@@ -1,0 +1,336 @@
+    Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('email_otp')->nullable();
+            $table->string('country')->nullable();
+            $table->string('affiliate_code')->nullable();
+            $table->string('gender')->nullable();
+            $table->unsignedBigInteger('referred_by')->nullable();
+            $table->json('referral_stats')->nullable();
+            $table->string('status')->default('active'); 
+            $table->enum('user_role', ['service_requester', 'super_admin','regional_admin' ,'moderator', 'service_provider'])->default('service_requester');
+            $table->string('preferred_language')->nullable();
+            $table->boolean('is_fake')->default(false);
+            $table->timestamp('last_login_at')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+
+            $table->foreign('referred_by')->references('id')->on('users')->nullOnDelete();
+
+            $table->index('email', 'idx_email');
+            $table->index('affiliate_code', 'idx_affiliate_code');
+            $table->index(['country'], 'idx_country_city');
+            $table->index('referred_by', 'idx_referred_by');
+
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
+
+        // Insert test admin credentials
+        \DB::table('users')->insert([
+            'name' => 'Test Admin',
+            'email' => 'admin@ulixai.com',
+            'password' => bcrypt('admin123'), // Change password as needed
+            'user_role' => 'super_admin',
+            'status' => 'active',
+            'email_verified_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+      Schema::create('service_providers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('native_language')->nullable();
+            $table->json('spoken_language')->nullable();
+            $table->json('services_to_offer')->nullable();
+            $table->json('services_to_offer_category')->nullable();
+            $table->text('provider_address')->nullable();
+            $table->text('operational_countries')->nullable();
+            
+            $table->boolean('communication_online')->nullable();
+            $table->boolean('communication_inperson')->nullable();
+            $table->text('profile_description')->nullable();
+            $table->string('profile_photo')->nullable();
+            $table->string('provider_docs')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('country')->nullable();
+            $table->string('preferred_language')->nullable();
+            $table->json('special_status')->nullable();
+            $table->boolean('provider_visibility')->default(true);
+            $table->json('country_coords')->nullable();
+            $table->json('city_coords')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->json('documents')->nullable();
+            $table->boolean('pinned')->default(false);
+            // Stripe related columns
+            $table->string('stripe_account_id')->nullable();
+            $table->boolean('stripe_chg_enabled')->default(false);
+            $table->boolean('stripe_pts_enabled')->default(false);
+            $table->string('kyc_link')->nullable();
+            
+            // KYC Status column
+            $table->enum('kyc_status', ['pending', 'incomplete', 'verified', 'rejected'])->default('pending');
+            $table->integer('points')->default(0);
+            $table->enum('ulysse_status', ['Ulysse+', 'Top Ulysse', 'Ulysse Diamond'])->default('Ulysse+');
+            $table->ipAddress('ip_address')->nullable();
+            $table->string('slug')->nullable();
+            $table->timestamps();
+            
+            // Add indexes for better performance
+            $table->index(['stripe_chg_enabled', 'stripe_pts_enabled']);
+            $table->index('kyc_status');
+            $table->index('stripe_account_id');
+        });
+
+          Schema::create('email_verifications', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('email');
+            $table->string('otp', 6);
+            $table->boolean('is_verified')->default(false);
+            $table->timestamp('verified_at')->nullable();
+            $table->timestamps();
+        });
+
+         Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->tinyInteger('level')->default(1); // 1 = main, 2 = sub, 3 = sub-sub
+            $table->string('slug')->nullable();
+            $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->integer('sort_order')->default(0);
+            $table->timestamps();
+            
+            $table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->index(['parent_id', 'level']);
+            $table->index('is_active');
+        });
+
+        Schema::create('missions', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('requester_id');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('subcategory_id');
+            $table->unsignedBigInteger('subsubcategory_id');
+            $table->string('title');
+            $table->text('description');
+            $table->decimal('budget_min', 10, 2)->nullable();
+            $table->decimal('budget_max', 10, 2)->nullable();
+            $table->string('budget_currency', 3)->default('EUR');
+            $table->string('service_durition')->nullable();
+            $table->string('location_country')->nullable();
+            $table->string('location_city', 100)->nullable();
+            $table->boolean('is_remote')->default(false);
+            $table->string('language')->nullable();
+            $table->enum('urgency', ['low', 'medium', 'high', 'urgent'])->default('medium');
+            $table->enum('status', ['draft', 'published', 'waiting_to_start', 'in_progress', 'completed', 'cancelled', 'disputed'])->default('published');
+            $table->unsignedBigInteger('selected_provider_id')->nullable();
+            $table->enum('payment_status', ['unpaid', 'paid', 'held', 'released', 'refunded'])->default('unpaid');
+            $table->boolean('is_fake')->default(false);
+            $table->json('attachments')->nullable(); 
+            $table->enum('cancelled_by', ['requester', 'provider', 'admin'])->nullable();
+            $table->timestamp('cancelled_on')->nullable();
+            $table->timestamps();
+
+            // Foreign Keys
+            $table->foreign('requester_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('subcategory_id')->references('id')->on('categories');
+            $table->foreign('selected_provider_id')->references('id')->on('service_providers')->onDelete('set null');
+        });
+
+        Schema::create('admins', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('provider_reviews', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('provider_id')->constrained('service_providers')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->tinyInteger('rating')->default(5);
+            $table->text('comment')->nullable();
+            $table->text('attributes')->nullable();
+            $table->boolean('service_success')->default(0);
+            $table->foreignId('mission_id')->nullable();
+            $table->timestamps();
+        });
+
+Schema::create('mission_offers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('mission_id')->constrained('missions')->onDelete('cascade');
+            $table->foreignId('provider_id')->constrained('service_providers')->onDelete('cascade');
+            $table->decimal('price', 10, 2)->nullable();
+            $table->string('delivery_time')->nullable();
+            $table->text('message')->nullable();
+            $table->enum('status', ['pending', 'accepted', 'declined'])->default('pending');
+            $table->timestamps();
+
+            // Important indexes
+            $table->index('mission_id', 'idx_mission_id');
+            $table->index('provider_id', 'idx_provider_id');
+            $table->index('status', 'idx_status');
+            $table->index('price', 'idx_price');
+        });
+
+Schema::create('mission_messages', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('mission_id')->constrained('missions')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->text('message');
+            $table->timestamps();
+
+            $table->index('mission_id', 'idx_mission_msg_mission_id');
+            $table->index('user_id', 'idx_mission_msg_user_id');
+        });
+
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('mission_id')->constrained('missions')->onDelete('cascade');
+            $table->foreignId('provider_id')->constrained('service_providers')->onDelete('cascade');
+            $table->foreignId('offer_id')->constrained('mission_offers')->onDelete('cascade');
+            $table->string('stripe_session_id')->nullable()->change();
+            $table->string('stripe_payment_intent_id')->nullable();
+            $table->decimal('amount_paid', 10, 2);
+            $table->decimal('client_fee', 10, 2);
+            $table->decimal('provider_fee', 10, 2)->nullable();
+            $table->string('country')->nullable();
+            $table->string('user_role')->nullable();
+            $table->enum('status', ['pending_payment', 'paid', 'released', 'refunded', 'dispute_pending'])->default('pending_payment');
+            $table->timestamps();
+        });
+
+Schema::create('conversations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('mission_id')->constrained('missions')->onDelete('cascade');
+            $table->foreignId('requester_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('provider_id')->constrained('service_providers')->onDelete('cascade');
+            $table->timestamp('last_message_at')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('messages', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('conversation_id')->constrained('conversations')->onDelete('cascade');
+            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
+            $table->text('body');
+            $table->boolean('is_read')->default(false);
+            $table->timestamps();
+        });
+
+        Schema::create('message_attachments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('message_id')->constrained('messages')->onDelete('cascade');
+            $table->string('filename');
+            $table->string('path');
+            $table->bigInteger('size');
+            $table->string('mime_type'); 
+            $table->timestamps();
+        });
+ Schema::create('mission_cancellation_reasons', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('mission_id');
+            $table->enum('cancelled_by', ['requester', 'provider', 'admin']);
+            $table->text('reason');
+            $table->text('custum_description')->nullable();
+            $table->boolean('email_sent')->default(false);
+            $table->timestamps();
+            $table->foreign('mission_id')->references('id')->on('missions')->onDelete('cascade');
+        });
+         Schema::create('reputation_points', function (Blueprint $table) {
+            $table->id();
+            $table->integer('mission_with_review')->default(0);
+            $table->integer('five_star_review')->default(0);   
+            $table->integer('four_star_review')->default(0);    
+            $table->integer('response_24h')->default(0);        
+            $table->integer('profile_complete')->default(0);  
+            $table->integer('active_3_months')->default(0);   
+            $table->integer('active_12_months')->default(0); 
+            $table->integer('no_disputes')->default(0); 
+            $table->integer('client_recommendations')->default(0); 
+            $table->integer('client_abuse_report')->default(0);
+            $table->integer('dispute_refund')->default(0);    
+            $table->integer('provider_canceled')->default(0); 
+            $table->integer('no_reply_5_requests')->default(0);
+            $table->timestamps();
+        });
+
+        Schema::create('ulixai_reviews', function (Blueprint $table) {
+            $table->id();
+            $table->integer('review_by')->nullable();
+            $table->integer('rating')->nullable();
+            $table->text('comment')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->decimal('affiliate_balance', 10, 2)->default(0)->after('referral_stats');
+            $table->decimal('pending_affiliate_balance', 10, 2)->default(0)->after('affiliate_balance');
+        });
+         Schema::create('affiliate_commissions', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('referrer_id');
+            $table->unsignedBigInteger('referee_id');
+            $table->unsignedBigInteger('mission_id')->nullable();
+            $table->decimal('amount', 10, 2);
+            $table->enum('status', ['pending', 'available', 'paid'])->default('pending');
+            $table->string('payout_method')->nullable();
+            $table->string('stripe_transfer_id')->nullable();
+            $table->timestamps();
+
+            $table->foreign('referrer_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('referee_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('mission_id')->references('id')->on('missions')->nullOnDelete();
+
+            $table->index(['referrer_id', 'referee_id']);
+        });
+
+        Schema::table('messages', function (Blueprint $table) {
+            // Add the attachment_path column to store the file path
+            $table->string('attachment_path')->nullable(); // Nullable because not all messages will have attachments
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->date('dob')->nullable()->after('email_verified_at');
+            $table->text('address')->nullable()->after('country');
+            if (!Schema::hasColumn('users', 'phone_number')) {
+                $table->string('phone_number')->nullable()->after('preferred_language');
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+

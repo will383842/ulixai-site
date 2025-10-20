@@ -1,0 +1,10 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\ServiceProvider;
+use App\Models\ProviderReview;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;

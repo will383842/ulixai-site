@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Exceptions pour faces-tool.php et faces/
+    RewriteRule ^faces-tool\.php$ - [L]
+    RewriteRule ^faces/ - [L]
+    
+    # Laravel
+    RewriteRule ^(.*)$ public/$1 [L]
+    
+    AddType application/javascript .js
+    AddType application/javascript .mjs
+</IfModule>

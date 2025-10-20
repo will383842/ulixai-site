@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ulixai.com/sitemap_index.xml
+Sitemap: https://blog.ulixai.com/sitemap_index.xml
