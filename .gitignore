@@ -26,3 +26,9 @@ public/storage
 *.zip
 *.tar
 *.tar.gz
+# uploads & médias générés (ne pas versionner)
+public/assets/profileImages/
+public/assets/userDocs/
+public/assets/mission/
+faces/
+.ftpquota
