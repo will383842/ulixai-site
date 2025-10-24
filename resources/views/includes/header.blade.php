@@ -1281,15 +1281,15 @@ function alignCookiesFor(lang) {
 		function showStep(stepIndex) {
 
       // Skip password step for existing users
-  if (stepIndex === 11 && document.querySelector('.user-menu')) { 
-    currentStep = 12;
-    stepIndex = 12;
-  }
+      if (stepIndex === 11 && document.querySelector('.user-menu')) { // If password step and user is logged in
+        currentStep = 12;
+        stepIndex = 12;
+      }
 
-  steps.forEach((step, i) => step.classList.toggle('hidden', i !== stepIndex));
-  prevBtn.disabled = stepIndex === 0;
-  progressBar.value = ((stepIndex + 1) / steps.length) * 100;
-  if (stepLabel) stepLabel.textContent = stepLabels[stepIndex] || "";
+      steps.forEach((step, i) => step.classList.toggle('hidden', i !== stepIndex));
+      prevBtn.disabled = stepIndex === 0;
+      progressBar.value = ((stepIndex + 1) / steps.length) * 100;
+      if (stepLabel) stepLabel.textContent = stepLabels[stepIndex] || "";
 
 			steps.forEach((step, i) => step?.classList.toggle('hidden', i !== stepIndex));
 			currentStep = stepIndex;

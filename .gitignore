@@ -32,3 +32,4 @@ public/assets/userDocs/
 public/assets/mission/
 faces/
 .ftpquota
+.env

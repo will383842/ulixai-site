@@ -3,17 +3,192 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover">
     <meta name="description" content="{{ $provider->profile_description }}">
     <title>Provider Detail</title>
 
     <!-- TAILWIND CDN - NÉCESSAIRE pour les includes -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" defer></script>
     
+    
+    
+    <!-- Performance & Mobile Optimization -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Ulixai">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <link rel="preload" href="https://code.jquery.com/jquery-3.6.0.min.js" as="script">
+    <link rel="dns-prefetch" href="https://code.jquery.com">
+    
+    <!-- SEO Meta Tags Enhanced -->
+    <meta name="keywords" content="helper, expat services, local expert, professional services, international assistance, 197 countries, multilingual helper, global services, expatriate support, relocation help, {{ $provider->first_name }} {{ $provider->last_name }}, international helper, worldwide services">
+    <meta name="author" content="Ulixai">
+    <meta http-equiv="content-language" content="en">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- Geographic Coverage -->
+    <meta name="geo.region" content="WORLD">
+    <meta name="geo.placename" content="Global">
+    <meta name="coverage" content="Worldwide">
+    <meta name="distribution" content="global">
+    <meta name="target" content="all">
+    
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('images/faviccon.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    
+    <!-- Canonical & Multilingual Links -->
+    <link rel="canonical" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'en']) }}">
+    <link rel="alternate" hreflang="en" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'en']) }}">
+    <link rel="alternate" hreflang="fr" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'fr']) }}">
+    <link rel="alternate" hreflang="de" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'de']) }}">
+    <link rel="alternate" hreflang="es" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'es']) }}">
+    <link rel="alternate" hreflang="pt" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'pt']) }}">
+    <link rel="alternate" hreflang="ar" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'ar']) }}">
+    <link rel="alternate" hreflang="ru" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'ru']) }}">
+    <link rel="alternate" hreflang="zh" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'zh']) }}">
+    <link rel="alternate" hreflang="hi" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'hi']) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ route('provider.profile', ['slug' => $provider->slug, 'locale' => 'en']) }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="{{ route('provider.profile', ['slug' => $provider->slug]) }}">
+    <meta property="og:title" content="{{ $provider->first_name }} {{ $provider->last_name }} - Professional Helper on Ulixai">
+    <meta property="og:description" content="{{ Str::limit($provider->profile_description ?? 'Verified professional helper providing quality services worldwide', 150) }}">
+    <meta property="og:image" content="{{ $provider->profile_photo ? asset($provider->profile_photo) : asset('images/default-profile-og.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="fr_FR">
+    <meta property="og:locale:alternate" content="de_DE">
+    <meta property="og:locale:alternate" content="es_ES">
+    <meta property="og:locale:alternate" content="pt_PT">
+    <meta property="og:locale:alternate" content="ar_AR">
+    <meta property="og:locale:alternate" content="ru_RU">
+    <meta property="og:locale:alternate" content="zh_CN">
+    <meta property="og:locale:alternate" content="hi_IN">
+    <meta property="og:site_name" content="Ulixai">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ route('provider.profile', ['slug' => $provider->slug]) }}">
+    <meta name="twitter:title" content="{{ $provider->first_name }} {{ $provider->last_name }} - Helper Profile">
+    <meta name="twitter:description" content="{{ Str::limit($provider->profile_description ?? 'Professional helper on Ulixai', 150) }}">
+    <meta name="twitter:image" content="{{ $provider->profile_photo ? asset($provider->profile_photo) : asset('images/default-profile-twitter.jpg') }}">
+    
+    <!-- JSON-LD Structured Data -->
+    @php
+        $reviewCount = $reviewCount ?? 0;
+        $avgRating = $avgRating ?? 0;
+    @endphp
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "{{ $provider->first_name }} {{ $provider->last_name }}",
+      "description": "{{ $provider->profile_description ?? 'Professional helper on Ulixai providing quality services' }}",
+      "url": "{{ route('provider.profile', ['slug' => $provider->slug]) }}",
+      "image": "{{ $provider->profile_photo ? asset($provider->profile_photo) : asset('images/default-profile.jpg') }}",
+      "inLanguage": "en"
+      @if(isset($reviewCount) && $reviewCount > 0)
+      ,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ $avgRating }}",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingCount": "{{ $reviewCount }}"
+      }
+      @endif
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "name": "{{ $provider->first_name }} {{ $provider->last_name }} - Professional Helper Profile",
+      "description": "Professional helper profile on Ulixai. Verified, trusted, and ready to help.",
+      "url": "{{ route('provider.profile', ['slug' => $provider->slug]) }}",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Ulixai",
+        "url": "{{ config('app.url') }}"
+      },
+      "mainEntity": {
+        "@type": "Person",
+        "name": "{{ $provider->first_name }} {{ $provider->last_name }}"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ config('app.url') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Providers",
+          "item": "{{ config('app.url') }}/providers"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ $provider->first_name }} {{ $provider->last_name }}",
+          "item": "{{ route('provider.profile', ['slug' => $provider->slug]) }}"
+        }
+      ]
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Ulixai",
+      "url": "{{ config('app.url') }}",
+      "logo": "{{ asset('images/logo.png') }}",
+      "sameAs": [
+        "https://facebook.com/ulixai",
+        "https://twitter.com/ulixai",
+        "https://linkedin.com/company/ulixai",
+        "https://instagram.com/ulixai"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "availableLanguage": ["en", "fr", "de", "es", "pt", "ar", "ru", "zh", "hi"]
+      }
+    }
+    </script>
+
     <style>
         /* CLASSES ULTRA-SPÉCIFIQUES POUR ÉVITER TOUS LES CONFLITS */
         
@@ -634,8 +809,8 @@
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
             </svg>
-            <span class="hidden sm:inline">Partager & Gagner</span>
-            <span class="sm:hidden">Partager</span>
+            <span class="hidden sm:inline">Share & Earn</span>
+            <span class="sm:hidden">Share</span>
             <span class="ml-1">💰</span>
         </button>
 
@@ -653,7 +828,7 @@
                             <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
                         </svg>
-                        Partager & Gagner
+                        Share & Earn
                     </h2>
                     <button onclick="closeSharePanel()" class="text-white/80 hover:text-white transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -664,15 +839,15 @@
                 
                 @auth
                     <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white">
-                        <p class="text-sm font-semibold mb-1">Votre code affilié</p>
+                        <p class="text-sm font-semibold mb-1">Your affiliate code</p>
                         <p class="text-lg font-bold font-mono tracking-wider">{{ Auth::user()->affiliate_code }}</p>
                     </div>
                 @else
                     <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white text-sm">
-                        <p class="font-semibold mb-2">🎁 Créez un compte gratuit</p>
-                        <p class="text-xs opacity-90 mb-3">Obtenez votre lien affilié et gagnez de l'argent !</p>
+                        <p class="font-semibold mb-2">🎁 Create a free account</p>
+                        <p class="text-xs opacity-90 mb-3">Get your affiliate link and earn money!</p>
                         <a href="/signup" class="block w-full bg-white text-green-600 font-bold py-2 px-4 rounded-lg text-center hover:bg-green-50 transition-colors">
-                            S'inscrire maintenant
+                            Sign Up Now
                         </a>
                     </div>
                 @endauth
@@ -684,7 +859,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
-                    Partagez maintenant
+                    Share Now
                 </h3>
 
                 <!-- Grid 2 colonnes -->
@@ -729,7 +904,7 @@
                     <!-- Copy Link -->
                     <button id="copyBtnSlide" class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 rounded-xl p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-2 transition-all duration-200 group">
                         <i class="fas fa-link text-4xl text-purple-600 group-hover:text-white transition-colors"></i>
-                        <span class="text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copier</span>
+                        <span class="text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copy</span>
                     </button>
 
                 </div>
@@ -744,12 +919,12 @@
                         <div class="flex-1">
                             <p class="font-bold text-sm">
                                 @auth
-                                    Gagnez € ou $ pour chaque partage !
+                                    Earn € or $ for each share!
                                 @else
-                                    Créez un compte pour gagner de l'argent
+                                    Create an account to earn money
                                 @endauth
                             </p>
-                            <p class="text-xs text-green-600 mt-1">Chaque personne qui clique sur votre lien compte !</p>
+                            <p class="text-xs text-green-600 mt-1">Every person who clicks your link counts!</p>
                         </div>
                     </div>
                 </div>
@@ -766,25 +941,24 @@
                             <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Génial ! 🎉</h3>
-                    <p class="text-gray-600 text-sm">Vous aidez quelqu'un à trouver le helper parfait !</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Awesome! 🎉</h3>
+                    <p class="text-gray-600 text-sm">You're helping someone find the perfect helper!</p>
                 </div>
                 <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 mb-4 border-2 border-green-200">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-gray-600">Vos gains d'affiliation :</span>
-                        <span class="text-2xl font-bold text-green-600">Jusqu'à 5€</span>
+                    <div class="flex items-center justify-center mb-2">
+                        <span class="text-lg font-bold text-green-600 text-center">Share and earn 75% affiliate commission</span>
                     </div>
                     <div class="h-2 bg-green-200 rounded-full overflow-hidden">
-                        <div class="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse" style="width: 60%"></div>
+                        <div class="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse" style="width: 75%"></div>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2">💡 Chaque inscription via votre lien vous rapporte des gains !</p>
+                    <p class="text-xs text-gray-500 mt-2">💡 Each signup via your link earns you rewards!</p>
                 </div>
                 <div class="space-y-2">
                     <button onclick="shareAgain()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg">
-                        Partager encore & Gagner plus 💰
+                        Share Again & Earn More 💰
                     </button>
                     <button onclick="closeSharePopup()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-6 rounded-xl transition-all">
-                        Fermer
+                        Close
                     </button>
                 </div>
             </div>
@@ -905,15 +1079,15 @@
             const finalUrl = getShareUrl();
             const enc = encodeURIComponent(finalUrl);
             
-            // Viral messages
-            const viralText = encodeURIComponent(`🌟 J'ai trouvé un super helper local/expat !\n\n👉 Découvre son profil :\n\n💡 Besoin d'aide à l'étranger ? Parfait !\n🚀 Tu veux aider et gagner de l'argent ? Rejoins-nous !\n\nPartage ça à ton réseau ! 💰`);
-            const subject = encodeURIComponent("🎯 Super Helper Local/Expat - Regarde ça !");
-            const viralEmailBody = encodeURIComponent(`Salut ! 👋\n\nJ'ai trouvé cet incroyable helper local/expat qui pourrait t'intéresser :\n\n${finalUrl}\n\nQue tu cherches :\n✅ De l'aide à l'étranger\n✅ À devenir helper et gagner de l'argent\n\nRegarde son profil !\n\n---\n💡 ASTUCE : Partage ce profil avec ton réseau et gagne des récompenses ! 💰`);
+            // Viral messages (English)
+            const viralText = encodeURIComponent(`🌟 I found an amazing local/expat helper!\n\n👉 Check out their profile:\n\n💡 Need help abroad? Perfect!\n🚀 Want to help & earn money? Join us!\n\nShare this with your network! 💰`);
+            const subject = encodeURIComponent("🎯 Amazing Local/Expat Helper - Check This Out!");
+            const viralEmailBody = encodeURIComponent(`Hi! 👋\n\nI found this incredible local/expat helper that might interest you:\n\n${finalUrl}\n\nWhether you're looking to:\n✅ Get help abroad\n✅ Become a helper and earn money\n\nCheck out their profile!\n\n---\n💡 TIP: Share this profile with your network and earn rewards! 💰`);
             
             // Social share links for slide panel
             const socialLinks = {
                 shareWhatsAppSlide: `https://api.whatsapp.com/send?text=${viralText}%20${enc}`,
-                shareMessengerSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
+                shareMessengerSlide: `fb-messenger://share/?link=${enc}`,
                 shareFacebookSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
                 shareTwitterSlide: `https://twitter.com/intent/tweet?url=${enc}&text=${viralText}`,
                 shareLinkedInSlide: `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`,
@@ -941,11 +1115,11 @@
                         copyBtn.className = 'bg-green-500 rounded-xl p-4 border-2 border-green-500 flex flex-col items-center gap-2 transition-all duration-200';
                         copyBtn.innerHTML = `
                             <i class="fas fa-check text-4xl text-white"></i>
-                            <span class="text-sm font-bold text-white uppercase tracking-wide">Copié !</span>
+                            <span class="text-sm font-bold text-white uppercase tracking-wide">Copied!</span>
                         `;
                         
                         if (typeof toastr !== 'undefined') {
-                            toastr.success('✅ Lien copié ! 🚀');
+                            toastr.success('✅ Link copied! 🚀');
                         }
                         
                         // Show success popup after copy
@@ -1007,9 +1181,9 @@
                             <div class="provider-profile-image-wrapper">
                                 <button id="profileImgBtn" class="provider-profile-image" style="border: none; background: none; padding: 0;">
                                     @if(isset($provider) && $provider->profile_photo)
-                                        <img src="{{ asset($provider->profile_photo) }}" alt="Profile">
+                                        <img loading="lazy" src="{{ asset($provider->profile_photo) }}" alt="Profile">
                                     @else
-                                        <img src="https://i.pravatar.cc/300?img=3" alt="Profile">
+                                        <img loading="lazy" src="https://i.pravatar.cc/300?img=3" alt="Profile">
                                     @endif
                                 </button>
                             </div>
@@ -1111,13 +1285,13 @@
                         
                         <!-- LANGUAGES SPOKEN SECTION -->
                         @if(isset($provider->spoken_language) && $provider->spoken_language)
-                        <div class="provider-profile-section-card">
-                            <h2 class="provider-profile-section-title">
+                        <div style="background: white; border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <p style="font-size: 0.875rem; font-weight: 600; color: #475569; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                                 <i class="fas fa-language" style="color: #0066FF;"></i>
                                 Languages Spoken
-                            </h2>
+                            </p>
                             
-                            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                            <div style="line-height: 2;">
                                 @php
                                     if (is_string($provider->spoken_language)) {
                                         $languages = json_decode($provider->spoken_language, true);
@@ -1130,7 +1304,7 @@
                                 @endphp
                                 
                                 @foreach($languages as $language)
-                                <span style="color: #2563EB; font-weight: 600; font-size: 0.9375rem; margin-right: 0.5rem;">
+                                <span style="color: #2563EB; font-weight: 600; font-size: 0.9375rem; margin-right: 1rem; white-space: nowrap;">
                                     <i class="fas fa-comments" style="margin-right: 0.25rem;"></i>{{ $language }}
                                 </span>
                                 @endforeach
@@ -1140,13 +1314,13 @@
 
                         <!-- COUNTRIES OF INTERVENTION SECTION -->
                         @if(isset($provider->operational_countries) && $provider->operational_countries)
-                        <div class="provider-profile-section-card">
-                            <h2 class="provider-profile-section-title">
+                        <div style="background: white; border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <p style="font-size: 0.875rem; font-weight: 600; color: #475569; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                                 <i class="fas fa-globe-americas" style="color: #16A34A;"></i>
                                 Countries of Intervention
-                            </h2>
+                            </p>
                             
-                            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                                 @php
                                     if (is_string($provider->operational_countries)) {
                                         $countries = json_decode($provider->operational_countries, true);
@@ -1167,8 +1341,6 @@
                                     display: inline-flex;
                                     align-items: center;
                                     gap: 0.5rem;
-                                    margin-right: 0.5rem;
-                                    margin-bottom: 0.5rem;
                                 ">
                                     <i class="fas fa-map-marker-alt" style="color: #16A34A;"></i>
                                     <span style="font-weight: 600; color: #166534; font-size: 0.9375rem;">{{ $country }}</span>
@@ -1232,9 +1404,9 @@
                                 data-rating="{{ $review->rating }}" 
                                 data-date="{{ $review->created_at->timestamp }}">
                                 @if($review->user && $review->user->profile_photo)
-                                    <img src="{{ asset($review->user->profile_photo) }}" alt="User" class="provider-profile-review-avatar">
+                                    <img loading="lazy" src="{{ asset($review->user->profile_photo) }}" alt="User" class="provider-profile-review-avatar">
                                 @else
-                                    <img src="{{ asset('images/helpexpat.png') }}" alt="User" class="provider-profile-review-avatar">
+                                    <img loading="lazy" src="{{ asset('images/helpexpat.png') }}" alt="User" class="provider-profile-review-avatar">
                                 @endif
                                 <div style="flex: 1;">
                                     <div style="font-weight: 800; color: #0066FF; margin-bottom: 0.5rem;">
@@ -1280,9 +1452,9 @@
                 <i class="fas fa-times" style="font-size: 1.25rem;"></i>
             </button>
             @if(isset($provider) && $provider->profile_photo)
-                <img src="{{ asset($provider->profile_photo) }}" alt="Profile Large" class="provider-profile-modal-image">
+                <img loading="lazy" src="{{ asset($provider->profile_photo) }}" alt="Profile Large" class="provider-profile-modal-image">
             @else
-                <img src="https://i.pravatar.cc/300?img=3" alt="Profile Large" class="provider-profile-modal-image">
+                <img loading="lazy" src="https://i.pravatar.cc/300?img=3" alt="Profile Large" class="provider-profile-modal-image">
             @endif
         </div>
     </div>
