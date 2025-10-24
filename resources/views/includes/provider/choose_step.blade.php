@@ -91,7 +91,7 @@
     
     <button 
       type="button"
-      onclick="openHelpPopup()"
+      onclick="openHelpRequestPopup()"
       class="group block relative w-full bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl sm:rounded-2xl shadow-xl transition-all duration-300 transform overflow-hidden cursor-pointer text-left focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2"
       role="button"
       aria-label="Request help from verified assistants in 197 countries - Click to open help request form"
