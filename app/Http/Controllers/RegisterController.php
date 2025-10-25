@@ -135,24 +135,33 @@ class RegisterController extends Controller
             'city_coords' => null 
         ]);
         
-        $otp = random_int(100000, 999999);
-        EmailVerification::create([
-            'user_id' => $user->id,
-            'email' => $user->email,
-            'otp' => $otp,
-            'is_verified' => false,
-        ]);
+        // NOTE: L'envoi d'OTP est maintenant géré par sendEmailOtp() au step 13
+        // On garde ce code en backup au cas où l'email n'a pas été vérifié avant
+        $existingVerification = EmailVerification::where('user_id', $user->id)
+            ->where('email', $user->email)
+            ->where('is_verified', false)
+            ->first();
+            
+        if (!$existingVerification) {
+            $otp = random_int(100000, 999999);
+            EmailVerification::create([
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'otp' => $otp,
+                'is_verified' => false,
+            ]);
 
-        Mail::raw(
-            "Welcome to Ulixai!\n\nYour verification code is: {$otp}\n\nPlease enter this code to verify your email address.",
-            function ($message) use ($user) {
-                $fromAddress = config('mail.from.address') ?: 'noreply@ulixai.com';
-                $fromName = config('mail.from.name') ?: 'Ulixai';
-                $message->to($user->email)
-                        ->from($fromAddress, $fromName)
-                        ->subject('Welcome to Ulixai - Email Verification');
-            }
-        );
+            Mail::raw(
+                "Welcome to Ulixai!\n\nYour verification code is: {$otp}\n\nPlease enter this code to verify your email address.",
+                function ($message) use ($user) {
+                    $fromAddress = config('mail.from.address') ?: 'noreply@ulixai.com';
+                    $fromName = config('mail.from.name') ?: 'Ulixai';
+                    $message->to($user->email)
+                            ->from($fromAddress, $fromName)
+                            ->subject('Welcome to Ulixai - Email Verification');
+                }
+            );
+        }
 
         if (!$provider->stripe_account_id) {
 
@@ -171,6 +180,7 @@ class RegisterController extends Controller
             'message' => 'Registration successful. Please check your email for the verification code.',
         ]);
     }
+    
     private function generateSlug($expats, $country)
     {
         $firstName = Str::slug($expats['first_name'] ?? '');
@@ -243,6 +253,55 @@ class RegisterController extends Controller
         return $slug;
     }
 
+    // NOUVELLE MÉTHODE: Envoyer OTP au step 13 (validation email)
+    public function sendEmailOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        // Chercher ou créer un user temporaire
+        $user = User::firstOrCreate(
+            ['email' => $request->email],
+            [
+                'name' => 'Temp User',
+                'password' => Hash::make(Str::random(16)),
+                'user_role' => 'service_provider',
+                'status' => 'pending'
+            ]
+        );
+
+        // Générer OTP
+        $otp = random_int(100000, 999999);
+        
+        // Sauvegarder avec expiration 10 min
+        EmailVerification::updateOrCreate(
+            ['user_id' => $user->id, 'email' => $request->email],
+            [
+                'otp' => $otp,
+                'is_verified' => false,
+                'created_at' => now()
+            ]
+        );
+
+        // Envoyer email
+        Mail::raw(
+            "Your verification code is: {$otp}\n\nThis code is valid for 10 minutes.",
+            function ($message) use ($user) {
+                $fromAddress = config('mail.from.address') ?: 'noreply@ulixai.com';
+                $fromName = config('mail.from.name') ?: 'Ulixai';
+                $message->to($user->email)
+                        ->from($fromAddress, $fromName)
+                        ->subject('Email Verification Code - Ulixai');
+            }
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Verification code sent to your email.'
+        ]);
+    }
+
     public function verifyEmailOtp(Request $request)
     {
         $request->validate([
@@ -262,17 +321,28 @@ class RegisterController extends Controller
             ], 422);
         }
 
+        // Vérifier expiration (10 minutes)
+        if ($verification->created_at->addMinutes(10)->isPast()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Code expired. Please request a new one.'
+            ], 422);
+        }
+
         $verification->is_verified = true;
         $verification->verified_at = now();
         $verification->save();
+        
         $user = $verification->user;
         if ($user && !$user->email_verified_at) {
             $user->email_verified_at = now();
             $user->save();
         }
+        
         \Auth::login($user, $request->filled('remember'));
         $request->session()->regenerate();
         \Auth::user()->update(['last_login_at' => now()]);
+        
         return response()->json([
             'status' => 'success',
             'message' => 'Email verified successfully.'

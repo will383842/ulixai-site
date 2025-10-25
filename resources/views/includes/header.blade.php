@@ -56,7 +56,6 @@
     }
   </script>
   <style>
-      <style>
   /* hide the top banner frame Google injects */
   iframe.goog-te-banner-frame {
     display: none !important;
@@ -277,8 +276,6 @@
   })();
 </script>
 
-
-  </style>
 
 </head>
 @php
@@ -909,22 +906,170 @@
     <!-- Step 4 -->
 		@include('includes.provider.provider_services')
 
-    <!-- Step 5 -->
+    <!-- Step 5: Country Selection - MODERN 2025/2026 -->
     <div id="step5" class="hidden">
-    <h2 class="font-bold mb-6 text-xl text-blue-900">In which country do you live?</h2>
+      
+      <!-- Header -->
+      <div class="mb-8 text-center">
+        <div class="inline-flex items-center justify-center gap-3 mb-3">
+          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg animate-pulse-slow">
+            <span class="text-2xl">🌍</span>
+          </div>
+          <h2 class="font-black text-3xl sm:text-4xl bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+            In which country do you live?
+          </h2>
+        </div>
+        <p class="text-gray-600 text-sm sm:text-base font-medium">
+          Select your country of residence
+        </p>
+      </div>
 
-    <select id="location-input" name="location" class="w-full border border-blue-400 rounded-full px-5 py-3 text-blue-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 mb-6">
-      <option value="" disabled selected>Select your country</option>
-      @foreach($countries as $country)
-        <option value="{{ $country->country }}">{{ $country->country }}</option>
-      @endforeach
-    </select>
+      <!-- Country Select -->
+      <div class="max-w-2xl mx-auto mb-8">
+        <div class="relative">
+          <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-2xl pointer-events-none">
+            🌎
+          </div>
+          <select id="location-input" name="location" class="w-full border-2 border-purple-200 rounded-2xl pl-14 pr-5 py-4 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all appearance-none cursor-pointer text-lg font-medium">
+            <option value="" disabled selected>Choose your country...</option>
+            @foreach($countries as $country)
+              <option value="{{ $country->country }}">{{ $country->country }}</option>
+            @endforeach
+          </select>
+          <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>
+        
+        <!-- Error message -->
+        <div id="countryError" class="hidden mt-2 text-red-600 text-sm font-semibold flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+          </svg>
+          <span>Please select your country to continue</span>
+        </div>
+        
+        <!-- Success message -->
+        <div id="countrySuccess" class="hidden mt-2 text-green-600 text-sm font-semibold flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <span>Country selected ✓</span>
+        </div>
+      </div>
 
-    <div class="flex justify-between items-center">
-      <button id="backToStep4" class="text-blue-700 hover:underline">Back</button>
-      <button id="nextStep5" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Next</button>
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between items-center gap-4">
+        <button id="backToStep4" class="flex items-center gap-2 px-6 py-3 text-purple-600 font-semibold hover:bg-purple-50 rounded-lg transition-all group">
+          <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+          <span>Back</span>
+        </button>
+        
+        <button id="nextStep5" class="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all group">
+          <span>Continue</span>
+          <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
+
+    <style>
+    /* Modern Country Select Styles */
+    #location-input:hover {
+      border-color: #a855f7;
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15);
+    }
+    
+    #location-input:focus {
+      box-shadow: 0 8px 20px rgba(168, 85, 247, 0.25);
+    }
+    
+    #location-input option {
+      padding: 12px;
+      font-size: 16px;
+    }
+    
+    @keyframes pulse-slow {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse-slow 3s ease-in-out infinite;
+    }
+    </style>
+
+    <script>
+    // Step 5 Validation & UX
+    (function() {
+      'use strict';
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        const locationInput = document.getElementById('location-input');
+        const nextBtn = document.getElementById('nextStep5');
+        const countryError = document.getElementById('countryError');
+        const countrySuccess = document.getElementById('countrySuccess');
+        
+        if (!locationInput || !nextBtn) return;
+        
+        // Show success when country selected
+        locationInput.addEventListener('change', function() {
+          if (this.value) {
+            countryError.classList.add('hidden');
+            countrySuccess.classList.remove('hidden');
+            
+            // Save to localStorage
+            const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+            expats.country = this.value;
+            localStorage.setItem('expats', JSON.stringify(expats));
+          }
+        });
+        
+        // Restore saved country
+        const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+        if (expats.country) {
+          locationInput.value = expats.country;
+          countrySuccess.classList.remove('hidden');
+        }
+        
+        // Validation on Next button
+        nextBtn.addEventListener('click', function(e) {
+          if (!locationInput.value) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            
+            // Show error
+            countryError.classList.remove('hidden');
+            countrySuccess.classList.add('hidden');
+            
+            // Shake animation
+            locationInput.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+              locationInput.style.animation = '';
+            }, 500);
+            
+            // Focus the select
+            locationInput.focus();
+            
+            return false;
+          }
+        }, true);
+      });
+    })();
+    </script>
+    
+    <style>
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+    </style>
 
     <!-- Step 6: Operational Countries -->
 
@@ -1281,15 +1426,15 @@ function alignCookiesFor(lang) {
 		function showStep(stepIndex) {
 
       // Skip password step for existing users
-      if (stepIndex === 11 && document.querySelector('.user-menu')) { // If password step and user is logged in
-        currentStep = 12;
-        stepIndex = 12;
-      }
+  if (stepIndex === 11 && document.querySelector('.user-menu')) { 
+    currentStep = 12;
+    stepIndex = 12;
+  }
 
-      steps.forEach((step, i) => step.classList.toggle('hidden', i !== stepIndex));
-      prevBtn.disabled = stepIndex === 0;
-      progressBar.value = ((stepIndex + 1) / steps.length) * 100;
-      if (stepLabel) stepLabel.textContent = stepLabels[stepIndex] || "";
+  steps.forEach((step, i) => step.classList.toggle('hidden', i !== stepIndex));
+  prevBtn.disabled = stepIndex === 0;
+  progressBar.value = ((stepIndex + 1) / steps.length) * 100;
+  if (stepLabel) stepLabel.textContent = stepLabels[stepIndex] || "";
 
 			steps.forEach((step, i) => step?.classList.toggle('hidden', i !== stepIndex));
 			currentStep = stepIndex;
