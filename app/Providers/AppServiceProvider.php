@@ -29,13 +29,17 @@ class AppServiceProvider extends ServiceProvider
     
     public function boot(): void
     {
-        $siteName = DB::table('site_settings')->value('site_name'); 
+        try {
+            $siteName = DB::table('site_settings')->value('site_name'); 
 
-        if (!empty($siteName)) {
-            Config::set('app.name', $siteName);
+            if (!empty($siteName)) {
+                Config::set('app.name', $siteName);
+            }
+
+            Blade::directive('site', fn () => "<?php echo e(config('app.name')); ?>");
+        } catch (\Exception $e) {
+            // Base de données pas encore créée
         }
-
-        Blade::directive('site', fn () => "<?php echo e(config('app.name')); ?>");
     }
 
 }

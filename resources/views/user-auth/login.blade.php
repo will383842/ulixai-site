@@ -793,10 +793,10 @@
                     tapToDismiss: true
                 };
 
-                // Laravel flash messages
                 @if(session('toast_success'))
                     toastr.success("{{ session('toast_success') }}");
                 @endif
+
                 @if(session('toast_error'))
                     toastr.error("{{ session('toast_error') }}");
                 @endif
@@ -918,115 +918,3 @@
     </script>
 </body>
 </html>
-
-<!-- NON-REGRESSION VERIFICATION CHECKLIST
-═══════════════════════════════════════════════════════════════════════════════
-
-✅ ROUTES & METHODS PRESERVED:
-   [✓] Form action: {{ route('user.login') }} - UNCHANGED
-   [✓] Google login: {{ route('google.login') }} - UNCHANGED
-   [✓] Forgot password: /forgot-password - UNCHANGED
-   [✓] Form method: POST + @csrf - INTACT
-
-✅ FORM INPUTS & VALIDATION PRESERVED:
-   [✓] Input name="email" - UNCHANGED
-   [✓] Input name="password" - UNCHANGED
-   [✓] old('email') helper - INTACT
-   [✓] @error('email') directive - INTACT
-   [✓] @error('password') directive - INTACT
-   [✓] All required attributes - INTACT
-
-✅ JAVASCRIPT HOOKS PRESERVED:
-   [✓] ID preserved: #loginForm
-   [✓] ID preserved: #submitBtn
-   [✓] ID preserved: #togglePassword
-   [✓] ID preserved: #password
-   [✓] ID preserved: #email
-   [✓] Function preserved: openSignupPopup()
-   [✓] Function preserved: closeSignupPopup()
-   [✓] Popup ID preserved: #signupPopup
-
-✅ BLADE STRUCTURE PRESERVED:
-   [✓] @include('includes.header') - INTACT
-   [✓] @include('pages.popup') - INTACT
-   [✓] @include('includes.footer') - INTACT
-   [✓] @csrf directive - INTACT
-   [✓] @error directives - INTACT
-   [✓] Session flash: toast_success, toast_error - INTACT
-
-✅ TOASTR INTEGRATION PRESERVED:
-   [✓] Toastr CDN links - INTACT
-   [✓] Configuration - ENHANCED (better mobile)
-   [✓] Session messages - INTACT
-   [✓] All event handlers - INTACT
-
-✅ DESIGN FIDELITY ACHIEVED:
-   [✓] Blue color scheme: #1d4ed8, #3b82f6, #2563eb - EXACT MATCH
-   [✓] Animated gradient background - IMPLEMENTED
-   [✓] Floating particles - IMPLEMENTED
-   [✓] Glassmorphism card - IMPLEMENTED
-   [✓] Logo with pulse animation - IMPLEMENTED
-   [✓] Smooth micro-interactions - IMPLEMENTED (≤200ms)
-   [✓] Hover/focus states - ALL IMPLEMENTED
-   [✓] Loading state on submit - IMPLEMENTED
-
-✅ MOBILE-FIRST & RESPONSIVE:
-   [✓] Touch targets ≥44px - VERIFIED
-   [✓] Font-size ≥16px (no iOS zoom) - VERIFIED
-   [✓] Viewport height fixes - IMPLEMENTED
-   [✓] Safe area insets (notch) - IMPLEMENTED
-   [✓] Breakpoints: 360/768/1024/1280/1440px - TESTED
-   [✓] Landscape mode optimized - VERIFIED
-   [✓] Keyboard handling - IMPLEMENTED
-
-✅ ACCESSIBILITY (a11y):
-   [✓] Semantic HTML5: <main>, <section>, <header> - IMPLEMENTED
-   [✓] Proper heading hierarchy: <h1> only - VERIFIED
-   [✓] ARIA labels & roles - IMPLEMENTED
-   [✓] aria-invalid for errors - IMPLEMENTED
-   [✓] aria-describedby for errors - IMPLEMENTED
-   [✓] Keyboard navigation - FULL SUPPORT
-   [✓] Focus visible styles - IMPLEMENTED
-   [✓] Screen reader compatible - VERIFIED
-   [✓] Color contrast WCAG AA - VERIFIED
-
-✅ PERFORMANCE OPTIMIZATIONS:
-   [✓] GPU-accelerated animations - IMPLEMENTED
-   [✓] will-change properties - STRATEGIC USE
-   [✓] Preconnect/DNS-prefetch - ADDED
-   [✓] Async/defer scripts - IMPLEMENTED
-   [✓] CSS animations 60fps - VERIFIED
-   [✓] Reduced motion support - IMPLEMENTED
-   [✓] Performance monitoring - ADDED
-
-✅ SEO-READY:
-   [✓] <title> tag - ENHANCED
-   [✓] Meta description - ADDED
-   [✓] Open Graph tags - ADDED
-   [✓] Semantic HTML - IMPLEMENTED
-   [✓] Proper heading hierarchy - VERIFIED
-   [✓] lang="en" attribute - SET
-
-✅ i18n-READY:
-   [✓] No hardcoded strings - ALL MARKED
-   [✓] i18n markers: \<!-- i18n:key --\> - IMPLEMENTED
-   [✓] Layout RTL-compatible - VERIFIED
-   [✓] Flexible for long translations - VERIFIED
-
-✅ SECURITY PRESERVED:
-   [✓] @csrf token - INTACT
-   [✓] Form method POST - INTACT
-   [✓] Input validation - INTACT
-   [✓] XSS protection (Blade escaping) - INTACT
-   [✓] No inline event handlers - VERIFIED
-
-✅ UX ENHANCEMENTS (NO BREAKING CHANGES):
-   [✓] Loading spinner on submit - ADDED
-   [✓] Haptic feedback - ADDED (mobile)
-   [✓] Password toggle with icon - ENHANCED
-   [✓] Smooth transitions - ALL ADDED
-   [✓] Better error display - ENHANCED
-   [✓] Toast notifications styled - ENHANCED
-
-═══════════════════════════════════════════════════════════════════════════════
--->
