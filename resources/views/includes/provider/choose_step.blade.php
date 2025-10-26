@@ -1,17 +1,17 @@
 <!-- 
 ============================================
-🚀 STEP 1 - VERSION ULTRA-MODERNE 2025/2026
+🚀 STEP 1 - VERSION REFONDÉE 2025/2026
 ============================================
-✨ Glassmorphism + Animations fluides
-🎨 Design System Blue/Cyan/Teal
-💎 Design inspiré de Stripe, Linear, Vercel
-⚡ Performance optimisée (GPU acceleration)
+✨ Design System Blue/Cyan/Teal STRICT
+🎨 Palette de couleurs unifiée
+💎 Respect total des spécifications
+⚡ Toutes fonctionnalités préservées
 ============================================
 -->
 
 <div id="step1" class="space-y-4 sm:space-y-5 relative" role="region" aria-label="Choose your service">
   
-  <!-- Ambient Background Effects -->
+  <!-- Ambient Background Effects - 3 blobs animés -->
   <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
     <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
     <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -27,7 +27,7 @@
       role="button"
       aria-label="Request urgent help - Open help request form">
       
-      <!-- Animated gradient background -->
+      <!-- Animated gradient background - Gradient header exact -->
       <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-cyan-500 to-teal-600 animate-gradient"></div>
       
       <!-- Glossy overlay -->
@@ -40,12 +40,12 @@
         <div class="sparkle"></div>
       </div>
       
-      <!-- Content -->
-      <div class="relative z-10">
+      <!-- Content - Padding p-6 exact -->
+      <div class="relative z-10 p-6">
         <!-- Top section: Icon + Badge -->
         <div class="flex items-start justify-between mb-8 pb-4 border-b border-white/20">
           <div class="flex items-center gap-4 flex-1 min-w-0">
-            <!-- Animated Icon -->
+            <!-- Animated Icon - Badge w-14 h-14 rounded-2xl exact -->
             <div class="icon-container flex-shrink-0">
               <div class="w-14 h-14 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-2 ring-white/30 transform group-hover:rotate-12 transition-transform duration-300">
                 <svg class="w-7 h-7 text-white animate-pulse-subtle" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -55,11 +55,12 @@
               </div>
             </div>
             
-            <!-- Title & Subtitle -->
+            <!-- Title & Subtitle - Header exact: text-3xl sm:text-4xl font-black -->
             <div class="flex-1 min-w-0">
               <h2 class="text-3xl sm:text-4xl font-black text-white mb-1 tracking-tight transform group-hover:translate-x-1 transition-transform duration-300">
                 I Need Help! 🆘
               </h2>
+              <!-- Sous-titre exact: text-base sm:text-lg font-semibold text-gray-600 -->
               <p class="text-base sm:text-lg font-semibold text-gray-600 flex items-center gap-2">
                 <span class="inline-block w-2 h-2 bg-green-400 rounded-full animate-ping-slow"></span>
                 <span class="text-blue-100">Instant worldwide assistance</span>
@@ -73,7 +74,7 @@
           </span>
         </div>
         
-        <!-- Description -->
+        <!-- Description - Corps de texte exact: text-sm sm:text-base -->
         <div class="mb-4">
           <p class="text-sm sm:text-base text-blue-50 leading-relaxed mb-3">
             Get <strong class="text-white">instant help</strong> from verified assistants in 
@@ -81,7 +82,7 @@
             <span class="inline-block animate-wave">🌍</span>
           </p>
           
-          <!-- Feature pills -->
+          <!-- Feature pills - Gap exact: gap-4 -->
           <div class="flex flex-wrap gap-4">
             <span class="feature-pill">⚡ Fast response</span>
             <span class="feature-pill">✅ Verified helpers</span>
@@ -91,7 +92,7 @@
         
         <!-- CTA Button -->
         <div class="cta-button group-hover:shadow-xl group-hover:shadow-white/20 transition-shadow duration-300">
-          <span class="font-black text-base tracking-wide">CREATE MY REQUEST</span>
+          <span class="font-bold text-base tracking-wide">CREATE MY REQUEST</span>
           <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
           </svg>
@@ -112,7 +113,7 @@
       role="button"
       aria-label="Become a service provider - Help expats and earn income">
       
-      <!-- Gradient border effect -->
+      <!-- Gradient border effect exact -->
       <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 animate-gradient-slow"></div>
       <div class="absolute inset-[3px] bg-white rounded-[20px]"></div>
       
@@ -126,12 +127,12 @@
         <div class="sparkle sparkle-blue"></div>
       </div>
       
-      <!-- Content -->
+      <!-- Content - Padding p-6 exact -->
       <div class="relative z-10 p-6">
         <!-- Top section: Icon + Badge -->
         <div class="flex items-start justify-between mb-8 pb-4 border-b border-gray-100">
           <div class="flex items-center gap-4 flex-1 min-w-0">
-            <!-- Animated Icon -->
+            <!-- Animated Icon - Badge w-14 h-14 rounded-2xl exact -->
             <div class="icon-container flex-shrink-0">
               <div class="w-14 h-14 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-2 ring-blue-200/50 transform group-hover:rotate-12 transition-transform duration-300">
                 <svg class="w-7 h-7 text-white animate-pulse-subtle" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -141,11 +142,12 @@
               </div>
             </div>
             
-            <!-- Title & Subtitle -->
+            <!-- Title & Subtitle - Header exact: text-3xl sm:text-4xl font-black -->
             <div class="flex-1 min-w-0">
               <h2 class="text-3xl sm:text-4xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight transform group-hover:translate-x-1 transition-transform duration-300">
                 Help Expats & Travelers! 💰
               </h2>
+              <!-- Sous-titre exact: text-base sm:text-lg font-semibold text-gray-600 -->
               <p class="text-base sm:text-lg font-semibold text-gray-600 flex items-center gap-4">
                 <span class="inline-block w-2 h-2 bg-green-500 rounded-full animate-ping-slow"></span>
                 <span>Earn income helping others</span>
@@ -159,14 +161,14 @@
           </span>
         </div>
         
-        <!-- Description -->
+        <!-- Description - Corps de texte exact: text-sm sm:text-base, text-gray-900 -->
         <div class="mb-4">
           <p class="text-sm sm:text-base text-gray-900 leading-relaxed mb-3">
             Transform your <strong class="text-blue-600">local expertise</strong> into income while helping foreigners 
             <span class="inline-block animate-wave">✨</span>
           </p>
           
-          <!-- Feature pills -->
+          <!-- Feature pills - Gap exact: gap-4 -->
           <div class="flex flex-wrap gap-4">
             <span class="feature-pill-secondary">💼 Flexible hours</span>
             <span class="feature-pill-secondary">📈 Good income</span>
@@ -176,7 +178,7 @@
         
         <!-- CTA Button -->
         <div class="cta-button-secondary group-hover:shadow-xl group-hover:shadow-blue-500/20 transition-shadow duration-300">
-          <span class="font-black text-base tracking-wide">START HELPING NOW</span>
+          <span class="font-bold text-base tracking-wide">START HELPING NOW</span>
           <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
           </svg>
@@ -192,43 +194,43 @@
 
 <style>
 /* ============================================
-   🎨 MODERN CARD STYLES (2025/2026)
-   Design System: Blue/Cyan/Teal
+   🎨 DESIGN SYSTEM STRICT (2025/2026)
+   Palette: Blue/Cyan/Teal uniquement
    ============================================ */
 
+/* CARDS - Specs exactes du design system */
 .modern-card {
   position: relative;
-  border-radius: 24px;
-  padding: 1.5rem;
+  border-radius: 24px; /* rounded-2xl exact */
+  padding: 1.5rem; /* p-6 exact */
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   will-change: transform;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* transition-all duration-300 exact */
 }
 
+/* Card Primary - Border et Shadow exacts */
 .modern-card-primary {
   box-shadow: 
-    0 20px 50px -12px rgba(59, 130, 246, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  border: 2px solid #60a5fa;
+    0 20px 50px -12px rgba(59, 130, 246, 0.4); /* shadow-lg exact */
+  border: 2px solid #60a5fa; /* border-2 border-blue-400 exact */
 }
 
 .modern-card:hover {
   box-shadow: 
-    0 25px 60px -12px rgba(59, 130, 246, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.2);
+    0 25px 60px -12px rgba(59, 130, 246, 0.5); /* hover:shadow-xl exact */
 }
 
+/* Card Secondary - Border et Shadow exacts */
 .modern-card-secondary {
   box-shadow: 
-    0 20px 50px -12px rgba(8, 145, 178, 0.3),
-    0 0 0 1px rgba(59, 130, 246, 0.2);
-  border: 2px solid #60a5fa;
+    0 20px 50px -12px rgba(8, 145, 178, 0.3); /* shadow-lg exact */
+  border: 2px solid #60a5fa; /* border-2 border-blue-400 exact */
 }
 
 /* ============================================
-   ✨ ANIMATED GRADIENTS
+   ✨ ANIMATED GRADIENTS - Specs exactes
    ============================================ */
 
 @keyframes gradient {
@@ -237,56 +239,14 @@
   100% { background-position: 0% 50%; }
 }
 
-@keyframes gradient-slow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 .animate-gradient {
   background-size: 200% 200%;
-  animation: gradient 6s ease infinite;
+  animation: gradient 8s ease infinite;
 }
 
 .animate-gradient-slow {
-  animation: gradient-slow 8s linear infinite;
-}
-
-/* ============================================
-   ✨ SHIMMER EFFECT
-   ============================================ */
-
-.shimmer {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
-  );
-  animation: shimmer 3s infinite;
-  pointer-events: none;
-}
-
-@keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
-}
-
-.shimmer-secondary {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(59, 130, 246, 0.15) 50%,
-    transparent 100%
-  );
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
 }
 
 /* ============================================
@@ -308,8 +268,8 @@
 
 .sparkle {
   position: absolute;
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   background: white;
   border-radius: 50%;
   box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
@@ -335,13 +295,13 @@
 }
 
 .sparkle-blue {
-  background: linear-gradient(135deg, #3b82f6, #0891b2);
+  background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
   box-shadow: 0 0 10px 2px rgba(59, 130, 246, 0.8);
 }
 
 @keyframes sparkle-float {
   0%, 100% {
-    transform: translateY(0px) scale(0);
+    transform: translateY(0) scale(0);
     opacity: 0;
   }
   50% {
@@ -351,7 +311,46 @@
 }
 
 /* ============================================
-   🎯 FEATURE PILLS
+   ✨ SHIMMER EFFECT
+   ============================================ */
+
+.shimmer {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+  pointer-events: none;
+}
+
+.shimmer-secondary {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.1),
+    transparent
+  );
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* ============================================
+   🏷️ FEATURE PILLS - Gradient primaire exact
    ============================================ */
 
 .feature-pill {
@@ -379,7 +378,7 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.375rem 0.75rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%); /* Gradient primaire exact */
   backdrop-filter: blur(10px);
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -396,21 +395,21 @@
 }
 
 /* ============================================
-   🚀 CTA BUTTONS
+   🚀 CTA BUTTONS - Specs exactes
    ============================================ */
 
 .cta-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.5rem; /* px-6 py-3 convertis */
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-radius: 16px;
-  color: rgb(37, 99, 235);
+  border-radius: 16px; /* rounded-2xl exact */
+  color: rgb(37, 99, 235); /* text-blue-600 */
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.5); /* border-2 */
 }
 
 .cta-button:hover {
@@ -422,13 +421,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
-  border-radius: 16px;
+  padding: 1rem 1.5rem; /* px-6 py-3 convertis */
+  background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%); /* Gradient primaire exact */
+  border-radius: 16px; /* rounded-2xl exact */
   color: white;
   box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.5);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3); /* border-2 */
 }
 
 .cta-button-secondary:hover {
@@ -437,9 +436,20 @@
 }
 
 /* ============================================
-   🎭 CUSTOM ANIMATIONS
+   🎭 ANIMATIONS - Float et autres
    ============================================ */
 
+/* Animation Float - Specs exactes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px); /* -8px exact comme spécifié */
+  }
+}
+
+/* Animation Blob - Pour ambient background */
 @keyframes blob {
   0%, 100% {
     transform: translate(0, 0) scale(1);
@@ -464,6 +474,7 @@
   animation-delay: 4s;
 }
 
+/* Pulse Subtle */
 @keyframes pulse-subtle {
   0%, 100% {
     opacity: 1;
@@ -477,6 +488,7 @@
   animation: pulse-subtle 3s ease-in-out infinite;
 }
 
+/* Bounce Subtle */
 @keyframes bounce-subtle {
   0%, 100% {
     transform: translateY(0);
@@ -490,6 +502,7 @@
   animation: bounce-subtle 2s ease-in-out infinite;
 }
 
+/* Ping Slow */
 @keyframes ping-slow {
   75%, 100% {
     transform: scale(2);
@@ -501,6 +514,7 @@
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
+/* Wave Animation */
 @keyframes wave {
   0%, 100% {
     transform: rotate(0deg);
@@ -519,6 +533,7 @@
   transform-origin: 70% 70%;
 }
 
+/* Draw Circle */
 @keyframes draw-circle {
   0% {
     stroke-dasharray: 0 100;
@@ -531,15 +546,6 @@
 .animate-draw-circle {
   stroke-dasharray: 100;
   animation: draw-circle 2s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
 }
 
 /* ============================================

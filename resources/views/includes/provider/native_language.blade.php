@@ -1,349 +1,382 @@
 <!-- 
 ============================================
-🚀 STEP 2 - NATIVE LANGUAGE (2025/2026)
+🚀 STEP 2 - NATIVE LANGUAGE SELECTION
 ============================================
-✨ Glassmorphism + Flag animations
-🎨 Design System Blue/Cyan/Teal
-💎 Modern grid layout with hover effects
-⚡ Performance optimized
+✨ Design System Blue/Cyan/Teal STRICT
+🎨 12 langues avec emojis flags
+💎 Validation et états interactifs
+⚡ Responsive 2 cols mobile / 3 cols desktop
 ============================================
 -->
 
-<div id="step2" class="hidden">
+<div id="step2" class="hidden space-y-6 sm:space-y-8 relative" role="region" aria-label="Select your native language">
   
-  <!-- Ambient Background Effects -->
+  <!-- Ambient Background Effects - 3 blobs animés -->
   <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-    <div class="absolute top-10 left-10 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-    <div class="absolute top-10 right-10 w-64 h-64 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-    <div class="absolute -bottom-8 left-1/2 w-64 h-64 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+    <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+    <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
   </div>
 
   <!-- Header Section -->
-  <div class="mb-8 text-center relative">
-    <div class="inline-flex items-center justify-center gap-3 mb-3">
-      <div class="w-14 h-14 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl animate-bounce-subtle">
-        <span class="text-2xl">🌍</span>
+  <div class="text-center space-y-4">
+    <!-- Icon Badge -->
+    <div class="flex justify-center">
+      <div class="w-14 h-14 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
+        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
       </div>
-      <h2 class="text-3xl sm:text-4xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">
-        What is your native language?
+    </div>
+    
+    <!-- Title & Subtitle -->
+    <div>
+      <div class="flex items-center justify-center gap-3 mb-2">
+        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold tracking-wide">STEP 2</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-2 tracking-tight">
+        What's Your Native Language? 🌍
       </h2>
+      <p class="text-base sm:text-lg font-semibold text-gray-600">
+        Select the language you speak fluently
+      </p>
     </div>
-    <p class="text-base sm:text-lg font-semibold text-gray-600">
-      Select your primary language to help us match you better
-    </p>
-  </div>
 
-  <!-- Selection Counter Badge -->
-  <div class="flex justify-center mb-6">
+    <!-- Counter Badge -->
     <div class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
-      <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
       </svg>
-      <span class="text-sm font-bold text-blue-700" id="languageCounter">0/1 selected</span>
+      <span class="text-sm font-bold text-blue-700">
+        <span id="selectedCount">0</span> / 1 selected
+      </span>
     </div>
   </div>
 
-  <!-- Language Grid -->
-  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-8">
+  <!-- Error Alert (Hidden by default) -->
+  <div id="languageError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-4 shake-animation" role="alert">
+    <div class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+      </svg>
+      <div>
+        <p class="text-sm font-semibold text-red-800">Please select your native language</p>
+        <p class="text-xs text-red-600 mt-1">You must choose one language to continue</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Languages Grid -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="Select your native language">
     
     <!-- English -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="English" aria-label="Select English">
-      <div class="language-flag text-3xl sm:text-4xl">🇬🇧</div>
-      <span class="language-name text-sm sm:text-base font-semibold">English</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="English"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select English">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/us.svg" alt="English flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">English</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
-      </div>
-    </button>
-
-    <!-- French -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="French" aria-label="Select French">
-      <div class="language-flag text-3xl sm:text-4xl">🇫🇷</div>
-      <span class="language-name text-sm sm:text-base font-semibold">French</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-        </svg>
-      </div>
+      </span>
     </button>
 
     <!-- Spanish -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Spanish" aria-label="Select Spanish">
-      <div class="language-flag text-3xl sm:text-4xl">🇪🇸</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Spanish</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Spanish"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Spanish">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/es.svg" alt="Spanish flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">Spanish</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
-      </div>
+      </span>
     </button>
 
-    <!-- Portuguese -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Portuguese" aria-label="Select Portuguese">
-      <div class="language-flag text-3xl sm:text-4xl">🇵🇹</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Portuguese</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <!-- French -->
+    <button 
+      type="button"
+      class="language-card"
+      data-language="French"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select French">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/fr.svg" alt="French flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">French</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
-      </div>
+      </span>
     </button>
 
     <!-- German -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="German" aria-label="Select German">
-      <div class="language-flag text-3xl sm:text-4xl">🇩🇪</div>
-      <span class="language-name text-sm sm:text-base font-semibold">German</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="German"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select German">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/de.svg" alt="German flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">German</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
-      </div>
+      </span>
     </button>
 
     <!-- Italian -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Italian" aria-label="Select Italian">
-      <div class="language-flag text-3xl sm:text-4xl">🇮🇹</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Italian</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Italian"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Italian">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/it.svg" alt="Italian flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">Italian</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
-      </div>
+      </span>
     </button>
 
-    <!-- Arabic -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Arabic" aria-label="Select Arabic">
-      <div class="language-flag text-3xl sm:text-4xl">🇸🇦</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Arabic</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <!-- Portuguese -->
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Portuguese"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Portuguese">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/pt.svg" alt="Portuguese flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">Portuguese</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
+      </span>
+    </button>
+
+    <!-- Russian -->
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Russian"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Russian">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/ru.svg" alt="Russian flag" class="flag-image" loading="lazy" />
       </div>
+      <span class="language-name">Russian</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+        </svg>
+      </span>
     </button>
 
     <!-- Chinese -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Chinese" aria-label="Select Chinese">
-      <div class="language-flag text-3xl sm:text-4xl">🇨🇳</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Chinese</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Chinese"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Chinese">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/cn.svg" alt="Chinese flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">Chinese</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
-      </div>
+      </span>
     </button>
 
     <!-- Japanese -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Japanese" aria-label="Select Japanese">
-      <div class="language-flag text-3xl sm:text-4xl">🇯🇵</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Japanese</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Japanese"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Japanese">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/jp.svg" alt="Japanese flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">Japanese</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
-      </div>
+      </span>
     </button>
 
     <!-- Korean -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Korean" aria-label="Select Korean">
-      <div class="language-flag text-3xl sm:text-4xl">🇰🇷</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Korean</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Korean"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Korean">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/kr.svg" alt="Korean flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">Korean</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
+      </span>
+    </button>
+
+    <!-- Arabic -->
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Arabic"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Arabic">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/sa.svg" alt="Arabic flag" class="flag-image" loading="lazy" />
       </div>
+      <span class="language-name">Arabic</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+        </svg>
+      </span>
     </button>
 
     <!-- Hindi -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Hindi" aria-label="Select Hindi">
-      <div class="language-flag text-3xl sm:text-4xl">🇮🇳</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Hindi</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Hindi"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Hindi">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/in.svg" alt="Hindi flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">Hindi</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
-      </div>
+      </span>
     </button>
 
     <!-- Turkish -->
-    <button class="lang-btn bg-white text-blue-700 border border-blue-700 language-card group" data-lang="Turkish" aria-label="Select Turkish">
-      <div class="language-flag text-3xl sm:text-4xl">🇹🇷</div>
-      <span class="language-name text-sm sm:text-base font-semibold">Turkish</span>
-      <div class="selection-indicator">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    <button 
+      type="button"
+      class="language-card"
+      data-language="Turkish"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Turkish">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/tr.svg" alt="Turkish flag" class="flag-image" loading="lazy" />
+      </div>
+      <span class="language-name">Turkish</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
         </svg>
+      </span>
+    </button>
+
+    <!-- Other -->
+    <button 
+      type="button"
+      class="language-card language-card-other"
+      data-language="Other"
+      role="radio"
+      aria-checked="false"
+      aria-label="Select Other language">
+      <div class="flag-container flag-other">
+        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
       </div>
+      <span class="language-name">Other</span>
+      <span class="check-indicator">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+        </svg>
+      </span>
     </button>
 
   </div>
+
+  <!-- Hidden input pour stocker la langue sélectionnée -->
+  <input type="hidden" id="nativeLanguage" name="native_language" value="">
 
   <!-- Navigation Buttons -->
-  <div class="wizard-nav-container flex justify-between gap-4">
-    <button id="backToStep1" type="button" class="nav-btn-back px-6 py-3 rounded-2xl font-bold bg-white text-blue-600 border-2 border-gray-200 hover:shadow-lg transition-all duration-300">
-      <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+  <div class="wizard-nav-container">
+    <button 
+      type="button"
+      id="backToStep1"
+      class="nav-btn-back"
+      aria-label="Go back to previous step">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
       </svg>
-      Back
+      <span>Back</span>
     </button>
-    <button id="nextStep2" type="button" class="nav-btn-next px-6 py-3 rounded-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:shadow-xl transition-all duration-300" disabled>
-      Continue
-      <svg class="w-5 h-5 inline-block ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    
+    <button 
+      type="button"
+      id="nextStep2"
+      class="nav-btn-next"
+      disabled
+      aria-label="Continue to next step">
+      <span>Continue</span>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
       </svg>
     </button>
   </div>
-
-  <!-- Auto-validation script -->
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const nextBtn = document.getElementById('nextStep2');
-      const stepElement = document.getElementById('step2');
-      const counterElement = document.getElementById('languageCounter');
-      
-      function checkValidation() {
-          // Check for BOTH .selected AND .bg-blue-900 to support external JS
-          const selectedCards = document.querySelectorAll('#step2 .lang-btn.bg-blue-900, #step2 .lang-btn.selected');
-          const isValid = selectedCards.length > 0;
-          
-          if (nextBtn) {
-              nextBtn.disabled = !isValid;
-              if (isValid) {
-                  nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-              } else {
-                  nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
-              }
-          }
-          
-          if (counterElement) {
-              counterElement.textContent = `${selectedCards.length}/1 selected`;
-          }
-      }
-      
-      // Observer les changements
-      if (stepElement) {
-          stepElement.addEventListener('click', () => setTimeout(checkValidation, 100));
-          stepElement.addEventListener('input', () => setTimeout(checkValidation, 100));
-          stepElement.addEventListener('change', () => setTimeout(checkValidation, 100));
-      }
-      
-      // Vérification initiale
-      setTimeout(checkValidation, 200);
-  });
-  </script>
 
 </div>
 
-<script>
-// VALIDATION STRICTE POUR STEP 2
-(function() {
-  'use strict';
-  
-  // Fonction de validation
-  function validateStep2() {
-    const selectedLanguage = document.querySelector('#step2 .lang-btn.bg-blue-900');
-    return selectedLanguage !== null;
-  }
-  
-  // Bloquer le bouton Next si rien n'est sélectionné
-  document.addEventListener('DOMContentLoaded', function() {
-    const nextBtn = document.getElementById('nextStep2');
-    
-    if (nextBtn) {
-      // Intercepter le clic AVANT que le header ne le traite
-      nextBtn.addEventListener('click', function(e) {
-        if (!validateStep2()) {
-          e.stopImmediatePropagation(); // Bloque TOUS les handlers
-          e.preventDefault();
-          
-          // Alert personnalisé moderne
-          const alertDiv = document.createElement('div');
-          alertDiv.className = 'fixed top-4 right-4 bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-xl shadow-2xl z-[9999] animate-shake';
-          alertDiv.innerHTML = `
-            <div class="flex items-center gap-3">
-              <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-              </svg>
-              <div>
-                <p class="font-bold">Selection Required</p>
-                <p class="text-sm">Please select your native language to continue</p>
-              </div>
-              <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-red-500 hover:text-red-700">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                </svg>
-              </button>
-            </div>
-          `;
-          document.body.appendChild(alertDiv);
-          
-          // Animation de shake sur les cards
-          const langCards = document.querySelectorAll('#step2 .language-card');
-          langCards.forEach(card => {
-            card.classList.add('animate-shake');
-            setTimeout(() => card.classList.remove('animate-shake'), 500);
-          });
-          
-          // Auto-remove après 5 secondes
-          setTimeout(() => {
-            if (alertDiv && alertDiv.parentElement) {
-              alertDiv.remove();
-            }
-          }, 5000);
-          
-          return false;
-        }
-      }, true); // Capture phase pour être le premier
-    }
-  });
-})();
-</script>
-
 <style>
 /* ============================================
-   🎭 SHAKE ANIMATION
+   🎨 DESIGN SYSTEM STRICT - STEP 2
+   Palette: Blue/Cyan/Teal uniquement
    ============================================ */
 
-@keyframes shake {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  10%, 30%, 50%, 70%, 90% {
-    transform: translateX(-5px);
-  }
-  20%, 40%, 60%, 80% {
-    transform: translateX(5px);
-  }
-}
-
-.animate-shake {
-  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-}
-
-@keyframes bounce-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.3) translateY(-20px);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1) translateX(0);
-  }
-}
-
-/* ============================================
-   🎨 LANGUAGE CARD STYLES (2025/2026)
-   Design System: Blue/Cyan/Teal
-   ============================================ */
-
+/* LANGUAGE CARDS - Specs exactes */
 .language-card {
   position: relative;
   display: flex;
@@ -351,124 +384,264 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.25rem; /* p-4 sm:p-5 converti */
   background: white;
-  border: 2px solid #60a5fa;
-  border-radius: 1rem;
+  border-radius: 1rem; /* rounded-2xl exact */
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
-  will-change: transform;
+  box-shadow: 
+    0 4px 6px -1px rgba(59, 130, 246, 0.1),
+    0 2px 4px -1px rgba(59, 130, 246, 0.06); /* shadow-md exact */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  will-change: transform;
+  /* Effet bordure gradient pour Step 2 */
+  border: 2px solid transparent;
+  background-image: 
+    linear-gradient(white, white),
+    linear-gradient(135deg, #60a5fa 0%, #0891b2 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
-.language-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(8, 145, 178, 0.05));
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
+@media (min-width: 640px) {
+  .language-card {
+    padding: 1.25rem; /* p-5 sur sm: */
+  }
 }
 
+/* Hover State - Specs exactes */
 .language-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: #3b82f6;
+  transform: translateY(-0.5rem) scale(1.02); /* -translate-y-2 scale-[1.02] exact */
   box-shadow: 
     0 20px 25px -5px rgba(59, 130, 246, 0.2),
-    0 10px 10px -5px rgba(59, 130, 246, 0.1);
+    0 10px 10px -5px rgba(59, 130, 246, 0.1); /* hover:shadow-xl exact */
+  background-image: 
+    linear-gradient(white, white),
+    linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
 }
 
-.language-card:hover::before {
-  opacity: 1;
+/* Focus State - Accessibilité */
+.language-card:focus-visible {
+  outline: none;
+  ring: 4px;
+  ring-color: rgba(59, 130, 246, 0.5);
+  ring-offset: 2px;
 }
 
-.language-card:active {
-  transform: translateY(-4px) scale(0.98);
-}
-
-/* Selected state - Design System (supports both .selected and .bg-blue-900) */
-.language-card.selected,
-.language-card.bg-blue-900 {
-  background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%) !important;
-  border-color: #1d4ed8 !important;
+/* Selected State - Gradient exact from-blue-600 to-cyan-700 */
+.language-card.selected {
+  background: linear-gradient(135deg, #2563eb 0%, #0e7490 100%); /* bg-gradient-to-br from-blue-600 to-cyan-700 */
+  color: white; /* text-white exact */
+  transform: translateY(-0.5rem) scale(1.02);
   box-shadow: 
-    0 20px 25px -5px rgba(37, 99, 235, 0.4),
-    0 0 0 4px rgba(59, 130, 246, 0.2);
-  transform: translateY(-8px) scale(1.02);
+    0 20px 25px -5px rgba(37, 99, 235, 0.3),
+    0 10px 10px -5px rgba(37, 99, 235, 0.2);
+  border: 2px solid #1d4ed8; /* border-blue-700 */
+  background-clip: padding-box;
 }
 
-.language-card.selected .language-name,
-.language-card.bg-blue-900 .language-name,
-.language-card.text-white .language-name {
-  color: white !important;
+.language-card.selected:hover {
+  transform: translateY(-0.5rem) scale(1.02);
 }
 
-.language-card.selected .selection-indicator,
-.language-card.bg-blue-900 .selection-indicator {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ============================================
-   🌍 FLAG & NAME STYLES
-   ============================================ */
-
-.language-flag {
-  line-height: 1;
+/* Flag Container */
+.flag-container {
+  width: 3rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
   transition: transform 0.3s;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-.language-card:hover .language-flag {
-  transform: scale(1.1) rotate(5deg);
+.flag-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.language-card.selected .language-flag,
-.language-card.bg-blue-900 .language-flag {
-  transform: scale(1.15);
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+.language-card:hover .flag-container {
+  transform: scale(1.1);
 }
 
-.language-name {
-  transition: color 0.3s;
-  text-align: center;
-  color: #1e40af;
-}
-
-.language-card:hover .language-name {
-  color: #1d4ed8;
-}
-
-/* ============================================
-   ✅ SELECTION INDICATOR
-   ============================================ */
-
-.selection-indicator {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 1.5rem;
-  height: 1.5rem;
-  background: white;
-  border-radius: 50%;
+/* Flag Other - Style spécial pour "Other" */
+.flag-other {
+  background: linear-gradient(135deg, #dbeafe 0%, #cffafe 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #3b82f6;
+  border: 2px dashed #3b82f6;
+}
+
+.language-card-other:hover .flag-other {
+  background: linear-gradient(135deg, #bfdbfe 0%, #a5f3fc 100%);
+  border-color: #2563eb;
+}
+
+.language-card-other.selected .flag-other {
+  background: white;
+  border-color: white;
+}
+
+.language-card-other.selected .flag-other svg {
+  color: #2563eb;
+}
+
+/* Language Name - text-sm sm:text-base font-semibold exact */
+.language-name {
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  font-weight: 600; /* font-semibold exact */
+  color: #111827; /* text-gray-900 exact */
+  transition: color 0.3s;
+}
+
+@media (min-width: 640px) {
+  .language-name {
+    font-size: 1rem; /* text-base sur sm: */
+    line-height: 1.5rem;
+  }
+}
+
+.language-card.selected .language-name {
+  color: white;
+}
+
+/* Check Indicator - w-6 h-6 rounded-full bg-white exact */
+.check-indicator {
+  position: absolute;
+  top: 0.5rem; /* top-2 exact */
+  right: 0.5rem; /* right-2 exact */
+  width: 1.5rem; /* w-6 exact */
+  height: 1.5rem; /* h-6 exact */
+  background: white; /* bg-white exact */
+  border-radius: 9999px; /* rounded-full exact */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
   transform: scale(0);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+.language-card.selected .check-indicator {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check-indicator svg {
+  color: #2563eb; /* blue-600 */
+}
+
 /* ============================================
-   🎭 ANIMATIONS
+   🔘 NAVIGATION BUTTONS - Specs exactes
    ============================================ */
 
+/* Container - flex justify-between gap-4 */
+.wizard-nav-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem; /* gap-4 exact */
+  margin-top: 2rem;
+}
+
+/* Base Button Style - px-6 py-3 rounded-2xl font-bold exact */
+.nav-btn-back,
+.nav-btn-next {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem; /* px-6 py-3 exact */
+  border-radius: 1rem; /* rounded-2xl exact */
+  font-weight: 700; /* font-bold exact */
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 2px solid transparent; /* border-2 exact */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Back Button - bg-white text-blue-600 border-gray-200 exact */
+.nav-btn-back {
+  background: white; /* bg-white exact */
+  color: #2563eb; /* text-blue-600 exact */
+  border-color: #e5e7eb; /* border-gray-200 exact */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-btn-back:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-btn-back:active {
+  transform: translateY(0);
+}
+
+/* Next Button - bg-gradient-to-r from-blue-600 to-cyan-600 exact */
+.nav-btn-next {
+  background: linear-gradient(to right, #2563eb 0%, #0891b2 100%); /* from-blue-600 to-cyan-600 exact */
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-btn-next:hover:not(:disabled) {
+  background: linear-gradient(to right, #1d4ed8 0%, #0e7490 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(37, 99, 235, 0.4);
+}
+
+.nav-btn-next:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Disabled State */
+.nav-btn-next:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* ============================================
+   ⚠️ ERROR ALERT - Specs exactes
+   ============================================ */
+
+/* bg-red-50 border-l-4 border-red-500 rounded-xl p-4 exact */
+#languageError {
+  background: #fef2f2; /* bg-red-50 exact */
+  border-left: 4px solid #ef4444; /* border-l-4 border-red-500 exact */
+  border-radius: 0.75rem; /* rounded-xl exact */
+  padding: 1rem; /* p-4 exact */
+}
+
+/* Shake Animation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+  20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+
+.shake-animation {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* ============================================
+   🎭 ANIMATIONS - Réutilisées du Step 1
+   ============================================ */
+
+/* Animation Blob - Pour ambient background */
 @keyframes blob {
   0%, 100% {
     transform: translate(0, 0) scale(1);
@@ -493,40 +666,28 @@
   animation-delay: 4s;
 }
 
-@keyframes bounce-subtle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-.animate-bounce-subtle {
-  animation: bounce-subtle 2s ease-in-out infinite;
-}
-
 /* ============================================
-   📱 RESPONSIVE
+   📱 RESPONSIVE OPTIMIZATIONS
    ============================================ */
 
 @media (max-width: 640px) {
+  .wizard-nav-container {
+    flex-direction: column;
+  }
+  
+  .nav-btn-back,
+  .nav-btn-next {
+    width: 100%;
+    justify-content: center;
+  }
+  
   .language-card {
-    padding: 1rem 0.75rem;
-    gap: 0.5rem;
+    padding: 0.875rem 1rem;
   }
   
-  .language-flag {
-    font-size: 2rem;
-  }
-  
-  .language-name {
-    font-size: 0.75rem;
-  }
-  
-  .selection-indicator {
-    width: 1.25rem;
-    height: 1.25rem;
+  .flag-container {
+    width: 2.5rem;
+    height: 1.75rem;
   }
 }
 
@@ -544,51 +705,119 @@
   }
 }
 
+/* High contrast mode */
 @media (prefers-contrast: high) {
   .language-card {
-    border-width: 3px;
+    border: 3px solid currentColor;
+  }
+  
+  .language-card.selected {
+    border: 3px solid #1d4ed8;
   }
 }
 
-/* Focus visible */
-.language-card:focus-visible {
-  outline: 3px solid #3b82f6;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
-}
-
 /* ============================================
-   ⚡ PERFORMANCE
+   ⚡ PERFORMANCE OPTIMIZATIONS
    ============================================ */
 
+/* GPU acceleration */
 .language-card,
-.language-flag,
-.selection-indicator {
+.check-indicator,
+.flag-container {
   transform: translateZ(0);
   backface-visibility: hidden;
+  perspective: 1000px;
 }
 
+/* Reduce repaints */
 .language-card {
   contain: layout style paint;
 }
+</style>
 
+<script>
 /* ============================================
-   🔘 BUTTON STATES
+   🎯 LANGUAGE SELECTION LOGIC
    ============================================ */
 
-.nav-btn-next:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
+// État global - accessible partout
+window.selectedLanguage = null;
 
-.nav-btn-back:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
-}
+// Fonction de sélection de langue - exposée globalement
+window.selectLanguage = function(card) {
+  const languageCards = document.querySelectorAll('.language-card');
+  const nextBtn = document.getElementById('nextStep2');
+  const errorAlert = document.getElementById('languageError');
+  const selectedCount = document.getElementById('selectedCount');
+  const language = card.getAttribute('data-language');
+  
+  // Désélectionner toutes les autres cartes
+  languageCards.forEach(c => {
+    c.classList.remove('selected');
+    c.setAttribute('aria-checked', 'false');
+  });
+  
+  // Sélectionner la carte cliquée
+  card.classList.add('selected');
+  card.setAttribute('aria-checked', 'true');
+  
+  // Mettre à jour l'état global
+  window.selectedLanguage = language;
+  
+  // Mettre à jour l'input hidden
+  const hiddenInput = document.getElementById('nativeLanguage');
+  if (hiddenInput) {
+    hiddenInput.value = language;
+  }
+  
+  // Mettre à jour le compteur
+  selectedCount.textContent = '1';
+  
+  // Cacher l'erreur si visible
+  if (!errorAlert.classList.contains('hidden')) {
+    errorAlert.classList.add('hidden');
+  }
+  
+  // Activer le bouton Next
+  nextBtn.disabled = false;
+  nextBtn.classList.remove('opacity-60');
+  
+  console.log('Selected language:', window.selectedLanguage);
+};
 
-.nav-btn-next:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
-}
-</style>
+// Fonction de validation - retourne true/false pour que le wizard décide
+window.validateStep2 = function() {
+  const errorAlert = document.getElementById('languageError');
+  
+  if (!window.selectedLanguage) {
+    errorAlert.classList.remove('hidden');
+    errorAlert.classList.add('shake-animation');
+    setTimeout(() => {
+      errorAlert.classList.remove('shake-animation');
+    }, 500);
+    return false;
+  }
+  
+  return true;
+};
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', function() {
+  const languageCards = document.querySelectorAll('.language-card');
+  
+  // Event listener pour chaque carte de langue
+  languageCards.forEach(card => {
+    card.addEventListener('click', function() {
+      window.selectLanguage(this);
+    });
+    
+    // Support clavier
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        window.selectLanguage(this);
+      }
+    });
+  });
+});
+</script>

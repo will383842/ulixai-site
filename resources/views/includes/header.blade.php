@@ -622,7 +622,7 @@
         <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
           <div class="w-14 h-14 bg-green-200 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
           <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Autres recherches d’emploi ou missions </a></div>
+           <a href="request-for-help.php"> Autres recherches d'emploi ou missions </a></div>
           <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <polyline points="9,18 15,12 9,6"></polyline>
@@ -1025,7 +1025,7 @@
                 'cls'   => 'bg-rose-100 text-rose-700 ring-1 ring-rose-600/20',
                 'icon'  => 'fa-user-shield',
               ],
-              // Service Provider → productive/“action” color
+              // Service Provider → productive/"action" color
               'service_provider' => [
                 'label' => 'Service Provider',
                 'cls'   => 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20',
@@ -1112,103 +1112,144 @@
     <!-- Step 4 -->
 		@include('includes.provider.provider_services')
 
-    <!-- Step 5: Country Selection - MODERN 2025/2026 -->
+    <!-- Step 5: Country Selection - Light Version -->
     <div id="step5" class="hidden">
+      <style>
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+        
+        .icon-badge {
+          animation: float 3s ease-in-out infinite;
+        }
+        
+        .country-select {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .country-select:focus {
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+          border-color: #3b82f6;
+          transform: translateY(-2px);
+        }
+        
+        .country-select:hover {
+          border-color: #60a5fa;
+        }
+
+        .ambient-blob {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          opacity: 0.2;
+          pointer-events: none;
+          z-index: 0;
+        }
+        
+        .ambient-blob-1 {
+          width: 300px;
+          height: 300px;
+          background: #93c5fd;
+          top: -150px;
+          left: -150px;
+        }
+        
+        .ambient-blob-2 {
+          width: 250px;
+          height: 250px;
+          background: #67e8f9;
+          top: -100px;
+          right: -100px;
+        }
+        
+        .ambient-blob-3 {
+          width: 200px;
+          height: 200px;
+          background: #5eead4;
+          bottom: -100px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      </style>
+
+      <!-- Ambient background blobs -->
+      <div class="ambient-blob ambient-blob-1"></div>
+      <div class="ambient-blob ambient-blob-2"></div>
+      <div class="ambient-blob ambient-blob-3"></div>
       
       <!-- Header -->
-      <div class="mb-8 text-center">
-        <div class="inline-flex items-center justify-center gap-3 mb-3">
-          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg animate-pulse-slow">
+      <div class="mb-8 text-center relative z-10">
+        <div class="inline-flex items-center justify-center gap-3 mb-4">
+          <div class="icon-badge w-12 h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
             <span class="text-2xl">🌍</span>
           </div>
-          <h2 class="font-black text-3xl sm:text-4xl bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+          <h2 class="font-black text-3xl sm:text-4xl bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">
             In which country do you live?
           </h2>
         </div>
-        <p class="text-gray-600 text-sm sm:text-base font-medium">
+        <p class="text-gray-600 text-base sm:text-lg font-semibold">
           Select your country of residence
         </p>
       </div>
 
       <!-- Country Select -->
-      <div class="max-w-2xl mx-auto mb-8">
+      <div class="mb-8 relative z-10">
+        <label class="block text-gray-900 font-bold text-base mb-2 flex items-center gap-2">
+          <span class="text-xl">🌎</span>
+          <span class="text-blue-600">Country of Residence</span>
+        </label>
         <div class="relative">
-          <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-2xl pointer-events-none">
-            🌎
-          </div>
-          <select id="location-input" name="location" class="w-full border-2 border-purple-200 rounded-2xl pl-14 pr-5 py-4 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all appearance-none cursor-pointer text-lg font-medium">
+          <select id="location-input" name="location" class="country-select w-full border-2 border-gray-300 rounded-xl px-5 py-3.5 text-gray-800 bg-white focus:outline-none transition-all appearance-none cursor-pointer text-base font-medium">
             <option value="" disabled selected>Choose your country...</option>
             @foreach($countries as $country)
               <option value="{{ $country->country }}">{{ $country->country }}</option>
             @endforeach
           </select>
           <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
             </svg>
           </div>
         </div>
         
         <!-- Error message -->
-        <div id="countryError" class="hidden mt-2 text-red-600 text-sm font-semibold flex items-center gap-2">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-          </svg>
-          <span>Please select your country to continue</span>
+        <div id="countryError" class="hidden mt-3 rounded-xl p-4 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-xl">⚠️</span>
+            </div>
+            <div>
+              <p class="text-red-900 font-bold text-base">Please select your country</p>
+              <p class="text-red-700 text-sm font-medium mt-0.5">This field is required to continue</p>
+            </div>
+          </div>
         </div>
         
         <!-- Success message -->
-        <div id="countrySuccess" class="hidden mt-2 text-green-600 text-sm font-semibold flex items-center gap-2">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-          </svg>
-          <span>Country selected ✓</span>
+        <div id="countrySuccess" class="hidden mt-3 rounded-xl p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 animate-bounce">
+              <span class="text-xl">✅</span>
+            </div>
+            <div>
+              <p class="text-green-900 font-bold text-base">Country selected!</p>
+              <p class="text-green-700 text-sm font-medium mt-0.5">Ready to continue</p>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Navigation Buttons -->
-      <div class="flex justify-between items-center gap-4">
-        <button id="backToStep4" class="flex items-center gap-2 px-6 py-3 text-purple-600 font-semibold hover:bg-purple-50 rounded-lg transition-all group">
-          <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-          </svg>
-          <span>Back</span>
+      <div class="wizard-nav-container relative z-10">
+        <button id="backToStep4" type="button" class="nav-btn-back bg-white text-blue-600 border-2 border-gray-200">
+          Back
         </button>
-        
-        <button id="nextStep5" class="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all group">
-          <span>Continue</span>
-          <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-          </svg>
+        <button id="nextStep5" type="button" class="nav-btn-next bg-gradient-to-r from-blue-600 to-cyan-600">
+          Continue
         </button>
       </div>
     </div>
-
-    <style>
-    /* Modern Country Select Styles */
-    #location-input:hover {
-      border-color: #a855f7;
-      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15);
-    }
-    
-    #location-input:focus {
-      box-shadow: 0 8px 20px rgba(168, 85, 247, 0.25);
-    }
-    
-    #location-input option {
-      padding: 12px;
-      font-size: 16px;
-    }
-    
-    @keyframes pulse-slow {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    
-    .animate-pulse-slow {
-      animation: pulse-slow 3s ease-in-out infinite;
-    }
-    </style>
 
     <script>
     // Step 5 Validation & UX
