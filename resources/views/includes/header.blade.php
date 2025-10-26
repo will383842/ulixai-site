@@ -288,6 +288,146 @@
 #signupPopup > div {
   transition: all 0.3s ease-in-out;
 }
+/* ============================================
+   🎯 NAVIGATION WIZARD - BOUTONS STANDARDISÉS
+   ============================================ */
+
+.wizard-nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e5e7eb;
+  margin-top: 2rem;
+}
+
+/* Bouton BACK */
+.nav-btn-back {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 2px solid transparent;
+  background: transparent;
+  color: #6b7280;
+  outline: none;
+}
+
+.nav-btn-back:hover {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.nav-btn-back svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.3s;
+}
+
+.nav-btn-back:hover svg {
+  transform: translateX(-0.25rem);
+}
+
+/* Bouton NEXT/CONTINUE */
+.nav-btn-next {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  color: white;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+  min-width: 160px;
+  justify-content: center;
+}
+
+.nav-btn-next:hover:not(:disabled) {
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.nav-btn-next:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.nav-btn-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.nav-btn-next svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.3s;
+}
+
+.nav-btn-next:hover:not(:disabled) svg {
+  transform: translateX(0.25rem);
+}
+
+/* État loading */
+.nav-btn-next.loading svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 📱 MOBILE - Boutons fixes en bas */
+@media (max-width: 768px) {
+  [id^="step"]:not(.hidden) {
+    padding-bottom: 120px !important;
+  }
+  
+  .wizard-nav-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 1rem;
+    background: linear-gradient(to top, 
+      rgba(255,255,255,1) 0%, 
+      rgba(255,255,255,0.98) 70%, 
+      rgba(255,255,255,0) 100%
+    );
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+    backdrop-filter: blur(12px);
+  }
+  
+  .nav-btn-back,
+  .nav-btn-next {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Accessibilité */
+.nav-btn-back:focus-visible,
+.nav-btn-next:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
 
 </style>
 {{-- keep these 2 lines somewhere globally once --}}
@@ -2449,6 +2589,8 @@ function updateHeaderAfterLogin(userData) {
 
 
 </script>
+<!-- Script de validation du wizard -->
+<script src="{{ asset('js/wizard-validation.js') }}"></script>
 
 </body>
 </html>
