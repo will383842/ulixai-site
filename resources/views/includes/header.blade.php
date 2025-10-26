@@ -238,8 +238,58 @@
     padding-left: 70px !important;
   }
 }
-</style>
 
+/* ============================================
+   📱 MOBILE OPTIMIZATIONS FOR SIGNUP POPUP
+   ============================================ */
+
+/* Touch-friendly interactive elements */
+@media (max-width: 640px) {
+  /* Ensure all buttons are touch-friendly (min 44x44px) */
+  #signupPopup button:not(#closePopup) {
+    min-height: 44px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Full-width buttons on mobile for easier tapping */
+  #signupPopup button[id^="nextStep"],
+  #signupPopup button[id^="backToStep"] {
+    width: 100%;
+  }
+  
+  /* Slightly larger text on mobile for better readability */
+  #signupPopup input,
+  #signupPopup select,
+  #signupPopup textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Smooth transitions for popup */
+#signupPopup {
+  transition: opacity 0.3s ease-in-out;
+}
+
+#signupPopup:not(.hidden) {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Smooth height adaptation */
+#signupPopup > div {
+  transition: all 0.3s ease-in-out;
+}
+
+</style>
 {{-- keep these 2 lines somewhere globally once --}}
 <style>[x-cloak]{display:none !important}</style>
 <script src="https://unpkg.com/alpinejs@3.x.x" defer></script>
@@ -892,9 +942,20 @@
 </div>
 
 <!-- Popup Overlay -->
-<div id="signupPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-6 hidden z-50 min-h-screen">
-  <div class="bg-white rounded-2xl p-8 max-w-3xl w-full relative shadow-lg max-h-[90vh] overflow-auto">
-    <button id="closePopup" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+<!-- 
+============================================
+🎯 POPUP SIGNUP - MOBILE FIRST OPTIMIZED
+============================================
+✨ Responsive adaptatif selon taille écran
+📱 Mobile: padding réduit pour plus d'espace
+💻 Desktop: identique à l'original
+🔄 Hauteur adaptative selon contenu du step
+============================================
+-->
+<div id="signupPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-2 sm:p-4 md:p-6 hidden z-50 overflow-y-auto py-4 sm:py-8">
+  <div class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 max-w-3xl w-full relative shadow-lg my-auto">
+    <!-- Close button - Optimisé pour touch sur mobile -->
+    <button id="closePopup" class="absolute top-2 sm:top-4 right-2 sm:right-4 w-10 h-10 sm:w-auto sm:h-auto flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 rounded-full sm:rounded-none text-xl sm:text-2xl font-bold transition-all active:scale-95" aria-label="Close signup form">&times;</button>
 		<!-- Step 1 -->
 		@include('includes.provider.choose_step')
     <!-- Step 2 -->
@@ -2351,42 +2412,6 @@ function handleSubcategoryClick(parentId, categoryName) {
 
 </script>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const popup = document.getElementById("signupPopup");
-  if (!popup) return;
-
-  const content  = popup.querySelector(".bg-white.rounded-2xl");
-  const closeBtn = document.getElementById("closePopup");
-
-  // If any library uses data attributes to auto-hide, strip them.
-  popup.removeAttribute("data-modal-hide");
-  content?.removeAttribute("data-modal-hide");
-
-  // Only close via the ✕ button
-  closeBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    popup.classList.add("hidden");
-  });
-
-  // HARD BLOCK: prevent any outside-click close from global listeners.
-  // (Capture phase so this runs before bubble-phase delegations.)
-  document.addEventListener("click", (e) => {
-    // If popup is hidden, ignore.
-    if (popup.classList.contains("hidden")) return;
-
-    const clickInsideContent = content?.contains(e.target);
-    const clickInsideOverlay = popup.contains(e.target);
-
-    // Clicked the overlay (inside popup but NOT inside content)
-    if (clickInsideOverlay && !clickInsideContent) {
-      // Block other handlers (even delegated ones) from seeing this click.
-      e.stopImmediatePropagation();
-      e.stopPropagation();
-      // Do NOT close.
-    }
-  }, true); // capture!
-});
 
 // Add this to your existing header JavaScript
 function updateHeaderAfterLogin(userData) {

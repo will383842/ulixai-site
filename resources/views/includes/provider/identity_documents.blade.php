@@ -12,6 +12,7 @@
     }
     .upload-zone {
       transition: all 0.3s ease;
+      position: relative;
     }
     .upload-zone:hover {
       transform: scale(1.02);
@@ -20,6 +21,12 @@
     .upload-zone.has-file {
       border-color: rgb(34, 197, 94);
       background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    }
+    .upload-zone img {
+      object-fit: cover !important;
+      object-position: center !important;
+      width: 100% !important;
+      height: 100% !important;
     }
     @keyframes pulse-ring {
       0% { transform: scale(1); opacity: 1; }
