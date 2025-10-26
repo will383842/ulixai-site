@@ -32,6 +32,8 @@
             'slide-down': 'slideDown 0.3s ease-out',
             'bounce-subtle': 'bounceSubtle 0.6s ease-out',
             'glow': 'glow 2s ease-in-out infinite alternate',
+            'slideUp': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            'fadeIn': 'fadeIn 0.3s ease-out',
           },
           keyframes: {
             fadeIn: {
@@ -40,6 +42,10 @@
             },
             slideDown: {
               '0%': { opacity: '0', transform: 'translateY(-20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(100%)' },
               '100%': { opacity: '1', transform: 'translateY(0)' }
             },
             bounceSubtle: {
@@ -238,203 +244,212 @@
     padding-left: 70px !important;
   }
 }
-
-/* ============================================
-   📱 MOBILE OPTIMIZATIONS FOR SIGNUP POPUP
-   ============================================ */
-
-/* Touch-friendly interactive elements */
-@media (max-width: 640px) {
-  /* Ensure all buttons are touch-friendly (min 44x44px) */
-  #signupPopup button:not(#closePopup) {
-    min-height: 44px;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
-  
-  /* Full-width buttons on mobile for easier tapping */
-  #signupPopup button[id^="nextStep"],
-  #signupPopup button[id^="backToStep"] {
-    width: 100%;
-  }
-  
-  /* Slightly larger text on mobile for better readability */
-  #signupPopup input,
-  #signupPopup select,
-  #signupPopup textarea {
-    font-size: 16px; /* Prevents zoom on iOS */
-  }
-}
-
-/* Smooth transitions for popup */
-#signupPopup {
-  transition: opacity 0.3s ease-in-out;
-}
-
-#signupPopup:not(.hidden) {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Smooth height adaptation */
-#signupPopup > div {
-  transition: all 0.3s ease-in-out;
-}
-
 </style>
+
 <style>
 /* ============================================
-   🎯 WIZARD NAVIGATION BUTTONS - STANDARDIZED
+   🎯 MOBILE-FIRST POPUP 2025/2026
    ============================================ */
 
-/* Container pour les boutons de navigation */
-.wizard-nav-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding: 1rem 0;
+/* Smooth scrolling */
+#popupContentArea {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Bouton Back standardisé */
-.nav-btn-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Custom scrollbar for desktop */
+@media (min-width: 640px) {
+  #popupContentArea::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  #popupContentArea::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+  
+  #popupContentArea::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  
+  #popupContentArea::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
 }
 
-.nav-btn-back svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  transition: transform 0.3s ease;
+/* Backdrop blur effect for mobile header */
+@supports (backdrop-filter: blur(12px)) {
+  @media (max-width: 639px) {
+    .backdrop-blur-sm {
+      backdrop-filter: blur(12px);
+    }
+  }
 }
 
-.nav-btn-back:hover {
-  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+/* Animation shake for validation errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
 }
 
-.nav-btn-back:hover svg {
-  transform: translateX(-3px);
+.shake {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
-.nav-btn-back:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+/* ============================================
+   🎨 NAVIGATION BUTTONS 2025 - ENHANCED
+   ============================================ */
 
-/* Bouton Next standardisé */
-.nav-btn-next {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
-}
-
-.nav-btn-next svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  transition: transform 0.3s ease;
-}
-
-.nav-btn-next:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
-  transform: translateY(-2px);
-}
-
-.nav-btn-next:hover svg {
-  transform: translateX(3px);
-}
-
-.nav-btn-next:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-}
-
-/* État désactivé */
-.nav-btn-next:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-  box-shadow: none;
-  pointer-events: none;
-}
-
-/* Responsive - Mobile */
-@media (max-width: 640px) {
-  .wizard-nav-container {
+/* Mobile: Fixed Bottom Navigation */
+@media (max-width: 639px) {
+  #mobileNavButtons {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: white;
-    padding: 1rem;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 50;
-    gap: 0.75rem;
+    background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0.95) 100%);
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 30;
+    backdrop-filter: blur(8px);
   }
-
-  .nav-btn-back,
-  .nav-btn-next {
+  
+  #mobileNavButtons button {
     flex: 1;
+    height: 48px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
     justify-content: center;
-    padding: 0.875rem 1rem;
-    font-size: 0.8125rem;
+    gap: 8px;
   }
-
-  .nav-btn-back svg,
-  .nav-btn-next svg {
-    width: 1rem;
-    height: 1rem;
+  
+  #mobileNavButtons .btn-back {
+    background: white;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+    flex: 0.8;
   }
-
-  /* Ajouter du padding en bas pour éviter que le contenu soit masqué */
-  #signupPopup .step-content {
-    padding-bottom: 6rem;
+  
+  #mobileNavButtons .btn-back:active {
+    background: #f8fafc;
+    transform: scale(0.98);
+  }
+  
+  #mobileNavButtons .btn-next {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  #mobileNavButtons .btn-next:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  }
+  
+  #mobileNavButtons .btn-next:disabled {
+    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+    box-shadow: none;
+    opacity: 0.6;
   }
 }
 
-/* Animations douces */
-@keyframes buttonEnable {
-  0% { transform: scale(0.95); opacity: 0.7; }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); opacity: 1; }
+/* Desktop: In-Flow Navigation */
+@media (min-width: 640px) {
+  #desktopNavButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  #desktopNavButtons button {
+    padding: 12px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  #desktopNavButtons .btn-back {
+    background: white;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+  }
+  
+  #desktopNavButtons .btn-back:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  #desktopNavButtons .btn-back:active {
+    transform: translateY(0);
+  }
+  
+  #desktopNavButtons .btn-next {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  #desktopNavButtons .btn-next:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  }
+  
+  #desktopNavButtons .btn-next:active {
+    transform: translateY(0);
+  }
+  
+  #desktopNavButtons .btn-next:disabled {
+    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+    box-shadow: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  #desktopNavButtons .btn-next:disabled:hover {
+    transform: none;
+  }
 }
 
-.nav-btn-next:not(:disabled) {
-  animation: buttonEnable 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+/* Icon animations */
+.btn-back svg {
+  transition: transform 0.3s ease;
+}
+
+.btn-back:hover svg {
+  transform: translateX(-4px);
+}
+
+.btn-next svg {
+  transition: transform 0.3s ease;
+}
+
+.btn-next:hover svg {
+  transform: translateX(4px);
 }
 </style>
+
 {{-- keep these 2 lines somewhere globally once --}}
 <style>[x-cloak]{display:none !important}</style>
 <script src="https://unpkg.com/alpinejs@3.x.x" defer></script>
@@ -482,8 +497,11 @@
   use App\Models\Country;
   $countries = Country::where('status', 1)->get();
 @endphp
-<body class="min-h-screen bg-white">
-<!-- //For showuing toast meassages across plateform -->
+<body class="min-h-screen bg-white pt-14 lg:pt-20">
+<!-- Padding-top responsive: 
+     - Mobile (pt-14): 56px for mobile header 
+     - Desktop (lg:pt-20): 80px for desktop navbar -->
+<!-- //For showing toast messages across platform -->
 @if (session('success'))
     <script>
         toastr.success('{{ session('success') }}', 'Success');
@@ -495,8 +513,10 @@
         toastr.error('{{ session('error') }}', 'Error');
     </script>
 @endif
-<!-- Navbar -->
-<nav class="top-0 z-50 border-b border-white/20 shadow-xl">
+
+<!-- Navbar (keeping original navbar as is) -->
+<!-- Desktop Navbar - Sticky Smart -->
+<nav id="desktopNavbar" class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-lg transition-transform duration-300">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-20 items-center">
 
@@ -523,201 +543,6 @@
   </span>
 </button>
 
-
-
-
-
-
-
-
-<div id="travailleursProtectionSocialeSubSubcategoriesPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-
-    <div class="sticky top-0 bg-white rounded-t-2xl border-b border-gray-100 p-6 flex items-center justify-between">
-      <div class="flex items-center">
-        <button onclick="goBackToTravailleursProtectionSocialeSubcategories()" class="mr-4 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Back">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-        </button>
-        <h2 class="text-xl font-semibold text-gray-800">Travailleurs & Freelances - Protection sociale</h2>
-      </div>
-      <button onclick="closeAllPopups()" class="text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Sub-Subcategories Grid -->
-    <div class="p-6 pt-2">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
-          <div class="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
-          <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Autres protections sociales </a></div>
-          <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-          </div>
-        </div>
-
-        <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
-          <div class="w-14 h-14 bg-yellow-200 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
-          <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Je cherche une assurance invalidité freelance </a></div>
-          <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-          </div>
-        </div>
-
-       
-        <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
-          <div class="w-14 h-14 bg-peach-200 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
-          <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Je veux une assurance retraite internationale </a></div>
-          <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Travailleurs Trouver un emploi ou une mission Sub-Subcategories Popup -->
-<div id="travailleursTrouverEmploiSubSubcategoriesPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-    <!-- Header -->
-    <div class="sticky top-0 bg-white rounded-t-2xl border-b border-gray-100 p-6 flex items-center justify-between">
-      <div class="flex items-center">
-        <button onclick="goBackToTravailleursTrouverEmploiSubcategories()" class="mr-4 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Back">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-        </button>
-        <h2 class="text-xl font-semibold text-gray-800">Travailleurs & Freelances - Trouver un emploi ou une mission</h2>
-      </div>
-      <button onclick="closeAllPopups()" class="text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Sub-Subcategories Grid -->
-    <div class="p-6 pt-2">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
-          <div class="w-14 h-14 bg-green-200 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
-          <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Autres recherches d'emploi ou missions </a></div>
-          <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-          </div>
-        </div>
-
-        <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
-          <div class="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
-          <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Je cherche des agences de recrutement </a></div>
-          <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-          </div>
-        </div>
-
-    
-
-        <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
-          <div class="w-14 h-14 bg-purple-200 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
-          <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Je veux trouver des missions freelance en ligne </a></div>
-          <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Travailleurs Visa et autorisations de travail Sub-Subcategories Popup -->
-<div id="travailleursVisaAutorisationsSubSubcategoriesPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-    <!-- Header -->
-    <div class="sticky top-0 bg-white rounded-t-2xl border-b border-gray-100 p-6 flex items-center justify-between">
-      <div class="flex items-center">
-        <button onclick="goBackToTravailleursVisaAutorisationsSubcategories()" class="mr-4 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Back">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-        </button>
-        <h2 class="text-xl font-semibold text-gray-800">Travailleurs & Freelances - Visa et autorisations de travail</h2>
-      </div>
-      <button onclick="closeAllPopups()" class="text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Sub-Subcategories Grid -->
-    <div class="p-6 pt-2">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
-          <div class="w-14 h-14 bg-purple-300 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
-          <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Autres démarches de visas et permis </a></div>
-          <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-          </div>
-        </div>
-
-
-        <div class="category-card bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group">
-          <div class="w-14 h-14 bg-cyan-200 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"></div>
-          <div class="flex-grow font-semibold text-gray-800">
-           <a href="request-for-help.php"> Je veux obtenir une carte professionnelle locale</a></div>
-          <div class="text-gray-400 group-hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="9,18 15,12 9,6"></polyline>
-            </svg>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-        
 <!-- SOS Button -->
 <a href="http://sos-expat.com/" 
    target="_blank"
@@ -728,24 +553,9 @@
   </span>
 </a>
 
-<!-- Popup Modal -->
-<div id="sos-popup" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center min-h-screen px-4 hidden">
-  <div class="bg-white rounded-xl p-6 shadow-2xl max-w-md w-full text-center">
-    <h2 class="text-xl font-bold text-gray-800 mb-3">Coming Soon</h2>
-    <p class="text-gray-600 italic mb-4 leading-relaxed">
-      Service available in the coming weeks.<br>
-    </p>
-    <button onclick="closeComingSoonPopup()" 
-            class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md transition-all duration-200">
-      Close
-    </button>
-  </div>
-</div>
-
       @if(Auth::check() && Auth::user()->user_role != 'service_provider' || Auth::check() === false)
         <a href="/become-service-provider" class="nav-button border-2 border-gradient-to-r from-purple-500 to-blue-500 bg-gradient-to-r from-purple-50 to-blue-50 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 rounded-full text-sm font-semibold hover:bg-gradient-to-r hover:from-purple-100 hover:to-blue-100 transition-all duration-300 transform hover:scale-105 shadow-lg border-blue-300">
           <span class="flex items-center space-x-2 text-blue-600">
-            <!-- Simple Icon -->
             <i class="fas fa-file-signature text-blue-600 text-2xl"></i>
             <span>Become a Provider</span>
           </span>
@@ -787,9 +597,6 @@
 
 <!-- Hidden Google Translate widget -->
 <div id="google_translate_element" class="hidden"></div>
-<!-- keep your existing HTML as-is -->
-
-
 
   <script type="text/javascript">
         // Cookie helpers
@@ -871,35 +678,27 @@
         });
 
         function setLanguage(lang, flag) {
-            // Save to localStorage
             localStorage.setItem('selectedLang', lang);
             localStorage.setItem('selectedFlag', flag);
-            // Update flag
             langFlag.src = flag;
-            // Align cookies
             alignCookiesFor(lang);
-            // Set hash to trigger translation
             if (lang === 'en') {
                 window.location.hash = '';
             } else {
                 window.location.hash = 'googtrans(en|' + lang + ')';
             }
-            // Try to set select and reload
             waitForSelect(select => {
                 select.value = lang;
                 select.dispatchEvent(new Event('change'));
                 setTimeout(() => location.reload(), 100);
             }, 2000);
-            // If select not found within timeout, reload anyway
             setTimeout(() => {
                 if (!document.querySelector('#google_translate_element select')) {
                     location.reload();
                 }
             }, 2100);
-            console.log('Translation triggered for:', lang);
         }
 
-        // Wait for select element
         function waitForSelect(callback, timeout = 5000) {
             const start = Date.now();
             const check = () => {
@@ -909,7 +708,6 @@
                 } else if (Date.now() - start < timeout) {
                     setTimeout(check, 100);
                 } else {
-                    // Fallback to hash
                     const savedLang = localStorage.getItem('selectedLang') || 'en';
                     if (savedLang !== 'en') {
                         window.location.hash = 'googtrans(en|' + savedLang + ')';
@@ -919,16 +717,13 @@
             check();
         }
 
-        // Initialize with default language
         document.addEventListener('DOMContentLoaded', function() {
             const savedLang = localStorage.getItem('selectedLang') || 'en';
             const savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
             langFlag.src = savedFlag;
             alignCookiesFor(savedLang);
-            // Set hash immediately for saved language if not English
             if (savedLang !== 'en') {
                 window.location.hash = 'googtrans(en|' + savedLang + ')';
-                // Also try to set select if available
                 waitForSelect(select => {
                     select.value = savedLang;
                     select.dispatchEvent(new Event('change'));
@@ -936,12 +731,6 @@
             }
         });
     </script>
-
-
-
-
-
-
 
  <!-- Auth Buttons -->
 <div class="flex items-center space-x-3">
@@ -951,7 +740,6 @@
 @endphp
 
 @if(!$isActive)
-  {{-- ===== YOUR EXACT CODE (unchanged) ===== --}}
   <a href="/login" class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 group">
    <i class="fas fa-user mr-2 text-lg text-blue-600"></i>
     <span class="font-medium text-blue-600"> Log in</span>
@@ -967,20 +755,14 @@
     $user = Auth::user();
     $provider = $user?->serviceProvider;
 
-    // Collect possible image sources
     $profilePhoto = $provider?->profile_photo ? asset($provider->profile_photo) : null;
     $avatar   = $user?->avatar ? asset($user->avatar) : null;
     $default      = asset('images/helpexpat.png');
 
-    // Build CSS background-image fallback chain
     $backgroundImage = "url('{$profilePhoto}'), url('{$avatar}'), url('{$default}')";
 @endphp
 
-
-
-  {{-- dropdown lives in its own wrapper so it won't affect your buttons layout --}}
   <div class="relative" x-data="{ open:false }">
-    <!-- Trigger -->
     <button 
       type="button"
       @click="open = !open"
@@ -996,7 +778,6 @@
       <i class="fas fa-chevron-down text-gray-500 text-sm"></i>
     </button>
 
-    <!-- Menu (hidden by default, even if Alpine fails) -->
     <div
       x-cloak
       x-show="open"
@@ -1019,13 +800,11 @@
             $key = strtolower(str_replace(['-', ' '], '_', $rawRole));
 
             $roles = [
-              // Admin → bold, attention color
               'admin' => [
                 'label' => 'Admin',
                 'cls'   => 'bg-rose-100 text-rose-700 ring-1 ring-rose-600/20',
                 'icon'  => 'fa-user-shield',
               ],
-              // Service Provider → productive/"action" color
               'service_provider' => [
                 'label' => 'Service Provider',
                 'cls'   => 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20',
@@ -1036,7 +815,6 @@
                 'cls'   => 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20',
                 'icon'  => 'fa-toolbox',
               ],
-              // Service Requester → trustworthy/communication color
               'service_requester' => [
                 'label' => 'Service Requester',
                 'cls'   => 'bg-indigo-100 text-indigo-700 ring-1 ring-indigo-600/20',
@@ -1086,23 +864,66 @@
 @endif
 </div>
 
-<!-- Popup Overlay -->
-<!-- 
-============================================
-🎯 POPUP SIGNUP - MOBILE FIRST OPTIMIZED
-============================================
-✨ Responsive adaptatif selon taille écran
-📱 Mobile: padding réduit pour plus d'espace
-💻 Desktop: identique à l'original
-🔄 Hauteur adaptative selon contenu du step
-============================================
--->
-<div id="signupPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-2 sm:p-4 md:p-6 hidden z-50 overflow-y-auto py-4 sm:py-8">
-  <div class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 max-w-3xl w-full relative shadow-lg my-auto">
-    <!-- Close button - Optimisé pour touch sur mobile -->
-    <button id="closePopup" class="absolute top-2 sm:top-4 right-2 sm:right-4 w-10 h-10 sm:w-auto sm:h-auto flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 rounded-full sm:rounded-none text-xl sm:text-2xl font-bold transition-all active:scale-95" aria-label="Close signup form">&times;</button>
+<!-- ============================================
+     🚀 POPUP MODERNISÉ 2025/2026
+     ============================================ -->
+<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6">
+  
+  <!-- CONTAINER RESPONSIVE -->
+  <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col">
+    
+    <!-- ============================================
+         HEADER STICKY MOBILE / NORMAL DESKTOP
+         ============================================ -->
+    <div class="sticky sm:relative top-0 z-20 bg-white/95 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none border-b border-gray-200 sm:border-b-0 px-4 sm:px-8 py-4 sm:py-6 flex items-center justify-between gap-4 shrink-0">
+      
+      <!-- LEFT: Progress Mobile / Badge Desktop -->
+      <div class="flex-1">
+        <!-- Mobile: Progress -->
+        <div class="sm:hidden">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-gray-500">Step <span id="currentStepNum">1</span> of 16</span>
+            <span class="text-xs font-semibold text-blue-600"><span id="progressPercentage">6</span>%</span>
+          </div>
+          <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+            <div id="mobileProgressBar" class="h-full bg-gradient-to-r from-blue-600 to-blue-500 transition-all duration-300 ease-out" style="width: 6.25%"></div>
+          </div>
+        </div>
+        
+        <!-- Desktop: Badge Provider Registration -->
+        <div class="hidden sm:flex items-center gap-3">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Provider Registration
+            </h2>
+            <p class="text-sm text-gray-500 font-medium">Become a Ulysse Service Provider</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- RIGHT: Close Button -->
+      <button id="closePopup" 
+              class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all active:scale-95 text-gray-500 hover:text-gray-800 shrink-0" 
+              aria-label="Close signup form">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- ============================================
+         CONTENT SCROLLABLE AREA
+         ============================================ -->
+    <div class="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-8 pt-4 sm:pt-2 pb-28 sm:pb-4" id="popupContentArea">
+      
 		<!-- Step 1 -->
 		@include('includes.provider.choose_step')
+    
     <!-- Step 2 -->
     @include('includes.provider.native_language')
 
@@ -1112,7 +933,7 @@
     <!-- Step 4 -->
 		@include('includes.provider.provider_services')
 
-    <!-- Step 5: Country Selection - Light Version -->
+    <!-- Step 5: Country Selection -->
     <div id="step5" class="hidden">
       <style>
         @keyframes float {
@@ -1173,12 +994,10 @@
         }
       </style>
 
-      <!-- Ambient background blobs -->
       <div class="ambient-blob ambient-blob-1"></div>
       <div class="ambient-blob ambient-blob-2"></div>
       <div class="ambient-blob ambient-blob-3"></div>
       
-      <!-- Header -->
       <div class="mb-8 text-center relative z-10">
         <div class="inline-flex items-center justify-center gap-3 mb-4">
           <div class="icon-badge w-12 h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -1193,7 +1012,6 @@
         </p>
       </div>
 
-      <!-- Country Select -->
       <div class="mb-8 relative z-10">
         <label class="block text-gray-900 font-bold text-base mb-2 flex items-center gap-2">
           <span class="text-xl">🌎</span>
@@ -1213,7 +1031,6 @@
           </div>
         </div>
         
-        <!-- Error message -->
         <div id="countryError" class="hidden mt-3 rounded-xl p-4 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 shadow-sm">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -1226,7 +1043,6 @@
           </div>
         </div>
         
-        <!-- Success message -->
         <div id="countrySuccess" class="hidden mt-3 rounded-xl p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 shadow-sm">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 animate-bounce">
@@ -1239,20 +1055,9 @@
           </div>
         </div>
       </div>
-
-      <!-- Navigation Buttons -->
-      <div class="wizard-nav-container relative z-10">
-        <button id="backToStep4" type="button" class="nav-btn-back bg-white text-blue-600 border-2 border-gray-200">
-          Back
-        </button>
-        <button id="nextStep5" type="button" class="nav-btn-next bg-gradient-to-r from-blue-600 to-cyan-600">
-          Continue
-        </button>
-      </div>
     </div>
 
     <script>
-    // Step 5 Validation & UX
     (function() {
       'use strict';
       
@@ -1264,43 +1069,36 @@
         
         if (!locationInput || !nextBtn) return;
         
-        // Show success when country selected
         locationInput.addEventListener('change', function() {
           if (this.value) {
             countryError.classList.add('hidden');
             countrySuccess.classList.remove('hidden');
             
-            // Save to localStorage
             const expats = JSON.parse(localStorage.getItem('expats') || '{}');
             expats.country = this.value;
             localStorage.setItem('expats', JSON.stringify(expats));
           }
         });
         
-        // Restore saved country
         const expats = JSON.parse(localStorage.getItem('expats') || '{}');
         if (expats.country) {
           locationInput.value = expats.country;
           countrySuccess.classList.remove('hidden');
         }
         
-        // Validation on Next button
         nextBtn.addEventListener('click', function(e) {
           if (!locationInput.value) {
             e.stopImmediatePropagation();
             e.preventDefault();
             
-            // Show error
             countryError.classList.remove('hidden');
             countrySuccess.classList.add('hidden');
             
-            // Shake animation
             locationInput.style.animation = 'shake 0.5s';
             setTimeout(() => {
               locationInput.style.animation = '';
             }, 500);
             
-            // Focus the select
             locationInput.focus();
             
             return false;
@@ -1309,17 +1107,6 @@
       });
     })();
     </script>
-    
-    <style>
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-10px); }
-      75% { transform: translateX(10px); }
-    }
-    </style>
-
-    <!-- Step 6: Operational Countries -->
-
 
  		<!-- Step 6 -->
 		@include('includes.provider.operational_countries', ['countries' => $countries])
@@ -1350,13 +1137,10 @@
 
 		<!-- Step 15: Phone Number -->
 		@include('includes.provider.phone_number')
-		
-
 
 		<!-- Step 16: Success Confirmation -->
 		<div id="step16" class="hidden space-y-6 text-center">
-			<h2 class="text-blue-900 font-extrabold text-2xl">
-YOUR PROVIDER ACCOUNT IS CREATED</h2>
+			<h2 class="text-blue-900 font-extrabold text-2xl">YOUR PROVIDER ACCOUNT IS CREATED</h2>
 			<p class="text-blue-800 font-semibold text-md">YOU ARE OFFICIALLY A ULYSSE</p>
 			<p class="text-gray-600">Go check out the service requests in your area now</p>
 
@@ -1366,12 +1150,55 @@ YOUR PROVIDER ACCOUNT IS CREATED</h2>
 			<p class="text-gray-600 text-sm mt-2">You can boost your profile to have more jobs to do</p>
 
 			<button class="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-bold px-6 py-2 rounded-full">
-				I BOOTS MY PROFILE TO BE AMONG THE FIRST SERVICE PROVIDERS
+				I BOOST MY PROFILE TO BE AMONG THE FIRST SERVICE PROVIDERS
 			</button>
 		</div>
 
-	</div>
-		<!-- Mobile Controls -->
+    </div>
+    
+    <!-- ============================================
+         NAVIGATION BUTTONS
+         Mobile: Fixed Bottom
+         Desktop: In Flow
+         ============================================ -->
+    
+    <!-- MOBILE NAVIGATION (Fixed Bottom) -->
+    <div id="mobileNavButtons" class="sm:hidden">
+      <button id="mobileBackBtn" class="btn-back" style="display:none;">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      
+      <button id="mobileNextBtn" class="btn-next">
+        <span>Continue</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- DESKTOP NAVIGATION (In Flow) -->
+    <div id="desktopNavButtons" class="hidden sm:flex px-8 pb-6">
+      <button id="desktopBackBtn" class="btn-back" style="display:none;">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        <span>Back</span>
+      </button>
+      
+      <button id="desktopNextBtn" class="btn-next">
+        <span>Continue</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Mobile Controls -->
 		<div class="lg:hidden flex items-center space-x-2">
 			<div class="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm">
 				<img src="https://flagcdn.com/24x18/fr.png" alt="FR" class="w-full h-full object-cover" />
@@ -1388,27 +1215,21 @@ YOUR PROVIDER ACCOUNT IS CREATED</h2>
 
 	<!-- Mobile Header -->
 	<div class="lg:hidden fixed top-0 left-0 w-full bg-white z-50 flex items-center justify-between  py-2 shadow-md">
-		<!-- Logo -->
 	<a href="/index.php">
 		<img src="/images/headerlogo.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" />
 	</a>
 
-
-  <!-- Request Help Button -->
-   <button id="mobileSearchButton" onclick="openHelpPopup()" class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover-glow transform hover:scale-105 shadow-lg">
+  <button id="mobileSearchButton" onclick="openHelpPopup()" class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover-glow transform hover:scale-105 shadow-lg">
     <span class="flex items-center space-x-2">
       <i class="fas fa-lock text-white-600 text-xl"></i>
       <span>Request Help</span>
     </span>
 </button>
 
-  <!-- Hamburger -->
 <button id="menu-toggle-top" class="p-2 rounded-lg hover:bg-white/50 transition-colors">
-  <!-- Hamburger Icon -->
   <svg class="icon-hamburger w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
   </svg>
-  <!-- X Icon -->
   <svg class="icon-close w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
   </svg>
@@ -1419,7 +1240,6 @@ YOUR PROVIDER ACCOUNT IS CREATED</h2>
 <!-- Mobile Dropdown Menu -->
 <div id="mobile-menu" class="lg:hidden fixed top-[64px] left-0 w-full bg-white z-40 shadow-md hidden px-6 py-4 space-y-4 animate-slide-down">
 
-  <!-- Close (X) Button for mobile menu -->
   <div class="flex justify-end mb-2">
     <button id="mobileMenuCloseBtn" class="p-2 rounded-full hover:bg-blue-200 focus:outline-none" aria-label="Close menu">
       <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1430,26 +1250,20 @@ YOUR PROVIDER ACCOUNT IS CREATED</h2>
 
   <a href="/become-service-provider" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Become a provider</a>
   <a href="/login" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Log in</a>
-  <a href="/signup"class="block text-gray-800 text-base font-semibold hover:text-blue-600">Sign up</a>
-  <a href="/affiliate" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Affiliate Program</a> <!-- New link added here -->
+  <button id="signupBtnMobile" class="block w-full text-left text-gray-800 text-base font-semibold hover:text-blue-600">Sign up</button>
+  <a href="/affiliate" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Affiliate Program</a>
 
-
-<!-- Hidden Google widget host -->
 <div id="google_translate_element" class="hidden"></div>
 
-<!-- Checkbox-driven mobile-friendly dropdown -->
 <div class="relative w-full sm:w-56">
-  <!-- Hidden checkbox controls open/close -->
   <input id="langOpen" type="checkbox" class="peer sr-only" />
 
-  <!-- Toggle button -->
   <label for="langOpen"
          class="flex justify-between items-center w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-800 bg-white cursor-pointer select-none">
     <span id="languageLabel">Language</span>
     <img id="languageFlag" src="https://flagcdn.com/24x18/us.png" alt="Lang" class="ml-2 w-5 h-4 object-cover" />
   </label>
 
-  <!-- Menu (shown when checkbox is checked) -->
   <ul id="languageMenu"
       class="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-50 hidden peer-checked:block">
     <li data-lang="fr" data-flag="https://flagcdn.com/24x18/fr.png"
@@ -1468,7 +1282,6 @@ YOUR PROVIDER ACCOUNT IS CREATED</h2>
 </div>
 
 <script>
-// Cookie helpers
 function domains() {
   const host = location.hostname;
   const naked = host.replace(/^www\./, '');
@@ -1506,13 +1319,11 @@ function alignCookiesFor(lang) {
   const flag     = document.getElementById('languageFlag');
   const label    = document.getElementById('languageLabel');
 
-  // Apply language (queue if Google select not ready yet)
   let pendingLang = null;
   function applyLanguage(code) {
     const select = document.querySelector('#google_translate_element select.goog-te-combo');
     if (select) {
       select.value = code;
-      // iOS/Safari-safe change event
       const ev = document.createEvent('HTMLEvents');
       ev.initEvent('change', true, true);
       select.dispatchEvent(ev);
@@ -1522,7 +1333,6 @@ function alignCookiesFor(lang) {
     }
   }
 
-  // Handle item clicks using delegation
   menu.addEventListener('click', function (e) {
     const li = e.target.closest('li[data-lang]');
     if (!li) return;
@@ -1531,32 +1341,26 @@ function alignCookiesFor(lang) {
     const flagUrl = li.dataset.flag;
     const name    = li.textContent.trim();
 
-    // Update UI
     flag.src = flagUrl;
     label.textContent = name;
 
-    // Save to localStorage
     localStorage.setItem('selectedLang', code);
     localStorage.setItem('selectedFlag', flagUrl);
 
-    // Align cookies
     alignCookiesFor(code);
 
-    // Set hash
     if (code === 'en') {
       window.location.hash = '';
     } else {
       window.location.hash = 'googtrans(en|' + code + ')';
     }
 
-    // Try to set select and reload
     const select = document.querySelector('#google_translate_element select.goog-te-combo');
     if (select) {
       select.value = code;
       select.dispatchEvent(new Event('change'));
       setTimeout(() => location.reload(), 100);
     } else {
-      // Wait for it
       const start = Date.now();
       (function wait() {
         const sel = document.querySelector('#google_translate_element select.goog-te-combo');
@@ -1572,11 +1376,9 @@ function alignCookiesFor(lang) {
       })();
     }
 
-    // Close dropdown by unchecking checkbox
     checkbox.checked = false;
   });
 
-  // Initialize Google Translate
   window.googleTranslateElementInit = function () {
     new google.translate.TranslateElement(
       { pageLanguage: 'en', includedLanguages: 'en,fr,de', autoDisplay: false },
@@ -1584,7 +1386,6 @@ function alignCookiesFor(lang) {
     );
   };
 
-  // Load Google script once
   if (!document.getElementById('gt-script')) {
     const s = document.createElement('script');
     s.id = 'gt-script';
@@ -1593,7 +1394,6 @@ function alignCookiesFor(lang) {
     document.body.appendChild(s);
   }
 
-  // If user selects before widget is ready, apply later
   const start = Date.now();
   (function waitForSelect() {
     const select = document.querySelector('#google_translate_element select.goog-te-combo');
@@ -1604,24 +1404,19 @@ function alignCookiesFor(lang) {
     if (Date.now() - start < 12000) setTimeout(waitForSelect, 200);
   })();
 
-  // Load saved language on page load
   const savedLang = localStorage.getItem('selectedLang') || 'en';
   const savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
   const langNames = { en: 'English', fr: 'Français', de: 'Deutsch' };
   flag.src = savedFlag;
   label.textContent = langNames[savedLang] || 'Language';
-  // Align cookies
   alignCookiesFor(savedLang);
-  // Set hash if not en
   if (savedLang !== 'en') {
     window.location.hash = 'googtrans(en|' + savedLang + ')';
-    // Try to set select
     const select = document.querySelector('#google_translate_element select.goog-te-combo');
     if (select) {
       select.value = savedLang;
       select.dispatchEvent(new Event('change'));
     } else {
-      // Wait for it
       const start = Date.now();
       (function wait() {
         const sel = document.querySelector('#google_translate_element select.goog-te-combo');
@@ -1637,14 +1432,6 @@ function alignCookiesFor(lang) {
 })();
 </script>
 
-<style>
-  /* Hide Google banner & mini-toolbar chrome */
-  iframe.goog-te-banner-frame, body > .skiptranslate { display: none !important; }
-  html { margin-top: 0 !important; }
-  .goog-te-gadget, .VIpgJd-ZVi9od-ORHb { display: none !important; }
-</style>
-
-  <!-- SOS Button -->
   <a href="/sos"  class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
     <i class="fas fa-phone-alt mr-1"></i> S.O.S
   </a>
@@ -1652,6 +1439,55 @@ function alignCookiesFor(lang) {
 
 @include('pages.popup')
 </nav>
+
+<!-- ============================================
+     🎯 STICKY NAVBAR SCRIPT - SMART SCROLL
+     ============================================ -->
+<script>
+(function() {
+  'use strict';
+  
+  const navbar = document.getElementById('desktopNavbar');
+  if (!navbar) return;
+  
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+  
+  function updateNavbar() {
+    const currentScrollY = window.scrollY;
+    
+    // Si on est en haut (< 50px), toujours afficher
+    if (currentScrollY < 50) {
+      navbar.style.transform = 'translateY(0)';
+      navbar.classList.remove('shadow-xl');
+      navbar.classList.add('shadow-lg');
+    }
+    // Si on scroll vers le bas, cacher
+    else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      navbar.style.transform = 'translateY(-100%)';
+    }
+    // Si on scroll vers le haut, afficher avec shadow forte
+    else {
+      navbar.style.transform = 'translateY(0)';
+      navbar.classList.remove('shadow-lg');
+      navbar.classList.add('shadow-xl');
+    }
+    
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+  
+  function requestTick() {
+    if (!ticking) {
+      window.requestAnimationFrame(updateNavbar);
+      ticking = true;
+    }
+  }
+  
+  window.addEventListener('scroll', requestTick, { passive: true });
+})();
+</script>
+
 <script>
 	function showComingSoonPopup(e) {
 		e.preventDefault();
@@ -1663,54 +1499,101 @@ function alignCookiesFor(lang) {
 
 	document.addEventListener('DOMContentLoaded', function () {
 		const popup = document.getElementById('signupPopup');
-		const closePopup = document.getElementById('closePopup');
+		const closePopupBtn = document.getElementById('closePopup');
 		const signupBtn = document.getElementById('signupBtn');
-		const progressText = document.getElementById('progressText');
 
 		const steps = Array.from({ length: 16 }, (_, i) => document.getElementById('step' + (i + 1)));
 		let currentStep = 0;
 
+    // ============================================
+    // 🎯 UNIFIED NAVIGATION SYSTEM
+    // ============================================
+    
+    function updateProgress() {
+      const progress = ((currentStep + 1) / steps.length) * 100;
+      const stepNum = currentStep + 1;
+      
+      // Update mobile progress
+      const mobileBar = document.getElementById('mobileProgressBar');
+      const mobileStepNum = document.getElementById('currentStepNum');
+      const mobilePercentage = document.getElementById('progressPercentage');
+      
+      if (mobileBar) mobileBar.style.width = progress + '%';
+      if (mobileStepNum) mobileStepNum.textContent = stepNum;
+      if (mobilePercentage) mobilePercentage.textContent = Math.round(progress);
+      
+      // Update buttons visibility
+      updateNavigationButtons();
+    }
+    
+    function updateNavigationButtons() {
+      const isFirstStep = currentStep === 0;
+      const isLastStep = currentStep === steps.length - 1;
+      
+      // Mobile buttons
+      const mobileBackBtn = document.getElementById('mobileBackBtn');
+      const mobileNextBtn = document.getElementById('mobileNextBtn');
+      
+      if (mobileBackBtn) {
+        mobileBackBtn.style.display = isFirstStep ? 'none' : 'flex';
+      }
+      
+      if (mobileNextBtn) {
+        mobileNextBtn.textContent = isLastStep ? 'Finish' : 'Continue';
+      }
+      
+      // Desktop buttons
+      const desktopBackBtn = document.getElementById('desktopBackBtn');
+      const desktopNextBtn = document.getElementById('desktopNextBtn');
+      
+      if (desktopBackBtn) {
+        desktopBackBtn.style.display = isFirstStep ? 'none' : 'inline-flex';
+      }
+      
+      if (desktopNextBtn) {
+        const textSpan = desktopNextBtn.querySelector('span');
+        if (textSpan) textSpan.textContent = isLastStep ? 'Finish' : 'Continue';
+      }
+    }
+
 		function showStep(stepIndex) {
-
-      // Skip password step for existing users
-  if (stepIndex === 11 && document.querySelector('.user-menu')) { 
-    currentStep = 12;
-    stepIndex = 12;
-  }
-
-  steps.forEach((step, i) => step.classList.toggle('hidden', i !== stepIndex));
-  prevBtn.disabled = stepIndex === 0;
-  progressBar.value = ((stepIndex + 1) / steps.length) * 100;
-  if (stepLabel) stepLabel.textContent = stepLabels[stepIndex] || "";
+      if (stepIndex === 11 && document.querySelector('.user-menu')) { 
+        currentStep = 12;
+        stepIndex = 12;
+      }
 
 			steps.forEach((step, i) => step?.classList.toggle('hidden', i !== stepIndex));
 			currentStep = stepIndex;
-			const progress = ((stepIndex + 1) / steps.length) * 100;
-			progressBar.style.width = progress + '%';
-			progressText.textContent = `Step ${stepIndex + 1} of ${steps.length}`;
+      updateProgress();
+      
+      // Scroll to top of content area
+      const contentArea = document.getElementById('popupContentArea');
+      if (contentArea) {
+        contentArea.scrollTop = 0;
+      }
 		}
 
 		function validateStep(index) {
 			switch(index) {
-				case 1: // Step 2 - language selected
+				case 1:
 					return !!document.querySelector('#step2 .lang-btn.bg-blue-900');
-				case 2: // Step 3 - multiple selected
+				case 2:
 					return document.querySelectorAll('#step3 .lang-btn.bg-blue-900').length > 0;
-				case 3: // Step 4 - help icon selected
+				case 3:
 					return document.querySelectorAll('#step4 .help-icon.ring-4').length > 0;
-          	case 4: // Step 9 - text filled
+        case 4:
 					return document.getElementById('location-input').value.trim().length > 0;
-          	case 5: // Step 6 - validate selected countries (at least 2)
+        case 5:
           return document.querySelectorAll('#countryList input[type="checkbox"]:checked').length >= 1;
-				case 6: // Step 7 - one toggle selected in each group
+				case 6:
 					return Array.from(document.querySelectorAll('#step7 .special-status-item'));
-				case 7: // Step 8 - yes/no selected in each group
+				case 7:
 					return Array.from(document.querySelectorAll('#step8 .speak-toggle')).every(group =>
 						group.querySelector('.bg-green-500')
 					);
-				case 8: // Step 9 - text filled
+				case 8:
 					return document.getElementById('profileDescription').value.trim().length > 0;
-				case 9: // Step 10 - image uploaded
+				case 9:
 					return document.getElementById('profileUpload').files.length > 0;
           case 11:
           return document.getElementById('first_name_input').value.trim().length > 0;
@@ -1729,13 +1612,57 @@ function alignCookiesFor(lang) {
 			}
 		}
 
-	
+    // ============================================
+    // 🎯 NAVIGATION HANDLERS
+    // ============================================
+    
+    function handleNext() {
+      if (!validateStep(currentStep)) {
+        alert("Please complete this step before continuing.");
+        return;
+      }
+      
+      if (currentStep < steps.length - 1) {
+        showStep(currentStep + 1);
+      } else {
+        // Handle completion
+        alert("Registration complete!");
+      }
+    }
+    
+    function handleBack() {
+      if (currentStep > 0) {
+        showStep(currentStep - 1);
+      }
+    }
+    
+    // Attach handlers to both mobile and desktop buttons
+    const mobileNextBtn = document.getElementById('mobileNextBtn');
+    const mobileBackBtn = document.getElementById('mobileBackBtn');
+    const desktopNextBtn = document.getElementById('desktopNextBtn');
+    const desktopBackBtn = document.getElementById('desktopBackBtn');
+    
+    if (mobileNextBtn) mobileNextBtn.addEventListener('click', handleNext);
+    if (mobileBackBtn) mobileBackBtn.addEventListener('click', handleBack);
+    if (desktopNextBtn) desktopNextBtn.addEventListener('click', handleNext);
+    if (desktopBackBtn) desktopBackBtn.addEventListener('click', handleBack);
 
+		// Desktop signup button
 		signupBtn?.addEventListener('click', () => {
 			popup.classList.remove('hidden');
+      showStep(0);
 		});
 
-		closePopup?.addEventListener('click', () => {
+		// Mobile signup button
+		const signupBtnMobile = document.getElementById('signupBtnMobile');
+		signupBtnMobile?.addEventListener('click', () => {
+			popup.classList.remove('hidden');
+      showStep(0);
+			// Fermer le menu mobile
+			document.getElementById('mobile-menu')?.classList.add('hidden');
+		});
+
+		closePopupBtn?.addEventListener('click', () => {
 			popup.classList.add('hidden');
 		});
 
@@ -1764,14 +1691,6 @@ function alignCookiesFor(lang) {
 			});
 		});
 
-		document.getElementById('completeSignup')?.addEventListener('click', () => {
-			if (!validateStep(currentStep)) {
-				alert("Please complete this step before finishing.");
-				return;
-			}
-			showStep(15);
-		});
-
 		// Step 2: Language selection
 		document.querySelectorAll('#step2 .lang-btn').forEach(btn => {
 			btn.addEventListener('click', () => {
@@ -1781,14 +1700,10 @@ function alignCookiesFor(lang) {
 				});
 				btn.classList.remove('bg-white', 'text-blue-700');
 				btn.classList.add('bg-blue-900', 'text-white');
-        // Get the text/content of the clicked button
         const selectedLanguage = btn.textContent.trim();
-
-        // Get current session object or create new
         const expats = JSON.parse(localStorage.getItem('expats')) || {};
         expats.native_language = selectedLanguage;
         localStorage.setItem('expats', JSON.stringify(expats));
-
 			});
 		});
 
@@ -1796,45 +1711,35 @@ function alignCookiesFor(lang) {
    let selectedLanguage = [];
 
 document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
-
   btn.addEventListener('click', () => {
     const lang = btn.textContent.trim();
-
     const isSelected = btn.classList.contains('bg-blue-900');
 
     if (isSelected) {
-      // Unselect
       btn.classList.remove('bg-blue-900', 'text-white', 'bg-blue-600');
       btn.classList.add('bg-blue-600', 'text-white');
-
       selectedLanguage = selectedLanguage.filter(item => item !== lang);
     } else {
-      // Select
       btn.classList.remove('bg-white', 'text-blue-700', 'bg-blue-600');
       btn.classList.add('bg-blue-900', 'text-white');
-
       selectedLanguage.push(lang);
     }
 
-    // Store in localStorage
     const expats = JSON.parse(localStorage.getItem('expats')) || {};
     expats.spoken_language = selectedLanguage;
     localStorage.setItem('expats', JSON.stringify(expats));
   });
-
 });
 
 		// Step 4: Help icon toggle
 		document.querySelectorAll('#step4 .help-icon').forEach(btn => {
 			btn.addEventListener('click', () => {
-        // console.log("Button clicked", btn.textContent.trim())
 				btn.classList.toggle('ring-4');
 				btn.classList.toggle('ring-white');
 				btn.classList.toggle('ring-offset-2');
 			});
 		});
 
-    //Step 5
       const location = document.querySelector('#step5 #location-input');
 			if (location) {
         location.addEventListener('change', () => {
@@ -1844,7 +1749,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
         });
       }
 
-    //Step 6
       const countryList = document.querySelector('#step6 #countryList');
       if (countryList) {
         countryList.addEventListener('change', () => {
@@ -1857,22 +1761,18 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
         });
       }
     
-		// Step 7: Toggle logic
 		let specialStatus = {};
 
     document.querySelectorAll('#step7 .status-checkbox').forEach(checkbox => {
       checkbox.addEventListener('change', () => {
         const label = checkbox.dataset.label;
         specialStatus[label] = checkbox.checked;
-        // Save to localStorage
         const expats = JSON.parse(localStorage.getItem('expats')) || {};
         expats.special_status = specialStatus;
         localStorage.setItem('expats', JSON.stringify(expats));
       });
     });
 
-    
-		// Step 8: Speak toggle
     communicationPreference = {};
 		document.querySelectorAll('#step8 .speak-toggle').forEach(group => {
 			const yesBtn = group.children[0];
@@ -1894,22 +1794,17 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
 			});
 		});
 
-		// Step 9: Character counter
 		const textarea = document.getElementById('profileDescription');
 		const charCount = document.getElementById('charCount');
 		if (textarea && charCount) {
 			textarea.addEventListener('input', () => {
 				charCount.textContent = textarea.value.length;
-
         const expats = JSON.parse(localStorage.getItem('expats')) || {};
         expats.profile_description = textarea.value;
         localStorage.setItem('expats', JSON.stringify(expats));
 			});
 		}
 
-
-		
-		// Step 10: Profile image preview
     const profileUpload = document.getElementById('profileUpload');
     const profilePreview = document.getElementById('profilePreview');
     const profilePlaceholder = document.getElementById('profilePlaceholder');
@@ -1921,15 +1816,11 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
           const reader = new FileReader();
           reader.onload = (e) => {
             const imageDataUrl = e.target.result;
-
-            // Show preview
             profilePreview.src = imageDataUrl;
             profilePreview.classList.remove('hidden');
             profilePlaceholder.classList.add('hidden');
-
-            // Save to localStorage
             const expats = JSON.parse(localStorage.getItem('expats')) || {};
-            expats.profile_image = imageDataUrl; // Store as base64 URL
+            expats.profile_image = imageDataUrl;
             localStorage.setItem('expats', JSON.stringify(expats));
           };
           reader.readAsDataURL(file);
@@ -1937,9 +1828,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
       });
     }
 
-    //Step 11: Identity Documents
-
-    //Step:12 Username
     const firstNameInput = document.querySelector('#step12 #first_name_input');
     const lastNameInput = document.querySelector('#step12 #last_name_input');
     const nextStep12 = document.getElementById('nextStep12');
@@ -1953,7 +1841,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
       });
     }
 
-    // Step13: Email 
     const emailInput = document.querySelector('#step13 #email_input');
     const nextStep13 = document.getElementById('nextStep13');
 
@@ -1962,8 +1849,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
         const expats = JSON.parse(localStorage.getItem('expats')) || {};
         expats.email = emailInput.value.trim();
         localStorage.setItem('expats', JSON.stringify(expats));
-
-        // createProviderAccount()
       });
     }
 
@@ -2036,10 +1921,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
       });
     }
 
-
-
-
-		// Mobile nav toggles
 		const toggleButtons = [
 			document.getElementById("menu-toggle-top"),
 			document.getElementById("menu-toggle")
@@ -2048,7 +1929,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
 		const langToggle = document.getElementById("languageToggle");
 		const langMenu = document.getElementById("languageMenu");
 
-		// Add close button logic for mobile menu
 		const mobileMenuCloseBtn = document.getElementById("mobileMenuCloseBtn");
 		if (mobileMenuCloseBtn) {
 			mobileMenuCloseBtn.addEventListener("click", () => {
@@ -2075,7 +1955,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
 			}
 		});
 
-		// Desktop language dropdown open/close on click
 		const desktopLangBtn = document.getElementById('desktopLangBtn');
 		const desktopLangMenu = document.getElementById('desktopLangMenu');
 		if (desktopLangBtn && desktopLangMenu) {
@@ -2083,7 +1962,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
 				e.stopPropagation();
 				desktopLangMenu.classList.toggle('hidden');
 			});
-			// Close dropdown when clicking outside
 			document.addEventListener('click', function (e) {
 				if (!desktopLangBtn.contains(e.target) && !desktopLangMenu.contains(e.target)) {
 					desktopLangMenu.classList.add('hidden');
@@ -2092,7 +1970,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
 		}
 	});
 
-	// Modal functions
 	function openModal() {
 		document.getElementById('modal')?.classList.remove('hidden');
 	}
@@ -2106,20 +1983,10 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
 </script>
 
 <script>
-  // function openHelpPopup() {
-  //   document.getElementById('searchPopup').classList.remove('hidden');
-  // }
-
-  // function closeSearchPopup() {
-  //   document.getElementById('searchPopup').classList.add('hidden');
-  // }
-
-  // Optional: close on ESC key
   document.addEventListener('keydown', function (e) {
     if (e.key === "Escape") closeSearchPopup();
   });
 
-  // Optional: attach close button
   document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.getElementById('closeSearchPopupBtn');
     if (closeBtn) {
@@ -2128,15 +1995,12 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
   });
 </script>
 
-
-
 <script>
   document.querySelectorAll(".faq-toggle").forEach((btn) => {
   btn.addEventListener("click", () => {
     const content = btn.nextElementSibling;
     const icon = btn.querySelector(".faq-icon");
 
-    // Close all other FAQ items
     document.querySelectorAll(".faq-content").forEach((item) => {
       if (item !== content) {
         item.classList.add("hidden");
@@ -2149,19 +2013,13 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
       }
     });
 
-    // Toggle current item
     content.classList.toggle("hidden");
     icon.textContent = content.classList.contains("hidden") ? "+" : "–";
   });
 });
-
 </script>
 
   <script>
-  
-
-
-        // FAQ Toggle Functionality
         const faqToggles = document.querySelectorAll('.faq-toggle');
 
         faqToggles.forEach((toggle, index) => {
@@ -2169,7 +2027,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
                 const content = toggle.nextElementSibling;
                 const isActive = toggle.classList.contains('active');
 
-                // Close all other FAQ items
                 faqToggles.forEach((otherToggle, otherIndex) => {
                     if (otherIndex !== index) {
                         const otherContent = otherToggle.nextElementSibling;
@@ -2178,7 +2035,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
                     }
                 });
 
-                // Toggle current FAQ item
                 if (isActive) {
                     toggle.classList.remove('active');
                     content.classList.remove('active');
@@ -2188,29 +2044,7 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
                 }
             });
         });
-
-    //     // Add some interactive particles effect
-    //     function createParticle() {
-    //         const particle = document.createElement('div');
-    //         particle.className = 'fixed w-2 h-2 bg-white/20 rounded-full pointer-events-none';
-    //         particle.style.left = Math.random() * window.innerWidth + 'px';
-    //         particle.style.top = window.innerHeight + 'px';
-    //         document.body.appendChild(particle);
-
-    //         const animation = particle.animate([
-    //             { transform: 'translateY(0px) rotate(0deg)', opacity: 1 },
-    //             { transform: `translateY(-${window.innerHeight + 100}px) rotate(360deg)`, opacity: 0 }
-    //         ], {
-    //             duration: Math.random() * 3000 + 2000,
-    //             easing: 'linear'
-    //         });
-
-    //         animation.onfinish = () => particle.remove();
-    //     }
-
-    //     // Create particles periodically
-    //     setInterval(createParticle, 300);
-    // </script>
+    </script>
 
      <script>
         tailwind.config = {
@@ -2251,7 +2085,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
     popup.classList.toggle("hidden");
   }
 </script>
-<!-- JavaScript to toggle popup -->
 <script>
   function toggleCategoryPopup() {
     const popup = document.getElementById("search-category-popup");
@@ -2259,25 +2092,11 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
   }
 </script>
 
-
-
-
  <script>
-  // Back to main categories
   function goBackToMainCategories() {
     closeAllPopups();
     openHelpPopup();
   }
-
-  function closeAllPopups() {
-    document.getElementById('searchPopup').classList.add('hidden');
-    document.getElementById('expatriesPopup').classList.add('hidden');
-    document.getElementById('vacanciersPopup').classList.add('hidden');
-    document.getElementById('vacanciersPreparationPopup').classList.add('hidden');
-    // Add other popups here as well if needed
-  }
-
-
 
   function closeAllPopups() {
     const popups = [
@@ -2313,7 +2132,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
       "travailleursProtectionSocialeSubSubcategoriesPopup",
       "travailleursTrouverEmploiSubSubcategoriesPopup",
       "travailleursVisaAutorisationsSubSubcategoriesPopup"
-      // Add more popup IDs here if you have them
     ];
     popups.forEach(id => {
       const el = document.getElementById(id);
@@ -2322,8 +2140,6 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
     localStorage.removeItem('create-request');
   }
 
-
-    // Close popups when clicking outside
   document.addEventListener('click', function(event) {
     const popups = [
       document.getElementById('searchPopup'),
@@ -2358,20 +2174,12 @@ function openHelpPopup() {
           div.className =
             "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
 
-          // Card background (bg_color if set, else white)
           const color =
             typeof cat.bg_color === 'string' && cat.bg_color.trim() !== ''
               ? cat.bg_color
               : '#ffffff';
           div.style.setProperty('background-color', color, 'important');
 
-          // Text color: white if card has bg_color, else dark gray
-          // const textColor =
-          //   typeof cat.bg_color === 'string' && cat.bg_color.trim() !== ''
-          //     ? 'text-white'
-          //     : 'text-gray-800';
-
-          // Icon circle
           const iconHtml = cat.icon_image
             ? `
               <div class="w-12 h-12 rounded-full overflow-hidden mb-2 group-hover:scale-110 transition-transform bg-gray-100">
@@ -2399,7 +2207,6 @@ function openHelpPopup() {
     .catch(err => console.error('Failed to load categories:', err));
 }
 
-
  function handleCategoryClick(categoryId, categoryName) {
   document.getElementById('searchPopup')?.classList.add('hidden');
   document.getElementById('expatriesPopup')?.classList.remove('hidden');
@@ -2423,13 +2230,12 @@ function openHelpPopup() {
           div.className =
             "category-card rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group";
 
-          // Card background (sub.bg_color if set, else white)
           const color =
             typeof sub.bg_color === 'string' && sub.bg_color.trim() !== ''
               ? sub.bg_color
               : '#ffffff';
           div.style.setProperty('background-color', color, 'important');
-          // Icon circle
+
           const iconHtml = sub.icon_image
             ? `
               <div class="w-14 h-14 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform overflow-hidden bg-gray-100">
@@ -2486,20 +2292,12 @@ function handleSubcategoryClick(parentId, categoryName) {
           div.className =
             "category-card rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group";
 
-          // Card background (child.bg_color if set, else white)
           const color =
             typeof child.bg_color === 'string' && child.bg_color.trim() !== ''
               ? child.bg_color
               : '#ffffff';
           div.style.setProperty('background-color', color, 'important');
 
-          // Text color (white if bg_color exists, else gray-800)
-          // const textColor =
-          //   typeof child.bg_color === 'string' && child.bg_color.trim() !== ''
-          //     ? 'text-white'
-          //     : 'text-gray-800';
-
-          // Icon circle
           const iconHtml = child.icon_image
             ? `
               <div class="w-14 h-14 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform overflow-hidden bg-gray-100">
@@ -2532,8 +2330,6 @@ function handleSubcategoryClick(parentId, categoryName) {
     .catch(err => {
       console.error('Error loading child categories:', err);
     });
-
-
 }
 
   function requestForHelp(childId, childName) {
@@ -2544,36 +2340,28 @@ function handleSubcategoryClick(parentId, categoryName) {
     });
 
     localStorage.setItem('create-request', JSON.stringify(createRequest));
-
-    // Redirect to the request creation page
     window.location.href = '/create-request';
   }
 
-  // Utility function to extract first name using JavaScript split method
   function extractFirstName(fullName) {
-    // Remove punctuation and extra spaces, then split and return first name
     const cleanName = fullName.replace(/[^\w\s]/g, '').trim();
     const nameParts = cleanName.split(/\s+/);
     return nameParts[0] || cleanName;
   }
 
-  // Extract and display first name only in header and sidebar
   function updateUserDisplayNames() {
-    // Update header user name (truncated version)
     const headerUserName = document.getElementById('header-user-name');
     if (headerUserName) {
       const fullName = headerUserName.textContent.trim();
       headerUserName.textContent = extractFirstName(fullName);
     }
 
-    // Update header dropdown full name
     const headerUserFullname = document.getElementById('header-user-fullname');
     if (headerUserFullname) {
       const fullName = headerUserFullname.textContent.trim();
       headerUserFullname.textContent = extractFirstName(fullName);
     }
 
-    // Update sidebar greeting
     const sidebarGreeting = document.getElementById('user-greeting');
     if (sidebarGreeting) {
       const fullGreeting = sidebarGreeting.textContent.trim();
@@ -2591,15 +2379,13 @@ function handleSubcategoryClick(parentId, categoryName) {
     document.getElementById('expatriesPopup')?.classList.remove('hidden');
   }
 
-  // Initialize user name updates when DOM is loaded
   document.addEventListener('DOMContentLoaded', function() {
     updateUserDisplayNames();
   });
 
 </script>
-<script>
 
-// Add this to your existing header JavaScript
+<script>
 function updateHeaderAfterLogin(userData) {
   const authButtons = document.querySelector('.auth-buttons');
   const userMenu = document.createElement('div');
@@ -2622,8 +2408,6 @@ function updateHeaderAfterLogin(userData) {
         </span>
         <i class="fas fa-chevron-down text-gray-500 text-sm"></i>
       </button>
-      
-      <!-- Rest of your existing user menu HTML -->
     </div>
   `;
   
@@ -2631,9 +2415,6 @@ function updateHeaderAfterLogin(userData) {
     authButtons.replaceWith(userMenu);
   }
 }
-
-
-
 </script>
 
 </body>

@@ -77,7 +77,6 @@
       background: linear-gradient(to bottom right, #f0fdf4, #d1fae5);
     }
     
-    /* CORRECTION CRITIQUE : Images et vidéos contenues dans leur zone */
     .upload-zone img,
     .upload-zone video {
       position: absolute;
@@ -114,14 +113,12 @@
     }
   </style>
 
-  <!-- Ambient Blobs -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10 hidden md:block">
     <div class="ambient-blob absolute top-10 left-10 w-64 h-64 bg-blue-300 rounded-full"></div>
     <div class="ambient-blob absolute top-20 right-10 w-64 h-64 bg-cyan-300 rounded-full"></div>
     <div class="ambient-blob absolute bottom-10 left-1/2 w-64 h-64 bg-teal-300 rounded-full"></div>
   </div>
 
-  <!-- Header premium avec gradient -->
   <div class="mb-8 text-center relative">
     <div class="inline-flex items-center justify-center gap-3 mb-4">
       <div class="w-14 h-14 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl transform hover:rotate-12 transition-transform duration-300">
@@ -136,7 +133,6 @@
     </p>
   </div>
 
-  <!-- Info banner -->
   <div class="mb-8 rounded-2xl bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 py-4 px-6 shadow-lg">
     <div class="flex items-start gap-4">
       <div class="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
@@ -149,7 +145,6 @@
     </div>
   </div>
 
-  <!-- Sélection des documents -->
   <div class="space-y-4 mb-8">
     <button type="button" onclick="openDocumentModal('european_id')" class="doc-btn w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold py-5 px-6 rounded-2xl shadow-lg hover:shadow-xl flex items-center justify-between group">
       <div class="flex items-center space-x-4">
@@ -188,7 +183,6 @@
     </button>
   </div>
 
-  <!-- Navigation -->
   <div class="wizard-nav-container flex items-center justify-between gap-4 mt-8">
     <button id="backToStep10" type="button" class="nav-btn-back flex-1 sm:flex-none bg-white text-blue-600 border-2 border-gray-200 hover:border-blue-400 px-8 py-3 rounded-xl font-bold text-base transition-colors hover:shadow-lg">
       Back
@@ -380,7 +374,6 @@
 (function() {
   const cameraStreams = {};
   
-  // Ouvrir modal
   window.openDocumentModal = function(type) {
     const modal = document.getElementById(`modal-${type}`);
     if (modal) {
@@ -389,14 +382,12 @@
     }
   };
   
-  // Fermer modal
   window.closeDocumentModal = function(type) {
     const modal = document.getElementById(`modal-${type}`);
     if (modal) {
       modal.classList.add('hidden');
     }
     
-    // Arrêter toutes les caméras du type
     if (isTwoSided(type)) {
       stopCamera(type, 'front');
       stopCamera(type, 'back');
@@ -407,32 +398,26 @@
     setNextStateForType(type);
   };
   
-  // Vérifier si document a 2 côtés
   function isTwoSided(type) {
     return type === 'european_id' || type === 'license';
   }
   
-  // ID preview box
   function previewBoxId(type, side) {
     return `preview-${type}-${side}`;
   }
   
-  // Parse upload-{type}-{side}
   function idParts(id) {
     const match = id.match(/upload-([^-]+)-([^-]+)/);
     return match ? { type: match[1], side: match[2] } : null;
   }
   
-  // État du bouton Next
   function setNextStateForType(type) {
-    // Documents optionnels - Next toujours enabled
     const nextBtn = document.getElementById('nextStep11');
     if (nextBtn) {
       nextBtn.disabled = false;
     }
   }
   
-  // Réinitialiser preview
   function resetPreview(type, side) {
     const box = document.getElementById(previewBoxId(type, side));
     if (!box) return;
@@ -447,13 +432,11 @@
     box.closest('.upload-zone').classList.remove('has-file');
   }
   
-  // Afficher preview
   function renderPreview(box, dataUrl) {
     box.innerHTML = `<img src="${dataUrl}" alt="Preview" class="rounded-2xl" />`;
     box.closest('.upload-zone').classList.add('has-file');
   }
   
-  // Upload file
   document.addEventListener('change', function(e) {
     if (e.target.type === 'file' && e.target.id.startsWith('upload-')) {
       const meta = idParts(e.target.id);
@@ -479,7 +462,6 @@
     }
   });
   
-  // Ouvrir caméra
   window.openCamera = async function(type, side) {
     const video = document.getElementById(`camera-${type}-${side}`);
     const captureBtn = document.getElementById(`capture-${type}-${side}`);
@@ -497,12 +479,10 @@
       const key = `${type}-${side}`;
       cameraStreams[key] = stream;
     } catch (err) {
-      console.error('Camera error:', err);
-      alert('Unable to access camera. Please check permissions.');
+      console.warn('Camera access denied or unavailable');
     }
   };
   
-  // Capturer photo
   window.capturePhoto = function(type, side) {
     const video = document.getElementById(`camera-${type}-${side}`);
     const box = document.getElementById(previewBoxId(type, side));
@@ -538,7 +518,6 @@
     autoSavePhoto(type, side, dataUrl);
   };
   
-  // Retake photo
   window.retakePhoto = function(type, side) {
     resetPreview(type, side);
     const input = document.getElementById(`upload-${type}-${side}`);
@@ -551,13 +530,11 @@
     }
     setNextStateForType(type);
     
-    // Remove from localStorage
     try {
       let expats = JSON.parse(localStorage.getItem('expats')) || {};
       if (expats.documents && expats.documents[type]) {
         if (isTwoSided(type)) {
           delete expats.documents[type][side];
-          // Si les deux côtés sont vides, supprimer le document entier
           if (!expats.documents[type].front && !expats.documents[type].back) {
             delete expats.documents[type];
           }
@@ -571,7 +548,6 @@
     }
   };
   
-  // Arrêter caméra
   window.stopCamera = function(type, side) {
     const key = `${type}-${side}`;
     if (cameraStreams[key]) {
@@ -589,7 +565,6 @@
     }
   };
   
-  // Fermer caméra avant upload
   window.closeCameraBeforeUpload = function(label) {
     const input = label.querySelector('input[type="file"]');
     if (!input) return;
@@ -602,7 +577,6 @@
     input.click();
   };
   
-  // Auto-save photo
   function autoSavePhoto(type, side, dataUrl) {
     try {
       let expats = JSON.parse(localStorage.getItem('expats')) || {};
@@ -627,7 +601,6 @@
     }
   }
   
-  // Restore document from localStorage
   function restoreDocumentFromStorage(type) {
     try {
       const expats = JSON.parse(localStorage.getItem('expats')) || {};
@@ -674,12 +647,10 @@
     }
   }
   
-  // Save document (fermer modal)
   window.saveDocument = function(type) {
     closeDocumentModal(type);
   };
   
-  // Cleanup caméras
   window.addEventListener('beforeunload', function() {
     Object.keys(cameraStreams).forEach(key => {
       if (cameraStreams[key]) {
@@ -688,7 +659,6 @@
     });
   });
   
-  // Observer pour arrêter caméras quand step11 devient hidden
   const step11Element = document.getElementById('step11');
   if (step11Element) {
     const observer = new MutationObserver(function(mutations) {
@@ -709,7 +679,6 @@
     });
   }
   
-  // Documents optionnels - Next toujours enabled
   const nextBtn = document.getElementById('nextStep11');
   if (nextBtn) {
     nextBtn.disabled = false;
