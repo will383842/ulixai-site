@@ -3,7 +3,7 @@
 🚀 STEP 1 - VERSION ULTRA-MODERNE 2025/2026
 ============================================
 ✨ Glassmorphism + Animations fluides
-🎨 Gradients animés + Micro-interactions
+🎨 Design System Blue/Cyan/Teal
 💎 Design inspiré de Stripe, Linear, Vercel
 ⚡ Performance optimisée (GPU acceleration)
 ============================================
@@ -13,22 +13,22 @@
   
   <!-- Ambient Background Effects -->
   <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-    <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-    <div class="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+    <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+    <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
   </div>
 
-  <!-- Card 1: I Need Help - Premium Blue Gradient -->
+  <!-- Card 1: I Need Help - Premium Blue/Cyan Gradient -->
   <article class="group relative">
     <button 
       type="button"
       onclick="openHelpPopup()" 
-      class="modern-card modern-card-primary w-full text-left overflow-hidden transform transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
+      class="modern-card modern-card-primary w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
       role="button"
       aria-label="Request urgent help - Open help request form">
       
       <!-- Animated gradient background -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 animate-gradient"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-cyan-500 to-teal-600 animate-gradient"></div>
       
       <!-- Glossy overlay -->
       <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -43,11 +43,11 @@
       <!-- Content -->
       <div class="relative z-10">
         <!-- Top section: Icon + Badge -->
-        <div class="flex items-start justify-between mb-4 pb-4 border-b border-white/20">
+        <div class="flex items-start justify-between mb-8 pb-4 border-b border-white/20">
           <div class="flex items-center gap-4 flex-1 min-w-0">
             <!-- Animated Icon -->
             <div class="icon-container flex-shrink-0">
-              <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-white/30 transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">
+              <div class="w-14 h-14 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-2 ring-white/30 transform group-hover:rotate-12 transition-transform duration-300">
                 <svg class="w-7 h-7 text-white animate-pulse-subtle" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" class="animate-draw-circle"/>
                   <path d="M12 8v4m0 4h.01" stroke-linecap="round"/>
@@ -57,12 +57,12 @@
             
             <!-- Title & Subtitle -->
             <div class="flex-1 min-w-0">
-              <h2 class="font-black text-2xl sm:text-3xl text-white mb-1 tracking-tight transform group-hover:translate-x-1 transition-transform duration-300">
+              <h2 class="text-3xl sm:text-4xl font-black text-white mb-1 tracking-tight transform group-hover:translate-x-1 transition-transform duration-300">
                 I Need Help! 🆘
               </h2>
-              <p class="text-sm text-blue-100 font-semibold flex items-center gap-2">
+              <p class="text-base sm:text-lg font-semibold text-gray-600 flex items-center gap-2">
                 <span class="inline-block w-2 h-2 bg-green-400 rounded-full animate-ping-slow"></span>
-                <span>Instant worldwide assistance</span>
+                <span class="text-blue-100">Instant worldwide assistance</span>
               </p>
             </div>
           </div>
@@ -82,7 +82,7 @@
           </p>
           
           <!-- Feature pills -->
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-4">
             <span class="feature-pill">⚡ Fast response</span>
             <span class="feature-pill">✅ Verified helpers</span>
             <span class="feature-pill">🔒 Secure</span>
@@ -103,38 +103,38 @@
     </button>
   </article>
 
-  <!-- Card 2: Help Expats - Premium Purple Gradient -->
+  <!-- Card 2: Help Expats - Premium Blue/Cyan/Teal Border -->
   <article class="group relative">
     <button 
       type="button"
       id="whiteCardBtn"
-      class="modern-card modern-card-secondary w-full text-left overflow-hidden transform transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-purple-500/50 focus:ring-offset-2"
+      class="modern-card modern-card-secondary w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
       role="button"
       aria-label="Become a service provider - Help expats and earn income">
       
       <!-- Gradient border effect -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 animate-gradient-slow"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 animate-gradient-slow"></div>
       <div class="absolute inset-[3px] bg-white rounded-[20px]"></div>
       
       <!-- Glossy overlay -->
-      <div class="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[23px]"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[23px]"></div>
       
       <!-- Sparkle effect on hover -->
       <div class="sparkle-container">
-        <div class="sparkle sparkle-purple"></div>
-        <div class="sparkle sparkle-purple"></div>
-        <div class="sparkle sparkle-purple"></div>
+        <div class="sparkle sparkle-blue"></div>
+        <div class="sparkle sparkle-blue"></div>
+        <div class="sparkle sparkle-blue"></div>
       </div>
       
       <!-- Content -->
       <div class="relative z-10 p-6">
         <!-- Top section: Icon + Badge -->
-        <div class="flex items-start justify-between mb-4 pb-4 border-b border-gray-100">
+        <div class="flex items-start justify-between mb-8 pb-4 border-b border-gray-100">
           <div class="flex items-center gap-4 flex-1 min-w-0">
             <!-- Animated Icon -->
             <div class="icon-container flex-shrink-0">
-              <div class="w-14 h-14 bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-purple-200/50 transform group-hover:rotate-[-12deg] group-hover:scale-110 transition-all duration-500">
-                <svg class="w-7 h-7 text-purple-600 animate-pulse-subtle" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <div class="w-14 h-14 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-2 ring-blue-200/50 transform group-hover:rotate-12 transition-transform duration-300">
+                <svg class="w-7 h-7 text-white animate-pulse-subtle" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10"/>
                   <path d="M8 12l2 2 4-4" stroke-linecap="round"/>
                 </svg>
@@ -143,10 +143,10 @@
             
             <!-- Title & Subtitle -->
             <div class="flex-1 min-w-0">
-              <h2 class="font-black text-2xl sm:text-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-1 tracking-tight transform group-hover:translate-x-1 transition-transform duration-300">
+              <h2 class="text-3xl sm:text-4xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight transform group-hover:translate-x-1 transition-transform duration-300">
                 Help Expats & Travelers! 💰
               </h2>
-              <p class="text-sm text-gray-600 font-semibold flex items-center gap-2">
+              <p class="text-base sm:text-lg font-semibold text-gray-600 flex items-center gap-4">
                 <span class="inline-block w-2 h-2 bg-green-500 rounded-full animate-ping-slow"></span>
                 <span>Earn income helping others</span>
               </p>
@@ -161,13 +161,13 @@
         
         <!-- Description -->
         <div class="mb-4">
-          <p class="text-sm sm:text-base text-gray-700 leading-relaxed mb-3">
-            Transform your <strong class="text-purple-600">local expertise</strong> into income while helping foreigners 
+          <p class="text-sm sm:text-base text-gray-900 leading-relaxed mb-3">
+            Transform your <strong class="text-blue-600">local expertise</strong> into income while helping foreigners 
             <span class="inline-block animate-wave">✨</span>
           </p>
           
           <!-- Feature pills -->
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-4">
             <span class="feature-pill-secondary">💼 Flexible hours</span>
             <span class="feature-pill-secondary">📈 Good income</span>
             <span class="feature-pill-secondary">🌟 Be a hero</span>
@@ -175,7 +175,7 @@
         </div>
         
         <!-- CTA Button -->
-        <div class="cta-button-secondary group-hover:shadow-xl group-hover:shadow-purple-500/20 transition-shadow duration-300">
+        <div class="cta-button-secondary group-hover:shadow-xl group-hover:shadow-blue-500/20 transition-shadow duration-300">
           <span class="font-black text-base tracking-wide">START HELPING NOW</span>
           <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -193,6 +193,7 @@
 <style>
 /* ============================================
    🎨 MODERN CARD STYLES (2025/2026)
+   Design System: Blue/Cyan/Teal
    ============================================ */
 
 .modern-card {
@@ -203,19 +204,27 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   will-change: transform;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modern-card-primary {
   box-shadow: 
     0 20px 50px -12px rgba(59, 130, 246, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.1);
+  border: 2px solid #60a5fa;
+}
+
+.modern-card:hover {
+  box-shadow: 
+    0 25px 60px -12px rgba(59, 130, 246, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
 .modern-card-secondary {
   box-shadow: 
-    0 20px 50px -12px rgba(168, 85, 247, 0.3),
-    0 0 0 1px rgba(168, 85, 247, 0.2);
+    0 20px 50px -12px rgba(8, 145, 178, 0.3),
+    0 0 0 1px rgba(59, 130, 246, 0.2);
+  border: 2px solid #60a5fa;
 }
 
 /* ============================================
@@ -235,72 +244,11 @@
 
 .animate-gradient {
   background-size: 200% 200%;
-  animation: gradient 8s ease infinite;
+  animation: gradient 6s ease infinite;
 }
 
 .animate-gradient-slow {
   animation: gradient-slow 8s linear infinite;
-}
-
-/* ============================================
-   💫 SPARKLE EFFECTS
-   ============================================ */
-
-.sparkle-container {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.group:hover .sparkle-container {
-  opacity: 1;
-}
-
-.sparkle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
-  animation: sparkle-float 3s infinite;
-}
-
-.sparkle-purple {
-  background: rgb(168, 85, 247);
-  box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.8);
-}
-
-.sparkle:nth-child(1) {
-  top: 20%;
-  left: 20%;
-  animation-delay: 0s;
-}
-
-.sparkle:nth-child(2) {
-  top: 60%;
-  right: 30%;
-  animation-delay: 1s;
-}
-
-.sparkle:nth-child(3) {
-  bottom: 30%;
-  left: 60%;
-  animation-delay: 2s;
-}
-
-@keyframes sparkle-float {
-  0%, 100% {
-    transform: translateY(0) scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: translateY(-20px) scale(1);
-    opacity: 1;
-  }
 }
 
 /* ============================================
@@ -315,25 +263,91 @@
   height: 100%;
   background: linear-gradient(
     90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
   );
-  transition: left 0.7s;
+  animation: shimmer 3s infinite;
   pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 .shimmer-secondary {
   background: linear-gradient(
     90deg,
-    transparent,
-    rgba(168, 85, 247, 0.2),
-    transparent
+    transparent 0%,
+    rgba(59, 130, 246, 0.15) 50%,
+    transparent 100%
   );
 }
 
-.group:hover .shimmer {
-  left: 100%;
+/* ============================================
+   ✨ SPARKLE EFFECTS
+   ============================================ */
+
+.sparkle-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.group:hover .sparkle-container {
+  opacity: 1;
+}
+
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+  animation: sparkle-float 3s ease-in-out infinite;
+}
+
+.sparkle:nth-child(1) {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.sparkle:nth-child(2) {
+  top: 60%;
+  left: 80%;
+  animation-delay: 1s;
+}
+
+.sparkle:nth-child(3) {
+  top: 80%;
+  left: 40%;
+  animation-delay: 2s;
+}
+
+.sparkle-blue {
+  background: linear-gradient(135deg, #3b82f6, #0891b2);
+  box-shadow: 0 0 10px 2px rgba(59, 130, 246, 0.8);
+}
+
+@keyframes sparkle-float {
+  0%, 100% {
+    transform: translateY(0px) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-20px) scale(1);
+    opacity: 1;
+  }
 }
 
 /* ============================================
@@ -365,18 +379,19 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.375rem 0.75rem;
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+  background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
   backdrop-filter: blur(10px);
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgb(124, 58, 237);
-  border: 1px solid rgba(168, 85, 247, 0.2);
+  color: white;
+  border: 1px solid rgba(59, 130, 246, 0.2);
   transition: all 0.3s;
+  opacity: 0.9;
 }
 
 .feature-pill-secondary:hover {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+  opacity: 1;
   transform: translateY(-2px);
 }
 
@@ -408,17 +423,17 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, rgb(59, 130, 246), rgb(168, 85, 247), rgb(236, 72, 153));
+  background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
   border-radius: 16px;
   color: white;
-  box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.5);
+  box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.5);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .cta-button-secondary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 40px -10px rgba(168, 85, 247, 0.6);
+  box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.6);
 }
 
 /* ============================================
@@ -518,13 +533,22 @@
   animation: draw-circle 2s ease-in-out infinite;
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 /* ============================================
    📱 RESPONSIVE OPTIMIZATIONS
    ============================================ */
 
 @media (max-width: 640px) {
   .modern-card {
-    padding: 1.25rem;
+    padding: 1rem;
     border-radius: 20px;
   }
   
