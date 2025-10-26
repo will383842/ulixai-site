@@ -288,147 +288,152 @@
 #signupPopup > div {
   transition: all 0.3s ease-in-out;
 }
+
+</style>
+<style>
 /* ============================================
-   🎯 NAVIGATION WIZARD - BOUTONS STANDARDISÉS
+   🎯 WIZARD NAVIGATION BUTTONS - STANDARDIZED
    ============================================ */
 
+/* Container pour les boutons de navigation */
 .wizard-nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding-top: 1.5rem;
-  border-top: 2px solid #e5e7eb;
   margin-top: 2rem;
+  padding: 1rem 0;
 }
 
-/* Bouton BACK */
+/* Bouton Back standardisé */
 .nav-btn-back {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.875rem 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.875rem;
   font-weight: 600;
-  font-size: 1rem;
-  border-radius: 0.75rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  border: 2px solid transparent;
-  background: transparent;
-  color: #6b7280;
-  outline: none;
-}
-
-.nav-btn-back:hover {
-  background: rgba(59, 130, 246, 0.05);
-  border-color: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .nav-btn-back svg {
   width: 1.25rem;
   height: 1.25rem;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
+}
+
+.nav-btn-back:hover {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
 .nav-btn-back:hover svg {
-  transform: translateX(-0.25rem);
+  transform: translateX(-3px);
 }
 
-/* Bouton NEXT/CONTINUE */
+.nav-btn-back:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Bouton Next standardisé */
 .nav-btn-next {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.875rem 2rem;
-  font-weight: 600;
-  font-size: 1rem;
-  border-radius: 0.75rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  border: none;
-  outline: none;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
-  min-width: 160px;
-  justify-content: center;
-}
-
-.nav-btn-next:hover:not(:disabled) {
-  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-}
-
-.nav-btn-next:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.nav-btn-next:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
 }
 
 .nav-btn-next svg {
   width: 1.25rem;
   height: 1.25rem;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
 }
 
-.nav-btn-next:hover:not(:disabled) svg {
-  transform: translateX(0.25rem);
+.nav-btn-next:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
 }
 
-/* État loading */
-.nav-btn-next.loading svg {
-  animation: spin 1s linear infinite;
+.nav-btn-next:hover svg {
+  transform: translateX(3px);
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.nav-btn-next:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
 }
 
-/* 📱 MOBILE - Boutons fixes en bas */
-@media (max-width: 768px) {
-  [id^="step"]:not(.hidden) {
-    padding-bottom: 120px !important;
-  }
-  
+/* État désactivé */
+.nav-btn-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* Responsive - Mobile */
+@media (max-width: 640px) {
   .wizard-nav-container {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    margin: 0;
+    background: white;
     padding: 1rem;
-    background: linear-gradient(to top, 
-      rgba(255,255,255,1) 0%, 
-      rgba(255,255,255,0.98) 70%, 
-      rgba(255,255,255,0) 100%
-    );
-    border-top: 1px solid #e5e7eb;
-    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
-    z-index: 1000;
-    backdrop-filter: blur(12px);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    gap: 0.75rem;
   }
-  
+
   .nav-btn-back,
   .nav-btn-next {
-    padding: 0.875rem 1.25rem;
-    font-size: 0.875rem;
+    flex: 1;
+    justify-content: center;
+    padding: 0.875rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .nav-btn-back svg,
+  .nav-btn-next svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  /* Ajouter du padding en bas pour éviter que le contenu soit masqué */
+  #signupPopup .step-content {
+    padding-bottom: 6rem;
   }
 }
 
-/* Accessibilité */
-.nav-btn-back:focus-visible,
-.nav-btn-next:focus-visible {
-  outline: 3px solid #3b82f6;
-  outline-offset: 2px;
+/* Animations douces */
+@keyframes buttonEnable {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
+.nav-btn-next:not(:disabled) {
+  animation: buttonEnable 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
 </style>
 {{-- keep these 2 lines somewhere globally once --}}
 <style>[x-cloak]{display:none !important}</style>
@@ -2589,8 +2594,6 @@ function updateHeaderAfterLogin(userData) {
 
 
 </script>
-<!-- Script de validation du wizard -->
-<script src="{{ asset('js/wizard-validation.js') }}"></script>
 
 </body>
 </html>

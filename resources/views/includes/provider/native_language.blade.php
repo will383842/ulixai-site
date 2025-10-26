@@ -170,26 +170,40 @@
 
   </div>
 
-  <!-- Navigation Buttons -->
-  <div class="flex justify-between items-center gap-4">
-    <button 
-      id="backToStep1" 
-      class="nav-btn-back group">
-      <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-      </svg>
-      <span>Back</span>
+  <!-- Navigation Buttons - STANDARDIZED -->
+  <div class="wizard-nav-container">
+    <button id="backToStep1" type="button" class="nav-btn-back">
+      Back
     </button>
-    
-    <button 
-      id="nextStep2" 
-      class="nav-btn-next group">
-      <span>Continue</span>
-      <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-      </svg>
+    <button id="nextStep2" type="button" class="nav-btn-next">
+      Continue
     </button>
   </div>
+
+  <!-- Auto-validation script -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const nextBtn = document.getElementById('nextStep2');
+      const stepElement = document.getElementById('step2');
+      
+      function checkValidation() {
+          const isValid = document.querySelector('#step2 .lang-btn.bg-blue-900') !== null;
+          if (nextBtn) {
+              nextBtn.disabled = !isValid;
+          }
+      }
+      
+      // Observer les changements
+      if (stepElement) {
+          stepElement.addEventListener('click', () => setTimeout(checkValidation, 100));
+          stepElement.addEventListener('input', () => setTimeout(checkValidation, 100));
+          stepElement.addEventListener('change', () => setTimeout(checkValidation, 100));
+      }
+      
+      // Vérification initiale
+      setTimeout(checkValidation, 200);
+  });
+  </script>
 
 </div>
 
@@ -393,53 +407,6 @@
 }
 
 /* ============================================
-   🎯 NAVIGATION BUTTONS
-   ============================================ */
-
-.nav-btn-back,
-.nav-btn-next {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 1.5rem;
-  font-weight: 600;
-  border-radius: 12px;
-  transition: all 0.3s;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  touch-action: manipulation;
-}
-
-.nav-btn-back {
-  color: #3b82f6;
-  background: transparent;
-  border: 2px solid transparent;
-}
-
-.nav-btn-back:hover {
-  background: rgba(59, 130, 246, 0.05);
-  border-color: rgba(59, 130, 246, 0.2);
-}
-
-.nav-btn-next {
-  color: white;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
-  min-width: 140px;
-  justify-content: center;
-}
-
-.nav-btn-next:hover {
-  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
-  transform: translateY(-2px);
-}
-
-.nav-btn-next:active {
-  transform: translateY(0);
-}
-
-/* ============================================
    🎭 ANIMATIONS
    ============================================ */
 
@@ -497,12 +464,6 @@
   .language-name {
     font-size: 0.75rem;
   }
-  
-  .nav-btn-back,
-  .nav-btn-next {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.875rem;
-  }
 }
 
 /* ============================================
@@ -526,9 +487,7 @@
 }
 
 /* Focus visible */
-.language-card:focus-visible,
-.nav-btn-back:focus-visible,
-.nav-btn-next:focus-visible {
+.language-card:focus-visible {
   outline: 3px solid #3b82f6;
   outline-offset: 2px;
 }

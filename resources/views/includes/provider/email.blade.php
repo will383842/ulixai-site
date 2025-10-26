@@ -1,73 +1,171 @@
 <div id="step13" class="hidden">
   <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes glow-pulse {
+      0%, 100% { 
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                    0 0 40px rgba(59, 130, 246, 0.3),
+                    0 0 60px rgba(59, 130, 246, 0.2);
+      }
+      50% { 
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.6),
+                    0 0 50px rgba(59, 130, 246, 0.4),
+                    0 0 80px rgba(59, 130, 246, 0.3);
+      }
+    }
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+    .email-input {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
     .email-input:focus {
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3),
+                  0 8px 24px rgba(59, 130, 246, 0.4);
+      border-color: #3b82f6;
+      transform: translateY(-3px) scale(1.01);
+      animation: glow-pulse 2s infinite;
+    }
+    .email-input::placeholder {
+      color: #9ca3af;
+      font-weight: 500;
+    }
+    .email-input.valid {
+      border-color: #10b981;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    }
+    .input-wrapper {
+      position: relative;
+      overflow: hidden;
+      animation: glow-pulse 3s infinite;
+    }
+    .input-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      animation: shimmer 2s infinite;
+    }
+    .input-wrapper:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
+    }
+    .icon-badge {
+      animation: float 3s ease-in-out infinite;
+    }
+    .success-indicator {
+      opacity: 0;
+      transform: scale(0) rotate(-180deg);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    .email-input.valid ~ .success-indicator {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+      animation: float 2s ease-in-out infinite;
+    }
+    .label-badge {
+      animation: glow-pulse 2s infinite;
     }
   </style>
 
-  <!-- Header moderne -->
-  <div class="mb-8 text-center">
-    <h2 class="text-4xl font-black bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
-      📧 What's Your Email?
-    </h2>
-    <p class="text-gray-500 text-base">We'll use this to contact you</p>
+  <!-- Header premium avec gradient et animation -->
+  <div class="mb-8 text-center relative">
+    <div class="inline-flex items-center justify-center gap-3 mb-4">
+      <div class="icon-badge w-16 h-16 bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl transform hover:rotate-12 transition-transform duration-300">
+        <span class="text-4xl">📧</span>
+      </div>
+      <h2 class="font-black text-4xl sm:text-5xl bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-clip-text text-transparent">
+        What's Your Email?
+      </h2>
+    </div>
+    <p class="text-gray-600 text-base sm:text-lg font-semibold">
+      We'll use this to contact you
+    </p>
   </div>
 
-  <!-- Email Input -->
-  <div class="mb-8">
-    <label class="block text-gray-700 font-bold text-base mb-3 flex items-center">
-      <span class="text-xl mr-2">✉️</span>
-      Email Address
-    </label>
-    <input 
-      id="email_input" 
-      type="email" 
-      placeholder="your.email@example.com" 
-      class="email-input w-full border-3 border-gray-200 rounded-2xl px-6 py-4 text-lg focus:outline-none focus:border-indigo-500 transition-all"
-      @if(Auth::check())
-        value="{{ Auth::user()->email }}"
-        disabled
-      @endif
-    />
-  </div>
-
-  <!-- Message erreur -->
-  <div id="emailError" class="hidden mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-xl">
-    <div class="flex items-center">
-      <span class="text-2xl mr-3">⚠️</span>
-      <p class="text-red-700 font-semibold">Please enter a valid email address</p>
+  <!-- Alert premium -->
+  <div class="mb-8 rounded-2xl bg-gradient-to-r from-blue-50 via-cyan-50 to-blue-50 border-2 border-blue-200 py-4 px-6 shadow-lg">
+    <div class="flex items-center gap-4">
+      <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+        <span class="text-xl">ℹ️</span>
+      </div>
+      <p class="text-blue-900 font-bold text-sm sm:text-base">A verification code will be sent to your email</p>
     </div>
   </div>
 
-  <!-- Message succès -->
-  <div id="emailSuccess" class="hidden mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-xl">
-    <div class="flex items-center">
-      <span class="text-2xl mr-3">✅</span>
-      <p class="text-green-700 font-semibold">Valid email address</p>
+  <!-- Email Input TRÈS VOYANT -->
+  <div class="mb-8">
+    <div class="input-wrapper relative bg-gradient-to-br from-blue-100 via-blue-200 to-cyan-200 rounded-3xl p-8 border-4 border-blue-500 shadow-2xl hover:shadow-blue-500/50 transition-all">
+      <label class="label-badge block text-gray-900 font-black text-2xl mb-4 flex items-center gap-3">
+        <div class="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-2xl">
+          <span class="text-3xl">✉️</span>
+        </div>
+        <span class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">Email Address</span>
+      </label>
+      <div class="relative">
+        <input 
+          id="email_input" 
+          type="email" 
+          placeholder="📧 your.email@example.com" 
+          class="email-input w-full border-4 border-blue-400 rounded-2xl px-8 py-6 focus:outline-none bg-white transition-all shadow-lg"
+          @if(Auth::check())
+            value="{{ Auth::user()->email }}"
+            disabled
+          @endif
+        />
+        <div class="success-indicator absolute right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-2xl">
+          <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message erreur premium -->
+  <div id="emailError" class="hidden mb-8 rounded-2xl p-5 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 shadow-lg animate-pulse">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+        <span class="text-2xl">⚠️</span>
+      </div>
+      <div>
+        <p class="text-red-900 font-black text-lg">Please enter a valid email address</p>
+        <p class="text-red-700 text-sm font-semibold mt-1">Format: email@example.com</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message succès premium -->
+  <div id="emailSuccess" class="hidden mb-8 rounded-2xl p-5 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 shadow-lg">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-md flex-shrink-0 animate-bounce">
+        <span class="text-2xl">✅</span>
+      </div>
+      <div>
+        <p class="text-green-900 font-black text-lg">Valid email address!</p>
+        <p class="text-green-700 text-sm font-semibold mt-1">Ready to send verification code</p>
+      </div>
     </div>
   </div>
 
   <!-- Navigation -->
-  <div class="flex justify-between items-center pt-6 border-t-2 border-gray-100">
-    <button 
-      id="backToStep12" 
-      class="group flex items-center space-x-2 text-gray-600 hover:text-purple-600 font-bold text-lg transition-all"
-    >
-      <svg class="w-6 h-6 transform group-hover:-translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-      </svg>
-      <span>Back</span>
+  <div class="wizard-nav-container">
+    <button id="backToStep12" type="button" class="nav-btn-back">
+      Back
     </button>
-    
-    <button 
-      id="nextStep13" 
-      class="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all flex items-center space-x-3 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
-      disabled
-    >
-      <span>Continue</span>
-      <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-      </svg>
+    <button id="nextStep13" type="button" class="nav-btn-next">
+      Send Verification Code
     </button>
   </div>
 
@@ -91,12 +189,16 @@
           nextBtn.disabled = false;
           errorMsg.classList.add('hidden');
           successMsg.classList.remove('hidden');
+          emailInput.classList.add('valid');
           return true;
         } else {
           nextBtn.disabled = true;
           successMsg.classList.add('hidden');
+          emailInput.classList.remove('valid');
           if (email) {
             errorMsg.classList.remove('hidden');
+          } else {
+            errorMsg.classList.add('hidden');
           }
           return false;
         }
@@ -166,7 +268,7 @@
         })
         .catch(err => {
           console.error(err);
-          errorMsg.querySelector('p').textContent = 'Network error. Please try again.';
+          errorMsg.querySelector('div > p:first-child').textContent = 'Network error. Please try again.';
           errorMsg.classList.remove('hidden');
           nextBtn.disabled = false;
           nextBtn.innerHTML = originalText;
@@ -182,3 +284,28 @@
     });
   </script>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const nextBtn = document.getElementById('nextStep13');
+    const stepElement = document.getElementById('step13');
+    
+    function checkValidation() {
+        const email = document.getElementById('email_input')?.value.trim();
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const isValid = email && regex.test(email);
+        if (nextBtn) {
+            nextBtn.disabled = !isValid;
+        }
+    }
+    
+    // Observer les changements
+    if (stepElement) {
+        stepElement.addEventListener('input', () => setTimeout(checkValidation, 100));
+        stepElement.addEventListener('change', () => setTimeout(checkValidation, 100));
+    }
+    
+    // Vérification initiale
+    setTimeout(checkValidation, 200);
+});
+</script>

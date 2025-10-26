@@ -4,10 +4,50 @@
 
 <div id="step14" class="hidden">
   <style>
-    .phone-input:focus {
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
     }
-    .iti { width: 100%; }
+    .phone-input {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    .phone-input:focus {
+      box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2);
+      border-color: #9333ea;
+      transform: translateY(-2px);
+    }
+    .phone-input::placeholder {
+      color: #9ca3af;
+      font-weight: 500;
+    }
+    .phone-input.border-green-500 {
+      border-color: #10b981 !important;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .icon-badge {
+      animation: float 3s ease-in-out infinite;
+    }
+    .success-indicator {
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s ease;
+    }
+    .phone-input.border-green-500 ~ .success-indicator {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    /* Fix pour intl-tel-input */
+    .iti { 
+      width: 100%;
+      position: relative;
+      z-index: 10;
+    }
     .iti__flag, .iti__flag.iti__be, .iti__flag.iti__us, .iti__selected-flag .iti__flag {
       background-repeat: no-repeat !important;
       background-size: auto !important;
@@ -26,6 +66,7 @@
       padding: 0 12px;
       display: flex;
       align-items: center;
+      z-index: 2;
     }
     .iti__selected-flag {
       padding: 0 8px 0 12px;
@@ -34,6 +75,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
+      z-index: 2;
     }
     .iti__arrow {
       margin-left: 6px;
@@ -44,11 +86,11 @@
     }
     .iti__country-list {
       position: absolute;
-      z-index: 1000;
+      z-index: 9999 !important;
       background: #fff;
       border: 2px solid #e5e7eb;
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
       max-height: 280px;
       overflow-y: auto;
       width: 340px;
@@ -70,81 +112,95 @@
       gap: 10px;
       transition: all 0.2s;
     }
-    .iti__country:hover { background-color: #f0f9ff; }
-    .iti__country.iti__highlight { background-color: #dbeafe; }
-    .iti__dial-code { color: #6366f1; font-weight: 600; }
+    .iti__country:hover { background-color: #faf5ff; }
+    .iti__country.iti__highlight { background-color: #f3e8ff; }
+    .iti__dial-code { color: #9333ea; font-weight: 600; }
     #phone_number_input { padding-left: 90px !important; }
   </style>
 
-  <!-- Header moderne -->
-  <div class="mb-8 text-center">
-    <h2 class="text-4xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 bg-clip-text text-transparent mb-3">
-      📱 What's Your Number?
-    </h2>
-    <p class="text-gray-500 text-base">We'll use this to communicate with you</p>
+  <!-- Header premium avec gradient et animation -->
+  <div class="mb-8 text-center relative">
+    <div class="inline-flex items-center justify-center gap-3 mb-4">
+      <div class="icon-badge w-14 h-14 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl">
+        <span class="text-3xl">📱</span>
+      </div>
+      <h2 class="font-black text-3xl sm:text-4xl bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+        What's Your Number?
+      </h2>
+    </div>
+    <p class="text-gray-600 text-base font-semibold">
+      We'll use this to communicate with you
+    </p>
   </div>
 
-  <!-- Info box -->
-  <div class="mb-6 rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-400 py-4 px-6">
-    <div class="flex items-start">
-      <span class="text-2xl mr-3">💬</span>
-      <p class="text-purple-900 font-semibold text-sm">Your number allows communication with service requesters</p>
+  <!-- Alert premium -->
+  <div class="mb-8 rounded-xl bg-gradient-to-r from-purple-50 via-pink-50 to-purple-50 border-l-4 border-purple-400 py-3 px-5 shadow-lg">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+        <span class="text-xl">💬</span>
+      </div>
+      <p class="text-purple-900 font-bold text-sm">Your number allows communication with service requesters</p>
     </div>
   </div>
 
-  <!-- Phone Input -->
+  <!-- Phone Input allégé -->
   <div class="mb-8">
-    <label class="block text-gray-700 font-bold text-base mb-3 flex items-center">
-      <span class="text-xl mr-2">☎️</span>
-      Phone Number
-    </label>
-    <div class="relative">
-      <input 
-        id="phone_number_input" 
-        type="tel" 
-        placeholder="Enter your phone number"
-        class="phone-input w-full border-3 border-gray-200 rounded-2xl px-6 py-4 text-lg focus:outline-none focus:border-purple-500 transition-all"
-      />
+    <div class="input-wrapper relative bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-300 shadow-lg">
+      <label class="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+        <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-md">
+          <span class="text-xl">☎️</span>
+        </div>
+        <span>Phone Number</span>
+      </label>
+      <div class="relative">
+        <input 
+          id="phone_number_input" 
+          type="tel" 
+          placeholder="Enter your phone number"
+          class="phone-input w-full border-3 border-purple-300 rounded-xl px-6 py-4 focus:outline-none bg-white transition-all shadow-sm"
+        />
+        <div class="success-indicator absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Message erreur -->
-  <div id="phoneError" class="hidden mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-xl">
-    <div class="flex items-center">
-      <span class="text-2xl mr-3">⚠️</span>
-      <p class="text-red-700 font-semibold">Please enter at least 6 digits</p>
+  <!-- Message erreur premium -->
+  <div id="phoneError" class="hidden mb-8 rounded-2xl p-5 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 shadow-lg animate-pulse">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+        <span class="text-2xl">⚠️</span>
+      </div>
+      <div>
+        <p class="text-red-900 font-black text-lg">Please enter at least 6 digits</p>
+        <p class="text-red-700 text-sm font-semibold mt-1">Example: +33 6 12 34 56 78</p>
+      </div>
     </div>
   </div>
 
-  <!-- Message succès -->
-  <div id="phoneSuccess" class="hidden mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-xl">
-    <div class="flex items-center">
-      <span class="text-2xl mr-3">✅</span>
-      <p class="text-green-700 font-semibold">Valid phone number</p>
+  <!-- Message succès premium -->
+  <div id="phoneSuccess" class="hidden mb-8 rounded-2xl p-5 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 shadow-lg">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-md flex-shrink-0 animate-bounce">
+        <span class="text-2xl">✅</span>
+      </div>
+      <div>
+        <p class="text-green-900 font-black text-lg">Valid phone number!</p>
+        <p class="text-green-700 text-sm font-semibold mt-1">Ready to continue</p>
+      </div>
     </div>
   </div>
 
   <!-- Navigation -->
-  <div class="flex justify-between items-center pt-6 border-t-2 border-gray-100">
-    <button 
-      id="backToStep13" 
-      class="group flex items-center space-x-2 text-gray-600 hover:text-purple-600 font-bold text-lg transition-all"
-    >
-      <svg class="w-6 h-6 transform group-hover:-translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-      </svg>
-      <span>Back</span>
+  <div class="wizard-nav-container">
+    <button id="backToStep13" type="button" class="nav-btn-back">
+      Back
     </button>
-    
-    <button 
-      id="nextStep14" 
-      class="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all flex items-center space-x-3 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
-      disabled
-    >
-      <span>Continue</span>
-      <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-      </svg>
+    <button id="nextStep14" type="button" class="nav-btn-next">
+      Continue
     </button>
   </div>
 </div>
@@ -252,5 +308,30 @@ document.addEventListener('DOMContentLoaded', function () {
     phoneInput.value = expats.phone_number;
     validatePhone();
   }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const nextBtn = document.getElementById('nextStep14');
+    const stepElement = document.getElementById('step14');
+    
+    function checkValidation() {
+        const phone = document.getElementById('phone_number_input')?.value.trim();
+        const digitsOnly = phone?.replace(/\D/g, '') || '';
+        const isValid = digitsOnly.length >= 6;
+        if (nextBtn) {
+            nextBtn.disabled = !isValid;
+        }
+    }
+    
+    // Observer les changements
+    if (stepElement) {
+        stepElement.addEventListener('input', () => setTimeout(checkValidation, 100));
+        stepElement.addEventListener('change', () => setTimeout(checkValidation, 100));
+    }
+    
+    // Vérification initiale
+    setTimeout(checkValidation, 200);
 });
 </script>

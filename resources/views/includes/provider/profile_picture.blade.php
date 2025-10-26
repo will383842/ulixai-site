@@ -1,59 +1,89 @@
 <div id="step10" class="hidden">
   <style>
     @keyframes pulse-border {
-      0%, 100% { border-color: rgba(99, 102, 241, 0.5); }
-      50% { border-color: rgba(99, 102, 241, 1); }
+      0%, 100% { border-color: rgba(59, 130, 246, 0.5); }
+      50% { border-color: rgba(59, 130, 246, 1); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
     }
     .photo-preview {
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .photo-preview:hover {
-      transform: scale(1.05);
+      transform: scale(1.05) rotate(2deg);
     }
     .upload-btn {
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .upload-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+    .upload-btn:hover::before {
+      left: 100%;
     }
     .upload-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
     }
   </style>
 
-  <!-- Header moderne -->
-  <div class="mb-8 text-center">
-    <h2 class="text-4xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
-      📸 Add Your Profile Picture
-    </h2>
-    <p class="text-gray-500 text-base">Show your authentic self</p>
+  <!-- Header premium avec gradient -->
+  <div class="mb-8 text-center relative">
+    <div class="inline-flex items-center justify-center gap-3 mb-4">
+      <div class="w-14 h-14 bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-xl transform hover:rotate-12 transition-transform duration-300">
+        <span class="text-3xl">📸</span>
+      </div>
+      <h2 class="font-black text-3xl sm:text-4xl bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-clip-text text-transparent">
+        Add Your Profile Picture
+      </h2>
+    </div>
+    <p class="text-gray-600 text-base sm:text-lg font-semibold">
+      Show your authentic self
+    </p>
   </div>
 
   <!-- Photo Preview Section -->
   <div class="flex flex-col items-center mb-8">
-    <!-- Circle Preview -->
+    <!-- Circle Preview avec effet premium -->
     <div class="relative mb-6">
-      <div class="w-48 h-48 rounded-full border-4 border-indigo-300 flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-50 to-purple-50 relative photo-preview shadow-2xl">
+      <div class="w-48 h-48 rounded-full border-4 border-blue-400 flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 relative photo-preview shadow-2xl">
         <img id="profilePreview" src="" alt="Profile Preview" class="w-full h-full object-cover hidden">
         <canvas id="photoCanvas" class="hidden absolute w-full h-full object-cover"></canvas>
         <div id="profilePlaceholder" class="text-center">
-          <div class="text-6xl mb-2">👤</div>
-          <p class="text-indigo-400 font-semibold text-sm">No photo yet</p>
+          <div class="text-6xl mb-2 animate-float">👤</div>
+          <p class="text-blue-400 font-bold text-sm">No photo yet</p>
         </div>
       </div>
-      <!-- Badge verified -->
-      <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg">
+      <!-- Badge verified premium -->
+      <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-xl">
         ✓ VERIFIED
       </div>
     </div>
 
-    <!-- Upload Buttons -->
-    <div class="flex gap-3 mb-4">
-      <label for="profileUpload" onclick="closeCamera()" class="upload-btn bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3.5 rounded-2xl cursor-pointer font-bold text-base shadow-lg flex items-center space-x-2">
+    <!-- Upload Buttons Premium -->
+    <div class="flex flex-col sm:flex-row gap-3 mb-4 w-full sm:w-auto px-4 sm:px-0">
+      <label for="profileUpload" onclick="closeCamera()" class="upload-btn bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-6 sm:px-8 py-3.5 rounded-2xl cursor-pointer font-bold text-base shadow-lg flex items-center justify-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
         </svg>
         <span>Choose Photo</span>
       </label>
-      <button onclick="openCamera()" class="upload-btn bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-3.5 rounded-2xl font-bold text-base shadow-lg flex items-center space-x-2">
+      <button onclick="openCamera()" class="upload-btn bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 sm:px-8 py-3.5 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
         </svg>
@@ -65,7 +95,7 @@
     <button 
       id="retakePhotoBtn" 
       onclick="retakeProfilePhoto()" 
-      class="hidden upload-btn bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-3 rounded-2xl font-bold text-base shadow-lg flex items-center space-x-2 mb-4"
+      class="hidden upload-btn bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 sm:px-8 py-3 rounded-2xl font-bold text-base shadow-lg flex items-center space-x-2 mb-4"
     >
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -79,62 +109,51 @@
     <div id="cameraSection" class="hidden mt-4 text-center">
       <div class="relative inline-block">
         <video id="videoStream" autoplay class="w-48 h-48 rounded-full border-4 border-green-400 mx-auto mb-4 shadow-2xl" style="animation: pulse-border 2s infinite;"></video>
-        <button onclick="capturePhoto()" class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all">
+        <button onclick="capturePhoto()" class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all">
           📸 Capture
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Instructions modernes -->
-  <div class="mb-8 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 p-6">
+  <!-- Instructions premium -->
+  <div class="mb-8 rounded-3xl bg-gradient-to-br from-amber-50 to-yellow-50 border-3 border-amber-300 p-6 shadow-lg">
     <div class="flex items-start mb-4">
-      <span class="text-3xl mr-3 flex-shrink-0">✅</span>
+      <div class="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-md flex-shrink-0 mr-4">
+        <span class="text-2xl">✅</span>
+      </div>
       <div>
-        <h3 class="text-amber-900 font-bold text-xl mb-2">Photo Requirements</h3>
-        <p class="text-amber-800 text-sm font-medium">These photos are visible to all members</p>
+        <h3 class="text-amber-900 font-black text-xl mb-2">Photo Requirements</h3>
+        <p class="text-amber-800 text-sm font-bold">These photos are visible to all members</p>
       </div>
     </div>
-    <div class="grid grid-cols-2 gap-3">
-      <div class="flex items-center space-x-2 bg-white rounded-xl px-4 py-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="flex items-center space-x-3 bg-white rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
         <span class="text-2xl">👤</span>
-        <span class="text-gray-700 font-semibold text-sm">Alone in photo</span>
+        <span class="text-gray-800 font-semibold text-sm">Alone in photo</span>
       </div>
-      <div class="flex items-center space-x-2 bg-white rounded-xl px-4 py-3">
+      <div class="flex items-center space-x-3 bg-white rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
         <span class="text-2xl">🚫</span>
-        <span class="text-gray-700 font-semibold text-sm">No filters</span>
+        <span class="text-gray-800 font-semibold text-sm">No filters</span>
       </div>
-      <div class="flex items-center space-x-2 bg-white rounded-xl px-4 py-3">
+      <div class="flex items-center space-x-3 bg-white rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
         <span class="text-2xl">😊</span>
-        <span class="text-gray-700 font-semibold text-sm">Face visible</span>
+        <span class="text-gray-800 font-semibold text-sm">Face visible</span>
       </div>
-      <div class="flex items-center space-x-2 bg-white rounded-xl px-4 py-3">
+      <div class="flex items-center space-x-3 bg-white rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
         <span class="text-2xl">📷</span>
-        <span class="text-gray-700 font-semibold text-sm">Face photo only</span>
+        <span class="text-gray-800 font-semibold text-sm">Face photo only</span>
       </div>
     </div>
   </div>
 
   <!-- Navigation -->
-  <div class="flex justify-between items-center pt-6 border-t-2 border-gray-100">
-    <button 
-      id="backToStep9" 
-      class="group flex items-center space-x-2 text-gray-600 hover:text-purple-600 font-bold text-lg transition-all"
-    >
-      <svg class="w-6 h-6 transform group-hover:-translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-      </svg>
-      <span>Back</span>
+  <div class="wizard-nav-container">
+    <button id="backToStep9" type="button" class="nav-btn-back">
+      Back
     </button>
-    
-    <button 
-      id="nextStep10" 
-      class="group bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all flex items-center space-x-3"
-    >
-      <span>Continue</span>
-      <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-      </svg>
+    <button id="nextStep10" type="button" class="nav-btn-next">
+      Continue
     </button>
   </div>
 </div>
@@ -252,6 +271,28 @@
     }
   });
 
+  // IMPORTANT: Observer pour restaurer la photo quand on revient sur le step
+  const step10Observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.target.id === 'step10' && !mutation.target.classList.contains('hidden')) {
+        // Le step devient visible, on restaure la photo si elle existe
+        const expats = JSON.parse(localStorage.getItem('expats')) || {};
+        if (expats.profilePhoto && expats.profilePhoto.image) {
+          profilePreview.src = expats.profilePhoto.image;
+          profilePreview.classList.remove('hidden');
+          photoCanvas.classList.add('hidden');
+          profilePlaceholder.classList.add('hidden');
+          retakeBtn.classList.remove('hidden');
+        }
+      }
+    });
+  });
+
+  const step10Element = document.getElementById('step10');
+  if (step10Element) {
+    step10Observer.observe(step10Element, { attributes: true, attributeFilter: ['class'] });
+  }
+
   // CRITIQUE: Arrêter caméra à la fermeture de page
   window.addEventListener('beforeunload', function() {
     try {
@@ -290,4 +331,15 @@
   window.closeCamera = closeCamera;
   window.capturePhoto = capturePhoto;
   window.retakeProfilePhoto = retakeProfilePhoto;
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Step 10 : Photo optionnelle, pas de validation obligatoire
+    // Le bouton Continue est toujours activé
+    const nextBtn = document.getElementById('nextStep10');
+    if (nextBtn) {
+        nextBtn.disabled = false;
+    }
+});
 </script>

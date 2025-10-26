@@ -1,8 +1,7 @@
 <div id="step6" class="hidden">
     <style>
         @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.1); }
+            0% { transform: scale(0.95); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
         @keyframes slideDown {
@@ -22,47 +21,53 @@
             cursor: pointer;
         }
         .country-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            border-color: #60a5fa;
         }
         .country-card.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border-color: #2563eb;
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
         }
-        .country-card.selected span {
+        .country-card.selected .country-name {
             color: white;
             font-weight: 600;
+        }
+        .country-card.selected .country-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .country-card.selected .country-icon svg {
+            color: white;
         }
         .shake-animation {
             animation: shake 0.5s;
         }
         .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         }
         .search-glow:focus {
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
     </style>
 
     <!-- Header avec gradient -->
     <div class="mb-6 text-center">
-        <h2 class="text-4xl font-black bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 bg-clip-text text-transparent mb-3 animate-slideDown">
+        <h2 class="text-4xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-500 bg-clip-text text-transparent mb-3 animate-slideDown">
             🌍 Where Do You Operate?
         </h2>
-        <p class="text-gray-600 text-base font-medium">Select at least 3 countries • Click to add/remove</p>
+        <p class="text-gray-600 text-base font-medium">Select at least 1 country • Click to add/remove</p>
     </div>
 
     <!-- Zone des pays sélectionnés (chips) -->
     <div id="selectedChipsContainer" class="mb-6 hidden">
-        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-5 border-2 border-purple-200">
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="text-lg font-bold text-purple-900 flex items-center">
-                    ✨ Selected Countries 
-                    <span id="chipCounter" class="ml-2 bg-purple-600 text-white text-sm px-3 py-1 rounded-full">0</span>
+                <h3 class="text-sm font-semibold text-blue-900 flex items-center">
+                    Selected Countries
+                    <span id="chipCounter" class="ml-2 bg-blue-600 text-white text-xs px-2.5 py-1 rounded-full font-bold">0</span>
                 </h3>
-                <button id="clearAll" class="text-red-500 hover:text-red-700 text-sm font-semibold hover:underline">
+                <button id="clearAll" class="text-red-500 hover:text-red-700 text-xs font-semibold hover:underline transition-all">
                     Clear All
                 </button>
             </div>
@@ -79,7 +84,7 @@
                 type="text" 
                 id="countrySearch" 
                 placeholder="🔍 Search for a country..." 
-                class="w-full px-6 py-4 text-lg border-3 border-purple-300 rounded-2xl focus:border-purple-500 focus:outline-none search-glow transition-all bg-white"
+                class="w-full px-6 py-4 text-lg border-3 border-blue-300 rounded-2xl focus:border-blue-500 focus:outline-none search-glow transition-all bg-white"
             >
             <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,27 +94,23 @@
         </div>
     </div>
 
-    <!-- Liste des pays avec design ultra moderne -->
-    <div id="countryList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-[500px] overflow-y-auto p-2 mb-6">
+    <!-- Liste des pays avec design moderne et épuré -->
+    <div id="countryList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto p-2 mb-6">
         @foreach($countries as $country)
-            <div class="country-card border-3 border-gray-200 rounded-2xl p-4 bg-white hover:border-purple-400 relative" data-country="{{ $country->country }}">
+            <div class="country-card group border-2 border-blue-400 rounded-xl p-3 bg-white hover:border-blue-500 relative transition-all duration-200" data-country="{{ $country->country }}">
                 <input 
                     type="checkbox" 
                     name="countries[]" 
                     value="{{ $country->country }}" 
                     class="country-checkbox absolute opacity-0"
                 >
-                <div class="flex flex-col items-center text-center space-y-2">
-                    <div class="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 rounded-full text-3xl">
-                        🌐
+                <div class="flex items-center space-x-3">
+                    <div class="country-icon w-10 h-10 flex items-center justify-center bg-blue-100 rounded-lg flex-shrink-0 transition-all">
+                        <svg class="w-5 h-5 text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
                     </div>
-                    <span class="font-semibold text-gray-700 text-sm">{{ $country->country }}</span>
-                </div>
-                <!-- Checkmark animé -->
-                <div class="checkmark absolute top-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-lg hidden">
-                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                    </svg>
+                    <span class="country-name font-medium text-gray-700 text-sm leading-tight flex-1 transition-colors">{{ $country->country }}</span>
                 </div>
             </div>
         @endforeach
@@ -119,37 +120,24 @@
     <div id="countryError" class="hidden mb-5 p-5 bg-red-50 border-l-4 border-red-500 rounded-xl shake-animation">
         <div class="flex items-center">
             <span class="text-3xl mr-4">⚠️</span>
-            <p class="text-red-700 font-bold text-lg">Please select at least 3 countries!</p>
+            <p class="text-red-700 font-bold text-lg">Please select at least 1 country!</p>
         </div>
     </div>
 
-    <div id="countrySuccess" class="hidden mb-5 p-5 bg-green-50 border-l-4 border-green-500 rounded-xl">
+    <div id="countrySuccess" class="hidden mb-5 p-5 bg-blue-50 border-l-4 border-blue-500 rounded-xl">
         <div class="flex items-center">
             <span class="text-3xl mr-4">🎉</span>
-            <p class="text-green-700 font-bold text-lg">Perfect! <span id="successCount"></span> countries selected</p>
+            <p class="text-blue-700 font-bold text-lg">Perfect! <span id="successCount"></span> countries selected</p>
         </div>
     </div>
 
     <!-- Navigation -->
-    <div class="flex justify-between items-center pt-6 border-t-2 border-gray-200">
-        <button 
-            id="backToStep5" 
-            class="group flex items-center space-x-2 text-gray-700 hover:text-purple-600 font-bold text-lg transition-all"
-        >
-            <svg class="w-6 h-6 transform group-hover:-translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-            <span>Back</span>
+    <div class="wizard-nav-container">
+        <button id="backToStep5" type="button" class="nav-btn-back">
+            Back
         </button>
-        
-        <button 
-            id="nextStep6" 
-            class="group gradient-bg text-white px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all flex items-center space-x-3"
-        >
-            <span>Continue</span>
-            <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
+        <button id="nextStep6" type="button" class="nav-btn-next">
+            Continue
         </button>
     </div>
 
@@ -168,11 +156,11 @@
             // Fonction pour créer un chip
             function createChip(countryName) {
                 const chip = document.createElement('div');
-                chip.className = 'country-chip flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg';
+                chip.className = 'country-chip inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm hover:shadow-md transition-all';
                 chip.innerHTML = `
                     <span>${countryName}</span>
-                    <button class="remove-chip ml-2 hover:bg-white hover:text-purple-600 rounded-full p-1 transition-all" data-country="${countryName}">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <button class="remove-chip hover:bg-blue-700 rounded p-0.5 transition-all" data-country="${countryName}">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
                         </svg>
                     </button>
@@ -205,7 +193,6 @@
                             const checkbox = card.querySelector('.country-checkbox');
                             checkbox.checked = false;
                             card.classList.remove('selected');
-                            card.querySelector('.checkmark').classList.add('hidden');
                             updateSelection();
                         });
                     });
@@ -217,7 +204,7 @@
                 errorMsg.classList.add('hidden');
                 successMsg.classList.add('hidden');
                 
-                if (selected.length >= 3) {
+                if (selected.length >= 1) {
                     successMsg.classList.remove('hidden');
                     document.getElementById('successCount').textContent = selected.length;
                 }
@@ -225,22 +212,22 @@
                 // Save localStorage
                 const selectedCountries = Array.from(selected).map(cb => cb.value);
                 localStorage.setItem('operationalCountries', JSON.stringify(selectedCountries));
+                
+                // Vérifier la validation
+                checkValidation();
             }
 
             // Click sur les cards
             cards.forEach(card => {
                 card.addEventListener('click', function() {
                     const checkbox = this.querySelector('.country-checkbox');
-                    const checkmark = this.querySelector('.checkmark');
                     
                     checkbox.checked = !checkbox.checked;
                     
                     if (checkbox.checked) {
                         this.classList.add('selected');
-                        checkmark.classList.remove('hidden');
                     } else {
                         this.classList.remove('selected');
-                        checkmark.classList.add('hidden');
                     }
                     
                     updateSelection();
@@ -254,7 +241,6 @@
                 });
                 cards.forEach(card => {
                     card.classList.remove('selected');
-                    card.querySelector('.checkmark').classList.add('hidden');
                 });
                 updateSelection();
             });
@@ -272,7 +258,7 @@
             nextBtn.addEventListener('click', function(e) {
                 const selected = document.querySelectorAll('.country-checkbox:checked').length;
                 
-                if (selected < 3) {
+                if (selected < 1) {
                     e.preventDefault();
                     errorMsg.classList.remove('hidden');
                     successMsg.classList.add('hidden');
@@ -289,11 +275,45 @@
                     if (selectedCountries.includes(checkbox.value)) {
                         checkbox.checked = true;
                         card.classList.add('selected');
-                        card.querySelector('.checkmark').classList.remove('hidden');
                     }
                 });
                 updateSelection();
             }
+            
+            // Fonction de validation pour désactiver/activer le bouton
+            function checkValidation() {
+                const isValid = document.querySelectorAll('#countryList input[type="checkbox"]:checked').length >= 1;
+                if (nextBtn) {
+                    nextBtn.disabled = !isValid;
+                }
+            }
+            
+            // Vérification initiale
+            setTimeout(checkValidation, 200);
         });
     </script>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const nextBtn = document.getElementById('nextStep6');
+    const stepElement = document.getElementById('step6');
+    
+    function checkValidation() {
+        const isValid = document.querySelectorAll('#countryList input[type="checkbox"]:checked').length >= 1;
+        if (nextBtn) {
+            nextBtn.disabled = !isValid;
+        }
+    }
+    
+    // Observer les changements
+    if (stepElement) {
+        stepElement.addEventListener('click', () => setTimeout(checkValidation, 100));
+        stepElement.addEventListener('input', () => setTimeout(checkValidation, 100));
+        stepElement.addEventListener('change', () => setTimeout(checkValidation, 100));
+    }
+    
+    // Vérification initiale
+    setTimeout(checkValidation, 200);
+});
+</script>
