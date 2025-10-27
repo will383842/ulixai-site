@@ -1,327 +1,593 @@
-<div id="step13" class="hidden">
-  <style>
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-    @keyframes glow-pulse {
-      0%, 100% { 
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-      }
-      50% { 
-        box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
-      }
-    }
-    
-    .email-input {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .email-input:focus {
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-      border-color: #3b82f6;
-      transform: translateY(-2px);
-      animation: glow-pulse 2s infinite;
-    }
-    
-    .email-input.valid {
-      border-color: #10b981 !important;
-      background: linear-gradient(to bottom right, #f0fdf4 0%, #dcfce7 100%);
-    }
-    
-    .input-wrapper {
-      transition: all 0.3s ease;
-    }
-    
-    .input-wrapper:hover {
-      transform: translateY(-2px);
-    }
-    
-    .icon-badge {
-      animation: float 3s ease-in-out infinite;
-    }
-    
-    .success-indicator {
-      opacity: 0;
-      transform: scale(0);
-      transition: all 0.3s ease;
-      pointer-events: none;
-    }
-    
-    .email-input.valid ~ .success-indicator {
-      opacity: 1;
-      transform: scale(1);
-    }
+<!-- 
+============================================
+🚀 STEP 13 - EMAIL INPUT (OPTIMIZED)
+============================================
+✨ Design System Blue/Cyan/Teal STRICT
+🎨 Email avec validation
+💎 Indicateurs visuels de succès
+⚡ Structure header fixe + contenu scrollable
+🔧 Optimisations CPU, RAM, GPU
+✅ Persistance localStorage
+⚡ Performance maximale
+============================================
+-->
 
-    .ambient-blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.2;
-      pointer-events: none;
-      z-index: 0;
-    }
+<div id="step13" class="hidden flex flex-col h-full" role="region" aria-label="Enter your email">
+  
+  <!-- ============================================
+       TITRE FIXE (STICKY)
+       ============================================ -->
+  <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    .ambient-blob-1 {
-      width: 300px;
-      height: 300px;
-      background: #93c5fd;
-      top: -150px;
-      left: -150px;
-    }
-    
-    .ambient-blob-2 {
-      width: 250px;
-      height: 250px;
-      background: #67e8f9;
-      top: -100px;
-      right: -100px;
-    }
-    
-    .ambient-blob-3 {
-      width: 200px;
-      height: 200px;
-      background: #5eead4;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  </style>
-
-  <!-- Ambient background blobs -->
-  <div class="ambient-blob ambient-blob-1"></div>
-  <div class="ambient-blob ambient-blob-2"></div>
-  <div class="ambient-blob ambient-blob-3"></div>
-
-  <!-- Header -->
-  <div class="mb-8 text-center relative z-10">
-    <div class="inline-flex items-center justify-center gap-3 mb-4">
-      <div class="icon-badge w-12 h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-        <span class="text-2xl">📧</span>
-      </div>
-      <h2 class="font-black text-3xl sm:text-4xl bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">
-        What's Your Email?
-      </h2>
+    <!-- Ambient Background Effects - 3 blobs animés -->
+    <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+      <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+      <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
-    <p class="text-gray-600 text-base sm:text-lg font-semibold">
-      We'll use this to contact you
-    </p>
-  </div>
 
-  <!-- Info banner -->
-  <div class="mb-6 rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 py-3 px-5 shadow-sm relative z-10">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-        <span class="text-base">💡</span>
+    <!-- Header Section -->
+    <div class="text-center space-y-2 relative">
+      <!-- Icon Badge -->
+      <div class="flex justify-center">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
+          <span class="text-lg sm:text-xl">📧</span>
+        </div>
       </div>
-      <p class="text-blue-900 font-semibold text-sm sm:text-base">A verification code will be sent to your email</p>
+      
+      <!-- Title & Subtitle -->
+      <div>
+        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
+          What's Your Email? 📬
+        </h2>
+        <p class="text-sm sm:text-base font-semibold text-gray-600">
+          We'll use this to keep you updated
+        </p>
+      </div>
+
+      <!-- Status Badge -->
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <span class="text-xs font-bold text-blue-700" id="step13StatusText">
+          Email not provided
+        </span>
+      </div>
     </div>
   </div>
 
-  <!-- Email Input -->
-  <div class="mb-8 relative z-10">
-    <div class="input-wrapper">
-      <label class="block text-gray-900 font-bold text-base mb-2 flex items-center gap-2">
-        <span class="text-xl">✉️</span>
-        <span class="text-blue-600">Email Address</span>
+  <!-- ============================================
+       CONTENU SCROLLABLE
+       ============================================ -->
+  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
+
+    <!-- Info Banner -->
+    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-2xl p-3 sm:p-4">
+      <div class="flex items-start gap-3">
+        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+          <span class="text-base">ℹ️</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-blue-900 font-bold text-sm sm:text-base">Required for communication</p>
+          <p class="text-blue-700 text-xs sm:text-sm font-medium mt-1">Enter a valid email address to receive updates and notifications</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email Input -->
+    <div class="input-container">
+      <label class="input-label">
+        <span class="text-lg sm:text-xl">✉️</span>
+        <span class="label-text label-blue">Email Address</span>
       </label>
-      <div class="relative">
+      <div class="input-wrapper">
         <input 
           id="email_input" 
           type="email" 
-          placeholder="your.email@example.com" 
-          class="email-input w-full border-2 border-gray-300 rounded-xl px-5 py-3.5 focus:outline-none bg-white transition-all shadow-sm text-base font-medium placeholder:text-gray-400"
-          @if(Auth::check())
-            value="{{ Auth::user()->email }}"
-            disabled
-          @endif
+          placeholder="example@email.com" 
+          class="email-input"
+          autocomplete="email"
+          maxlength="100"
         />
-        <div class="success-indicator absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
-          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div class="success-indicator">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
           </svg>
         </div>
       </div>
+      <p class="input-hint">We'll never share your email with anyone else</p>
     </div>
-  </div>
 
-  <!-- Error message -->
-  <div id="emailError" class="hidden mb-8 rounded-xl p-4 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 shadow-sm relative z-10">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-        <span class="text-xl">⚠️</span>
-      </div>
-      <div>
-        <p class="text-red-900 font-bold text-base">Please enter a valid email address</p>
-        <p class="text-red-700 text-sm font-medium mt-0.5">Format: email@example.com</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Success message -->
-  <div id="emailSuccess" class="hidden mb-8 rounded-xl p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 shadow-sm relative z-10">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 animate-bounce">
-        <span class="text-xl">✅</span>
-      </div>
-      <div>
-        <p class="text-green-900 font-bold text-base">Valid email address!</p>
-        <p class="text-green-700 text-sm font-medium mt-0.5">Ready to send verification code</p>
+    <!-- Error Alert (Hidden by default) -->
+    <div id="step13Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-red-800">Invalid email address</p>
+          <p class="text-xs text-red-600 mt-0.5">Please enter a valid email (e.g., name@example.com)</p>
+        </div>
       </div>
     </div>
+
+    <!-- Success Alert (Hidden by default) -->
+    <div id="step13Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3" role="status">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-green-800">Valid email address!</p>
+          <p class="text-xs text-green-600 mt-0.5">Ready to continue</p>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- Navigation -->
-  <div class="wizard-nav-container relative z-10">
-    <button id="backToStep12" type="button" class="nav-btn-back bg-white text-blue-600 border-2 border-gray-200">
-      Back
-    </button>
-    <button id="nextStep13" type="button" class="nav-btn-next bg-gradient-to-r from-blue-600 to-cyan-600" disabled>
-      Send Verification Code
-    </button>
-  </div>
+<!-- ============================================
+     STYLES OPTIMISÉS
+     ============================================ -->
+<style>
+/* ============================================
+   🎨 BASE STYLES
+   ============================================ */
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const emailInput = document.getElementById('email_input');
-      const nextBtn = document.getElementById('nextStep13');
-      const errorMsg = document.getElementById('emailError');
-      const successMsg = document.getElementById('emailSuccess');
+/* Animations des blobs - optimisé GPU */
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
 
-      // Validation email
-      function isValidEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-      }
+.animate-blob {
+  animation: blob 7s infinite;
+  will-change: transform;
+}
 
-      function validateEmail() {
-        const email = emailInput.value.trim();
-        
-        if (email && isValidEmail(email)) {
-          nextBtn.disabled = false;
-          errorMsg.classList.add('hidden');
-          successMsg.classList.remove('hidden');
-          emailInput.classList.add('valid');
-          return true;
-        } else {
-          nextBtn.disabled = true;
-          successMsg.classList.add('hidden');
-          emailInput.classList.remove('valid');
-          if (email) {
-            errorMsg.classList.remove('hidden');
-          } else {
-            errorMsg.classList.add('hidden');
-          }
-          return false;
-        }
-      }
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
 
-      // Auto-save localStorage
-      function saveEmail() {
-        let expats = JSON.parse(localStorage.getItem('expats')) || {};
-        expats.email = emailInput.value.trim();
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Shake animation pour les erreurs */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.shake-animation {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* ============================================
+   📝 INPUT STYLES
+   ============================================ */
+
+#step13 .input-container {
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+#step13 .input-container:hover {
+  transform: translateY(-2px);
+}
+
+#step13 .input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.625rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  #step13 .input-label {
+    font-size: 1rem;
+  }
+}
+
+#step13 .label-text {
+  font-weight: 800;
+}
+
+#step13 .label-blue {
+  color: #2563eb;
+}
+
+#step13 .input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+#step13 .email-input {
+  width: 100%;
+  padding: 0.875rem 3rem 0.875rem 1.25rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  #step13 .email-input {
+    padding: 1rem 3rem 1rem 1.25rem;
+    font-size: 1rem;
+  }
+}
+
+#step13 .email-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#step13 .email-input.valid {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+  padding-right: 3rem;
+}
+
+#step13 .email-input.invalid {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+#step13 .success-indicator {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  #step13 .success-indicator {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+#step13 .email-input.valid ~ .success-indicator {
+  display: flex;
+  opacity: 1;
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: translateY(-50%) scale(0);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+#step13 .input-hint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+@media (min-width: 640px) {
+  #step13 .input-hint {
+    font-size: 0.875rem;
+  }
+}
+
+/* Error shake animation */
+#step13 .input-container.error-shake {
+  animation: shake 0.5s ease-in-out;
+}
+</style>
+
+<script>
+/* ============================================
+   🎯 STEP 13 - EMAIL VALIDATION
+   ✅ Activation/désactivation des boutons
+   ✅ Validation email avec regex
+   ✅ Persistance localStorage
+   ============================================ */
+
+(function() {
+  'use strict';
+
+  // ============================================
+  // 📦 STATE & CONSTANTS
+  // ============================================
+  
+  const EMAIL_REGEX = /^[a-zA-Z0-9](?:[a-zA-Z0-9._+-]{0,62}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
+  
+  const state = {
+    email: '',
+    isValid: false,
+    saveTimeout: null,
+    validationTimeout: null
+  };
+
+  // ============================================
+  // 🗄️ CACHE DOM ELEMENTS
+  // ============================================
+  
+  let cachedElements = null;
+
+  function getCachedElements() {
+    if (!cachedElements) {
+      cachedElements = {
+        step: document.getElementById('step13'),
+        emailInput: document.getElementById('email_input'),
+        errorAlert: document.getElementById('step13Error'),
+        successAlert: document.getElementById('step13Success'),
+        statusText: document.getElementById('step13StatusText')
+      };
+    }
+    return cachedElements;
+  }
+
+  // ============================================
+  // 💾 LOCAL STORAGE
+  // ============================================
+  
+  function getLocalStorage() {
+    try {
+      return JSON.parse(localStorage.getItem('expats') || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  function saveToLocalStorage() {
+    // Debouncing - sauvegarder après 500ms d'inactivité
+    if (state.saveTimeout) {
+      clearTimeout(state.saveTimeout);
+    }
+    
+    state.saveTimeout = setTimeout(() => {
+      try {
+        const expats = getLocalStorage();
+        expats.email = state.email;
         localStorage.setItem('expats', JSON.stringify(expats));
-        validateEmail();
+      } catch (e) {
+        console.warn('localStorage error:', e);
       }
+    }, 500);
+  }
 
-      // Events
-      if (!emailInput.disabled) {
-        emailInput.addEventListener('input', saveEmail);
-        emailInput.addEventListener('blur', function() {
-          const email = emailInput.value.trim();
-          if (email && !isValidEmail(email)) {
-            errorMsg.classList.remove('hidden');
-          }
+  // ============================================
+  // ✅ VALIDATION
+  // ============================================
+  
+  function validateEmail(email) {
+    if (!email || email.length === 0) {
+      return false;
+    }
+    
+    // Validation basique de la longueur
+    if (email.length < 5 || email.length > 100) {
+      return false;
+    }
+    
+    // Validation regex
+    return EMAIL_REGEX.test(email);
+  }
+
+  function updateValidationState() {
+    const elements = getCachedElements();
+    
+    state.email = elements.emailInput.value.trim();
+    state.isValid = validateEmail(state.email);
+    
+    // Mise à jour des classes CSS
+    if (state.email.length > 0) {
+      if (state.isValid) {
+        elements.emailInput.classList.remove('invalid');
+        elements.emailInput.classList.add('valid');
+      } else {
+        elements.emailInput.classList.remove('valid');
+        elements.emailInput.classList.add('invalid');
+      }
+    } else {
+      elements.emailInput.classList.remove('valid', 'invalid');
+    }
+    
+    // Mise à jour du texte de statut
+    if (elements.statusText) {
+      if (state.isValid) {
+        elements.statusText.textContent = 'Valid email provided';
+      } else {
+        elements.statusText.textContent = 'Email not provided';
+      }
+    }
+    
+    // Gestion des alertes
+    if (state.isValid) {
+      if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
+      if (elements.successAlert) elements.successAlert.classList.remove('hidden');
+    } else {
+      if (elements.successAlert) elements.successAlert.classList.add('hidden');
+    }
+    
+    // Mettre à jour l'état des boutons
+    updateStep13Buttons();
+    
+    return state.isValid;
+  }
+
+  // ============================================
+  // 🔘 BUTTON STATE MANAGEMENT
+  // ============================================
+  
+  function updateStep13Buttons() {
+    const mobileNextBtn = document.getElementById('mobileNextBtn');
+    const desktopNextBtn = document.getElementById('desktopNextBtn');
+    
+    if (state.isValid) {
+      // Si l'email est valide, activer les boutons
+      if (mobileNextBtn) mobileNextBtn.disabled = false;
+      if (desktopNextBtn) desktopNextBtn.disabled = false;
+    } else {
+      // Sinon, désactiver les boutons
+      if (mobileNextBtn) mobileNextBtn.disabled = true;
+      if (desktopNextBtn) desktopNextBtn.disabled = true;
+    }
+  }
+
+  // ============================================
+  // 🎨 UI UPDATES
+  // ============================================
+  
+  function showError() {
+    const elements = getCachedElements();
+    
+    if (elements.errorAlert) {
+      elements.errorAlert.classList.remove('hidden');
+      elements.errorAlert.classList.add('shake-animation');
+      
+      // Scroll vers l'erreur
+      requestAnimationFrame(() => {
+        elements.errorAlert.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
         });
-      }
+      });
+      
+      // Retirer l'animation après
+      setTimeout(() => {
+        elements.errorAlert.classList.remove('shake-animation');
+      }, 500);
+    }
+    
+    // Shake sur l'input
+    const inputContainer = elements.emailInput?.closest('.input-container');
+    if (inputContainer) {
+      inputContainer.classList.add('error-shake');
+      setTimeout(() => inputContainer.classList.remove('error-shake'), 500);
+    }
+  }
 
-      // Validation au clic Next
-      nextBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        if (!validateEmail()) {
-          errorMsg.classList.remove('hidden');
-          errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return;
+  // ============================================
+  // 🎬 EVENT HANDLERS
+  // ============================================
+  
+  function handleInput(e) {
+    const input = e.target;
+    if (!input || input.id !== 'email_input') return;
+    
+    // Debouncing pour la validation
+    if (state.validationTimeout) {
+      clearTimeout(state.validationTimeout);
+    }
+    
+    state.validationTimeout = setTimeout(() => {
+      // Utiliser requestAnimationFrame pour smooth UI
+      requestAnimationFrame(() => {
+        updateValidationState();
+        if (state.isValid) {
+          saveToLocalStorage();
         }
+      });
+    }, 300);
+  }
 
-        // Envoyer OTP par email
-        nextBtn.disabled = true;
-        const originalText = nextBtn.innerHTML;
-        nextBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+  function handleBlur(e) {
+    const input = e.target;
+    if (!input || input.id !== 'email_input') return;
+    
+    // Validation immédiate au blur
+    requestAnimationFrame(() => {
+      updateValidationState();
+    });
+  }
 
-        const email = emailInput.value.trim();
-        const token = document.querySelector('input[name="_token"]')?.value || '';
+  // ============================================
+  // 🎪 EVENT DELEGATION
+  // ============================================
+  
+  function initEventDelegation() {
+    const elements = getCachedElements();
+    
+    // Event delegation sur le step
+    if (elements.step) {
+      elements.step.addEventListener('input', handleInput, { passive: true });
+      elements.step.addEventListener('blur', handleBlur, { capture: true, passive: true });
+    }
+  }
 
-        fetch('/send-email-otp', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': token,
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({ email, _token: token }),
-          credentials: 'same-origin'
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'success') {
-            // Passer au step suivant (verification)
-            if (typeof goToStep === 'function') {
-              goToStep(14);
-            } else {
-              document.getElementById('step13').classList.add('hidden');
-              document.getElementById('step14').classList.remove('hidden');
+  // ============================================
+  // 🔄 RESTORE STATE
+  // ============================================
+  
+  function restoreState() {
+    const elements = getCachedElements();
+    const expats = getLocalStorage();
+    
+    // Restaurer l'email depuis localStorage
+    if (elements.emailInput && expats.email) {
+      elements.emailInput.value = expats.email;
+      state.email = expats.email;
+    }
+    
+    // Valider après restauration
+    requestAnimationFrame(() => {
+      updateValidationState();
+    });
+  }
+
+  // ============================================
+  // 🎬 INITIALIZATION
+  // ============================================
+  
+  function init() {
+    // Init event delegation
+    initEventDelegation();
+
+    // Observer pour détecter quand le step devient visible
+    const elements = getCachedElements();
+    if (elements.step) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            if (!elements.step.classList.contains('hidden')) {
+              // Step est visible, restaurer l'état et valider
+              restoreState();
             }
-          } else {
-            errorMsg.querySelector('div > div > p:first-child').textContent = data.message || 'Failed to send verification code';
-            errorMsg.classList.remove('hidden');
-            successMsg.classList.add('hidden');
-            nextBtn.disabled = false;
-            nextBtn.innerHTML = originalText;
           }
-        })
-        .catch(err => {
-          console.error(err);
-          errorMsg.querySelector('div > div > p:first-child').textContent = 'Network error. Please try again.';
-          errorMsg.classList.remove('hidden');
-          successMsg.classList.add('hidden');
-          nextBtn.disabled = false;
-          nextBtn.innerHTML = originalText;
         });
       });
 
-      // Restore localStorage
-      const expats = JSON.parse(localStorage.getItem('expats')) || {};
-      if (expats.email && !emailInput.disabled) {
-        emailInput.value = expats.email;
-      }
-      validateEmail();
-    });
-  </script>
-</div>
+      observer.observe(elements.step, { attributes: true });
+    }
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const nextBtn = document.getElementById('nextStep13');
-    const stepElement = document.getElementById('step13');
-    
-    function checkValidation() {
-        const email = document.getElementById('email_input')?.value.trim();
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const isValid = email && regex.test(email);
-        if (nextBtn) {
-            nextBtn.disabled = !isValid;
-        }
-    }
-    
-    // Observer les changements
-    if (stepElement) {
-        stepElement.addEventListener('input', () => setTimeout(checkValidation, 100));
-        stepElement.addEventListener('change', () => setTimeout(checkValidation, 100));
-    }
-    
-    // Vérification initiale
-    setTimeout(checkValidation, 200);
-});
+    // Restaurer l'état initial
+    restoreState();
+  }
+
+  // Start when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 </script>

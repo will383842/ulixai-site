@@ -1,407 +1,712 @@
+<!-- 
+============================================
+🚀 STEP 14 - PHONE NUMBER INPUT (OPTIMIZED)
+============================================
+✨ Design System Blue/Cyan/Teal STRICT
+🎨 Téléphone avec intl-tel-input
+💎 Indicateurs visuels de succès
+⚡ Structure header fixe + contenu scrollable
+🔧 Optimisations CPU, RAM, GPU
+✅ Persistance localStorage
+⚡ Performance maximale
+============================================
+-->
+
 <!-- Include intl-tel-input library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
-<div id="step14" class="hidden">
-  <style>
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-    @keyframes glow-pulse {
-      0%, 100% { 
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-      }
-      50% { 
-        box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
-      }
-    }
+<div id="step14" class="hidden flex flex-col h-full" role="region" aria-label="Enter your phone number">
+  
+  <!-- ============================================
+       TITRE FIXE (STICKY)
+       ============================================ -->
+  <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    .phone-input {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .phone-input:focus {
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-      border-color: #3b82f6;
-      transform: translateY(-2px);
-    }
-    
-    .phone-input.valid {
-      border-color: #10b981 !important;
-      background: linear-gradient(to bottom right, #f0fdf4 0%, #dcfce7 100%);
-    }
-    
-    .input-wrapper {
-      transition: all 0.3s ease;
-    }
-    
-    .input-wrapper:hover {
-      transform: translateY(-2px);
-    }
-    
-    .icon-badge {
-      animation: float 3s ease-in-out infinite;
-    }
-    
-    .success-indicator {
-      opacity: 0;
-      transform: scale(0);
-      transition: all 0.3s ease;
-      pointer-events: none;
-    }
-    
-    .phone-input.valid ~ .success-indicator {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .ambient-blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.2;
-      pointer-events: none;
-      z-index: 0;
-    }
-    
-    .ambient-blob-1 {
-      width: 300px;
-      height: 300px;
-      background: #93c5fd;
-      top: -150px;
-      left: -150px;
-    }
-    
-    .ambient-blob-2 {
-      width: 250px;
-      height: 250px;
-      background: #67e8f9;
-      top: -100px;
-      right: -100px;
-    }
-    
-    .ambient-blob-3 {
-      width: 200px;
-      height: 200px;
-      background: #5eead4;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-    
-    /* Intl-tel-input custom styling */
-    .iti { 
-      width: 100%;
-      position: relative;
-      z-index: 10;
-    }
-    
-    .iti__flag, .iti__flag.iti__be, .iti__flag.iti__us, .iti__selected-flag .iti__flag {
-      background-repeat: no-repeat !important;
-      background-size: auto !important;
-    }
-    
-    .iti__flag {
-      background-image: url('https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags.png') !important;
-    }
-    
-    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-      .iti__flag {
-        background-image: url('https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags@2x.png') !important;
-      }
-    }
-    
-    .iti__flag-container {
-      position: absolute;
-      inset: 0 auto 0 0;
-      padding: 0 12px;
-      display: flex;
-      align-items: center;
-      z-index: 2;
-    }
-    
-    .iti__selected-flag {
-      padding: 0 8px 0 12px;
-      background: transparent;
-      border-radius: 12px 0 0 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      z-index: 2;
-    }
-    
-    .iti__arrow {
-      margin-left: 6px;
-      width: 0;
-      height: 0;
-      border-left: 3px solid transparent;
-      border-right: 3px solid transparent;
-      border-top: 4px solid #2563eb;
-    }
-    
-    .iti__country-list {
-      position: absolute;
-      z-index: 9999 !important;
-      background: #fff;
-      border: 2px solid #dbeafe;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
-      max-height: 280px;
-      overflow-y: auto;
-      width: 320px;
-      top: 100%;
-      left: 0;
-      margin-top: 8px;
-    }
-    
-    .iti__country-list--up {
-      top: auto !important;
-      bottom: 100% !important;
-      margin-top: 0 !important;
-      margin-bottom: 8px !important;
-    }
-    
-    .iti__country {
-      padding: 10px 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.2s;
-    }
-    
-    .iti__country:hover {
-      background-color: #dbeafe;
-    }
-    
-    .iti__country.iti__highlight {
-      background-color: #bfdbfe;
-    }
-    
-    .iti__dial-code {
-      color: #2563eb;
-      font-weight: 600;
-    }
-    
-    #phone_number_input {
-      padding-left: 88px !important;
-    }
-  </style>
-
-  <!-- Ambient background blobs -->
-  <div class="ambient-blob ambient-blob-1"></div>
-  <div class="ambient-blob ambient-blob-2"></div>
-  <div class="ambient-blob ambient-blob-3"></div>
-
-  <!-- Header -->
-  <div class="mb-8 text-center relative z-10">
-    <div class="inline-flex items-center justify-center gap-3 mb-4">
-      <div class="icon-badge w-12 h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-        <span class="text-2xl">📱</span>
-      </div>
-      <h2 class="font-black text-3xl sm:text-4xl bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">
-        What's Your Number?
-      </h2>
+    <!-- Ambient Background Effects - 3 blobs animés -->
+    <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+      <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+      <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
-    <p class="text-gray-600 text-base sm:text-lg font-semibold">
-      We'll use this to communicate with you
-    </p>
-  </div>
 
-  <!-- Info banner -->
-  <div class="mb-6 rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 py-3 px-5 shadow-sm relative z-10">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-        <span class="text-base">💬</span>
+    <!-- Header Section -->
+    <div class="text-center space-y-2 relative">
+      <!-- Icon Badge -->
+      <div class="flex justify-center">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
+          <span class="text-lg sm:text-xl">📱</span>
+        </div>
       </div>
-      <p class="text-blue-900 font-semibold text-sm sm:text-base">Your number allows communication with service requesters</p>
+      
+      <!-- Title & Subtitle -->
+      <div>
+        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
+          What's Your Number? ☎️
+        </h2>
+        <p class="text-sm sm:text-base font-semibold text-gray-600">
+          We'll use this to communicate with you
+        </p>
+      </div>
+
+      <!-- Status Badge -->
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <span class="text-xs font-bold text-blue-700" id="step14StatusText">
+          Phone not provided
+        </span>
+      </div>
     </div>
   </div>
 
-  <!-- Phone Input -->
-  <div class="mb-8 relative z-10">
-    <div class="input-wrapper">
-      <label class="block text-gray-900 font-bold text-base mb-2 flex items-center gap-2">
-        <span class="text-xl">☎️</span>
-        <span class="text-blue-600">Phone Number</span>
+  <!-- ============================================
+       CONTENU SCROLLABLE
+       ============================================ -->
+  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
+
+    <!-- Info Banner -->
+    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-2xl p-3 sm:p-4">
+      <div class="flex items-start gap-3">
+        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+          <span class="text-base">💬</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-blue-900 font-bold text-sm sm:text-base">Required for communication</p>
+          <p class="text-blue-700 text-xs sm:text-sm font-medium mt-1">Your number allows communication with service requesters</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone Input -->
+    <div class="input-container">
+      <label class="input-label">
+        <span class="text-lg sm:text-xl">📞</span>
+        <span class="label-text label-blue">Phone Number</span>
       </label>
-      <div class="relative">
+      <div class="input-wrapper">
         <input 
           id="phone_number_input" 
           type="tel" 
           placeholder="Enter your phone number"
-          class="phone-input w-full border-2 border-gray-300 rounded-xl px-5 py-3.5 focus:outline-none bg-white transition-all shadow-sm text-base font-medium"
+          class="phone-input"
+          autocomplete="tel"
         />
-        <div class="success-indicator absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
-          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div class="success-indicator">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
           </svg>
         </div>
       </div>
+      <p class="input-hint">We'll never share your phone number without your permission</p>
     </div>
-  </div>
 
-  <!-- Error message -->
-  <div id="phoneError" class="hidden mb-8 rounded-xl p-4 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 shadow-sm relative z-10">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-        <span class="text-xl">⚠️</span>
-      </div>
-      <div>
-        <p class="text-red-900 font-bold text-base">Please enter at least 6 digits</p>
-        <p class="text-red-700 text-sm font-medium mt-0.5">Example: +33 6 12 34 56 78</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Success message -->
-  <div id="phoneSuccess" class="hidden mb-8 rounded-xl p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 shadow-sm relative z-10">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 animate-bounce">
-        <span class="text-xl">✅</span>
-      </div>
-      <div>
-        <p class="text-green-900 font-bold text-base">Valid phone number!</p>
-        <p class="text-green-700 text-sm font-medium mt-0.5">Ready to continue</p>
+    <!-- Error Alert (Hidden by default) -->
+    <div id="step14Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-red-800">Please enter at least 6 digits</p>
+          <p class="text-xs text-red-600 mt-0.5">Example: +33 6 12 34 56 78</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Navigation -->
-  <div class="wizard-nav-container relative z-10">
-    <button id="backToStep13" type="button" class="nav-btn-back bg-white text-blue-600 border-2 border-gray-200">
-      Back
-    </button>
-    <button id="nextStep14" type="button" class="nav-btn-next bg-gradient-to-r from-blue-600 to-cyan-600" disabled>
-      Continue
-    </button>
+    <!-- Success Alert (Hidden by default) -->
+    <div id="step14Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3" role="status">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-green-800">Valid phone number!</p>
+          <p class="text-xs text-green-600 mt-0.5">Ready to continue</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- ============================================
+     STYLES OPTIMISÉS
+     ============================================ -->
+<style>
+/* ============================================
+   🎨 BASE STYLES
+   ============================================ */
+
+/* Animations des blobs - optimisé GPU */
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+  will-change: transform;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Shake animation pour les erreurs */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.shake-animation {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* ============================================
+   📝 INPUT STYLES
+   ============================================ */
+
+#step14 .input-container {
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+#step14 .input-container:hover {
+  transform: translateY(-2px);
+}
+
+#step14 .input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.625rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  #step14 .input-label {
+    font-size: 1rem;
+  }
+}
+
+#step14 .label-text {
+  font-weight: 800;
+}
+
+#step14 .label-blue {
+  color: #2563eb;
+}
+
+#step14 .input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+#step14 .phone-input {
+  width: 100%;
+  padding: 0.875rem 3rem 0.875rem 1.25rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  #step14 .phone-input {
+    padding: 1rem 3rem 1rem 1.25rem;
+    font-size: 1rem;
+  }
+}
+
+#step14 .phone-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#step14 .phone-input.valid {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+  padding-right: 3rem;
+}
+
+#step14 .phone-input.invalid {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+#step14 .success-indicator {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  #step14 .success-indicator {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+#step14 .phone-input.valid ~ .success-indicator {
+  display: flex;
+  opacity: 1;
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: translateY(-50%) scale(0);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+#step14 .input-hint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+@media (min-width: 640px) {
+  #step14 .input-hint {
+    font-size: 0.875rem;
+  }
+}
+
+/* Error shake animation */
+#step14 .input-container.error-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* ============================================
+   📱 INTL-TEL-INPUT OVERRIDES
+   ============================================ */
+
+#step14 .iti {
+  width: 100%;
+  display: block;
+}
+
+#step14 .iti__flag-container {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+#step14 .iti__selected-flag {
+  padding: 0 0.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+#step14 .iti__selected-flag:hover,
+#step14 .iti__selected-flag:focus {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+#step14 .iti__country-list {
+  max-height: 250px;
+  background: white;
+  border: 2px solid #d1d5db;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  margin-top: 0.25rem;
+  z-index: 999;
+}
+
+#step14 .iti__country {
+  padding: 0.625rem 1rem;
+  transition: background-color 0.2s ease;
+}
+
+#step14 .iti__country:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+#step14 .iti__country.iti__highlight {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+#step14 .iti__selected-flag .iti__arrow {
+  border-top-color: #6b7280;
+  margin-left: 0.25rem;
+}
+
+#step14 .iti--allow-dropdown input {
+  padding-left: 4.5rem !important;
+}
+
+@media (min-width: 640px) {
+  #step14 .iti--allow-dropdown input {
+    padding-left: 5rem !important;
+  }
+}
+</style>
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const phoneInput = document.getElementById('phone_number_input');
-  const nextBtn = document.getElementById('nextStep14');
-  const errorMsg = document.getElementById('phoneError');
-  const successMsg = document.getElementById('phoneSuccess');
+/* ============================================
+   🎯 STEP 14 - PHONE VALIDATION
+   ✅ Activation/désactivation des boutons
+   ✅ Validation téléphone (min 6 chiffres)
+   ✅ Persistance localStorage
+   ✅ intl-tel-input integration
+   ============================================ */
+
+(function() {
+  'use strict';
+
+  // ============================================
+  // 📦 STATE & CONSTANTS
+  // ============================================
   
-  if (!phoneInput || !window.intlTelInput) return;
+  const state = {
+    phone: '',
+    isValid: false,
+    saveTimeout: null,
+    validationTimeout: null,
+    iti: null
+  };
 
-  const iti = window.intlTelInput(phoneInput, {
-    initialCountry: "auto",
-    geoIpLookup: function (callback) {
-      fetch("https://ipapi.co/json")
-        .then(res => res.json())
-        .then(data => callback(data && data.country_code ? data.country_code : "FR"))
-        .catch(() => callback("FR"));
-    },
-    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-    separateDialCode: false,
-    nationalMode: false,
-    formatOnDisplay: true,
-    autoPlaceholder: "polite"
-  });
+  // ============================================
+  // 🗄️ CACHE DOM ELEMENTS
+  // ============================================
+  
+  let cachedElements = null;
 
-  phoneInput.iti = iti;
+  function getCachedElements() {
+    if (!cachedElements) {
+      cachedElements = {
+        step: document.getElementById('step14'),
+        phoneInput: document.getElementById('phone_number_input'),
+        errorAlert: document.getElementById('step14Error'),
+        successAlert: document.getElementById('step14Success'),
+        statusText: document.getElementById('step14StatusText')
+      };
+    }
+    return cachedElements;
+  }
 
-  // Validation assouplie (6+ digits)
-  function validatePhone() {
-    const phoneValue = phoneInput.value.trim();
-    const digitsOnly = phoneValue.replace(/\D/g, '');
-    const isValid = digitsOnly.length >= 6;
+  // ============================================
+  // 💾 LOCAL STORAGE
+  // ============================================
+  
+  function getLocalStorage() {
+    try {
+      return JSON.parse(localStorage.getItem('expats') || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  function saveToLocalStorage() {
+    // Debouncing - sauvegarder après 500ms d'inactivité
+    if (state.saveTimeout) {
+      clearTimeout(state.saveTimeout);
+    }
     
-    if (isValid) {
-      phoneInput.classList.remove('border-red-500');
-      phoneInput.classList.add('valid');
-      errorMsg.classList.add('hidden');
-      successMsg.classList.remove('hidden');
-      nextBtn.disabled = false;
+    state.saveTimeout = setTimeout(() => {
+      try {
+        const expats = getLocalStorage();
+        expats.phone_number = state.phone;
+        localStorage.setItem('expats', JSON.stringify(expats));
+      } catch (e) {
+        console.warn('localStorage error:', e);
+      }
+    }, 500);
+  }
+
+  // ============================================
+  // 📱 INTL-TEL-INPUT
+  // ============================================
+  
+  function initIntlTelInput() {
+    const elements = getCachedElements();
+    if (!elements.phoneInput) return false;
+
+    try {
+      state.iti = window.intlTelInput(elements.phoneInput, {
+        initialCountry: 'fr',
+        preferredCountries: ['fr', 'be', 'ch', 'ca', 'us', 'gb'],
+        separateDialCode: true,
+        autoPlaceholder: 'aggressive',
+        nationalMode: false,
+        utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js'
+      });
+      
       return true;
-    } else {
-      phoneInput.classList.remove('valid');
-      successMsg.classList.add('hidden');
-      nextBtn.disabled = true;
+    } catch (e) {
+      console.error('Error initializing intl-tel-input:', e);
       return false;
     }
   }
 
-  // Auto-save localStorage
-  function savePhone() {
-    const phoneValue = phoneInput.value.trim();
-    const digitsOnly = phoneValue.replace(/\D/g, '');
+  // ============================================
+  // ✅ VALIDATION
+  // ============================================
+  
+  function validatePhone() {
+    const elements = getCachedElements();
     
-    if (digitsOnly.length >= 6) {
-      const fullNumber = iti.getNumber();
-      const countryData = iti.getSelectedCountryData();
-      
-      let expats = JSON.parse(localStorage.getItem('expats')) || {};
-      expats.phone_number = fullNumber;
-      expats.phone_country = countryData.name;
-      expats.phone_country_code = countryData.dialCode;
-      localStorage.setItem('expats', JSON.stringify(expats));
-    }
-    validatePhone();
-  }
-
-  // Events
-  phoneInput.addEventListener('input', savePhone);
-  phoneInput.addEventListener('countrychange', savePhone);
-
-  // Validation au clic Next
-  nextBtn.addEventListener('click', function(e) {
-    if (!validatePhone()) {
-      e.preventDefault();
-      errorMsg.classList.remove('hidden');
-      errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  });
-
-  // Dropdown direction (auto up/down)
-  phoneInput.addEventListener('open:countrydropdown', function () {
-    const list = phoneInput.parentElement.querySelector('.iti__country-list');
-    if (!list) return;
-    const rect = phoneInput.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const spaceAbove = rect.top;
-
-    if (spaceAbove > spaceBelow) {
-      list.classList.add('iti__country-list--up');
+    state.phone = elements.phoneInput.value.trim();
+    const digitsOnly = state.phone.replace(/\D/g, '');
+    
+    // Validation assouplie: au moins 6 chiffres
+    state.isValid = digitsOnly.length >= 6;
+    
+    // Mise à jour des classes CSS
+    if (state.phone.length > 0) {
+      if (state.isValid) {
+        elements.phoneInput.classList.remove('invalid');
+        elements.phoneInput.classList.add('valid');
+      } else {
+        elements.phoneInput.classList.remove('valid');
+        elements.phoneInput.classList.add('invalid');
+      }
     } else {
-      list.classList.remove('iti__country-list--up');
+      elements.phoneInput.classList.remove('valid', 'invalid');
     }
-  });
-
-  // Restore localStorage
-  const expats = JSON.parse(localStorage.getItem('expats')) || {};
-  if (expats.phone_number) {
-    phoneInput.value = expats.phone_number;
-    validatePhone();
+    
+    // Mise à jour du texte de statut
+    if (elements.statusText) {
+      if (state.isValid) {
+        elements.statusText.textContent = 'Valid phone provided';
+      } else {
+        elements.statusText.textContent = 'Phone not provided';
+      }
+    }
+    
+    // Gestion des alertes
+    if (state.isValid) {
+      if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
+      if (elements.successAlert) elements.successAlert.classList.remove('hidden');
+    } else {
+      if (elements.successAlert) elements.successAlert.classList.add('hidden');
+    }
+    
+    // Mettre à jour l'état des boutons
+    updateStep14Buttons();
+    
+    return state.isValid;
   }
-});
-</script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const nextBtn = document.getElementById('nextStep14');
-    const stepElement = document.getElementById('step14');
+  // ============================================
+  // 🔘 BUTTON STATE MANAGEMENT
+  // ============================================
+  
+  function updateStep14Buttons() {
+    const mobileNextBtn = document.getElementById('mobileNextBtn');
+    const desktopNextBtn = document.getElementById('desktopNextBtn');
     
-    function checkValidation() {
-        const phone = document.getElementById('phone_number_input')?.value.trim();
-        const digitsOnly = phone?.replace(/\D/g, '') || '';
-        const isValid = digitsOnly.length >= 6;
-        if (nextBtn) {
-            nextBtn.disabled = !isValid;
+    if (state.isValid) {
+      // Si le téléphone est valide, activer les boutons
+      if (mobileNextBtn) mobileNextBtn.disabled = false;
+      if (desktopNextBtn) desktopNextBtn.disabled = false;
+    } else {
+      // Sinon, désactiver les boutons
+      if (mobileNextBtn) mobileNextBtn.disabled = true;
+      if (desktopNextBtn) desktopNextBtn.disabled = true;
+    }
+  }
+
+  // ============================================
+  // 🎨 UI UPDATES
+  // ============================================
+  
+  function showError() {
+    const elements = getCachedElements();
+    
+    if (elements.errorAlert) {
+      elements.errorAlert.classList.remove('hidden');
+      elements.errorAlert.classList.add('shake-animation');
+      
+      // Scroll vers l'erreur
+      requestAnimationFrame(() => {
+        elements.errorAlert.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      });
+      
+      // Retirer l'animation après
+      setTimeout(() => {
+        elements.errorAlert.classList.remove('shake-animation');
+      }, 500);
+    }
+    
+    // Shake sur l'input
+    const inputContainer = elements.phoneInput?.closest('.input-container');
+    if (inputContainer) {
+      inputContainer.classList.add('error-shake');
+      setTimeout(() => inputContainer.classList.remove('error-shake'), 500);
+    }
+  }
+
+  // ============================================
+  // 🎬 EVENT HANDLERS
+  // ============================================
+  
+  function handleInput(e) {
+    const input = e.target;
+    if (!input || input.id !== 'phone_number_input') return;
+    
+    // Debouncing pour la validation
+    if (state.validationTimeout) {
+      clearTimeout(state.validationTimeout);
+    }
+    
+    state.validationTimeout = setTimeout(() => {
+      // Utiliser requestAnimationFrame pour smooth UI
+      requestAnimationFrame(() => {
+        validatePhone();
+        if (state.isValid) {
+          saveToLocalStorage();
         }
+      });
+    }, 300);
+  }
+
+  function handleCountryChange() {
+    // Validation immédiate lors du changement de pays
+    requestAnimationFrame(() => {
+      validatePhone();
+      if (state.isValid) {
+        saveToLocalStorage();
+      }
+    });
+  }
+
+  // ============================================
+  // 🎪 EVENT DELEGATION
+  // ============================================
+  
+  function initEventDelegation() {
+    const elements = getCachedElements();
+    
+    // Event delegation sur le step
+    if (elements.step) {
+      elements.step.addEventListener('input', handleInput, { passive: true });
     }
     
-    // Observer les changements
-    if (stepElement) {
-        stepElement.addEventListener('input', () => setTimeout(checkValidation, 100));
-        stepElement.addEventListener('change', () => setTimeout(checkValidation, 100));
+    // Event spécifique pour le changement de pays
+    if (elements.phoneInput) {
+      elements.phoneInput.addEventListener('countrychange', handleCountryChange);
+      
+      // Gestion de la direction du dropdown (up/down)
+      elements.phoneInput.addEventListener('open:countrydropdown', function() {
+        const list = document.querySelector('.iti__country-list');
+        if (!list) return;
+        
+        const rect = elements.phoneInput.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        
+        if (spaceAbove > spaceBelow && spaceAbove > 300) {
+          list.classList.add('iti__country-list--up');
+        } else {
+          list.classList.remove('iti__country-list--up');
+        }
+      });
+    }
+  }
+
+  // ============================================
+  // 🔄 RESTORE STATE
+  // ============================================
+  
+  function restoreState() {
+    const elements = getCachedElements();
+    const expats = getLocalStorage();
+    
+    // Restaurer le téléphone depuis localStorage
+    if (elements.phoneInput && expats.phone_number) {
+      elements.phoneInput.value = expats.phone_number;
+      state.phone = expats.phone_number;
     }
     
-    // Vérification initiale
-    setTimeout(checkValidation, 200);
-});
+    // Valider après restauration
+    requestAnimationFrame(() => {
+      validatePhone();
+    });
+  }
+
+  // ============================================
+  // 🎬 INITIALIZATION
+  // ============================================
+  
+  function init() {
+    // Vérifier que intl-tel-input est chargé
+    if (!window.intlTelInput) {
+      console.warn('intl-tel-input library not loaded');
+      return;
+    }
+
+    // Init intl-tel-input
+    const itiSuccess = initIntlTelInput();
+    if (!itiSuccess) {
+      console.error('Failed to initialize intl-tel-input');
+      return;
+    }
+
+    // Init event delegation
+    initEventDelegation();
+
+    // Observer pour détecter quand le step devient visible
+    const elements = getCachedElements();
+    if (elements.step) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            if (!elements.step.classList.contains('hidden')) {
+              // Step est visible, restaurer l'état et valider
+              restoreState();
+            }
+          }
+        });
+      });
+
+      observer.observe(elements.step, { attributes: true });
+    }
+
+    // Restaurer l'état initial
+    restoreState();
+  }
+
+  // Start when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 </script>

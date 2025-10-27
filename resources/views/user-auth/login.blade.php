@@ -2,919 +2,1146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="theme-color" content="#1d4ed8">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Meta Tags -->
-    <title>Login - ULIX AI | Secure Authentication Portal</title>
-    <meta name="description" content="Log in to your ULIX AI account securely. Access your AI-powered platform with email or Google authentication.">
+    <title>Login - Welcome Back to Ulixai | Secure Sign In</title>
+    <meta name="description" content="Log in to your Ulixai account securely. Access your global help network, connect with helpers worldwide, and manage your profile. Sign in with email or Google.">
+    <meta name="keywords" content="Ulixai login, sign in, secure login, account access, expat community login, travel help login">
+    <meta name="author" content="Ulixai">
     <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
     
-    <!-- Open Graph -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Login - ULIX AI">
-    <meta property="og:description" content="Log in to your ULIX AI account securely">
-    <meta property="og:image" content="{{ asset('images/faviccon.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Login to Ulixai - Your Global Help Network">
+    <meta property="og:description" content="Access your Ulixai account and connect with helpers worldwide. Fast, secure login.">
+    <meta property="og:image" content="{{ asset('images/og-login.jpg') }}">
+    <meta property="og:site_name" content="Ulixai">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="Login to Ulixai">
+    <meta name="twitter:description" content="Access your account and connect with helpers worldwide.">
+    <meta name="twitter:image" content="{{ asset('images/twitter-login.jpg') }}">
     
     <!-- Favicons -->
-    <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png" />
-    <link rel="apple-touch-icon" href="images/faviccon.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png">
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <style>
-        /* ========================================
-           DESIGN SYSTEM - ULIX AI 2025
-        ======================================== */
-        :root {
-            /* Colors - Matching design file */
-            --primary: #1d4ed8;
-            --primary-dark: #1e40af;
-            --primary-light: #3b82f6;
-            --secondary-blue: #2563eb;
-            --light-blue: #60a5fa;
-            --success: #10b981;
-            --error: #ef4444;
-            --warning: #f59e0b;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
-            --border: #e2e8f0;
-            
-            /* Spacing - 8px grid system */
-            --space-1: 0.25rem;
-            --space-2: 0.5rem;
-            --space-3: 0.75rem;
-            --space-4: 1rem;
-            --space-5: 1.25rem;
-            --space-6: 1.5rem;
-            --space-8: 2rem;
-            --space-10: 2.5rem;
-            
-            /* Border radius */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
-            --radius-2xl: 24px;
-            
-            /* Transitions - 60fps smooth */
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* Shadows */
-            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.12);
-            --shadow-2xl: 0 24px 48px rgba(0, 0, 0, 0.15);
-            --shadow-3xl: 0 40px 80px rgba(0, 0, 0, 0.2);
-            
-            /* Safe area insets */
-            --safe-area-top: env(safe-area-inset-top, 0);
-            --safe-area-bottom: env(safe-area-inset-bottom, 0);
-            
-            /* Dynamic viewport */
-            --vh: 1vh;
-        }
-
-        /* ========================================
-           RESET & BASE - MOBILE PERFECT
-        ======================================== */
-        *, *::before, *::after {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
-
-        html {
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
-            scroll-behavior: smooth;
-            height: 100%;
-            height: -webkit-fill-available;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-            overscroll-behavior: none;
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            min-height: calc(var(--vh, 1vh) * 100);
-        }
-
-        /* Remove default input styling */
-        input, button, textarea, select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-
-        /* Better focus for accessibility */
-        :focus-visible {
-            outline: 3px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        /* ========================================
-           ANIMATED BACKGROUND
-        ======================================== */
-        .gradient-bg {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-blue) 50%, var(--primary) 100%);
-            opacity: 0.15;
-            animation: gradientShift 20s ease-in-out infinite;
-            z-index: 0;
-            will-change: transform;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { 
-                transform: scale(1) rotate(0deg);
-                filter: hue-rotate(0deg);
-            }
-            50% { 
-                transform: scale(1.15) rotate(3deg);
-                filter: hue-rotate(10deg);
-            }
-        }
-
-        /* ========================================
-           FLOATING PARTICLES
-        ======================================== */
-        .particle {
-            position: fixed;
-            width: 3px;
-            height: 3px;
-            background: var(--primary-light);
-            border-radius: 50%;
-            animation: float 25s infinite ease-in-out;
-            z-index: 0;
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
-            will-change: transform, opacity;
-            pointer-events: none;
-        }
-
-        .particle:nth-child(1) { left: 15%; top: 20%; animation-delay: 0s; animation-duration: 18s; }
-        .particle:nth-child(2) { left: 85%; top: 25%; animation-delay: 3s; animation-duration: 22s; width: 4px; height: 4px; }
-        .particle:nth-child(3) { left: 25%; top: 65%; animation-delay: 6s; animation-duration: 20s; }
-        .particle:nth-child(4) { left: 75%; top: 75%; animation-delay: 9s; animation-duration: 19s; width: 5px; height: 5px; }
-        .particle:nth-child(5) { left: 50%; top: 15%; animation-delay: 12s; animation-duration: 24s; }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translate3d(0, 0, 0) scale(1);
-                opacity: 0;
-            }
-            5% { opacity: 0.8; }
-            95% { opacity: 0.8; }
-            25% { transform: translate3d(80px, 100px, 0) scale(1.4); }
-            50% { transform: translate3d(-60px, 180px, 0) scale(1); }
-            75% { transform: translate3d(120px, 60px, 0) scale(1.2); }
-        }
-
-        /* ========================================
-           MAIN CONTAINER
-        ======================================== */
-        .login-container {
-            position: relative;
-            z-index: 1;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.97);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-3xl);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            overflow: hidden;
-            position: relative;
-            animation: slideUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        /* Glowing effect */
-        .login-card::before {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 25%, var(--light-blue) 50%, var(--primary-light) 75%, var(--primary) 100%);
-            background-size: 200% 200%;
-            border-radius: var(--radius-2xl);
-            z-index: -1;
-            opacity: 0.4;
-            filter: blur(24px);
-            animation: glowPulse 4s ease-in-out infinite, gradientMove 8s linear infinite;
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.7; }
-        }
-
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* ========================================
-           LOGO & HEADER
-        ======================================== */
-        .logo-container {
-            text-align: center;
-            margin-bottom: var(--space-8);
-            animation: fadeInDown 0.6s var(--transition-smooth) 0.1s both;
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .logo-icon {
-            width: 68px;
-            height: 68px;
-            margin: 0 auto var(--space-4);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(29, 78, 216, 0.25), 0 4px 12px rgba(59, 130, 246, 0.15);
-            animation: logoPulse 3s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        @keyframes logoPulse {
-            0%, 100% { 
-                transform: scale(1);
-                box-shadow: 0 8px 24px rgba(29, 78, 216, 0.25), 0 4px 12px rgba(59, 130, 246, 0.15);
-            }
-            50% { 
-                transform: scale(1.04);
-                box-shadow: 0 12px 32px rgba(29, 78, 216, 0.35), 0 6px 16px rgba(59, 130, 246, 0.25);
-            }
-        }
-
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
-            animation: logoShine 3s infinite;
-        }
-
-        @keyframes logoShine {
-            0% { transform: translate(-100%, -100%) rotate(45deg); }
-            100% { transform: translate(100%, 100%) rotate(45deg); }
-        }
-
-        .page-title {
-            font-size: clamp(1.5rem, 5vw, 1.75rem);
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: var(--space-2);
-            letter-spacing: -0.02em;
-            animation: fadeIn 0.6s var(--transition-smooth) 0.2s both;
-        }
-
-        .page-subtitle {
-            font-size: clamp(0.875rem, 3vw, 0.9375rem);
-            color: var(--text-gray);
-            font-weight: 500;
-            margin-bottom: var(--space-6);
-            animation: fadeIn 0.6s var(--transition-smooth) 0.3s both;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fun-emoji {
-            display: inline-block;
-            animation: wave 2.5s ease-in-out infinite;
-            transform-origin: 70% 70%;
-        }
-
-        @keyframes wave {
-            0%, 100% { transform: rotate(0deg); }
-            10%, 30% { transform: rotate(14deg); }
-            20% { transform: rotate(-8deg); }
-            40%, 100% { transform: rotate(0deg); }
-        }
-
-        /* ========================================
-           SOCIAL BUTTON (GOOGLE)
-        ======================================== */
-        .social-btn {
-            min-height: 48px;
-            animation: fadeIn 0.6s var(--transition-smooth) 0.4s both;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.08), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.7s var(--transition-smooth);
-        }
-
-        .social-btn:hover::before {
-            transform: translateX(100%);
-        }
-
-        /* ========================================
-           DIVIDER
-        ======================================== */
-        .divider {
-            animation: fadeIn 0.6s var(--transition-smooth) 0.5s both;
-        }
-
-        .divider::before,
-        .divider::after {
-            background: linear-gradient(to right, transparent, var(--border) 20%, var(--border) 80%, transparent);
-        }
-
-        /* ========================================
-           FORM ELEMENTS
-        ======================================== */
-        .form-group {
-            animation: fadeIn 0.6s var(--transition-smooth) both;
-        }
-
-        .form-group:nth-child(1) { animation-delay: 0.6s; }
-        .form-group:nth-child(2) { animation-delay: 0.7s; }
-
-        .form-label {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            margin-bottom: var(--space-2);
-            color: var(--text-dark);
-            font-weight: 700;
-            font-size: 0.875rem;
-        }
-
-        .form-label i {
-            color: var(--primary);
-            width: 16px;
-            text-align: center;
-        }
-
-        .form-input {
-            min-height: 52px;
-            font-size: max(16px, 1rem); /* Prevent zoom on iOS */
-            transition: all var(--transition-base);
-        }
-
-        .form-input:focus {
-            box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.08), 0 4px 12px rgba(29, 78, 216, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .form-input:hover {
-            border-color: var(--primary-light);
-        }
-
-        /* Password toggle */
-        .password-toggle {
-            position: absolute;
-            right: var(--space-4);
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-gray);
-            cursor: pointer;
-            transition: all var(--transition-base);
-            padding: var(--space-2);
-            border-radius: var(--radius-sm);
-            min-width: 44px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .password-toggle:hover {
-            color: var(--primary);
-            background: rgba(29, 78, 216, 0.06);
-        }
-
-        /* ========================================
-           SUBMIT BUTTON
-        ======================================== */
-        .submit-btn {
-            min-height: 52px;
-            animation: fadeIn 0.6s var(--transition-smooth) 0.8s both;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .submit-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.7s var(--transition-smooth);
-        }
-
-        .submit-btn:hover::before {
-            transform: translateX(100%);
-        }
-
-        .submit-btn.loading {
-            pointer-events: none;
-        }
-
-        .submit-btn.loading span {
-            opacity: 0;
-        }
-
-        .submit-btn.loading::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        /* ========================================
-           SIGNUP LINK
-        ======================================== */
-        .signup-link {
-            animation: fadeIn 0.6s var(--transition-smooth) 0.9s both;
-        }
-
-        /* ========================================
-           RESPONSIVE BREAKPOINTS
-        ======================================== */
-        @media (max-width: 374px) {
-            .login-card {
-                padding: 1.5rem 1rem !important;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .logo-icon {
-                width: 80px;
-                height: 80px;
-            }
-        }
-
-        @media (max-height: 700px) {
-            .logo-icon {
-                width: 56px;
-                height: 56px;
-                margin-bottom: var(--space-3);
-            }
-            
-            .page-title {
-                font-size: 1.375rem;
-                margin-bottom: var(--space-1);
-            }
-            
-            .page-subtitle {
-                margin-bottom: var(--space-4);
-            }
-        }
-
-        /* Landscape mode */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .logo-icon {
-                width: 40px;
-                height: 40px;
-            }
-        }
-
-        /* ========================================
-           ACCESSIBILITY - REDUCED MOTION
-        ======================================== */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* ========================================
-           TOASTR CUSTOMIZATION
-        ======================================== */
-        #toast-container > div {
-            opacity: 0.97;
-            box-shadow: var(--shadow-2xl);
-            border-radius: var(--radius-lg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            font-weight: 600;
-            padding: var(--space-4) var(--space-5);
-        }
-
-        #toast-container .toast-success {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
-        }
-
-        #toast-container .toast-error {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
-        }
-
-        @media (max-width: 767px) {
-            #toast-container {
-                width: 100%;
-                max-width: calc(100vw - 2rem);
-                left: 50% !important;
-                transform: translateX(-50%);
-                top: max(1rem, var(--safe-area-top)) !important;
-            }
-        }
-
-        /* ========================================
-           SELECTION STYLING
-        ======================================== */
-        ::selection {
-            background: var(--primary-light);
-            color: white;
-        }
-
-        ::-moz-selection {
-            background: var(--primary-light);
-            color: white;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <!-- Animated Background -->
-    <div class="gradient-bg"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-
-    @include('includes.header')
-    @include('pages.popup')
-
-    <!-- Main Content -->
-    <main class="min-h-screen flex items-center justify-center px-4 login-container">
-        <div class="w-full max-w-xl login-card shadow-2xl">
-            
-            <!-- Login Form Section -->
-            <section class="p-10 bg-white flex items-center justify-center" aria-labelledby="login-title">
-                <div class="w-full">
-                    
-                    <!-- Logo & Header -->
-                    <header class="logo-container">
-                        <div class="logo-icon" role="img" aria-label="ULIX AI Logo">
-                            <svg width="38" height="38" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M16 2L2 9L16 16L30 9L16 2Z" fill="white" fill-opacity="0.95"/>
-                                <path d="M2 23L16 30L30 23V9L16 16V30" fill="white" fill-opacity="0.75"/>
-                            </svg>
-                        </div>
-                    </header>
-
-                    <h1 id="login-title" class="page-title text-center">
-                        <!-- i18n:welcome -->Welcome!<!-- /i18n --> <span class="fun-emoji" role="img" aria-label="sparkles">✨</span>
-                    </h1>
-                    <p class="page-subtitle text-center">
-                        <!-- i18n:login_subtitle -->Log in with your email and password.<!-- /i18n -->
-                    </p>
-
-                    <!-- Social Login -->
-                    <div class="space-y-3 mb-6">
-                        <a href="{{ route('google.login') }}" class="social-btn w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition" aria-label="Continue with Google">
-                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="" width="20" height="20" loading="eager">
-                            <span><!-- i18n:continue_with_google -->Continue with Google<!-- /i18n --></span>
-                        </a>
-                    </div>
-
-                    <!-- Divider -->
-                    <div class="divider flex items-center my-6" role="separator" aria-label="or">
-                        <div class="flex-1 h-px"></div>
-                        <span class="px-4 text-sm text-gray-500 font-semibold uppercase tracking-wide">
-                            <!-- i18n:or -->or<!-- /i18n -->
-                        </span>
-                        <div class="flex-1 h-px"></div>
-                    </div>
-
-                    <!-- Login Form -->
-                    <form id="loginForm" class="space-y-4" method="POST" action="{{ route('user.login') }}" novalidate>
-                        @csrf
-                        
-                        <!-- Email Field -->
-                        <div class="form-group">
-                            <label for="email" class="form-label block text-sm text-gray-700">
-                                <i class="fas fa-envelope" aria-hidden="true"></i>
-                                <span><!-- i18n:email -->Email<!-- /i18n --></span>
-                            </label>
-                            <input 
-                                id="email"
-                                name="email" 
-                                type="email" 
-                                value="{{ old('email') }}" 
-                                required 
-                                class="form-input w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:outline-none" 
-                                placeholder="you@example.com"
-                                autocomplete="email"
-                                inputmode="email"
-                                aria-required="true"
-                                aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
-                                aria-describedby="{{ $errors->has('email') ? 'email-error' : '' }}"
-                            />
-                            @error('email')
-                                <p id="email-error" class="text-xs text-red-600 mt-1 font-semibold" role="alert">
-                                    <i class="fas fa-exclamation-circle" aria-hidden="true"></i> {{ $message }}
-                                </p>
-                            @enderror
-                        </div>
-
-                        <!-- Password Field -->
-                        <div class="form-group">
-                            <label for="password" class="form-label block text-sm text-gray-700">
-                                <i class="fas fa-lock" aria-hidden="true"></i>
-                                <span><!-- i18n:password -->Password<!-- /i18n --></span>
-                            </label>
-                            <div class="relative">
-                                <input 
-                                    id="password"
-                                    name="password" 
-                                    type="password" 
-                                    required 
-                                    class="form-input w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:outline-none pr-12" 
-                                    placeholder="••••••••"
-                                    autocomplete="current-password"
-                                    aria-required="true"
-                                    aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
-                                    aria-describedby="{{ $errors->has('password') ? 'password-error' : '' }}"
-                                />
-                                <button 
-                                    type="button" 
-                                    class="password-toggle" 
-                                    id="togglePassword" 
-                                    aria-label="Show password"
-                                    tabindex="0"
-                                >
-                                    <i class="fas fa-eye" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            @error('password')
-                                <p id="password-error" class="text-xs text-red-600 mt-1 font-semibold" role="alert">
-                                    <i class="fas fa-exclamation-circle" aria-hidden="true"></i> {{ $message }}
-                                </p>
-                            @enderror
-                            <div class="text-right mt-1">
-                                <a href="/forgot-password" class="text-xs text-blue-600 hover:underline font-semibold transition">
-                                    <!-- i18n:forgot_password -->Forgot password?<!-- /i18n -->
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <button 
-                            type="submit" 
-                            id="submitBtn"
-                            class="submit-btn w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded-md transition shadow-lg"
-                            aria-label="Login"
-                        >
-                            <span><!-- i18n:login_button -->Login<!-- /i18n --> <span role="img" aria-label="rocket">🚀</span></span>
-                        </button>
-                    </form>
-
-                    <!-- Signup Link -->
-                    <p class="signup-link mt-6 text-xs text-center text-gray-600">
-                        <!-- i18n:no_account -->Don't have an account?<!-- /i18n -->
-                        <a href="javascript:void(0)" onclick="openSignupPopup()" class="text-blue-600 font-medium hover:underline transition ml-1">
-                            <!-- i18n:start_free_trial -->Start Free Trial<!-- /i18n -->
-                        </a>
-                    </p>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    @include('includes.footer')
-
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" defer></script>
-    
-    <script>
-        'use strict';
-
-        // ========================================
-        // VIEWPORT HEIGHT FIX - MOBILE PERFECT
-        // ========================================
-        function setVH() {
-            const vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-        setVH();
-        
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(setVH, 100);
-        });
-        
-        window.addEventListener('orientationchange', () => {
-            setTimeout(setVH, 100);
-        });
-
-        // ========================================
-        // TOASTR CONFIGURATION & MESSAGES
-        // ========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof toastr !== 'undefined') {
-                toastr.options = {
-                    closeButton: true,
-                    debug: false,
-                    newestOnTop: true,
-                    progressBar: true,
-                    positionClass: 'toast-top-center',
-                    preventDuplicates: true,
-                    onclick: null,
-                    showDuration: '250',
-                    hideDuration: '800',
-                    timeOut: '4000',
-                    extendedTimeOut: '1000',
-                    showEasing: 'easeOutCubic',
-                    hideEasing: 'easeInCubic',
-                    showMethod: 'fadeIn',
-                    hideMethod: 'fadeOut',
-                    tapToDismiss: true
-                };
-
-                @if(session('toast_success'))
-                    toastr.success("{{ session('toast_success') }}");
-                @endif
-
-                @if(session('toast_error'))
-                    toastr.error("{{ session('toast_error') }}");
-                @endif
-            }
-        });
-
-        // ========================================
-        // PASSWORD TOGGLE
-        // ========================================
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-
-        if (togglePassword && passwordInput) {
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.type === 'password' ? 'text' : 'password';
-                passwordInput.type = type;
-                
-                const icon = this.querySelector('i');
-                icon.classList.toggle('fa-eye');
-                icon.classList.toggle('fa-eye-slash');
-                
-                this.setAttribute('aria-label', type === 'password' ? 'Show password' : 'Hide password');
-                
-                if ('vibrate' in navigator) {
-                    navigator.vibrate(8);
-                }
-            });
-
-            togglePassword.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.click();
-                }
-            });
-        }
-
-        // ========================================
-        // FORM SUBMISSION - LOADING STATE
-        // ========================================
-        const loginForm = document.getElementById('loginForm');
-        const submitBtn = document.getElementById('submitBtn');
-        let isSubmitting = false;
-
-        if (loginForm && submitBtn) {
-            loginForm.addEventListener('submit', function(e) {
-                if (isSubmitting) {
-                    e.preventDefault();
-                    return false;
-                }
-
-                isSubmitting = true;
-                submitBtn.disabled = true;
-                submitBtn.classList.add('loading');
-                submitBtn.setAttribute('aria-busy', 'true');
-
-                if ('vibrate' in navigator) {
-                    navigator.vibrate(15);
-                }
-            });
-        }
-
-        // ========================================
-        // SIGNUP POPUP FUNCTIONS (PRESERVED)
-        // ========================================
-        function openSignupPopup() {
-            const popup = document.getElementById('signupPopup');
-            if (popup) {
-                popup.classList.remove('hidden');
-                
-                if ('vibrate' in navigator) {
-                    navigator.vibrate(8);
-                }
-            }
-        }
-
-        function closeSignupPopup() {
-            const popup = document.getElementById('signupPopup');
-            if (popup) {
-                popup.classList.add('hidden');
-            }
-        }
-
-        // ========================================
-        // KEYBOARD NAVIGATION
-        // ========================================
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeSignupPopup();
-            }
-        });
-
-        // ========================================
-        // PARTICLE SPARKLE EFFECT
-        // ========================================
-        setInterval(() => {
-            const particles = document.querySelectorAll('.particle');
-            if (particles.length > 0) {
-                const randomParticle = particles[Math.floor(Math.random() * particles.length)];
-                const blue1 = 50 + Math.random() * 120;
-                const blue2 = 120 + Math.random() * 120;
-                randomParticle.style.background = `rgba(${blue1}, ${blue2}, 246, ${0.6 + Math.random() * 0.4})`;
-            }
-        }, 2500);
-
-        // ========================================
-        // PERFORMANCE MONITORING
-        // ========================================
-        if ('performance' in window) {
-            window.addEventListener('load', function() {
-                setTimeout(() => {
-                    const perfData = performance.getEntriesByType('navigation')[0];
-                    if (perfData) {
-                        const loadTime = perfData.loadEventEnd - perfData.fetchStart;
-                        console.log(`⚡ Page loaded in ${Math.round(loadTime)}ms`);
-                    }
-                }, 0);
-            });
-        }
+    <!-- JSON-LD Schema for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Login - Ulixai",
+      "description": "Secure login page for Ulixai global help network. Sign in to access your account and connect with helpers worldwide.",
+      "url": "{{ url()->current() }}",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Ulixai",
+        "url": "{{ config('app.url') }}"
+      },
+      "potentialAction": {
+        "@type": "LoginAction",
+        "name": "Sign In",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "{{ route('user.login') }}",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        }
+      }
+    }
     </script>
+</head>
+<body>
+
+@include('includes.header')
+@include('pages.popup')
+
+<!-- ============================================
+     🎯 ULIXAI LOGIN - MOBILE-FIRST PERFECTION
+     ⚡ Ultra-optimized Performance
+     🔍 SEO & AI-Ready
+     📱 Mobile-First Design
+     ============================================ -->
+
+<!-- Main Content -->
+<main class="main-login" role="main" aria-labelledby="login-title">
+  
+  <!-- Background Layer - CSS only -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Content Container -->
+  <div class="container">
+    
+    <!-- Login Card -->
+    <article class="login-card">
+      
+      <!-- Card Border Effect -->
+      <div class="card-border" aria-hidden="true"></div>
+      
+      <!-- Card Content -->
+      <div class="card-content">
+        
+        <!-- Header Section -->
+        <header class="login-header">
+          
+          <!-- Brand Icon -->
+          <div class="brand-icon" aria-hidden="true">
+            <div class="icon-container">
+              <svg class="icon-svg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Main Heading - H1 for SEO -->
+          <h1 id="login-title" class="main-title">
+            <span class="title-text">Welcome Back!</span>
+            <span class="title-emoji" aria-hidden="true">👋</span>
+          </h1>
+          
+          <!-- Subtitle -->
+          <p class="subtitle">Log in and continue your adventure! ✨🌍</p>
+          
+        </header>
+
+        <!-- Google Sign In -->
+        <a href="{{ route('google.login') }}" 
+           class="google-btn" 
+           aria-label="Continue with Google">
+          <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <span>Sign in with Google - Super Fast!</span>
+          <span class="rocket" aria-hidden="true">⚡</span>
+        </a>
+
+        <!-- Divider -->
+        <div class="divider" role="separator" aria-label="Or sign in with email">
+          <span>Or use your email 💌</span>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" 
+              method="POST" 
+              action="{{ route('user.login') }}" 
+              class="login-form" 
+              novalidate
+              aria-label="Login form">
+          @csrf
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email" class="form-label">
+              <span aria-hidden="true">📧</span>
+              <span>Email</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="email"
+                id="email"
+                name="email" 
+                class="form-input @error('email') input-error @enderror"
+                placeholder="you@example.com"
+                value="{{ old('email') }}"
+                required
+                autocomplete="email"
+                aria-required="true"
+                aria-invalid="@error('email')true @else false @enderror"
+                aria-describedby="error-email" />
+              <div class="input-glow" aria-hidden="true"></div>
+            </div>
+            @error('email')
+              <p id="error-email" class="error-msg" role="alert">{{ $message }}</p>
+            @else
+              <p id="error-email" class="error-msg" role="alert"></p>
+            @enderror
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password" class="form-label">
+              <span aria-hidden="true">🔐</span>
+              <span>Password</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="password"
+                id="password"
+                name="password" 
+                class="form-input @error('password') input-error @enderror"
+                placeholder="••••••••"
+                required
+                autocomplete="current-password"
+                aria-required="true"
+                aria-invalid="@error('password')true @else false @enderror"
+                aria-describedby="error-password" />
+              <div class="input-glow" aria-hidden="true"></div>
+              <button type="button" 
+                      class="toggle-password" 
+                      data-target="password"
+                      aria-label="Toggle password visibility">
+                <span class="eye-icon">👁️</span>
+              </button>
+            </div>
+            @error('password')
+              <p id="error-password" class="error-msg" role="alert">{{ $message }}</p>
+            @else
+              <p id="error-password" class="error-msg" role="alert"></p>
+            @enderror
+            <div class="forgot-password-link">
+              <a href="/forgot-password" class="forgot-link">
+                <span>Forgot password?</span>
+                <span aria-hidden="true">🔑</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="loginBtnSubmit" class="submit-btn">
+            <span class="submit-bg" aria-hidden="true"></span>
+            <span class="submit-text">
+              <span class="submit-label">Login & Explore! 🚀</span>
+              <span class="submit-emoji" aria-hidden="true">✨</span>
+            </span>
+          </button>
+
+        </form>
+
+        <!-- Signup Link -->
+        <footer class="card-footer">
+          <p class="footer-text">
+            <span class="already-text">New to Ulixai? 🎊</span>
+            <a href="javascript:void(0)" onclick="openSignupPopup()" class="signup-link-fun">
+              <span>Join the Adventure!</span>
+              <span aria-hidden="true">🌟✨</span>
+            </a>
+          </p>
+        </footer>
+
+      </div>
+    </article>
+  </div>
+
+</main>
+
+<!-- FAQ Section - SEO Rich -->
+<section class="faq-section" aria-labelledby="faq-title">
+  <div class="container">
+    
+    <h2 id="faq-title" class="faq-title">Frequently Asked Questions 💬</h2>
+    
+    <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+      
+      <!-- Question 1 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon" aria-hidden="true">🔐</span>
+          <span>Is my login secure on Ulixai?</span>
+          <span class="faq-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Absolutely!</strong> We use bank-level SSL encryption, secure OAuth 2.0 authentication with Google, and follow strict GDPR compliance. Your login credentials are encrypted both in transit and at rest. We also offer two-factor authentication (2FA) for additional security.
+          </p>
+        </div>
+      </details>
+
+      <!-- Question 2 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon" aria-hidden="true">❓</span>
+          <span>I forgot my password. What should I do?</span>
+          <span class="faq-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>No worries!</strong> Click the "Forgot password?" link below the password field. Enter your email address, and we'll send you a secure reset link within minutes. Follow the instructions in the email to create a new password. If you don't receive the email, check your spam folder or contact our support team.
+          </p>
+        </div>
+      </details>
+
+      <!-- Question 3 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon" aria-hidden="true">🚀</span>
+          <span>Can I login with Google?</span>
+          <span class="faq-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Yes, absolutely!</strong> Click the "Sign in with Google" button for instant access. This method is fast, secure, and eliminates the need to remember another password. Your Google account credentials are never shared with us - we only receive basic profile information to create and authenticate your Ulixai account.
+          </p>
+        </div>
+      </details>
+
+      <!-- Question 4 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon" aria-hidden="true">📱</span>
+          <span>Can I login from multiple devices?</span>
+          <span class="faq-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Yes, of course!</strong> You can access your Ulixai account from any device - desktop, laptop, tablet, or smartphone. Your account automatically syncs across all devices. Use our mobile apps on iOS and Android for the best mobile experience, or access Ulixai through any web browser.
+          </p>
+        </div>
+      </details>
+
+      <!-- Question 5 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon" aria-hidden="true">⚠️</span>
+          <span>Why can't I login to my account?</span>
+          <span class="faq-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Common solutions:</strong> Make sure you're using the correct email address registered with your account. Check that Caps Lock is off when entering your password. Clear your browser cache and cookies, or try a different browser. If you recently changed your password, use the new one. Still having issues? Use the "Forgot password?" link or contact our 24/7 support team for immediate assistance.
+          </p>
+        </div>
+      </details>
+
+      <!-- Question 6 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon" aria-hidden="true">🌍</span>
+          <span>Can I login from anywhere in the world?</span>
+          <span class="faq-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Yes, from anywhere!</strong> Ulixai is accessible globally in 195+ countries. Whether you're traveling, relocating, or working remotely, you can access your account from any location with an internet connection. Our platform automatically adjusts to your timezone and location preferences.
+          </p>
+        </div>
+      </details>
+
+      <!-- Question 7 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon" aria-hidden="true">🔄</span>
+          <span>How do I update my login credentials?</span>
+          <span class="faq-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Easy to update!</strong> Once logged in, go to Settings > Account Security. From there, you can change your password, update your email address, enable two-factor authentication, and manage connected social accounts. We recommend updating your password every 3-6 months for optimal security.
+          </p>
+        </div>
+      </details>
+
+      <!-- Question 8 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon" aria-hidden="true">🛡️</span>
+          <span>Do you offer two-factor authentication?</span>
+          <span class="faq-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Yes, we highly recommend it!</strong> Enable two-factor authentication (2FA) in your account settings for an extra layer of security. We support SMS codes, authenticator apps (Google Authenticator, Authy), and email verification. With 2FA enabled, even if someone knows your password, they can't access your account without the second verification step.
+          </p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- Footer Links -->
+<footer class="footer-links" role="contentinfo">
+  <div class="container">
+    <nav class="links-nav" aria-label="Footer navigation">
+      <a href="https://ulixai.com/partnershiprequest" class="footer-link" rel="nofollow">
+        <span class="link-icon" aria-hidden="true">🤝</span>
+        <span>Partnership</span>
+      </a>
+      <span class="link-separator" aria-hidden="true">•</span>
+      <a href="https://ulixai.com/press" class="footer-link" rel="nofollow">
+        <span class="link-icon" aria-hidden="true">📰</span>
+        <span>Press</span>
+      </a>
+      <span class="link-separator" aria-hidden="true">•</span>
+      <a href="https://ulixai.com/recruitment" class="footer-link" rel="nofollow">
+        <span class="link-icon" aria-hidden="true">💼</span>
+        <span>Careers</span>
+      </a>
+    </nav>
+    <p class="footer-copyright">
+      &copy; {{ date('Y') }} Ulixai. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+<style>
+/* ============================================
+   CSS - MOBILE-FIRST & OPTIMIZED
+   ============================================ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+
+/* Main Login Container */
+.main-login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:1rem;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg,#eff6ff 0%,#ecfeff 50%,#f0fdfa 100%);
+}
+
+/* Background Layer */
+.bg-layer{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.blob{
+  position:absolute;
+  border-radius:50%;
+  mix-blend-mode:multiply;
+  filter:blur(60px);
+  opacity:0.4;
+  will-change:transform;
+  transform:translateZ(0);
+}
+
+.blob-1{
+  width:24rem;
+  height:24rem;
+  background:#3b82f6;
+  top:5rem;
+  left:2.5rem;
+  animation:float-1 12s ease-in-out infinite;
+}
+
+.blob-2{
+  width:20rem;
+  height:20rem;
+  background:#06b6d4;
+  top:10rem;
+  right:5rem;
+  animation:float-2 15s ease-in-out infinite;
+}
+
+.blob-3{
+  width:18rem;
+  height:18rem;
+  background:#14b8a6;
+  bottom:8rem;
+  left:50%;
+  animation:float-3 18s ease-in-out infinite;
+}
+
+@keyframes float-1{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(2rem,-2rem) scale(1.1)}
+  66%{transform:translate(-1rem,1rem) scale(0.9)}
+}
+
+@keyframes float-2{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(-2rem,2rem) scale(0.9)}
+  66%{transform:translate(2rem,-1rem) scale(1.1)}
+}
+
+@keyframes float-3{
+  0%,100%{transform:translate(-50%,0) scale(1)}
+  50%{transform:translate(-50%,-2rem) scale(1.05)}
+}
+
+.container{
+  width:100%;
+  max-width:28rem;
+  margin:0 auto;
+  position:relative;
+  z-index:1;
+}
+
+/* Card */
+.login-card{
+  position:relative;
+  background:#fff;
+  border-radius:1.5rem;
+  box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);
+  overflow:hidden;
+}
+
+.card-border{
+  position:absolute;
+  inset:-2px;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6,#ec4899);
+  border-radius:1.5rem;
+  z-index:-1;
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+
+.login-card:hover .card-border{
+  opacity:0.7;
+}
+
+.card-content{
+  padding:2rem 1.5rem;
+  position:relative;
+  background:#fff;
+  border-radius:1.5rem;
+}
+
+/* Header */
+.login-header{
+  text-align:center;
+  margin-bottom:2rem;
+}
+
+/* Brand Icon */
+.brand-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:4rem;
+  height:4rem;
+  margin:0 auto 1.5rem;
+  position:relative;
+}
+
+.icon-container{
+  width:4rem;
+  height:4rem;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 10px 25px rgba(6,182,212,0.3);
+}
+
+.icon-svg{
+  width:2rem;
+  height:2rem;
+  color:#fff;
+}
+
+/* Title */
+.main-title{
+  font-size:2rem;
+  font-weight:800;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:0.5rem;
+  letter-spacing:-0.025em;
+}
+
+.title-text{
+  display:inline-block;
+}
+
+.title-emoji{
+  display:inline-block;
+  margin-left:0.5rem;
+  font-size:1.75rem;
+}
+
+.subtitle{
+  font-size:1.125rem;
+  color:#6b7280;
+  font-weight:500;
+  margin-bottom:1.5rem;
+}
+
+/* Google Button */
+.google-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.75rem;
+  width:100%;
+  padding:0.875rem 1.5rem;
+  background:#fff;
+  border:2px solid #e5e7eb;
+  border-radius:0.75rem;
+  font-size:1rem;
+  font-weight:600;
+  color:#1f2937;
+  text-decoration:none;
+  transition:all 0.3s ease;
+  box-shadow:0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom:1.5rem;
+}
+
+.google-btn:hover{
+  border-color:#06b6d4;
+  box-shadow:0 10px 25px rgba(6,182,212,0.2);
+  transform:translateY(-2px);
+}
+
+.google-icon{
+  width:1.5rem;
+  height:1.5rem;
+  flex-shrink:0;
+}
+
+.rocket{
+  font-size:1.25rem;
+}
+
+/* Divider */
+.divider{
+  position:relative;
+  text-align:center;
+  margin:1.5rem 0;
+}
+
+.divider::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:0;
+  right:0;
+  height:2px;
+  background:#e5e7eb;
+  border-style:dashed;
+}
+
+.divider span{
+  position:relative;
+  display:inline-block;
+  padding:0 1rem;
+  background:rgba(255,255,255,0.95);
+  font-size:0.875rem;
+  font-weight:900;
+  color:#6b7280;
+}
+
+/* Form */
+.login-form{
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+}
+
+.form-group{
+  border:0;
+  padding:0;
+  margin:0;
+}
+
+.form-label{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  font-size:0.875rem;
+  font-weight:900;
+  color:#374151;
+  margin-bottom:0.5rem;
+}
+
+.input-wrapper{
+  position:relative;
+}
+
+.form-input{
+  width:100%;
+  padding:1rem 1.25rem;
+  background:#f3f4f6;
+  border:3px solid #d1d5db;
+  border-radius:1rem;
+  font-weight:700;
+  font-size:1rem;
+  color:#111827;
+  transition:all 0.3s ease;
+  font-family:inherit;
+}
+
+.form-input::placeholder{
+  color:#9ca3af;
+  font-weight:500;
+}
+
+.form-input:focus{
+  outline:none;
+  border-color:#06b6d4;
+  background:#fff;
+  box-shadow:0 0 0 4px rgba(6,182,212,0.1);
+}
+
+.input-glow{
+  position:absolute;
+  inset:0;
+  border-radius:1rem;
+  opacity:0;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  filter:blur(20px);
+  transition:opacity 0.3s ease;
+  pointer-events:none;
+  z-index:-1;
+}
+
+.form-input:focus + .input-glow{
+  opacity:0.3;
+}
+
+.toggle-password{
+  position:absolute;
+  right:1rem;
+  top:50%;
+  transform:translateY(-50%);
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:1.25rem;
+  padding:0.5rem;
+  transition:transform 0.3s ease;
+}
+
+.toggle-password:hover{
+  transform:translateY(-50%) scale(1.1);
+}
+
+.error-msg{
+  color:#ef4444;
+  font-size:0.75rem;
+  font-weight:900;
+  margin-top:0.375rem;
+  min-height:1rem;
+}
+
+.forgot-password-link{
+  text-align:right;
+  margin-top:0.5rem;
+}
+
+.forgot-link{
+  display:inline-flex;
+  align-items:center;
+  gap:0.25rem;
+  font-size:0.875rem;
+  font-weight:700;
+  color:#06b6d4;
+  text-decoration:none;
+  transition:all 0.3s ease;
+}
+
+.forgot-link:hover{
+  color:#0891b2;
+  text-decoration:underline;
+}
+
+/* Submit Button */
+.submit-btn{
+  position:relative;
+  width:100%;
+  padding:1rem 1.5rem;
+  margin-top:0.5rem;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  border:none;
+  border-radius:1rem;
+  font-size:1rem;
+  font-weight:900;
+  color:#fff;
+  cursor:pointer;
+  overflow:hidden;
+  transition:all 0.3s ease;
+  box-shadow:0 10px 30px -10px rgba(6,182,212,0.5);
+  font-family:inherit;
+}
+
+.submit-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 15px 40px -10px rgba(6,182,212,0.6);
+}
+
+.submit-btn:active{
+  transform:translateY(0);
+}
+
+.submit-bg{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,#0891b2,#7c3aed);
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+
+.submit-btn:hover .submit-bg{
+  opacity:1;
+}
+
+.submit-text{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+}
+
+/* Footer */
+.card-footer{
+  margin-top:1.5rem;
+  padding-top:1.5rem;
+  border-top:2px dashed #d1d5db;
+}
+
+.footer-text{
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
+  align-items:center;
+  text-align:center;
+}
+
+.already-text{
+  font-size:0.9375rem;
+  color:#6b7280;
+  font-weight:600;
+}
+
+.signup-link-fun{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.75rem 1.5rem;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  color:#fff;
+  font-weight:800;
+  font-size:1rem;
+  border-radius:9999px;
+  text-decoration:none;
+  transition:all 0.3s ease;
+  box-shadow:0 4px 15px rgba(6,182,212,0.3);
+  animation:pulse-glow 2s ease-in-out infinite;
+}
+
+.signup-link-fun:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 25px rgba(6,182,212,0.5);
+  background:linear-gradient(135deg,#0891b2,#7c3aed);
+}
+
+@keyframes pulse-glow{
+  0%,100%{box-shadow:0 4px 15px rgba(6,182,212,0.3)}
+  50%{box-shadow:0 4px 25px rgba(139,92,246,0.5)}
+}
+
+/* FAQ Section */
+.faq-section{
+  padding:4rem 1rem;
+  background:#fff;
+}
+
+.faq-title{
+  font-size:2rem;
+  font-weight:900;
+  text-align:center;
+  margin-bottom:2rem;
+  background:linear-gradient(135deg,#2563eb,#06b6d4,#14b8a6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.faq-list{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  max-width:48rem;
+  margin:0 auto;
+}
+
+.faq-item{
+  background:#fff;
+  border:3px solid #e5e7eb;
+  border-radius:1rem;
+  overflow:hidden;
+  transition:all 0.3s ease;
+}
+
+.faq-item:hover{
+  border-color:#06b6d4;
+  box-shadow:0 4px 20px -4px rgba(6,182,212,0.2);
+}
+
+.faq-item[open]{
+  border-color:#06b6d4;
+  box-shadow:0 8px 30px -8px rgba(6,182,212,0.3);
+}
+
+.faq-question{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  padding:1.25rem 1.5rem;
+  cursor:pointer;
+  list-style:none;
+  font-size:1rem;
+  font-weight:900;
+  color:#1f2937;
+  background:linear-gradient(135deg,#f9fafb,#fff);
+  transition:all 0.3s ease;
+}
+
+.faq-question::-webkit-details-marker{
+  display:none;
+}
+
+.faq-question:hover{
+  background:linear-gradient(135deg,#ecfeff,#f0fdfa);
+  color:#06b6d4;
+}
+
+.faq-icon{
+  font-size:1.5rem;
+  flex-shrink:0;
+}
+
+.faq-question span:nth-child(2){
+  flex:1;
+}
+
+.faq-toggle{
+  font-size:1.5rem;
+  font-weight:900;
+  color:#06b6d4;
+  transition:transform 0.3s ease;
+  flex-shrink:0;
+}
+
+.faq-item[open] .faq-toggle{
+  transform:rotate(45deg);
+}
+
+.faq-answer{
+  padding:0 1.5rem 1.5rem 4rem;
+}
+
+.faq-answer p{
+  line-height:1.7;
+  color:#4b5563;
+  font-size:0.9375rem;
+}
+
+/* Footer Links */
+.footer-links{
+  padding:2rem 1rem 3rem;
+  background:linear-gradient(to bottom,#fff,#f9fafb);
+  border-top:1px solid #e5e7eb;
+}
+
+.links-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.75rem;
+  flex-wrap:wrap;
+  margin-bottom:1rem;
+}
+
+.footer-link{
+  display:inline-flex;
+  align-items:center;
+  gap:0.35rem;
+  font-size:0.8125rem;
+  font-weight:600;
+  color:#6b7280;
+  text-decoration:none;
+  transition:color 0.3s ease;
+  padding:0.25rem 0.5rem;
+}
+
+.footer-link:hover{
+  color:#06b6d4;
+}
+
+.link-icon{
+  font-size:0.875rem;
+  opacity:0.7;
+}
+
+.link-separator{
+  color:#d1d5db;
+  font-size:0.75rem;
+  user-select:none;
+}
+
+.footer-copyright{
+  text-align:center;
+  font-size:0.75rem;
+  color:#9ca3af;
+  font-weight:500;
+}
+
+/* Tablet */
+@media (min-width:640px){
+  .card-content{padding:2.5rem}
+  .main-title{font-size:2.5rem}
+  .subtitle{font-size:1.25rem}
+}
+
+/* Desktop */
+@media (min-width:1024px){
+  .container{max-width:50rem}
+  .card-content{padding:3rem}
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:0.01ms!important;
+  }
+}
+
+@media (prefers-contrast:high){
+  .form-input:focus{border:4px solid #1e40af}
+}
+</style>
+
+<!-- JavaScript -->
+<script>
+(function(){
+  'use strict';
+  
+  const form=document.getElementById('loginForm');
+  const btn=document.getElementById('loginBtnSubmit');
+  
+  // Password toggle
+  document.addEventListener('click',function(e){
+    const toggle=e.target.closest('.toggle-password');
+    if(!toggle)return;
+    
+    const targetId=toggle.dataset.target;
+    const input=document.getElementById(targetId);
+    const icon=toggle.querySelector('.eye-icon');
+    
+    if(input.type==='password'){
+      input.type='text';
+      icon.textContent='🙈';
+    }else{
+      input.type='password';
+      icon.textContent='👁️';
+    }
+  });
+  
+  // Real-time validation
+  const inputs=form.querySelectorAll('input[type="email"],input[type="password"]');
+  inputs.forEach(function(input){
+    input.addEventListener('input',function(){
+      const errorEl=document.getElementById('error-'+this.name);
+      if(errorEl && this.value.trim()){
+        errorEl.textContent='';
+        this.classList.remove('error');
+      }
+    });
+  });
+  
+  // Form submission validation
+  form.addEventListener('submit',function(e){
+    const errorIds=['email','password'];
+    errorIds.forEach(function(id){
+      const el=document.getElementById('error-'+id);
+      if(el)el.textContent='';
+    });
+    
+    inputs.forEach(function(input){
+      input.classList.remove('error');
+    });
+    
+    let valid=true;
+    const email=form.elements.email.value.trim();
+    const password=form.elements.password.value;
+    
+    if(!email){
+      showError('email','Email is required.');
+      valid=false;
+    }else if(!/^\S+@\S+\.\S+$/.test(email)){
+      showError('email','Invalid email address.');
+      valid=false;
+    }
+    
+    if(!password){
+      showError('password','Password is required.');
+      valid=false;
+    }
+    
+    if(!valid){
+      e.preventDefault();
+      btn.disabled=false;
+      return false;
+    }
+  });
+  
+  function showError(field,msg){
+    const errorEl=document.getElementById('error-'+field);
+    const inputEl=form.elements[field];
+    
+    if(errorEl)errorEl.textContent=msg;
+    if(inputEl && inputEl.classList){
+      inputEl.classList.add('error');
+    }
+  }
+})();
+
+// Signup popup function
+function openSignupPopup() {
+  document.getElementById('signupPopup').classList.remove('hidden');
+}
+
+function closeSignupPopup() {
+  document.getElementById('signupPopup').classList.add('hidden');
+}
+</script>
+
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    @if(session('toast_success'))
+        toastr.success("{{ session('toast_success') }}");
+    @endif
+    @if(session('toast_error'))
+        toastr.error("{{ session('toast_error') }}");
+    @endif
+});
+</script>
+
+@include('includes.footer')
+
 </body>
 </html>

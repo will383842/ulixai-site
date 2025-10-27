@@ -310,11 +310,11 @@
     left: 0;
     right: 0;
     background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0.95) 100%);
-    padding: 16px;
+    padding: 12px; /* 🆕 Réduit de 16px à 12px */
     display: flex;
     gap: 12px;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-    z-index: 30;
+    z-index: 60;
     backdrop-filter: blur(8px);
   }
   
@@ -365,13 +365,18 @@
 /* Desktop: In-Flow Navigation */
 @media (min-width: 640px) {
   #desktopNavButtons {
+    position: sticky;
+    bottom: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    margin-top: 32px;
-    padding-top: 24px;
+    margin-top: 16px; /* 🆕 Réduit de 32px à 16px */
+    padding: 12px 0; /* 🆕 Réduit de 24px à 12px */
+    background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0.95) 100%);
+    backdrop-filter: blur(8px);
     border-top: 1px solid #e5e7eb;
+    z-index: 60;
   }
   
   #desktopNavButtons button {
@@ -448,6 +453,72 @@
 .btn-next:hover svg {
   transform: translateX(4px);
 }
+
+/* ============================================
+   🎯 AJOUTS: CROIX VISIBLE & BOUTONS GRISÉS
+   ============================================ */
+
+.close-popup {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  border: 2px solid #ef4444;
+}
+
+.close-popup:hover {
+  background-color: #ef4444;
+  transform: scale(1.1);
+}
+
+.close-popup svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #ef4444;
+  stroke-width: 3;
+  transition: color 0.2s ease;
+}
+
+.close-popup:hover svg {
+  color: white;
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background-color: #e5e7eb !important;
+  color: #9ca3af !important;
+}
+
+.btn-enabled {
+  opacity: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+@media (max-width: 768px) {
+  .close-popup {
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .close-popup svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
 </style>
 
 {{-- keep these 2 lines somewhere globally once --}}
@@ -497,10 +568,7 @@
   use App\Models\Country;
   $countries = Country::where('status', 1)->get();
 @endphp
-<body class="min-h-screen bg-white pt-14 lg:pt-20">
-<!-- Padding-top responsive: 
-     - Mobile (pt-14): 56px for mobile header 
-     - Desktop (lg:pt-20): 80px for desktop navbar -->
+<body class="min-h-screen bg-white">
 <!-- //For showing toast messages across platform -->
 @if (session('success'))
     <script>
@@ -515,8 +583,7 @@
 @endif
 
 <!-- Navbar (keeping original navbar as is) -->
-<!-- Desktop Navbar - Sticky Smart -->
-<nav id="desktopNavbar" class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-lg transition-transform duration-300">
+<nav class="top-0 z-50 border-b border-white/20 shadow-xl">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-20 items-center">
 
@@ -875,7 +942,7 @@
     <!-- ============================================
          HEADER STICKY MOBILE / NORMAL DESKTOP
          ============================================ -->
-    <div class="sticky sm:relative top-0 z-20 bg-white/95 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none border-b border-gray-200 sm:border-b-0 px-4 sm:px-8 py-4 sm:py-6 flex items-center justify-between gap-4 shrink-0">
+    <div class="sticky sm:relative top-0 z-20 bg-white/95 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none border-b-0 px-4 sm:px-8 py-0 flex items-center justify-between gap-4 h-0 overflow-hidden sm:h-auto sm:overflow-visible">
       
       <!-- LEFT: Progress Mobile / Badge Desktop -->
       <div class="flex-1">
@@ -890,25 +957,11 @@
           </div>
         </div>
         
-        <!-- Desktop: Badge Provider Registration -->
-        <div class="hidden sm:flex items-center gap-3">
-          <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
-          </div>
-          <div>
-            <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Provider Registration
-            </h2>
-            <p class="text-sm text-gray-500 font-medium">Become a Ulysse Service Provider</p>
-          </div>
-        </div>
       </div>
       
       <!-- RIGHT: Close Button -->
       <button id="closePopup" 
-              class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all active:scale-95 text-gray-500 hover:text-gray-800 shrink-0" 
+              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all active:scale-95 text-gray-500 hover:text-gray-800 shrink-0 absolute top-2 right-2" 
               aria-label="Close signup form">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
@@ -919,7 +972,7 @@
     <!-- ============================================
          CONTENT SCROLLABLE AREA
          ============================================ -->
-    <div class="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-8 pt-4 sm:pt-2 pb-28 sm:pb-4" id="popupContentArea">
+    <div class="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-8 pt-0 pb-20 sm:pb-4" id="popupContentArea">
       
 		<!-- Step 1 -->
 		@include('includes.provider.choose_step')
@@ -934,179 +987,266 @@
 		@include('includes.provider.provider_services')
 
     <!-- Step 5: Country Selection -->
-    <div id="step5" class="hidden">
-      <style>
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-        }
-        
-        .icon-badge {
-          animation: float 3s ease-in-out infinite;
-        }
-        
-        .country-select {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .country-select:focus {
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-          border-color: #3b82f6;
-          transform: translateY(-2px);
-        }
-        
-        .country-select:hover {
-          border-color: #60a5fa;
-        }
+<div id="step5" class="hidden flex flex-col h-full" role="region" aria-label="Select your country of residence">
+  
+  <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
+    
+    <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+      <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+      <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
 
-        .ambient-blob {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(80px);
-          opacity: 0.2;
-          pointer-events: none;
-          z-index: 0;
-        }
-        
-        .ambient-blob-1 {
-          width: 300px;
-          height: 300px;
-          background: #93c5fd;
-          top: -150px;
-          left: -150px;
-        }
-        
-        .ambient-blob-2 {
-          width: 250px;
-          height: 250px;
-          background: #67e8f9;
-          top: -100px;
-          right: -100px;
-        }
-        
-        .ambient-blob-3 {
-          width: 200px;
-          height: 200px;
-          background: #5eead4;
-          bottom: -100px;
-          left: 50%;
-          transform: translateX(-50%);
-        }
-      </style>
-
-      <div class="ambient-blob ambient-blob-1"></div>
-      <div class="ambient-blob ambient-blob-2"></div>
-      <div class="ambient-blob ambient-blob-3"></div>
-      
-      <div class="mb-8 text-center relative z-10">
-        <div class="inline-flex items-center justify-center gap-3 mb-4">
-          <div class="icon-badge w-12 h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-            <span class="text-2xl">🌍</span>
-          </div>
-          <h2 class="font-black text-3xl sm:text-4xl bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">
-            In which country do you live?
-          </h2>
+    <div class="text-center space-y-2 relative">
+      <div class="flex justify-center">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
         </div>
-        <p class="text-gray-600 text-base sm:text-lg font-semibold">
+      </div>
+      
+      <div>
+        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
+          Where Do You Live? 🌍
+        </h2>
+        <p class="text-sm sm:text-base font-semibold text-gray-600">
           Select your country of residence
         </p>
       </div>
 
-      <div class="mb-8 relative z-10">
-        <label class="block text-gray-900 font-bold text-base mb-2 flex items-center gap-2">
-          <span class="text-xl">🌎</span>
-          <span class="text-blue-600">Country of Residence</span>
-        </label>
-        <div class="relative">
-          <select id="location-input" name="location" class="country-select w-full border-2 border-gray-300 rounded-xl px-5 py-3.5 text-gray-800 bg-white focus:outline-none transition-all appearance-none cursor-pointer text-base font-medium">
-            <option value="" disabled selected>Choose your country...</option>
-            @foreach($countries as $country)
-              <option value="{{ $country->country }}">{{ $country->country }}</option>
-            @endforeach
-          </select>
-          <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </div>
-        </div>
-        
-        <div id="countryError" class="hidden mt-3 rounded-xl p-4 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 shadow-sm">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-              <span class="text-xl">⚠️</span>
-            </div>
-            <div>
-              <p class="text-red-900 font-bold text-base">Please select your country</p>
-              <p class="text-red-700 text-sm font-medium mt-0.5">This field is required to continue</p>
-            </div>
-          </div>
-        </div>
-        
-        <div id="countrySuccess" class="hidden mt-3 rounded-xl p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 shadow-sm">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 animate-bounce">
-              <span class="text-xl">✅</span>
-            </div>
-            <div>
-              <p class="text-green-900 font-bold text-base">Country selected!</p>
-              <p class="text-green-700 text-sm font-medium mt-0.5">Ready to continue</p>
-            </div>
-          </div>
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <span class="text-xs font-bold text-blue-700">
+          <span id="step5SelectedCount">0</span> / 1 selected
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
+
+    <div id="step5CountryError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-red-800">Please select your country</p>
+          <p class="text-xs text-red-600 mt-0.5">You must choose one country to continue</p>
         </div>
       </div>
     </div>
 
-    <script>
-    (function() {
-      'use strict';
-      
-      document.addEventListener('DOMContentLoaded', function() {
-        const locationInput = document.getElementById('location-input');
-        const nextBtn = document.getElementById('nextStep5');
-        const countryError = document.getElementById('countryError');
-        const countrySuccess = document.getElementById('countrySuccess');
-        
-        if (!locationInput || !nextBtn) return;
-        
-        locationInput.addEventListener('change', function() {
-          if (this.value) {
-            countryError.classList.add('hidden');
-            countrySuccess.classList.remove('hidden');
-            
-            const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-            expats.country = this.value;
-            localStorage.setItem('expats', JSON.stringify(expats));
+    <div id="step5CountrySuccess" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3" role="status">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-green-800">Country selected!</p>
+          <p class="text-xs text-green-600 mt-0.5">Ready to continue</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative">
+      <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+        <span class="text-lg">🌎</span>
+        <span class="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">Country of Residence</span>
+      </label>
+      <div class="relative">
+        <select 
+          id="location-input" 
+          name="location" 
+          class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all appearance-none cursor-pointer text-sm font-medium hover:border-blue-400"
+        >
+          <option value="" disabled selected>Choose your country...</option>
+          @foreach($countries as $country)
+            <option value="{{ $country->country }}">{{ $country->country }}</option>
+          @endforeach
+        </select>
+        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, -50px) scale(1.1); }
+  50% { transform: translate(-20px, 20px) scale(0.9); }
+  75% { transform: translate(50px, 50px) scale(1.05); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.shake-animation {
+  animation: shake 0.5s;
+}
+
+#step5 select:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  #step5 select {
+    border: 3px solid currentColor;
+  }
+  
+  #step5 select:focus {
+    border: 3px solid #1d4ed8;
+  }
+}
+</style>
+
+<script>
+window.selectedCountry = null;
+let cachedElementsStep5 = null;
+
+function getCachedElementsStep5() {
+  if (!cachedElementsStep5) {
+    cachedElementsStep5 = {
+      select: document.getElementById('location-input'),
+      errorAlert: document.getElementById('step5CountryError'),
+      successAlert: document.getElementById('step5CountrySuccess'),
+      selectedCount: document.getElementById('step5SelectedCount')
+    };
+  }
+  return cachedElementsStep5;
+}
+
+function updateStep5Buttons() {
+  const mobileNextBtn = document.getElementById('mobileNextBtn');
+  const desktopNextBtn = document.getElementById('desktopNextBtn');
+  
+  if (window.selectedCountry) {
+    if (mobileNextBtn) mobileNextBtn.disabled = false;
+    if (desktopNextBtn) desktopNextBtn.disabled = false;
+  } else {
+    if (mobileNextBtn) mobileNextBtn.disabled = true;
+    if (desktopNextBtn) desktopNextBtn.disabled = true;
+  }
+}
+
+window.selectCountry = function(country) {
+  if (!country) return;
+  
+  const elements = getCachedElementsStep5();
+  window.selectedCountry = country;
+  
+  if (elements.selectedCount) {
+    elements.selectedCount.textContent = '1';
+  }
+  
+  if (elements.successAlert) {
+    elements.successAlert.classList.remove('hidden');
+  }
+  
+  if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
+    elements.errorAlert.classList.add('hidden');
+  }
+  
+  try {
+    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+    expats.country = country;
+    localStorage.setItem('expats', JSON.stringify(expats));
+  } catch (e) {
+    console.warn('localStorage not available:', e.message);
+  }
+  
+  updateStep5Buttons();
+};
+
+window.validateStep5 = function() {
+  const elements = getCachedElementsStep5();
+  
+  if (!window.selectedCountry) {
+    if (elements.errorAlert) {
+      elements.errorAlert.classList.remove('hidden');
+      elements.errorAlert.classList.add('shake-animation');
+      setTimeout(() => {
+        elements.errorAlert.classList.remove('shake-animation');
+      }, 500);
+    }
+    
+    if (elements.successAlert) {
+      elements.successAlert.classList.add('hidden');
+    }
+    
+    if (elements.select) {
+      elements.select.focus();
+    }
+    
+    return false;
+  }
+  
+  return true;
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  const elements = getCachedElementsStep5();
+  
+  if (!elements.select) return;
+  
+  elements.select.addEventListener('change', function() {
+    if (this.value) {
+      window.selectCountry(this.value);
+    }
+  });
+  
+  const container = document.querySelector('#step5');
+  if (container) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          if (!container.classList.contains('hidden')) {
+            updateStep5Buttons();
           }
-        });
-        
-        const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-        if (expats.country) {
-          locationInput.value = expats.country;
-          countrySuccess.classList.remove('hidden');
         }
-        
-        nextBtn.addEventListener('click', function(e) {
-          if (!locationInput.value) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            
-            countryError.classList.remove('hidden');
-            countrySuccess.classList.add('hidden');
-            
-            locationInput.style.animation = 'shake 0.5s';
-            setTimeout(() => {
-              locationInput.style.animation = '';
-            }, 500);
-            
-            locationInput.focus();
-            
-            return false;
-          }
-        }, true);
       });
-    })();
-    </script>
+    });
+    
+    observer.observe(container, { attributes: true });
+  }
+  
+  updateStep5Buttons();
+});
+</script>
 
  		<!-- Step 6 -->
 		@include('includes.provider.operational_countries', ['countries' => $countries])
@@ -1168,6 +1308,7 @@
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
+        <span>Back</span>
       </button>
       
       <button id="mobileNextBtn" class="btn-next">
@@ -1250,7 +1391,7 @@
 
   <a href="/become-service-provider" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Become a provider</a>
   <a href="/login" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Log in</a>
-  <button id="signupBtnMobile" class="block w-full text-left text-gray-800 text-base font-semibold hover:text-blue-600">Sign up</button>
+  <a href="/signup"class="block text-gray-800 text-base font-semibold hover:text-blue-600">Sign up</a>
   <a href="/affiliate" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Affiliate Program</a>
 
 <div id="google_translate_element" class="hidden"></div>
@@ -1440,536 +1581,644 @@ function alignCookiesFor(lang) {
 @include('pages.popup')
 </nav>
 
-<!-- ============================================
-     🎯 STICKY NAVBAR SCRIPT - SMART SCROLL
-     ============================================ -->
 <script>
-(function() {
-  'use strict';
+function showComingSoonPopup(e) {
+  e.preventDefault();
+  document.getElementById('sos-popup').classList.remove('hidden');
+}
+function closeComingSoonPopup() {
+  document.getElementById('sos-popup').classList.add('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const popup = document.getElementById('signupPopup');
+  const closePopupBtn = document.getElementById('closePopup');
+  const signupBtn = document.getElementById('signupBtn');
+
+  const steps = Array.from({ length: 16 }, (_, i) => document.getElementById('step' + (i + 1)));
+  let currentStep = 0;
+
+  // ============================================
+  // 🎯 UNIFIED NAVIGATION SYSTEM
+  // ============================================
   
-  const navbar = document.getElementById('desktopNavbar');
-  if (!navbar) return;
-  
-  let lastScrollY = window.scrollY;
-  let ticking = false;
-  
-  function updateNavbar() {
-    const currentScrollY = window.scrollY;
+  function updateProgress() {
+    const progress = ((currentStep + 1) / steps.length) * 100;
+    const stepNum = currentStep + 1;
     
-    // Si on est en haut (< 50px), toujours afficher
-    if (currentScrollY < 50) {
-      navbar.style.transform = 'translateY(0)';
-      navbar.classList.remove('shadow-xl');
-      navbar.classList.add('shadow-lg');
-    }
-    // Si on scroll vers le bas, cacher
-    else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-      navbar.style.transform = 'translateY(-100%)';
-    }
-    // Si on scroll vers le haut, afficher avec shadow forte
-    else {
-      navbar.style.transform = 'translateY(0)';
-      navbar.classList.remove('shadow-lg');
-      navbar.classList.add('shadow-xl');
-    }
+    // Update mobile progress
+    const mobileBar = document.getElementById('mobileProgressBar');
+    const mobileStepNum = document.getElementById('currentStepNum');
+    const mobilePercentage = document.getElementById('progressPercentage');
     
-    lastScrollY = currentScrollY;
-    ticking = false;
+    if (mobileBar) mobileBar.style.width = progress + '%';
+    if (mobileStepNum) mobileStepNum.textContent = stepNum;
+    if (mobilePercentage) mobilePercentage.textContent = Math.round(progress);
+    
+    // Update buttons visibility
+    updateNavigationButtons();
   }
   
-  function requestTick() {
-    if (!ticking) {
-      window.requestAnimationFrame(updateNavbar);
-      ticking = true;
+  function updateNavigationButtons() {
+    const isValid = validateStep(currentStep);
+    const isStep1 = currentStep === 0;
+    
+    const mobileNavButtons = document.getElementById('mobileNavButtons');
+    const desktopNavButtons = document.getElementById('desktopNavButtons');
+    const mobileBackBtn = document.getElementById('mobileBackBtn');
+    const mobileNextBtn = document.getElementById('mobileNextBtn');
+    const desktopBackBtn = document.getElementById('desktopBackBtn');
+    const desktopNextBtn = document.getElementById('desktopNextBtn');
+    
+    // Sur Step 1 : Masquer complètement les containers
+    if (isStep1) {
+      if (mobileNavButtons) mobileNavButtons.style.display = 'none';
+      if (desktopNavButtons) desktopNavButtons.style.display = 'none';
+      return;
     }
+    
+    // Sur Step 2+ : Afficher les containers
+    if (mobileNavButtons) mobileNavButtons.style.display = '';
+    if (desktopNavButtons) desktopNavButtons.style.display = '';
+    
+    // Masquer le bouton Back uniquement sur Step 1
+    if (mobileBackBtn) mobileBackBtn.style.display = isStep1 ? 'none' : 'flex';
+    if (desktopBackBtn) desktopBackBtn.style.display = isStep1 ? 'none' : 'inline-flex';
+    
+    // Gérer l'état disabled des boutons Continue
+    if (mobileNextBtn) mobileNextBtn.disabled = !isValid;
+    if (desktopNextBtn) desktopNextBtn.disabled = !isValid;
   }
   
-  window.addEventListener('scroll', requestTick, { passive: true });
-})();
-</script>
-
-<script>
-	function showComingSoonPopup(e) {
-		e.preventDefault();
-		document.getElementById('sos-popup').classList.remove('hidden');
-	}
-	function closeComingSoonPopup() {
-		document.getElementById('sos-popup').classList.add('hidden');
-	}
-
-	document.addEventListener('DOMContentLoaded', function () {
-		const popup = document.getElementById('signupPopup');
-		const closePopupBtn = document.getElementById('closePopup');
-		const signupBtn = document.getElementById('signupBtn');
-
-		const steps = Array.from({ length: 16 }, (_, i) => document.getElementById('step' + (i + 1)));
-		let currentStep = 0;
-
-    // ============================================
-    // 🎯 UNIFIED NAVIGATION SYSTEM
-    // ============================================
+  // ============================================
+  // 🎯 UPDATE HEADER BUTTONS (pour Step 4)
+  // ============================================
+  function updateHeaderButtons() {
+    const mobileNextBtn = document.getElementById('mobileNextBtn');
+    const desktopNextBtn = document.getElementById('desktopNextBtn');
+    const mobileBackBtn = document.getElementById('mobileBackBtn');
+    const desktopBackBtn = document.getElementById('desktopBackBtn');
     
-    function updateProgress() {
-      const progress = ((currentStep + 1) / steps.length) * 100;
-      const stepNum = currentStep + 1;
-      
-      // Update mobile progress
-      const mobileBar = document.getElementById('mobileProgressBar');
-      const mobileStepNum = document.getElementById('currentStepNum');
-      const mobilePercentage = document.getElementById('progressPercentage');
-      
-      if (mobileBar) mobileBar.style.width = progress + '%';
-      if (mobileStepNum) mobileStepNum.textContent = stepNum;
-      if (mobilePercentage) mobilePercentage.textContent = Math.round(progress);
-      
-      // Update buttons visibility
-      updateNavigationButtons();
+    const isLastStep = currentStep === steps.length - 1;
+    
+    // Default Back button text for all steps
+    if (mobileBackBtn) {
+      const span = mobileBackBtn.querySelector('span');
+      if (span) span.textContent = 'Back';
+    }
+    if (desktopBackBtn) {
+      const span = desktopBackBtn.querySelector('span');
+      if (span) span.textContent = 'Back';
     }
     
-    function updateNavigationButtons() {
-      const isFirstStep = currentStep === 0;
-      const isLastStep = currentStep === steps.length - 1;
+    // Step 4 logic
+    if (currentStep === 3) {
+      const hasServices = window.selectedServices && 
+                         Object.keys(window.selectedServices).length > 0;
       
-      // Mobile buttons
-      const mobileBackBtn = document.getElementById('mobileBackBtn');
-      const mobileNextBtn = document.getElementById('mobileNextBtn');
+      // Vérifier si des services ont des sous-catégories disponibles
+      const servicesWithSubcats = window.servicesData?.filter(s => 
+        window.selectedServices[s.serviceId] && 
+        s.subcategories && 
+        s.subcategories.length > 0
+      ) || [];
       
-      if (mobileBackBtn) {
-        mobileBackBtn.style.display = isFirstStep ? 'none' : 'flex';
+      // Vérifier si toutes les sous-catégories sont sélectionnées
+      const allSubcatsSelected = servicesWithSubcats.every(service => 
+        window.selectedSubcategories && 
+        window.selectedSubcategories[service.serviceId] && 
+        window.selectedSubcategories[service.serviceId].length > 0
+      );
+      
+      let buttonText = 'Continue';
+      
+      // Si des services avec sous-catégories existent et ne sont pas tous complétés
+      if (hasServices && servicesWithSubcats.length > 0 && !allSubcatsSelected) {
+        buttonText = 'Choose Sub categories';
       }
       
       if (mobileNextBtn) {
-        mobileNextBtn.textContent = isLastStep ? 'Finish' : 'Continue';
-      }
-      
-      // Desktop buttons
-      const desktopBackBtn = document.getElementById('desktopBackBtn');
-      const desktopNextBtn = document.getElementById('desktopNextBtn');
-      
-      if (desktopBackBtn) {
-        desktopBackBtn.style.display = isFirstStep ? 'none' : 'inline-flex';
+        const span = mobileNextBtn.querySelector('span');
+        if (span) span.textContent = buttonText;
       }
       
       if (desktopNextBtn) {
-        const textSpan = desktopNextBtn.querySelector('span');
-        if (textSpan) textSpan.textContent = isLastStep ? 'Finish' : 'Continue';
+        const span = desktopNextBtn.querySelector('span');
+        if (span) span.textContent = buttonText;
       }
+      return;
+    }
+    
+    // All other steps - default behavior
+    const defaultText = isLastStep ? 'Finish' : 'Continue';
+    
+    if (mobileNextBtn) {
+      const span = mobileNextBtn.querySelector('span');
+      if (span) span.textContent = defaultText;
+    }
+    
+    if (desktopNextBtn) {
+      const span = desktopNextBtn.querySelector('span');
+      if (span) span.textContent = defaultText;
+    }
+  }
+
+  function showStep(stepIndex) {
+    if (stepIndex === 11 && document.querySelector('.user-menu')) { 
+      currentStep = 12;
+      stepIndex = 12;
     }
 
-		function showStep(stepIndex) {
-      if (stepIndex === 11 && document.querySelector('.user-menu')) { 
-        currentStep = 12;
-        stepIndex = 12;
-      }
+    steps.forEach((step, i) => step?.classList.toggle('hidden', i !== stepIndex));
+    currentStep = stepIndex;
+    updateProgress();
+    updateHeaderButtons();
+    
+    // 🆕 IMPORTANT : Appeler updateNavigationButtons pour gérer Step 1
+    updateNavigationButtons();
+    
+    // Scroll to top of content area
+    const contentArea = document.getElementById('popupContentArea');
+    if (contentArea) {
+      contentArea.scrollTop = 0;
+    }
+  }
+  
+  // Expose showStep globally for Step 4 modal
+  window.showStep = showStep;
+  window.updateHeaderButtons = updateHeaderButtons;
+  window.updateNavigationButtons = updateNavigationButtons;
 
-			steps.forEach((step, i) => step?.classList.toggle('hidden', i !== stepIndex));
-			currentStep = stepIndex;
-      updateProgress();
-      
-      // Scroll to top of content area
-      const contentArea = document.getElementById('popupContentArea');
-      if (contentArea) {
-        contentArea.scrollTop = 0;
-      }
-		}
-
-		function validateStep(index) {
-			switch(index) {
-				case 1:
-					return !!document.querySelector('#step2 .lang-btn.bg-blue-900');
-				case 2:
-					return document.querySelectorAll('#step3 .lang-btn.bg-blue-900').length > 0;
-				case 3:
-					return document.querySelectorAll('#step4 .help-icon.ring-4').length > 0;
-        case 4:
-					return document.getElementById('location-input').value.trim().length > 0;
-        case 5:
-          return document.querySelectorAll('#countryList input[type="checkbox"]:checked').length >= 1;
-				case 6:
-					return Array.from(document.querySelectorAll('#step7 .special-status-item'));
-				case 7:
-					return Array.from(document.querySelectorAll('#step8 .speak-toggle')).every(group =>
-						group.querySelector('.bg-green-500')
-					);
-				case 8:
-					return document.getElementById('profileDescription').value.trim().length > 0;
-				case 9:
-					return document.getElementById('profileUpload').files.length > 0;
-          case 11:
-          return document.getElementById('first_name_input').value.trim().length > 0;
-           case 12:
-          return document.getElementById('email_input').value.trim().length > 0;
-          case 13:
-            const phoneInput = document.getElementById('phone_number_input');
-            if (phoneInput && phoneInput.iti) {
-              return phoneInput.iti.isValidNumber();
-            }
-            return phoneInput && phoneInput.value.trim().length > 0;
-          case 14:
-          return document.getElementById('otp_input').value.trim().length > 0;
-				default:
-					return true;
-			}
-		}
-
+  function validateStep(index) {
     // ============================================
-    // 🎯 NAVIGATION HANDLERS
+    // 🚀 SYSTÈME MODERNE AVEC FALLBACK SÉCURISÉ
     // ============================================
     
-    function handleNext() {
-      if (!validateStep(currentStep)) {
-        alert("Please complete this step before continuing.");
+    switch(index) {
+      case 1:
+        // Step 2: Native Language
+        if (typeof window.validateStep2 === 'function') {
+          return window.validateStep2();
+        }
+        return !!document.querySelector('#step2 .language-card.selected');
+        
+      case 2:
+        // Step 3: Spoken Languages
+        if (typeof window.validateStep3 === 'function') {
+          return window.validateStep3();
+        }
+        return document.querySelectorAll('#step3 .lang-btn.selected').length > 0;
+        
+      case 3:
+        // Step 4: Provider Services
+        if (typeof window.validateStep4 === 'function') {
+          const result = window.validateStep4();
+          // Pour le bouton disabled, on considère 'show_subcategories' comme valide
+          return result === true || result === 'show_subcategories';
+        }
+        return document.querySelectorAll('#step4 .service-card.selected').length > 0;
+        
+      case 4:
+        // Step 5: Country
+        if (typeof window.validateStep5 === 'function') {
+          return window.validateStep5();
+        }
+        return document.getElementById('location-input')?.value.trim().length > 0;
+        
+      case 5:
+        // Step 6: Operational Countries
+        if (typeof window.validateStep6 === 'function') {
+          return window.validateStep6();
+        }
+        return document.querySelectorAll('#countryList input[type="checkbox"]:checked').length >= 1;
+        
+      case 6:
+        // Step 7: Special Status
+        if (typeof window.validateStep7 === 'function') {
+          return window.validateStep7();
+        }
+        return Array.from(document.querySelectorAll('#step7 .special-status-item'));
+        
+      case 7:
+        // Step 8: Communication Preference
+        if (typeof window.validateStep8 === 'function') {
+          return window.validateStep8();
+        }
+        return Array.from(document.querySelectorAll('#step8 .speak-toggle')).every(group =>
+          group.querySelector('.bg-green-500')
+        );
+        
+      case 8:
+        // Step 9: Profile Description
+        if (typeof window.validateStep9 === 'function') {
+          return window.validateStep9();
+        }
+        return document.getElementById('profileDescription')?.value.trim().length > 0;
+        
+      case 9:
+        // Step 10: Profile Picture
+        if (typeof window.validateStep10 === 'function') {
+          return window.validateStep10();
+        }
+        return document.getElementById('profileUpload')?.files.length > 0;
+        
+      case 11:
+        // Step 12: First/Last Name
+        if (typeof window.validateStep12 === 'function') {
+          return window.validateStep12();
+        }
+        return document.getElementById('first_name_input')?.value.trim().length > 0;
+        
+      case 12:
+        // Step 13: Email
+        if (typeof window.validateStep13 === 'function') {
+          return window.validateStep13();
+        }
+        return document.getElementById('email_input')?.value.trim().length > 0;
+        
+      case 13:
+        // Step 14: Phone Number
+        if (typeof window.validateStep14 === 'function') {
+          return window.validateStep14();
+        }
+        const phoneInput = document.getElementById('phone_number_input');
+        if (phoneInput && phoneInput.iti) {
+          return phoneInput.iti.isValidNumber();
+        }
+        return phoneInput && phoneInput.value.trim().length > 0;
+          
+      case 14:
+        // Step 15: OTP Verification
+        if (typeof window.validateStep15 === 'function') {
+          return window.validateStep15();
+        }
+        return document.getElementById('otp_input')?.value.trim().length > 0;
+        
+      default:
+        return true;
+    }
+  }
+
+  // ============================================
+  // 🎯 NAVIGATION HANDLERS
+  // ============================================
+  
+  function handleNext() {
+    if (!validateStep(currentStep)) {
+      return;
+    }
+    
+    // Special handling for Step 4
+    if (currentStep === 3 && typeof window.validateStep4 === 'function') {
+      const result = window.validateStep4();
+      if (result === 'show_subcategories') {
+        // Ouvrir le modal des sous-catégories
+        if (typeof window.openSubcategoriesModal === 'function') {
+          window.openSubcategoriesModal();
+        }
+        return;
+      } else if (!result) {
         return;
       }
-      
-      if (currentStep < steps.length - 1) {
-        showStep(currentStep + 1);
-      } else {
-        // Handle completion
-        alert("Registration complete!");
-      }
     }
     
-    function handleBack() {
-      if (currentStep > 0) {
-        showStep(currentStep - 1);
-      }
-    }
-    
-    // Attach handlers to both mobile and desktop buttons
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const mobileBackBtn = document.getElementById('mobileBackBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
-    const desktopBackBtn = document.getElementById('desktopBackBtn');
-    
-    if (mobileNextBtn) mobileNextBtn.addEventListener('click', handleNext);
-    if (mobileBackBtn) mobileBackBtn.addEventListener('click', handleBack);
-    if (desktopNextBtn) desktopNextBtn.addEventListener('click', handleNext);
-    if (desktopBackBtn) desktopBackBtn.addEventListener('click', handleBack);
-
-		// Desktop signup button
-		signupBtn?.addEventListener('click', () => {
-			popup.classList.remove('hidden');
-      showStep(0);
-		});
-
-		// Mobile signup button
-		const signupBtnMobile = document.getElementById('signupBtnMobile');
-		signupBtnMobile?.addEventListener('click', () => {
-			popup.classList.remove('hidden');
-      showStep(0);
-			// Fermer le menu mobile
-			document.getElementById('mobile-menu')?.classList.add('hidden');
-		});
-
-		closePopupBtn?.addEventListener('click', () => {
-			popup.classList.add('hidden');
-		});
-
-		popup.addEventListener('click', (e) => {
-			if (e.target === popup) popup.classList.add('hidden');
-		});
-
-		const stepNavigation = [
-			['whiteCardBtn', 1], ['backToStep1', 0], ['nextStep2', 2], ['backToStep2', 1],
-			['nextStep3', 3], ['backToStep3', 2], ['nextStep4', 4], ['backToStep4', 3],
-			['nextStep5', 5], ['backToStep5', 4], ['nextStep6', 6], ['backToStep6', 5],
-			['nextStep7', 7], ['backToStep7', 6], ['nextStep8', 8], ['backToStep8', 7],
-			['nextStep9', 9], ['backToStep9', 8], ['nextStep10', 10], ['backToStep10', 9],
-			['nextStep11', 11], ['backToStep11', 10], ['nextStep12', 12], ['backToStep12', 11],
-			['nextStep13', 13], ['backToStep13', 12], ['nextStep14', 14], ['backToStep14', 13],
-			['nextStep15', 15], ['backToStep15', 14]
-		];
-
-		stepNavigation.forEach(([btnId, stepIndex]) => {
-			document.getElementById(btnId)?.addEventListener('click', () => {
-				if (stepIndex > currentStep && !validateStep(currentStep)) {
-					alert("Please complete this step before continuing.");
-					return;
-				}
-				showStep(stepIndex);
-			});
-		});
-
-		// Step 2: Language selection
-		document.querySelectorAll('#step2 .lang-btn').forEach(btn => {
-			btn.addEventListener('click', () => {
-				document.querySelectorAll('#step2 .lang-btn').forEach(b => {
-					b.classList.remove('bg-blue-900', 'text-white');
-					b.classList.add('bg-white', 'text-blue-700');
-				});
-				btn.classList.remove('bg-white', 'text-blue-700');
-				btn.classList.add('bg-blue-900', 'text-white');
-        const selectedLanguage = btn.textContent.trim();
-        const expats = JSON.parse(localStorage.getItem('expats')) || {};
-        expats.native_language = selectedLanguage;
-        localStorage.setItem('expats', JSON.stringify(expats));
-			});
-		});
-
-		// Step 3: Multiple selection
-   let selectedLanguage = [];
-
-document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const lang = btn.textContent.trim();
-    const isSelected = btn.classList.contains('bg-blue-900');
-
-    if (isSelected) {
-      btn.classList.remove('bg-blue-900', 'text-white', 'bg-blue-600');
-      btn.classList.add('bg-blue-600', 'text-white');
-      selectedLanguage = selectedLanguage.filter(item => item !== lang);
+    if (currentStep < steps.length - 1) {
+      showStep(currentStep + 1);
     } else {
-      btn.classList.remove('bg-white', 'text-blue-700', 'bg-blue-600');
-      btn.classList.add('bg-blue-900', 'text-white');
-      selectedLanguage.push(lang);
+      // Handle completion (submit form)
     }
+  }
+  
+  function handleBack() {
+    if (currentStep > 0) {
+      showStep(currentStep - 1);
+    }
+  }
+  
+  // Attach handlers to both mobile and desktop buttons
+  const mobileNextBtn = document.getElementById('mobileNextBtn');
+  const mobileBackBtn = document.getElementById('mobileBackBtn');
+  const desktopNextBtn = document.getElementById('desktopNextBtn');
+  const desktopBackBtn = document.getElementById('desktopBackBtn');
+  
+  if (mobileNextBtn) mobileNextBtn.addEventListener('click', handleNext);
+  if (mobileBackBtn) mobileBackBtn.addEventListener('click', handleBack);
+  if (desktopNextBtn) desktopNextBtn.addEventListener('click', handleNext);
+  if (desktopBackBtn) desktopBackBtn.addEventListener('click', handleBack);
 
-    const expats = JSON.parse(localStorage.getItem('expats')) || {};
-    expats.spoken_language = selectedLanguage;
-    localStorage.setItem('expats', JSON.stringify(expats));
+  signupBtn?.addEventListener('click', () => {
+    popup.classList.remove('hidden');
+    showStep(1); // 🆕 Commencer au Step 2 (Native Language) au lieu de Step 1
   });
-});
 
-		// Step 4: Help icon toggle
-		document.querySelectorAll('#step4 .help-icon').forEach(btn => {
-			btn.addEventListener('click', () => {
-				btn.classList.toggle('ring-4');
-				btn.classList.toggle('ring-white');
-				btn.classList.toggle('ring-offset-2');
-			});
-		});
+  closePopupBtn?.addEventListener('click', () => {
+    popup.classList.add('hidden');
+  });
 
-      const location = document.querySelector('#step5 #location-input');
-			if (location) {
-        location.addEventListener('change', () => {
-          const expats = JSON.parse(localStorage.getItem('expats')) || {};
-          expats.location = location.value;
-          localStorage.setItem('expats', JSON.stringify(expats));
-        });
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) popup.classList.add('hidden');
+  });
+
+  const stepNavigation = [
+    ['whiteCardBtn', 1], ['backToStep1', 0], ['nextStep2', 2], ['backToStep2', 1],
+    ['nextStep3', 3], ['backToStep3', 2], ['nextStep4', 4], ['backToStep4', 3],
+    ['nextStep5', 5], ['backToStep5', 4], ['nextStep6', 6], ['backToStep6', 5],
+    ['nextStep7', 7], ['backToStep7', 6], ['nextStep8', 8], ['backToStep8', 7],
+    ['nextStep9', 9], ['backToStep9', 8], ['nextStep10', 10], ['backToStep10', 9],
+    ['nextStep11', 11], ['backToStep11', 10], ['nextStep12', 12], ['backToStep12', 11],
+    ['nextStep13', 13], ['backToStep13', 12], ['nextStep14', 14], ['backToStep14', 13],
+    ['nextStep15', 15], ['backToStep15', 14]
+  ];
+
+  stepNavigation.forEach(([btnId, stepIndex]) => {
+    document.getElementById(btnId)?.addEventListener('click', () => {
+      if (stepIndex > currentStep && !validateStep(currentStep)) {
+        return;
+      }
+      showStep(stepIndex);
+    });
+  });
+
+  // Step 2: Language selection (ancien système - à remplacer par le nouveau fichier step2)
+  document.querySelectorAll('#step2 .lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#step2 .lang-btn').forEach(b => {
+        b.classList.remove('bg-blue-900', 'text-white');
+        b.classList.add('bg-white', 'text-blue-700');
+      });
+      btn.classList.remove('bg-white', 'text-blue-700');
+      btn.classList.add('bg-blue-900', 'text-white');
+      const selectedLanguage = btn.textContent.trim();
+      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+      expats.native_language = selectedLanguage;
+      localStorage.setItem('expats', JSON.stringify(expats));
+    });
+  });
+
+  // Step 3: Multiple selection (ancien système - à remplacer par le nouveau fichier step3)
+  let selectedLanguage = [];
+
+  document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.textContent.trim();
+      const isSelected = btn.classList.contains('bg-blue-900');
+
+      if (isSelected) {
+        btn.classList.remove('bg-blue-900', 'text-white', 'bg-blue-600');
+        btn.classList.add('bg-blue-600', 'text-white');
+        selectedLanguage = selectedLanguage.filter(item => item !== lang);
+      } else {
+        btn.classList.remove('bg-white', 'text-blue-700', 'bg-blue-600');
+        btn.classList.add('bg-blue-900', 'text-white');
+        selectedLanguage.push(lang);
       }
 
-      const countryList = document.querySelector('#step6 #countryList');
-      if (countryList) {
-        countryList.addEventListener('change', () => {
-          const selectedCountries = Array.from(
-            countryList.querySelectorAll('input[type="checkbox"]:checked')
-          ).map(input => input.value);
-          const expats = JSON.parse(localStorage.getItem('expats')) || {};
-          expats.operational_countries = selectedCountries;
-          localStorage.setItem('expats', JSON.stringify(expats));
-        });
-      }
-    
-		let specialStatus = {};
+      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+      expats.spoken_language = selectedLanguage;
+      localStorage.setItem('expats', JSON.stringify(expats));
+    });
+  });
 
-    document.querySelectorAll('#step7 .status-checkbox').forEach(checkbox => {
-      checkbox.addEventListener('change', () => {
-        const label = checkbox.dataset.label;
-        specialStatus[label] = checkbox.checked;
-        const expats = JSON.parse(localStorage.getItem('expats')) || {};
-        expats.special_status = specialStatus;
+  // Step 4: Help icon toggle
+  document.querySelectorAll('#step4 .help-icon').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('ring-4');
+      btn.classList.toggle('ring-white');
+      btn.classList.toggle('ring-offset-2');
+    });
+  });
+
+  const location = document.querySelector('#step5 #location-input');
+  if (location) {
+    location.addEventListener('change', () => {
+      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+      expats.location = location.value;
+      localStorage.setItem('expats', JSON.stringify(expats));
+    });
+  }
+
+  const countryList = document.querySelector('#step6 #countryList');
+  if (countryList) {
+    countryList.addEventListener('change', () => {
+      const selectedCountries = Array.from(
+        countryList.querySelectorAll('input[type="checkbox"]:checked')
+      ).map(input => input.value);
+      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+      expats.operational_countries = selectedCountries;
+      localStorage.setItem('expats', JSON.stringify(expats));
+    });
+  }
+
+  let specialStatus = {};
+
+  document.querySelectorAll('#step7 .status-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      const label = checkbox.dataset.label;
+      specialStatus[label] = checkbox.checked;
+      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+      expats.special_status = specialStatus;
+      localStorage.setItem('expats', JSON.stringify(expats));
+    });
+  });
+
+  communicationPreference = {};
+  document.querySelectorAll('#step8 .speak-toggle').forEach(group => {
+    const yesBtn = group.children[0];
+    const noBtn = group.children[1];
+    [yesBtn, noBtn].forEach(btn => {
+      btn.addEventListener('click', () => {
+        const label = btn.dataset.label;
+        yesBtn.classList.remove('bg-green-500', 'text-white');
+        yesBtn.classList.add('bg-white', 'text-green-600');
+        noBtn.classList.remove('bg-green-500', 'text-white');
+        noBtn.classList.add('bg-white', 'text-green-600');
+        btn.classList.remove('bg-white', 'text-green-600');
+        btn.classList.add('bg-green-500', 'text-white');
+        communicationPreference[label] = btn.textContent === 'Yes' ? 'true' : 'false';
+        const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+        expats.communication_preference = communicationPreference;
         localStorage.setItem('expats', JSON.stringify(expats));
       });
     });
+  });
 
-    communicationPreference = {};
-		document.querySelectorAll('#step8 .speak-toggle').forEach(group => {
-			const yesBtn = group.children[0];
-			const noBtn = group.children[1];
-			[yesBtn, noBtn].forEach(btn => {
-				btn.addEventListener('click', () => {
-          const label = btn.dataset.label;
-					yesBtn.classList.remove('bg-green-500', 'text-white');
-					yesBtn.classList.add('bg-white', 'text-green-600');
-					noBtn.classList.remove('bg-green-500', 'text-white');
-					noBtn.classList.add('bg-white', 'text-green-600');
-					btn.classList.remove('bg-white', 'text-green-600');
-					btn.classList.add('bg-green-500', 'text-white');
-          communicationPreference[label] = btn.textContent === 'Yes' ? 'true' : 'false';
-          const expats = JSON.parse(localStorage.getItem('expats')) || {};
-          expats.communication_preference = communicationPreference;
+  const textarea = document.getElementById('profileDescription');
+  const charCount = document.getElementById('charCount');
+  if (textarea && charCount) {
+    textarea.addEventListener('input', () => {
+      charCount.textContent = textarea.value.length;
+      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+      expats.profile_description = textarea.value;
+      localStorage.setItem('expats', JSON.stringify(expats));
+    });
+  }
+
+  const profileUpload = document.getElementById('profileUpload');
+  const profilePreview = document.getElementById('profilePreview');
+  const profilePlaceholder = document.getElementById('profilePlaceholder');
+
+  if (profileUpload) {
+    profileUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageDataUrl = e.target.result;
+          profilePreview.src = imageDataUrl;
+          profilePreview.classList.remove('hidden');
+          profilePlaceholder.classList.add('hidden');
+          const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+          expats.profile_image = imageDataUrl;
           localStorage.setItem('expats', JSON.stringify(expats));
-				});
-			});
-		});
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
 
-		const textarea = document.getElementById('profileDescription');
-		const charCount = document.getElementById('charCount');
-		if (textarea && charCount) {
-			textarea.addEventListener('input', () => {
-				charCount.textContent = textarea.value.length;
-        const expats = JSON.parse(localStorage.getItem('expats')) || {};
-        expats.profile_description = textarea.value;
-        localStorage.setItem('expats', JSON.stringify(expats));
-			});
-		}
+  const firstNameInput = document.querySelector('#step12 #first_name_input');
+  const lastNameInput = document.querySelector('#step12 #last_name_input');
+  const nextStep12 = document.getElementById('nextStep12');
 
-    const profileUpload = document.getElementById('profileUpload');
-    const profilePreview = document.getElementById('profilePreview');
-    const profilePlaceholder = document.getElementById('profilePlaceholder');
+  if (nextStep12) {
+    nextStep12.addEventListener('click', () => {
+      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+      expats.first_name = firstNameInput.value.trim();
+      expats.last_name = lastNameInput.value.trim();
+      localStorage.setItem('expats', JSON.stringify(expats));
+    });
+  }
 
-    if (profileUpload) {
-      profileUpload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const imageDataUrl = e.target.result;
-            profilePreview.src = imageDataUrl;
-            profilePreview.classList.remove('hidden');
-            profilePlaceholder.classList.add('hidden');
-            const expats = JSON.parse(localStorage.getItem('expats')) || {};
-            expats.profile_image = imageDataUrl;
-            localStorage.setItem('expats', JSON.stringify(expats));
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-    }
+  const emailInput = document.querySelector('#step13 #email_input');
+  const nextStep13 = document.getElementById('nextStep13');
 
-    const firstNameInput = document.querySelector('#step12 #first_name_input');
-    const lastNameInput = document.querySelector('#step12 #last_name_input');
-    const nextStep12 = document.getElementById('nextStep12');
+  if (nextStep13) {
+    nextStep13.addEventListener('click', () => {
+      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+      expats.email = emailInput.value.trim();
+      localStorage.setItem('expats', JSON.stringify(expats));
+    });
+  }
 
-    if (nextStep12) {
-      nextStep12.addEventListener('click', () => {
-        const expats = JSON.parse(localStorage.getItem('expats')) || {};
-        expats.first_name = firstNameInput.value.trim();
-        expats.last_name = lastNameInput.value.trim();
-        localStorage.setItem('expats', JSON.stringify(expats));
-      });
-    }
+  const phoneNumberInput = document.querySelector('#step14 #phone_number_input');
+  const nextStep14 = document.getElementById('nextStep14');
+  if (nextStep14 && phoneNumberInput) {
+    nextStep14.addEventListener('click', () => {
+      if (phoneNumberInput.iti) {
+        const iti = phoneNumberInput.iti;
 
-    const emailInput = document.querySelector('#step13 #email_input');
-    const nextStep13 = document.getElementById('nextStep13');
+        if (iti.isValidNumber()) {
+          const fullNumber = iti.getNumber();
+          const countryData = iti.getSelectedCountryData();
 
-    if (nextStep13) {
-      nextStep13.addEventListener('click', () => {
-        const expats = JSON.parse(localStorage.getItem('expats')) || {};
-        expats.email = emailInput.value.trim();
-        localStorage.setItem('expats', JSON.stringify(expats));
-      });
-    }
-
-    const phoneNumberInput = document.querySelector('#step14 #phone_number_input');
-    const nextStep14 = document.getElementById('nextStep14');
-    if (nextStep14 && phoneNumberInput) {
-      nextStep14.addEventListener('click', () => {
-        if (phoneNumberInput.iti) {
-          const iti = phoneNumberInput.iti;
-
-          if (iti.isValidNumber()) {
-            const fullNumber = iti.getNumber();
-            const countryData = iti.getSelectedCountryData();
-
-            const expats = JSON.parse(localStorage.getItem('expats')) || {};
-            expats.phone_number = fullNumber;
-            expats.phone_country = countryData.name;
-            expats.phone_country_code = countryData.dialCode;
-            localStorage.setItem('expats', JSON.stringify(expats));
-            createProviderAccount();
-          } else {
-            toastr.error('Please enter a valid phone number');
-            return false;
-          }
-        } else {
-          const expats = JSON.parse(localStorage.getItem('expats')) || {};
-          expats.phone_number = phoneNumberInput.value.trim();
+          const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+          expats.phone_number = fullNumber;
+          expats.phone_country = countryData.name;
+          expats.phone_country_code = countryData.dialCode;
           localStorage.setItem('expats', JSON.stringify(expats));
           createProviderAccount();
+        } else {
+          toastr.error('Please enter a valid phone number');
+          return false;
         }
-      });
+      } else {
+        const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+        expats.phone_number = phoneNumberInput.value.trim();
+        localStorage.setItem('expats', JSON.stringify(expats));
+        createProviderAccount();
+      }
+    });
+  }
+
+  function createProviderAccount() {
+    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+    const nextBtn = document.getElementById('nextStep14');
+    nextBtn.disabled = true;
+    nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating Account...';
+
+    return fetch('/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(expats)
+    })
+    .then(response => {
+      if (!response.ok) throw response;
+      return response.json();
+    })
+    .then(data => {
+      toastr.success(data.message || 'Account created successfully!');
+      document.getElementById('step14').classList.add('hidden');
+      document.getElementById('step15').classList.remove('hidden');
+    })
+    .catch(async error => {
+      let errorMessage = 'Failed to create account. Please try again.';
+      try {
+        const errData = await error.json();
+        errorMessage = errData.message || errorMessage;
+      } catch (_) {}
+      console.error('Error creating account:', errorMessage);
+      toastr.error(errorMessage);
+    })
+    .finally(() => {
+      nextBtn.disabled = false;
+      nextBtn.innerHTML = 'Next';
+    });
+  }
+
+  const toggleButtons = [
+    document.getElementById("menu-toggle-top"),
+    document.getElementById("menu-toggle")
+  ];
+  const mobileMenu = document.getElementById("mobile-menu");
+  const langToggle = document.getElementById("languageToggle");
+  const langMenu = document.getElementById("languageMenu");
+
+  const mobileMenuCloseBtn = document.getElementById("mobileMenuCloseBtn");
+  if (mobileMenuCloseBtn) {
+    mobileMenuCloseBtn.addEventListener("click", () => {
+      mobileMenu.classList.add("hidden");
+    });
+  }
+
+  toggleButtons.forEach(btn => {
+    if (btn) btn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+  });
+
+  if (langToggle && langMenu) {
+    langToggle.addEventListener("click", () => {
+      langMenu.classList.toggle("hidden");
+    });
+  }
+
+  window.addEventListener("click", (e) => {
+    if (!e.target.closest("#languageToggle") && langMenu) {
+      langMenu.classList.add("hidden");
     }
+  });
 
-    function createProviderAccount() {
-      const expats = JSON.parse(localStorage.getItem('expats')) || {};
-      const nextBtn = document.getElementById('nextStep14');
-      nextBtn.disabled = true;
-      nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating Account...';
-
-      return fetch('/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(expats)
-      })
-      .then(response => {
-        if (!response.ok) throw response;
-        return response.json();
-      })
-      .then(data => {
-        toastr.success(data.message || 'Account created successfully!');
-        document.getElementById('step14').classList.add('hidden');
-        document.getElementById('step15').classList.remove('hidden');
-      })
-      .catch(async error => {
-        let errorMessage = 'Failed to create account. Please try again.';
-        try {
-          const errData = await error.json();
-          errorMessage = errData.message || errorMessage;
-        } catch (_) {}
-        console.error('Error creating account:', errorMessage);
-        toastr.error(errorMessage);
-      })
-      .finally(() => {
-        nextBtn.disabled = false;
-        nextBtn.innerHTML = 'Next';
-      });
-    }
-
-		const toggleButtons = [
-			document.getElementById("menu-toggle-top"),
-			document.getElementById("menu-toggle")
-		];
-		const mobileMenu = document.getElementById("mobile-menu");
-		const langToggle = document.getElementById("languageToggle");
-		const langMenu = document.getElementById("languageMenu");
-
-		const mobileMenuCloseBtn = document.getElementById("mobileMenuCloseBtn");
-		if (mobileMenuCloseBtn) {
-			mobileMenuCloseBtn.addEventListener("click", () => {
-				mobileMenu.classList.add("hidden");
-			});
-		}
-
-		toggleButtons.forEach(btn => {
-			if (btn) btn.addEventListener("click", () => {
-				mobileMenu.classList.toggle("hidden");
-			});
-		});
-
-		if (langToggle) {
-			langToggle.addEventListener("click", (e) => {
-				e.stopPropagation();
-				langMenu.classList.toggle("hidden");
-			});
-		}
-
-		document.addEventListener("click", (e) => {
-			if (langToggle && langMenu && !langToggle.contains(e.target) && !langMenu.contains(e.target)) {
-				langMenu.classList.add('hidden');
-			}
-		});
-
-		const desktopLangBtn = document.getElementById('desktopLangBtn');
-		const desktopLangMenu = document.getElementById('desktopLangMenu');
-		if (desktopLangBtn && desktopLangMenu) {
-			desktopLangBtn.addEventListener('click', function (e) {
-				e.stopPropagation();
-				desktopLangMenu.classList.toggle('hidden');
-			});
-			document.addEventListener('click', function (e) {
-				if (!desktopLangBtn.contains(e.target) && !desktopLangMenu.contains(e.target)) {
-					desktopLangMenu.classList.add('hidden');
-				}
-			});
-		}
-	});
-
+  // ============================================
+  // 🎯 GLOBAL EXPORTS
+  // ============================================
+  window.showStep = showStep;
+  window.nextStep = handleNext;
+  window.previousStep = handleBack;
+  window.validateStep = validateStep;
+  window.updateHeaderButtons = updateHeaderButtons;
+  window.updateNavigationButtons = updateNavigationButtons;
+  
+  // ============================================
+  // 🎯 INITIAL STATE - Important pour griser les boutons par défaut
+  // ============================================
+  updateProgress();
+  updateHeaderButtons();
+  updateNavigationButtons(); // 🆕 AJOUTÉ pour initialiser correctement Step 1
+});
 	function openModal() {
 		document.getElementById('modal')?.classList.remove('hidden');
 	}
@@ -2139,6 +2388,37 @@ document.querySelectorAll('#step3 .lang-btn').forEach(btn => {
     });
     localStorage.removeItem('create-request');
   }
+
+// ============================================
+// 🎯 FONCTION POUR GÉRER BOUTONS GRISÉS
+// ============================================
+// À utiliser dans tes fichiers steps pour activer/désactiver les boutons
+
+function enableButtonIfValid(buttonId, conditionMet) {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+  
+  if (conditionMet) {
+    button.disabled = false;
+    button.classList.remove('btn-disabled');
+    button.classList.add('btn-enabled');
+  } else {
+    button.disabled = true;
+    button.classList.add('btn-disabled');
+    button.classList.remove('btn-enabled');
+  }
+}
+
+/* EXEMPLE D'UTILISATION:
+   Dans ton fichier step, tu peux faire:
+   
+   // Vérifier si le formulaire est valide
+   const formIsValid = email.value && phone.value;
+   
+   // Activer/désactiver le bouton selon la condition
+   enableButtonIfValid('nextStepBtn', formIsValid);
+*/
+
 
   document.addEventListener('click', function(event) {
     const popups = [
