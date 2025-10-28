@@ -9,6 +9,7 @@
 🔧 Optimisations CPU, RAM, GPU
 ✅ Persistance localStorage
 ⚡ Performance maximale
+🔥 CAMERA FIXED - Avec debug logs
 ============================================
 -->
 
@@ -208,55 +209,35 @@
 
 .upload-btn {
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
 }
 
 .upload-btn:active {
-  transform: translateZ(0) scale(0.98);
+  transform: scale(0.98);
 }
 
 /* ============================================
-   🎯 PERFORMANCE
+   📹 VIDEO/CANVAS
    ============================================ */
 
-#step10 #step10Preview,
-#step10 #step10Canvas,
-#step10 #step10Video {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* ============================================
-   📱 ACCESSIBILITY
-   ============================================ */
-
-@media (prefers-reduced-motion: reduce) {
-  #step10 *,
-  #step10 *::before,
-  #step10 *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-@media (prefers-contrast: high) {
-  #step10 .upload-btn {
-    border: 3px solid currentColor;
-  }
+#step10Video,
+#step10Canvas {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 </style>
 
 <!-- ============================================
-     JAVASCRIPT OPTIMISÉ
+     JAVASCRIPT OPTIMISÉ - CAMERA FIXED
      ============================================ -->
 <script>
 (function() {
   'use strict';
+
+  console.log('🚀 Step 10 Script Loading...');
 
   // ============================================
   // 🎯 STATE MANAGEMENT
@@ -268,7 +249,7 @@
   };
 
   // ============================================
-  // 💾 CACHE DOM
+  // 📦 DOM CACHE
   // ============================================
   
   let cachedElements = null;
@@ -289,6 +270,7 @@
         cancelBtn: document.getElementById('step10CancelCamera'),
         cameraError: document.getElementById('step10CameraError')
       };
+      console.log('📦 Elements cached:', Object.keys(cachedElements).filter(k => cachedElements[k]));
     }
     return cachedElements;
   }
@@ -316,6 +298,7 @@
       localStorage.setItem('expats', JSON.stringify(expats));
       state.hasPhoto = true;
       updateStep10Buttons();
+      console.log('✅ Photo saved to localStorage');
     } catch (e) {
       console.warn('localStorage save error:', e.message);
     }
@@ -328,22 +311,39 @@
       localStorage.setItem('expats', JSON.stringify(expats));
       state.hasPhoto = false;
       updateStep10Buttons();
+      console.log('🗑️ Photo removed from localStorage');
     } catch (e) {
       console.warn('localStorage remove error:', e.message);
     }
   }
 
-  // ============================================
-  // 🔘 BUTTON STATE MANAGEMENT
-  // ============================================
-  
   function updateStep10Buttons() {
-    // Ce step est optionnel, les boutons sont toujours activés
     const mobileNextBtn = document.getElementById('mobileNextBtn');
     const desktopNextBtn = document.getElementById('desktopNextBtn');
     
-    if (mobileNextBtn) mobileNextBtn.disabled = false;
-    if (desktopNextBtn) desktopNextBtn.disabled = false;
+    if (state.hasPhoto) {
+      // Si une photo est uploadée, activer les boutons
+      if (mobileNextBtn) {
+        mobileNextBtn.disabled = false;
+        mobileNextBtn.classList.remove('btn-disabled');
+      }
+      if (desktopNextBtn) {
+        desktopNextBtn.disabled = false;
+        desktopNextBtn.classList.remove('btn-disabled');
+      }
+      console.log('✅ Boutons Next activés (photo présente)');
+    } else {
+      // Sinon, désactiver les boutons
+      if (mobileNextBtn) {
+        mobileNextBtn.disabled = true;
+        mobileNextBtn.classList.add('btn-disabled');
+      }
+      if (desktopNextBtn) {
+        desktopNextBtn.disabled = true;
+        desktopNextBtn.classList.add('btn-disabled');
+      }
+      console.log('🔒 Boutons Next désactivés (pas de photo)');
+    }
   }
 
   // ============================================
@@ -387,37 +387,58 @@
   }
 
   // ============================================
-  // 📸 CAMERA FUNCTIONS
+  // 📸 CAMERA FUNCTIONS - FIXED WITH DEBUG
   // ============================================
   
   async function openCamera() {
+    console.log('📸 openCamera() called');
     const elements = getCachedElements();
+    
+    // Vérifier que navigator.mediaDevices existe
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.error('❌ navigator.mediaDevices NOT supported');
+      alert('Your browser does not support camera access. Please use Chrome, Firefox, Safari, or Edge.');
+      return;
+    }
+    
+    console.log('✅ navigator.mediaDevices is supported');
     
     // Cacher l'erreur précédente si elle existe
     hideCameraError();
     
     try {
+      console.log('🎥 Requesting camera access...');
+      
       // Directement demander l'accès - ceci déclenche le popup natif du navigateur
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { facingMode: 'user' },
         audio: false 
       });
       
+      console.log('✅ Camera access GRANTED!');
+      
       state.cameraStream = stream;
       elements.video.srcObject = stream;
       elements.cameraView.classList.remove('hidden');
       
+      console.log('📹 Camera opened successfully');
+      
     } catch (error) {
-      console.error('Camera error:', error);
+      console.error('❌ Camera error:', error.name, error.message);
       showCameraError();
+      alert('Camera Error: ' + error.name + ' - ' + error.message);
     }
   }
 
   function closeCamera() {
+    console.log('🔒 closeCamera() called');
     const elements = getCachedElements();
     
     if (state.cameraStream) {
-      state.cameraStream.getTracks().forEach(track => track.stop());
+      state.cameraStream.getTracks().forEach(track => {
+        track.stop();
+        console.log('🛑 Camera track stopped');
+      });
       state.cameraStream = null;
     }
     
@@ -431,26 +452,42 @@
   }
 
   function capturePhoto() {
+    console.log('📸 capturePhoto() called');
     const elements = getCachedElements();
     
+    if (!elements.video || !elements.canvas) {
+      console.error('❌ Video or Canvas element not found');
+      return;
+    }
+    
+    if (!elements.video.videoWidth || !elements.video.videoHeight) {
+      console.error('❌ Video not ready');
+      alert('Please wait for the camera to fully load');
+      return;
+    }
+    
     requestAnimationFrame(() => {
-      const context = elements.canvas.getContext('2d');
-      const video = elements.video;
+      const ctx = elements.canvas.getContext('2d', { alpha: false });
+      elements.canvas.width = elements.video.videoWidth;
+      elements.canvas.height = elements.video.videoHeight;
+      ctx.drawImage(elements.video, 0, 0);
       
-      elements.canvas.width = video.videoWidth;
-      elements.canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0);
+      const imageData = elements.canvas.toDataURL('image/jpeg', 0.92);
       
-      const dataUrl = elements.canvas.toDataURL('image/jpeg', 0.8);
-      
+      // Afficher le canvas (avec l'image capturée)
       elements.canvas.classList.remove('hidden');
       elements.preview.classList.add('hidden');
       elements.placeholder.classList.add('hidden');
       elements.retakeBtn.classList.remove('hidden');
       elements.retakeBtn.classList.add('flex');
       
-      savePhotoToLocalStorage(dataUrl);
+      // Sauvegarder dans localStorage
+      savePhotoToLocalStorage(imageData);
+      
+      // Fermer la caméra
       closeCamera();
+      
+      console.log('✅ Photo captured successfully');
     });
   }
 
@@ -459,40 +496,47 @@
   // ============================================
   
   function handleFileUpload(file) {
+    console.log('📁 handleFileUpload() called');
     const elements = getCachedElements();
     
     if (!file.type.startsWith('image/')) {
+      console.warn('⚠️ Not an image file');
       return;
     }
     
     const reader = new FileReader();
     
     reader.onerror = function() {
-      console.error('Error reading file');
+      console.error('❌ FileReader error');
     };
     
-    reader.onload = function(event) {
+    reader.onload = function(e) {
       requestAnimationFrame(() => {
-        const dataUrl = event.target.result;
+        const imageData = e.target.result;
         
-        elements.preview.src = dataUrl;
+        // Afficher l'image dans le preview
+        elements.preview.src = imageData;
         elements.preview.classList.remove('hidden');
         elements.canvas.classList.add('hidden');
         elements.placeholder.classList.add('hidden');
         elements.retakeBtn.classList.remove('hidden');
         elements.retakeBtn.classList.add('flex');
         
-        savePhotoToLocalStorage(dataUrl);
-        hideCameraError();
+        // Sauvegarder dans localStorage
+        savePhotoToLocalStorage(imageData);
+        
+        console.log('✅ File uploaded successfully');
       });
     };
     
     reader.readAsDataURL(file);
     
+    // S'assurer que la caméra est fermée
     closeCamera();
   }
 
   function retakePhoto() {
+    console.log('🔄 retakePhoto() called');
     const elements = getCachedElements();
     
     requestAnimationFrame(() => {
@@ -512,21 +556,22 @@
   }
 
   function restorePhoto() {
+    console.log('🔄 restorePhoto() called');
     const elements = getCachedElements();
     
     try {
       const expats = getLocalStorage();
       if (expats.profile_photo && expats.profile_photo.image) {
-        const dataUrl = expats.profile_photo.image;
+        const imageData = expats.profile_photo.image;
         
-        if (dataUrl.startsWith('data:image')) {
+        if (imageData.startsWith('data:image')) {
           const img = new Image();
           img.onload = function() {
             requestAnimationFrame(() => {
-              const context = elements.canvas.getContext('2d');
+              const ctx = elements.canvas.getContext('2d');
               elements.canvas.width = img.width;
               elements.canvas.height = img.height;
-              context.drawImage(img, 0, 0);
+              ctx.drawImage(img, 0, 0);
               elements.canvas.classList.remove('hidden');
               elements.preview.classList.add('hidden');
               elements.placeholder.classList.add('hidden');
@@ -534,25 +579,55 @@
               elements.retakeBtn.classList.add('flex');
               state.hasPhoto = true;
               updateStep10Buttons();
+              console.log('✅ Photo restored from localStorage');
             });
           };
-          img.src = dataUrl;
+          img.src = imageData;
         }
       } else {
         updateStep10Buttons();
       }
     } catch (e) {
-      console.warn('Could not restore photo:', e);
+      console.warn('⚠️ Could not restore photo:', e);
       updateStep10Buttons();
     }
   }
 
   // ============================================
-  // ✅ VALIDATION
+  // ✅ VALIDATION - STEP 10 OBLIGATOIRE
   // ============================================
   
   window.validateStep10 = function() {
-    // Ce step est optionnel, toujours valide
+    const elements = getCachedElements();
+    
+    if (!state.hasPhoto) {
+      console.log('❌ Validation Step 10 échouée : pas de photo');
+      
+      // Afficher une erreur
+      if (elements.cameraError) {
+        elements.cameraError.classList.remove('hidden');
+        elements.cameraError.querySelector('p').textContent = 'Please upload or take a profile picture to continue';
+        
+        // Scroll vers l'erreur
+        requestAnimationFrame(() => {
+          elements.cameraError.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'nearest' 
+          });
+        });
+        
+        // Auto-cacher après 5 secondes
+        setTimeout(() => {
+          if (elements.cameraError) {
+            elements.cameraError.classList.add('hidden');
+          }
+        }, 5000);
+      }
+      
+      return false;
+    }
+    
+    console.log('✅ Validation Step 10 réussie');
     return true;
   };
 
@@ -561,6 +636,7 @@
   // ============================================
   
   function handleUploadChange(e) {
+    console.log('📁 Upload input changed');
     const file = e.target.files[0];
     if (file) {
       handleFileUpload(file);
@@ -568,18 +644,22 @@
   }
 
   function handleTakePhotoClick() {
+    console.log('🔘 Take Photo button clicked');
     openCamera();
   }
 
   function handleCaptureClick() {
+    console.log('🔘 Capture button clicked');
     capturePhoto();
   }
 
   function handleCancelClick() {
+    console.log('🔘 Cancel button clicked');
     closeCamera();
   }
 
   function handleRetakeClick() {
+    console.log('🔘 Retake button clicked');
     retakePhoto();
   }
 
@@ -588,26 +668,42 @@
   // ============================================
   
   function initEventDelegation() {
+    console.log('🎪 Initializing event delegation...');
     const elements = getCachedElements();
     
     if (elements.upload) {
       elements.upload.addEventListener('change', handleUploadChange);
+      console.log('✅ Upload listener attached');
+    } else {
+      console.warn('⚠️ Upload element not found');
     }
     
     if (elements.takePhotoBtn) {
       elements.takePhotoBtn.addEventListener('click', handleTakePhotoClick);
+      console.log('✅ Take Photo listener attached');
+    } else {
+      console.warn('⚠️ Take Photo button not found');
     }
     
     if (elements.captureBtn) {
       elements.captureBtn.addEventListener('click', handleCaptureClick);
+      console.log('✅ Capture listener attached');
+    } else {
+      console.warn('⚠️ Capture button not found');
     }
     
     if (elements.cancelBtn) {
       elements.cancelBtn.addEventListener('click', handleCancelClick);
+      console.log('✅ Cancel listener attached');
+    } else {
+      console.warn('⚠️ Cancel button not found');
     }
     
     if (elements.retakeBtn) {
       elements.retakeBtn.addEventListener('click', handleRetakeClick);
+      console.log('✅ Retake listener attached');
+    } else {
+      console.warn('⚠️ Retake button not found');
     }
   }
 
@@ -633,6 +729,8 @@
   // ============================================
   
   function init() {
+    console.log('🎬 Initializing Step 10...');
+    
     initEventDelegation();
 
     const elements = getCachedElements();
@@ -641,8 +739,10 @@
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             if (!elements.step.classList.contains('hidden')) {
+              console.log('👁️ Step 10 became visible');
               restoreState();
             } else {
+              console.log('🙈 Step 10 became hidden');
               cleanup();
             }
           }
@@ -650,15 +750,19 @@
       });
 
       observer.observe(elements.step, { attributes: true });
+      console.log('✅ MutationObserver attached');
     }
 
     window.addEventListener('beforeunload', cleanup);
 
     restoreState();
+    
+    console.log('✅ Step 10 initialized successfully');
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
+    console.log('⏳ Waiting for DOMContentLoaded...');
   } else {
     init();
   }

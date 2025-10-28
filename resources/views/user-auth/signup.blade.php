@@ -103,7 +103,7 @@
         </header>
 
         <!-- Google Sign In -->
-        <a href="{{ route('google.login') }}" 
+        <a href="{{ route('google.signup') }}" 
            class="google-btn" 
            aria-label="Continue with Google">
           <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -304,7 +304,7 @@
         <footer class="card-footer">
           <p class="footer-text">
             <span class="already-text">Already part of the family? 🎊</span>
-            <a href="{{ route('user.signin') }}" class="login-link-fun">
+            <a href="{{ route('login') }}" class="login-link-fun">
               <span>Welcome back!</span>
               <span aria-hidden="true">👋✨</span>
             </a>

@@ -87,6 +87,163 @@
     visibility: hidden !important;
     opacity: 0 !important;
   }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🎨 UX 2025/2026 MOBILE MENU - CSS MODERNE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* GPU Acceleration pour performances */
+#mobile-menu {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth transitions */
+#mobile-menu a {
+  transition: all 0.2s ease;
+}
+
+#mobile-menu a:hover {
+  transform: translateX(4px);
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* Boutons avec effects */
+.nav-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button:active {
+  transform: translateY(0);
+}
+
+/* Language selector moderne */
+#languageMenu li {
+  transition: background-color 0.2s ease;
+}
+
+#languageMenu li:hover {
+  background-color: rgba(59, 130, 246, 0.08);
+}
+
+/* Hamburger animation */
+#menu-toggle-top,
+#menu-toggle {
+  transition: transform 0.2s ease;
+}
+
+#menu-toggle-top:active,
+#menu-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Responsive touch targets */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🍔 HAMBURGER → X ANIMATION (ULTRA VISIBLE)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.hamburger-line {
+  transform-origin: center;
+}
+
+#menu-toggle-top.menu-active .hamburger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+  background-color: #1f2937;
+}
+
+#menu-toggle-top.menu-active .hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+#menu-toggle-top.menu-active .hamburger-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+  background-color: #1f2937;
+}
+
+/* Effet hover amélioré */
+#menu-toggle-top:hover .hamburger-line {
+  background-color: #2563eb;
+}
+
+#menu-toggle-top.menu-active:hover .hamburger-line {
+  background-color: #dc2626;
+}
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ⚡ ULTRA PERFORMANCE OPTIMIZATIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Remplacement de "transition: all" par propriétés spécifiques */
+#mobile-menu a {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-button {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#languageMenu li {
+  transition: background-color 0.2s ease;
+}
+
+#menu-toggle-top,
+#menu-toggle {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* will-change dynamique géré par JS - pas ici */
+#mobile-menu.menu-animating {
+  will-change: transform, opacity;
+}
+
+/* Containment pour isolation */
+#mobile-menu {
+  contain: layout style paint;
+}
+
+/* Content visibility pour lazy rendering */
+#mobile-menu:not(.menu-open) {
+  content-visibility: hidden;
+}
+
+/* Réduire les repaints */
+.nav-button,
+#mobile-menu a,
+#languageMenu li {
+  contain: layout style;
+}
+
+/* GPU layers optimisés */
+.hamburger-line {
+  will-change: transform, opacity;
+}
+
+#mobileMenuCloseBtn svg {
+  will-change: transform;
+}
 </style>
 <style>
   /* Kill the top banner and any wrapper space */
@@ -558,6 +715,135 @@
 </script>
 
 
+
+<style>
+html { scroll-behavior: auto !important; }
+
+.breadcrumb-container {
+  background: transparent;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  padding: 12px 0;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+  font-size: 14px;
+}
+
+.breadcrumb-item { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px;
+}
+
+.breadcrumb-item svg { 
+  width: 15px; 
+  height: 15px;
+}
+
+.breadcrumb-item a {
+  color: #64748b;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  background: transparent;
+}
+
+.breadcrumb-item a:hover { 
+  background: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+  transform: translateX(2px);
+}
+
+.breadcrumb-item.active { 
+  color: #1e293b; 
+  font-weight: 600;
+  padding: 6px 12px;
+  background: rgba(226, 232, 240, 0.4);
+  border-radius: 20px;
+}
+
+.breadcrumb-separator { 
+  color: #cbd5e1; 
+  margin: 0 4px;
+  font-size: 14px;
+}
+
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+#scrollToTopBtn:hover { background: #2563eb; }
+#scrollToTopBtn.show { display: flex; }
+
+@media (max-width: 768px) {
+  #scrollToTopBtn { display: none !important; }
+  .breadcrumb-container { 
+    padding: 12px 0;
+  }
+  .breadcrumb { 
+    padding: 0 16px; 
+    font-size: 13px;
+    gap: 6px;
+  }
+  .breadcrumb-item svg {
+    width: 14px;
+    height: 14px;
+  }
+  .breadcrumb-item a {
+    padding: 5px 10px;
+  }
+  .breadcrumb-item.active {
+    padding: 5px 12px;
+  }
+}
+</style>
+
+<script>
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.onload = () => window.scrollTo(0, 0);
+
+let scrollTimer;
+window.onscroll = function() {
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => {
+    const btn = document.getElementById('scrollToTopBtn');
+    if (btn && window.innerWidth > 768) {
+      btn.className = window.pageYOffset > 400 ? 'show' : '';
+    }
+  }, 100);
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('scrollToTopBtn')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+</script>
 </head>
 @php
     $settings = \App\Models\SiteSetting::first();
@@ -569,6 +855,13 @@
   $countries = Country::where('status', 1)->get();
 @endphp
 <body class="min-h-screen bg-white">
+
+<!-- 🚀 Bouton Flèche Retour en Haut -->
+<button id="scrollToTopBtn" aria-label="Retour en haut">
+  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
 <!-- //For showing toast messages across platform -->
 @if (session('success'))
     <script>
@@ -1339,61 +1632,64 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </div>
 
-<!-- Mobile Controls -->
-		<div class="lg:hidden flex items-center space-x-2">
-			<div class="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm">
-				<img src="https://flagcdn.com/24x18/fr.png" alt="FR" class="w-full h-full object-cover" />
-			</div>
-			<button id="menu-toggle" class="p-2 rounded-lg bg-blue-600 hover:bg-sky-400 transition-colors shadow">
+	<!-- 🎨 Mobile Header - HTML5 Semantic -->
+	<header class="lg:hidden fixed top-0 left-0 w-full bg-white z-50 shadow-md" role="banner">
+		<div class="flex items-center justify-between px-4 py-2">
+			<a href="/index.php" aria-label="ULIXAI Home">
+				<img src="/images/headerlogos.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" width="40" height="40" />
+			</a>
 
-				<svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-				</svg>
-			</button>
+			<nav class="flex items-center gap-2" aria-label="Main navigation">
+				<button id="mobileSearchButton" onclick="openHelpPopup()" class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg" aria-label="Request help">
+					<span class="flex items-center gap-2">
+						<i class="fas fa-hand-paper text-white text-base" aria-hidden="true"></i>
+						<span class="hidden xs:inline">Request Help</span>
+						<span class="xs:hidden">Help</span>
+					</span>
+				</button>
+
+				<a href="http://sos-expat.com/" 
+				   target="_blank"
+				   rel="noopener noreferrer"
+				   class="nav-button bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg"
+				   aria-label="Emergency SOS">
+					<span class="flex items-center gap-1.5">
+						<i class="fas fa-phone-alt text-white text-base" aria-hidden="true"></i>
+						<span>S.O.S</span>
+					</span>
+				</a>
+
+				<button id="menu-toggle-top" class="p-2.5 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+					<div class="w-6 h-6 flex flex-col justify-center items-center gap-1.5">
+						<span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
+						<span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
+						<span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
+					</div>
+				</button>
+			</nav>
 		</div>
-	</div>
-</div>
+	</header>
 
-	<!-- Mobile Header -->
-	<div class="lg:hidden fixed top-0 left-0 w-full bg-white z-50 flex items-center justify-between  py-2 shadow-md">
-	<a href="/index.php">
-		<img src="/images/headerlogo.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" />
-	</a>
 
-  <button id="mobileSearchButton" onclick="openHelpPopup()" class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover-glow transform hover:scale-105 shadow-lg">
-    <span class="flex items-center space-x-2">
-      <i class="fas fa-lock text-white-600 text-xl"></i>
-      <span>Request Help</span>
-    </span>
-</button>
-
-<button id="menu-toggle-top" class="p-2 rounded-lg hover:bg-white/50 transition-colors">
-  <svg class="icon-hamburger w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-  </svg>
-  <svg class="icon-close w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-  </svg>
-</button>
-
-</div>
-
-<!-- Mobile Dropdown Menu -->
-<div id="mobile-menu" class="lg:hidden fixed top-[64px] left-0 w-full bg-white z-40 shadow-md hidden px-6 py-4 space-y-4 animate-slide-down">
+<!-- 🎨 Mobile Menu - HTML5 Semantic with ARIA -->
+<nav id="mobile-menu" class="lg:hidden fixed top-[64px] left-0 w-full bg-white z-40 shadow-md hidden px-6 py-4 space-y-4" role="navigation" aria-label="Mobile menu" aria-hidden="true">
 
   <div class="flex justify-end mb-2">
-    <button id="mobileMenuCloseBtn" class="p-2 rounded-full hover:bg-blue-200 focus:outline-none" aria-label="Close menu">
-      <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <button id="mobileMenuCloseBtn" class="p-3 rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-110" aria-label="Close menu">
+      <svg class="w-7 h-7 text-gray-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
   </div>
 
-  <a href="/become-service-provider" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Become a provider</a>
-  <a href="/login" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Log in</a>
-  <a href="/signup"class="block text-gray-800 text-base font-semibold hover:text-blue-600">Sign up</a>
-  <a href="/affiliate" class="block text-gray-800 text-base font-semibold hover:text-blue-600">Affiliate Program</a>
+  <ul class="space-y-2" role="menu">
+    <li role="none"><a href="/become-service-provider" class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" role="menuitem">Become a provider</a></li>
+    <li role="none"><a href="/login" class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" role="menuitem">Log in</a></li>
+    <li role="none"><a href="/signup" class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" role="menuitem">Sign up</a></li>
+    <li role="none"><a href="/affiliate" class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" role="menuitem">Affiliate Program</a></li>
+  </ul>
 
+<div id="google_translate_element" class="hidden"></div>
 <div id="google_translate_element" class="hidden"></div>
 
 <div class="relative w-full sm:w-56">
@@ -1573,13 +1869,49 @@ function alignCookiesFor(lang) {
 })();
 </script>
 
-  <a href="/sos"  class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
+  <a href="http://sos-expat.com/" target="_blank"  class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
     <i class="fas fa-phone-alt mr-1"></i> S.O.S
   </a>
 </div>
 
 @include('pages.popup')
 </nav>
+
+<!-- 🍞 Fil d'Ariane -->
+<div class="breadcrumb-container">
+  <nav class="breadcrumb">
+    <div class="breadcrumb-item">
+      <a href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Accueil</span>
+      </a>
+    </div>
+    
+    @php
+    $segments = request()->segments();
+    $url = '';
+    @endphp
+    
+    @foreach($segments as $index => $segment)
+      @php
+      $url .= '/' . $segment;
+      $isLast = $index === count($segments) - 1;
+      $title = ucfirst(str_replace(['-', '_'], ' ', $segment));
+      @endphp
+      
+      <span class="breadcrumb-separator">›</span>
+      
+      @if($isLast)
+        <div class="breadcrumb-item active">{{ $title }}</div>
+      @else
+        <div class="breadcrumb-item"><a href="{{ $url }}">{{ $title }}</a></div>
+      @endif
+    @endforeach
+  </nav>
+</div>
 
 <script>
 function showComingSoonPopup(e) {
@@ -2169,29 +2501,141 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // ============================================
+  // 🎨 MOBILE MENU UX 2025/2026 - MODERNE & FLUIDE
+  // ============================================
   const toggleButtons = [
+    // Plus de menu-toggle, seulement menu-toggle-top
     document.getElementById("menu-toggle-top"),
-    document.getElementById("menu-toggle")
+    null
   ];
   const mobileMenu = document.getElementById("mobile-menu");
+  const mobileMenuCloseBtn = document.getElementById("mobileMenuCloseBtn");
   const langToggle = document.getElementById("languageToggle");
   const langMenu = document.getElementById("languageMenu");
+  
+  let isMenuOpen = false;
 
-  const mobileMenuCloseBtn = document.getElementById("mobileMenuCloseBtn");
-  if (mobileMenuCloseBtn) {
-    mobileMenuCloseBtn.addEventListener("click", () => {
+
+  function openMobileMenu() {
+    if (!mobileMenu) return;
+    isMenuOpen = true;
+    
+    // Ajouter will-change avant animation
+    mobileMenu.classList.add("menu-animating");
+    mobileMenu.classList.remove("hidden");
+    
+    // Animations fluides optimisées
+    requestAnimationFrame(() => {
+      mobileMenu.style.opacity = '0';
+      mobileMenu.style.transform = 'translateY(-10px)';
+      requestAnimationFrame(() => {
+        mobileMenu.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        mobileMenu.style.opacity = '1';
+        mobileMenu.style.transform = 'translateY(0)';
+      });
+    });
+    
+    // Animer hamburger en X
+    toggleButtons.forEach(btn => {
+      if (btn) {
+        btn.classList.add("menu-active");
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+    
+    // Retirer will-change après animation
+    setTimeout(() => {
+      mobileMenu.classList.remove("menu-animating");
+    }, 300);
+    
+    // Haptic feedback
+    if (navigator.vibrate) navigator.vibrate(10);
+    
+    // Accessibilité
+    if (mobileMenu) mobileMenu.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeMobileMenu() {
+    if (!mobileMenu) return;
+    isMenuOpen = false;
+    
+    // Ajouter will-change avant animation
+    mobileMenu.classList.add("menu-animating");
+    
+    mobileMenu.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    mobileMenu.style.opacity = '0';
+    mobileMenu.style.transform = 'translateY(-10px)';
+    
+    setTimeout(() => {
       mobileMenu.classList.add("hidden");
+      mobileMenu.classList.remove("menu-animating");
+      mobileMenu.style.opacity = '';
+      mobileMenu.style.transform = '';
+      mobileMenu.style.transition = '';
+    }, 300);
+    
+    // Restaurer hamburger
+    toggleButtons.forEach(btn => {
+      if (btn) {
+        btn.classList.remove("menu-active");
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    
+    // Haptic feedback
+    if (navigator.vibrate) navigator.vibrate(5);
+    
+    // Accessibilité
+    if (mobileMenu) mobileMenu.setAttribute('aria-hidden', 'true');
+  }
+
+  function toggleMobileMenu() {
+    if (isMenuOpen) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  }
+
+  // Event listeners
+  toggleButtons.forEach(btn => {
+    if (btn) {
+      btn.addEventListener("click", toggleMobileMenu);
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  if (mobileMenuCloseBtn) {
+    mobileMenuCloseBtn.addEventListener("click", closeMobileMenu);
+  }
+
+  // Fermer en cliquant sur un lien
+  if (mobileMenu) {
+    const menuLinks = mobileMenu.querySelectorAll('a');
+    menuLinks.forEach(link => {
+      link.addEventListener('click', () => setTimeout(closeMobileMenu, 100));
     });
   }
 
-  toggleButtons.forEach(btn => {
-    if (btn) btn.addEventListener("click", () => {
-      mobileMenu.classList.toggle("hidden");
-    });
+  // ESC pour fermer
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isMenuOpen) closeMobileMenu();
   });
 
+  // Clic extérieur pour fermer
+  document.addEventListener('click', (e) => {
+    if (isMenuOpen && mobileMenu && 
+        !mobileMenu.contains(e.target) && 
+        !toggleButtons.some(btn => btn && btn.contains(e.target))) {
+      closeMobileMenu();
+    }
+  });
+
+  // Language toggle
   if (langToggle && langMenu) {
-    langToggle.addEventListener("click", () => {
+    langToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
       langMenu.classList.toggle("hidden");
     });
   }
@@ -2201,6 +2645,7 @@ document.addEventListener('DOMContentLoaded', function () {
       langMenu.classList.add("hidden");
     }
   });
+
 
   // ============================================
   // 🎯 GLOBAL EXPORTS

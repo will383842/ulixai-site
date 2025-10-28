@@ -1,462 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Partnership Request - Join Ulixai Global Network</title>
+    <meta name="description" content="Partner with Ulixai to reach millions worldwide. Join our global network of content creators, distributors, and sponsors. Submit your partnership request today.">
+    <meta name="keywords" content="Ulixai partnership, business collaboration, content partnership, distribution partner, sponsorship opportunities, global network, business alliance">
+    <meta name="author" content="Ulixai">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Partner With Ulixai - Global Collaboration Opportunities">
+    <meta property="og:description" content="Join Ulixai's global partnership network. Collaborate with us in content creation, distribution, or sponsorship.">
+    <meta property="og:image" content="{{ asset('images/og-partnership.jpg') }}">
+    <meta property="og:site_name" content="Ulixai">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="Partner With Ulixai - Global Collaboration">
+    <meta name="twitter:description" content="Join Ulixai's global partnership network. Submit your collaboration request today.">
+    <meta name="twitter:image" content="{{ asset('images/twitter-partnership.jpg') }}">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
+    
+    <!-- JSON-LD Schema for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Partnership Request - Ulixai",
+      "description": "Submit a partnership request to collaborate with Ulixai's global network",
+      "url": "{{ url()->current() }}",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Ulixai",
+        "url": "{{ config('app.url') }}"
+      },
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "Ulixai",
+        "url": "{{ config('app.url') }}",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "{{ asset('images/logo.png') }}"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Partnership Inquiries",
+          "email": "partnerships@ulixai.com"
+        }
+      },
+      "potentialAction": {
+        "@type": "CommunicateAction",
+        "name": "Submit Partnership Request",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "{{ route('partnership.store') }}",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        }
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ config('app.url') }}"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Partnership Request",
+            "item": "{{ url()->current() }}"
+          }
+        ]
+      }
+    }
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
 
-  <title>Become a Partner</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png" />
+@include('includes.header')
 
-  <style>
-    .gradient-text {
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8, #1e40af);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .glass-effect {
-      backdrop-filter: blur(20px);
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .gradient-border {
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-      padding: 2px;
-      border-radius: 1rem;
-    }
-    
-    .gradient-border-content {
-      background: white;
-      border-radius: calc(1rem - 2px);
-    }
-    
-    .enhanced-card {
-      position: relative;
-      background: white;
-      border-radius: 1rem;
-      padding: 1rem 1.25rem;
-      border: 2px solid transparent;
-      background-clip: padding-box;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+<!-- ============================================
+     🤝 PARTNERSHIP REQUEST - MOBILE-FIRST
+     ⚡ SEO Optimized
+     🎨 Fun & Professional
+     ============================================ -->
 
-    .enhanced-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8, #2563eb, #1e40af);
-      background-size: 400% 400%;
-      animation: gradientFlow 8s ease infinite;
-      z-index: -1;
-      border-radius: 1rem;
-    }
-
-    .enhanced-card::after {
-      content: '';
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      right: 2px;
-      bottom: 2px;
-      background: white;
-      border-radius: calc(1rem - 2px);
-      z-index: -1;
-    }
-
-    .enhanced-card:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
-    }
-
-    .enhanced-card:hover::before {
-      animation-duration: 2s;
-    }
-
-    @keyframes gradientFlow {
-      0% {
-        background-position: 0% 50%;
-      }
-      25% {
-        background-position: 100% 50%;
-      }
-      50% {
-        background-position: 100% 100%;
-      }
-      75% {
-        background-position: 0% 100%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-    
-    .floating-animation {
-      animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    .pulse-glow {
-      animation: pulseGlow 3s ease-in-out infinite;
-    }
-    
-    @keyframes pulseGlow {
-      0%, 100% {
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-      }
-      50% {
-        box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-      }
-    }
-    
-    .sparkle {
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .sparkle::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-      animation: sparkle 3s infinite;
-    }
-    
-    @keyframes sparkle {
-      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-    }
-    
-    .icon-bounce {
-      animation: bounce 2s infinite;
-    }
-    
-    @keyframes bounce {
-      0%, 20%, 53%, 80%, 100% {
-        transform: translateY(0);
-      }
-      40%, 43% {
-        transform: translateY(-8px);
-      }
-      70% {
-        transform: translateY(-4px);
-      }
-      90% {
-        transform: translateY(-2px);
-      }
-    }
-    
-    .stagger-animation {
-      animation: fadeInUp 0.8s ease-out forwards;
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
- </style>
-<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
-
- @include('includes.header')
-    @include('pages.popup')
-
-<!-- Hero Section -->
-<section class="relative py-20 px-6 text-center overflow-hidden">
-  <!-- Background decorative elements -->
-  <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%233b82f6" fill-opacity="0.03"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
+<main class="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8 sm:py-12 px-4">
   
-  <div class="relative max-w-5xl mx-auto">
-    <!-- Welcome Badge -->
-    <div class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-indigo-100 border-2 border-blue-200 rounded-full px-6 py-3 mb-8 sparkle">
-      <span class="text-3xl icon-bounce">👋</span>
-      <span class="text-blue-800 font-bold text-lg">Welcome to Partnership Opportunities</span>
-    </div>
+  <!-- Background Blobs -->
+  <div class="bg-layer">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="relative max-w-4xl mx-auto z-10">
     
-    <!-- Main Heading -->
-    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-      <span class="gradient-text">Hello and welcome!</span>
-    </h1>
-    
-    <!-- Subheading -->
-    <div class="space-y-4 mb-8">
-      <p class="text-xl text-gray-700 flex items-center justify-center gap-2">
-        Thank you for your interest 
-        <span class="text-3xl floating-animation">✨</span>
-      </p>
+    <!-- ============================================
+         PARTNERSHIP FORM CARD
+         ============================================ -->
+    <article class="form-card-wrapper">
+      <div class="form-card-border"></div>
       
-      <div class="max-w-3xl mx-auto">
-        <p class="text-lg text-gray-600 leading-relaxed mb-4">
-         @site supports everyone living abroad, regardless of their language or country of origin.
-        </p>
+      <div id="partnershipForm" class="form-card-content">
         
-        <div class="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-2xl px-6 py-3">
-          <span class="text-2xl">💡</span>
-          <span class="text-gray-800 font-semibold text-lg">
-            We believe in partnerships that are human, simple and impactful
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        <!-- Header -->
+        <header class="form-header">
+          <!-- Icon -->
+          <div class="icon-wrapper">
+            <div class="icon-ring"></div>
+            <div class="icon-ring delay-1"></div>
+            <div class="icon-container">
+              <span class="icon-emoji">🤝</span>
+            </div>
+          </div>
 
-<!-- Partnership Types Section -->
-<section class="py-16 px-6">
-  <div class="max-w-6xl mx-auto">
-    <div class="gradient-border glass-effect">
-      <div class="gradient-border-content p-8 md:p-12">
-        <!-- Section Header -->
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-blue-800 mb-4">
-            You might be<span class="text-blue-500">...</span>
+          <!-- Title -->
+          <h1 class="main-title">
+            <span class="title-gradient">Let's Build Together!</span>
+            <span class="title-emoji">🚀</span>
+          </h1>
+          
+          <p class="subtitle">
+            Join <strong class="text-highlight">Ulixai</strong>'s global network of partners and grow your impact worldwide 🌍
+          </p>
+          
+          <!-- Trust Badges -->
+          <div class="trust-badges">
+            <span class="badge">
+              <span class="badge-icon">⚡</span>
+              <span class="badge-text">24h Response</span>
+            </span>
+            <span class="badge">
+              <span class="badge-icon">🌍</span>
+              <span class="badge-text">Global Reach</span>
+            </span>
+            <span class="badge">
+              <span class="badge-icon">💼</span>
+              <span class="badge-text">Professional</span>
+            </span>
+          </div>
+        </header>
+
+        <!-- Form -->
+        <form class="partnership-form partnership-request-form" onsubmit="submitForm(event)">
+          @csrf
+
+          <!-- Entity Name -->
+          <div class="form-group">
+            <label for="first_name" class="form-label">
+              <span class="label-icon">🏢</span>
+              <span class="label-text">Entity Name</span>
+              <span class="label-required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="first_name"
+                name="first_name" 
+                value="{{ Auth::check() ? Auth::user()->name : '' }}"
+                required
+                placeholder="Your company or organization name"
+                class="form-input">
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="last_name" class="form-label">
+              <span class="label-icon">👤</span>
+              <span class="label-text">Your Full Name</span>
+              <span class="label-required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="last_name"
+                name="last_name" 
+                value="{{ Auth::check() ? Auth::user()->name : '' }}"
+                required
+                placeholder="John Doe"
+                class="form-input">
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="form-group">
+            <label for="phone" class="form-label">
+              <span class="label-icon">📱</span>
+              <span class="label-text">Phone Number</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="phone"
+                name="phone" 
+                value="{{ Auth::check() ? Auth::user()->serviceProvider->phone_number ?? '' : '' }}"
+                placeholder="+1 234 567 8900"
+                class="form-input">
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Country -->
+          <div class="form-group">
+            <label for="country" class="form-label">
+              <span class="label-icon">🌍</span>
+              <span class="label-text">Country of Activity</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="country"
+                name="country" 
+                value="{{ Auth::check() ? Auth::user()->serviceProvider->country ?? '' : '' }}"
+                placeholder="United States"
+                class="form-input">
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Sector of Activity -->
+          <div class="form-group">
+            <label for="sector_of_activity" class="form-label">
+              <span class="label-icon">💼</span>
+              <span class="label-text">Sector of Activity</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="sector_of_activity"
+                name="sector_of_activity" 
+                placeholder="Technology, Healthcare, Education..."
+                class="form-input">
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Languages Spoken -->
+          <div class="form-group">
+            <label for="language_spoken" class="form-label">
+              <span class="label-icon">💬</span>
+              <span class="label-text">Languages Spoken</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="language_spoken"
+                name="language_spoken" 
+                value="{{ Auth::check() ? Auth::user()->serviceProvider->preferred_language ?? '' : '' }}"
+                placeholder="English, Spanish, French..."
+                class="form-input">
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Preferred Time -->
+          <div class="form-group">
+            <label for="preferred_time" class="form-label">
+              <span class="label-icon">⏰</span>
+              <span class="label-text">Preferred Time for Reply</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="preferred_time"
+                name="preferred_time" 
+                placeholder="Morning, Afternoon, Evening..."
+                class="form-input">
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Partnership Type -->
+          <div class="form-group">
+            <label for="partnership_type" class="form-label">
+              <span class="label-icon">🎯</span>
+              <span class="label-text">Type of Partnership</span>
+            </label>
+            <div class="input-wrapper">
+              <select 
+                id="partnership_type" 
+                name="partnership_type" 
+                class="form-input">
+                <option disabled selected>— Choose an option —</option>
+                <option value="Content Collaboration">Content Collaboration 📝</option>
+                <option value="Distribution Partner">Distribution Partner 🚀</option>
+                <option value="Sponsorship">Sponsorship 💰</option>
+              </select>
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- How did you hear -->
+          <div class="form-group">
+            <label for="how_heard_about" class="form-label">
+              <span class="label-icon">📢</span>
+              <span class="label-text">How Did You Hear About Us?</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="how_heard_about"
+                name="how_heard_about" 
+                placeholder="Google, Social Media, Friend..."
+                class="form-input">
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Motivation -->
+          <div class="form-group">
+            <label for="motivation" class="form-label">
+              <span class="label-icon">💡</span>
+              <span class="label-text">What Motivates You?</span>
+            </label>
+            <div class="input-wrapper">
+              <textarea 
+                id="motivation"
+                name="motivation" 
+                rows="4"
+                placeholder="Tell us why you want to collaborate with Ulixai..."
+                class="form-input form-textarea"></textarea>
+              <div class="input-glow"></div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="submit-btn">
+            <div class="submit-bg"></div>
+            <span class="submit-content">
+              <span class="submit-icon">✅</span>
+              <span class="submit-text">Submit Partnership Request</span>
+              <span class="submit-emoji">🚀</span>
+            </span>
+          </button>
+
+        </form>
+
+      </div>
+    </article>
+
+    <!-- ============================================
+         THANK YOU MESSAGE
+         ============================================ -->
+    <div id="thankYouMessage" class="hidden">
+      <article class="thank-you-wrapper">
+        <div class="thank-you-border"></div>
+        
+        <div class="thank-you-content">
+          <!-- Success Icon -->
+          <div class="success-icon-wrapper">
+            <div class="success-ring"></div>
+            <div class="success-icon">
+              <span class="success-check">✓</span>
+            </div>
+          </div>
+          
+          <!-- Title -->
+          <h2 class="thank-you-title">
+            <span class="thank-you-gradient">Thank You!</span>
+            <span class="thank-you-emoji">🎉</span>
           </h2>
-          <div class="w-20 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full"></div>
-        </div>
-        
-        <!-- Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          <!-- Card 1: Business -->
-          <div class="enhanced-card stagger-animation" style="animation-delay: 0.1s;">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                🏙️
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-800 text-lg">Business</h3>
-                <p class="text-gray-600 text-sm">Local or international business</p>
-              </div>
-            </div>
+          
+          <!-- Message -->
+          <div class="thank-you-message">
+            <p>We've received your partnership request.</p>
+            <p>Our team will get back to you <strong>within 24 hours</strong>.</p>
+            <p class="thank-you-footer">
+              See you soon on this exciting <strong>Ulixai</strong> journey! 🌍✨
+            </p>
           </div>
           
-          <!-- Card 2: Brand -->
-          <div class="enhanced-card stagger-animation" style="animation-delay: 0.2s;">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                🏪
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-800 text-lg">Retail & Startup</h3>
-                <p class="text-gray-600 text-sm">Brand, retailer or startup</p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Card 3: Community -->
-          <div class="enhanced-card stagger-animation" style="animation-delay: 0.3s;">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                💬
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-800 text-lg">Communities</h3>
-                <p class="text-gray-600 text-sm">Social media & Discord communities</p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Card 4: NGO -->
-          <div class="enhanced-card stagger-animation" style="animation-delay: 0.4s;">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                🧡
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-800 text-lg">Non-Profit</h3>
-                <p class="text-gray-600 text-sm">NGO, nonprofit or grassroots initiative</p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Card 5: Government -->
-          <div class="enhanced-card stagger-animation" style="animation-delay: 0.5s;">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                🏛️
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-800 text-lg">Public Sector</h3>
-                <p class="text-gray-600 text-sm">Municipality or public institution</p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Card 6: Media -->
-          <div class="enhanced-card stagger-animation" style="animation-delay: 0.6s;">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                📰
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-800 text-lg">Media</h3>
-                <p class="text-gray-600 text-sm">Media outlet, platform or website</p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Card 7: Creator -->
-          <div class="enhanced-card stagger-animation" style="animation-delay: 0.7s;">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                📱
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-800 text-lg">Content Creator</h3>
-                <p class="text-gray-600 text-sm">Content creator or influencer</p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Card 8: Tech -->
-          <div class="enhanced-card stagger-animation" style="animation-delay: 0.8s;">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                🧑‍💻
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-800 text-lg">Tech & Innovation</h3>
-                <p class="text-gray-600 text-sm">Incubator, student network or coworking</p>
-              </div>
-            </div>
+          <!-- Globe Icon -->
+          <div class="globe-icon">
+            <span class="text-6xl">🌎</span>
           </div>
         </div>
-      </div>
+      </article>
     </div>
-  </div>
-</section>
 
-<!-- Call to Action Section -->
-<section class="py-16 px-6">
-  <div class="max-w-4xl mx-auto text-center">
-    <div class="gradient-border">
-      <div class="gradient-border-content p-8 md:p-12">
-        <!-- Connection Message -->
-        <div class="mb-8">
-          <div class="inline-flex items-center gap-3 mb-6">
-            <span class="text-4xl floating-animation">🤝</span>
-            <h3 class="text-2xl md:text-3xl font-bold text-blue-800">Let's Connect</h3>
-          </div>
-          
-          <p class="text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            If you'd like to take action and support those far from home, 
-            <br class="hidden md:block">
-            we'd be happy to connect with you
+  </div>
+</main>
+
+<!-- ============================================
+     FAQ SECTION - SEO OPTIMIZED
+     ============================================ -->
+<section class="faq-section" aria-labelledby="faq-title">
+  <div class="faq-container">
+    
+    <h2 id="faq-title" class="faq-main-title">
+      <span class="faq-title-gradient">Partnership FAQs</span>
+      <span class="faq-title-emoji">❓</span>
+    </h2>
+    
+    <p class="faq-subtitle">Everything you need to know about partnering with Ulixai</p>
+    
+    <!-- FAQ List -->
+    <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+      
+      <!-- FAQ 1 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon">🤝</span>
+          <span>What types of partnerships does Ulixai offer?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            Ulixai offers <strong>three main partnership types</strong>: Content Collaboration (co-create valuable content with our global community), Distribution Partners (help us expand our reach in new markets), and Sponsorship opportunities (support our mission while gaining brand visibility). Each partnership is tailored to create mutual value and long-term success.
           </p>
         </div>
-        
-        <!-- CTA Button -->
-        <div class="mb-8">
-          <a href="/partnershiprequest" class="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 pulse-glow">
-            <span class="text-xl group-hover:animate-bounce">➕</span>
-            <span class="text-lg">Suggest a Partnership</span>
-            <div class="w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </a>
+      </details>
+
+      <!-- FAQ 2 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon">⏱️</span>
+          <span>How long does it take to get a response?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            We typically respond to partnership requests <strong>within 24 hours</strong>. Our dedicated partnerships team reviews each submission carefully to ensure we can provide you with the most relevant information and next steps. During high-volume periods, it may take up to 48 hours, but we always aim to be as prompt as possible.
+          </p>
         </div>
-        
-        <!-- Response Time Info -->
-        <div class="inline-flex items-center gap-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl px-6 py-3">
-          <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-          <span class="text-green-800 font-semibold">Response within 72h</span>
-          <span class="text-green-700">•</span>
-          <span class="text-green-700">Simple, human and friendly contact</span>
+      </details>
+
+      <!-- FAQ 3 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon">💰</span>
+          <span>Is there a cost to become a partner?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Absolutely not!</strong> Submitting a partnership request and becoming a Ulixai partner is completely free. We believe in creating mutually beneficial relationships where both parties grow together. Our partnerships are based on shared goals, values, and the value each party brings to the collaboration.
+          </p>
         </div>
-      </div>
+      </details>
+
+      <!-- FAQ 4 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon">🌍</span>
+          <span>Do you accept international partnerships?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            <strong>Yes, definitely!</strong> Ulixai is a global platform and we actively seek partnerships from all around the world. We work with partners in North America, Europe, Asia, Africa, South America, and Oceania. Our international approach helps us better serve our diverse global community and expand our impact worldwide.
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ 5 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon">📋</span>
+          <span>What information should I prepare before applying?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            To expedite your partnership request, please have ready: <strong>your entity/company name, contact details, country and sector of activity, languages you work in, and a brief explanation of your motivation</strong> to collaborate. The more details you provide, the better we can tailor a partnership that meets both our needs.
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ 6 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon">✅</span>
+          <span>What happens after I submit my request?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            After submission, our partnerships team will <strong>review your request within 24 hours</strong>. If there's a potential fit, we'll reach out to schedule a call to discuss opportunities in detail. We'll explore how we can work together, define clear goals, and outline the next steps. Every partnership is customized to ensure maximum value for both parties.
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ 7 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon">🎯</span>
+          <span>What makes a good partnership with Ulixai?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            A great Ulixai partnership is built on <strong>shared values, complementary strengths, and mutual growth</strong>. We look for partners who are committed to helping people connect globally, provide value to our community, and share our vision of making the world more accessible. Whether you bring content expertise, distribution channels, or resources, we can create something amazing together.
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ 8 -->
+      <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <summary class="faq-question" itemprop="name">
+          <span class="faq-icon">📞</span>
+          <span>Can I speak with someone before submitting?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">
+            While we encourage you to <strong>submit the form first</strong> to help us understand your needs better, you can also reach our partnerships team at <strong>partnerships@ulixai.com</strong>. The form helps us prepare for our conversation and ensures we can provide you with the most relevant information when we connect.
+          </p>
+        </div>
+      </details>
+
     </div>
   </div>
 </section>
 
-<!-- Benefits Preview Section -->
-<section class="py-16 px-6 bg-gradient-to-r from-blue-50 to-indigo-50">
-  <div class="max-w-6xl mx-auto text-center">
-    <h3 class="text-3xl font-bold text-blue-800 mb-8">Why Partner with @site?</h3>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Benefit 1 -->
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-4 mx-auto floating-animation">
-          🌍
-        </div>
-        <h4 class="text-xl font-bold text-blue-800 mb-3">Global Impact</h4>
-        <p class="text-gray-600">Help millions of people navigating life abroad with trusted local partnerships.</p>
-      </div>
-      
-      <!-- Benefit 2 -->
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2" style="animation-delay: 0.2s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center text-3xl mb-4 mx-auto floating-animation">
-          📈
-        </div>
-        <h4 class="text-xl font-bold text-blue-800 mb-3">Growth Opportunity</h4>
-        <p class="text-gray-600">Expand your reach to international communities and expat markets.</p>
-      </div>
-      
-      <!-- Benefit 3 -->
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2" style="animation-delay: 0.4s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-4 mx-auto floating-animation">
-          🤝
-        </div>
-        <h4 class="text-xl font-bold text-blue-800 mb-3">Meaningful Collaboration</h4>
-        <p class="text-gray-600">Join a mission-driven platform focused on human connection and support.</p>
-      </div>
-    </div>
+<!-- Footer Links -->
+<footer class="footer-section">
+  <div class="footer-container">
+    <nav class="footer-nav">
+      <a href="https://ulixai.com/partnershiprequest" class="footer-link">
+        <span>🤝</span> Partnership
+      </a>
+      <span class="footer-separator">•</span>
+      <a href="https://ulixai.com/press" class="footer-link">
+        <span>📰</span> Press
+      </a>
+      <span class="footer-separator">•</span>
+      <a href="https://ulixai.com/recruitment" class="footer-link">
+        <span>💼</span> Careers
+      </a>
+    </nav>
+    <p class="footer-copyright">&copy; {{ date('Y') }} Ulixai. All rights reserved.</p>
   </div>
-</section>
+</footer>
 
-<div class="mb-20"></div>
+@include('includes.footer')
 
- @include('includes.footer')
+<style>
+/* ============================================
+   MOBILE-FIRST OPTIMIZED STYLES
+   ============================================ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+
+/* Animations */
+@keyframes blob{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(50px,-50px,0) scale(1.1)}}
+@keyframes bounce-soft{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes gradient-shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+
+/* Background */
+.bg-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;mix-blend-mode:multiply;filter:blur(60px);opacity:0.3;will-change:transform;animation:blob 12s ease-in-out infinite}
+.blob-1{width:22rem;height:22rem;background:#3b82f6;top:4rem;left:2rem}
+.blob-2{width:18rem;height:18rem;background:#a855f7;top:8rem;right:4rem;animation-delay:2s}
+.blob-3{width:20rem;height:20rem;background:#ec4899;bottom:4rem;left:30%;animation-delay:4s}
+
+/* Form Card */
+.form-card-wrapper{position:relative;will-change:transform}
+.form-card-border{position:absolute;inset:-0.25rem;background:linear-gradient(135deg,#3b82f6,#a855f7,#ec4899);border-radius:1.5rem;filter:blur(0.75rem);opacity:0.7}
+.form-card-content{position:relative;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-radius:1.5rem;padding:1.5rem;box-shadow:0 20px 60px -12px rgba(0,0,0,0.15)}
+
+/* Header */
+.form-header{text-align:center;margin-bottom:2rem}
+.icon-wrapper{display:flex;justify-content:center;margin-bottom:1.5rem;position:relative}
+.icon-ring{position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#a855f7);opacity:0.2}
+.delay-1{animation-delay:0.5s}
+.icon-container{width:5rem;height:5rem;background:linear-gradient(135deg,#3b82f6,#a855f7,#ec4899);border-radius:1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(168,85,247,0.5);position:relative;z-index:1;transition:transform 0.3s ease}
+.icon-container:active{transform:scale(0.95)}
+.icon-emoji{font-size:2.5rem;animation:bounce-soft 2s ease-in-out infinite}
+
+/* Typography */
+.main-title{font-size:2rem;font-weight:900;margin-bottom:0.75rem;line-height:1.2}
+.title-gradient{background:linear-gradient(135deg,#2563eb,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.title-emoji{display:inline-block;margin-left:0.5rem}
+.subtitle{font-size:1rem;font-weight:600;color:#4b5563;margin-bottom:1rem;line-height:1.6}
+.text-highlight{color:#a855f7;font-weight:900}
+
+/* Trust Badges */
+.trust-badges{display:flex;justify-content:center;gap:0.5rem;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;background:linear-gradient(135deg,#dbeafe,#f3e8ff);border:2px solid #a855f7;border-radius:9999px;font-size:0.75rem;font-weight:900;color:#7c3aed;transition:transform 0.2s ease}
+.badge:active{transform:scale(0.95)}
+.badge-icon{font-size:0.875rem}
+
+/* Form */
+.partnership-form{display:flex;flex-direction:column;gap:1.25rem}
+.form-group{display:flex;flex-direction:column}
+.form-label{display:flex;align-items:center;gap:0.5rem;font-size:0.875rem;font-weight:900;color:#374151;margin-bottom:0.5rem}
+.label-icon{font-size:1.125rem}
+.label-required{color:#ef4444;font-weight:900;margin-left:0.125rem}
+
+/* Inputs */
+.input-wrapper{position:relative}
+.form-input{width:100%;padding:1rem 1.25rem;background:linear-gradient(135deg,#f0f9ff,#faf5ff);border:3px solid #d1d5db;border-radius:1rem;font-weight:700;font-size:1rem;color:#111827;transition:all 0.3s ease;outline:0;appearance:none;-webkit-appearance:none}
+.form-input::placeholder{color:#9ca3af;font-weight:600}
+.form-input:focus{background:#fff;border-color:transparent;box-shadow:0 10px 40px -10px rgba(168,85,247,0.4);transform:scale(1.01)}
+.form-input:focus + .input-glow{opacity:1;transform:scale(1)}
+.form-textarea{resize:vertical;min-height:6rem;font-family:inherit;line-height:1.5}
+
+.input-glow{position:absolute;inset:0;border-radius:1rem;background:linear-gradient(135deg,#3b82f6,#a855f7,#ec4899);padding:3px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transform:scale(0.98);transition:all 0.3s ease;pointer-events:none}
+
+/* Submit Button */
+.submit-btn{position:relative;width:100%;padding:1.25rem;border-radius:1rem;border:0;cursor:pointer;overflow:hidden;background:linear-gradient(135deg,#3b82f6,#a855f7,#ec4899);background-size:200% 200%;animation:gradient-shift 3s ease infinite;transition:all 0.3s ease;box-shadow:0 10px 30px -8px rgba(168,85,247,0.5);outline:0;-webkit-tap-highlight-color:transparent}
+.submit-btn:hover{transform:scale(1.02);box-shadow:0 20px 50px -12px rgba(168,85,247,0.6)}
+.submit-btn:active{transform:scale(0.98)}
+.submit-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1d4ed8,#7c3aed,#be185d);opacity:0;transition:opacity 0.3s ease}
+.submit-btn:hover .submit-bg{opacity:1}
+.submit-content{position:relative;display:flex;align-items:center;justify-content:center;gap:0.75rem;color:#fff;font-weight:900;font-size:1rem}
+.submit-icon,.submit-emoji{font-size:1.5rem}
+
+/* Thank You */
+.thank-you-wrapper{position:relative;will-change:transform}
+.thank-you-border{position:absolute;inset:-0.25rem;background:linear-gradient(135deg,#10b981,#059669);border-radius:1.5rem;filter:blur(0.75rem);opacity:0.7}
+.thank-you-content{position:relative;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-radius:1.5rem;padding:2rem;text-align:center;box-shadow:0 20px 60px -12px rgba(0,0,0,0.15)}
+
+.success-icon-wrapper{display:flex;justify-content:center;margin-bottom:1.5rem;position:relative}
+.success-ring{position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);opacity:0.2}
+.success-icon{width:5rem;height:5rem;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(16,185,129,0.5);position:relative;z-index:1;animation:pop 0.6s cubic-bezier(0.68,-0.55,0.265,1.55)}
+.success-check{font-size:2.5rem;color:#fff;font-weight:900}
+
+.thank-you-title{font-size:2rem;font-weight:900;margin-bottom:1rem}
+.thank-you-gradient{background:linear-gradient(135deg,#10b981,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.thank-you-emoji{display:inline-block;margin-left:0.5rem}
+.thank-you-message{margin-bottom:2rem}
+.thank-you-message p{color:#4b5563;font-weight:600;margin-bottom:0.5rem;line-height:1.6}
+.thank-you-footer{color:#059669;font-weight:900;margin-top:1rem}
+.globe-icon{animation:bounce-soft 2s ease-in-out infinite}
+
+/* FAQ Section */
+.faq-section{padding:4rem 1rem;background:#fff}
+.faq-container{max-width:48rem;margin:0 auto}
+.faq-main-title{font-size:2rem;font-weight:900;text-align:center;margin-bottom:1rem}
+.faq-title-gradient{background:linear-gradient(135deg,#2563eb,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.faq-title-emoji{display:inline-block;margin-left:0.5rem}
+.faq-subtitle{text-align:center;font-size:1rem;font-weight:600;color:#6b7280;margin-bottom:2rem}
+
+.faq-list{display:flex;flex-direction:column;gap:1rem}
+.faq-item{background:#fff;border:2px solid #e5e7eb;border-radius:1rem;overflow:hidden;transition:all 0.3s ease}
+.faq-item:hover{border-color:#a855f7;box-shadow:0 10px 30px -8px rgba(168,85,247,0.2)}
+.faq-item[open]{border-color:#a855f7;box-shadow:0 10px 30px -8px rgba(168,85,247,0.3)}
+
+.faq-question{display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1.5rem;font-weight:900;font-size:1.125rem;color:#111827;cursor:pointer;list-style:none;transition:all 0.3s ease}
+.faq-question::-webkit-details-marker{display:none}
+.faq-question:hover{background:linear-gradient(135deg,#f0f9ff,#faf5ff)}
+.faq-icon{font-size:1.5rem;flex-shrink:0}
+.faq-toggle{margin-left:auto;font-size:1.5rem;font-weight:700;color:#a855f7;transition:transform 0.3s ease}
+.faq-item[open] .faq-toggle{transform:rotate(45deg)}
+
+.faq-answer{padding:0 1.5rem 1.5rem 4rem}
+.faq-answer p{line-height:1.7;color:#4b5563;font-size:0.9375rem}
+
+/* Footer */
+.footer-section{padding:2rem 1rem 3rem;background:linear-gradient(to bottom,transparent,#f9fafb)}
+.footer-container{max-width:72rem;margin:0 auto}
+.footer-nav{display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem}
+.footer-link{display:inline-flex;align-items:center;gap:0.35rem;font-size:0.8125rem;font-weight:600;color:#6b7280;text-decoration:none;transition:color 0.3s ease;padding:0.25rem 0.5rem}
+.footer-link:active{color:#a855f7}
+.footer-separator{color:#d1d5db;font-size:0.75rem;user-select:none}
+.footer-copyright{text-align:center;font-size:0.75rem;color:#9ca3af;font-weight:500}
+
+/* Responsive */
+@media (min-width:48em){
+.form-card-content{padding:2rem}
+.main-title{font-size:2.5rem}
+.subtitle{font-size:1.125rem}
+.form-input{padding:1.125rem 1.5rem}
+.submit-content{font-size:1.125rem}
+}
+
+@media (min-width:64em){
+.form-card-content{padding:2.5rem}
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion:reduce){
+*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
+
+@media (prefers-contrast:high){
+.form-input:focus{border:4px solid #7c3aed}}
+
+/* iOS fixes */
+@supports (-webkit-touch-callout:none){
+.form-input{font-size:16px}}
+</style>
 
 <script>
-  // Add scroll animations
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, observerOptions);
-  
-  // Initialize animations for cards
-  document.querySelectorAll('.stagger-animation').forEach((el, index) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = `opacity 0.8s ease ${index * 0.1}s, transform 0.8s ease ${index * 0.1}s`;
-    observer.observe(el);
+function submitForm(event) {
+  event.preventDefault();
+
+  const formData = new FormData(document.querySelector(".partnership-request-form"));
+
+  fetch("{{ route('partnership.store') }}", {
+    method: "POST",
+    body: formData,
+    headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}",
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('partnershipForm').classList.add('hidden');
+      document.getElementById('thankYouMessage').classList.remove('hidden');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    } else {
+      alert("Something went wrong, please try again.");
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("An error occurred. Please try again.");
   });
-  
-  // Add hover sound effect (optional)
-  document.querySelectorAll('.enhanced-card').forEach(card => {
-    card.addEventListener('mouseenter', () => {
-      // Optional: Add subtle sound effect or haptic feedback
-    });
-  });
-  
-  // Smooth scroll for internal links
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      document.querySelector(this.getAttribute('href')).scrollIntoView({
-        behavior: 'smooth'
-      });
-    });
-  });
+}
 </script>
 
 </body>

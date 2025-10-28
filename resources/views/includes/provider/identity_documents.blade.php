@@ -874,6 +874,9 @@
    ============================================ */
 
 (function() {
+  "use strict";
+  console.log("🚀 Step 11 Script Loading...");
+  console.log("📍 Script location: Step 11 Identity Documents");
   'use strict';
   
   // État global
@@ -913,9 +916,29 @@
     const mobileNextBtn = document.getElementById('mobileNextBtn');
     const desktopNextBtn = document.getElementById('desktopNextBtn');
     
-    // Le step 11 est optionnel, donc les boutons sont toujours activés
-    if (mobileNextBtn) mobileNextBtn.disabled = false;
-    if (desktopNextBtn) desktopNextBtn.disabled = false;
+    if (state.uploadedDocs && state.uploadedDocs.length > 0) {
+      // Si au moins un document est uploade, activer les boutons
+      if (mobileNextBtn) {
+        mobileNextBtn.disabled = false;
+        mobileNextBtn.classList.remove('btn-disabled');
+      }
+      if (desktopNextBtn) {
+        desktopNextBtn.disabled = false;
+        desktopNextBtn.classList.remove('btn-disabled');
+      }
+      console.log('Boutons Next actives (' + state.uploadedDocs.length + ' document(s))');
+    } else {
+      // Sinon, desactiver les boutons
+      if (mobileNextBtn) {
+        mobileNextBtn.disabled = true;
+        mobileNextBtn.classList.add('btn-disabled');
+      }
+      if (desktopNextBtn) {
+        desktopNextBtn.disabled = true;
+        desktopNextBtn.classList.add('btn-disabled');
+      }
+      console.log('Boutons Next desactives (pas de document)');
+    }
   }
 
   // ============================================
@@ -1025,36 +1048,55 @@
   // ============================================
   
   async function openCamera(type, side) {
+    console.log(`📸 openCamera(${type}, ${side}) called`);
     const video = document.querySelector(`.camera-video[data-type="${type}"][data-side="${side}"]`);
     const captureBtn = document.querySelector(`.capture-btn[data-type="${type}"][data-side="${side}"]`);
     
-    if (!video || !captureBtn) return;
+    if (!video || !captureBtn) {
+      console.error("❌ Video or Capture button not found");
+      return;
+    }
     
     const key = `${type}-${side}`;
     
     // Fermer la caméra si déjà ouverte
     if (state.cameraStreams.has(key)) {
+      console.log("🔄 Camera already open, closing it");
       stopCamera(type, side);
       return;
     }
     
+    // Vérifier que navigator.mediaDevices existe
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.error("❌ navigator.mediaDevices NOT supported");
+      alert("Your browser does not support camera access. Please use Chrome, Firefox, Safari, or Edge.");
+      return;
+    }
+    
+    console.log("✅ navigator.mediaDevices is supported");
+    
     try {
+      console.log("🎥 Requesting camera access...");
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          facingMode: 'environment',
+          facingMode: "environment",
           width: { ideal: 1920 },
           height: { ideal: 1080 }
         }
       });
       
+      console.log("✅ Camera access GRANTED!");
+      
       video.srcObject = stream;
-      video.classList.remove('hidden');
-      captureBtn.classList.remove('hidden');
+      video.classList.remove("hidden");
+      captureBtn.classList.remove("hidden");
       
       state.cameraStreams.set(key, stream);
+      
+      console.log("📹 Camera opened successfully");
     } catch (err) {
-      console.warn('Camera access error:', err);
-      alert('Unable to access camera. Please check permissions.');
+      console.error("❌ Camera error:", err.name, err.message);
+      alert("Camera Error: " + err.name + " - " + err.message + "\n\nPlease check permissions.");
     }
   }
 
@@ -1270,7 +1312,16 @@
   // ============================================
   
   window.validateStep11 = function() {
-    // Ce step est optionnel, toujours valide
+    if (!state.uploadedDocs || state.uploadedDocs.length === 0) {
+      console.log('Validation Step 11 echouee : pas de document');
+      
+      // Afficher un message d'erreur
+      alert('Please upload at least one identity document to continue');
+      
+      return false;
+    }
+    
+    console.log('Validation Step 11 reussie : ' + state.uploadedDocs.length + ' document(s)');
     return true;
   };
 

@@ -19,7 +19,7 @@
   <!-- Card 1: I Need Help - Compact -->
   <article class="group relative">
     <a 
-      href="https://www.ulixai.com/signup"
+      href="/signup"
       class="modern-card modern-card-primary w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 block"
       role="button"
       aria-label="Request urgent help - Create account">

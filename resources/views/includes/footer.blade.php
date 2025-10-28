@@ -3,183 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Improved Responsive Footer</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>@site - Connect with Trusted Helpers Worldwide | Expatriate Assistance Platform</title>
+    <meta name="description" content="@site connects expatriates and travelers with verified local helpers worldwide. Get trusted assistance wherever you are. Safe, secure, and hassle-free support services available 24/7.">
+    <meta name="keywords" content="expatriate assistance, travel help, local helpers, international support, verified providers, traveler services, expat community">
+    <meta name="author" content="@site.com">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="@site - Never Alone, Wherever You Go">
+    <meta property="og:description" content="Connect with trusted helpers worldwide. @site provides verified assistance for expatriates and travelers in any location.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://@site.com">
+    <meta property="og:image" content="https://@site.com/images/og-image.jpg">
+    <meta property="og:site_name" content="@site">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@Ulixai_officiel">
+    <meta name="twitter:title" content="@site - Trusted Global Assistance Platform">
+    <meta name="twitter:description" content="Connect with verified helpers worldwide. Never travel alone.">
+    <meta name="twitter:image" content="https://@site.com/images/twitter-card.jpg">
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="geo.region" content="US">
+    <meta name="geo.placename" content="Worldwide">
+    <link rel="canonical" href="https://@site.com">
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "@site",
+      "url": "https://@site.com",
+      "logo": "https://@site.com/images/headerlogos.png",
+      "description": "Global platform connecting expatriates and travelers with verified local helpers and service providers.",
+      "sameAs": [
+        "https://www.facebook.com/profile.php?id=61575873886727",
+        "https://www.instagram.com/ulixai_officiel/",
+        "https://fr.pinterest.com/ulixai/"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Service",
+        "availableLanguage": ["English", "French"]
+      }
+    }
+    </script>
+    
     <style>
-        /* Custom blur background animation */
-        .blur-orb {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .blur-orb:nth-child(2) {
-            animation-delay: -3s;
-        }
-
+        /* MOBILE FIRST - Optimized animations */
         @keyframes float {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            33% { transform: translateY(-20px) translateX(10px); }
-            66% { transform: translateY(10px) translateX(-10px); }
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -8px, 0); }
         }
 
-        /* Custom gradient for payment cards */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(220, 38, 38, 0.6); }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Blur orbs - DISABLED on mobile */
+        .blur-orb {
+            opacity: 0;
+        }
+
+        @media (min-width: 768px) {
+            .blur-orb {
+                will-change: transform;
+                opacity: 0.12;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .blur-orb {
+                animation: float 12s ease-in-out infinite;
+            }
+            .blur-orb:nth-child(2) { animation-delay: -4s; }
+        }
+
+        /* Lightweight glass effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        @media (min-width: 768px) {
+            .glass-card {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(8px);
+            }
+        }
+
+        /* Red banner */
+        .sos-banner {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+        }
+
+        @media (min-width: 768px) {
+            .sos-banner {
+                animation: pulse-glow 3s ease-in-out infinite;
+            }
+        }
+
+        .sos-banner:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 50%, #7f1d1d 100%);
+        }
+
+        /* Touch-optimized hover */
+        .social-icon {
+            transition: transform 0.2s ease;
+        }
+
+        @media (min-width: 768px) {
+            .social-icon:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+            }
+        }
+
+        /* Link hover */
+        .link-item {
+            transition: color 0.2s ease;
+        }
+
+        .link-item:hover {
+            color: #2563eb;
+        }
+
+        /* Simplified gradient on mobile */
+        .blue-mesh-gradient {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
+
+        @media (min-width: 768px) {
+            .blue-mesh-gradient {
+                background: 
+                    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(147, 197, 253, 0.08) 0px, transparent 50%),
+                    linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #e0f2fe 100%);
+            }
+        }
+
+        /* Payment card hover */
         .payment-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        @media (min-width: 768px) {
+            .payment-card:hover {
+                transform: translateY(-2px);
+            }
+        }
+
+        /* Logo container */
+        .logo-container {
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Font optimization */
+        @font-face {
+            font-display: swap;
+        }
+
+        /* Mobile tap highlight */
+        * {
+            -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50">
     <!-- Main content spacer -->
     <div class="min-h-screen flex items-end">
         
-        <footer class="relative w-full bg-gradient-to-br from-white via-blue-50 to-red-50 border-t border-red-100 overflow-hidden">
-            <!-- Animated Decorative Background -->
-            <div class="absolute inset-0 overflow-hidden">
-                <div class="blur-orb absolute -top-20 -left-20 w-80 h-80 bg-gradient-to-r from-red-200 to-pink-200 rounded-full blur-3xl opacity-20"></div>
-                <div class="blur-orb absolute -bottom-20 -right-20 w-80 h-80 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full blur-3xl opacity-20"></div>
-                <div class="blur-orb absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-r from-yellow-200 to-orange-200 rounded-full blur-3xl opacity-10"></div>
+        <!-- Ultra-Compact Mobile-First Footer -->
+        <footer class="relative w-full blue-mesh-gradient overflow-hidden border-t border-blue-200/50" role="contentinfo" itemscope itemtype="https://schema.org/WPFooter">
+            
+            <!-- Decorative orbs -->
+            <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+                <div class="blur-orb absolute -top-16 -left-16 w-48 h-48 bg-blue-400 rounded-full blur-3xl"></div>
+                <div class="blur-orb absolute -bottom-16 right-0 w-48 h-48 bg-cyan-300 rounded-full blur-3xl"></div>
             </div>
 
             <!-- Main Footer Content -->
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
                 
-                <!-- Main Grid Layout -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-12">
+                <!-- SOS-Expat Red Banner - MOBILE OPTIMIZED -->
+                <a href="https://sos-expat.com" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="sos-banner block rounded-2xl p-4 sm:p-5 mb-5 shadow-lg transition-all duration-300 hover:shadow-xl group"
+                   aria-label="Get urgent help on SOS-Expat">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-white">
+                        <div class="flex items-center gap-3 w-full sm:w-auto">
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm flex-shrink-0">
+                                <i class="fas fa-phone-volume text-2xl text-white" aria-hidden="true"></i>
+                            </div>
+                            <div class="text-center sm:text-left flex-1">
+                                <h2 class="text-base sm:text-lg lg:text-xl font-bold mb-0.5">
+                                    🚨 Need Urgent Help?
+                                </h2>
+                                <p class="text-xs sm:text-sm opacity-90 leading-relaxed">
+                                    <strong class="font-bold">SOS-Expat.com</strong> – Phone connection <strong>in under 5 minutes</strong> with a lawyer or helping expat
+                                </p>
+                            </div>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm px-4 py-2.5 rounded-lg font-bold text-xs sm:text-sm whitespace-nowrap group-hover:bg-white/30 transition-colors flex items-center gap-2 min-h-[44px]">
+                            Get Help Now
+                            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Single Unified Card -->
+                <div class="glass-card rounded-2xl p-4 sm:p-5 lg:p-6 shadow-sm">
                     
-                    <!-- About Section -->
-                    <div class="space-y-6">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12  rounded-lg flex items-center justify-center">
-                                <img src="/images/headerlogos.png" alt="Logo" class="w-25 h-auto max-h-14 object-contain" />
+                    <!-- Top Row: Brand, Mission & Social -->
+                    <div class="flex flex-col lg:flex-row items-center justify-between gap-4 mb-4 sm:mb-5 pb-4 sm:pb-5 border-b border-blue-100">
+                        
+                        <!-- Brand & Mission -->
+                        <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left w-full lg:w-auto">
+                            <!-- Logo - Touch friendly size -->
+                            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 p-0.5 shadow-md flex-shrink-0">
+                                <div class="logo-container w-full h-full bg-white rounded-xl overflow-hidden">
+                                    <img src="/images/headerlogos.png" 
+                                         alt="@site Logo" 
+                                         width="56" 
+                                         height="56"
+                                         loading="lazy"
+                                         itemprop="logo"
+                                         class="w-full h-auto object-contain p-1.5" />
+                                </div>
                             </div>
-                            <h3 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                                 @site
-                            </h3>
-                        </div>
-                        <div class="space-y-4 text-gray-600 leading-relaxed">
-                            <p class="text-sm lg:text-base">
-                                <span class="font-semibold text-blue-800"> @site.com</span> is the solution for anyone who needs a helping hand — wherever they are in the world.
-                            </p>
-                            <p class="text-sm lg:text-base">
-                                Need trusted, hassle-free assistance? Our platform connects you with verified providers who are available and ready to help.
-                            </p>
-                            <p class="text-sm lg:text-base font-medium text-blue-700">
-                                At @site, we never leave you alone.
-                            </p>
-                        </div>
-                        <div class="space-y-3">
-                            <h5 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Follow Us</h5>
-                            <div class="flex flex-wrap gap-3">
-                                <a href="https://www.facebook.com/profile.php?id=61575873886727" class="group w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg">
-                                    <i class="fab fa-facebook-f text-sm group-hover:scale-110 transition-transform"></i>
-                                </a>
-                                <a href="https://fr.pinterest.com/ulixai/" class="group w-10 h-10 bg-red-600 hover:bg-red-700 text-white rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg">
-                                    <i class="fab fa-pinterest-p text-sm group-hover:scale-110 transition-transform"></i>
-                                </a>
-                                <a href="https://www.instagram.com/ulixai_officiel/" class="group w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg">
-                                    <i class="fab fa-instagram text-sm group-hover:scale-110 transition-transform"></i>
-                                </a>
-                                <a href="#" class="group w-10 h-10 bg-black hover:bg-gray-800 text-white rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg">
-                                    <i class="fab fa-tiktok text-sm group-hover:scale-110 transition-transform"></i>
-                                </a>
-                                <a href="https://x.com/Ulixai_officiel" class="group w-10 h-10 bg-blue-400 hover:bg-blue-500 text-white rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg">
-                                    <i class="fab fa-twitter text-sm group-hover:scale-110 transition-transform"></i>
-                                </a>
+                            
+                            <!-- Brand & Tagline -->
+                            <div class="flex-1">
+                                <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1" itemprop="name">
+                                    @site
+                                </h1>
+                                <p class="text-xs sm:text-sm lg:text-base text-gray-700 font-medium leading-snug" itemprop="description">
+                                    🌍 <strong>All nationalities, all languages, all countries</strong> – Together, we support each other!
+                                </p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Quick Links -->
-                    <div>
-                        <h4 class="text-lg font-bold mb-6 text-gray-900 flex items-center">
-                            <span class="text-orange-500 mr-2">⚡</span>
-                            Quick Links
-                        </h4>
-                        <ul class="space-y-3">
-                            <li><a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">Home</a></li>
-                            <li>
-                            <a href="{{ auth()->check() ? url('/inviteFriend') : route('login') }}"
-                                class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">
-                                Invite Friends
+                        
+                        <!-- Social Media Icons - 44x44 minimum for touch -->
+                        <nav aria-label="Social media links" class="flex gap-2.5 sm:gap-3">
+                            <a href="https://www.facebook.com/profile.php?id=61575873886727" 
+                               class="social-icon w-11 h-11 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg flex items-center justify-center shadow-sm"
+                               aria-label="Facebook"
+                               rel="noopener noreferrer"
+                               target="_blank">
+                                <i class="fab fa-facebook-f text-sm" aria-hidden="true"></i>
                             </a>
-                            </li>
-
-                            <li><a href="/affiliate" class="text-gray-600 hover:text-blue-700 hover:underline text-sm lg:text-base hover:translate-x-1 transform transition-all inline-block">Affiliate Program</a></li>
-                            <li><a href="/becomepartner" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">Become a Partner</a></li>
-                            <li>
-                            <a href="{{ route('recruitment') }}"
-                                class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">
-                                Recruitment
+                            <a href="https://fr.pinterest.com/ulixai/" 
+                               class="social-icon w-11 h-11 sm:w-10 sm:h-10 bg-gradient-to-br from-red-500 to-rose-600 text-white rounded-lg flex items-center justify-center shadow-sm"
+                               aria-label="Pinterest"
+                               rel="noopener noreferrer"
+                               target="_blank">
+                                <i class="fab fa-pinterest-p text-sm" aria-hidden="true"></i>
                             </a>
-                            </li>
-
-                            <li><a href="/customerreviews" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">Customer Reviews</a></li>
-                            <li><a href="/aboutUS" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">About Us</a></li>
-                            <li><a href="https://williamsjullin.com/" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">Founder @site</a></li>
-                        </ul>
+                            <a href="https://www.instagram.com/ulixai_officiel/" 
+                               class="social-icon w-11 h-11 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 text-white rounded-lg flex items-center justify-center shadow-sm"
+                               aria-label="Instagram"
+                               rel="noopener noreferrer"
+                               target="_blank">
+                                <i class="fab fa-instagram text-sm" aria-hidden="true"></i>
+                            </a>
+                        </nav>
                     </div>
+                    
+                    <!-- Bottom Row: Links - MOBILE FIRST GRID -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-4 sm:gap-x-6 gap-y-4 text-xs sm:text-sm">
+                        
+                        <!-- Quick Links -->
+                        <nav aria-labelledby="quick-links">
+                            <h2 id="quick-links" class="font-bold text-gray-900 mb-2">Quick Links</h2>
+                            <ul class="space-y-1.5" role="list">
+                                <li><a href="/" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Home</a></li>
+                                <li><a href="{{ auth()->check() ? url('/inviteFriend') : route('login') }}" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Invite Friends</a></li>
+                                <li><a href="/affiliate" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Affiliate</a></li>
+                                <li><a href="/becomepartner" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Partners</a></li>
+                                <li><a href="{{ route('recruitment') }}" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Recruitment</a></li>
+                            </ul>
+                        </nav>
 
-                    <!-- Legal Info -->
-                    <div>
-                        <h4 class="text-lg font-bold mb-6 text-gray-900 flex items-center">
-                            <span class="text-blue-500 mr-2">📚</span>
-                            Legal & Info
-                        </h4>
-                        <ul class="space-y-3">
-                            <li><a href="/trustnsecurity" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">Trust & Security</a></li>
-                            <li><a href="/howitwork" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">How It Works</a></li>
-                            <li>
-                                <a href="{{ route('terms.show') }}"
-                                    class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">
-                                    Terms & Conditions
-                                </a>
-                                </li>
-                            <li><a href="/cookiemanagment" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transformation inline-block">Cookie Management</a></li>
-                            <li><a href="/legal-notice" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">Legal Notice</a></li>
-                            <li><a href="/press" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm lg:text-base hover:translate-x-1 transform transition-transform inline-block">Press</a></li>
-                        </ul>
-                    </div>
+                        <!-- More Links -->
+                        <nav aria-labelledby="more-links">
+                            <h2 id="more-links" class="font-bold text-gray-900 mb-2">Discover</h2>
+                            <ul class="space-y-1.5" role="list">
+                                <li><a href="/customerreviews" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Reviews</a></li>
+                                <li><a href="/aboutUS" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">About Us</a></li>
+                                <li><a href="/howitwork" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">How It Works</a></li>
+                                <li><a href="/press" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Press</a></li>
+                            </ul>
+                        </nav>
 
-                    <!-- Payment & Actions -->
-                    <div>
-                        <h4 class="text-lg font-bold mb-6 text-gray-900 flex items-center">
-                            <span class="text-green-500 mr-2">💳</span>
-                            Payment
-                        </h4>
-                        <div class="grid grid-cols-3 mb-4">
-                            <div class="flex items-center justify-center">
-                                <img src="{{ asset('images/visa.png') }}" alt="VISA" class="w-20 h-[50px] object-contain">
-                            </div>
-                            <div class="flex items-center justify-center">
-                                <img src="{{ asset('images/mastercard.png') }}" alt="MasterCard" class="w-20 h-[50px] object-contain">
-                            </div>
-                            <div class="flex items-center justify-center">
-                                <img src="{{ asset('images/paypal.png') }}" alt="PayPal" class="w-20 h-[50px] object-contain">
-                            </div>
-                        </div>
+                        <!-- Legal -->
+                        <nav aria-labelledby="legal-links">
+                            <h2 id="legal-links" class="font-bold text-gray-900 mb-2">Legal</h2>
+                            <ul class="space-y-1.5" role="list">
+                                <li><a href="/trustnsecurity" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Security</a></li>
+                                <li><a href="{{ route('terms.show') }}" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Terms</a></li>
+                                <li><a href="/cookiemanagment" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Cookies</a></li>
+                                <li><a href="/legal-notice" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Legal Notice</a></li>
+                            </ul>
+                        </nav>
 
-                        <!-- Report Bug Button -->
-                        <div class="space-y-4">
-                            <a href="/reportbug" class="w-full bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm text-center block">
-                                <i class="fas fa-bug mr-2"></i>
-                                Report a Bug
+                        <!-- Payment Methods -->
+                        <div aria-labelledby="payment">
+                            <h2 id="payment" class="font-bold text-gray-900 mb-2">Payment</h2>
+                            <div class="flex gap-2 flex-wrap">
+                                <div class="payment-card bg-white/70 rounded-lg p-1.5 w-14 h-10 flex items-center justify-center shadow-sm">
+                                    <img src="{{ asset('images/visa.png') }}" alt="VISA" width="50" height="30" loading="lazy" class="w-full h-auto object-contain">
+                                </div>
+                                <div class="payment-card bg-white/70 rounded-lg p-1.5 w-14 h-10 flex items-center justify-center shadow-sm">
+                                    <img src="{{ asset('images/mastercard.png') }}" alt="MasterCard" width="50" height="30" loading="lazy" class="w-full h-auto object-contain">
+                                </div>
+                                <div class="payment-card bg-white/70 rounded-lg p-1.5 w-14 h-10 flex items-center justify-center shadow-sm">
+                                    <img src="{{ asset('images/paypal.png') }}" alt="PayPal" width="50" height="30" loading="lazy" class="w-full h-auto object-contain">
+                                </div>
+                            </div>
+                            <!-- Touch-friendly button -->
+                            <a href="/reportbug" class="inline-block mt-3 bg-gradient-to-r from-orange-400 to-pink-500 text-white font-semibold py-2 px-3 rounded-lg text-xs shadow-sm hover:shadow-md transition-shadow min-h-[36px] flex items-center">
+                                <i class="fas fa-bug mr-1" aria-hidden="true"></i>Report Bug
                             </a>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Bottom Footer -->
-                <div class="mt-12 pt-8 border-t border-gray-200">
-                    <div class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-                        <p class="text-sm text-gray-500 text-center sm:text-left">
-                            © 2025 <span class="font-semibold text-blue-700"> @site.com</span> – Helping expatriates and travelers connect.
-                        </p>
-                        <div class="flex items-center space-x-4 text-xs text-gray-400">
-                            <span>Made with ❤️ for travelers</span>
+                        <!-- 2 Platforms, 4 Missions -->
+                        <div class="col-span-2 sm:col-span-3 lg:col-span-1">
+                            <h2 class="font-bold text-gray-900 mb-2">2 Platforms, 4 Missions</h2>
+                            <p class="text-gray-600 leading-relaxed mb-2">
+                                <strong class="text-blue-600">@site</strong> & <strong class="text-red-600">SOS-Expat</strong> – One startup, global solidarity! 🤝
+                            </p>
+                            <p class="text-gray-500 text-xs">
+                                © <time datetime="2025">2025</time> <span class="font-semibold">@site</span> · All rights reserved
+                            </p>
                         </div>
+                        
                     </div>
+                    
                 </div>
 
             </div>

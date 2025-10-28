@@ -93,6 +93,7 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('user.login');
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/signup', [GoogleController::class, 'redirectToGoogle'])->name('google.signup');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 // Forgot Password

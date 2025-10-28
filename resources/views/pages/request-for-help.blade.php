@@ -42,7 +42,10 @@
     <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     
     <!-- Tailwind CSS (TODO: Replace with compiled CSS in production) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -51,10 +54,11 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <!-- Font Awesome -->
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     
     <!-- Toastr -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" media="print" onload="this.media='all'">
     
     <!-- Country Select -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/css/countrySelect.min.css">
@@ -217,8 +221,8 @@
         
         /* Logical properties for RTL support */
         .section-spacing {
-            padding-block: clamp(1rem, 4vw, 2rem);
-            padding-inline: clamp(0.75rem, 3vw, 1rem);
+            padding-block: clamp(0.5rem, 2vw, 1rem);
+            padding-inline: clamp(0.5rem, 2vw, 0.75rem);
         }
         
         /* Container query support with fallback */
@@ -245,6 +249,34 @@
         .modal-overlay {
             z-index: 9999 !important;
         }
+
+        /* Compact spacing for desktop */
+        @media (min-width: 768px) {
+            .form-step {
+                max-height: 65vh;
+                overflow-y: auto;
+            }
+            .info-box {
+                padding: 0.75rem !important;
+                margin-top: 0.75rem !important;
+            }
+            .info-box p {
+                font-size: 0.875rem !important;
+                line-height: 1.4 !important;
+            }
+            input, select, textarea {
+                padding: 0.75rem !important;
+            }
+            .option-btn, .duration-btn {
+                padding: 0.75rem 1rem !important;
+            }
+            .support-option, .urgency-option {
+                padding: 0.75rem 1rem !important;
+            }
+            .lang-option {
+                padding: 0.5rem 0.75rem !important;
+            }
+        }
     </style>
     
     <!-- JSON-LD Structured Data -->
@@ -264,9 +296,35 @@
         }
     }
     </script>
+
+    <!-- 💫 LOADING SCREEN -->
+    <div id="pageLoader" class="fixed inset-0 z-[99999] bg-white flex items-center justify-center">
+      <div class="text-center">
+        <div class="relative">
+          <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
+          <div class="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-blue-300 mx-auto opacity-20"></div>
+        </div>
+        <h2 class="text-gray-800 font-bold text-lg mb-1">Loading your form...</h2>
+        <p class="text-gray-500 text-sm">Just a moment ✨</p>
+      </div>
+    </div>
+    <script>
+      window.addEventListener("load", function() {
+        const loader = document.getElementById("pageLoader");
+        if (loader) {
+          loader.style.opacity = "0";
+          loader.style.transition = "opacity 0.3s ease";
+          setTimeout(() => loader.style.display = "none", 300);
+        }
+      });
+      setTimeout(() => {
+        const loader = document.getElementById("pageLoader");
+        if (loader) loader.style.display = "none";
+      }, 5000);
+    </script>
 </head>
 
-<body class="min-h-screen bg-gradient-to-tr from-white to-blue-50 pb-24 sm:pb-32">
+<body class="min-h-screen bg-gradient-to-tr from-white to-blue-50 pb-20 sm:pb-24">
     <!-- Skip to content link -->
     <a href="#main-content" class="skip-link">Skip to content</a>
     
@@ -292,22 +350,6 @@
             ['text' => "Last one! 🎉", 'color' => '#8b5cf6'],
             ['text' => "...", 'color' => '#6b7280'],
             ['text' => "Congrats! 🎉", 'color' => '#10b981']
-        ];
-        
-        $blockColors = [
-            ['bg' => 'from-blue-50 to-indigo-50', 'border' => 'border-blue-200', 'text' => 'text-blue-900'],
-            ['bg' => 'from-purple-50 to-pink-50', 'border' => 'border-purple-200', 'text' => 'text-purple-900'],
-            ['bg' => 'from-green-50 to-emerald-50', 'border' => 'border-green-200', 'text' => 'text-green-900'],
-            ['bg' => 'from-amber-50 to-orange-50', 'border' => 'border-amber-200', 'text' => 'text-amber-900'],
-            ['bg' => 'from-cyan-50 to-blue-50', 'border' => 'border-cyan-200', 'text' => 'text-cyan-900'],
-            ['bg' => 'from-indigo-50 to-blue-50', 'border' => 'border-indigo-200', 'text' => 'text-indigo-900'],
-            ['bg' => 'from-rose-50 to-pink-50', 'border' => 'border-rose-200', 'text' => 'text-rose-900'],
-            ['bg' => 'from-teal-50 to-cyan-50', 'border' => 'border-teal-200', 'text' => 'text-teal-900'],
-            ['bg' => 'from-violet-50 to-purple-50', 'border' => 'border-violet-200', 'text' => 'text-violet-900'],
-            ['bg' => 'from-sky-50 to-blue-50', 'border' => 'border-sky-200', 'text' => 'text-sky-900'],
-            ['bg' => 'from-emerald-50 to-green-50', 'border' => 'border-emerald-200', 'text' => 'text-emerald-900'],
-            ['bg' => 'from-fuchsia-50 to-pink-50', 'border' => 'border-fuchsia-200', 'text' => 'text-fuchsia-900'],
-            ['bg' => 'from-lime-50 to-green-50', 'border' => 'border-lime-200', 'text' => 'text-lime-900']
         ];
         
         $stepLabels = [
@@ -349,21 +391,21 @@
     <!-- Sticky Header with Progress -->
     <header class="sticky top-0 sticky-header bg-white/98 backdrop-blur-md border-b-2 border-gray-200 section-spacing shadow-sm">
         <div class="max-w-3xl mx-auto">
-            <div class="w-full bg-gray-200 h-2 rounded-full mb-2 sm:mb-3 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="w-full bg-gray-200 h-1.5 rounded-full mb-2 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                 <div id="progressBar" class="h-full bg-blue-600 rounded-full" style="width: 0%"></div>
             </div>
             
             <div class="flex items-center justify-between mb-1">
-                <span id="stepCounter" class="text-sm sm:text-base font-semibold text-gray-700">Step 1</span>
-                <span id="funText" class="text-xs sm:text-sm font-semibold transition-colors duration-300" style="color: #2563eb" aria-live="polite">Let's go! 🚀</span>
+                <span id="stepCounter" class="text-sm font-semibold text-gray-700">Step 1</span>
+                <span id="funText" class="text-xs font-semibold transition-colors duration-300" style="color: #2563eb" aria-live="polite">Let's go! 🚀</span>
             </div>
-            <h1 id="formStepLabel" class="text-xl sm:text-2xl md:text-3xl font-bold text-blue-700 leading-tight">Which country do you need help in?</h1>
+            <h1 id="formStepLabel" class="text-lg sm:text-xl md:text-2xl font-bold text-blue-700 leading-tight">Which country do you need help in?</h1>
         </div>
     </header>
     
     <!-- Main Content -->
-    <main id="main-content" class="max-w-3xl mx-auto section-spacing py-4 sm:py-6">
-        <div class="md:border-4 md:border-blue-300 md:rounded-3xl md:p-6 lg:p-8 md:bg-white md:shadow-xl">
+    <main id="main-content" class="max-w-3xl mx-auto section-spacing py-3 sm:py-4">
+        <div class="md:border-4 md:border-blue-300 md:rounded-3xl md:p-4 lg:p-6 md:bg-white md:shadow-xl">
             <form action="{{ route('save-request-form') }}" id="helpRequestForm" method="POST" novalidate>
                 @csrf
                 
@@ -374,7 +416,7 @@
                     <select 
                         id="countryNeed" 
                         name="countryNeed" 
-                        class="w-full p-5 text-base bg-white border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-white border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
                         required
                         aria-required="true"
                         aria-describedby="countryNeed-help">
@@ -383,13 +425,12 @@
                             <option value="{{ $country->country }}">{{ $country->country }}</option>
                         @endforeach
                     </select>
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-5 mt-6 shadow-sm" id="countryNeed-help">
-                        <p class="text-base text-blue-900 leading-relaxed">
-                            🎯 <strong>A few quick questions</strong> to properly post your help request and receive offers from qualified service providers...<br><br>
-                            You will just have to <strong>choose the one you prefer</strong>! 🚀
+                    <div class="info-box bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 mt-4 shadow-sm" id="countryNeed-help">
+                        <p class="text-sm text-blue-900 leading-relaxed">
+                            🎯 <strong>A few quick questions</strong> to properly post your help request and receive offers from qualified service providers... You will just have to <strong>choose the one you prefer</strong>! 🚀
                         </p>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 2: Origin Country -->
@@ -399,7 +440,7 @@
                     <select 
                         id="originCountry" 
                         name="originCountry" 
-                        class="w-full p-5 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
                         required
                         aria-required="true"
                         aria-describedby="originCountry-help">
@@ -408,12 +449,12 @@
                             <option value="{{ $country->country }}">{{ $country->country }}</option>
                         @endforeach
                     </select>
-                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-5 mt-6 shadow-sm" id="originCountry-help">
-                        <p class="text-base text-purple-900 leading-relaxed">
+                    <div class="info-box bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-4 mt-4 shadow-sm" id="originCountry-help">
+                        <p class="text-sm text-purple-900 leading-relaxed">
                             😏 It's because we are <strong>very curious</strong>... Yes I know, bad habit!
                         </p>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 3: Current City -->
@@ -425,27 +466,27 @@
                         id="currentCity"
                         name="currentCity"
                         placeholder="E.g.: Paris, Lyon, Marseille..."
-                        class="w-full p-5 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
                         autocomplete="address-level2"
                         aria-describedby="currentCity-help"
                     />
-                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-5 mt-6 shadow-sm" id="currentCity-help">
-                        <p class="text-base text-green-900 leading-relaxed">
+                    <div class="info-box bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-4 mt-4 shadow-sm" id="currentCity-help">
+                        <p class="text-sm text-green-900 leading-relaxed">
                             💡 Or the name of the nearest larger town — <strong>essential if you need physical help</strong>!
                         </p>
                     </div>
-                    <p class="mt-3 text-sm text-gray-500 italic text-center">⚠️ Optional but recommended for local help</p>
+                    <p class="mt-2 text-xs text-gray-500 italic text-center">⚠️ Optional but recommended for local help</p>
                 </fieldset>
                 
                 <!-- Step 4: Duration -->
                 <fieldset class="form-step hidden">
                     <legend class="sr-only">How long have you been in this country?</legend>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" role="group" aria-labelledby="duration-label">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" role="group" aria-labelledby="duration-label">
                         <span id="duration-label" class="sr-only">Select duration</span>
                         @foreach($durations as $index => $duration)
                         <button
                             type="button"
-                            class="option-btn border-2 rounded-2xl py-5 px-4 text-center font-semibold text-base transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100 {{ $index === count($durations) - 1 ? 'sm:col-span-2' : '' }}"
+                            class="option-btn border-2 rounded-2xl py-4 px-3 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100 {{ $index === count($durations) - 1 ? 'sm:col-span-2' : '' }}"
                             data-value="{{ $duration }}"
                             aria-pressed="false">
                             {{ $duration }}
@@ -453,11 +494,11 @@
                         @endforeach
                     </div>
                     <input type="hidden" id="durationHere" name="durationHere" />
-                    <p class="text-sm text-red-500 mt-4 font-semibold text-center" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-3 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 5: Request Details -->
-                <fieldset class="form-step hidden space-y-6">
+                <fieldset class="form-step hidden space-y-4">
                     <legend class="sr-only">Describe your help request</legend>
                     <div>
                         <label for="requestTitle" class="sr-only">Request title (minimum 15 characters)</label>
@@ -466,14 +507,14 @@
                             id="requestTitle"
                             name="requestTitle"
                             placeholder="E.g.: Help with moving, Document translation..."
-                            class="w-full p-5 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                            class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
                             required
                             aria-required="true"
                             aria-describedby="titleCounter"
                             maxlength="200"
                         />
-                        <div id="titleCounter" class="mt-4 text-base text-orange-600 bg-orange-50 border-orange-300 p-4 rounded-xl border-2 shadow-sm" role="status" aria-live="polite">
-                            ⚠️ Minimum 15 characters required • <span id="titleCount">0/15</span>
+                        <div id="titleCounter" class="mt-3 text-sm text-orange-600 bg-orange-50 border-orange-300 p-3 rounded-xl border-2 shadow-sm" role="status" aria-live="polite">
+                            ⚠️ Minimum 15 characters • <span id="titleCount">0/15</span>
                         </div>
                     </div>
                     
@@ -482,137 +523,137 @@
                         <textarea
                             id="moreDetails"
                             name="moreDetails"
-                            rows="7"
+                            rows="5"
                             maxlength="1500"
                             placeholder="Describe the circumstances, dates, locations, people involved..."
-                            class="w-full p-5 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl resize-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                            class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl resize-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
                             required
                             aria-required="true"
                             aria-describedby="detailsCounter"
                         ></textarea>
-                        <div id="detailsCounter" class="mt-4 text-base flex justify-between text-orange-600 bg-orange-50 border-orange-300 p-4 rounded-xl border-2 shadow-sm" role="status" aria-live="polite">
-                            <span>⚠️ Minimum 50 characters required</span>
+                        <div id="detailsCounter" class="mt-3 text-sm flex justify-between text-orange-600 bg-orange-50 border-orange-300 p-3 rounded-xl border-2 shadow-sm" role="status" aria-live="polite">
+                            <span>⚠️ Min 50 chars</span>
                             <span class="text-gray-700"><span id="detailsCount">0</span>/50 (max 1500)</span>
                         </div>
-                        <div class="bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-2xl p-5 mt-4 shadow-sm">
-                            <p class="text-base text-cyan-900 leading-relaxed">
+                        <div class="info-box bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-2xl p-3 mt-3 shadow-sm">
+                            <p class="text-sm text-cyan-900 leading-relaxed">
                                 💰 <strong>The more you provide, the better</strong> service providers will be able to give you the <strong>best price quote</strong>!
                             </p>
                         </div>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 6: Photos -->
-                <fieldset class="form-step hidden space-y-5">
+                <fieldset class="form-step hidden space-y-4">
                     <legend class="sr-only">Add photos to your request (optional)</legend>
-                    <div class="grid grid-cols-2 gap-5">
+                    <div class="grid grid-cols-2 gap-3">
                         @for ($i = 1; $i <= 4; $i++)
-                        <div class="photo-upload-box border-2 border-blue-400 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-100 hover:border-blue-500 transition-all min-h-[160px] active:scale-95 bg-blue-50 shadow-sm">
+                        <div class="photo-upload-box border-2 border-blue-400 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-100 hover:border-blue-500 transition-all min-h-[120px] active:scale-95 bg-blue-50 shadow-sm">
                             <button type="button" class="photo-menu-btn w-full h-full flex flex-col items-center justify-center focus:outline-none" aria-label="Upload photo {{ $i }}">
-                                <img src="{{ asset('images/uploadpng.png') }}" alt="" class="w-14 h-14 mb-3 photo-preview" loading="lazy" decoding="async" />
-                                <span class="text-base text-blue-700 font-semibold">Add photo</span>
+                                <img src="{{ asset('images/uploadpng.png') }}" alt="" class="w-10 h-10 mb-2 photo-preview" loading="lazy" decoding="async" />
+                                <span class="text-sm text-blue-700 font-semibold">Add photo</span>
                             </button>
                             <input type="file" name="photo{{ $i }}" class="hidden photo-input" accept="image/*" aria-label="Photo {{ $i }}" />
                         </div>
                         @endfor
                     </div>
-                    <div class="bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-2xl p-5 shadow-sm">
-                        <p class="text-base text-indigo-900 leading-relaxed">
+                    <div class="info-box bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-2xl p-3 shadow-sm">
+                        <p class="text-sm text-indigo-900 leading-relaxed">
                             🖼️ <strong>Optional</strong> — Only <strong>photos</strong> are accepted
                         </p>
                     </div>
                 </fieldset>
                 
                 <!-- Step 7: Support Type -->
-                <fieldset class="form-step hidden space-y-5">
+                <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">How would you like to be helped?</legend>
-                    <div class="grid grid-cols-1 gap-4 max-w-md mx-auto" role="radiogroup" aria-labelledby="support-type-label">
+                    <div class="grid grid-cols-1 gap-3 max-w-md mx-auto" role="radiogroup" aria-labelledby="support-type-label">
                         <span id="support-type-label" class="sr-only">Support type</span>
-                        <label class="support-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100">
-                            <span class="font-bold text-base">Phone support is sufficient</span>
-                            <input type="radio" name="supportType" value="phone" class="w-6 h-6 text-blue-600" required aria-required="true" />
+                        <label class="support-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100">
+                            <span class="font-bold text-sm">Phone support is sufficient</span>
+                            <input type="radio" name="supportType" value="phone" class="w-5 h-5 text-blue-600" required aria-required="true" />
                         </label>
-                        <label class="support-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100">
-                            <span class="font-bold text-base">Help with physical intervention</span>
-                            <input type="radio" name="supportType" value="physical" class="w-6 h-6 text-blue-600" />
+                        <label class="support-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100">
+                            <span class="font-bold text-sm">Help with physical intervention</span>
+                            <input type="radio" name="supportType" value="physical" class="w-5 h-5 text-blue-600" />
                         </label>
-                        <label class="support-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100">
-                            <span class="font-bold text-base">I don't know yet</span>
-                            <input type="radio" name="supportType" value="unknown" class="w-6 h-6 text-blue-600" />
+                        <label class="support-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100">
+                            <span class="font-bold text-sm">I don't know yet</span>
+                            <input type="radio" name="supportType" value="unknown" class="w-5 h-5 text-blue-600" />
                         </label>
                     </div>
-                    <div class="bg-gradient-to-r from-rose-50 to-pink-50 border-2 border-rose-200 rounded-2xl p-5 text-center shadow-sm">
-                        <p class="text-base text-rose-900 leading-relaxed">
+                    <div class="info-box bg-gradient-to-r from-rose-50 to-pink-50 border-2 border-rose-200 rounded-2xl p-3 text-center shadow-sm">
+                        <p class="text-sm text-rose-900 leading-relaxed">
                             ⚠️ <strong>Important:</strong> Select <strong>only one</strong> option
                         </p>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 8: Urgency -->
-                <fieldset class="form-step hidden space-y-5">
+                <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">How soon do you need this service?</legend>
-                    <div class="grid grid-cols-1 gap-4 max-w-lg mx-auto" role="radiogroup" aria-labelledby="urgency-label">
+                    <div class="grid grid-cols-1 gap-3 max-w-lg mx-auto" role="radiogroup" aria-labelledby="urgency-label">
                         <span id="urgency-label" class="sr-only">Urgency level</span>
-                        <label class="urgency-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl" aria-hidden="true">🔥</span>
-                                <span class="font-bold text-base text-red-500">It's urgent</span>
+                        <label class="urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl" aria-hidden="true">🔥</span>
+                                <span class="font-bold text-sm text-red-500">It's urgent</span>
                             </div>
-                            <input type="radio" name="urgency" value="urgent" class="w-6 h-6" required aria-required="true" />
+                            <input type="radio" name="urgency" value="urgent" class="w-5 h-5" required aria-required="true" />
                         </label>
-                        <label class="urgency-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl" aria-hidden="true">📅</span>
-                                <span class="font-bold text-base text-blue-500">Within the week</span>
+                        <label class="urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl" aria-hidden="true">📅</span>
+                                <span class="font-bold text-sm text-blue-500">Within the week</span>
                             </div>
-                            <input type="radio" name="urgency" value="within_week" class="w-6 h-6" />
+                            <input type="radio" name="urgency" value="within_week" class="w-5 h-5" />
                         </label>
-                        <label class="urgency-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl" aria-hidden="true">⏳</span>
-                                <span class="font-bold text-base text-amber-500">Between 1-2 weeks</span>
+                        <label class="urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl" aria-hidden="true">⏳</span>
+                                <span class="font-bold text-sm text-amber-500">Between 1-2 weeks</span>
                             </div>
-                            <input type="radio" name="urgency" value="1_2_weeks" class="w-6 h-6" />
+                            <input type="radio" name="urgency" value="1_2_weeks" class="w-5 h-5" />
                         </label>
-                        <label class="urgency-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl" aria-hidden="true">📆</span>
-                                <span class="font-bold text-base text-green-500">Between 2 weeks and 1 month</span>
+                        <label class="urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl" aria-hidden="true">📆</span>
+                                <span class="font-bold text-sm text-green-500">Between 2 weeks - 1 month</span>
                             </div>
-                            <input type="radio" name="urgency" value="2_weeks_1_month" class="w-6 h-6" />
+                            <input type="radio" name="urgency" value="2_weeks_1_month" class="w-5 h-5" />
                         </label>
-                        <label class="urgency-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl" aria-hidden="true">🗓️</span>
-                                <span class="font-bold text-base text-purple-500">More than a month</span>
+                        <label class="urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl" aria-hidden="true">🗓️</span>
+                                <span class="font-bold text-sm text-purple-500">More than a month</span>
                             </div>
-                            <input type="radio" name="urgency" value="more_than_month" class="w-6 h-6" />
+                            <input type="radio" name="urgency" value="more_than_month" class="w-5 h-5" />
                         </label>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 9: Languages -->
-                <fieldset class="form-step hidden space-y-5">
+                <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">What languages do you speak?</legend>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-2xl mx-auto" role="group" aria-labelledby="languages-label">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-2xl mx-auto" role="group" aria-labelledby="languages-label">
                         <span id="languages-label" class="sr-only">Select languages you speak</span>
                         @foreach($languages as $lang)
-                        <label class="lang-option border-2 rounded-2xl px-4 py-4 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 border-blue-400 bg-blue-50 hover:bg-blue-100 active:scale-95">
-                            <img src="https://flagcdn.com/{{ $lang['flag'] }}.svg" alt="{{ $lang['name'] }} flag" class="w-6 h-4 rounded pointer-events-none" loading="lazy" decoding="async" />
-                            <span class="font-semibold text-sm pointer-events-none">{{ $lang['name'] }}</span>
+                        <label class="lang-option border-2 rounded-2xl px-3 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 border-blue-400 bg-blue-50 hover:bg-blue-100 active:scale-95">
+                            <img src="https://flagcdn.com/{{ $lang['flag'] }}.svg" alt="{{ $lang['name'] }} flag" class="w-5 h-3 rounded pointer-events-none" loading="lazy" decoding="async" />
+                            <span class="font-semibold text-xs pointer-events-none">{{ $lang['name'] }}</span>
                             <input type="checkbox" name="languages[]" value="{{ $lang['name'] }}" class="hidden lang-checkbox" />
                         </label>
                         @endforeach
                     </div>
-                    <div class="bg-gradient-to-r from-violet-50 to-purple-50 border-2 border-violet-200 rounded-2xl p-5 text-center shadow-sm">
-                        <p class="text-base text-violet-900 leading-relaxed">
+                    <div class="info-box bg-gradient-to-r from-violet-50 to-purple-50 border-2 border-violet-200 rounded-2xl p-3 text-center shadow-sm">
+                        <p class="text-sm text-violet-900 leading-relaxed">
                             🌍 <strong>Select all languages</strong> you can communicate in
                         </p>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required (at least one)</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required (at least one)</p>
                 </fieldset>
                 
                 <!-- Step 10: First Name -->
@@ -624,7 +665,7 @@
                         id="firstName"
                         name="firstName"
                         placeholder="Your first name"
-                        class="w-full p-5 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
                         required
                         aria-required="true"
                         autocomplete="given-name"
@@ -633,12 +674,12 @@
                             disabled
                         @endif
                     />
-                    <div class="bg-gradient-to-r from-sky-50 to-blue-50 border-2 border-sky-200 rounded-2xl p-5 mt-6 shadow-sm">
-                        <p class="text-base text-sky-900 leading-relaxed">
+                    <div class="info-box bg-gradient-to-r from-sky-50 to-blue-50 border-2 border-sky-200 rounded-2xl p-4 mt-4 shadow-sm">
+                        <p class="text-sm text-sky-900 leading-relaxed">
                             👤 We need <strong>your first name</strong> to personalize your experience
                         </p>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 11: Email -->
@@ -650,7 +691,7 @@
                         id="email"
                         name="email"
                         placeholder="your-email@example.com"
-                        class="w-full p-5 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
                         required
                         aria-required="true"
                         autocomplete="email"
@@ -660,12 +701,12 @@
                             disabled
                         @endif
                     />
-                    <div class="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-200 rounded-2xl p-5 mt-6 shadow-sm">
-                        <p class="text-base text-emerald-900 leading-relaxed">
+                    <div class="info-box bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-200 rounded-2xl p-4 mt-4 shadow-sm">
+                        <p class="text-sm text-emerald-900 leading-relaxed">
                             📧 We'll send you <strong>notifications</strong> about your request here
                         </p>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 12: Password -->
@@ -676,8 +717,8 @@
                         type="password"
                         id="password"
                         name="password"
-                        placeholder="Choose a secure password (minimum 6 characters)"
-                        class="w-full p-5 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        placeholder="Choose a secure password (min 6 chars)"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
                         required
                         aria-required="true"
                         aria-describedby="passwordStrength"
@@ -687,81 +728,81 @@
                             disabled
                         @endif
                     />
-                    <div id="passwordStrength" class="mt-4">
-                        <div class="flex justify-between text-sm mb-2">
+                    <div id="passwordStrength" class="mt-3">
+                        <div class="flex justify-between text-xs mb-1">
                             <span id="strengthText" class="font-semibold text-gray-700">Password strength</span>
                             <span id="strengthLabel" class="font-semibold text-gray-500">Too short</span>
                         </div>
-                        <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-live="polite">
+                        <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-live="polite">
                             <div id="strengthBar" class="h-full bg-gray-300 transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
-                    <div class="bg-gradient-to-r from-fuchsia-50 to-pink-50 border-2 border-fuchsia-200 rounded-2xl p-5 mt-6 shadow-sm">
-                        <p class="text-base text-fuchsia-900 leading-relaxed">
-                            🔐 Use at least <strong>6 characters</strong> — 8+ recommended for better security
+                    <div class="info-box bg-gradient-to-r from-fuchsia-50 to-pink-50 border-2 border-fuchsia-200 rounded-2xl p-4 mt-4 shadow-sm">
+                        <p class="text-sm text-fuchsia-900 leading-relaxed">
+                            🔐 Use at least <strong>6 characters</strong> — 8+ recommended
                         </p>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 13: Service Duration -->
-                <fieldset class="form-step hidden space-y-5">
+                <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">How long should your request remain visible?</legend>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4" role="group" aria-labelledby="duration-label-13">
+                    <div class="flex flex-col sm:flex-row justify-center gap-3" role="group" aria-labelledby="duration-label-13">
                         <span id="duration-label-13" class="sr-only">Select service duration</span>
-                        <button type="button" class="duration-btn border-2 rounded-2xl py-5 px-6 text-center font-semibold text-base transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100" data-duration="1 week" aria-pressed="false">1 week</button>
-                        <button type="button" class="duration-btn border-2 rounded-2xl py-5 px-6 text-center font-semibold text-base transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100" data-duration="2 weeks" aria-pressed="false">2 weeks</button>
-                        <button type="button" class="duration-btn border-2 rounded-2xl py-5 px-6 text-center font-semibold text-base transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100" data-duration="1 month" aria-pressed="false">1 month</button>
+                        <button type="button" class="duration-btn border-2 rounded-2xl py-3 px-5 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100" data-duration="1 week" aria-pressed="false">1 week</button>
+                        <button type="button" class="duration-btn border-2 rounded-2xl py-3 px-5 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100" data-duration="2 weeks" aria-pressed="false">2 weeks</button>
+                        <button type="button" class="duration-btn border-2 rounded-2xl py-3 px-5 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100" data-duration="1 month" aria-pressed="false">1 month</button>
                     </div>
                     <input type="hidden" id="serviceDuration" name="serviceDuration" />
                     
-                    <div class="bg-yellow-100 border-l-4 border-yellow-400 p-5 rounded-xl shadow-sm" role="note">
-                        <p class="text-base text-gray-800 leading-relaxed">
-                            <strong>Note:</strong> Your Service request will be automatically deleted after you have chosen <u>The service provider</u>. You will need to submit a new request if you need help again. When you choose a service provider your ad will be archived.
+                    <div class="bg-yellow-100 border-l-4 border-yellow-400 p-3 rounded-xl shadow-sm" role="note">
+                        <p class="text-sm text-gray-800 leading-relaxed">
+                            <strong>Note:</strong> Your request will be automatically deleted after you choose a service provider. You'll need to submit a new request if you need help again.
                         </p>
                     </div>
                     
-                    <div class="bg-yellow-100 border-l-4 border-yellow-400 p-5 rounded-xl shadow-sm flex items-start gap-3">
-                        <input type="checkbox" id="termsCheckbox" class="mt-1 w-5 h-5 rounded border-gray-300" required aria-required="true" />
-                        <label for="termsCheckbox" class="text-base text-gray-800 leading-relaxed cursor-pointer">
-                            By clicking next I acknowledge that I have read and understood the <span class="font-semibold">terms & conditions of sale</span> for service requests.
+                    <div class="bg-yellow-100 border-l-4 border-yellow-400 p-3 rounded-xl shadow-sm flex items-start gap-2">
+                        <input type="checkbox" id="termsCheckbox" class="mt-0.5 w-4 h-4 rounded border-gray-300" required aria-required="true" />
+                        <label for="termsCheckbox" class="text-sm text-gray-800 leading-relaxed cursor-pointer">
+                            By clicking next I acknowledge that I have read and understood the <span class="font-semibold">terms & conditions</span> for service requests.
                         </label>
                     </div>
-                    <p class="text-sm text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
                 <!-- Step 14: Loading -->
-                <div class="form-step hidden flex flex-col items-center justify-center space-y-6 py-12" role="status" aria-live="polite" aria-label="Processing your request">
+                <div class="form-step hidden flex flex-col items-center justify-center space-y-4 py-8" role="status" aria-live="polite" aria-label="Processing your request">
                     <div class="relative">
-                        <div class="w-24 h-24 border-8 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                        <div class="w-20 h-20 border-8 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-16 h-16 bg-blue-100 rounded-full"></div>
+                            <div class="w-14 h-14 bg-blue-100 rounded-full"></div>
                         </div>
                     </div>
                     <div class="text-center max-w-md">
-                        <h2 class="text-2xl font-bold text-blue-900 mb-3">Processing your request...</h2>
-                        <p class="text-base text-gray-600 leading-relaxed">
+                        <h2 class="text-xl font-bold text-blue-900 mb-2">Processing your request...</h2>
+                        <p class="text-sm text-gray-600 leading-relaxed">
                             We are notifying <strong>service providers</strong> near you. This will only take a moment! ⏳
                         </p>
                     </div>
                 </div>
                 
                 <!-- Step 15: Success -->
-                <div class="form-step hidden flex flex-col items-center space-y-6 py-8" role="status" aria-live="polite">
-                    <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-4 shadow-lg">
-                        <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div class="form-step hidden flex flex-col items-center space-y-4 py-6" role="status" aria-live="polite">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-3 shadow-lg">
+                        <svg class="w-14 h-14 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <h2 class="text-3xl font-bold text-blue-900 text-center">Your request is created! 🎉</h2>
-                    <p class="text-base text-gray-600 text-center max-w-md">
+                    <h2 class="text-2xl font-bold text-blue-900 text-center">Your request is created! 🎉</h2>
+                    <p class="text-sm text-gray-600 text-center max-w-md">
                         Your ad is now <strong>visible to service providers</strong> near you. You'll receive offers very soon! 🚀
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-                        <a id="see-my-ad" href="#" class="flex-1 px-8 py-5 bg-blue-600 rounded-2xl text-white font-bold text-base hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-95 text-center">
+                    <div class="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+                        <a id="see-my-ad" href="#" class="flex-1 px-6 py-3 bg-blue-600 rounded-2xl text-white font-bold text-sm hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-95 text-center">
                             View my ad
                         </a>
-                        <a href="{{ route('service-providers') }}" class="flex-1 px-8 py-5 bg-white border-2 border-blue-600 rounded-2xl text-blue-600 font-bold text-base hover:bg-blue-50 transition-all shadow-md hover:shadow-lg active:scale-95 text-center">
+                        <a href="{{ route('service-providers') }}" class="flex-1 px-6 py-3 bg-white border-2 border-blue-600 rounded-2xl text-blue-600 font-bold text-sm hover:bg-blue-50 transition-all shadow-md hover:shadow-lg active:scale-95 text-center">
                             View providers
                         </a>
                     </div>
@@ -771,33 +812,32 @@
     </main>
     
     <!-- Popup for Expat Helper -->
-    <aside id="expatPopup" class="fixed bottom-32 right-4 left-4 md:left-auto md:right-6 max-w-sm bg-gradient-to-br from-purple-600 to-indigo-600 text-white p-5 rounded-2xl shadow-2xl hidden animate-slideUp modal-overlay" role="complementary" aria-labelledby="popup-title">
-        <button type="button" onclick="document.getElementById('expatPopup').classList.add('hidden')" class="absolute top-2 right-2 text-white text-2xl font-bold hover:bg-white/20 w-8 h-8 rounded-full flex items-center justify-center" aria-label="Close popup">×</button>
-        <p id="popup-title" class="text-base font-bold mb-2">👋 Hey! Did you know?</p>
-        <p class="text-sm leading-relaxed">
+    <aside id="expatPopup" class="fixed bottom-28 right-4 left-4 md:left-auto md:right-6 max-w-sm bg-gradient-to-br from-purple-600 to-indigo-600 text-white p-4 rounded-2xl shadow-2xl hidden animate-slideUp modal-overlay" role="complementary" aria-labelledby="popup-title">
+        <button type="button" onclick="document.getElementById('expatPopup').classList.add('hidden')" class="absolute top-1 right-1 text-white text-2xl font-bold hover:bg-white/20 w-7 h-7 rounded-full flex items-center justify-center" aria-label="Close popup">×</button>
+        <p id="popup-title" class="text-sm font-bold mb-1">👋 Hey! Did you know?</p>
+        <p class="text-xs leading-relaxed">
             If you become an <strong>expat helper</strong>, you can earn income! 💰<br><br>
-            You take the missions you want and earn income.<br><br>
-            <strong>Cool, right?</strong> 😎
+            You take the missions you want and earn income. <strong>Cool, right?</strong> 😎
         </p>
     </aside>
     
     <!-- Validation Error Popup -->
-    <div id="validationError" class="fixed top-24 left-1/2 transform -translate-x-1/2 max-w-md bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl hidden animate-slideDown modal-overlay" role="alert" aria-live="assertive">
-        <p id="validationMessage" class="text-base font-bold text-center"></p>
+    <div id="validationError" class="fixed top-20 left-1/2 transform -translate-x-1/2 max-w-md bg-gradient-to-r from-orange-500 to-red-500 text-white px-5 py-3 rounded-2xl shadow-2xl hidden animate-slideDown modal-overlay" role="alert" aria-live="assertive">
+        <p id="validationMessage" class="text-sm font-bold text-center"></p>
     </div>
     
     <!-- CGV Warning Popup -->
-    <div id="cgvWarning" class="fixed top-24 left-1/2 transform -translate-x-1/2 max-w-md bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-4 rounded-2xl shadow-2xl hidden animate-slideDown modal-overlay" role="alert" aria-live="assertive">
-        <p class="text-base font-bold text-center">⚠️ Don't forget to check the T&C below! 📝✅</p>
+    <div id="cgvWarning" class="fixed top-20 left-1/2 transform -translate-x-1/2 max-w-md bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-5 py-3 rounded-2xl shadow-2xl hidden animate-slideDown modal-overlay" role="alert" aria-live="assertive">
+        <p class="text-sm font-bold text-center">⚠️ Don't forget to check the T&C below! 📝✅</p>
     </div>
     
     <!-- Sticky Footer Navigation -->
     <nav id="stickyNav" class="fixed md:sticky bottom-0 left-0 right-0 z-40 bg-white/98 backdrop-blur-md border-t-2 border-gray-200 section-spacing shadow-lg" aria-label="Form navigation">
-        <div class="max-w-3xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
+        <div class="max-w-3xl mx-auto flex items-center justify-between gap-3">
             <button
                 type="button"
                 id="prevBtn"
-                class="text-blue-600 font-bold px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-blue-50 transition-all flex items-center gap-2 text-sm sm:text-base active:scale-95"
+                class="text-blue-600 font-bold px-4 py-2 rounded-xl hover:bg-blue-50 transition-all flex items-center gap-2 text-sm active:scale-95"
                 style="visibility: hidden"
                 aria-label="Go to previous step">
                 ← Back
@@ -805,7 +845,7 @@
             <button
                 type="button"
                 id="nextBtn"
-                class="px-6 sm:px-10 py-3 sm:py-4 rounded-2xl font-bold text-sm sm:text-base transition-all flex items-center gap-2 shadow-md bg-gray-300 text-gray-500"
+                class="px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md bg-gray-300 text-gray-500"
                 aria-label="Go to next step">
                 Next →
             </button>
@@ -814,340 +854,155 @@
     
     <!-- Photo Menu Modal -->
     <div id="photoMenuModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center px-4 hidden modal-overlay" role="dialog" aria-modal="true" aria-labelledby="photo-modal-title">
-        <div class="bg-white rounded-3xl shadow-2xl p-7 w-96 max-w-full">
-            <h2 id="photo-modal-title" class="text-xl font-bold mb-4 text-gray-900">Choose a source</h2>
+        <div class="bg-white rounded-3xl shadow-2xl p-6 w-96 max-w-full">
+            <h2 id="photo-modal-title" class="text-lg font-bold mb-3 text-gray-900">Choose a source</h2>
             <div class="space-y-2">
-                <button type="button" class="photo-menu-option w-full flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-blue-50 transition-all border-2 border-transparent hover:border-blue-200" data-action="library">
+                <button type="button" class="photo-menu-option w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 transition-all border-2 border-transparent hover:border-blue-200" data-action="library">
                     <i class="fa fa-image text-blue-600" aria-hidden="true"></i>
-                    <span class="text-base font-medium">Photo library</span>
+                    <span class="text-sm font-medium">Photo library</span>
                 </button>
-                <button type="button" class="photo-menu-option w-full flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-blue-50 transition-all border-2 border-transparent hover:border-blue-200" data-action="camera">
+                <button type="button" class="photo-menu-option w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 transition-all border-2 border-transparent hover:border-blue-200" data-action="camera">
                     <i class="fa fa-camera text-blue-600" aria-hidden="true"></i>
-                    <span class="text-base font-medium">Take a photo</span>
+                    <span class="text-sm font-medium">Take photo</span>
                 </button>
-                <button type="button" class="photo-menu-option w-full flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-blue-50 transition-all border-2 border-transparent hover:border-blue-200" data-action="file">
-                    <i class="fa fa-folder text-blue-600" aria-hidden="true"></i>
-                    <span class="text-base font-medium">Choose a file</span>
-                </button>
+                <button type="button" id="closePhotoMenuModal" class="w-full mt-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all text-sm font-medium">Cancel</button>
             </div>
-            <button
-                type="button"
-                id="closePhotoMenuModal"
-                class="mt-4 w-full text-gray-600 hover:text-blue-700 text-center font-semibold text-base py-3 hover:bg-gray-100 rounded-xl transition-all">
-                Cancel
-            </button>
         </div>
     </div>
-    
+
     <!-- Camera Modal -->
-    <div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden modal-overlay" role="dialog" aria-modal="true" aria-labelledby="camera-modal-title">
-        <div class="bg-white rounded-3xl p-6 flex flex-col items-center relative">
-            <h2 id="camera-modal-title" class="sr-only">Camera</h2>
-            <button type="button" id="closeCameraModal" class="absolute top-2 right-2 text-gray-600 hover:text-black text-xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" aria-label="Close camera">×</button>
-            <video id="cameraVideo" width="320" height="240" autoplay class="rounded-2xl mb-4" aria-label="Camera preview"></video>
-            <button type="button" id="capturePhotoBtn" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 font-semibold">Capture Photo</button>
+    <div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center px-4 hidden modal-overlay" role="dialog" aria-modal="true" aria-labelledby="camera-modal-title">
+        <div class="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg">
+            <h2 id="camera-modal-title" class="text-lg font-bold mb-3 text-gray-900">Take a photo</h2>
+            <video id="cameraVideo" class="w-full h-64 bg-gray-900 rounded-xl mb-4" autoplay playsinline></video>
+            <div class="flex gap-3">
+                <button type="button" id="capturePhotoBtn" class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-semibold text-sm">Capture</button>
+                <button type="button" id="closeCameraModal" class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all font-semibold text-sm">Cancel</button>
+            </div>
         </div>
     </div>
     
-    @php
-        $shareUrl = url()->current();
-    @endphp
-    
-    <!-- VIRAL SHARE SYSTEM -->
-    <button id="floatingShareBtn" onclick="openSharePanel()" class="fixed bottom-24 right-6 z-50 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold px-6 py-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3 group animate-pulse hover:animate-none" aria-label="Share this page and earn rewards">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-        </svg>
-        <span class="hidden sm:inline">Share & Earn</span>
-        <span class="sm:hidden">Share</span>
-        <span class="ml-1">💰</span>
+    <!-- Share Button -->
+    <button id="shareBtn" onclick="openSimpleShare()" class="fixed bottom-20 right-6 z-50 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group" aria-label="Share this page">
+      <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+      </svg>
     </button>
 
-    <div id="shareOverlay" onclick="closeSharePanel()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300" aria-hidden="true"></div>
-
-    <div id="sharePanel" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="share-panel-title">
-        <div class="bg-gradient-to-r from-green-400 to-emerald-500 p-6 sticky top-0 z-10">
-            <div class="flex items-center justify-between mb-4">
-                <h2 id="share-panel-title" class="text-white font-bold text-xl flex items-center gap-2">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
-                    </svg>
-                    Share & Earn
-                </h2>
-                <button onclick="closeSharePanel()" class="text-white/80 hover:text-white transition-colors" aria-label="Close share panel">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            
-            @auth
-                <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white">
-                    <p class="text-sm font-semibold mb-1">Your affiliate code</p>
-                    <p class="text-lg font-bold font-mono tracking-wider">{{ Auth::user()->affiliate_code }}</p>
-                </div>
-            @else
-                <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white text-sm">
-                    <p class="font-semibold mb-2">🎁 Create a free account</p>
-                    <p class="text-xs opacity-90 mb-3">Get your affiliate link and earn money!</p>
-                    <a href="/signup" class="block w-full bg-white text-green-600 font-bold py-2 px-4 rounded-lg text-center hover:bg-green-50 transition-colors">
-                        Sign Up Now
-                    </a>
-                </div>
-            @endauth
+    <div id="sharePopup" class="hidden fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeSimpleShare()">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-5" style="animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);" onclick="event.stopPropagation()">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg font-bold text-gray-800">Share</h3>
+          <button onclick="closeSimpleShare()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-
-        <div class="p-6">
-            <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                </svg>
-                Share Now
-            </h3>
-
-            <div class="grid grid-cols-2 gap-3">
-                <a id="shareWhatsAppSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-500 hover:to-green-600 rounded-xl p-4 border border-green-200 hover:border-green-500 flex flex-col items-center gap-2 transition-all duration-200 group">
-                    <i class="fab fa-whatsapp text-4xl text-green-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
-                    <span class="text-sm font-bold text-green-700 group-hover:text-white uppercase tracking-wide transition-colors">WhatsApp</span>
-                </a>
-
-                <a id="shareMessengerSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-400 hover:to-blue-500 rounded-xl p-4 border border-blue-200 hover:border-blue-400 flex flex-col items-center gap-2 transition-all duration-200 group">
-                    <i class="fab fa-facebook-messenger text-4xl text-blue-500 group-hover:text-white transition-colors" aria-hidden="true"></i>
-                    <span class="text-sm font-bold text-blue-600 group-hover:text-white uppercase tracking-wide transition-colors">Messenger</span>
-                </a>
-
-                <a id="shareFacebookSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-500 hover:to-blue-600 rounded-xl p-4 border border-blue-200 hover:border-blue-500 flex flex-col items-center gap-2 transition-all duration-200 group">
-                    <i class="fab fa-facebook text-4xl text-blue-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
-                    <span class="text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">Facebook</span>
-                </a>
-
-                <a id="shareTwitterSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-gray-50 to-gray-100 hover:from-gray-800 hover:to-black rounded-xl p-4 border border-gray-200 hover:border-gray-800 flex flex-col items-center gap-2 transition-all duration-200 group">
-                    <i class="fab fa-x-twitter text-4xl text-gray-800 group-hover:text-white transition-colors" aria-hidden="true"></i>
-                    <span class="text-sm font-bold text-gray-700 group-hover:text-white uppercase tracking-wide transition-colors">Twitter</span>
-                </a>
-
-                <a id="shareLinkedInSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-600 hover:to-blue-700 rounded-xl p-4 border border-blue-200 hover:border-blue-600 flex flex-col items-center gap-2 transition-all duration-200 group">
-                    <i class="fab fa-linkedin text-4xl text-blue-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
-                    <span class="text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">LinkedIn</span>
-                </a>
-
-                <a id="shareEmailSlide" href="#" class="bg-gradient-to-br from-red-50 to-red-100 hover:from-red-500 hover:to-red-600 rounded-xl p-4 border border-red-200 hover:border-red-500 flex flex-col items-center gap-2 transition-all duration-200 group">
-                    <i class="fas fa-envelope text-4xl text-red-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
-                    <span class="text-sm font-bold text-red-700 group-hover:text-white uppercase tracking-wide transition-colors">Email</span>
-                </a>
-
-                <button id="copyBtnSlide" class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 rounded-xl p-4 border border-purple-200 hover:border-purple-500 flex flex-col items-center gap-2 transition-all duration-200 group">
-                    <i class="fas fa-link text-4xl text-purple-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
-                    <span class="text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copy</span>
-                </button>
+        
+        <div class="grid grid-cols-4 gap-2 mb-3">
+          <button onclick="shareVia('whatsapp')" class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
             </div>
-
-            <div class="mt-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
-                <div class="flex items-center gap-3 text-green-700">
-                    <svg class="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
-                    </svg>
-                    <div class="flex-1">
-                        <p class="font-bold text-sm">
-                            @auth
-                                Earn € or $ for each share!
-                            @else
-                                Create an account to earn money
-                            @endauth
-                        </p>
-                        <p class="text-xs text-green-600 mt-1">Every person who clicks your link counts!</p>
-                    </div>
-                </div>
+            <span class="text-xs text-gray-600 font-medium">WhatsApp</span>
+          </button>
+          
+          <button onclick="shareVia('facebook')" class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
             </div>
+            <span class="text-xs text-gray-600 font-medium">Facebook</span>
+          </button>
+          
+          <button onclick="shareVia('twitter')" class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-gray-600 font-medium">Twitter</span>
+          </button>
+          
+          <button onclick="shareVia('copy')" class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <span class="text-xs text-gray-600 font-medium">Copy</span>
+          </button>
         </div>
+        
+        <div class="bg-blue-50 rounded-xl p-2 text-xs text-blue-700 text-center">
+          <p class="font-medium">💡 Share with your friends!</p>
+        </div>
+      </div>
     </div>
 
+    <style>
+      @keyframes scaleIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+    </style>
+
+    <script>
+      function openSimpleShare() { document.getElementById('sharePopup').classList.remove('hidden'); }
+      function closeSimpleShare() { document.getElementById('sharePopup').classList.add('hidden'); }
+      function shareVia(platform) {
+        const url = window.location.href;
+        const text = 'I found this amazing help request form!';
+        let shareUrl;
+        switch(platform) {
+          case 'whatsapp': shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`; break;
+          case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`; break;
+          case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`; break;
+          case 'copy':
+            navigator.clipboard.writeText(url).then(() => {
+              const btn = event.target.closest('button');
+              const original = btn.innerHTML;
+              btn.innerHTML = '<div class="flex flex-col items-center gap-1 p-2"><div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg></div><span class="text-xs text-green-600 font-medium">Copied!</span></div>';
+              setTimeout(() => btn.innerHTML = original, 2000);
+            });
+            return;
+        }
+        if (shareUrl) window.open(shareUrl, '_blank', 'width=600,height=400');
+        setTimeout(() => closeSimpleShare(), 500);
+      }
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSimpleShare(); });
+    </script>
+
     <div id="shareSuccessPopup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="success-title">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all scale-95 opacity-0" id="popupContent">
-            <div class="text-center mb-4">
-                <div class="inline-block bg-gradient-to-br from-green-400 to-emerald-500 rounded-full p-4 mb-3 animate-bounce">
-                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 transform transition-all scale-95 opacity-0" id="popupContent">
+            <div class="text-center mb-3">
+                <div class="inline-block bg-gradient-to-br from-green-400 to-emerald-500 rounded-full p-3 mb-2 animate-bounce">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                         <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
                     </svg>
                 </div>
-                <h3 id="success-title" class="text-2xl font-bold text-gray-900 mb-2">Awesome! 🎉</h3>
-                <p class="text-gray-600 text-sm">Thank you for sharing!</p>
+                <h3 id="success-title" class="text-xl font-bold text-gray-900 mb-1">Awesome! 🎉</h3>
+                <p class="text-gray-600 text-xs">Thank you for sharing!</p>
             </div>
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 mb-4 border border-green-200">
-                <div class="flex items-center justify-center mb-2">
-                    <span class="text-lg font-bold text-green-600 text-center">Share and earn 75% affiliate commission</span>
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 mb-3 border border-green-200">
+                <div class="flex items-center justify-center">
+                    <span class="text-base font-bold text-green-600 text-center">Share and earn 75% affiliate commission</span>
                 </div>
             </div>
-            <button onclick="closeSharePopup()" class="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-3 rounded-xl transition-all">
+            <button onclick="closeSharePopup()" class="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-2.5 rounded-xl transition-all text-sm">
                 Got it!
             </button>
         </div>
     </div>
     
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/js/countrySelect.min.js"></script>
-    
-    <script>
-    // VIRAL SHARE SYSTEM
-    (function() {
-        'use strict';
-        
-        window.openSharePanel = function() {
-            const panel = document.getElementById('sharePanel');
-            const overlay = document.getElementById('shareOverlay');
-            const floatingBtn = document.getElementById('floatingShareBtn');
-            
-            if (overlay) {
-                overlay.classList.remove('hidden');
-                setTimeout(() => overlay.classList.add('opacity-100'), 10);
-            }
-            if (panel) {
-                panel.classList.remove('translate-x-full');
-            }
-            if (floatingBtn) {
-                floatingBtn.style.display = 'none';
-            }
-            document.body.style.overflow = 'hidden';
-        };
-        
-        window.closeSharePanel = function() {
-            const panel = document.getElementById('sharePanel');
-            const overlay = document.getElementById('shareOverlay');
-            const floatingBtn = document.getElementById('floatingShareBtn');
-            
-            if (panel) {
-                panel.classList.add('translate-x-full');
-            }
-            if (overlay) {
-                overlay.classList.remove('opacity-100');
-                setTimeout(() => overlay.classList.add('hidden'), 300);
-            }
-            if (floatingBtn) {
-                setTimeout(() => floatingBtn.style.display = 'flex', 300);
-            }
-            document.body.style.overflow = '';
-        };
-        
-        window.closeSharePopup = function() {
-            const popup = document.getElementById('shareSuccessPopup');
-            const content = document.getElementById('popupContent');
-            if (content) {
-                content.style.transform = 'scale(0.95)';
-                content.style.opacity = '0';
-                setTimeout(() => {
-                    if (popup) popup.classList.add('hidden');
-                }, 200);
-            }
-        };
-        
-        function getShareUrl() {
-            let shareUrl = '{{ $shareUrl }}';
-            try {
-                const urlObj = new URL(shareUrl, window.location.origin);
-                urlObj.searchParams.set('utm_source', 'social');
-                urlObj.searchParams.set('utm_medium', 'share');
-                urlObj.searchParams.set('utm_campaign', 'referral');
-                @auth
-                urlObj.searchParams.set('ref', '{{ Auth::user()->affiliate_code }}');
-                @endauth
-                shareUrl = urlObj.toString();
-            } catch (e) {
-                console.error('UTM error:', e);
-            }
-            return shareUrl;
-        }
-        
-        const finalUrl = getShareUrl();
-        const enc = encodeURIComponent(finalUrl);
-        
-        const viralText = encodeURIComponent(`🌟 Need help abroad? I found the perfect solution!\n\n👉 Create your help request and get offers from qualified service providers in 197 countries!\n\n✅ Local & Expat Helpers\n✅ Verified Professionals\n✅ Free to post requests\n\n💡 Or become a helper and earn money! 💰`);
-        const subject = encodeURIComponent("🎯 Need Help Abroad? Check Out This Platform!");
-        const viralEmailBody = encodeURIComponent(`Hi! 👋\n\nI found this amazing platform where you can get help from qualified service providers worldwide:\n\n${finalUrl}\n\nWhether you need:\n✅ Help with documents, moving, translations, etc.\n✅ Local assistance in 197 countries\n✅ Or want to become a helper and earn money\n\nCheck it out and create your help request for free!\n\n---\n💡 TIP: Share this platform and earn affiliate commissions! 💰`);
-        
-        const socialLinks = {
-            shareWhatsAppSlide: `https://api.whatsapp.com/send?text=${viralText}%20${enc}`,
-            shareMessengerSlide: `fb-messenger://share/?link=${enc}`,
-            shareFacebookSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
-            shareTwitterSlide: `https://twitter.com/intent/tweet?url=${enc}&text=${viralText}`,
-            shareLinkedInSlide: `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`,
-            shareEmailSlide: `mailto:?subject=${subject}&body=${viralEmailBody}`
-        };
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            Object.entries(socialLinks).forEach(([id, href]) => {
-                const link = document.getElementById(id);
-                if (link) link.href = href;
-            });
-            
-            const copyBtn = document.getElementById('copyBtnSlide');
-            if (copyBtn) {
-                copyBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    navigator.clipboard.writeText(finalUrl).then(() => {
-                        const originalHTML = copyBtn.innerHTML;
-                        
-                        copyBtn.className = 'bg-green-500 rounded-xl p-4 border border-green-500 flex flex-col items-center gap-2 transition-all duration-200';
-                        copyBtn.innerHTML = `
-                            <i class="fas fa-check text-4xl text-white"></i>
-                            <span class="text-sm font-bold text-white uppercase tracking-wide">Copied!</span>
-                        `;
-                        
-                        if (typeof toastr !== 'undefined') {
-                            toastr.success('✅ Link copied! 🚀');
-                        }
-                        
-                        setTimeout(() => {
-                            closeSharePanel();
-                            const popup = document.getElementById('shareSuccessPopup');
-                            const content = document.getElementById('popupContent');
-                            if (popup && content) {
-                                popup.classList.remove('hidden');
-                                popup.classList.add('flex');
-                                setTimeout(() => {
-                                    content.style.transform = 'scale(1)';
-                                    content.style.opacity = '1';
-                                }, 10);
-                            }
-                        }, 800);
-                        
-                        setTimeout(() => {
-                            copyBtn.className = 'bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 rounded-xl p-4 border border-purple-200 hover:border-purple-500 flex flex-col items-center gap-2 transition-all duration-200 group';
-                            copyBtn.innerHTML = originalHTML;
-                        }, 1500);
-                    }).catch(() => {
-                        if (typeof toastr !== 'undefined') {
-                            toastr.error('😅 Copy failed, please try again!');
-                        }
-                    });
-                });
-            }
-            
-            const shareButtons = document.querySelectorAll('a[id^="share"]');
-            shareButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    setTimeout(() => {
-                        closeSharePanel();
-                        const popup = document.getElementById('shareSuccessPopup');
-                        const content = document.getElementById('popupContent');
-                        if (popup && content) {
-                            popup.classList.remove('hidden');
-                            popup.classList.add('flex');
-                            setTimeout(() => {
-                                content.style.transform = 'scale(1)';
-                                content.style.opacity = '1';
-                            }, 10);
-                        }
-                    }, 1000);
-                });
-            });
-        });
-    })();
-    </script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/js/countrySelect.min.js"></script>
     
     <script>
     (function() {
@@ -1155,7 +1010,6 @@
         
         const funTexts = @json($funTexts);
         const stepLabels = @json($stepLabels);
-        const blockColors = @json($blockColors);
         
         const steps = document.querySelectorAll('.form-step');
         const nextBtn = document.getElementById('nextBtn');
@@ -1182,11 +1036,11 @@
                 const length = this.value.length;
                 titleCount.textContent = length + '/15';
                 if (length >= 15) {
-                    titleCounter.className = 'mt-4 text-base text-green-700 bg-green-50 border-green-300 p-4 rounded-xl border-2 shadow-sm';
-                    titleCounter.innerHTML = '✅ Minimum 15 characters required • <span id="titleCount">' + length + '/15</span>';
+                    titleCounter.className = 'mt-3 text-sm text-green-700 bg-green-50 border-green-300 p-3 rounded-xl border-2 shadow-sm';
+                    titleCounter.innerHTML = '✅ Minimum 15 characters • <span id="titleCount">' + length + '/15</span>';
                 } else {
-                    titleCounter.className = 'mt-4 text-base text-orange-600 bg-orange-50 border-orange-300 p-4 rounded-xl border-2 shadow-sm';
-                    titleCounter.innerHTML = '⚠️ Minimum 15 characters required • <span id="titleCount">' + length + '/15</span>';
+                    titleCounter.className = 'mt-3 text-sm text-orange-600 bg-orange-50 border-orange-300 p-3 rounded-xl border-2 shadow-sm';
+                    titleCounter.innerHTML = '⚠️ Minimum 15 characters • <span id="titleCount">' + length + '/15</span>';
                 }
                 updateNextButton();
             });
@@ -1197,11 +1051,11 @@
                 const length = this.value.length;
                 detailsCount.textContent = length;
                 if (length >= 50) {
-                    detailsCounter.className = 'mt-4 text-base flex justify-between text-green-700 bg-green-50 border-green-300 p-4 rounded-xl border-2 shadow-sm';
-                    detailsCounter.innerHTML = '<span>✅ Minimum 50 characters required</span><span class="text-gray-700"><span id="detailsCount">' + length + '</span>/50 (max 1500)</span>';
+                    detailsCounter.className = 'mt-3 text-sm flex justify-between text-green-700 bg-green-50 border-green-300 p-3 rounded-xl border-2 shadow-sm';
+                    detailsCounter.innerHTML = '<span>✅ Min 50 chars</span><span class="text-gray-700"><span id="detailsCount">' + length + '</span>/50 (max 1500)</span>';
                 } else {
-                    detailsCounter.className = 'mt-4 text-base flex justify-between text-orange-600 bg-orange-50 border-orange-300 p-4 rounded-xl border-2 shadow-sm';
-                    detailsCounter.innerHTML = '<span>⚠️ Minimum 50 characters required</span><span class="text-gray-700"><span id="detailsCount">' + length + '</span>/50 (max 1500)</span>';
+                    detailsCounter.className = 'mt-3 text-sm flex justify-between text-orange-600 bg-orange-50 border-orange-300 p-3 rounded-xl border-2 shadow-sm';
+                    detailsCounter.innerHTML = '<span>⚠️ Min 50 chars</span><span class="text-gray-700"><span id="detailsCount">' + length + '</span>/50 (max 1500)</span>';
                 }
                 updateNextButton();
             });
@@ -1252,13 +1106,13 @@
         durationButtons.forEach(button => {
             button.addEventListener('click', function() {
                 durationButtons.forEach(btn => {
-                    btn.className = 'option-btn border-2 rounded-2xl py-5 px-4 text-center font-semibold text-base transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100';
+                    btn.className = 'option-btn border-2 rounded-2xl py-4 px-3 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100';
                     btn.setAttribute('aria-pressed', 'false');
                     if (btn.classList.contains('sm:col-span-2')) {
                         btn.classList.add('sm:col-span-2');
                     }
                 });
-                this.className = 'option-btn border-2 rounded-2xl py-5 px-4 text-center font-semibold text-base transition-all shadow-sm hover:shadow-md active:scale-95 bg-blue-600 text-white border-blue-700 shadow-lg';
+                this.className = 'option-btn border-2 rounded-2xl py-4 px-3 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 bg-blue-600 text-white border-blue-700 shadow-lg';
                 this.setAttribute('aria-pressed', 'true');
                 if (this.classList.contains('sm:col-span-2')) {
                     this.classList.add('sm:col-span-2');
@@ -1283,10 +1137,10 @@
             const radio = option.querySelector('input[type="radio"]');
             radio.addEventListener('change', function() {
                 supportOptions.forEach(opt => {
-                    opt.className = 'support-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100';
+                    opt.className = 'support-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100';
                 });
                 if (this.checked) {
-                    option.className = 'support-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md bg-blue-600 text-white border-blue-700';
+                    option.className = 'support-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md bg-blue-600 text-white border-blue-700';
                 }
                 updateNextButton();
             });
@@ -1298,35 +1152,32 @@
             const radio = option.querySelector('input[type="radio"]');
             radio.addEventListener('change', function() {
                 urgencyOptions.forEach(opt => {
-                    opt.className = 'urgency-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100';
+                    opt.className = 'urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100';
                 });
                 if (this.checked) {
-                    option.className = 'urgency-option flex items-center justify-between gap-4 border-2 rounded-2xl px-6 py-5 cursor-pointer transition-all shadow-sm hover:shadow-md bg-blue-600 text-white border-blue-700';
+                    option.className = 'urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md bg-blue-600 text-white border-blue-700';
                 }
                 updateNextButton();
             });
         });
         
-        // Language selection - FIXED WITH LABEL TAG
+        // Language selection
         const langOptions = document.querySelectorAll('.lang-option');
         langOptions.forEach(option => {
             const checkbox = option.querySelector('.lang-checkbox');
             
             option.addEventListener('click', function(e) {
-                // Toggle checkbox state
                 checkbox.checked = !checkbox.checked;
                 
-                // Update visual state
                 if (checkbox.checked) {
-                    this.className = 'lang-option border-2 rounded-2xl px-4 py-4 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 bg-blue-600 text-white border-blue-700';
+                    this.className = 'lang-option border-2 rounded-2xl px-3 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 bg-blue-600 text-white border-blue-700';
                 } else {
-                    this.className = 'lang-option border-2 rounded-2xl px-4 py-4 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 border-blue-400 bg-blue-50 hover:bg-blue-100 active:scale-95';
+                    this.className = 'lang-option border-2 rounded-2xl px-3 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 border-blue-400 bg-blue-50 hover:bg-blue-100 active:scale-95';
                 }
                 
                 updateNextButton();
             });
             
-            // Prevent checkbox default to avoid double-toggle
             checkbox.addEventListener('click', function(e) {
                 e.preventDefault();
             });
@@ -1339,10 +1190,10 @@
         serviceDurationBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 serviceDurationBtns.forEach(b => {
-                    b.className = 'duration-btn border-2 rounded-2xl py-5 px-6 text-center font-semibold text-base transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100';
+                    b.className = 'duration-btn border-2 rounded-2xl py-3 px-5 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100';
                     b.setAttribute('aria-pressed', 'false');
                 });
-                this.className = 'duration-btn border-2 rounded-2xl py-5 px-6 text-center font-semibold text-base transition-all shadow-sm hover:shadow-md active:scale-95 bg-blue-600 text-white border-blue-700 shadow-lg';
+                this.className = 'duration-btn border-2 rounded-2xl py-3 px-5 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 bg-blue-600 text-white border-blue-700 shadow-lg';
                 this.setAttribute('aria-pressed', 'true');
                 serviceDurationInput.value = this.getAttribute('data-duration');
                 updateNextButton();
@@ -1624,10 +1475,10 @@
             }
             
             if (canProceed) {
-                nextBtn.className = 'px-6 sm:px-10 py-3 sm:py-4 rounded-2xl font-bold text-sm sm:text-base transition-all flex items-center gap-2 shadow-md bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg active:scale-95 cursor-pointer';
+                nextBtn.className = 'px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg active:scale-95 cursor-pointer';
                 nextBtn.disabled = false;
             } else {
-                nextBtn.className = 'px-6 sm:px-10 py-3 sm:py-4 rounded-2xl font-bold text-sm sm:text-base transition-all flex items-center gap-2 shadow-md bg-gray-300 text-gray-500 cursor-not-allowed';
+                nextBtn.className = 'px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md bg-gray-300 text-gray-500 cursor-not-allowed';
                 nextBtn.disabled = true;
             }
         }
@@ -1714,7 +1565,7 @@
                         checkbox.checked = true;
                         const option = checkbox.closest('.lang-option');
                         if (option) {
-                            option.className = 'lang-option border-2 rounded-2xl px-4 py-4 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 bg-blue-600 text-white border-blue-700';
+                            option.className = 'lang-option border-2 rounded-2xl px-3 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 bg-blue-600 text-white border-blue-700';
                         }
                     }
                 });
@@ -1905,7 +1756,7 @@
             }
         });
         
-        // FIX: Close camera modal properly
+        // Close camera modal properly
         function closeCameraAndStream() {
             cameraModal.classList.add('hidden');
             if (cameraStream) {

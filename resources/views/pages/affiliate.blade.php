@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="64x64" href="/images/faviccon.png" />
   
   <!-- SEO 2025/2026 PERFECT -->
-  <meta name="description" content="Join Ulixai's affiliate program and earn 75% commission instantly. Free signup, instant link, paid from $30. 197 countries, all languages. Start earning today!">
+  <meta name="description" content="Earn 75% commission instantly with Ulixai affiliate program. Free signup, get your link in 30 seconds, paid from $30. 197 countries, all languages supported.">
   <meta name="keywords" content="affiliate program 2025, earn money online, passive income, 75% commission, referral program, make money from home, affiliate marketing 2025, best affiliate programs 2025">
   <meta name="author" content="Ulixai">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -304,8 +304,8 @@
     @media (min-width: 640px) {
       .hero-badge {
         padding: 10px 24px;
-        font-size: 15px;
-        margin-bottom: 32px;
+        font-size: 14px;
+        margin-bottom: 12px;
       }
     }
     
@@ -466,12 +466,12 @@
     
     @media (min-width: 640px) {
       .hero-stat-number {
-        margin-bottom: 12px;
+        margin-bottom: 8px;
       }
     }
     
     .hero-stat-label {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--text-muted);
       font-weight: 600;
       letter-spacing: -0.01em;
@@ -514,7 +514,7 @@
     .section-title {
       font-size: clamp(32px, 7vw, 56px);
       font-weight: 900;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       color: var(--text);
       letter-spacing: -0.03em;
       line-height: 1.1;
@@ -621,7 +621,7 @@
     @media (min-width: 640px) {
       .carousel-dots {
         gap: 12px;
-        margin-top: 40px;
+        margin-top: 24px;
       }
     }
     
@@ -664,7 +664,7 @@
     /* STEP CARDS */
     .step-card {
       text-align: center;
-      padding: 36px 28px;
+      padding: 20px 16px;
       background: white;
       border-radius: 24px;
       border: 2px solid var(--border);
@@ -676,7 +676,7 @@
     
     @media (min-width: 640px) {
       .step-card {
-        padding: 40px 32px;
+        padding: 24px 20px;
       }
     }
     
@@ -761,7 +761,7 @@
     .step-card h3 {
       font-size: 22px;
       font-weight: 900;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       color: var(--text);
       letter-spacing: -0.02em;
       position: relative;
@@ -777,7 +777,7 @@
     @media (min-width: 1024px) {
       .step-card h3 {
         font-size: 26px;
-        margin-bottom: 16px;
+        margin-bottom: 12px;
       }
     }
     
@@ -844,7 +844,7 @@
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
       border-radius: 24px;
-      padding: 36px 24px;
+      padding: 20px 16px;
       max-width: 840px;
       margin: 0 auto;
       color: var(--text);
@@ -855,21 +855,21 @@
     
     @media (min-width: 640px) {
       .calculator-card {
-        padding: 44px 32px;
+        padding: 24px 20px;
         border-radius: 28px;
       }
     }
     
     @media (min-width: 768px) {
       .calculator-card {
-        padding: 50px 40px;
+        padding: 28px 24px;
         border-radius: 30px;
       }
     }
     
     @media (min-width: 1024px) {
       .calculator-card {
-        padding: 56px;
+        padding: 32px;
         border-radius: 32px;
         backdrop-filter: blur(30px);
         -webkit-backdrop-filter: blur(30px);
@@ -878,18 +878,18 @@
     }
     
     .slider-group {
-      margin-bottom: 32px;
+      margin-bottom: 12px;
     }
     
     @media (min-width: 768px) {
       .slider-group {
-        margin-bottom: 38px;
+        margin-bottom: 18px;
       }
     }
     
     @media (min-width: 1024px) {
       .slider-group {
-        margin-bottom: 44px;
+        margin-bottom: 20px;
       }
     }
     
@@ -897,10 +897,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       font-weight: 800;
       color: var(--text);
-      font-size: 15px;
+      font-size: 14px;
       letter-spacing: -0.01em;
       gap: 12px;
     }
@@ -908,14 +908,14 @@
     @media (min-width: 640px) {
       .slider-label {
         font-size: 16px;
-        margin-bottom: 14px;
+        margin-bottom: 10px;
       }
     }
     
     @media (min-width: 1024px) {
       .slider-label {
         font-size: 17px;
-        margin-bottom: 16px;
+        margin-bottom: 12px;
       }
     }
     
@@ -1062,7 +1062,7 @@
     @media (min-width: 640px) {
       .commission-box-header {
         gap: 14px;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
       }
     }
     
@@ -1086,7 +1086,7 @@
     }
     
     .commission-box p {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--text-light);
       line-height: 1.7;
       margin: 0;
@@ -1102,49 +1102,49 @@
     .calculator-result {
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       color: white;
-      padding: 36px 28px;
+      padding: 20px 16px;
       border-radius: 20px;
       text-align: center;
-      margin-top: 36px;
+      margin-top: 20px;
       box-shadow: 0 14px 40px rgba(37, 99, 235, 0.4);
     }
     
     @media (min-width: 640px) {
       .calculator-result {
-        padding: 40px 32px;
+        padding: 24px 20px;
         border-radius: 22px;
-        margin-top: 40px;
+        margin-top: 24px;
       }
     }
     
     @media (min-width: 768px) {
       .calculator-result {
-        padding: 44px 40px;
+        padding: 28px 24px;
         border-radius: 23px;
-        margin-top: 44px;
+        margin-top: 24px;
       }
     }
     
     @media (min-width: 1024px) {
       .calculator-result {
-        padding: 48px;
+        padding: 32px 28px;
         border-radius: 24px;
-        margin-top: 48px;
+        margin-top: 28px;
         box-shadow: 0 16px 48px rgba(37, 99, 235, 0.4);
       }
     }
     
     .result-amount {
-      font-size: clamp(48px, 12vw, 88px);
+      font-size: clamp(32px, 10vw, 56px);
       font-weight: 900;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       line-height: 1;
       letter-spacing: -0.04em;
     }
     
     @media (min-width: 640px) {
       .result-amount {
-        margin-bottom: 16px;
+        margin-bottom: 12px;
       }
     }
     
@@ -1201,14 +1201,14 @@
     
     @media (min-width: 640px) {
       .result-breakdown {
-        margin-top: 36px;
+        margin-top: 20px;
         padding-top: 36px;
       }
     }
     
     @media (min-width: 1024px) {
       .result-breakdown {
-        margin-top: 40px;
+        margin-top: 24px;
         padding-top: 40px;
       }
     }
@@ -1217,8 +1217,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 15px;
-      margin-bottom: 14px;
+      font-size: 14px;
+      margin-bottom: 10px;
       opacity: 0.95;
       font-weight: 600;
       gap: 12px;
@@ -1234,7 +1234,7 @@
     @media (min-width: 1024px) {
       .breakdown-item {
         font-size: 17px;
-        margin-bottom: 16px;
+        margin-bottom: 12px;
       }
     }
     
@@ -1245,7 +1245,7 @@
     .examples-grid {
       display: grid;
       gap: 14px;
-      margin-top: 36px;
+      margin-top: 20px;
       padding-top: 36px;
       border-top: 2px solid var(--border);
     }
@@ -1253,7 +1253,7 @@
     @media (min-width: 640px) {
       .examples-grid {
         gap: 16px;
-        margin-top: 40px;
+        margin-top: 24px;
         padding-top: 40px;
       }
     }
@@ -1261,14 +1261,14 @@
     @media (min-width: 768px) {
       .examples-grid {
         gap: 18px;
-        margin-top: 44px;
+        margin-top: 24px;
         padding-top: 44px;
       }
     }
     
     @media (min-width: 1024px) {
       .examples-grid {
-        margin-top: 48px;
+        margin-top: 28px;
         padding-top: 48px;
       }
     }
@@ -1277,7 +1277,7 @@
       background: var(--bg-light);
       padding: 16px 20px;
       border-radius: 14px;
-      font-size: 15px;
+      font-size: 14px;
       line-height: 1.7;
       font-weight: 500;
       border: 2px solid transparent;
@@ -1573,7 +1573,7 @@
     
     @media (min-width: 1024px) {
       .author-info p {
-        font-size: 15px;
+        font-size: 14px;
       }
     }
     
@@ -1581,8 +1581,8 @@
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       color: white;
       border-radius: 24px;
-      padding: 36px 28px;
-      margin-top: 44px;
+      padding: 20px 16px;
+      margin-top: 24px;
       box-shadow: 0 20px 56px rgba(37, 99, 235, 0.3);
     }
     
@@ -1596,7 +1596,7 @@
     
     @media (min-width: 768px) {
       .case-study {
-        padding: 50px 40px;
+        padding: 28px 24px;
         border-radius: 30px;
         margin-top: 52px;
       }
@@ -1604,7 +1604,7 @@
     
     @media (min-width: 1024px) {
       .case-study {
-        padding: 56px;
+        padding: 32px;
         border-radius: 32px;
         margin-top: 56px;
         box-shadow: 0 24px 64px rgba(37, 99, 235, 0.3);
@@ -1643,7 +1643,7 @@
       font-size: 16px;
       opacity: 0.95;
       line-height: 1.7;
-      margin-bottom: 32px;
+      margin-bottom: 12px;
       font-weight: 500;
     }
     
@@ -1717,7 +1717,7 @@
     
     @media (min-width: 640px) {
       .case-stat-label {
-        font-size: 15px;
+        font-size: 14px;
       }
     }
     
@@ -1737,7 +1737,7 @@
       background: white;
       border: 2px solid var(--border);
       border-radius: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       overflow: hidden;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -1833,7 +1833,7 @@
     
     .faq-answer {
       padding: 0 24px 24px;
-      font-size: 15px;
+      font-size: 14px;
       color: var(--text-light);
       line-height: 1.8;
       font-weight: 500;
@@ -2413,15 +2413,15 @@
           <span>3,217 people already earning 💸</span>
         </div>
         
-        <h1>Turn Your Network Into Cash 💰</h1>
+        <h1>Earn 75% Commission 💰</h1>
         
         <p class="hero-subtitle">
           <strong>Sign up → your link is ready instantly.</strong><br>
-          Share it and earn <strong>75% commission</strong> in € or $ on every transaction.
+          Share it and earn <strong>75% on every sale</strong>.
         </p>
         
-        <a href="https://ulixai.com/signup" class="hero-cta">
-          <span>🚀 Get My Link Now</span>
+        <a href="/signup" class="hero-cta">
+          <span>Start Earning Now →</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
@@ -2430,7 +2430,7 @@
         <div class="hero-stats">
           <div class="hero-stat">
             <span class="hero-stat-number" id="monthlyPayout">$13,742</span>
-            <span class="hero-stat-label">Paid This Month</span>
+            <span class="hero-stat-label">Monthly Payout</span>
           </div>
           <div class="hero-stat">
             <span class="hero-stat-number">197</span>
@@ -2449,7 +2449,7 @@
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">How It Works ⚡</h2>
-        <p class="section-subtitle">3 ultra-simple steps to start earning money</p>
+        <p class="section-subtitle">Start earning in 3 simple steps</p>
       </div>
       
       <div class="carousel-container">
@@ -2570,7 +2570,7 @@
           </div>
         </div>
         
-        <a href="https://ulixai.com/signup" class="btn btn-primary" style="margin-top: 32px; text-decoration: none;">
+        <a href="/signup" class="btn btn-primary" style="margin-top: 32px; text-decoration: none;">
           🚀 Create My Free Account
         </a>
         
@@ -2763,7 +2763,7 @@
       <h2>Your Link Is Waiting 🚀</h2>
       <p>Sign up now and start earning in € or $</p>
       
-      <a href="https://ulixai.com/signup" class="btn-white">
+      <a href="/signup" class="btn-white">
         🎯 Create My Free Account
       </a>
     </div>

@@ -1,1152 +1,1460 @@
-@include('includes.header')
-@include('pages.popup')
-
-{{-- ⚡ META TAGS ULTRA-COMPLETS - SEO + IA + MOBILE --}}
-@push('head')
-{{-- Viewport et mobile optimisé --}}
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<meta name="theme-color" content="#1e40af">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="format-detection" content="telephone=no">
-
-{{-- SEO Meta tags complets --}}
-<meta name="description" content="Join ULIXAI as service provider. Earn €100-€10,000/month helping expats worldwide. Free registration. Set your rates. Work flexibly. Secure payments. 10,000+ providers trust us.">
-<meta name="keywords" content="service provider jobs, earn money online, freelance platform, expat services, remote work, flexible income, help expats, translation jobs, legal services">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<link rel="canonical" href="{{ url()->current() }}">
-<meta name="author" content="ULIXAI">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-{{-- Open Graph optimisé --}}
-<meta property="og:type" content="website">
-<meta property="og:title" content="Join ULIXAI - Earn €100-€10k/Month as Service Provider">
-<meta property="og:description" content="Join 10,000+ service providers earning flexible income helping expats worldwide. Free signup. Set your rates. Work your schedule. Secure payments guaranteed.">
-<meta property="og:url" content="{{ url()->current() }}">
-<meta property="og:site_name" content="ULIXAI">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="{{ asset('images/og-image-provider.jpg') }}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="ULIXAI Service Provider Platform - Earn money helping expats">
-
-{{-- Twitter Card optimisé --}}
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Earn €100-€10k/Month as Service Provider | ULIXAI">
-<meta name="twitter:description" content="Join 10,000+ providers. Free. Flexible. Secure payment. Help expats worldwide.">
-<meta name="twitter:image" content="{{ asset('images/twitter-card-provider.jpg') }}">
-<meta name="twitter:image:alt" content="ULIXAI - Service provider earning opportunity">
-
-{{-- Preconnect pour performance --}}
-<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="dns-prefetch" href="//www.sos-expat.com">
-
-{{-- Preload critical fonts --}}
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" as="style">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" media="print" onload="this.media='all'">
-
-{{-- Schema.org JSON-LD COMPLET pour IA et SEO --}}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "ULIXAI Service Provider Platform",
-  "description": "Global platform connecting service providers with expats. Earn €100-€10,000+ monthly helping people relocate abroad. Free registration, flexible work, secure payments.",
-  "provider": {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  
+  {{-- SEO Meta Tags Ultra-Optimisés --}}
+  <title>Strategic Partnerships | Join Ulixai.com & SOS-Expat.com Global Network</title>
+  <meta name="description" content="Partner with Ulixai.com and SOS-Expat.com to support 304 million expats and 1.465 billion travelers worldwide. Four missions: Immediate Help, Guaranteed Income, Unlimited Services, Worldwide Income. Strategic partnerships across 195+ countries with insurance, banks, airlines, real estate, and major service providers.">
+  <meta name="keywords" content="strategic partnerships expats, ulixai partnerships, sos expat partnerships, insurance partnerships, banking partnerships, airline partnerships, real estate partnerships, vehicle leasing partnerships, translation services partnerships, renovation partnerships, B2B partnerships worldwide, enterprise partnerships, global service providers, expat financial services, 304 million expats, 1.465 billion travelers, immediate help, guaranteed income">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="{{ url()->current() }}">
+  <meta name="author" content="Ulixai - Williams Jullin">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  {{-- Theme & Mobile --}}
+  <meta name="theme-color" content="#3b82f6">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  
+  {{-- Open Graph Tags --}}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Strategic Partnerships - Join Ulixai's Global Network for Expats">
+  <meta property="og:description" content="Build enterprise partnerships to support expats and travelers globally. Major service providers, financial institutions, and travel industry leaders welcome.">
+  <meta property="og:url" content="{{ url()->current() }}">
+  <meta property="og:site_name" content="Ulixai">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="{{ asset('images/og-partnership.jpg') }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ulixai Strategic Partnership Program">
+  
+  {{-- Twitter Card --}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Strategic Partnerships | Ulixai Global Network">
+  <meta name="twitter:description" content="Partner with Ulixai to support millions of expats and travelers worldwide.">
+  <meta name="twitter:image" content="{{ asset('images/twitter-partnership.jpg') }}">
+  
+  {{-- Preconnect for Performance --}}
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  {{-- Favicon --}}
+  <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png">
+  
+  {{-- Schema.org JSON-LD --}}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "ULIXAI",
+    "name": "Ulixai",
     "url": "{{ url('/') }}",
     "logo": {
       "@type": "ImageObject",
-      "url": "{{ asset('images/logo.png') }}",
-      "width": "250",
-      "height": "60"
+      "url": "{{ asset('images/logo.png') }}"
     },
-    "sameAs": [
-      "https://www.facebook.com/ulixai",
-      "https://twitter.com/ulixai",
-      "https://www.linkedin.com/company/ulixai"
-    ],
+    "founder": {
+      "@type": "Person",
+      "name": "Williams Jullin",
+      "jobTitle": "Founder & CEO"
+    },
+    "description": "Two complementary global platforms (Ulixai.com and SOS-Expat.com) connecting strategic partners to support expats and travelers worldwide through meaningful, enterprise-level collaborations with major service providers. Four core missions: Prepare, Settle, Live, Respond.",
     "contactPoint": {
       "@type": "ContactPoint",
-      "contactType": "Customer Service",
-      "availableLanguage": ["en", "fr", "es", "de", "it"],
+      "contactType": "Partnership Inquiries",
+      "availableLanguage": ["en", "fr", "es", "de", "it", "pt"],
       "areaServed": "Worldwide"
     }
-  },
-  "areaServed": {
-    "@type": "Place",
-    "name": "Worldwide"
-  },
-  "availableChannel": {
-    "@type": "ServiceChannel",
-    "serviceUrl": "{{ url('/paymentsvalidate') }}",
-    "availableLanguage": ["en", "fr", "es"]
-  },
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "EUR",
-    "description": "100% free registration for service providers. No upfront costs. Small commission on completed services only.",
-    "availability": "https://schema.org/InStock",
-    "priceValidUntil": "2025-12-31"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "reviewCount": "523",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
-  "review": [
-    {
-      "@type": "Review",
-      "author": {"@type": "Person", "name": "Sarah Johnson"},
-      "reviewRating": {"@type": "Rating", "ratingValue": "5"},
-      "reviewBody": "ULIX AI helped us streamline our reports in no time. Fast, accurate, and professional."
-    },
-    {
-      "@type": "Review",
-      "author": {"@type": "Person", "name": "Ahmed Raza"},
-      "reviewRating": {"@type": "Rating", "ratingValue": "5"},
-      "reviewBody": "Amazingly intuitive platform. I use it daily to support clients."
-    },
-    {
-      "@type": "Review",
-      "author": {"@type": "Person", "name": "Lisa Fernandez"},
-      "reviewRating": {"@type": "Rating", "ratingValue": "5"},
-      "reviewBody": "Game-changer for managing personalized documentation."
-    }
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How much can I earn as a service provider on ULIXAI?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Service providers on ULIXAI earn from €100 to €10,000+ per month. You set your own rates and control your income. Top providers with specialized expertise earn €5,000+ monthly. Earnings depend on your skills, availability, service quality, and client reviews."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is registration free for service providers?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, 100% free. No credit card required. No monthly fees. No hidden charges. You only pay a small commission (15-20%) when you complete a paid service."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What services can I offer on ULIXAI?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Translation, interpretation, legal document assistance, visa support, real estate guidance, apartment hunting, banking setup, insurance advice, school enrollment help, cultural orientation, language teaching, job search support, tax consultation, and any professional service helping expats relocate or settle abroad."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I get paid on ULIXAI?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Secure escrow payment system. Client pays upfront, funds held securely. You deliver service. Client confirms completion. Funds released to your account within 24-48 hours. Withdraw via bank transfer, PayPal, or Wise."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I work part-time on ULIXAI?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Absolutely. Full flexibility. Accept only requests that fit your schedule. Work 1 hour/week or 40+ hours. Set your availability. Pause anytime. Perfect for students, freelancers, professionals, and anyone wanting extra income."
-      }
-    }
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "Join as Service Provider - ULIXAI",
-  "description": "Register as service provider. Earn €100-€10k/month helping expats. Free signup. Flexible schedule. Secure payment.",
-  "url": "{{ url()->current() }}",
-  "inLanguage": "en-US",
-  "isPartOf": {
-    "@type": "WebSite",
-    "name": "ULIXAI",
-    "url": "{{ url('/') }}"
-  },
-  "breadcrumb": {
-    "@type": "BreadcrumbList",
-    "itemListElement": [
+  }
+  </script>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
       {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "{{ url('/') }}"
+        "@type": "Question",
+        "name": "What types of strategic partnerships does Ulixai.com and SOS-Expat.com seek?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We seek partnerships with major service providers including insurance companies, international banks, airlines, real estate agencies, travel agencies, telecom operators, moving companies, vehicle dealers and leasing companies, translation services, construction and renovation firms, conflict resolution and mediation services, education institutions, healthcare providers, legal service networks, relocation services, and other enterprise-level organizations serving expats and travelers at every stage of their journey."
+        }
       },
       {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Join as Provider",
-        "item": "{{ url()->current() }}"
+        "@type": "Question",
+        "name": "What are the differences between Ulixai.com and SOS-Expat.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ulixai.com is the comprehensive platform for everyday expatriation needs—insurance, banking, housing, healthcare, vehicle purchases, translations, renovations, and all essential services. SOS-Expat.com is the emergency response platform for urgent situations—conflicts with landlords or employers, crisis management, immediate problem-solving, and time-sensitive support. Together, they cover the complete expatriation lifecycle across four core missions: Prepare, Settle, Live, and Respond."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why should major companies partner with Ulixai.com and SOS-Expat.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "By partnering with us, you help millions of expats, travelers, and vacationers navigate international life successfully. Our platforms connect people with trusted service providers across 195+ countries in a multilingual environment. It's about genuinely helping people—expatriate professionals, local experts, and expat helpers—all working together to support those living abroad."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the partnership philosophy of Ulixai.com and SOS-Expat.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We believe in authentic, long-term partnerships built on trust, honesty, and mutual respect. No corporate games, no complicated deals—just straightforward relationships with people who genuinely care about making international life easier. We prioritize quality over quantity and impact over metrics."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the partnership process work with Ulixai.com and SOS-Expat.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The process begins with submitting a partnership proposal. We review each inquiry within 72 hours, followed by a strategic discovery call where we explore how your services align with one or both platforms, due diligence, co-creation of partnership terms tailored to both parties, pilot program launch, and scale-up with ongoing support and optimization across Ulixai.com and/or SOS-Expat.com."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What makes these partnerships different from others?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We focus on genuine human connections and real impact, not transactions or data harvesting. Partners join a global ecosystem where the goal is helping people thrive internationally. We work with expatriate service providers, local professionals, and expat helpers across 195+ countries in multiple languages. It's about building something meaningful together."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can companies from any country partner with Ulixai.com and SOS-Expat.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! We welcome partnerships from organizations worldwide, particularly those with international presence or services applicable across borders. Our mission is global, and we actively seek partners from all countries committed to supporting international mobility through Ulixai.com and SOS-Expat.com."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What support do partners receive?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Partners receive genuine support and collaboration: integration into our platforms where it makes sense, partnership guidance, brand visibility opportunities, and a direct connection with people who need your services. We're here to help you help others—with straightforward communication and long-term thinking."
+        }
       }
     ]
-  },
-  "potentialAction": {
-    "@type": "RegisterAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": "{{ url('/paymentsvalidate') }}",
-      "actionPlatform": [
-        "http://schema.org/DesktopWebPlatform",
-        "http://schema.org/MobileWebPlatform",
-        "http://schema.org/IOSPlatform",
-        "http://schema.org/AndroidPlatform"
+  }
+  </script>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Strategic Partnerships - Ulixai",
+    "description": "Join Ulixai's global mission to support expats and travelers through strategic enterprise partnerships.",
+    "url": "{{ url()->current() }}",
+    "inLanguage": "en-US",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Ulixai",
+      "url": "{{ url('/') }}"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ url('/') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Partnerships",
+          "item": "{{ url()->current() }}"
+        }
       ]
     }
   }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "HowTo",
-  "name": "How to Start Earning as ULIXAI Service Provider",
-  "description": "3-step process to start earning money helping expats worldwide",
-  "totalTime": "PT5M",
-  "step": [
-    {
-      "@type": "HowToStep",
-      "position": 1,
-      "name": "Sign Up Free",
-      "text": "Create profile in 5 minutes. Add skills and experience. No credit card needed.",
-      "url": "{{ url('/paymentsvalidate') }}"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 2,
-      "name": "Browse Requests",
-      "text": "View client requests matching your expertise. Quote your price. Accept when ready.",
-      "url": "{{ url('/paymentsvalidate') }}"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 3,
-      "name": "Get Paid",
-      "text": "Complete service. Client confirms. Funds released securely to your account.",
-      "url": "{{ url('/paymentsvalidate') }}"
-    }
-  ]
-}
-</script>
-@endpush
-
-<title>Join as a Service Provider – ULIXAI | Earn €100-€10k/Month</title>
-
-{{-- ⚡ CSS CRITICAL INLINE - Mobile-First avec bug CSS corrigé --}}
-<style>
-/* Reset et base */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFamily, 'Segoe UI', Roboto, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #1f2937;
-  overflow-x: hidden;
-}
-
-/* ✅ CORRECTION CRITIQUE - Pas de user-select: none qui bloque les taps mobile */
-a, button {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-}
-
-/* Hero Section - Mobile First */
-.hero-section {
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"%3E%3Cpath d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100" height="100" fill="url(%23grid)"/%3E%3C/svg%3E');
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  max-width: 1000px;
-  color: #fff;
-  width: 100%;
-}
-
-.hero-tag {
-  background: rgba(255, 255, 255, 0.25);
-  display: inline-block;
-  padding: 0.6rem 1.5rem;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.hero-title {
-  font-size: clamp(1.75rem, 5vw, 3.75rem);
-  font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: 1rem;
-  letter-spacing: -0.02em;
-}
-
-.hero-highlight {
-  color: #fbbf24;
-  display: block;
-  margin-top: 0.5rem;
-  font-size: clamp(1.5rem, 4vw, 3rem);
-}
-
-.hero-description {
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
-  margin-bottom: 2rem;
-  opacity: 0.95;
-  line-height: 1.5;
-  max-width: 42rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.hero-cta-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-  max-width: 500px;
-  margin: 0 auto 2rem;
-}
-
-.hero-cta-btn {
-  padding: 1.25rem 2rem;
-  font-size: clamp(1.1rem, 3vw, 1.35rem);
-  font-weight: 900;
-  text-align: center;
-  border-radius: 9999px;
-  border: none;
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  display: block;
-  width: 100%;
-  font-family: inherit;
-  letter-spacing: -0.01em;
-  min-height: 44px;
-}
-
-.hero-cta-btn:active {
-  transform: scale(0.97);
-}
-
-.hero-cta-primary {
-  background: #fff;
-  color: #667eea;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-}
-
-.hero-cta-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
-}
-
-.hero-cta-secondary {
-  background: transparent;
-  color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-}
-
-.hero-cta-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #fff;
-}
-
-.hero-benefits {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.hero-benefit {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-}
-
-/* Sections communes */
-.section {
-  padding: clamp(3rem, 8vw, 5rem) clamp(1rem, 4vw, 1.5rem);
-}
-
-.section-container {
-  max-width: 75rem;
-  margin: 0 auto;
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: clamp(2.5rem, 6vw, 4rem);
-}
-
-.section-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 900;
-  color: #1f2937;
-  margin-bottom: 0.75rem;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-
-.section-subtitle {
-  color: #6b7280;
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  max-width: 48rem;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* Grid responsive */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: clamp(1.5rem, 4vw, 2rem);
-}
-
-/* Feature cards */
-.feature-card {
-  background: #fff;
-  border-radius: 1rem;
-  padding: clamp(1.5rem, 4vw, 2rem);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #f3f4f6;
-}
-
-.feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-}
-
-.feature-icon {
-  font-size: clamp(2.5rem, 6vw, 3rem);
-  margin-bottom: 1rem;
-  line-height: 1;
-}
-
-.feature-title {
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: #1f2937;
-  line-height: 1.3;
-}
-
-.feature-description {
-  color: #4b5563;
-  line-height: 1.7;
-  font-size: clamp(0.95rem, 2vw, 1rem);
-}
-
-/* Stats section */
-.stats-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  gap: clamp(1.5rem, 4vw, 2rem);
-}
-
-.stat-card {
-  padding: clamp(1rem, 3vw, 1.5rem);
-  text-align: center;
-}
-
-.stat-number {
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  font-weight: 900;
-  margin-bottom: 0.5rem;
-  line-height: 1;
-}
-
-.stat-label {
-  color: rgba(255, 255, 255, 0.95);
-  font-size: clamp(0.95rem, 2vw, 1.15rem);
-  font-weight: 500;
-}
-
-/* Steps (How it Works) */
-.steps-container {
-  max-width: 56rem;
-  margin: 0 auto;
-}
-
-.steps-list {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.5rem, 4vw, 2rem);
-}
-
-.step-card {
-  display: flex;
-  align-items: flex-start;
-  gap: clamp(1rem, 3vw, 1.5rem);
-  background: #fff;
-  padding: clamp(1.5rem, 4vw, 2rem);
-  border-radius: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border-left: 4px solid #667eea;
-}
-
-.step-icon {
-  font-size: clamp(2.5rem, 6vw, 3.5rem);
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.step-content h3 {
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-  line-height: 1.3;
-}
-
-.step-content p {
-  color: #4b5563;
-  font-size: clamp(0.95rem, 2vw, 1.125rem);
-  line-height: 1.7;
-}
-
-/* Table responsive */
-.table-wrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.comparison-table {
-  width: 100%;
-  min-width: 600px;
-  border-collapse: collapse;
-  background: #fff;
-}
-
-.comparison-table thead {
-  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-  color: #fff;
-}
-
-.comparison-table th {
-  padding: clamp(0.75rem, 2vw, 1rem);
-  font-weight: 700;
-  font-size: clamp(0.95rem, 2vw, 1.125rem);
-  text-align: left;
-}
-
-.comparison-table th:not(:first-child) {
-  text-align: center;
-}
-
-.comparison-table tbody tr {
-  border-bottom: 1px solid #e5e7eb;
-  transition: background 0.15s ease;
-}
-
-.comparison-table tbody tr:hover {
-  background: #f9fafb;
-}
-
-.comparison-table td,
-.comparison-table th[scope="row"] {
-  padding: clamp(0.75rem, 2vw, 1rem);
-  font-size: clamp(0.9rem, 2vw, 1rem);
-}
-
-.comparison-table th[scope="row"] {
-  font-weight: 400;
-  color: #374151;
-}
-
-.comparison-table td {
-  text-align: center;
-  font-weight: 700;
-}
-
-/* Testimonials */
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: clamp(1.5rem, 4vw, 2rem);
-}
-
-.testimonial-card {
-  background: #fff;
-  border-radius: 1rem;
-  padding: clamp(1.5rem, 4vw, 2rem);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.testimonial-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-}
-
-.testimonial-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 1rem;
-  border: 3px solid;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.testimonial-rating {
-  color: #fbbf24;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.testimonial-name {
-  font-size: clamp(1.1rem, 2.5vw, 1.25rem);
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 0.25rem;
-}
-
-.testimonial-role {
-  font-size: clamp(0.85rem, 2vw, 0.95rem);
-  color: #6b7280;
-  margin-bottom: 1rem;
-}
-
-.testimonial-text {
-  color: #374151;
-  line-height: 1.7;
-  font-size: clamp(0.95rem, 2vw, 1rem);
-}
-
-/* CTA buttons */
-.cta-section {
-  text-align: center;
-  margin-top: clamp(2rem, 5vw, 3rem);
-}
-
-.cta-btn {
-  background: #1e40af;
-  color: #fff;
-  padding: clamp(1rem, 3vw, 1.25rem) clamp(2rem, 5vw, 2.5rem);
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
-  font-weight: 700;
-  border-radius: 9999px;
-  border: none;
-  box-shadow: 0 10px 30px rgba(30, 64, 175, 0.3);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: inherit;
-  display: inline-block;
-  min-height: 44px;
-}
-
-.cta-btn:hover {
-  background: #1e3a8a;
-  transform: scale(1.05);
-  box-shadow: 0 15px 40px rgba(30, 64, 175, 0.4);
-}
-
-.cta-btn:active {
-  transform: scale(0.98);
-}
-
-/* Media queries */
-@media (min-width: 768px) {
-  .hero-cta-container {
-    flex-direction: row;
-    max-width: 700px;
-  }
+  </script>
   
-  .hero-benefits {
-    gap: 1.5rem;
-    font-size: 0.95rem;
-  }
-}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-/* Utility colors */
-.text-blue-800 { color: #1e40af; }
-.text-blue-900 { color: #1e3a8a; }
-.text-green-600 { color: #10b981; }
-.text-red-500 { color: #ef4444; }
-.text-purple-500 { color: #a855f7; }
-.text-pink-500 { color: #ec4899; }
-.bg-blue-50 { background: #eff6ff; }
-.bg-white { background: #fff; }
-.bg-gray-50 { background: #f9fafb; }
-</style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
 
-<body class="bg-gradient-to-tr from-blue-50 to-white text-gray-800">
+    /* Gradient Text */
+    .gradient-text {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4, #14b8a6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientFlow 8s ease infinite;
+      background-size: 400% 400%;
+    }
 
-<main itemscope itemtype="https://schema.org/Service">
+    @keyframes gradientFlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
 
-{{-- 🚀 Hero Section - Accroche principale --}}
-<section class="hero-section" aria-labelledby="hero-title">
-  <div class="hero-content">
-    <div class="hero-tag" role="status" aria-live="polite">✅ 100% FREE - NO CREDIT CARD</div>
+    /* Enhanced Card Styles */
+    .enhanced-card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .enhanced-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1.5rem;
+      padding: 2px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4, #14b8a6);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .enhanced-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+    }
+
+    .enhanced-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Glass Effect */
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Floating Animation */
+    .floating-animation {
+      animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Gradient Border */
+    .gradient-border {
+      position: relative;
+      border-radius: 2rem;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4, #14b8a6);
+      padding: 3px;
+      background-size: 400% 400%;
+      animation: gradientFlow 6s ease infinite;
+    }
     
-    <h1 id="hero-title" class="hero-title" itemprop="name">
-      Earn Money Helping Expats Worldwide
-      <span class="hero-highlight" itemprop="description">💰 €100 to €10,000+/month</span>
+    .gradient-border-content {
+      background: white;
+      border-radius: calc(2rem - 3px);
+    }
+    
+    /* Sparkle Animation - Plus dynamique */
+    .sparkle::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+      animation: sparkle 2s infinite;
+    }
+    
+    @keyframes sparkle {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    /* Pulse Animation pour badges */
+    .pulse-badge {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    /* Shake Animation pour icônes */
+    .shake-animation {
+      animation: shake 3s ease-in-out infinite;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: rotate(0deg); }
+      10%, 30% { transform: rotate(-3deg); }
+      20%, 40% { transform: rotate(3deg); }
+    }
+    
+    /* Rainbow Border Animation */
+    .rainbow-border {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .rainbow-border::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+      background-size: 400% 400%;
+      animation: rainbow 8s linear infinite;
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .rainbow-border:hover::before {
+      opacity: 0.3;
+    }
+    
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 400% 50%; }
+    }
+    
+    /* Glow effect */
+    .glow-effect {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+      animation: glow 2s ease-in-out infinite;
+    }
+    
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+    }
+    
+    /* Pop-in Animation */
+    .pop-in {
+      animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Wiggle Animation */
+    .wiggle {
+      animation: wiggle 1s ease-in-out;
+    }
+    
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-5deg); }
+      75% { transform: rotate(5deg); }
+    }
+    
+    .icon-bounce {
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+      40%, 43% { transform: translateY(-8px); }
+      70% { transform: translateY(-4px); }
+      90% { transform: translateY(-2px); }
+    }
+    
+    .stagger-animation {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Background Pattern */
+    .bg-pattern {
+      background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%233b82f6" fill-opacity="0.03"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+      opacity: 0.4;
+    }
+
+    /* FAQ Styles */
+    .faq-item {
+      background: white;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: #1e40af;
+      transition: all 0.3s ease;
+    }
+
+    .faq-question:hover {
+      color: #3b82f6;
+    }
+
+    .faq-icon {
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+      margin-left: 1rem;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding: 0 1.5rem;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .faq-answer p {
+      color: #64748b;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    /* Founder Message Card */
+    .founder-card {
+      background: white;
+      border-radius: 2rem;
+      padding: 2.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .founder-card::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4, #14b8a6);
+      background-size: 400% 400%;
+      border-radius: 2rem;
+      z-index: -1;
+      animation: gradientFlow 6s ease infinite;
+    }
+
+    .founder-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      border-radius: 2rem;
+      z-index: -1;
+    }
+
+    /* Quote Styling */
+    .quote-mark {
+      font-size: 4rem;
+      line-height: 0;
+      color: #3b82f6;
+      opacity: 0.2;
+      font-family: Georgia, serif;
+    }
+
+    /* Process Timeline */
+    .timeline-item {
+      position: relative;
+      padding-left: 3rem;
+      padding-bottom: 2rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0.75rem;
+      top: 3rem;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #3b82f6, #e5e7eb);
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Performance */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .founder-card { padding: 1.5rem; }
+      .timeline-item { padding-left: 2.5rem; }
+    }
+
+    img { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+
+@include('includes.header')
+@include('pages.popup')
+
+<!-- HERO SECTION -->
+<section class="relative py-20 px-6 text-center overflow-hidden" role="banner">
+  <div class="absolute inset-0 bg-pattern"></div>
+  
+  <!-- Bannière top énergique -->
+  <div class="absolute top-0 left-0 right-0 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 py-2 px-4 overflow-hidden">
+    <div class="flex items-center justify-center gap-3 text-white font-bold text-sm md:text-base animate-pulse">
+      <span class="text-xl">🔥</span>
+      <span>JOIN THE GLOBAL MOVEMENT</span>
+      <span class="text-xl">•</span>
+      <span>HELP MILLIONS THRIVE ABROAD</span>
+      <span class="text-xl">🌍</span>
+    </div>
+  </div>
+  
+  <div class="relative max-w-5xl mx-auto pt-8">
+    <div class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-indigo-100 border-2 border-blue-200 rounded-full px-6 py-3 mb-8 sparkle glow-effect">
+      <span class="text-3xl icon-bounce shake-animation" aria-hidden="true">🤝</span>
+      <span class="text-blue-800 font-bold text-lg">Strategic Enterprise Partnerships</span>
+    </div>
+    
+    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight pop-in">
+      <span class="gradient-text">Partner with Ulixai.com & SOS-Expat.com</span>
     </h1>
-
-    <p class="hero-description">
-      Join 10,000+ service providers on ULIXAI. Turn your local knowledge into global income. Set your own rates. Work on your terms. Get paid securely.
-    </p>
-
-    <div class="hero-cta-container">
-      <a href="javascript:void(0)" 
-         onclick="openSignupPopup()" 
-         class="hero-cta-btn hero-cta-primary"
-         aria-label="Start earning now - Free registration">
-        START EARNING NOW 🚀
-      </a>
-      
-      <a href="javascript:void(0)" 
-         onclick="openSignupPopup()" 
-         class="hero-cta-btn hero-cta-secondary"
-         aria-label="Free registration as service provider">
-        FREE REGISTRATION 💼
-      </a>
+    
+    <!-- Stats Badges Colorés -->
+    <div class="flex flex-wrap justify-center gap-3 mb-6">
+      <span class="inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-300 rounded-full px-4 py-2 pulse-badge">
+        <span class="text-xl">🌍</span>
+        <span class="text-green-800 font-bold text-sm">195+ Countries</span>
+      </span>
+      <span class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-purple-300 rounded-full px-4 py-2 pulse-badge">
+        <span class="text-xl">🗣️</span>
+        <span class="text-purple-800 font-bold text-sm">All Languages</span>
+      </span>
+      <span class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-100 to-red-100 border-2 border-orange-300 rounded-full px-4 py-2 pulse-badge">
+        <span class="text-xl">🌈</span>
+        <span class="text-orange-800 font-bold text-sm">All Nationalities</span>
+      </span>
     </div>
-
-    <div class="hero-benefits" role="list" aria-label="Key benefits">
-      <div class="hero-benefit" role="listitem"><span aria-hidden="true">✅</span> Zero upfront costs</div>
-      <div class="hero-benefit" role="listitem"><span aria-hidden="true">💳</span> Secure payments</div>
-      <div class="hero-benefit" role="listitem"><span aria-hidden="true">🌍</span> Global reach</div>
-      <div class="hero-benefit" role="listitem"><span aria-hidden="true">⏰</span> Flexible schedule</div>
-    </div>
-  </div>
-</section>
-
-{{-- 💡 Why Join Section --}}
-<section class="section bg-white" aria-labelledby="why-join-heading">
-  <div class="section-container">
-    <header class="section-header">
-      <h2 id="why-join-heading" class="section-title">Why Join @site?</h2>
-    </header>
-
-    {{-- Mobile Register Button --}}
-    <div class="block md:hidden text-center mb-12">
-      <a href="javascript:void(0)" 
-         onclick="openSignupPopup()" 
-         class="cta-btn"
-         aria-label="Register as service provider">
-        Register as provider
-      </a>
-    </div>
-
-    <div class="grid" role="list">
-      <article class="glass feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">🎯</div>
-        <h3 class="feature-title text-blue-800">Targeted Missions</h3>
-        <p class="feature-description">Get only those requests that match your profile. Save time, earn more.</p>
-      </article>
-      
-      <article class="glass feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">⚡</div>
-        <h3 class="feature-title text-blue-800">Daily Global Opportunities</h3>
-        <p class="feature-description">Connect with clients worldwide – online or in-person.</p>
-      </article>
-      
-      <article class="glass feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">🛡️</div>
-        <h3 class="feature-title text-blue-800">Peace of Mind</h3>
-        <p class="feature-description">Verified identity, secure payments, and dedicated support.</p>
-      </article>
-    </div>
-
-    <div style="max-width: 48rem; margin: 2rem auto; text-align: center;">
-      <p class="feature-description" style="margin-bottom: 1rem;">
-        Whether you're a <strong class="text-blue-800">expat, lawyer, real estate agent, translator or teacher</strong>, join us and offer your assistance worldwide, regardless of your spoken languages.
+    
+    <div class="space-y-4 mb-8">
+      <p class="text-xl text-gray-700 flex items-center justify-center gap-2 flex-wrap">
+        Supporting <strong class="text-blue-600 text-2xl">304 million expats</strong> and <strong class="text-blue-600 text-2xl">1.465 billion travelers</strong> worldwide
+        <span class="text-3xl floating-animation" aria-hidden="true">✨</span>
       </p>
       
-      <p class="feature-description" style="margin-bottom: 1rem;">
-        Receive instant job <strong class="text-blue-800">alerts</strong>, submit your rate offer, and start earning money with your expertise.
-      </p>
-      
-      <p class="feature-description" style="margin-bottom: 2rem;">
-        <strong class="text-blue-800">Flexible income:</strong> Whether you work full time or part time, you alone decide your monthly income (<strong class="text-blue-800">€100, €1,000, €10,000</strong>? You decide).
-      </p>
-
-      <a href="javascript:void(0)" 
-         onclick="openSignupPopup()" 
-         class="cta-btn"
-         aria-label="Create free provider profile">
-        Create My Free Profile
-      </a>
-    </div>
-  </div>
-</section>
-
-{{-- 🎯 Features Section - 6 cards complètes --}}
-<section class="section" style="background: #f9fafb;" aria-labelledby="features-heading">
-  <div class="section-container">
-    <header class="section-header">
-      <h2 id="features-heading" class="section-title">🎯 Why Choose ULIXAI</h2>
-      <p class="section-subtitle">
-        Join thousands of professionals earning consistent income while helping expats worldwide
-      </p>
-    </header>
-
-    <div class="grid" role="list" aria-label="Platform features">
-      <article class="feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">💰</div>
-        <h3 class="feature-title">Set Your Own Rates</h3>
-        <p class="feature-description">
-          Control your pricing. Earn €20-€500+ per service. No commission limits. Keep 80-85% of earnings.
-        </p>
-      </article>
-
-      <article class="feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">🌍</div>
-        <h3 class="feature-title">Global Client Base</h3>
-        <p class="feature-description">
-          Access clients from 150+ countries seeking translation, legal help, housing, and local guidance.
-        </p>
-      </article>
-
-      <article class="feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">🛡️</div>
-        <h3 class="feature-title">Secure Payments</h3>
-        <p class="feature-description">
-          Escrow system protects both parties. Funds released after service completion. Zero disputes.
-        </p>
-      </article>
-
-      <article class="feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">⏰</div>
-        <h3 class="feature-title">Work When You Want</h3>
-        <p class="feature-description">
-          Complete flexibility. Accept requests fitting your schedule. Part-time or full-time.
-        </p>
-      </article>
-
-      <article class="feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">⭐</div>
-        <h3 class="feature-title">Build Your Reputation</h3>
-        <p class="feature-description">
-          Earn 5-star reviews. Showcase expertise. Higher ratings = more clients = more income.
-        </p>
-      </article>
-
-      <article class="feature-card" role="listitem">
-        <div class="feature-icon" aria-hidden="true">🤝</div>
-        <h3 class="feature-title">24/7 Support</h3>
-        <p class="feature-description">
-          Dedicated provider support team. Quick response times. We've got your back always.
-        </p>
-      </article>
-    </div>
-  </div>
-</section>
-
-{{-- 📈 Stats Section --}}
-<section class="section stats-section" aria-labelledby="stats-heading">
-  <div class="section-container">
-    <header class="section-header">
-      <h2 id="stats-heading" class="section-title">📊 ULIXAI By The Numbers</h2>
-    </header>
-
-    <div class="stats-grid" role="list" aria-label="Platform statistics">
-      <div class="stat-card" role="listitem">
-        <div class="stat-number" aria-label="Over 10,000 service providers">10,000+</div>
-        <div class="stat-label">Active Providers</div>
-      </div>
-
-      <div class="stat-card" role="listitem">
-        <div class="stat-number" aria-label="Serving 150+ countries">150+</div>
-        <div class="stat-label">Countries Served</div>
-      </div>
-
-      <div class="stat-card" role="listitem">
-        <div class="stat-number" aria-label="Over 2 million euros paid">€2M+</div>
-        <div class="stat-label">Earnings Paid Out</div>
-      </div>
-
-      <div class="stat-card" role="listitem">
-        <div class="stat-number" aria-label="4.8 out of 5 satisfaction">4.8/5</div>
-        <div class="stat-label">Provider Satisfaction</div>
+      <div class="max-w-3xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-4 mb-6">
+          <a 
+            href="https://ulixai.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl px-6 py-4 hover:from-blue-100 hover:to-indigo-100 hover:border-blue-400 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+          >
+            <span class="text-3xl group-hover:scale-110 transition-transform" aria-hidden="true">🌍</span>
+            <div class="text-left flex-1">
+              <span class="text-gray-800 font-bold text-lg block group-hover:text-blue-700 transition-colors">Ulixai.com</span>
+              <span class="text-gray-600 text-sm block">Services & Pricing</span>
+            </div>
+            <span class="text-blue-600 text-xl opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+          </a>
+          
+          <a 
+            href="https://sos-expat.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="group inline-flex items-center gap-3 bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200 rounded-2xl px-6 py-4 hover:from-red-100 hover:to-orange-100 hover:border-red-400 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+          >
+            <span class="text-3xl group-hover:scale-110 transition-transform" aria-hidden="true">🆘</span>
+            <div class="text-left flex-1">
+              <span class="text-gray-800 font-bold text-lg block group-hover:text-red-700 transition-colors">SOS-Expat.com</span>
+              <span class="text-gray-600 text-sm block">Phone Help <5min 📞</span>
+            </div>
+            <span class="text-red-600 text-xl opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-{{-- 🔄 How It Works Section --}}
-<section class="section bg-white" aria-labelledby="how-heading">
-  <div class="section-container">
-    <header class="section-header">
-      <h2 id="how-heading" class="section-title">🔄 How It Works</h2>
-      <p class="section-subtitle">
-        Start earning in 3 simple steps. No complexity. No hidden fees.
-      </p>
-    </header>
-
-    <div class="steps-container">
-      <div class="steps-list" role="list" aria-label="Getting started steps">
-        <article class="step-card" role="listitem">
-          <div class="step-icon" aria-hidden="true">1️⃣</div>
-          <div class="step-content">
-            <h3>Sign Up for Free</h3>
+<!-- FOUNDER MESSAGE SECTION -->
+<section class="py-16 px-6" aria-labelledby="founder-message">
+  <div class="max-w-4xl mx-auto">
+    <div class="founder-card">
+      <div class="flex flex-col md:flex-row gap-8 items-start">
+        <!-- Founder Photo -->
+        <div class="flex-shrink-0">
+          <img 
+            src="{{ asset('images/williams-jullin-founder-optimized.jpg') }}" 
+            alt="Williams Jullin - Founder & CEO of Ulixai"
+            class="w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover shadow-2xl ring-4 ring-blue-100"
+            width="160"
+            height="160"
+            loading="lazy"
+            onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <!-- Fallback si l'image ne charge pas -->
+          <div class="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-6xl shadow-2xl ring-4 ring-blue-100" style="display:none;">
+            👤
+          </div>
+          <div class="text-center mt-4">
+            <p class="font-bold text-gray-800 text-lg">Williams Jullin</p>
+            <p class="text-blue-600 font-semibold text-sm">Founder & CEO</p>
+          </div>
+        </div>
+        
+        <!-- Message Content -->
+        <div class="flex-1">
+          <div class="quote-mark">"</div>
+          <h2 id="founder-message" class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Why Major Partnerships Matter 💬</h2>
+          
+          <div class="space-y-4 text-gray-700 leading-relaxed">
+            <p class="text-lg">
+              <strong>To the decision-makers reading this 👋</strong>
+            </p>
+            
             <p>
-              Create profile in 5 minutes. Add skills, experience, and availability. Zero cost to join.
+              Every year, millions of people relocate internationally—for work, education, love, or adventure. They arrive in new countries facing countless challenges that can make or break their experience abroad.
+            </p>
+            
+            <p>
+              <strong>The reality?</strong> Finding reliable insurance that works internationally. Opening a bank account without local history. Securing safe housing. Navigating healthcare in a foreign language. Organizing international moves. Buying or leasing a vehicle abroad. Getting documents translated. Managing renovations. Resolving conflicts with landlords or employers.
+            </p>
+            
+            <p>
+              These aren't just logistics—they're <strong>life-changing moments</strong> that determine whether someone thrives or struggles abroad.
+            </p>
+            
+            <p>
+              <strong>That's why we built two complementary platforms:</strong>
+            </p>
+            
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 my-4 border-2 border-blue-200">
+              <div class="space-y-4">
+                <div>
+                  <p class="mb-2">
+                    <strong class="text-blue-800 text-lg">🌍 Ulixai.com — Services & Pricing</strong>
+                  </p>
+                  <div class="ml-6 space-y-2 text-sm">
+                    <p>✓ <strong>Unlimited Services & Choice</strong> — Find the right provider among multiple offers for insurance, banking, housing, healthcare, vehicles, translations, and more.</p>
+                    <p>✓ <strong>Worldwide Income</strong> — Service providers earn income wherever they are.</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <p class="mb-2">
+                    <strong class="text-red-800 text-lg">🆘 SOS-Expat.com — Phone Help <5min</strong>
+                  </p>
+                  <div class="ml-6 space-y-2 text-sm">
+                    <p>✓ <strong>Immediate Help</strong> — Phone connection in less than 5 minutes with a lawyer or expat helper for urgent situations. All languages, all nationalities, all countries.</p>
+                    <p>✓ <strong>Guaranteed Income</strong> — Lawyers and helpers earn with prepaid calls.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <p>
+              We connect expats with three types of partners: <strong>expatriate service providers</strong> who understand international challenges, <strong>local professionals</strong> with deep market knowledge, and <strong>expat helpers</strong>—people who've been through it and want to support others.
+            </p>
+            
+            <p>
+              If you represent an <strong>insurance company</strong>, <strong>bank</strong>, <strong>airline</strong>, <strong>real estate agency</strong>, <strong>moving company</strong>, <strong>vehicle dealer</strong>, <strong>translation service</strong>, <strong>construction firm</strong>, <strong>legal practice</strong>, <strong>healthcare provider</strong>, or any service that helps people navigate international life—we'd love to connect.
+            </p>
+            
+            <p>
+              <strong>What we're looking for?</strong> Authentic, long-term partnerships built on trust and mutual respect. Straightforward relationships where everyone wins—especially the people we're here to help.
+            </p>
+            
+            <p>
+              <strong>Our reach?</strong> <strong>195+ countries</strong>, <strong>all nationalities</strong>, <strong>multilingual</strong> (English, French, Spanish, German, Italian, Portuguese, Russian, Chinese, Arabic, Hindi, and more).
+            </p>
+            
+            <p>
+              <strong>Interested in helping millions of people thrive abroad?</strong> Let's have a genuine conversation about how we can work together. 🌍
+            </p>
+            
+            <p class="text-lg font-semibold text-blue-700 mt-6">
+              Looking forward to connecting,<br>
+              <span class="gradient-text text-xl">Williams</span>
             </p>
           </div>
-        </article>
-
-        <article class="step-card" role="listitem">
-          <div class="step-icon" aria-hidden="true">2️⃣</div>
-          <div class="step-content">
-            <h3>Browse Client Requests</h3>
-            <p>
-              View requests matching your expertise. Quote your price. Accept when ready to work.
-            </p>
-          </div>
-        </article>
-
-        <article class="step-card" role="listitem">
-          <div class="step-icon" aria-hidden="true">3️⃣</div>
-          <div class="step-content">
-            <h3>Get Paid Securely</h3>
-            <p>
-              Complete service. Client confirms satisfaction. Funds released to your account within 48h.
-            </p>
-          </div>
-        </article>
-      </div>
-
-      <div class="cta-section">
-        <a href="javascript:void(0)" 
-           onclick="openSignupPopup()" 
-           class="cta-btn"
-           aria-label="Join 10,000+ service providers">
-          JOIN 10,000+ PROVIDERS 🚀
-        </a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-{{-- 📊 Comparison Table --}}
-<section class="section bg-blue-50" aria-labelledby="comparison-heading">
-  <div class="section-container">
-    <header class="section-header">
-      <h2 id="comparison-heading" class="section-title text-blue-900">
-        Individual or Professional? Help and Earn Money
+<!-- FIRST CTA WITH STATS -->
+<section class="py-16 px-6 relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600" aria-labelledby="cta-stats">
+  <div class="absolute inset-0 bg-pattern opacity-20"></div>
+  
+  <div class="relative max-w-5xl mx-auto text-center text-white">
+    <div class="mb-8">
+      <h2 id="cta-stats" class="text-3xl md:text-5xl font-bold mb-6">
+        The Global Opportunity
       </h2>
-    </header>
-    
-    <div class="table-wrapper">
-      <table class="comparison-table" role="table" aria-label="Service comparison">
-        <thead>
-          <tr>
-            <th scope="col">@site Services</th>
-            <th scope="col">Individual</th>
-            <th scope="col">Professional</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Access to client requests</th>
-            <td class="text-green-600" aria-label="Available">✅</td>
-            <td class="text-green-600" aria-label="Available">✅</td>
-          </tr>
-          <tr>
-            <th scope="row">Expertise badge by field</th>
-            <td class="text-green-600" aria-label="Available">✅</td>
-            <td class="text-green-600" aria-label="Available">✅</td>
-          </tr>
-          <tr>
-            <th scope="row">Statistics tracking</th>
-            <td class="text-green-600" aria-label="Available">✅</td>
-            <td class="text-green-600" aria-label="Available">✅</td>
-          </tr>
-          <tr>
-            <th scope="row">Secure payment</th>
-            <td class="text-green-600" aria-label="Available">✅</td>
-            <td class="text-green-600" aria-label="Available">✅</td>
-          </tr>
-          <tr>
-            <th scope="row">Client/provider reviews</th>
-            <td class="text-green-600" aria-label="Available">✅</td>
-            <td class="text-green-600" aria-label="Available">✅</td>
-          </tr>
-          <tr>
-            <th scope="row">Affiliate link</th>
-            <td class="text-green-600" aria-label="Available">✅</td>
-            <td class="text-green-600" aria-label="Available">✅</td>
-          </tr>
-          <tr>
-            <th scope="row" style="color: #6b7280; font-style: italic;">
-              SOS Emergency Call<br>
-              <span style="font-size: 0.75rem;">(coming soon)</span>
-            </th>
-            <td class="text-red-500" aria-label="Not available">❌</td>
-            <td class="text-red-500" aria-label="Not available">❌</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <div class="cta-section">
-      <a href="javascript:void(0)" 
-         onclick="openSignupPopup()" 
-         class="cta-btn"
-         aria-label="Register as service provider">
-        Register as provider
-      </a>
-    </div>
-  </div>
-</section>
-
-{{-- 💬 Testimonials Section --}}
-<section class="section bg-gray-50" aria-labelledby="testimonials-heading">
-  <div class="section-container">
-    <header class="section-header">
-      <h2 id="testimonials-heading" class="section-title">💬 What our clients say</h2>
-      <p class="section-subtitle">
-        Real feedback from our happy users around the world.
+      
+      <div class="grid md:grid-cols-2 gap-6 mb-8 max-w-3xl mx-auto">
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20 hover:border-yellow-300 hover:scale-105 transition-all duration-300 rainbow-border">
+          <div class="text-4xl md:text-5xl font-black mb-2 text-yellow-300 flex items-center justify-center gap-2">
+            <span class="shake-animation">🌟</span> 304M
+          </div>
+          <p class="text-lg text-blue-100">People living abroad worldwide</p>
+        </div>
+        
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20 hover:border-yellow-300 hover:scale-105 transition-all duration-300 rainbow-border">
+          <div class="text-4xl md:text-5xl font-black mb-2 text-yellow-300 flex items-center justify-center gap-2">
+            <span class="shake-animation">✈️</span> 1.465B
+          </div>
+          <p class="text-lg text-blue-100">International travelers annually</p>
+        </div>
+      </div>
+      
+      <p class="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
+        Together, we can help this massive global community navigate life abroad with confidence, security, and peace of mind.
       </p>
-    </header>
+    </div>
+    
+    <a 
+      href="/partnershiprequest" 
+      class="inline-flex items-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-bold hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-2xl"
+    >
+      <span>Submit Partnership Proposal</span>
+      <span class="text-2xl">→</span>
+    </a>
+    
+    <p class="mt-6 text-blue-100 text-sm">
+      🤝 We respond personally to every inquiry within 72 hours
+    </p>
+  </div>
+</section>
 
-    <div class="testimonials-grid" role="list" aria-label="Client testimonials">
-      <article class="testimonial-card" role="listitem" itemscope itemtype="https://schema.org/Review">
-        <img src="images/test1.jpg" 
-             alt="Sarah Johnson - Marketing Manager at BrightCorp" 
-             class="testimonial-img"
-             style="border-color: #a855f7;"
-             width="80"
-             height="80"
-             loading="lazy"
-             decoding="async">
-        <div class="testimonial-rating" role="img" aria-label="5 out of 5 stars">★★★★★</div>
-        <h3 class="testimonial-name" itemprop="author">Sarah Johnson</h3>
-        <p class="testimonial-role">Marketing Manager, BrightCorp</p>
-        <p class="testimonial-text" itemprop="reviewBody">
-          "ULIX AI helped us streamline our reports in no time. The service is fast, accurate, and extremely professional. Highly recommended!"
+<!-- PARTNERSHIP VISION SECTION -->
+<section class="py-16 px-6 bg-gradient-to-r from-blue-50 to-indigo-50" aria-labelledby="our-vision">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 id="our-vision" class="text-3xl md:text-4xl font-bold text-blue-800 mb-4">
+        Our Partnership Vision
+      </h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+        Building a global ecosystem that genuinely helps expats, travelers, and vacationers thrive internationally—through authentic partnerships with trusted service providers across 195+ countries.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Vision Card 1 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-4 floating-animation" aria-hidden="true">
+          🌍
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">Global Reach, Human Touch</h3>
+        <p class="text-gray-600 leading-relaxed">
+          We connect expats and travelers with trusted service providers across <strong>195+ countries</strong>, supporting <strong>all nationalities</strong> in a <strong>multilingual environment</strong>. Ulixai.com handles everyday needs while SOS-Expat.com responds to urgent situations—together covering every stage of international life.
         </p>
-        <meta itemprop="ratingValue" content="5">
       </article>
 
-      <article class="testimonial-card" role="listitem" itemscope itemtype="https://schema.org/Review">
-        <img src="images/test2.jpg" 
-             alt="Ahmed Raza - Founder of TechVerse" 
-             class="testimonial-img"
-             style="border-color: #ec4899;"
-             width="80"
-             height="80"
-             loading="lazy"
-             decoding="async">
-        <div class="testimonial-rating" role="img" aria-label="5 out of 5 stars">★★★★★</div>
-        <h3 class="testimonial-name" itemprop="author">Ahmed Raza</h3>
-        <p class="testimonial-role">Founder, TechVerse</p>
-        <p class="testimonial-text" itemprop="reviewBody">
-          "I'm amazed by how intuitive and effective this platform is. I use it daily to support clients and generate deliverables with ease."
+      <!-- Vision Card 2 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center text-3xl mb-4 floating-animation" aria-hidden="true">
+          💚
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">Authentic Long-Term Partnerships</h3>
+        <p class="text-gray-600 leading-relaxed">
+          We believe in straightforward, sincere relationships built on trust and mutual respect. No corporate games, no complicated deals—just honest partnerships with people who genuinely care about making international life easier for everyone involved.
         </p>
-        <meta itemprop="ratingValue" content="5">
       </article>
 
-      <article class="testimonial-card" role="listitem" itemscope itemtype="https://schema.org/Review">
-        <img src="images/test3.jpg" 
-             alt="Lisa Fernandez - Operations Head at Medline Group" 
-             class="testimonial-img"
-             style="border-color: #10b981;"
-             width="80"
-             height="80"
-             loading="lazy"
-             decoding="async">
-        <div class="testimonial-rating" role="img" aria-label="5 out of 5 stars">★★★★★</div>
-        <h3 class="testimonial-name" itemprop="author">Lisa Fernandez</h3>
-        <p class="testimonial-role">Operations Head, Medline Group</p>
-        <p class="testimonial-text" itemprop="reviewBody">
-          "We were struggling to manage personalized documentation until we found ULIX AI. It's a game-changer for businesses like ours."
+      <!-- Vision Card 3 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-4 floating-animation" aria-hidden="true">
+          🤝
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">Three Types of Partners</h3>
+        <p class="text-gray-600 leading-relaxed">
+          We work with <strong>expatriate service providers</strong> who understand international challenges, <strong>local professionals</strong> with deep market knowledge, and <strong>expat helpers</strong>—people who've lived abroad and want to support others on their journey.
         </p>
-        <meta itemprop="ratingValue" content="5">
+      </article>
+
+      <!-- Vision Card 4 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-3xl mb-4 floating-animation" aria-hidden="true">
+          🎯
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">Focus on Real Impact</h3>
+        <p class="text-gray-600 leading-relaxed">
+          Success isn't measured by transactions—it's measured by how well we help people navigate international life. Every partnership is designed to make expats, travelers, and vacationers feel supported, informed, and confident wherever they go.
+        </p>
       </article>
     </div>
   </div>
 </section>
 
-</main>
+<!-- WHO WE'RE LOOKING FOR - STRATEGIC PARTNERS -->
+<section class="py-16 px-6" aria-labelledby="partnership-types">
+  <div class="max-w-6xl mx-auto">
+    <div class="gradient-border glass-effect">
+      <div class="gradient-border-content p-8 md:p-12">
+        <div class="text-center mb-12">
+          <h2 id="partnership-types" class="text-3xl md:text-4xl font-bold text-blue-800 mb-4">
+            Strategic Partners We're Seeking<span class="text-blue-500">...</span>
+          </h2>
+          <div class="w-20 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full" aria-hidden="true"></div>
+          <p class="text-gray-600 mt-4 text-lg">
+            Major service providers committed to supporting the global mobility ecosystem
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6" role="list">
+          <!-- Insurance Companies -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.1s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🛡️</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Insurance Companies</h3>
+                <p class="text-gray-600 text-sm">International health, travel & expat insurance</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Banks -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.2s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🏦</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">International Banks</h3>
+                <p class="text-gray-600 text-sm">Banking services for expats & multi-currency accounts</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Airlines -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.3s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">✈️</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Airlines & Travel Companies</h3>
+                <p class="text-gray-600 text-sm">Flight services & loyalty programs for travelers</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Real Estate -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.4s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🏠</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Real Estate Agencies</h3>
+                <p class="text-gray-600 text-sm">International property sales & rental services</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Travel Agencies -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.5s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🌴</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Travel & Tour Agencies</h3>
+                <p class="text-gray-600 text-sm">Vacation packages, tours & travel planning</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Moving Companies -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.6s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">📦</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Moving & Logistics Companies</h3>
+                <p class="text-gray-600 text-sm">International relocation & shipping services</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Telecom -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.7s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">📱</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Telecom Providers</h3>
+                <p class="text-gray-600 text-sm">International SIM cards & mobile services</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Healthcare -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.8s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">⚕️</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Healthcare Providers</h3>
+                <p class="text-gray-600 text-sm">International clinics & telemedicine services</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Legal Services -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 0.9s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">⚖️</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Legal Service Networks</h3>
+                <p class="text-gray-600 text-sm">Immigration lawyers & visa consultancy</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Education -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 1.0s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🎓</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Education Institutions</h3>
+                <p class="text-gray-600 text-sm">Language schools & international programs</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Relocation Services -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 1.1s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🗺️</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Relocation Services</h3>
+                <p class="text-gray-600 text-sm">Full-service relocation management</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Vehicle Services -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 1.2s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-slate-400 to-slate-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🚗</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Vehicle Dealers & Leasing</h3>
+                <p class="text-gray-600 text-sm">Car sales, leasing & import services</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Translation Services -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 1.3s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-violet-400 to-violet-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🌐</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Translation Services</h3>
+                <p class="text-gray-600 text-sm">Document translation & interpretation</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Construction & Renovation -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 1.4s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🔨</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Construction & Renovation</h3>
+                <p class="text-gray-600 text-sm">Renovation, repairs & home services</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Conflict Resolution & Mediation -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 1.5s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-rose-400 to-rose-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🤝</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Conflict Resolution Services</h3>
+                <p class="text-gray-600 text-sm">Mediation, arbitration & legal support</p>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Associations -->
+          <article class="enhanced-card stagger-animation" style="animation-delay: 1.6s;" role="listitem">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-lime-400 to-lime-600 rounded-xl flex items-center justify-center text-2xl shadow-lg" aria-hidden="true">🤝</div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-lg">Expat Associations</h3>
+                <p class="text-gray-600 text-sm">Community organizations & support networks</p>
+              </div>
+            </div>
+          </article>
+        </div>
+        
+        <div class="mt-10 text-center">
+          <p class="text-gray-600 text-lg mb-4">
+            <strong>Don't see your category listed?</strong>
+          </p>
+          <p class="text-gray-600">
+            If you provide services that help expats, travelers, or vacationers navigate international life—whether it's financial services, logistics, accommodation, cultural integration, coworking spaces, storage solutions, or anything else relevant to global mobility—we want to hear from you.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERSHIP PROCESS -->
+<section class="py-16 px-6 bg-white" aria-labelledby="process-heading">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 id="process-heading" class="text-3xl md:text-4xl font-bold text-blue-800 mb-4">
+        How Partnership Works
+      </h2>
+      <p class="text-lg text-gray-600">
+        A structured, transparent process designed for enterprise collaboration
+      </p>
+    </div>
+
+    <div class="space-y-0">
+      <!-- Step 1 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">1</div>
+        <div class="bg-blue-50 rounded-2xl p-6 border-2 border-blue-100">
+          <h3 class="text-xl font-bold text-blue-800 mb-2">📝 Initial Contact & Discovery</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Submit your partnership proposal. We review your organization, services, market position, and strategic fit with our platform. Initial response within 72 hours for qualified partners.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">2</div>
+        <div class="bg-green-50 rounded-2xl p-6 border-2 border-green-100">
+          <h3 class="text-xl font-bold text-green-800 mb-2">🤝 Strategic Alignment Call</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Deep-dive discussion with our partnerships team. We explore mutual objectives, target audiences, integration possibilities, success metrics, and potential collaboration models.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">3</div>
+        <div class="bg-purple-50 rounded-2xl p-6 border-2 border-purple-100">
+          <h3 class="text-xl font-bold text-purple-800 mb-2">📊 Proposal & Due Diligence</h3>
+          <p class="text-gray-600 leading-relaxed">
+            We develop a customized partnership proposal with clear deliverables, timelines, and ROI projections. Both parties conduct due diligence to ensure alignment and capability.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">4</div>
+        <div class="bg-orange-50 rounded-2xl p-6 border-2 border-orange-100">
+          <h3 class="text-xl font-bold text-orange-800 mb-2">📄 Agreement & Onboarding</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Legal agreements signed, technical integration specifications finalized, brand assets exchanged, and dedicated account manager assigned. Full onboarding support provided.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">5</div>
+        <div class="bg-pink-50 rounded-2xl p-6 border-2 border-pink-100">
+          <h3 class="text-xl font-bold text-pink-800 mb-2">🚀 Launch & Optimization</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Pilot program launch with monitoring, A/B testing, and iterative improvements. Regular performance reviews, analytics reporting, and optimization based on data insights.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">6</div>
+        <div class="bg-indigo-50 rounded-2xl p-6 border-2 border-indigo-100">
+          <h3 class="text-xl font-bold text-indigo-800 mb-2">📈 Scale & Expansion</h3>
+          <p class="text-gray-600 leading-relaxed">
+            After proven success, we scale the partnership globally, expand integration features, explore co-marketing campaigns, and continuously enhance value for both parties and end users.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE BELIEVE IN -->
+<section class="py-16 px-6 bg-gradient-to-r from-slate-50 to-blue-50" aria-labelledby="our-values">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 id="our-values" class="text-3xl md:text-4xl font-bold text-blue-800 mb-4">
+        What We Believe In
+      </h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+        The principles that guide every partnership we build
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Belief 1 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center text-3xl mb-4" aria-hidden="true">
+          💙
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Human First, Always</h3>
+        <p class="text-gray-600 leading-relaxed">
+          Behind every service request is a real person navigating life in a foreign country. We prioritize genuine help over metrics, relationships over transactions.
+        </p>
+      </article>
+
+      <!-- Belief 2 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center text-3xl mb-4" aria-hidden="true">
+          🌍
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Truly Global, Truly Inclusive</h3>
+        <p class="text-gray-600 leading-relaxed">
+          All nationalities, all languages, 195+ countries. We believe everyone deserves support abroad, regardless of where they're from or where they're going.
+        </p>
+      </article>
+
+      <!-- Belief 3 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center text-3xl mb-4" aria-hidden="true">
+          🤝
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Honest, Long-Term Relationships</h3>
+        <p class="text-gray-600 leading-relaxed">
+          We're building partnerships that last years, not months. Straightforward communication, mutual respect, and genuine care for everyone involved.
+        </p>
+      </article>
+
+      <!-- Belief 4 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-3xl mb-4" aria-hidden="true">
+          ✨
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Quality Over Quantity</h3>
+        <p class="text-gray-600 leading-relaxed">
+          We'd rather work with fewer partners who truly care about helping people than hundreds who don't. Trust and reliability matter most.
+        </p>
+      </article>
+
+      <!-- Belief 5 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center text-3xl mb-4" aria-hidden="true">
+          🗣️
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Multilingual by Nature</h3>
+        <p class="text-gray-600 leading-relaxed">
+          Language should never be a barrier to getting help. Our platforms support multiple languages so everyone can find support in their native tongue.
+        </p>
+      </article>
+
+      <!-- Belief 6 -->
+      <article class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 bg-gradient-to-br from-teal-400 to-teal-600 rounded-xl flex items-center justify-center text-3xl mb-4" aria-hidden="true">
+          🎯
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Real Solutions, Real Impact</h3>
+        <p class="text-gray-600 leading-relaxed">
+          We measure success by how well we help people thrive internationally—not by corporate KPIs. Impact matters more than numbers.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA SECTION -->
+<section class="py-20 px-6 relative overflow-hidden" aria-labelledby="cta-heading">
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
+  <div class="absolute inset-0 bg-pattern opacity-20"></div>
+  
+  <div class="relative max-w-4xl mx-auto text-center text-white">
+    <h2 id="cta-heading" class="text-4xl md:text-5xl font-bold mb-6">
+      Ready to Help Millions of People Thrive Abroad?
+    </h2>
+    
+    <div class="grid md:grid-cols-2 gap-6 mb-8 max-w-3xl mx-auto">
+      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20 hover:border-yellow-300 hover:scale-105 transition-all duration-300 rainbow-border">
+        <div class="text-4xl md:text-5xl font-black mb-2 text-yellow-300 flex items-center justify-center gap-2">
+          <span class="shake-animation">🌟</span> 304M
+        </div>
+        <p class="text-lg text-blue-100">Expats worldwide</p>
+      </div>
+      
+      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20 hover:border-yellow-300 hover:scale-105 transition-all duration-300 rainbow-border">
+        <div class="text-4xl md:text-5xl font-black mb-2 text-yellow-300 flex items-center justify-center gap-2">
+          <span class="shake-animation">✈️</span> 1.465B
+        </div>
+        <p class="text-lg text-blue-100">International travelers</p>
+      </div>
+    </div>
+    
+    <p class="text-xl mb-8 text-blue-100">
+      Let's have an honest conversation about how we can work together to make international life easier, safer, and more fulfilling for everyone
+    </p>
+    
+    <a 
+      href="/partnershiprequest" 
+      class="inline-flex items-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-bold hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-2xl"
+    >
+      <span>Submit Your Partnership Proposal</span>
+      <span class="text-2xl">💬</span>
+    </a>
+    
+    <p class="mt-6 text-blue-100">
+      🤝 We respond personally to every inquiry within 72 hours
+    </p>
+  </div>
+</section>
+
+<!-- FAQ SECTION -->
+<section class="py-16 px-6 bg-white" aria-labelledby="faq-heading">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 id="faq-heading" class="text-3xl md:text-4xl font-bold text-blue-800 mb-4">
+        Frequently Asked Questions
+      </h2>
+      <p class="text-lg text-gray-600">
+        Common questions about strategic partnerships with Ulixai
+      </p>
+    </div>
+
+    <div class="space-y-4" role="list">
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>What types of strategic partnerships does Ulixai.com and SOS-Expat.com seek?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>We seek partnerships with major service providers including insurance companies, international banks, airlines, real estate agencies, travel agencies, telecom operators, moving companies, vehicle dealers and leasing companies, translation services, construction and renovation firms, conflict resolution and mediation services, education institutions, healthcare providers, legal service networks, relocation services, and other enterprise-level organizations serving expats and travelers at every stage of their journey.</p>
+        </div>
+      </article>
+
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>What are the differences between Ulixai.com and SOS-Expat.com?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Ulixai.com is the comprehensive platform for everyday expatriation needs—insurance, banking, housing, healthcare, vehicle purchases, translations, renovations, and all essential services. SOS-Expat.com is the emergency response platform for urgent situations—conflicts with landlords or employers, crisis management, immediate problem-solving, and time-sensitive support. Together, they cover the complete expatriation lifecycle across four core missions: Prepare, Settle, Live, and Respond.</p>
+        </div>
+      </article>
+
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>Why should major companies partner with Ulixai.com and SOS-Expat.com?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>By partnering with us, you help millions of expats, travelers, and vacationers navigate international life successfully. Our platforms connect people with trusted service providers across 195+ countries in a multilingual environment. It's about genuinely helping people—expatriate professionals, local experts, and expat helpers—all working together to support those living abroad.</p>
+        </div>
+      </article>
+
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>What is the partnership philosophy of Ulixai.com and SOS-Expat.com?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>We believe in authentic, long-term partnerships built on trust, honesty, and mutual respect. No corporate games, no complicated deals—just straightforward relationships with people who genuinely care about making international life easier. We prioritize quality over quantity and impact over metrics.</p>
+        </div>
+      </article>
+
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>How does the partnership process work with Ulixai.com and SOS-Expat.com?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>The process begins with submitting a partnership proposal. We review each inquiry within 72 hours, followed by a strategic discovery call where we explore how your services align with one or both platforms, due diligence, co-creation of partnership terms tailored to both parties, pilot program launch, and scale-up with ongoing support and optimization across Ulixai.com and/or SOS-Expat.com.</p>
+        </div>
+      </article>
+
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>What makes these partnerships different from others?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>We focus on genuine human connections and real impact, not transactions or data harvesting. Partners join a global ecosystem where the goal is helping people thrive internationally. We work with expatriate service providers, local professionals, and expat helpers across 195+ countries in multiple languages. It's about building something meaningful together.</p>
+        </div>
+      </article>
+
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>Can companies from any country partner with you?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Yes! We welcome partnerships from organizations worldwide, particularly those with international presence or services applicable across borders. Our mission is global, and we actively seek partners from all countries committed to supporting international mobility through Ulixai.com and SOS-Expat.com.</p>
+        </div>
+      </article>
+
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>What support do partners receive?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Partners receive genuine support and collaboration: integration into our platforms where it makes sense, partnership guidance, brand visibility opportunities, and a direct connection with people who need your services. We're here to help you help others—with straightforward communication and long-term thinking.</p>
+        </div>
+      </article>
+
+      <article class="faq-item" role="listitem">
+        <button class="faq-question w-full text-left" aria-expanded="false" onclick="ulixaiFaqToggle(this)">
+          <span>How quickly will I receive a response to my partnership inquiry?</span>
+          <span class="faq-icon" aria-hidden="true">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>We personally review every partnership inquiry from major service providers and respond within 72 hours. For enterprise-level partnerships, we prioritize rapid response and can arrange expedited discovery calls to explore collaboration opportunities across our platforms.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="mb-20"></div>
 
 @include('includes.footer')
 
-{{-- ✅ JavaScript SIMPLE (comme l'original qui fonctionnait) --}}
 <script>
-function openSignupPopup() {
-  document.getElementById('signupPopup').classList.remove('hidden');
-}
+// ============================================
+// FAQ Toggle - Optimized & Conflict-free
+// ============================================
+(function() {
+  'use strict';
+  
+  function toggleFaq(button) {
+    const faqItem = button.parentElement;
+    const wasActive = faqItem.classList.contains('active');
+    
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.classList.remove('active');
+      const btn = item.querySelector('.faq-question');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    });
+    
+    if (!wasActive) {
+      faqItem.classList.add('active');
+      button.setAttribute('aria-expanded', 'true');
+    }
+  }
+  
+  // Make function globally available but namespaced
+  window.ulixaiFaqToggle = toggleFaq;
 
-function closeSignupPopup() {
-  document.getElementById('signupPopup').classList.add('hidden');
-}
+  // ============================================
+  // Scroll Animations - Passive listeners
+  // ============================================
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+
+  // Wait for DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnimations);
+  } else {
+    initAnimations();
+  }
+
+  function initAnimations() {
+    document.querySelectorAll('.stagger-animation').forEach((el, index) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = `opacity 0.8s ease ${index * 0.1}s, transform 0.8s ease ${index * 0.1}s`;
+      observer.observe(el);
+    });
+  }
+
+  // ============================================
+  // Smooth Scroll - Passive & Debounced
+  // ============================================
+  document.addEventListener('click', function(e) {
+    const anchor = e.target.closest('a[href^="#"]');
+    if (!anchor) return;
+    
+    e.preventDefault();
+    const targetId = anchor.getAttribute('href');
+    const target = document.querySelector(targetId);
+    
+    if (target) {
+      target.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, { passive: false });
+
+})();
 </script>
 
 </body>
