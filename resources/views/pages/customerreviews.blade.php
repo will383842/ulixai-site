@@ -1,244 +1,362 @@
-<!-- Customer Reviews Page -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Customer Reviews</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
+    <link rel="icon" type="image/png" href="{{ asset('images/faviccon.png') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
     
-    @keyframes floatReverse {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(10px); }
-    }
+    <!-- Primary Meta Tags -->
+    <title>Customer Reviews - Real Stories from Ulixai Users | 197 Countries</title>
+    <meta name="description" content="Read authentic reviews from expats and travelers worldwide who used Ulixai services. Real success stories from 197 countries.">
+    <meta name="keywords" content="ulixai reviews, customer testimonials, expat services reviews, international assistance reviews">
     
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ulixai.com/customerreviews">
+    <meta property="og:title" content="Customer Reviews - Ulixai.com">
+    <meta property="og:description" content="Authentic reviews from our global community">
+    <meta property="og:image" content="https://ulixai.com/images/og-reviews.jpg">
     
-    .float-card:nth-child(odd) {
-      animation: float 4s ease-in-out infinite;
-      animation-delay: 0s;
-    }
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://ulixai.com/customerreviews">
+    <meta property="twitter:title" content="Customer Reviews - Ulixai.com">
+    <meta property="twitter:description" content="Authentic reviews from our global community">
     
-    .float-card:nth-child(even) {
-      animation: floatReverse 4s ease-in-out infinite;
-      animation-delay: 1s;
-    }
+    <!-- Canonical -->
+    <link rel="canonical" href="https://ulixai.com/customerreviews">
     
-    .float-card:nth-child(3n) {
-      animation-delay: 2s;
-    }
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    .review-card {
-      transition: all 0.3s ease;
-      animation: fadeInUp 0.6s ease-out;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .review-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
-    
-    .profile-img {
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    }
-    
-    .review-card:hover .profile-img {
-      transform: scale(1.05);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-    }
-    
-    .stars {
-      filter: drop-shadow(0 2px 4px rgba(255, 193, 7, 0.3));
-    }
-    
-    .review-text {
-      position: relative;
-    }
-    
-    .review-text::before {
-      content: '"';
-      position: absolute;
-      top: -10px;
-      left: -5px;
-      font-size: 2rem;
-      color: rgba(0, 0, 0, 0.1);
-      font-family: serif;
-    }
-    
-    .review-text::after {
-      content: '"';
-      position: absolute;
-      bottom: -15px;
-      right: 0px;
-      font-size: 2rem;
-      color: rgba(0, 0, 0, 0.1);
-      font-family: serif;
-    }
-    
-    .section-header {
-      animation: fadeInUp 0.8s ease-out;
-    }
-    
-    .row-1 .review-card {
-      animation-delay: 0.2s;
-    }
-    
-    .row-1 .review-card:nth-child(2) {
-      animation-delay: 0.4s;
-    }
-    
-    .row-1 .review-card:nth-child(3) {
-      animation-delay: 0.6s;
-    }
-    
-    .row-2 .review-card {
-      animation-delay: 0.8s;
-    }
-    
-    .row-2 .review-card:nth-child(2) {
-      animation-delay: 1s;
-    }
-    
-    .row-2 .review-card:nth-child(3) {
-      animation-delay: 1.2s;
-    }
-  </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f9fafb;
+            color: #111827;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 50%, #BFDBFE 100%);
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1F2937;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #6B7280;
+            margin-bottom: 1.5rem;
+        }
+        
+        .reviews-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .star-rating {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .star {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: #FBBF24;
+        }
+        
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 3rem 0;
+        }
+        
+        .review-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .review-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+        
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+        
+        .author-avatar {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #DBEAFE;
+        }
+        
+        .author-info {
+            flex: 1;
+        }
+        
+        .author-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .author-location {
+            font-size: 0.875rem;
+            color: #6B7280;
+        }
+        
+        .review-date {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        
+        .date-main {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .date-relative {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+        }
+        
+        .review-destination {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            color: #6B7280;
+        }
+        
+        .review-stars {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .stars {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .star-small {
+            width: 1.25rem;
+            height: 1.25rem;
+            fill: #FBBF24;
+        }
+        
+        .rating-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .service-badge {
+            display: inline-block;
+            background: #DBEAFE;
+            color: #1E40AF;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            margin-bottom: 1rem;
+        }
+        
+        .review-text {
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        
+        .read-more-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2563EB;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .read-more-link:hover {
+            color: #1D4ED8;
+        }
+        
+        .arrow-icon {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.125rem;
+            }
+            
+            .reviews-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
 </head>
-<body class="bg-white text-gray-800">
-  @include('includes.header')
-  @include('pages.popup')
 
-<section class="py-20 px-4 text-center relative overflow-hidden">
-  <!-- Background decorative elements -->
-  <div class="absolute top-10 left-10 w-20 h-20 bg-blue-100 rounded-full opacity-30 blur-xl"></div>
-  <div class="absolute bottom-20 right-10 w-32 h-32 bg-pink-100 rounded-full opacity-30 blur-xl"></div>
-  <div class="absolute top-1/2 left-1/4 w-16 h-16 bg-purple-100 rounded-full opacity-20 blur-lg"></div>
-  
-  <div class="section-header">
-    <h2 class="text-4xl font-bold text-blue-900 mb-6 relative">
-      💬 What Customers are Saying
-      <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
-    </h2>
-    <p class="text-gray-600 max-w-2xl mx-auto mb-16 text-lg leading-relaxed">
-      Thousands trust @site abroad. Here's what they're saying about their incredible experiences.
-    </p>
-  </div>
+<body>
 
-  <!-- ROW 1 -->
-  <div class="row-1 flex flex-wrap justify-center gap-8 mb-12">
-    <div class="review-card float-card bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl shadow-lg hover:shadow-2xl p-8 w-[320px] relative group border border-blue-200">
-      <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-3xl"></div>
-      <div class="relative z-10">
-        <div class="mb-6">
-          <img src="https://i.pravatar.cc/100?img=1" alt="Mateo Levi" class="profile-img w-20 h-20 rounded-full mx-auto mb-4 ring-4 ring-blue-200/50" />
-          <h4 class="font-bold text-gray-900 mb-1 text-xl">Mateo Levi</h4>
-          <div class="w-12 h-0.5 bg-blue-300 mx-auto mb-4"></div>
+@include('includes.header')
+@include('pages.popup')
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">Customer Reviews</h1>
+        <p class="hero-subtitle">Real stories from our global community</p>
+        
+        <div class="reviews-count">
+            <div class="star-rating">
+                @for($i = 0; $i < 5; $i++)
+                    <svg class="star" viewBox="0 0 20 20">
+                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                    </svg>
+                @endfor
+            </div>
+            <span style="color: #374151; font-weight: 600;">{{ count($allReviews) }} Reviews</span>
         </div>
-        <p class="review-text text-gray-700 mb-6 leading-relaxed text-base font-medium">The UI is intuitive and user-friendly. Even for someone like me who's not tech-savvy!</p>
-        <div class="stars text-yellow-400 text-xl flex justify-center gap-1">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-      </div>
     </div>
-
-    <div class="review-card float-card bg-gradient-to-br from-pink-50 to-pink-100 rounded-3xl shadow-lg hover:shadow-2xl p-8 w-[320px] relative group border border-pink-200">
-      <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-3xl"></div>
-      <div class="relative z-10">
-        <div class="mb-6">
-          <img src="https://i.pravatar.cc/100?img=47" alt="Olivia Emma" class="profile-img w-20 h-20 rounded-full mx-auto mb-4 ring-4 ring-pink-200/50" />
-          <h4 class="font-bold text-gray-900 mb-1 text-xl">Olivia Emma</h4>
-          <div class="w-12 h-0.5 bg-pink-300 mx-auto mb-4"></div>
-        </div>
-        <p class="review-text text-gray-700 mb-6 leading-relaxed text-base font-medium">The team exceeded design expectations beautifully. Absolutely stunning results!</p>
-        <div class="stars text-yellow-400 text-xl flex justify-center gap-1">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="review-card float-card bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl shadow-lg hover:shadow-2xl p-8 w-[320px] relative group border border-purple-200">
-      <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-3xl"></div>
-      <div class="relative z-10">
-        <div class="mb-6">
-          <img src="https://i.pravatar.cc/100?img=3" alt="David" class="profile-img w-20 h-20 rounded-full mx-auto mb-4 ring-4 ring-purple-200/50" />
-          <h4 class="font-bold text-gray-900 mb-1 text-xl">David</h4>
-          <div class="w-12 h-0.5 bg-purple-300 mx-auto mb-4"></div>
-        </div>
-        <p class="review-text text-gray-700 mb-6 leading-relaxed text-base font-medium">The variety of styles and effects was amazing. Creative freedom at its best!</p>
-        <div class="stars text-yellow-400 text-xl flex justify-center gap-1">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ROW 2 -->
-  <div class="row-2 flex flex-wrap justify-center gap-8">
-    <div class="review-card float-card bg-gradient-to-br from-green-50 to-green-100 rounded-3xl shadow-lg hover:shadow-2xl p-8 w-[320px] relative group border border-green-200">
-      <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-3xl"></div>
-      <div class="relative z-10">
-        <div class="mb-6">
-          <img src="https://i.pravatar.cc/100?img=12" alt="James Elijah" class="profile-img w-20 h-20 rounded-full mx-auto mb-4 ring-4 ring-green-200/50" />
-          <h4 class="font-bold text-gray-900 mb-1 text-xl">James Elijah</h4>
-          <div class="w-12 h-0.5 bg-green-300 mx-auto mb-4"></div>
-        </div>
-        <p class="review-text text-gray-700 mb-6 leading-relaxed text-base font-medium">Artistic brilliance that's a game-changer. Revolutionary platform!</p>
-        <div class="stars text-yellow-400 text-xl flex justify-center gap-1">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="review-card float-card bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-3xl shadow-lg hover:shadow-2xl p-8 w-[320px] relative group border border-indigo-200">
-      <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-3xl"></div>
-      <div class="relative z-10">
-        <div class="mb-6">
-          <img src="https://i.pravatar.cc/100?img=5" alt="Audrey" class="profile-img w-20 h-20 rounded-full mx-auto mb-4 ring-4 ring-indigo-200/50" />
-          <h4 class="font-bold text-gray-900 mb-1 text-xl">Audrey</h4>
-          <div class="w-12 h-0.5 bg-indigo-300 mx-auto mb-4"></div>
-        </div>
-        <p class="review-text text-gray-700 mb-6 leading-relaxed text-base font-medium">Customization made expression effortless. Perfect tools for creativity!</p>
-        <div class="stars text-yellow-400 text-xl flex justify-center gap-1">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="review-card float-card bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl shadow-lg hover:shadow-2xl p-8 w-[320px] relative group border border-orange-200">
-      <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-3xl"></div>
-      <div class="relative z-10">
-        <div class="mb-6">
-          <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Estelle" class="profile-img w-20 h-20 rounded-full mx-auto mb-4 ring-4 ring-orange-200/50" />
-          <h4 class="font-bold text-gray-900 mb-1 text-xl">Estelle</h4>
-          <div class="w-12 h-0.5 bg-orange-300 mx-auto mb-4"></div>
-        </div>
-        <p class="review-text text-gray-700 mb-6 leading-relaxed text-base font-medium">Loved comparing options and reviews. Made decision-making so easy!</p>
-        <div class="stars text-yellow-400 text-xl flex justify-center gap-1">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
-  @include('includes.footer')
+<!-- Reviews Grid -->
+<section style="padding: 3rem 0;">
+    <div class="container">
+        <div class="reviews-grid">
+            @foreach($allReviews as $review)
+                <article class="review-card">
+                    <!-- Header -->
+                    <div class="review-header">
+                        <div class="review-author">
+                            <img 
+                                src="{{ $review['image'] }}" 
+                                alt="{{ $review['name'] }}" 
+                                class="author-avatar"
+                            />
+                            <div class="author-info">
+                                <h3 class="author-name">{{ $review['name'] }}</h3>
+                                <p class="author-location">
+                                    <span style="font-size: 1.125rem;">{{ $review['flag'] }}</span> 
+                                    {{ $review['nationality'] }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="review-date">
+                            <div class="date-main">
+                                {{ \Carbon\Carbon::parse($review['date'])->format('M d, Y') }}
+                            </div>
+                            <div class="date-relative">
+                                {{ \Carbon\Carbon::parse($review['date'])->diffForHumans() }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Destination -->
+                    <div class="review-destination">
+                        <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span>{{ $review['country'] }}</span>
+                    </div>
+                    
+                    <!-- Stars -->
+                    <div class="review-stars">
+                        <div class="stars">
+                            @for($i = 0; $i < $review['rating']; $i++)
+                                <svg class="star-small" viewBox="0 0 20 20">
+                                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                </svg>
+                            @endfor
+                        </div>
+                        <span class="rating-text">({{ $review['rating'] }}/5)</span>
+                    </div>
+                    
+                    <!-- Service Badge -->
+                    <span class="service-badge">{{ $review['service'] }}</span>
+                    
+                    <!-- Review Text -->
+                    <p class="review-text">"{{ $review['shortText'] }}"</p>
+                    
+                    <!-- Read More Link -->
+                    <a href="{{ route('review.show', $review['slug']) }}" class="read-more-link">
+                        <span>Read full story</span>
+                        <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </article>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+@include('includes.footer')
+
 </body>
 </html>

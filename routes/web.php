@@ -17,6 +17,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ServiceProviderController;
 use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -460,9 +461,15 @@ Route::get('/sitemap-providers.xml', function () {
 Route::post('/conversations/{conversation}/report', [ConversationController::class, 'report'])->middleware('auth');
 
 // ========================================
+// CUSTOMER REVIEWS ROUTES
+// ========================================
+Route::get('/customerreviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('review.show');
+
+// ========================================
 // ⚠️ CATCH-ALL ROUTE - DOIT RESTER EN DERNIER !
 // ========================================
 // Cette route attrape toutes les URLs non définies ci-dessus
-// La regex exclut explicitement les URLs commençant par "provider"
+// La regex exclut explicitement les URLs commençant par "provider" ou "reviews"
 Route::get('/{slug?}', [PageController::class, 'show'])
-    ->where('slug', '^(?!provider).*$');
+    ->where('slug', '^(?!provider|reviews).*$');
