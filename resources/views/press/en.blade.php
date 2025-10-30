@@ -795,7 +795,7 @@
       </div>
       
       <h1 id="press-hero-title" class="text-3xl md:text-5xl font-bold mb-4 leading-tight pop-in">
-        <span class="gradient-text">@site Press Kit & Media Resources</span>
+        <span class="gradient-text">Ulixai Press Kit & Media Resources</span>
       </h1>
       
       <p class="text-lg text-gray-700 mb-2 flex items-center justify-center gap-2 flex-wrap">
@@ -851,7 +851,7 @@
       <div class="max-w-6xl mx-auto">
         <header class="text-center mb-10">
           <h2 id="press-kit-heading" class="text-2xl md:text-3xl font-bold mb-3">
-            <span class="gradient-text">📛 Download the @site Press Kit</span>
+            <span class="gradient-text">Download the @site Press Kit</span>
           </h2>
           <div class="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full mb-4" aria-hidden="true"></div>
           <p class="text-base text-gray-600 max-w-2xl mx-auto">
@@ -902,7 +902,7 @@
               <div class="flex-grow">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl" aria-hidden="true" role="img" aria-label="Art palette icon">🎨</span>
-                  <h3 id="logo-heading" class="font-bold text-gray-800 text-base">Official logo (PNG/SVG)</h3>
+                  <h3 id="logo-heading" class="font-bold text-gray-800 text-base">Official Logo</h3>
                 </div>
                 <p class="text-sm text-gray-600 mb-4">PNG/SVG formats • High resolution • Transparent background</p>
               </div>
@@ -912,16 +912,18 @@
                   <button onclick="viewAsset('{{ route('press.asset', [$latestIcon->id, 'icon']) }}')" 
                           class="btn-primary flex-1"
                           aria-label="View official logo">
-                    View
+                    <span aria-hidden="true">👁️</span> <span>View</span>
                   </button>
                   <button onclick="downloadAsset('{{ route('press.asset', [$latestIcon->id, 'icon']) }}', 'logo.zip')"
                           class="btn-secondary flex-1"
                           aria-label="Download official logo as ZIP">
-                    Download
+                    <span aria-hidden="true">⬇️</span> <span>Download</span>
                   </button>
                 </div>
               @else
-                <p class="text-sm text-gray-600 mt-3">No logos uploaded yet.</p>
+                <div class="bg-gray-100 text-gray-500 text-center py-2 rounded-full text-sm mt-auto" role="status">
+                  Not available yet
+                </div>
               @endif
             </article>
 
@@ -951,7 +953,7 @@
               <div class="flex-grow">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl" aria-hidden="true" role="img" aria-label="Newspaper icon">📰</span>
-                  <h3 id="presskit-heading" class="font-bold text-gray-800 text-base">Press Kit (PDF)</h3>
+                  <h3 id="presskit-heading" class="font-bold text-gray-800 text-base">Press Kit</h3>
                 </div>
                 <p class="text-sm text-gray-600 mb-4">Complete information package • Company facts • PDF format</p>
               </div>
@@ -961,16 +963,18 @@
                   <button onclick="viewPdfModal('{{ route('press.preview', [$latestPdf->id, 'pdf']) }}')" 
                           class="btn-primary flex-1"
                           aria-label="View press kit PDF">
-                    View
+                    <span aria-hidden="true">👁️</span> <span>View</span>
                   </button>
                   <button onclick="downloadAsset('{{ route('press.asset', [$latestPdf->id, 'pdf']) }}', 'press-kit.zip')"
                           class="btn-secondary flex-1"
                           aria-label="Download press kit as ZIP">
-                    Download
+                    <span aria-hidden="true">⬇️</span> <span>Download</span>
                   </button>
                 </div>
               @else
-                <p class="text-sm text-gray-600 mt-3">No press kit PDFs uploaded yet.</p>
+                <div class="bg-gray-100 text-gray-500 text-center py-2 rounded-full text-sm mt-auto" role="status">
+                  Not available yet
+                </div>
               @endif
             </article>
 
@@ -1010,16 +1014,18 @@
                   <button onclick="viewPdfModal('{{ route('press.preview', [$latestGuide->id, 'guideline_pdf']) }}')" 
                           class="btn-primary flex-1"
                           aria-label="View brand guidelines PDF">
-                    View
+                    <span aria-hidden="true">👁️</span> <span>View</span>
                   </button>
                   <button onclick="downloadAsset('{{ route('press.asset', [$latestGuide->id, 'guideline_pdf']) }}', 'brand-guidelines.zip')"
                           class="btn-secondary flex-1"
                           aria-label="Download brand guidelines as ZIP">
-                    Download
+                    <span aria-hidden="true">⬇️</span> <span>Download</span>
                   </button>
                 </div>
               @else
-                <p class="text-sm text-gray-600 mt-3">No brand guidelines uploaded yet.</p>
+                <div class="bg-gray-100 text-gray-500 text-center py-2 rounded-full text-sm mt-auto" role="status">
+                  Not available yet
+                </div>
               @endif
             </article>
 
@@ -1056,16 +1062,18 @@
                   <button onclick="viewAsset('{{ route('press.asset', [$latestPhoto->id, 'photo']) }}')" 
                           class="btn-primary flex-1"
                           aria-label="View HD photo">
-                    View
+                    <span aria-hidden="true">👁️</span> <span>View</span>
                   </button>
                   <button onclick="downloadAsset('{{ route('press.asset', [$latestPhoto->id, 'photo']) }}', 'photo.zip')"
                           class="btn-secondary flex-1"
                           aria-label="Download HD photo as ZIP">
-                    Download
+                    <span aria-hidden="true">⬇️</span> <span>Download</span>
                   </button>
                 </div>
               @else
-                <p class="text-sm text-gray-600 mt-3">No photos uploaded yet.</p>
+                <div class="bg-gray-100 text-gray-500 text-center py-2 rounded-full text-sm mt-auto" role="status">
+                  Not available yet
+                </div>
               @endif
             </article>
 
@@ -1077,6 +1085,13 @@
     <!-- Key Figures & Milestones Section -->
     <section class="py-12 md:py-16 px-4 bg-gradient-to-r from-slate-50 to-blue-50" aria-labelledby="key-figures-heading">
       <div class="max-w-6xl mx-auto">
+        <header class="text-center mb-10">
+          <h2 id="key-figures-heading" class="text-2xl md:text-3xl font-bold mb-3">
+            <span class="gradient-text">Key Figures & Milestones</span>
+          </h2>
+          <div class="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full mb-4" aria-hidden="true"></div>
+        </header>
+
         <div class="grid md:grid-cols-2 gap-6">
           <!-- Global Expatriation -->
           <article class="bg-white border-2 border-blue-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all">
@@ -1098,10 +1113,10 @@
           <article class="bg-white border-2 border-blue-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all">
             <div class="flex items-center gap-2 mb-4">
               <span class="text-3xl" aria-hidden="true" role="img" aria-label="Information">ℹ️</span>
-              <h3 class="text-xl font-bold text-blue-700">About @site & SOS Expat</h3>
+              <h3 class="text-xl font-bold text-blue-700">About Ulixai & SOS Expat</h3>
             </div>
             <ul class="list-disc pl-5 text-gray-700 space-y-2 text-sm md:text-base">
-              <li><strong>@site.com</strong>: a digital platform that simplifies expatriates' lives by centralizing information, services, and guidance.</li>
+              <li><strong>Ulixai.com</strong>: a digital platform that simplifies expatriates' lives by centralizing information, services, and guidance.</li>
               <li><strong>SOS-Expat.com</strong>: an on-demand, 24/7 assistance service for urgent needs (legal, housing, healthcare, employment).</li>
               <li><strong>Mission</strong>: make expatriation easier and remove practical and administrative barriers.</li>
             </ul>
@@ -1117,8 +1132,13 @@
     <section class="py-12 md:py-16 px-4" aria-labelledby="press-releases-heading">
       <div class="max-w-6xl mx-auto">
         <header class="text-center mb-10">
-          <h3 class="text-2xl font-bold text-blue-800 mb-6 text-center">📰 Recent Press Releases</h3>
+          <h2 id="press-releases-heading" class="text-2xl md:text-3xl font-bold mb-3">
+            <span class="gradient-text">Recent Press Releases</span>
+          </h2>
           <div class="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full mb-4" aria-hidden="true"></div>
+          <p class="text-base text-gray-600">
+            Latest news and announcements from Ulixai
+          </p>
         </header>
 
         @php
@@ -1126,31 +1146,44 @@
         @endphp
 
         @if($releases->isEmpty())
-          <p class="text-center text-gray-500">No press releases yet. Please check back soon.</p>
+          <div class="text-center py-12" role="status" aria-live="polite">
+            <div class="text-6xl mb-4" aria-hidden="true" role="img" aria-label="Newspaper">📰</div>
+            <p class="text-gray-500 text-lg">No press releases yet. Please check back soon!</p>
+          </div>
         @else
           <div class="grid md:grid-cols-3 gap-4 md:gap-6" role="list" aria-label="Press releases">
             @foreach($releases as $index => $pr)
               <article class="press-release-card stagger-animation" style="animation-delay: {{ ($index * 0.1) + 0.1 }}s;" role="listitem">
-                <div class="flex justify-between items-start mb-4">
-                  <h4 class="font-semibold text-green-700 mb-2">
-                    {{ ($pr->title ?: '@site Press Release') }}
-                    — {{ optional($pr->created_at)->format('F Y') }}
-                  </h4>
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center gap-2 flex-1">
+                    <span class="text-2xl" aria-hidden="true" role="img" aria-label="Megaphone icon">📢</span>
+                    <h3 class="font-bold text-green-700 text-base line-clamp-2">
+                      {{ $pr->title ?: config('app.name', 'Ulixai').' Press Release' }}
+                    </h3>
+                  </div>
+                  @if($pr->created_at)
+                    <time datetime="{{ $pr->created_at->format('Y-m') }}" class="inline-flex items-center gap-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap ml-2">
+                      <span aria-hidden="true">📅</span>
+                      {{ $pr->created_at->format('F Y') }}
+                    </time>
+                  @endif
                 </div>
 
-                <p class="text-sm text-gray-600 mb-4">
-                  {{ $pr->description ? \Illuminate\Support\Str::limit($pr->description, 160) : '@site press release.' }}
+                <p class="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">
+                  {{ $pr->description ? \Illuminate\Support\Str::limit($pr->description, 160) : config('app.name', 'Ulixai').' press release.' }}
                 </p>
 
                 @if($pr->pdf)
-                  <div class="flex gap-2">
-                    <button onclick="downloadAsset('{{ route('press.asset', [$pr->id, 'pdf']) }}', '{{ $pr->title ? \Illuminate\Support\Str::slug($pr->title) : 'press-release' }}-{{ optional($pr->created_at)->format('Y-m') }}.zip')"
-                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full text-center transition-colors shadow-sm">
-                      Download
-                    </button>
-                  </div>
+                  <button onclick="downloadAsset('{{ route('press.asset', [$pr->id, 'pdf']) }}', '{{ $pr->title ? \Illuminate\Support\Str::slug($pr->title) : 'press-release' }}-{{ optional($pr->created_at)->format('Y-m') }}.zip')"
+                          class="btn-primary w-full"
+                          aria-label="Download {{ $pr->title ?: 'press release' }}">
+                    <span aria-hidden="true">⬇️</span>
+                    <span>Download</span>
+                  </button>
                 @else
-                  <span class="bg-gray-200 text-gray-600 p-2 rounded-full text-center block">No PDF available</span>
+                  <div class="bg-gray-100 text-gray-500 text-center py-2.5 rounded-full text-sm font-semibold" role="status">
+                    Not available
+                  </div>
                 @endif
               </article>
             @endforeach
@@ -1191,9 +1224,23 @@
 
     <!-- CTA Section -->
     <section class="py-12 px-4 relative overflow-hidden" aria-labelledby="cta-heading">
-      <div class="flex justify-center items-center my-10">
-        <button onclick="openModal()" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-8 py-3 rounded-full text-lg">
-          Contact-us
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
+      <div class="absolute inset-0 bg-pattern opacity-20" aria-hidden="true"></div>
+      
+      <div class="relative max-w-3xl mx-auto text-center text-white">
+        <div class="text-4xl mb-4 floating-animation" aria-hidden="true" role="img" aria-label="Envelope">✉️</div>
+        <h2 id="cta-heading" class="text-2xl md:text-3xl font-bold mb-4">
+          Need More Information?
+        </h2>
+        <p class="text-lg mb-6 text-blue-100 max-w-xl mx-auto">
+          For media inquiries, interview requests, or additional press materials, our team is here to help!
+        </p>
+        
+        <button onclick="openModal()" 
+                class="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-full text-base font-bold hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-xl"
+                aria-label="Open contact form for press inquiries">
+          <span aria-hidden="true">📧</span>
+          <span>Contact Press Team</span>
         </button>
       </div>
     </section>
@@ -1232,39 +1279,98 @@
 
   <!-- PRESS CONTACT FORM MODAL -->
   <div id="contactModal" class="modal-backdrop hidden" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="press-form-title">
-    <div class="modal-content-form p-6 md:p-8 relative">
+    <div class="modal-content-form p-6 md:p-8">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold transition-colors z-10" aria-label="Close contact form">×</button>
 
       <div class="flex items-center gap-2 mb-6">
-        <img src="https://img.icons8.com/emoji/48/memo.png" class="w-6 h-6" />
-        <h2 id="press-form-title" class="text-xl font-bold">press relations</h2>
+        <span class="text-2xl" role="img" aria-label="Memo">📝</span>
+        <h2 id="press-form-title" class="text-xl md:text-2xl font-bold text-gray-800">Press Relations</h2>
       </div>
 
       <form onsubmit="submitForm(event)" class="space-y-4" novalidate>
-        <input type="text" placeholder="Media name" class="form-input">
-        <input type="text" placeholder="Your full name" class="form-input">
-        <input type="text" placeholder="Phone number (with country code)" class="form-input">
-        <input type="text" placeholder="Website if you have" class="form-input">
-        <input type="email" placeholder="your email" class="form-input">
-        <input type="text" placeholder="Languages spoken" class="form-input">
-        <input type="text" placeholder="How did you hear about Ulixai?" class="form-input">
-        <textarea placeholder="A little words" class="form-input h-24"></textarea>
+        <div>
+          <label for="media-name" class="block text-sm font-semibold text-gray-700 mb-1">Media Name *</label>
+          <input type="text" id="media-name" name="media-name" required 
+                 class="form-input" 
+                 placeholder="Your media organization"
+                 aria-required="true">
+        </div>
 
-        <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-full w-full font-semibold flex items-center justify-center gap-2">
-          <input type="checkbox" checked class="accent-green-500" />
-          Submit my partnership request
+        <div>
+          <label for="full-name" class="block text-sm font-semibold text-gray-700 mb-1">Full Name *</label>
+          <input type="text" id="full-name" name="full-name" required 
+                 class="form-input" 
+                 placeholder="Your full name"
+                 aria-required="true">
+        </div>
+
+        <div>
+          <label for="phone" class="block text-sm font-semibold text-gray-700 mb-1">Phone Number (with country code) *</label>
+          <input type="tel" id="phone" name="phone" required 
+                 class="form-input" 
+                 placeholder="+1 234 567 8900"
+                 aria-required="true">
+        </div>
+
+        <div>
+          <label for="website" class="block text-sm font-semibold text-gray-700 mb-1">Website</label>
+          <input type="url" id="website" name="website" 
+                 class="form-input" 
+                 placeholder="https://yourmedia.com">
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Email Address *</label>
+          <input type="email" id="email" name="email" required 
+                 class="form-input" 
+                 placeholder="your@email.com"
+                 aria-required="true">
+        </div>
+
+        <div>
+          <label for="languages" class="block text-sm font-semibold text-gray-700 mb-1">Languages Spoken *</label>
+          <input type="text" id="languages" name="languages" required 
+                 class="form-input" 
+                 placeholder="English, French, Spanish..."
+                 aria-required="true">
+        </div>
+
+        <div>
+          <label for="heard-about" class="block text-sm font-semibold text-gray-700 mb-1">How did you hear about Ulixai?</label>
+          <input type="text" id="heard-about" name="heard-about" 
+                 class="form-input" 
+                 placeholder="Search engine, social media, referral...">
+        </div>
+
+        <div>
+          <label for="message" class="block text-sm font-semibold text-gray-700 mb-1">A little words *</label>
+          <textarea id="message" name="message" required 
+                    class="form-input h-24 resize-none" 
+                    placeholder="Tell us about your inquiry..."
+                    aria-required="true"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary w-full text-base py-3 flex items-center justify-center gap-2">
+          <input type="checkbox" checked class="accent-green-500" readonly aria-hidden="true">
+          <span>Submit my partnership request</span>
         </button>
+
+        <p class="text-xs text-gray-500 text-center">
+          * Required fields • We respond within 24 hours
+        </p>
       </form>
     </div>
   </div>
 
-  <!-- THANK YOU POPUP -->
+  <!-- THANK YOU MODAL -->
   <div id="thankYouModal" class="modal-backdrop hidden" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="thank-you-title">
     <div class="modal-content-thanks px-6 md:px-8 py-10 text-center relative">
-      <img src="https://img.icons8.com/color/96/internet--v1.png" class="absolute -top-12 left-1/2 transform -translate-x-1/2 w-16 h-16" />
-      <h2 id="thank-you-title" class="text-xl font-bold text-blue-700 mt-6">Thank you for your request!</h2>
-      <p class="mt-2 text-gray-700">We have received it and will get back to you <strong>within 24 hours</strong>.</p>
-      <p class="mt-2 text-gray-600">See you soon on this exciting <strong>@site</strong> journey 🌍</p>
+      <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 text-white" aria-hidden="true">
+        ✓
+      </div>
+      <h2 id="thank-you-title" class="text-xl md:text-2xl font-bold text-gray-800 mb-3">Thank you for your request!</h2>
+      <p class="text-gray-700 mb-2">We have received it and will get back to you <strong>within 24 hours</strong>.</p>
+      <p class="text-gray-600 text-sm">See you soon on this exciting <strong>@site</strong> journey 🌍</p>
     </div>
   </div>
 
@@ -1275,7 +1381,7 @@
     (function() {
       'use strict';
 
-      // Download asset and create ZIP - EXACT FROM ORIGINAL
+      // Download asset and create ZIP
       window.downloadAsset = async function(url, suggestedZipName) {
         let zipName = suggestedZipName || 'download.zip';
         if (!zipName.toLowerCase().endsWith('.zip')) {
@@ -1433,28 +1539,49 @@
         document.body.style.overflow = '';
       };
 
-      // Contact modal functions - FROM ORIGINAL
+      // Contact modal functions
       window.openModal = function() {
-        document.getElementById('contactModal').classList.remove('hidden');
-        document.getElementById('contactModal').style.display = 'flex';
+        const modal = document.getElementById('contactModal');
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
       };
-      
+
       window.closeModal = function() {
-        document.getElementById('contactModal').classList.add('hidden');
-        document.getElementById('contactModal').style.display = 'none';
+        const modal = document.getElementById('contactModal');
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
       };
-      
+
       window.submitForm = function(e) {
         e.preventDefault();
+        
+        // Basic validation
+        const form = e.target;
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        // Close form modal
         closeModal();
+        
+        // Show thank you modal
         setTimeout(() => {
-          document.getElementById('thankYouModal').classList.remove('hidden');
-          document.getElementById('thankYouModal').style.display = 'flex';
-        }, 200);
+          const thankYouModal = document.getElementById('thankYouModal');
+          thankYouModal.style.display = 'flex';
+          thankYouModal.classList.remove('hidden');
+        }, 300);
+        
+        // Auto close thank you modal after 5 seconds
         setTimeout(() => {
-          document.getElementById('thankYouModal').classList.add('hidden');
-          document.getElementById('thankYouModal').style.display = 'none';
-        }, 5000); // Auto close after 5 seconds
+          const thankYouModal = document.getElementById('thankYouModal');
+          thankYouModal.style.display = 'none';
+          thankYouModal.classList.add('hidden');
+          document.body.style.overflow = '';
+          form.reset();
+        }, 5000);
       };
 
       // Scroll Animations with Intersection Observer
@@ -1501,12 +1628,17 @@
         }
       });
 
-      // Close modals on outside click - FROM ORIGINAL
-      window.addEventListener('click', function (e) {
-        if (e.target.id === 'contactModal') closeModal();
-        if (e.target.id === 'thankYouModal') {
-          document.getElementById('thankYouModal').classList.add('hidden');
-          document.getElementById('thankYouModal').style.display = 'none';
+      // Close modals on outside click
+      ['pdfModal', 'assetModal', 'contactModal', 'thankYouModal'].forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+              this.style.display = 'none';
+              this.classList.add('hidden');
+              document.body.style.overflow = '';
+            }
+          });
         }
       });
 
