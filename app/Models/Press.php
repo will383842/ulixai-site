@@ -23,11 +23,3 @@ class Press extends Model
         'updated_at' => 'datetime',
     ];
 }
-```
-
----
-
-## 📂 Récapitulatif:
-```
-app/Models/Press.php                    ← CRÉER (code PHP ci-dessus)
-resources/views/admin/press.blade.php   ← EXISTE (document 11, HTML/Blade)
