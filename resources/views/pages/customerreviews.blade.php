@@ -213,7 +213,7 @@
                 "name": "How can I filter reviews by country or language?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Use our advanced search bar and filters at the top to find reviews by specific countries, languages, or keywords relevant to your needs."
+                    "text": "Use our advanced filters at the top to find reviews by specific countries, languages, or keywords relevant to your needs."
                 }
             },
             {
@@ -454,7 +454,7 @@
             visibility: visible !important;
         }
         
-        /* BARRE DE FILTRES - NON STICKY, COMPACTE ET VISIBLE */
+        /* BARRE DE FILTRES */
         .search-section {
             background: transparent;
             padding: 2rem 1rem;
@@ -463,7 +463,7 @@
         }
         
         .search-frame {
-            max-width: 1100px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             border-radius: 1.25rem;
@@ -511,94 +511,9 @@
             }
         }
         
-        .search-wrapper {
-            position: relative;
-            margin-bottom: 1rem;
-        }
-        
-        .search-input-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 1rem 3.5rem 1rem 3.5rem;
-            border: 2px solid #E5E7EB;
-            border-radius: 1rem;
-            font-size: 0.9375rem;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: inherit;
-            background: #F3F4F6;
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-            font-weight: 500;
-        }
-        
-        .search-input::placeholder {
-            color: #9CA3AF;
-            font-weight: 400;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            background: white;
-            box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.25), 0 0 0 4px rgba(37, 99, 235, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 1.5rem;
-            height: 1.5rem;
-            color: var(--primary-blue);
-            pointer-events: none;
-            transition: all 0.3s;
-        }
-        
-        .search-input:focus ~ .search-icon {
-            color: var(--purple);
-            transform: translateY(-50%) scale(1.15) rotate(15deg);
-        }
-        
-        .clear-search {
-            position: absolute;
-            right: 1.125rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 1.875rem;
-            height: 1.875rem;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #EF4444, #DC2626);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            padding: 0;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-        }
-        
-        .clear-search:hover {
-            background: linear-gradient(135deg, #DC2626, #B91C1C);
-            transform: translateY(-50%) scale(1.15) rotate(90deg);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-        }
-        
-        .clear-search svg {
-            width: 0.875rem;
-            height: 0.875rem;
-            color: white;
-        }
-        
         .filters-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
             align-items: center;
         }
@@ -1287,24 +1202,6 @@
                 border-radius: 1rem;
             }
             
-            .search-input {
-                padding: 0.875rem 3rem;
-                font-size: 0.875rem;
-                border-radius: 1rem;
-            }
-            
-            .search-icon {
-                left: 1rem;
-                width: 1.25rem;
-                height: 1.25rem;
-            }
-            
-            .clear-search {
-                right: 1rem;
-                width: 1.625rem;
-                height: 1.625rem;
-            }
-            
             .filters-grid {
                 grid-template-columns: 1fr;
                 gap: 0.875rem;
@@ -1400,11 +1297,6 @@
             
             .search-frame {
                 padding: 0.875rem;
-            }
-            
-            .search-input {
-                padding: 0.8125rem 2.75rem;
-                font-size: 0.8125rem;
             }
             
             .review-header {
@@ -1623,49 +1515,209 @@
         </div>
     </section>
 
-    <!-- BARRE DE FILTRES -->
+    <!-- BARRE DE FILTRES - SANS RECHERCHE -->
     <section class="search-section">
         <div class="container">
             <div class="search-frame">
-                <div class="search-wrapper">
-                    <div class="search-input-container">
-                        <input 
-                            type="text" 
-                            id="searchInput" 
-                            placeholder="Search by name, country, or keyword..."
-                            aria-label="Search reviews"
-                            class="search-input"
-                        />
-                        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <button class="clear-search" id="clearSearch" aria-label="Clear search">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
                 <div class="filters-grid">
                     <div class="filter-wrapper">
                         <select id="countryFilter" aria-label="Filter by country" class="filter-select">
                             <option value="">🌍 All Countries</option>
-                            <option value="france">🇫🇷 France</option>
-                            <option value="usa">🇺🇸 United States</option>
-                            <option value="uk">🇬🇧 United Kingdom</option>
-                            <option value="germany">🇩🇪 Germany</option>
-                            <option value="spain">🇪🇸 Spain</option>
-                            <option value="italy">🇮🇹 Italy</option>
-                            <option value="japan">🇯🇵 Japan</option>
-                            <option value="china">🇨🇳 China</option>
-                            <option value="brazil">🇧🇷 Brazil</option>
-                            <option value="canada">🇨🇦 Canada</option>
-                            <option value="australia">🇦🇺 Australia</option>
-                            <option value="india">🇮🇳 India</option>
-                            <option value="mexico">🇲🇽 Mexico</option>
-                            <option value="netherlands">🇳🇱 Netherlands</option>
-                            <option value="sweden">🇸🇪 Sweden</option>
+                            <option value="afghanistan">Afghanistan</option>
+                            <option value="albania">Albania</option>
+                            <option value="algeria">Algeria</option>
+                            <option value="andorra">Andorra</option>
+                            <option value="angola">Angola</option>
+                            <option value="antigua">Antigua and Barbuda</option>
+                            <option value="argentina">Argentina</option>
+                            <option value="armenia">Armenia</option>
+                            <option value="australia">Australia</option>
+                            <option value="austria">Austria</option>
+                            <option value="azerbaijan">Azerbaijan</option>
+                            <option value="bahamas">Bahamas</option>
+                            <option value="bahrain">Bahrain</option>
+                            <option value="bangladesh">Bangladesh</option>
+                            <option value="barbados">Barbados</option>
+                            <option value="belarus">Belarus</option>
+                            <option value="belgium">Belgium</option>
+                            <option value="belize">Belize</option>
+                            <option value="benin">Benin</option>
+                            <option value="bhutan">Bhutan</option>
+                            <option value="bolivia">Bolivia</option>
+                            <option value="bosnia">Bosnia and Herzegovina</option>
+                            <option value="botswana">Botswana</option>
+                            <option value="brazil">Brazil</option>
+                            <option value="brunei">Brunei</option>
+                            <option value="bulgaria">Bulgaria</option>
+                            <option value="burkina">Burkina Faso</option>
+                            <option value="burundi">Burundi</option>
+                            <option value="cambodia">Cambodia</option>
+                            <option value="cameroon">Cameroon</option>
+                            <option value="canada">Canada</option>
+                            <option value="cape verde">Cape Verde</option>
+                            <option value="central african">Central African Republic</option>
+                            <option value="chad">Chad</option>
+                            <option value="chile">Chile</option>
+                            <option value="china">China</option>
+                            <option value="colombia">Colombia</option>
+                            <option value="comoros">Comoros</option>
+                            <option value="congo">Congo</option>
+                            <option value="costa rica">Costa Rica</option>
+                            <option value="croatia">Croatia</option>
+                            <option value="cuba">Cuba</option>
+                            <option value="cyprus">Cyprus</option>
+                            <option value="czech">Czech Republic</option>
+                            <option value="denmark">Denmark</option>
+                            <option value="djibouti">Djibouti</option>
+                            <option value="dominica">Dominica</option>
+                            <option value="dominican">Dominican Republic</option>
+                            <option value="ecuador">Ecuador</option>
+                            <option value="egypt">Egypt</option>
+                            <option value="el salvador">El Salvador</option>
+                            <option value="equatorial guinea">Equatorial Guinea</option>
+                            <option value="eritrea">Eritrea</option>
+                            <option value="estonia">Estonia</option>
+                            <option value="eswatini">Eswatini</option>
+                            <option value="ethiopia">Ethiopia</option>
+                            <option value="fiji">Fiji</option>
+                            <option value="finland">Finland</option>
+                            <option value="france">France</option>
+                            <option value="gabon">Gabon</option>
+                            <option value="gambia">Gambia</option>
+                            <option value="georgia">Georgia</option>
+                            <option value="germany">Germany</option>
+                            <option value="ghana">Ghana</option>
+                            <option value="greece">Greece</option>
+                            <option value="grenada">Grenada</option>
+                            <option value="guatemala">Guatemala</option>
+                            <option value="guinea">Guinea</option>
+                            <option value="guinea-bissau">Guinea-Bissau</option>
+                            <option value="guyana">Guyana</option>
+                            <option value="haiti">Haiti</option>
+                            <option value="honduras">Honduras</option>
+                            <option value="hungary">Hungary</option>
+                            <option value="iceland">Iceland</option>
+                            <option value="india">India</option>
+                            <option value="indonesia">Indonesia</option>
+                            <option value="iran">Iran</option>
+                            <option value="iraq">Iraq</option>
+                            <option value="ireland">Ireland</option>
+                            <option value="israel">Israel</option>
+                            <option value="italy">Italy</option>
+                            <option value="jamaica">Jamaica</option>
+                            <option value="japan">Japan</option>
+                            <option value="jordan">Jordan</option>
+                            <option value="kazakhstan">Kazakhstan</option>
+                            <option value="kenya">Kenya</option>
+                            <option value="kiribati">Kiribati</option>
+                            <option value="kosovo">Kosovo</option>
+                            <option value="kuwait">Kuwait</option>
+                            <option value="kyrgyzstan">Kyrgyzstan</option>
+                            <option value="laos">Laos</option>
+                            <option value="latvia">Latvia</option>
+                            <option value="lebanon">Lebanon</option>
+                            <option value="lesotho">Lesotho</option>
+                            <option value="liberia">Liberia</option>
+                            <option value="libya">Libya</option>
+                            <option value="liechtenstein">Liechtenstein</option>
+                            <option value="lithuania">Lithuania</option>
+                            <option value="luxembourg">Luxembourg</option>
+                            <option value="madagascar">Madagascar</option>
+                            <option value="malawi">Malawi</option>
+                            <option value="malaysia">Malaysia</option>
+                            <option value="maldives">Maldives</option>
+                            <option value="mali">Mali</option>
+                            <option value="malta">Malta</option>
+                            <option value="marshall islands">Marshall Islands</option>
+                            <option value="mauritania">Mauritania</option>
+                            <option value="mauritius">Mauritius</option>
+                            <option value="mexico">Mexico</option>
+                            <option value="micronesia">Micronesia</option>
+                            <option value="moldova">Moldova</option>
+                            <option value="monaco">Monaco</option>
+                            <option value="mongolia">Mongolia</option>
+                            <option value="montenegro">Montenegro</option>
+                            <option value="morocco">Morocco</option>
+                            <option value="mozambique">Mozambique</option>
+                            <option value="myanmar">Myanmar</option>
+                            <option value="namibia">Namibia</option>
+                            <option value="nauru">Nauru</option>
+                            <option value="nepal">Nepal</option>
+                            <option value="netherlands">Netherlands</option>
+                            <option value="new zealand">New Zealand</option>
+                            <option value="nicaragua">Nicaragua</option>
+                            <option value="niger">Niger</option>
+                            <option value="nigeria">Nigeria</option>
+                            <option value="north korea">North Korea</option>
+                            <option value="north macedonia">North Macedonia</option>
+                            <option value="norway">Norway</option>
+                            <option value="oman">Oman</option>
+                            <option value="pakistan">Pakistan</option>
+                            <option value="palau">Palau</option>
+                            <option value="palestine">Palestine</option>
+                            <option value="panama">Panama</option>
+                            <option value="papua new guinea">Papua New Guinea</option>
+                            <option value="paraguay">Paraguay</option>
+                            <option value="peru">Peru</option>
+                            <option value="philippines">Philippines</option>
+                            <option value="poland">Poland</option>
+                            <option value="portugal">Portugal</option>
+                            <option value="qatar">Qatar</option>
+                            <option value="romania">Romania</option>
+                            <option value="russia">Russia</option>
+                            <option value="rwanda">Rwanda</option>
+                            <option value="saint kitts">Saint Kitts and Nevis</option>
+                            <option value="saint lucia">Saint Lucia</option>
+                            <option value="saint vincent">Saint Vincent</option>
+                            <option value="samoa">Samoa</option>
+                            <option value="san marino">San Marino</option>
+                            <option value="sao tome">Sao Tome and Principe</option>
+                            <option value="saudi arabia">Saudi Arabia</option>
+                            <option value="senegal">Senegal</option>
+                            <option value="serbia">Serbia</option>
+                            <option value="seychelles">Seychelles</option>
+                            <option value="sierra leone">Sierra Leone</option>
+                            <option value="singapore">Singapore</option>
+                            <option value="slovakia">Slovakia</option>
+                            <option value="slovenia">Slovenia</option>
+                            <option value="solomon islands">Solomon Islands</option>
+                            <option value="somalia">Somalia</option>
+                            <option value="south africa">South Africa</option>
+                            <option value="south korea">South Korea</option>
+                            <option value="south sudan">South Sudan</option>
+                            <option value="spain">Spain</option>
+                            <option value="sri lanka">Sri Lanka</option>
+                            <option value="sudan">Sudan</option>
+                            <option value="suriname">Suriname</option>
+                            <option value="sweden">Sweden</option>
+                            <option value="switzerland">Switzerland</option>
+                            <option value="syria">Syria</option>
+                            <option value="taiwan">Taiwan</option>
+                            <option value="tajikistan">Tajikistan</option>
+                            <option value="tanzania">Tanzania</option>
+                            <option value="thailand">Thailand</option>
+                            <option value="timor-leste">Timor-Leste</option>
+                            <option value="togo">Togo</option>
+                            <option value="tonga">Tonga</option>
+                            <option value="trinidad">Trinidad and Tobago</option>
+                            <option value="tunisia">Tunisia</option>
+                            <option value="turkey">Turkey</option>
+                            <option value="turkmenistan">Turkmenistan</option>
+                            <option value="tuvalu">Tuvalu</option>
+                            <option value="uganda">Uganda</option>
+                            <option value="ukraine">Ukraine</option>
+                            <option value="uae">United Arab Emirates</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="usa">United States</option>
+                            <option value="uruguay">Uruguay</option>
+                            <option value="uzbekistan">Uzbekistan</option>
+                            <option value="vanuatu">Vanuatu</option>
+                            <option value="vatican">Vatican City</option>
+                            <option value="venezuela">Venezuela</option>
+                            <option value="vietnam">Vietnam</option>
+                            <option value="yemen">Yemen</option>
+                            <option value="zambia">Zambia</option>
+                            <option value="zimbabwe">Zimbabwe</option>
                         </select>
                         <svg class="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -1675,16 +1727,114 @@
                     <div class="filter-wrapper">
                         <select id="languageFilter" aria-label="Filter by language" class="filter-select">
                             <option value="">💬 All Languages</option>
+                            <option value="afrikaans">Afrikaans</option>
+                            <option value="albanian">Albanian / Shqip</option>
+                            <option value="amharic">Amharic / አማርኛ</option>
+                            <option value="arabic">Arabic / العربية</option>
+                            <option value="armenian">Armenian / Հայերեն</option>
+                            <option value="azerbaijani">Azerbaijani / Azərbaycan</option>
+                            <option value="basque">Basque / Euskara</option>
+                            <option value="belarusian">Belarusian / Беларуская</option>
+                            <option value="bengali">Bengali / বাংলা</option>
+                            <option value="bosnian">Bosnian / Bosanski</option>
+                            <option value="bulgarian">Bulgarian / Български</option>
+                            <option value="burmese">Burmese / မြန်မာ</option>
+                            <option value="catalan">Catalan / Català</option>
+                            <option value="cebuano">Cebuano</option>
+                            <option value="chinese">Chinese / 中文</option>
+                            <option value="corsican">Corsican / Corsu</option>
+                            <option value="croatian">Croatian / Hrvatski</option>
+                            <option value="czech">Czech / Čeština</option>
+                            <option value="danish">Danish / Dansk</option>
+                            <option value="dutch">Dutch / Nederlands</option>
                             <option value="english">English</option>
-                            <option value="french">Français</option>
-                            <option value="spanish">Español</option>
-                            <option value="german">Deutsch</option>
-                            <option value="italian">Italiano</option>
-                            <option value="portuguese">Português</option>
-                            <option value="chinese">中文</option>
-                            <option value="japanese">日本語</option>
-                            <option value="arabic">العربية</option>
-                            <option value="russian">Русский</option>
+                            <option value="esperanto">Esperanto</option>
+                            <option value="estonian">Estonian / Eesti</option>
+                            <option value="filipino">Filipino</option>
+                            <option value="finnish">Finnish / Suomi</option>
+                            <option value="french">French / Français</option>
+                            <option value="galician">Galician / Galego</option>
+                            <option value="georgian">Georgian / ქართული</option>
+                            <option value="german">German / Deutsch</option>
+                            <option value="greek">Greek / Ελληνικά</option>
+                            <option value="gujarati">Gujarati / ગુજરાતી</option>
+                            <option value="haitian">Haitian Creole</option>
+                            <option value="hausa">Hausa</option>
+                            <option value="hawaiian">Hawaiian / ʻŌlelo Hawaiʻi</option>
+                            <option value="hebrew">Hebrew / עברית</option>
+                            <option value="hindi">Hindi / हिन्दी</option>
+                            <option value="hmong">Hmong</option>
+                            <option value="hungarian">Hungarian / Magyar</option>
+                            <option value="icelandic">Icelandic / Íslenska</option>
+                            <option value="igbo">Igbo</option>
+                            <option value="indonesian">Indonesian / Bahasa Indonesia</option>
+                            <option value="irish">Irish / Gaeilge</option>
+                            <option value="italian">Italian / Italiano</option>
+                            <option value="japanese">Japanese / 日本語</option>
+                            <option value="javanese">Javanese / Basa Jawa</option>
+                            <option value="kannada">Kannada / ಕನ್ನಡ</option>
+                            <option value="kazakh">Kazakh / Қазақ</option>
+                            <option value="khmer">Khmer / ខ្មែរ</option>
+                            <option value="kinyarwanda">Kinyarwanda</option>
+                            <option value="korean">Korean / 한국어</option>
+                            <option value="kurdish">Kurdish / Kurdî</option>
+                            <option value="kyrgyz">Kyrgyz / Кыргызча</option>
+                            <option value="lao">Lao / ລາວ</option>
+                            <option value="latin">Latin / Latina</option>
+                            <option value="latvian">Latvian / Latviešu</option>
+                            <option value="lithuanian">Lithuanian / Lietuvių</option>
+                            <option value="luxembourgish">Luxembourgish / Lëtzebuergesch</option>
+                            <option value="macedonian">Macedonian / Македонски</option>
+                            <option value="malagasy">Malagasy</option>
+                            <option value="malay">Malay / Bahasa Melayu</option>
+                            <option value="malayalam">Malayalam / മലയാളം</option>
+                            <option value="maltese">Maltese / Malti</option>
+                            <option value="maori">Maori / Te Reo Māori</option>
+                            <option value="marathi">Marathi / मराठी</option>
+                            <option value="mongolian">Mongolian / Монгол</option>
+                            <option value="nepali">Nepali / नेपाली</option>
+                            <option value="norwegian">Norwegian / Norsk</option>
+                            <option value="nyanja">Nyanja / Chichewa</option>
+                            <option value="odia">Odia / ଓଡ଼ିଆ</option>
+                            <option value="pashto">Pashto / پښتو</option>
+                            <option value="persian">Persian / فارسی</option>
+                            <option value="polish">Polish / Polski</option>
+                            <option value="portuguese">Portuguese / Português</option>
+                            <option value="punjabi">Punjabi / ਪੰਜਾਬੀ</option>
+                            <option value="romanian">Romanian / Română</option>
+                            <option value="russian">Russian / Русский</option>
+                            <option value="samoan">Samoan</option>
+                            <option value="scots gaelic">Scots Gaelic / Gàidhlig</option>
+                            <option value="serbian">Serbian / Српски</option>
+                            <option value="sesotho">Sesotho</option>
+                            <option value="shona">Shona</option>
+                            <option value="sindhi">Sindhi / سنڌي</option>
+                            <option value="sinhala">Sinhala / සිංහල</option>
+                            <option value="slovak">Slovak / Slovenčina</option>
+                            <option value="slovenian">Slovenian / Slovenščina</option>
+                            <option value="somali">Somali / Soomaali</option>
+                            <option value="spanish">Spanish / Español</option>
+                            <option value="sundanese">Sundanese / Basa Sunda</option>
+                            <option value="swahili">Swahili / Kiswahili</option>
+                            <option value="swedish">Swedish / Svenska</option>
+                            <option value="tajik">Tajik / Тоҷикӣ</option>
+                            <option value="tamil">Tamil / தமிழ்</option>
+                            <option value="tatar">Tatar / Татар</option>
+                            <option value="telugu">Telugu / తెలుగు</option>
+                            <option value="thai">Thai / ไทย</option>
+                            <option value="tigrinya">Tigrinya / ትግርኛ</option>
+                            <option value="turkish">Turkish / Türkçe</option>
+                            <option value="turkmen">Turkmen / Türkmen</option>
+                            <option value="ukrainian">Ukrainian / Українська</option>
+                            <option value="urdu">Urdu / اردو</option>
+                            <option value="uyghur">Uyghur / ئۇيغۇرچە</option>
+                            <option value="uzbek">Uzbek / Oʻzbek</option>
+                            <option value="vietnamese">Vietnamese / Tiếng Việt</option>
+                            <option value="welsh">Welsh / Cymraeg</option>
+                            <option value="xhosa">Xhosa / isiXhosa</option>
+                            <option value="yiddish">Yiddish / ייִדיש</option>
+                            <option value="yoruba">Yoruba</option>
+                            <option value="zulu">Zulu / isiZulu</option>
                         </select>
                         <svg class="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -1834,7 +1984,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <h3 style="font-size: 1.375rem; font-weight: 700; margin-bottom: 0.5rem;">No reviews found</h3>
-                <p style="font-size: 0.9375rem;">Try adjusting your search or filters</p>
+                <p style="font-size: 0.9375rem;">Try adjusting your filters</p>
             </div>
             
             @if($totalPages > 1)
@@ -1990,7 +2140,7 @@
                     </button>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
-                            Use our advanced search bar and filters at the top of the reviews section. You can search by keywords, select specific countries from the dropdown menu, or filter by language to find reviews most relevant to your destination and needs.
+                            Use our filters at the top of the reviews section. You can select specific countries from the dropdown menu or filter by language to find reviews most relevant to your destination and needs.
                         </div>
                     </div>
                 </div>
@@ -2181,12 +2331,10 @@
         });
     }
 
-    // RECHERCHE ET FILTRES
-    const searchInput = document.getElementById('searchInput');
+    // FILTRES UNIQUEMENT (SANS RECHERCHE)
     const countryFilter = document.getElementById('countryFilter');
     const languageFilter = document.getElementById('languageFilter');
     const clearFiltersBtn = document.getElementById('clearFilters');
-    const clearSearchBtn = document.getElementById('clearSearch');
     const reviewCards = document.querySelectorAll('.review-card');
     const noResults = document.getElementById('noResults');
     const activeFiltersContainer = document.getElementById('activeFilters');
@@ -2195,53 +2343,36 @@
     reviewCards.forEach(card => {
         const link = card.querySelector('a[href]');
         if (link) {
-            // Make the whole card clickable
             card.style.cursor = 'pointer';
             
             card.addEventListener('click', function(e) {
-                // Don't interfere if clicking on an actual link or button
                 if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('button')) {
                     return;
                 }
                 
-                // Navigate to the link
                 if (e.ctrlKey || e.metaKey) {
-                    // Open in new tab if Ctrl/Cmd is pressed
                     window.open(link.href, '_blank');
                 } else {
-                    // Normal navigation
                     window.location.href = link.href;
                 }
             });
             
-            // Also make sure the link itself is clickable
             link.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent double navigation
+                e.stopPropagation();
             });
         }
     });
 
     function filterReviews() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
         const selectedCountry = countryFilter.value.toLowerCase();
         const selectedLanguage = languageFilter.value.toLowerCase();
         
         let visibleCount = 0;
         
         reviewCards.forEach(card => {
-            const name = card.dataset.name || '';
             const country = card.dataset.country || '';
             const nationality = card.dataset.nationality || '';
-            const service = card.dataset.service || '';
-            const text = card.dataset.text || '';
             const language = card.dataset.language || 'english';
-            
-            const matchesSearch = !searchTerm || 
-                name.includes(searchTerm) || 
-                country.includes(searchTerm) || 
-                nationality.includes(searchTerm) || 
-                service.includes(searchTerm) || 
-                text.includes(searchTerm);
             
             const matchesCountry = !selectedCountry || 
                 country.includes(selectedCountry) || 
@@ -2250,7 +2381,7 @@
             const matchesLanguage = !selectedLanguage || 
                 language.includes(selectedLanguage);
             
-            if (matchesSearch && matchesCountry && matchesLanguage) {
+            if (matchesCountry && matchesLanguage) {
                 card.style.display = 'block';
                 visibleCount++;
             } else {
@@ -2262,13 +2393,9 @@
             noResults.style.display = visibleCount === 0 ? 'block' : 'none';
         }
         
-        const hasActiveFilters = searchTerm || selectedCountry || selectedLanguage;
+        const hasActiveFilters = selectedCountry || selectedLanguage;
         if (clearFiltersBtn) {
             clearFiltersBtn.style.display = hasActiveFilters ? 'inline-flex' : 'none';
-        }
-        
-        if (clearSearchBtn) {
-            clearSearchBtn.style.display = searchTerm ? 'flex' : 'none';
         }
         
         updateActiveFilters();
@@ -2277,11 +2404,10 @@
     function updateActiveFilters() {
         if (!activeFiltersContainer) return;
         
-        const searchTerm = searchInput.value.trim();
         const selectedCountry = countryFilter.value;
         const selectedLanguage = languageFilter.value;
         
-        const hasFilters = searchTerm || selectedCountry || selectedLanguage;
+        const hasFilters = selectedCountry || selectedLanguage;
         
         if (!hasFilters) {
             activeFiltersContainer.style.display = 'none';
@@ -2291,20 +2417,6 @@
         
         activeFiltersContainer.style.display = 'flex';
         activeFiltersContainer.innerHTML = '';
-        
-        if (searchTerm) {
-            const tag = document.createElement('div');
-            tag.className = 'filter-tag';
-            tag.innerHTML = `
-                <span>Search: "${searchTerm}"</span>
-                <button onclick="clearSearchFilter()" aria-label="Remove search filter">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
-            `;
-            activeFiltersContainer.appendChild(tag);
-        }
         
         if (selectedCountry) {
             const countryText = countryFilter.options[countryFilter.selectedIndex].text;
@@ -2337,11 +2449,6 @@
         }
     }
     
-    window.clearSearchFilter = function() {
-        if (searchInput) searchInput.value = '';
-        filterReviews();
-    };
-    
     window.clearCountryFilter = function() {
         if (countryFilter) countryFilter.value = '';
         filterReviews();
@@ -2351,10 +2458,6 @@
         if (languageFilter) languageFilter.value = '';
         filterReviews();
     };
-
-    if (searchInput) {
-        searchInput.addEventListener('input', filterReviews);
-    }
     
     if (countryFilter) {
         countryFilter.addEventListener('change', filterReviews);
@@ -2366,16 +2469,8 @@
     
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', () => {
-            if (searchInput) searchInput.value = '';
             if (countryFilter) countryFilter.value = '';
             if (languageFilter) languageFilter.value = '';
-            filterReviews();
-        });
-    }
-    
-    if (clearSearchBtn) {
-        clearSearchBtn.addEventListener('click', () => {
-            if (searchInput) searchInput.value = '';
             filterReviews();
         });
     }

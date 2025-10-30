@@ -59,12 +59,23 @@ Route::get('/provider/{slug}', [ServiceProviderController::class, 'providerProfi
 
 Route::post('/check-email-login', [App\Http\Controllers\AuthController::class, 'checkEmailAndLogin']);
 
-//Recruitment Route 
-Route::get('/recruitment', [RecruitApplicationController::class ,'allcountry'])->name('recruitment');
+// Recruitment Route - ✅ Utilise la méthode dédiée du ReviewController
+Route::get('/recruitment', [ReviewController::class, 'recruitment'])->name('recruitment');
+
 Route::post('/recruit/apply', [RecruitApplicationController::class, 'store'])
     ->name('recruit.apply'); 
 
-//Partnership Request
+// Affiliate Route - ✅ Utilise la méthode dédiée du ReviewController
+Route::get('/affiliate', function() {
+    $reviewController = new \App\Http\Controllers\ReviewController();
+    $reviews = $reviewController->getAffiliateReviews(3);
+    return view('pages.affiliate', compact('reviews'));
+})->name('affiliate');
+
+// Partnerships Route - ✅ CORRIGÉ : Utilise maintenant la méthode dédiée du ReviewController
+Route::get('/partnerships', [ReviewController::class, 'partnerships'])->name('partnerships');
+
+// Partnership Request
 Route::post('/partnership/store', [PartnershipController::class, 'store'])->name('partnership.store');
 
 Route::get('/press', [AdminDashboardController::class, 'publicPress'])->name('press.page');
@@ -382,12 +393,11 @@ Route::get('/sitemap.xml', function () {
             ['loc' => 'https://ulixai.com/become-service-provider', 'lastmod' => $now, 'priority' => '0.8'],
             ['loc' => 'https://ulixai.com/service-providers',       'lastmod' => $now, 'priority' => '0.8'],
             ['loc' => 'https://ulixai.com/recruitment',             'lastmod' => $now, 'priority' => '0.7'],
-            ['loc' => 'https://ulixai.com/becomepartner',           'lastmod' => $now, 'priority' => '0.6'],
+            ['loc' => 'https://ulixai.com/partnerships',            'lastmod' => $now, 'priority' => '0.7'],
+            ['loc' => 'https://ulixai.com/affiliate',               'lastmod' => $now, 'priority' => '0.7'],
             ['loc' => 'https://ulixai.com/affiliate/sign-up',       'lastmod' => $now, 'priority' => '0.6'],
             ['loc' => 'https://ulixai.com/customerreviews',         'lastmod' => $now, 'priority' => '0.6'],
             ['loc' => 'https://ulixai.com/aboutUS',                 'lastmod' => $now, 'priority' => '0.5'],
-            ['loc' => 'https://ulixai.com/trustnsecurity',          'lastmod' => $now, 'priority' => '0.5'],
-            ['loc' => 'https://ulixai.com/howitwork',               'lastmod' => $now, 'priority' => '0.5'],
             ['loc' => 'https://ulixai.com/press',                   'lastmod' => $now, 'priority' => '0.5'],
         ];
 

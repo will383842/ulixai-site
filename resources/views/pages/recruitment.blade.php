@@ -839,6 +839,56 @@
     </div>
   </section>
 
+  {{-- TESTIMONIALS SECTION --}}
+  <section class="py-20 px-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 stagger-item">
+        What Our Team Says 💬
+      </h2>
+      <p class="text-center text-gray-600 text-lg mb-12 stagger-item">
+        Real experiences from real freelance professionals
+      </p>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach($reviews as $review)
+        <a href="{{ route('review.show', $review['slug']) }}" class="block group">
+          <div class="bg-white rounded-2xl p-6 shadow-lg stagger-item hover:shadow-xl transition-all transform group-hover:scale-105 cursor-pointer">
+            {{-- Badge Early Beta --}}
+            @if($review['is_early_beta'] ?? false)
+            <div class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-3">
+              ⭐ Early Beta
+            </div>
+            @endif
+
+            {{-- Stars --}}
+            <div class="flex gap-1 mb-3">
+              @for($i = 0; $i < $review['rating']; $i++)
+              <span class="text-yellow-400 text-lg">⭐</span>
+              @endfor
+            </div>
+
+            {{-- Review Text --}}
+            <p class="text-gray-700 mb-4 leading-relaxed italic">
+              "{{ $review['shortText'] }}"
+            </p>
+
+            {{-- Author Info --}}
+            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                {{ strtoupper(substr($review['name'], 0, 2)) }}
+              </div>
+              <div>
+                <p class="font-bold text-gray-800">{{ $review['name'] }}</p>
+                <p class="text-sm text-gray-500">{{ $review['flag'] }} {{ $review['nationality'] }}</p>
+              </div>
+            </div>
+          </div>
+        </a>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
   {{-- FAQ SECTION - SEO OPTIMIZED --}}
   <section class="py-20 px-6 bg-gradient-to-br from-gray-50 to-white">
     <div class="max-w-4xl mx-auto">

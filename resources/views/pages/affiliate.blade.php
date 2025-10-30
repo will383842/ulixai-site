@@ -6,14 +6,12 @@
   <title>Earn 75% Commission - Ulixai Affiliate Program</title>
   <link rel="icon" type="image/png" sizes="64x64" href="/images/faviccon.png" />
   
-  <!-- SEO 2025/2026 PERFECT -->
   <meta name="description" content="Earn 75% commission instantly with Ulixai affiliate program. Free signup, get your link in 30 seconds, paid from $30. 197 countries, all languages supported.">
   <meta name="keywords" content="affiliate program 2025, earn money online, passive income, 75% commission, referral program, make money from home, affiliate marketing 2025, best affiliate programs 2025">
   <meta name="author" content="Ulixai">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="theme-color" content="#2563EB">
   
-  <!-- Canonical & Hreflang PERFECT -->
   <link rel="canonical" href="https://ulixai.com/en/affiliate" />
   <link rel="alternate" hreflang="en" href="https://ulixai.com/en/affiliate" />
   <link rel="alternate" hreflang="fr" href="https://ulixai.com/fr/affiliate" />
@@ -26,7 +24,6 @@
   <link rel="alternate" hreflang="hi" href="https://ulixai.com/hi/affiliate" />
   <link rel="alternate" hreflang="x-default" href="https://ulixai.com/en/affiliate" />
   
-  <!-- Open Graph 2025 PERFECT -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ulixai.com/en/affiliate">
   <meta property="og:title" content="Earn 75% Commission - Ulixai Affiliate Program 💰">
@@ -38,7 +35,6 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:site_name" content="Ulixai">
   
-  <!-- Twitter Card PERFECT -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://ulixai.com/en/affiliate">
   <meta name="twitter:title" content="Earn 75% Commission with Ulixai 💸">
@@ -46,7 +42,6 @@
   <meta name="twitter:image" content="https://ulixai.com/images/twitter-affiliate-en.jpg">
   <meta name="twitter:image:alt" content="Ulixai Affiliate Program">
   
-  <!-- JSON-LD: Organization PERFECT -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -80,7 +75,6 @@
   }
   </script>
   
-  <!-- JSON-LD: WebPage + Breadcrumb PERFECT -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -133,7 +127,6 @@
   }
   </script>
   
-  <!-- JSON-LD: FAQPage PERFECT -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -177,12 +170,10 @@
   }
   </script>
 
-  <!-- Preload Critical Resources for SPEED -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://code.jquery.com">
 
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   
@@ -211,7 +202,6 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
-      /* iOS safe area */
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
     
@@ -228,7 +218,7 @@
     .hero {
       position: relative;
       min-height: 100vh;
-      min-height: 100dvh; /* Dynamic viewport for mobile */
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       padding: 120px 0 80px;
@@ -533,7 +523,6 @@
       font-weight: 500;
     }
     
-    /* MOBILE CAROUSEL - OPTIMIZED */
     .carousel-container {
       position: relative;
       overflow: hidden;
@@ -661,7 +650,6 @@
       }
     }
     
-    /* STEP CARDS */
     .step-card {
       text-align: center;
       padding: 20px 16px;
@@ -811,7 +799,6 @@
       }
     }
     
-    /* CALCULATOR SECTION */
     .calculator {
       background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
       color: white;
@@ -1382,7 +1369,6 @@
       }
     }
     
-    /* TESTIMONIALS */
     .testimonial-card {
       background: white;
       border: 2px solid var(--border);
@@ -1727,7 +1713,6 @@
       }
     }
     
-    /* FAQ */
     .faq-grid {
       max-width: 860px;
       margin: 0 auto;
@@ -1858,7 +1843,6 @@
       font-weight: 800;
     }
     
-    /* FINAL CTA */
     .final-cta {
       background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--accent) 100%);
       color: white;
@@ -2033,7 +2017,6 @@
     @keyframes shimmer { 100% { transform: translateX(100%); } }
     .animate-shimmer { animation: shimmer 3s infinite; }
     
-    /* Performance: reduce motion for users who prefer it */
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -2050,9 +2033,6 @@
   @include('includes.header')
   @include('pages.popup')
   
-  <!-- 🔥 VIRAL SHARE SYSTEM - 100% ENGLISH -->
-  
-  <!-- 💰 FLOATING BUTTON -->
   <button id="floatingShareBtn" onclick="openSharePanel()" class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold px-5 py-3.5 sm:px-6 sm:py-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-2.5 sm:gap-3 group animate-pulse hover:animate-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
       <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
           <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
@@ -2062,13 +2042,10 @@
       <span class="ml-1">💰</span>
   </button>
 
-  <!-- 🎨 OVERLAY -->
   <div id="shareOverlay" onclick="closeSharePanel()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300"></div>
 
-  <!-- 📱 SLIDE PANEL - 100% ENGLISH -->
   <div id="sharePanel" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 overflow-y-auto" style="overscroll-behavior: contain;">
       
-      <!-- Header -->
       <div class="bg-gradient-to-r from-green-400 to-emerald-500 p-5 sm:p-6 sticky top-0 z-10">
           <div class="flex items-center justify-between mb-3 sm:mb-4">
               <h2 class="text-white font-bold text-lg sm:text-xl flex items-center gap-2">
@@ -2101,7 +2078,6 @@
           @endauth
       </div>
 
-      <!-- Share Buttons - 100% ENGLISH -->
       <div class="p-5 sm:p-6">
           <h3 class="font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 text-base sm:text-lg">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -2112,43 +2088,36 @@
 
           <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
               
-              <!-- WhatsApp -->
               <a id="shareWhatsAppSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-500 hover:to-green-600 active:from-green-600 active:to-green-700 rounded-xl p-3.5 sm:p-4 border-2 border-green-200 hover:border-green-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
                   <i class="fab fa-whatsapp text-3xl sm:text-4xl text-green-600 group-hover:text-white transition-colors"></i>
                   <span class="text-xs sm:text-sm font-bold text-green-700 group-hover:text-white uppercase tracking-wide transition-colors">WhatsApp</span>
               </a>
 
-              <!-- Messenger -->
               <a id="shareMessengerSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-400 hover:to-blue-500 active:from-blue-500 active:to-blue-600 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-400 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
                   <i class="fab fa-facebook-messenger text-3xl sm:text-4xl text-blue-500 group-hover:text-white transition-colors"></i>
                   <span class="text-xs sm:text-sm font-bold text-blue-600 group-hover:text-white uppercase tracking-wide transition-colors">Messenger</span>
               </a>
 
-              <!-- Facebook -->
               <a id="shareFacebookSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-500 hover:to-blue-600 active:from-blue-600 active:to-blue-700 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
                   <i class="fab fa-facebook text-3xl sm:text-4xl text-blue-600 group-hover:text-white transition-colors"></i>
                   <span class="text-xs sm:text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">Facebook</span>
               </a>
 
-              <!-- Twitter -->
               <a id="shareTwitterSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-gray-50 to-gray-100 hover:from-gray-800 hover:to-black active:from-black active:to-gray-900 rounded-xl p-3.5 sm:p-4 border-2 border-gray-200 hover:border-gray-800 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
                   <i class="fab fa-x-twitter text-3xl sm:text-4xl text-gray-800 group-hover:text-white transition-colors"></i>
                   <span class="text-xs sm:text-sm font-bold text-gray-700 group-hover:text-white uppercase tracking-wide transition-colors">Twitter</span>
               </a>
 
-              <!-- LinkedIn -->
               <a id="shareLinkedInSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-600 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
                   <i class="fab fa-linkedin text-3xl sm:text-4xl text-blue-600 group-hover:text-white transition-colors"></i>
                   <span class="text-xs sm:text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">LinkedIn</span>
               </a>
 
-              <!-- Email -->
               <a id="shareEmailSlide" href="#" class="bg-gradient-to-br from-red-50 to-red-100 hover:from-red-500 hover:to-red-600 active:from-red-600 active:to-red-700 rounded-xl p-3.5 sm:p-4 border-2 border-red-200 hover:border-red-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
                   <i class="fas fa-envelope text-3xl sm:text-4xl text-red-600 group-hover:text-white transition-colors"></i>
                   <span class="text-xs sm:text-sm font-bold text-red-700 group-hover:text-white uppercase tracking-wide transition-colors">Email</span>
               </a>
 
-              <!-- Copy Link -->
               <button id="copyBtnSlide" class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 active:from-purple-600 active:to-purple-700 rounded-xl p-3.5 sm:p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
                   <i class="fas fa-link text-3xl sm:text-4xl text-purple-600 group-hover:text-white transition-colors"></i>
                   <span class="text-xs sm:text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copy</span>
@@ -2156,7 +2125,6 @@
 
           </div>
 
-          <!-- Bottom Message - 100% ENGLISH -->
           <div class="mt-5 sm:mt-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-3.5 sm:p-4 border-2 border-green-200">
               <div class="flex items-center gap-2.5 sm:gap-3 text-green-700">
                   <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -2178,7 +2146,6 @@
       </div>
   </div>
 
-  <!-- 🎉 SUCCESS POPUP - 100% ENGLISH -->
   <div id="shareSuccessPopup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4">
       <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 sm:p-6 transform transition-all scale-95 opacity-0" id="popupContent">
           <div class="text-center mb-3 sm:mb-4">
@@ -2217,191 +2184,6 @@
   @else
   <input type="text" id="affiliateLinkShareNew" value="{{ url('/en/affiliate') }}" hidden>
   @endauth
-  
-  <script>
-  // VIRAL SHARE SYSTEM - 100% ENGLISH VERSION
-  document.addEventListener('DOMContentLoaded', function() {
-      'use strict';
-      
-      // Global functions for panel control
-      window.openSharePanel = function() {
-          const panel = document.getElementById('sharePanel');
-          const overlay = document.getElementById('shareOverlay');
-          const floatingBtn = document.getElementById('floatingShareBtn');
-          
-          if (overlay) {
-              overlay.classList.remove('hidden');
-              setTimeout(() => overlay.classList.add('opacity-100'), 10);
-          }
-          if (panel) {
-              panel.classList.remove('translate-x-full');
-          }
-          if (floatingBtn) {
-              floatingBtn.style.display = 'none';
-          }
-          document.body.style.overflow = 'hidden';
-          
-          console.log('✅ Share panel opened');
-      };
-      
-      window.closeSharePanel = function() {
-          const panel = document.getElementById('sharePanel');
-          const overlay = document.getElementById('shareOverlay');
-          const floatingBtn = document.getElementById('floatingShareBtn');
-          
-          if (panel) {
-              panel.classList.add('translate-x-full');
-          }
-          if (overlay) {
-              overlay.classList.remove('opacity-100');
-              setTimeout(() => overlay.classList.add('hidden'), 300);
-          }
-          if (floatingBtn) {
-              setTimeout(() => floatingBtn.style.display = 'flex', 300);
-          }
-          document.body.style.overflow = '';
-          
-          console.log('✅ Share panel closed');
-      };
-      
-      window.showShareSuccessPopup = function() {
-          const popup = document.getElementById('shareSuccessPopup');
-          const content = document.getElementById('popupContent');
-          if (popup && content) {
-              popup.classList.remove('hidden');
-              popup.classList.add('flex');
-              setTimeout(() => {
-                  content.classList.remove('scale-95', 'opacity-0');
-                  content.classList.add('scale-100', 'opacity-100');
-              }, 10);
-              console.log('✅ Success popup shown');
-          }
-      };
-      
-      window.closeSharePopup = function() {
-          const popup = document.getElementById('shareSuccessPopup');
-          const content = document.getElementById('popupContent');
-          if (popup && content) {
-              content.classList.remove('scale-100', 'opacity-100');
-              content.classList.add('scale-95', 'opacity-0');
-              setTimeout(() => {
-                  popup.classList.remove('flex');
-                  popup.classList.add('hidden');
-              }, 200);
-              console.log('✅ Success popup closed');
-          }
-      };
-      
-      window.shareAgain = function() {
-          closeSharePopup();
-          setTimeout(() => openSharePanel(), 300);
-      };
-      
-      // Get share URL with UTM
-      function getShareUrl() {
-          const input = document.getElementById('affiliateLinkShareNew');
-          if (!input) return window.location.href;
-          
-          let shareUrl = input.value;
-          try {
-              const urlObj = new URL(shareUrl, window.location.origin);
-              urlObj.searchParams.set('utm_source', 'social');
-              urlObj.searchParams.set('utm_medium', 'share');
-              urlObj.searchParams.set('utm_campaign', 'affiliate');
-              shareUrl = urlObj.toString();
-          } catch (e) {
-              console.error('UTM error:', e);
-          }
-          return shareUrl;
-      }
-      
-      const finalUrl = getShareUrl();
-      const enc = encodeURIComponent(finalUrl);
-      
-      // Viral messages - 100% ENGLISH - AFFILIATE SPECIFIC
-      const viralText = encodeURIComponent(`💰 I discovered how to earn 75% commission online!\n\n👉 Join Ulixai's affiliate program:\n\n✅ 100% FREE\n✅ Instant link after signup\n✅ 75% commission on EVERY sale\n✅ 197 countries + all languages\n\n🚀 Share your link and earn money! 💸`);
-      const subject = encodeURIComponent("💰 75% Commission - Ulixai Affiliate Program!");
-      const viralEmailBody = encodeURIComponent(`Hey! 👋\n\nI discovered an amazing affiliate program that pays 75% commission:\n\n${finalUrl}\n\nWhy it's perfect:\n✅ FREE signup in 30 seconds\n✅ Your affiliate link is ready instantly\n✅ 75% commission on service fees\n✅ Payout from €30/$30\n✅ 197 countries covered + all languages\n\nClick and start earning money today!\n\n---\n💡 TIP: Share this link in your groups and networks to maximize your earnings! 💰`);
-      
-      // Social share links for slide panel
-      const socialLinks = {
-          shareWhatsAppSlide: `https://api.whatsapp.com/send?text=${viralText}%20${enc}`,
-          shareMessengerSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
-          shareFacebookSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
-          shareTwitterSlide: `https://twitter.com/intent/tweet?url=${enc}&text=${viralText}`,
-          shareLinkedInSlide: `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`,
-          shareEmailSlide: `mailto:?subject=${subject}&body=${viralEmailBody}`
-      };
-      
-      // Apply links to buttons
-      Object.entries(socialLinks).forEach(([id, href]) => {
-          const link = document.getElementById(id);
-          if (link) {
-              link.href = href;
-              console.log(`✅ Link set for ${id}`);
-          }
-      });
-      
-      // Copy button setup
-      const copyBtn = document.getElementById('copyBtnSlide');
-      if (copyBtn) {
-          copyBtn.addEventListener('click', function(e) {
-              e.preventDefault();
-              
-              navigator.clipboard.writeText(finalUrl).then(() => {
-                  const originalHTML = copyBtn.innerHTML;
-                  
-                  copyBtn.className = 'bg-green-500 rounded-xl p-3.5 sm:p-4 border-2 border-green-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200';
-                  copyBtn.innerHTML = `
-                      <i class="fas fa-check text-3xl sm:text-4xl text-white"></i>
-                      <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wide">Copied!</span>
-                  `;
-                  
-                  // Show success popup after copy
-                  setTimeout(() => {
-                      closeSharePanel();
-                      showShareSuccessPopup();
-                  }, 800);
-                  
-                  setTimeout(() => {
-                      copyBtn.className = 'bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 active:from-purple-600 active:to-purple-700 rounded-xl p-3.5 sm:p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group';
-                      copyBtn.innerHTML = originalHTML;
-                  }, 1500);
-                  
-              }).catch(() => {
-                  console.error('Copy failed');
-              });
-          });
-      }
-      
-      // Show popup ONLY after clicking a share button
-      const shareButtons = document.querySelectorAll('a[id^="share"]');
-      shareButtons.forEach(btn => {
-          btn.addEventListener('click', function(e) {
-              console.log('🚀 Share button clicked:', btn.id);
-              
-              setTimeout(() => {
-                  closeSharePanel();
-                  showShareSuccessPopup();
-              }, 800);
-          });
-      });
-      
-      // Close popup when clicking outside
-      const popup = document.getElementById('shareSuccessPopup');
-      if (popup) {
-          popup.addEventListener('click', function(e) {
-              if (e.target === popup) {
-                  closeSharePopup();
-              }
-          });
-      }
-      
-      console.log('✅ Viral share system (affiliate - ENGLISH) initialized!');
-  });
-  </script>
-  
-  <!-- END SHARE SYSTEM -->
 
   <section class="hero">
     <div class="container">
@@ -2601,53 +2383,36 @@
       
       <div class="carousel-container">
         <div class="carousel-wrapper" id="testimonialsCarousel">
+          @foreach($reviews as $review)
           <div class="carousel-item">
-            <div class="testimonial-card">
-              <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-              <p class="testimonial-text">"I shared my link in 2 WhatsApp expat groups. First earnings in 10 days! Ultra-clear dashboard, regular payments. Top!"</p>
-              <div class="testimonial-author">
-                <div class="author-avatar">ML</div>
-                <div class="author-info">
-                  <h4>Marie L.</h4>
-                  <p>Barcelona, Spain</p>
+            <a href="{{ route('review.show', $review['slug']) }}" class="block">
+              <div class="testimonial-card" style="cursor: pointer;">
+                @if($review['is_early_beta'] ?? false)
+                <div class="absolute top-3 right-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-lg z-10 animate-pulse">
+                  ⭐ Early Beta
+                </div>
+                @endif
+                <div class="testimonial-stars">
+                  @for($i = 0; $i < $review['rating']; $i++)⭐@endfor
+                </div>
+                <p class="testimonial-text">{{ $review['shortText'] }}</p>
+                <div class="testimonial-author">
+                  <div class="author-avatar">{{ strtoupper(substr($review['name'], 0, 2)) }}</div>
+                  <div class="author-info">
+                    <h4>{{ $review['name'] }}</h4>
+                    <p>{{ $review['flag'] }} {{ $review['nationality'] }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </a>
           </div>
-          
-          <div class="carousel-item">
-            <div class="testimonial-card">
-              <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-              <p class="testimonial-text">"My network in the African diaspora allows me to have regular conversions in 6 countries. Commissions in € are excellent 💰"</p>
-              <div class="testimonial-author">
-                <div class="author-avatar">DK</div>
-                <div class="author-info">
-                  <h4>David K.</h4>
-                  <p>Paris, France</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="carousel-item">
-            <div class="testimonial-card">
-              <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-              <p class="testimonial-text">"Complete dashboard: I see everything in real-time (clicks, conversions, earnings). Super-responsive support. I recommend 100%!"</p>
-              <div class="testimonial-author">
-                <div class="author-avatar">SR</div>
-                <div class="author-info">
-                  <h4>Sofia R.</h4>
-                  <p>Dubai, UAE</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          @endforeach
         </div>
         
         <div class="carousel-dots" id="testimonialsDots">
-          <div class="carousel-dot active"></div>
-          <div class="carousel-dot"></div>
-          <div class="carousel-dot"></div>
+          @foreach($reviews as $index => $review)
+          <div class="carousel-dot {{ $index === 0 ? 'active' : '' }}"></div>
+          @endforeach
         </div>
       </div>
       
@@ -2777,7 +2542,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" defer></script>
   
   <script>
-    // PERFORMANCE: Use passive event listeners
     const supportsPassive = (() => {
       let support = false;
       try {
@@ -2791,7 +2555,6 @@
     
     const passiveOpt = supportsPassive ? { passive: true } : false;
     
-    // Carousel functionality - OPTIMIZED
     function initCarousel(carouselId, dotsId) {
       const carousel = document.getElementById(carouselId);
       const dots = document.getElementById(dotsId);
@@ -2827,11 +2590,9 @@
         });
       });
       
-      // Initial update
       updateDots();
     }
     
-    // Initialize carousels when DOM is ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initCarousels);
     } else {
@@ -2843,7 +2604,6 @@
       initCarousel('testimonialsCarousel', 'testimonialsDots');
     }
     
-    // Calculator - OPTIMIZED
     const calculator = {
       inputs: {},
       values: {},
@@ -2907,7 +2667,7 @@
         const signups = Math.floor(contacts * (signupRate / 100));
         const conversions = Math.floor(signups * (conversionRate / 100));
         
-        const commissionRate = 0.1125; // 75% of 15% = 11.25%
+        const commissionRate = 0.1125;
         const commissionPerConversion = serviceAmount * commissionRate;
         const monthlyRevenue = conversions * commissionPerConversion;
         const totalVolume = conversions * serviceAmount;
@@ -2922,14 +2682,12 @@
       }
     };
     
-    // Initialize calculator when DOM is ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => calculator.init());
     } else {
       calculator.init();
     }
     
-    // Animate monthly payout - OPTIMIZED
     (function animatePayout() {
       const target = 13742;
       const element = document.getElementById('monthlyPayout');
@@ -2962,7 +2720,6 @@
         requestAnimationFrame(update);
       }
       
-      // Start animation when element is in viewport
       const observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           requestAnimationFrame(update);
@@ -2972,6 +2729,206 @@
       
       observer.observe(element);
     })();
+  </script>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+      'use strict';
+      
+      window.openSharePanel = function() {
+          const panel = document.getElementById('sharePanel');
+          const overlay = document.getElementById('shareOverlay');
+          const floatingBtn = document.getElementById('floatingShareBtn');
+          
+          if (overlay) {
+              overlay.classList.remove('hidden');
+              setTimeout(() => overlay.classList.add('opacity-100'), 10);
+          }
+          if (panel) {
+              panel.classList.remove('translate-x-full');
+          }
+          if (floatingBtn) {
+              floatingBtn.style.display = 'none';
+          }
+          document.body.style.overflow = 'hidden';
+          
+          console.log('✅ Share panel opened');
+      };
+      
+      window.closeSharePanel = function() {
+          const panel = document.getElementById('sharePanel');
+          const overlay = document.getElementById('shareOverlay');
+          const floatingBtn = document.getElementById('floatingShareBtn');
+          
+          if (panel) {
+              panel.classList.add('translate-x-full');
+          }
+          if (overlay) {
+              overlay.classList.remove('opacity-100');
+              setTimeout(() => overlay.classList.add('hidden'), 300);
+          }
+          if (floatingBtn) {
+              setTimeout(() => floatingBtn.style.display = 'flex', 300);
+          }
+          document.body.style.overflow = '';
+          
+          console.log('✅ Share panel closed');
+      };
+      
+      window.showShareSuccessPopup = function() {
+          const popup = document.getElementById('shareSuccessPopup');
+          const content = document.getElementById('popupContent');
+          if (popup && content) {
+              popup.classList.remove('hidden');
+              popup.classList.add('flex');
+              setTimeout(() => {
+                  content.classList.remove('scale-95', 'opacity-0');
+                  content.classList.add('scale-100', 'opacity-100');
+              }, 10);
+              console.log('✅ Success popup shown');
+          }
+      };
+      
+      window.closeSharePopup = function() {
+          const popup = document.getElementById('shareSuccessPopup');
+          const content = document.getElementById('popupContent');
+          if (popup && content) {
+              content.classList.remove('scale-100', 'opacity-100');
+              content.classList.add('scale-95', 'opacity-0');
+              setTimeout(() => {
+                  popup.classList.remove('flex');
+                  popup.classList.add('hidden');
+              }, 200);
+              console.log('✅ Success popup closed');
+          }
+      };
+      
+      window.shareAgain = function() {
+          closeSharePopup();
+          setTimeout(() => openSharePanel(), 300);
+      };
+      
+      function getShareUrl() {
+          const input = document.getElementById('affiliateLinkShareNew');
+          if (!input) return window.location.href;
+          
+          let shareUrl = input.value;
+          try {
+              const urlObj = new URL(shareUrl, window.location.origin);
+              urlObj.searchParams.set('utm_source', 'social');
+              urlObj.searchParams.set('utm_medium', 'share');
+              urlObj.searchParams.set('utm_campaign', 'affiliate');
+              shareUrl = urlObj.toString();
+          } catch (e) {
+              console.error('UTM error:', e);
+          }
+          return shareUrl;
+      }
+      
+      const finalUrl = getShareUrl();
+      const enc = encodeURIComponent(finalUrl);
+      
+      const viralText = encodeURIComponent(`💰 I discovered how to earn 75% commission online!\n\n👉 Join Ulixai's affiliate program:\n\n✅ 100% FREE\n✅ Instant link after signup\n✅ 75% commission on EVERY sale\n✅ 197 countries + all languages\n\n🚀 Share your link and earn money! 💸`);
+      const subject = encodeURIComponent("💰 75% Commission - Ulixai Affiliate Program!");
+      const viralEmailBody = encodeURIComponent(`Hey! 👋\n\nI discovered an amazing affiliate program that pays 75% commission:\n\n${finalUrl}\n\nWhy it's perfect:\n✅ FREE signup in 30 seconds\n✅ Your affiliate link is ready instantly\n✅ 75% commission on service fees\n✅ Payout from €30/$30\n✅ 197 countries covered + all languages\n\nClick and start earning money today!\n\n---\n💡 TIP: Share this link in your groups and networks to maximize your earnings! 💰`);
+      
+      const socialLinks = {
+          shareWhatsAppSlide: `https://api.whatsapp.com/send?text=${viralText}%20${enc}`,
+          shareMessengerSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
+          shareFacebookSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
+          shareTwitterSlide: `https://twitter.com/intent/tweet?url=${enc}&text=${viralText}`,
+          shareLinkedInSlide: `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`,
+          shareEmailSlide: `mailto:?subject=${subject}&body=${viralEmailBody}`
+      };
+      
+      Object.entries(socialLinks).forEach(([id, href]) => {
+          const link = document.getElementById(id);
+          if (link) {
+              link.href = href;
+              console.log(`✅ Link set for ${id}`);
+          }
+      });
+      
+      const copyBtn = document.getElementById('copyBtnSlide');
+      if (copyBtn) {
+          copyBtn.addEventListener('click', function(e) {
+              e.preventDefault();
+              
+              navigator.clipboard.writeText(finalUrl).then(() => {
+                  const originalHTML = copyBtn.innerHTML;
+                  
+                  copyBtn.className = 'bg-green-500 rounded-xl p-3.5 sm:p-4 border-2 border-green-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200';
+                  copyBtn.innerHTML = `
+                      <i class="fas fa-check text-3xl sm:text-4xl text-white"></i>
+                      <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wide">Copied!</span>
+                  `;
+                  
+                  setTimeout(() => {
+                      closeSharePanel();
+                      showShareSuccessPopup();
+                  }, 800);
+                  
+                  setTimeout(() => {
+                      copyBtn.className = 'bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 active:from-purple-600 active:to-purple-700 rounded-xl p-3.5 sm:p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group';
+                      copyBtn.innerHTML = originalHTML;
+                  }, 1500);
+                  
+              }).catch(() => {
+                  console.error('Copy failed');
+              });
+          });
+      }
+      
+      const shareButtons = document.querySelectorAll('a[id^="share"]');
+      shareButtons.forEach(btn => {
+          btn.addEventListener('click', function(e) {
+              console.log('🚀 Share button clicked:', btn.id);
+              
+              setTimeout(() => {
+                  closeSharePanel();
+                  showShareSuccessPopup();
+              }, 800);
+          });
+      });
+      
+      const popup = document.getElementById('shareSuccessPopup');
+      if (popup) {
+          popup.addEventListener('click', function(e) {
+              if (e.target === popup) {
+                  closeSharePopup();
+              }
+          });
+      }
+      
+      (function() {
+        const carousel = document.getElementById('testimonialsCarousel');
+        if (!carousel) return;
+        
+        let currentIndex = 0;
+        const items = carousel.children;
+        const dots = document.querySelectorAll('#testimonialsDots .carousel-dot');
+        const totalItems = items.length;
+        
+        function scrollToIndex(index) {
+          const itemWidth = items[0].offsetWidth + parseInt(getComputedStyle(carousel).gap || 0);
+          carousel.scrollTo({
+            left: itemWidth * index,
+            behavior: 'smooth'
+          });
+          
+          dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+          });
+        }
+        
+        setInterval(() => {
+          currentIndex = (currentIndex + 1) % totalItems;
+          scrollToIndex(currentIndex);
+        }, 5000);
+      })();
+      
+      console.log('✅ Viral share system (affiliate - ENGLISH) initialized!');
+  });
   </script>
 </body>
 </html>
