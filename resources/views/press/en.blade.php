@@ -791,7 +791,6 @@
     <div class="relative max-w-4xl mx-auto pt-6">
       <div class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 border-2 border-blue-200 rounded-full px-4 py-2 mb-6 glow-effect" role="presentation">
         <span class="flag-en" aria-label="English language"></span>
-        <span class="text-blue-800 font-bold text-sm">English Press Resources</span>
       </div>
       
       <h1 id="press-hero-title" class="text-3xl md:text-5xl font-bold mb-4 leading-tight pop-in">

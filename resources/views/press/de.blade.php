@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
   <!-- SEO Meta Tags Ultra-Optimized 2025/2026 -->
-  <title>Ulixai Press Kit - Official Media Resources, Logos & Brand Guidelines | Download Now</title>
-  <meta name="description" content="Download official Ulixai press materials: high-resolution logos (PNG/SVG), comprehensive press kits, brand guidelines, and HD photos. Complete media resources for journalists, bloggers, and media professionals covering expat services worldwide.">
-  <meta name="keywords" content="Ulixai press kit, media resources, brand guidelines, logo download, press releases, expat services media, international mobility press, official brand assets, journalist resources, HD photos, PNG SVG logos">
+  <title>Ulixai Pressekit - Offizielle Medienressourcen, Logos & Markenrichtlinien | Jetzt herunterladen</title>
+  <meta name="description" content="Laden Sie offizielle Ulixai-Pressematerialien herunter: hochauflösende Logos (PNG/SVG), umfassende Pressekits, Markenrichtlinien und HD-Fotos. Komplette Medienressourcen für Journalisten, Blogger und Medienprofis über Expat-Services weltweit.">
+  <meta name="keywords" content="Ulixai Pressekit, Medienressourcen, Markenrichtlinien, Logo Download, Pressemitteilungen, Expat-Services Medien, internationale Mobilität Presse, offizielle Marken-Assets, Journalisten-Ressourcen, HD-Fotos, PNG SVG Logos">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <link rel="canonical" href="https://ulixai.com/press/en">
+  <link rel="canonical" href="https://ulixai.com/press/de">
   <meta name="author" content="Ulixai - Williams Jullin">
   
   <!-- Alternate Language Tags -->
@@ -28,20 +28,20 @@
   
   <!-- Open Graph Tags -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Ulixai Press Kit - Official Media Resources & Brand Guidelines">
-  <meta property="og:description" content="Download official Ulixai press materials: logos, press kits, brand guidelines, and HD photos for media professionals.">
-  <meta property="og:url" content="https://ulixai.com/press/en">
+  <meta property="og:title" content="Ulixai Pressekit - Offizielle Medienressourcen & Markenrichtlinien">
+  <meta property="og:description" content="Laden Sie offizielle Ulixai-Pressematerialien herunter: Logos, Pressekits, Markenrichtlinien und HD-Fotos für Medienprofis.">
+  <meta property="og:url" content="https://ulixai.com/press/de">
   <meta property="og:site_name" content="Ulixai">
-  <meta property="og:locale" content="en_US">
+  <meta property="og:locale" content="de_DE">
   <meta property="og:image" content="{{ asset('images/og-press.jpg') }}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Ulixai Press Kit and Media Resources">
+  <meta property="og:image:alt" content="Ulixai Pressekit und Medienressourcen">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Ulixai Press Kit - Official Media Resources">
-  <meta name="twitter:description" content="Download logos, press kits, brand guidelines & HD photos for media professionals.">
+  <meta name="twitter:title" content="Ulixai Pressekit - Offizielle Medienressourcen">
+  <meta name="twitter:description" content="Laden Sie Logos, Pressekits, Markenrichtlinien & HD-Fotos für Medienprofis herunter.">
   <meta name="twitter:image" content="{{ asset('images/twitter-press.jpg') }}">
   
   <!-- Favicon -->
@@ -81,9 +81,9 @@
     "founder": {
       "@type": "Person",
       "name": "Williams Jullin",
-      "jobTitle": "Founder & CEO"
+      "jobTitle": "Gründer & CEO"
     },
-    "description": "Global platform connecting 304 million expats and 1.465 billion international travelers with essential services worldwide. Comprehensive solutions for expatriates, digital nomads, students, and families living abroad.",
+    "description": "Globale Plattform, die 304 Millionen Expats und 1,465 Milliarden internationale Reisende mit wesentlichen Dienstleistungen weltweit verbindet. Umfassende Lösungen für Expatriates, digitale Nomaden, Studenten und Familien im Ausland.",
     "sameAs": [
       "https://www.linkedin.com/company/ulixai",
       "https://twitter.com/ulixai",
@@ -91,7 +91,7 @@
     ],
     "contactPoint": {
       "@type": "ContactPoint",
-      "contactType": "Press Relations",
+      "contactType": "Pressebeziehungen",
       "email": "press@ulixai.com",
       "availableLanguage": ["en", "fr", "de"],
       "areaServed": "Worldwide"
@@ -103,10 +103,10 @@
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Ulixai Press Kit - Official Media Resources",
-    "description": "Download official Ulixai press materials including logos, press kits, brand guidelines, and professional photos for media coverage.",
-    "url": "https://ulixai.com/press/en",
-    "inLanguage": "en-US",
+    "name": "Ulixai Pressekit - Offizielle Medienressourcen",
+    "description": "Laden Sie offizielle Ulixai-Pressematerialien herunter, einschließlich Logos, Pressekits, Markenrichtlinien und professionelle Fotos für Medienberichterstattung.",
+    "url": "https://ulixai.com/press/de",
+    "inLanguage": "de-DE",
     "isPartOf": {
       "@type": "WebSite",
       "name": "Ulixai",
@@ -124,15 +124,15 @@
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "Press",
-          "item": "https://ulixai.com/press/en"
+          "name": "Presse",
+          "item": "https://ulixai.com/press/de"
         }
       ]
     },
     "mainEntity": {
       "@type": "CreativeWork",
-      "name": "Ulixai Press Kit",
-      "description": "Official press materials and media resources for journalists and media professionals",
+      "name": "Ulixai Pressekit",
+      "description": "Offizielle Pressematerialien und Medienressourcen für Journalisten und Medienprofis",
       "publisher": {
         "@type": "Organization",
         "name": "Ulixai"
@@ -150,7 +150,7 @@
     "logo": "{{ asset('images/logo.png') }}",
     "contactPoint": {
       "@type": "ContactPoint",
-      "contactType": "Media Relations",
+      "contactType": "Medienbeziehungen",
       "email": "press@ulixai.com"
     }
   }
@@ -781,44 +781,44 @@
     <div class="absolute top-0 left-0 right-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 py-1.5 px-3 overflow-hidden" role="complementary" aria-label="Press announcement banner">
       <div class="flex items-center justify-center gap-2 text-white font-bold text-xs md:text-sm animate-pulse">
         <span class="text-lg shake-animation" aria-hidden="true" role="img" aria-label="News icon">📰</span>
-        <span>OFFICIAL PRESS MATERIALS</span>
+        <span>OFFIZIELLE PRESSEMATERIALIEN</span>
         <span class="text-lg" aria-hidden="true">•</span>
-        <span>MEDIA RESOURCES</span>
+        <span>MEDIENRESSOURCEN</span>
         <span class="text-lg shake-animation" aria-hidden="true" role="img" aria-label="Folder icon">📁</span>
       </div>
     </div>
     
     <div class="relative max-w-4xl mx-auto pt-6">
       <div class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 border-2 border-blue-200 rounded-full px-4 py-2 mb-6 glow-effect" role="presentation">
-        <span class="flag-en" aria-label="English language"></span>
-        <span class="text-blue-800 font-bold text-sm">English Press Resources</span>
+        <span style="font-size: 24px;">🇩🇪</span>
+        <span class="text-blue-800 font-bold text-sm">Deutsche Presseressourcen</span>
       </div>
       
       <h1 id="press-hero-title" class="text-3xl md:text-5xl font-bold mb-4 leading-tight pop-in">
-        <span class="gradient-text">Ulixai Press Kit & Media Resources</span>
+        <span class="gradient-text">Ulixai Pressekit & Medienressourcen</span>
       </h1>
       
       <p class="text-lg text-gray-700 mb-2 flex items-center justify-center gap-2 flex-wrap">
-        Official press materials for journalists and media professionals
+        Offizielle Pressematerialien für Journalisten und Medienprofis
         <span class="text-2xl floating-animation" aria-hidden="true" role="img" aria-label="Sparkles">✨</span>
       </p>
       <p class="text-base text-gray-600 mb-6">
-        Download logos, press kits, brand guidelines, and HD photos
+        Logos, Pressekits, Markenrichtlinien und HD-Fotos herunterladen
       </p>
       
       <!-- Quick Stats -->
       <div class="flex flex-wrap justify-center gap-2 mb-4" role="list" aria-label="Available resources">
         <span class="inline-flex items-center gap-1.5 bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-300 rounded-full px-3 py-1.5 pulse-badge" role="listitem">
           <span class="text-lg" aria-hidden="true" role="img" aria-label="Picture frame">🖼️</span>
-          <span class="text-green-800 font-bold text-xs">HD Images</span>
+          <span class="text-green-800 font-bold text-xs">HD-Bilder</span>
         </span>
         <span class="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-purple-300 rounded-full px-3 py-1.5 pulse-badge" role="listitem">
           <span class="text-lg" aria-hidden="true" role="img" aria-label="Document">📄</span>
-          <span class="text-purple-800 font-bold text-xs">Press Kits</span>
+          <span class="text-purple-800 font-bold text-xs">Pressekits</span>
         </span>
         <span class="inline-flex items-center gap-1.5 bg-gradient-to-r from-orange-100 to-red-100 border-2 border-orange-300 rounded-full px-3 py-1.5 pulse-badge" role="listitem">
           <span class="text-lg" aria-hidden="true" role="img" aria-label="Art palette">🎨</span>
-          <span class="text-orange-800 font-bold text-xs">Brand Assets</span>
+          <span class="text-orange-800 font-bold text-xs">Marken-Assets</span>
         </span>
       </div>
     </div>
@@ -829,16 +829,16 @@
     <div class="max-w-6xl mx-auto">
       <p class="text-center text-sm font-semibold text-gray-700 mb-4 flex items-center justify-center gap-2">
         <span class="text-lg" aria-hidden="true" role="img" aria-label="Globe">🌍</span>
-        Available in multiple languages
+        Verfügbar in mehreren Sprachen
       </p>
       <div class="flex justify-center gap-3 flex-wrap" role="list">
-        <a href="/press/en" class="language-btn active" aria-current="page" role="listitem" aria-label="English press resources - current page">
+        <a href="/press/en" class="language-btn" role="listitem" aria-label="English press resources">
           <span class="flag-en" aria-hidden="true"></span> <span>English</span>
         </a>
         <a href="/press/fr" class="language-btn" role="listitem" aria-label="French press resources">
           <span aria-hidden="true">🇫🇷</span> Français
         </a>
-        <a href="/press/de" class="language-btn" role="listitem" aria-label="German press resources">
+        <a href="/press/de" class="language-btn active" aria-current="page" role="listitem" aria-label="German press resources - current page">
           <span aria-hidden="true">🇩🇪</span> Deutsch
         </a>
       </div>
@@ -851,11 +851,11 @@
       <div class="max-w-6xl mx-auto">
         <header class="text-center mb-10">
           <h2 id="press-kit-heading" class="text-2xl md:text-3xl font-bold mb-3">
-            <span class="gradient-text">Download the @site Press Kit</span>
+            <span class="gradient-text">Ulixai Pressekit herunterladen</span>
           </h2>
           <div class="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full mb-4" aria-hidden="true"></div>
           <p class="text-base text-gray-600 max-w-2xl mx-auto">
-            High-quality assets for journalists, bloggers, and media professionals covering expat services
+            Hochwertige Assets für Journalisten, Blogger und Medienprofis über Expat-Services
           </p>
         </header>
 
@@ -874,7 +874,7 @@
         @if($pressItems->isEmpty())
           <div class="text-center py-12" role="status" aria-live="polite">
             <div class="text-6xl mb-4" aria-hidden="true" role="img" aria-label="Empty mailbox">📭</div>
-            <p class="text-gray-500 text-lg">No press assets available yet. Please check back later.</p>
+            <p class="text-gray-500 text-lg">Noch keine Press-Assets verfügbar. Bitte schauen Sie später noch einmal vorbei.</p>
           </div>
         @else
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" role="list" aria-label="Press kit resources">
@@ -886,14 +886,14 @@
                   @if($latestIcon)
                     <img
                       src="{{ route('press.asset', [$latestIcon->id, 'icon']) }}"
-                      alt="Official Ulixai company logo in high resolution PNG and SVG format for media use"
+                      alt="Offizielles Ulixai Firmenlogo in hochauflösendem PNG- und SVG-Format für Medienzwecke"
                       loading="lazy"
                       width="300"
                       height="200">
                   @else
                     <div class="preview-placeholder" role="img" aria-label="Logo placeholder">
                       <div class="text-5xl text-blue-500 mb-2" aria-hidden="true">🗂️</div>
-                      <span class="text-sm text-gray-500">No logo available</span>
+                      <span class="text-sm text-gray-500">Kein Logo verfügbar</span>
                     </div>
                   @endif
                 </div>
@@ -902,9 +902,9 @@
               <div class="flex-grow">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl" aria-hidden="true" role="img" aria-label="Art palette icon">🎨</span>
-                  <h3 id="logo-heading" class="font-bold text-gray-800 text-base">Official Logo</h3>
+                  <h3 id="logo-heading" class="font-bold text-gray-800 text-base">Offizielles Logo</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-4">PNG/SVG formats • High resolution • Transparent background</p>
+                <p class="text-sm text-gray-600 mb-4">PNG/SVG-Formate • Hochauflösend • Transparenter Hintergrund</p>
               </div>
               
               @if($latestIcon)
@@ -912,17 +912,17 @@
                   <button onclick="viewAsset('{{ route('press.asset', [$latestIcon->id, 'icon']) }}')" 
                           class="btn-primary flex-1"
                           aria-label="View official logo">
-                    <span aria-hidden="true">👁️</span> <span>View</span>
+                    <span aria-hidden="true">👁️</span> <span>Ansehen</span>
                   </button>
                   <button onclick="downloadAsset('{{ route('press.asset', [$latestIcon->id, 'icon']) }}', 'logo.zip')"
                           class="btn-secondary flex-1"
                           aria-label="Download official logo as ZIP">
-                    <span aria-hidden="true">⬇️</span> <span>Download</span>
+                    <span aria-hidden="true">⬇️</span> <span>Herunterladen</span>
                   </button>
                 </div>
               @else
                 <div class="bg-gray-100 text-gray-500 text-center py-2 rounded-full text-sm mt-auto" role="status">
-                  Not available yet
+                  Noch nicht verfügbar
                 </div>
               @endif
             </article>
@@ -939,12 +939,12 @@
                         aria-label="Click to preview press kit PDF"
                         onkeypress="if(event.key === 'Enter') this.onclick()">
                       <div class="text-5xl text-red-500 mb-2" aria-hidden="true">📄</div>
-                      <span class="text-sm text-gray-600">Click to preview</span>
+                      <span class="text-sm text-gray-600">Klicken für Vorschau</span>
                     </div>
                   @else
                     <div class="preview-placeholder" role="img" aria-label="Press kit placeholder">
                       <div class="text-5xl text-red-500 mb-2" aria-hidden="true">📄</div>
-                      <span class="text-sm text-gray-500">No PDF available</span>
+                      <span class="text-sm text-gray-500">Kein PDF verfügbar</span>
                     </div>
                   @endif
                 </div>
@@ -953,9 +953,9 @@
               <div class="flex-grow">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl" aria-hidden="true" role="img" aria-label="Newspaper icon">📰</span>
-                  <h3 id="presskit-heading" class="font-bold text-gray-800 text-base">Press Kit</h3>
+                  <h3 id="presskit-heading" class="font-bold text-gray-800 text-base">Pressekit</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-4">Complete information package • Company facts • PDF format</p>
+                <p class="text-sm text-gray-600 mb-4">Vollständiges Informationspaket • Firmenfakten • PDF-Format</p>
               </div>
               
               @if($latestPdf)
@@ -963,17 +963,17 @@
                   <button onclick="viewPdfModal('{{ route('press.preview', [$latestPdf->id, 'pdf']) }}')" 
                           class="btn-primary flex-1"
                           aria-label="View press kit PDF">
-                    <span aria-hidden="true">👁️</span> <span>View</span>
+                    <span aria-hidden="true">👁️</span> <span>Ansehen</span>
                   </button>
                   <button onclick="downloadAsset('{{ route('press.asset', [$latestPdf->id, 'pdf']) }}', 'press-kit.zip')"
                           class="btn-secondary flex-1"
                           aria-label="Download press kit as ZIP">
-                    <span aria-hidden="true">⬇️</span> <span>Download</span>
+                    <span aria-hidden="true">⬇️</span> <span>Herunterladen</span>
                   </button>
                 </div>
               @else
                 <div class="bg-gray-100 text-gray-500 text-center py-2 rounded-full text-sm mt-auto" role="status">
-                  Not available yet
+                  Noch nicht verfügbar
                 </div>
               @endif
             </article>
@@ -990,12 +990,12 @@
                         aria-label="Click to preview brand guidelines PDF"
                         onkeypress="if(event.key === 'Enter') this.onclick()">
                       <div class="text-5xl text-purple-500 mb-2" aria-hidden="true">📋</div>
-                      <span class="text-sm text-gray-600">Click to preview</span>
+                      <span class="text-sm text-gray-600">Klicken für Vorschau</span>
                     </div>
                   @else
                     <div class="preview-placeholder" role="img" aria-label="Brand guidelines placeholder">
                       <div class="text-5xl text-purple-500 mb-2" aria-hidden="true">📋</div>
-                      <span class="text-sm text-gray-500">No guidelines available</span>
+                      <span class="text-sm text-gray-500">Keine Richtlinien verfügbar</span>
                     </div>
                   @endif
                 </div>
@@ -1004,9 +1004,9 @@
               <div class="flex-grow">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl" aria-hidden="true" role="img" aria-label="Book icon">📖</span>
-                  <h3 id="guidelines-heading" class="font-bold text-gray-800 text-base">Brand Guidelines</h3>
+                  <h3 id="guidelines-heading" class="font-bold text-gray-800 text-base">Markenrichtlinien</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-4">Logo usage • Brand standards • Color palette • PDF</p>
+                <p class="text-sm text-gray-600 mb-4">Logo-Nutzung • Markenstandards • Farbpalette • PDF</p>
               </div>
               
               @if($latestGuide)
@@ -1014,17 +1014,17 @@
                   <button onclick="viewPdfModal('{{ route('press.preview', [$latestGuide->id, 'guideline_pdf']) }}')" 
                           class="btn-primary flex-1"
                           aria-label="View brand guidelines PDF">
-                    <span aria-hidden="true">👁️</span> <span>View</span>
+                    <span aria-hidden="true">👁️</span> <span>Ansehen</span>
                   </button>
                   <button onclick="downloadAsset('{{ route('press.asset', [$latestGuide->id, 'guideline_pdf']) }}', 'brand-guidelines.zip')"
                           class="btn-secondary flex-1"
                           aria-label="Download brand guidelines as ZIP">
-                    <span aria-hidden="true">⬇️</span> <span>Download</span>
+                    <span aria-hidden="true">⬇️</span> <span>Herunterladen</span>
                   </button>
                 </div>
               @else
                 <div class="bg-gray-100 text-gray-500 text-center py-2 rounded-full text-sm mt-auto" role="status">
-                  Not available yet
+                  Noch nicht verfügbar
                 </div>
               @endif
             </article>
@@ -1036,14 +1036,14 @@
                   @if($latestPhoto)
                     <img
                       src="{{ route('press.asset', [$latestPhoto->id, 'photo']) }}"
-                      alt="High-resolution professional photo of Ulixai platform and services for media publications"
+                      alt="Hochauflösendes professionelles Foto der Ulixai-Plattform und Services für Medienpublikationen"
                       loading="lazy"
                       width="300"
                       height="200">
                   @else
                     <div class="preview-placeholder" role="img" aria-label="Photo placeholder">
                       <div class="text-5xl text-green-500 mb-2" aria-hidden="true">🖼️</div>
-                      <span class="text-sm text-gray-500">No photo available</span>
+                      <span class="text-sm text-gray-500">Kein Foto verfügbar</span>
                     </div>
                   @endif
                 </div>
@@ -1052,9 +1052,9 @@
               <div class="flex-grow">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl" aria-hidden="true" role="img" aria-label="Camera icon">📸</span>
-                  <h3 id="photos-heading" class="font-bold text-gray-800 text-base">HD Photos</h3>
+                  <h3 id="photos-heading" class="font-bold text-gray-800 text-base">HD-Fotos</h3>
                 </div>
-                <p class="text-sm text-gray-600 mb-4">Professional images • High quality • Print ready</p>
+                <p class="text-sm text-gray-600 mb-4">Professionelle Bilder • Hohe Qualität • Druckfertig</p>
               </div>
               
               @if($latestPhoto)
@@ -1062,17 +1062,17 @@
                   <button onclick="viewAsset('{{ route('press.asset', [$latestPhoto->id, 'photo']) }}')" 
                           class="btn-primary flex-1"
                           aria-label="View HD photo">
-                    <span aria-hidden="true">👁️</span> <span>View</span>
+                    <span aria-hidden="true">👁️</span> <span>Ansehen</span>
                   </button>
                   <button onclick="downloadAsset('{{ route('press.asset', [$latestPhoto->id, 'photo']) }}', 'photo.zip')"
                           class="btn-secondary flex-1"
                           aria-label="Download HD photo as ZIP">
-                    <span aria-hidden="true">⬇️</span> <span>Download</span>
+                    <span aria-hidden="true">⬇️</span> <span>Herunterladen</span>
                   </button>
                 </div>
               @else
                 <div class="bg-gray-100 text-gray-500 text-center py-2 rounded-full text-sm mt-auto" role="status">
-                  Not available yet
+                  Noch nicht verfügbar
                 </div>
               @endif
             </article>
@@ -1087,7 +1087,7 @@
       <div class="max-w-6xl mx-auto">
         <header class="text-center mb-10">
           <h2 id="key-figures-heading" class="text-2xl md:text-3xl font-bold mb-3">
-            <span class="gradient-text">Key Figures & Milestones</span>
+            <span class="gradient-text">Schlüsselzahlen & Meilensteine</span>
           </h2>
           <div class="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full mb-4" aria-hidden="true"></div>
         </header>
@@ -1097,15 +1097,15 @@
           <article class="bg-white border-2 border-blue-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all">
             <div class="flex items-center gap-2 mb-4">
               <span class="text-3xl" aria-hidden="true" role="img" aria-label="Globe">🌍</span>
-              <h3 class="text-xl font-bold text-blue-700">Global Expatriation at a Glance</h3>
+              <h3 class="text-xl font-bold text-blue-700">Globale Expatriation auf einen Blick</h3>
             </div>
             <ul class="list-disc pl-5 text-gray-700 space-y-2 text-sm md:text-base">
-              <li><strong>304 million people</strong> currently live outside their country of origin (UN, 2023).</li>
-              <li>Over <strong>1.645 billion international travelers</strong> every year.</li>
-              <li>Mobility keeps growing for work, study, retirement, and family reasons.</li>
+              <li><strong>304 Millionen Menschen</strong> leben derzeit außerhalb ihres Ursprungslandes (UN, 2023).</li>
+              <li>Über <strong>1,645 Milliarden internationale Reisende</strong> jedes Jahr.</li>
+              <li>Die Mobilität wächst weiter aus beruflichen, Studien-, Ruhestands- und familiären Gründen.</li>
             </ul>
             <p class="mt-4 text-gray-700 text-sm md:text-base">
-              <strong>Key challenges:</strong> administrative procedures, housing, employment, healthcare, and cultural integration.
+              <strong>Hauptherausforderungen:</strong> administrative Verfahren, Wohnung, Beschäftigung, Gesundheitsversorgung und kulturelle Integration.
             </p>
           </article>
 
@@ -1113,15 +1113,15 @@
           <article class="bg-white border-2 border-blue-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all">
             <div class="flex items-center gap-2 mb-4">
               <span class="text-3xl" aria-hidden="true" role="img" aria-label="Information">ℹ️</span>
-              <h3 class="text-xl font-bold text-blue-700">About Ulixai & SOS Expat</h3>
+              <h3 class="text-xl font-bold text-blue-700">Über Ulixai & SOS Expat</h3>
             </div>
             <ul class="list-disc pl-5 text-gray-700 space-y-2 text-sm md:text-base">
-              <li><strong>Ulixai.com</strong>: a digital platform that simplifies expatriates' lives by centralizing information, services, and guidance.</li>
-              <li><strong>SOS-Expat.com</strong>: an on-demand, 24/7 assistance service for urgent needs (legal, housing, healthcare, employment).</li>
-              <li><strong>Mission</strong>: make expatriation easier and remove practical and administrative barriers.</li>
+              <li><strong>Ulixai.com</strong>: eine digitale Plattform, die das Leben von Expatriates vereinfacht, indem sie Informationen, Services und Anleitungen zentralisiert.</li>
+              <li><strong>SOS-Expat.com</strong>: ein On-Demand-24/7-Assistenzdienst für dringende Bedürfnisse (Recht, Wohnung, Gesundheitsversorgung, Beschäftigung).</li>
+              <li><strong>Mission</strong>: Expatriation erleichtern und praktische und administrative Barrieren beseitigen.</li>
             </ul>
             <p class="mt-4 text-gray-700 text-sm md:text-base">
-              <strong>Commitment:</strong> speed, confidentiality, and reliability.
+              <strong>Engagement:</strong> Schnelligkeit, Vertraulichkeit und Zuverlässigkeit.
             </p>
           </article>
         </div>
@@ -1133,11 +1133,11 @@
       <div class="max-w-6xl mx-auto">
         <header class="text-center mb-10">
           <h2 id="press-releases-heading" class="text-2xl md:text-3xl font-bold mb-3">
-            <span class="gradient-text">Recent Press Releases</span>
+            <span class="gradient-text">Aktuelle Pressemitteilungen</span>
           </h2>
           <div class="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full mb-4" aria-hidden="true"></div>
           <p class="text-base text-gray-600">
-            Latest news and announcements from Ulixai
+            Neueste Nachrichten und Ankündigungen von Ulixai
           </p>
         </header>
 
@@ -1148,7 +1148,7 @@
         @if($releases->isEmpty())
           <div class="text-center py-12" role="status" aria-live="polite">
             <div class="text-6xl mb-4" aria-hidden="true" role="img" aria-label="Newspaper">📰</div>
-            <p class="text-gray-500 text-lg">No press releases yet. Please check back soon!</p>
+            <p class="text-gray-500 text-lg">Noch keine Pressemitteilungen. Bitte schauen Sie bald wieder vorbei!</p>
           </div>
         @else
           <div class="grid md:grid-cols-3 gap-4 md:gap-6" role="list" aria-label="Press releases">
@@ -1158,7 +1158,7 @@
                   <div class="flex items-center gap-2 flex-1">
                     <span class="text-2xl" aria-hidden="true" role="img" aria-label="Megaphone icon">📢</span>
                     <h3 class="font-bold text-green-700 text-base line-clamp-2">
-                      {{ $pr->title ?: config('app.name', 'Ulixai').' Press Release' }}
+                      {{ $pr->title ?: config('app.name', 'Ulixai').' Pressemitteilung' }}
                     </h3>
                   </div>
                   @if($pr->created_at)
@@ -1170,7 +1170,7 @@
                 </div>
 
                 <p class="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">
-                  {{ $pr->description ? \Illuminate\Support\Str::limit($pr->description, 160) : config('app.name', 'Ulixai').' press release.' }}
+                  {{ $pr->description ? \Illuminate\Support\Str::limit($pr->description, 160) : config('app.name', 'Ulixai').' Pressemitteilung.' }}
                 </p>
 
                 @if($pr->pdf)
@@ -1178,11 +1178,11 @@
                           class="btn-primary w-full"
                           aria-label="Download {{ $pr->title ?: 'press release' }}">
                     <span aria-hidden="true">⬇️</span>
-                    <span>Download</span>
+                    <span>Herunterladen</span>
                   </button>
                 @else
                   <div class="bg-gray-100 text-gray-500 text-center py-2.5 rounded-full text-sm font-semibold" role="status">
-                    Not available
+                    Nicht verfügbar
                   </div>
                 @endif
               </article>
@@ -1199,23 +1199,23 @@
           <article class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all">
             <div class="flex items-center gap-2 mb-4">
               <span class="text-3xl" aria-hidden="true" role="img" aria-label="Speech bubble">💬</span>
-              <h3 class="text-xl font-bold text-blue-700">Official Quotes</h3>
+              <h3 class="text-xl font-bold text-blue-700">Offizielle Zitate</h3>
             </div>
             <blockquote class="space-y-4">
-              <p class="italic text-gray-700 text-sm md:text-base">"Whether you're leaving for 6 days or 6 years, the unexpected happens fast. @site is your human Plan B abroad."</p>
-              <p class="italic text-gray-700 text-sm md:text-base">"We created @site to solve real struggles people face when far from home — with real human support."</p>
+              <p class="italic text-gray-700 text-sm md:text-base">"Ob Sie für 6 Tage oder 6 Jahre gehen, das Unerwartete passiert schnell. @site ist Ihr menschlicher Plan B im Ausland."</p>
+              <p class="italic text-gray-700 text-sm md:text-base">"Wir haben @site geschaffen, um echte Probleme zu lösen, mit denen Menschen weit weg von zu Hause konfrontiert sind – mit echter menschlicher Unterstützung."</p>
             </blockquote>
           </article>
 
           <article class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all">
             <div class="flex items-center gap-2 mb-4">
               <span class="text-3xl" aria-hidden="true" role="img" aria-label="Lightning">⚡</span>
-              <h3 class="text-xl font-bold text-blue-700">Suggested Headlines</h3>
+              <h3 class="text-xl font-bold text-blue-700">Vorgeschlagene Schlagzeilen</h3>
             </div>
             <ul class="list-disc pl-5 text-gray-800 space-y-2 text-sm md:text-base">
-              <li>@site, the go-to platform for those on the move</li>
-              <li>Travelers, expats, students: finally a simple solution abroad</li>
-              <li>No more searching — @site centralizes everything you need abroad</li>
+              <li>@site, die Anlaufstelle für Menschen unterwegs</li>
+              <li>Reisende, Expats, Studenten: endlich eine einfache Lösung im Ausland</li>
+              <li>Keine Suche mehr – @site zentralisiert alles, was Sie im Ausland brauchen</li>
             </ul>
           </article>
         </div>
@@ -1230,17 +1230,17 @@
       <div class="relative max-w-3xl mx-auto text-center text-white">
         <div class="text-4xl mb-4 floating-animation" aria-hidden="true" role="img" aria-label="Envelope">✉️</div>
         <h2 id="cta-heading" class="text-2xl md:text-3xl font-bold mb-4">
-          Need More Information?
+          Benötigen Sie weitere Informationen?
         </h2>
         <p class="text-lg mb-6 text-blue-100 max-w-xl mx-auto">
-          For media inquiries, interview requests, or additional press materials, our team is here to help!
+          Für Medienanfragen, Interviewanfragen oder zusätzliche Pressematerialien steht unser Team Ihnen gerne zur Verfügung!
         </p>
         
         <button onclick="openModal()" 
                 class="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-full text-base font-bold hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-xl"
                 aria-label="Open contact form for press inquiries">
           <span aria-hidden="true">📧</span>
-          <span>Contact Press Team</span>
+          <span>Presseteam kontaktieren</span>
         </button>
       </div>
     </section>
@@ -1252,7 +1252,7 @@
       <div class="modal-header">
         <h3 id="pdf-modal-title" class="text-lg font-bold text-gray-800 flex items-center gap-2">
           <span class="text-2xl" aria-hidden="true" role="img" aria-label="Document">📄</span>
-          Document Preview
+          Dokumentvorschau
         </h3>
         <button onclick="closePdfModal()" class="modal-close" aria-label="Close PDF preview">
           ✕
@@ -1273,7 +1273,7 @@
         ✕
       </button>
       <img id="assetModalImg" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl" src="" alt="Press asset preview">
-      <span id="asset-modal-title" class="sr-only">Image Preview</span>
+      <span id="asset-modal-title" class="sr-only">Bildvorschau</span>
     </div>
   </div>
 
@@ -1284,31 +1284,31 @@
 
       <div class="flex items-center gap-2 mb-6">
         <span class="text-2xl" role="img" aria-label="Memo">📝</span>
-        <h2 id="press-form-title" class="text-xl md:text-2xl font-bold text-gray-800">Press Relations</h2>
+        <h2 id="press-form-title" class="text-xl md:text-2xl font-bold text-gray-800">Pressebeziehungen</h2>
       </div>
 
       <form onsubmit="submitForm(event)" class="space-y-4" novalidate>
         <div>
-          <label for="media-name" class="block text-sm font-semibold text-gray-700 mb-1">Media Name *</label>
+          <label for="media-name" class="block text-sm font-semibold text-gray-700 mb-1">Medienname *</label>
           <input type="text" id="media-name" name="media-name" required 
                  class="form-input" 
-                 placeholder="Your media organization"
+                 placeholder="Ihre Medienorganisation"
                  aria-required="true">
         </div>
 
         <div>
-          <label for="full-name" class="block text-sm font-semibold text-gray-700 mb-1">Full Name *</label>
+          <label for="full-name" class="block text-sm font-semibold text-gray-700 mb-1">Vollständiger Name *</label>
           <input type="text" id="full-name" name="full-name" required 
                  class="form-input" 
-                 placeholder="Your full name"
+                 placeholder="Ihr vollständiger Name"
                  aria-required="true">
         </div>
 
         <div>
-          <label for="phone" class="block text-sm font-semibold text-gray-700 mb-1">Phone Number (with country code) *</label>
+          <label for="phone" class="block text-sm font-semibold text-gray-700 mb-1">Telefonnummer (mit Ländervorwahl) *</label>
           <input type="tel" id="phone" name="phone" required 
                  class="form-input" 
-                 placeholder="+1 234 567 8900"
+                 placeholder="+49 123 456 7890"
                  aria-required="true">
         </div>
 
@@ -1316,47 +1316,47 @@
           <label for="website" class="block text-sm font-semibold text-gray-700 mb-1">Website</label>
           <input type="url" id="website" name="website" 
                  class="form-input" 
-                 placeholder="https://yourmedia.com">
+                 placeholder="https://ihremedien.de">
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Email Address *</label>
+          <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">E-Mail-Adresse *</label>
           <input type="email" id="email" name="email" required 
                  class="form-input" 
-                 placeholder="your@email.com"
+                 placeholder="ihre@email.de"
                  aria-required="true">
         </div>
 
         <div>
-          <label for="languages" class="block text-sm font-semibold text-gray-700 mb-1">Languages Spoken *</label>
+          <label for="languages" class="block text-sm font-semibold text-gray-700 mb-1">Gesprochene Sprachen *</label>
           <input type="text" id="languages" name="languages" required 
                  class="form-input" 
-                 placeholder="English, French, Spanish..."
+                 placeholder="Deutsch, Englisch, Französisch..."
                  aria-required="true">
         </div>
 
         <div>
-          <label for="heard-about" class="block text-sm font-semibold text-gray-700 mb-1">How did you hear about Ulixai?</label>
+          <label for="heard-about" class="block text-sm font-semibold text-gray-700 mb-1">Wie haben Sie von Ulixai erfahren?</label>
           <input type="text" id="heard-about" name="heard-about" 
                  class="form-input" 
-                 placeholder="Search engine, social media, referral...">
+                 placeholder="Suchmaschine, soziale Medien, Empfehlung...">
         </div>
 
         <div>
-          <label for="message" class="block text-sm font-semibold text-gray-700 mb-1">A little words *</label>
+          <label for="message" class="block text-sm font-semibold text-gray-700 mb-1">Ein paar Worte *</label>
           <textarea id="message" name="message" required 
                     class="form-input h-24 resize-none" 
-                    placeholder="Tell us about your inquiry..."
+                    placeholder="Erzählen Sie uns von Ihrer Anfrage..."
                     aria-required="true"></textarea>
         </div>
 
         <button type="submit" class="btn-primary w-full text-base py-3 flex items-center justify-center gap-2">
           <input type="checkbox" checked class="accent-green-500" readonly aria-hidden="true">
-          <span>Submit my partnership request</span>
+          <span>Partnerschaftsanfrage senden</span>
         </button>
 
         <p class="text-xs text-gray-500 text-center">
-          * Required fields • We respond within 24 hours
+          * Pflichtfelder • Wir antworten innerhalb von 24 Stunden
         </p>
       </form>
     </div>
@@ -1368,9 +1368,9 @@
       <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 text-white" aria-hidden="true">
         ✓
       </div>
-      <h2 id="thank-you-title" class="text-xl md:text-2xl font-bold text-gray-800 mb-3">Thank you for your request!</h2>
-      <p class="text-gray-700 mb-2">We have received it and will get back to you <strong>within 24 hours</strong>.</p>
-      <p class="text-gray-600 text-sm">See you soon on this exciting <strong>@site</strong> journey 🌍</p>
+      <h2 id="thank-you-title" class="text-xl md:text-2xl font-bold text-gray-800 mb-3">Vielen Dank für Ihre Anfrage!</h2>
+      <p class="text-gray-700 mb-2">Wir haben sie erhalten und werden uns <strong>innerhalb von 24 Stunden</strong> bei Ihnen melden.</p>
+      <p class="text-gray-600 text-sm">Bis bald auf dieser aufregenden <strong>@site</strong>-Reise 🌍</p>
     </div>
   </div>
 

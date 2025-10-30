@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
@@ -10,7 +10,7 @@
   <meta name="description" content="Download official Ulixai press materials: high-resolution logos (PNG/SVG), comprehensive press kits, brand guidelines, and HD photos. Complete media resources for journalists, bloggers, and media professionals covering expat services worldwide.">
   <meta name="keywords" content="Ulixai press kit, media resources, brand guidelines, logo download, press releases, expat services media, international mobility press, official brand assets, journalist resources, HD photos, PNG SVG logos">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <link rel="canonical" href="https://ulixai.com/press/en">
+  <link rel="canonical" href="https://ulixai.com/press/fr">
   <meta name="author" content="Ulixai - Williams Jullin">
   
   <!-- Alternate Language Tags -->
@@ -30,9 +30,9 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Ulixai Press Kit - Official Media Resources & Brand Guidelines">
   <meta property="og:description" content="Download official Ulixai press materials: logos, press kits, brand guidelines, and HD photos for media professionals.">
-  <meta property="og:url" content="https://ulixai.com/press/en">
+  <meta property="og:url" content="https://ulixai.com/press/fr">
   <meta property="og:site_name" content="Ulixai">
-  <meta property="og:locale" content="en_US">
+  <meta property="og:locale" content="fr_FR">
   <meta property="og:image" content="{{ asset('images/og-press.jpg') }}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -105,8 +105,8 @@
     "@type": "WebPage",
     "name": "Ulixai Press Kit - Official Media Resources",
     "description": "Download official Ulixai press materials including logos, press kits, brand guidelines, and professional photos for media coverage.",
-    "url": "https://ulixai.com/press/en",
-    "inLanguage": "en-US",
+    "url": "https://ulixai.com/press/fr",
+    "inLanguage": "fr-FR",
     "isPartOf": {
       "@type": "WebSite",
       "name": "Ulixai",
@@ -125,7 +125,7 @@
           "@type": "ListItem",
           "position": 2,
           "name": "Press",
-          "item": "https://ulixai.com/press/en"
+          "item": "https://ulixai.com/press/fr"
         }
       ]
     },
@@ -790,20 +790,20 @@
     
     <div class="relative max-w-4xl mx-auto pt-6">
       <div class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 border-2 border-blue-200 rounded-full px-4 py-2 mb-6 glow-effect" role="presentation">
-        <span class="flag-en" aria-label="English language"></span>
-        <span class="text-blue-800 font-bold text-sm">English Press Resources</span>
+        <span style="font-size: 24px;">🇫🇷</span>
+        <span class="text-blue-800 font-bold text-sm">Ressources Presse Français</span>
       </div>
       
       <h1 id="press-hero-title" class="text-3xl md:text-5xl font-bold mb-4 leading-tight pop-in">
-        <span class="gradient-text">Ulixai Press Kit & Media Resources</span>
+        <span class="gradient-text">Kit Presse Ulixai & Ressources Médias</span>
       </h1>
       
       <p class="text-lg text-gray-700 mb-2 flex items-center justify-center gap-2 flex-wrap">
-        Official press materials for journalists and media professionals
+        Ressources officielles pour journalistes et professionnels des médias
         <span class="text-2xl floating-animation" aria-hidden="true" role="img" aria-label="Sparkles">✨</span>
       </p>
       <p class="text-base text-gray-600 mb-6">
-        Download logos, press kits, brand guidelines, and HD photos
+        Téléchargez logos, kits presse, guidelines et photos HD
       </p>
       
       <!-- Quick Stats -->
@@ -832,10 +832,10 @@
         Available in multiple languages
       </p>
       <div class="flex justify-center gap-3 flex-wrap" role="list">
-        <a href="/press/en" class="language-btn active" aria-current="page" role="listitem" aria-label="English press resources - current page">
+        <a href="/press/en" class="language-btn" role="listitem" aria-label="English press resources">
           <span class="flag-en" aria-hidden="true"></span> <span>English</span>
         </a>
-        <a href="/press/fr" class="language-btn" role="listitem" aria-label="French press resources">
+        <a href="/press/fr" class="language-btn active" aria-current="page" role="listitem" aria-label="French press resources - current page">
           <span aria-hidden="true">🇫🇷</span> Français
         </a>
         <a href="/press/de" class="language-btn" role="listitem" aria-label="German press resources">
@@ -851,7 +851,7 @@
       <div class="max-w-6xl mx-auto">
         <header class="text-center mb-10">
           <h2 id="press-kit-heading" class="text-2xl md:text-3xl font-bold mb-3">
-            <span class="gradient-text">Download the @site Press Kit</span>
+            <span class="gradient-text">Télécharger le Kit Presse Ulixai</span>
           </h2>
           <div class="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full mb-4" aria-hidden="true"></div>
           <p class="text-base text-gray-600 max-w-2xl mx-auto">
