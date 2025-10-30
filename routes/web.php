@@ -41,6 +41,7 @@ use App\Http\Controllers\ServiceFeesController;
 use App\Http\Controllers\PartnershipController;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Controllers\RecruitApplicationController;
+use App\Http\Controllers\PressController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -78,18 +79,67 @@ Route::get('/partnerships', [ReviewController::class, 'partnerships'])->name('pa
 // Partnership Request
 Route::post('/partnership/store', [PartnershipController::class, 'store'])->name('partnership.store');
 
-Route::get('/press', [AdminDashboardController::class, 'publicPress'])->name('press.page');
+// ========================================
+// 🌍 ROUTES PRESSE PUBLIQUES - MULTILINGUES
+// ========================================
 
-// Public inline streaming with preview mode
-Route::get('/press/asset/{press}/{field}', [AdminDashboardController::class, 'previewPress'])
+// Page principale avec sélecteur de langues (pas de contenu)
+Route::get('/press', function() {
+    return view('pages.press', [
+        'pressItems' => collect(),
+        'locale' => 'en',
+        'showContent' => false
+    ]);
+})->name('press.page');
+
+// Page ANGLAISE - Documents en anglais uniquement
+Route::get('/press/en', function() {
+    $pressItems = App\Models\Press::where('language', 'en')
+                                   ->orderBy('created_at', 'desc')
+                                   ->get();
+    return view('press.en', [
+        'pressItems' => $pressItems,
+        'locale' => 'en',
+        'showContent' => true
+    ]);
+})->name('press.en');
+
+// Page FRANÇAISE - Documents en français uniquement
+Route::get('/press/fr', function() {
+    $pressItems = App\Models\Press::where('language', 'fr')
+                                   ->orderBy('created_at', 'desc')
+                                   ->get();
+    return view('press.fr', [
+        'pressItems' => $pressItems,
+        'locale' => 'fr',
+        'showContent' => true
+    ]);
+})->name('press.fr');
+
+// Page ALLEMANDE - Documents en allemand uniquement
+Route::get('/press/de', function() {
+    $pressItems = App\Models\Press::where('language', 'de')
+                                   ->orderBy('created_at', 'desc')
+                                   ->get();
+    return view('press.de', [
+        'pressItems' => $pressItems,
+        'locale' => 'de',
+        'showContent' => true
+    ]);
+})->name('press.de');
+
+// Routes de téléchargement/preview des fichiers presse (publiques)
+Route::get('/press/asset/{press}/{field}', [PressController::class, 'asset'])
     ->whereIn('field', ['pdf','guideline_pdf','photo','icon'])
     ->name('press.asset');
 
-// Alternative route specifically for previews (IDM less likely to intercept)
-Route::get('/press/preview/{press}/{field}', [AdminDashboardController::class, 'previewPress'])
+Route::get('/press/preview/{press}/{field}', [PressController::class, 'preview'])
     ->whereIn('field', ['pdf','guideline_pdf','photo','icon'])
-    ->defaults('preview', true)
     ->name('press.preview');
+
+// ========================================
+// AUTRES ROUTES PUBLIQUES (suite)
+// ========================================
 
 Route::get('/termsnconditions', [TermsAndConditionsController::class, 'ShowTerms'])
     ->name('terms.show');
@@ -342,11 +392,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/user-affiliations', [AdminDashboardController::class, 'showAffiliateSummary'])->name('affiliationss');
         Route::get('/affiliate-details/{id}', [AdminDashboardController::class, 'affiliateDetails'])->name('affiliates.details');
 
-        // Press Route
+        // ========================================
+        // 📰 PRESS MANAGEMENT - ADMIN ROUTES (CORRIGÉ)
+        // ========================================
         Route::get('/press', [AdminDashboardController::class, 'showPressSummary'])->name('press');
-        Route::post('/press/store', [AdminDashboardController::class, 'storePress'])->name('press.store');
-        Route::get('/press/preview/{press}/{field}', [AdminDashboardController::class, 'previewPress'])->whereIn('field', ['pdf','guideline_pdf','photo','icon'])->name('press.preview');
-        Route::delete('/press/delete-all', [AdminDashboardController::class, 'deleteAllPress'])->name('press.deleteAll');
+        Route::post('/press/store', [PressController::class, 'store'])->name('press.store');
+        Route::get('/press/preview/{press}/{field}', [PressController::class, 'preview'])
+            ->whereIn('field', ['pdf','guideline_pdf','photo','icon'])
+            ->name('admin.press.preview');
+        Route::delete('/press/delete-all', [PressController::class, 'deleteAll'])->name('press.deleteAll');
 
         //Terms n conditions 
         Route::get('/terms', [TermsAndConditionsController::class, 'termsIndex'])->name('terms.index');
@@ -469,30 +523,7 @@ Route::get('/sitemap-providers.xml', function () {
 // CONVERSATION REPORT (Auth required)
 // ========================================
 Route::post('/conversations/{conversation}/report', [ConversationController::class, 'report'])->middleware('auth');
-Route::post('/conversations/{conversation}/report', [ConversationController::class, 'report'])->middleware('auth');
 
-// ========================================
-// 🌍 ROUTES PRESSE MULTILINGUES
-// ========================================
-Route::get('/press/en', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.en', ['pressItems' => $pressItems]);
-})->name('press.en');
-
-Route::get('/press/fr', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.fr', ['pressItems' => $pressItems]);
-})->name('press.fr');
-
-Route::get('/press/de', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.de', ['pressItems' => $pressItems]);
-})->name('press.de');
-
-// ========================================
-// CUSTOMER REVIEWS ROUTES
-// ========================================
-Route::get('/customerreviews', [ReviewController::class, 'index'])->name('reviews.index');
 // ========================================
 // CUSTOMER REVIEWS ROUTES
 // ========================================
@@ -506,53 +537,3 @@ Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('review.s
 // La regex exclut explicitement les URLs commençant par "provider" ou "reviews"
 Route::get('/{slug?}', [PageController::class, 'show'])
     ->where('slug', '^(?!provider|reviews).*$');
-
-    // Routes pour les pages presse
-Route::get('/press/en', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.en', ['pressItems' => $pressItems]);
-})->name('press.en');
-
-Route::get('/press/fr', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.fr', ['pressItems' => $pressItems]);
-})->name('press.fr');
-
-Route::get('/press/de', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.de', ['pressItems' => $pressItems]);
-})->name('press.de');
-
-
-// Route pour télécharger les fichiers
-Route::get('/press/asset/{id}/{type}', function($id, $type) {
-    $item = App\Models\Press::findOrFail($id);
-    
-    $allowedTypes = ['icon', 'photo', 'pdf', 'guideline_pdf'];
-    if (!in_array($type, $allowedTypes)) {
-        abort(404);
-    }
-    
-    $filePath = storage_path('app/public/' . $item->{$type});
-    
-    if (!file_exists($filePath)) {
-        abort(404);
-    }
-    
-    return response()->download($filePath);
-})->name('press.asset');
-
-Route::get('/press/en', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.en', ['pressItems' => $pressItems]);
-})->name('press.en');
-
-Route::get('/press/fr', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.fr', ['pressItems' => $pressItems]);
-})->name('press.fr');
-
-Route::get('/press/de', function() {
-    $pressItems = App\Models\Press::orderBy('created_at', 'desc')->get();
-    return view('press.de', ['pressItems' => $pressItems]);
-})->name('press.de');
