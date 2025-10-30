@@ -523,10 +523,6 @@ Route::get('/press/de', function() {
     return view('press.de', ['pressItems' => $pressItems]);
 })->name('press.de');
 
-// Redirection par défaut vers anglais
-Route::get('/press', function() {
-    return redirect('/press/en');
-});
 
 // Route pour télécharger les fichiers
 Route::get('/press/asset/{id}/{type}', function($id, $type) {

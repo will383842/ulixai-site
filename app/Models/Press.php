@@ -18,5 +18,6 @@ class Press extends Model
         'photo',
         'icon',
         'guideline_pdf',
+        'language',
     ];
 }
