@@ -2,16 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Earn 75% Commission - Ulixai Affiliate Program</title>
-  <link rel="icon" type="image/png" sizes="64x64" href="/images/faviccon.png" />
-  
-  <meta name="description" content="Earn 75% commission instantly with Ulixai affiliate program. Free signup, get your link in 30 seconds, paid from $30. 197 countries, all languages supported.">
-  <meta name="keywords" content="affiliate program 2025, earn money online, passive income, 75% commission, referral program, make money from home, affiliate marketing 2025, best affiliate programs 2025">
-  <meta name="author" content="Ulixai">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Earn 75% Commission - Ulixai Affiliate Program | Make Money Online 2025</title>
+  <meta name="description" content="Join Ulixai's affiliate program and earn 75% commission instantly. Free signup, get your link in 30 seconds, paid from $30. Support 304 million expats across 197 countries in all languages. Start earning passive income today with one of the best affiliate programs 2025.">
+  <meta name="keywords" content="affiliate program 2025, earn money online, passive income, 75% commission, referral program, make money from home, affiliate marketing 2025, best affiliate programs 2025, high commission affiliate program, instant payout affiliate, work from home 2025, earn dollars online, expat services affiliate, international affiliate program">
+  <meta name="author" content="Ulixai - Williams Jullin">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <meta name="theme-color" content="#2563EB">
-  
   <link rel="canonical" href="https://ulixai.com/en/affiliate" />
   <link rel="alternate" hreflang="en" href="https://ulixai.com/en/affiliate" />
   <link rel="alternate" hreflang="fr" href="https://ulixai.com/fr/affiliate" />
@@ -23,7 +20,11 @@
   <link rel="alternate" hreflang="zh" href="https://ulixai.com/zh/affiliate" />
   <link rel="alternate" hreflang="hi" href="https://ulixai.com/hi/affiliate" />
   <link rel="alternate" hreflang="x-default" href="https://ulixai.com/en/affiliate" />
-  
+  <meta name="theme-color" content="#2563EB">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ulixai.com/en/affiliate">
   <meta property="og:title" content="Earn 75% Commission - Ulixai Affiliate Program 💰">
@@ -34,14 +35,20 @@
   <meta property="og:image:alt" content="Ulixai Affiliate Program - Earn 75% Commission">
   <meta property="og:locale" content="en_US">
   <meta property="og:site_name" content="Ulixai">
-  
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://ulixai.com/en/affiliate">
   <meta name="twitter:title" content="Earn 75% Commission with Ulixai 💸">
   <meta name="twitter:description" content="Turn your network into cash. Sign up and get your link instantly.">
   <meta name="twitter:image" content="https://ulixai.com/images/twitter-affiliate-en.jpg">
   <meta name="twitter:image:alt" content="Ulixai Affiliate Program">
-  
+  <link rel="icon" type="image/png" sizes="64x64" href="/images/faviccon.png">
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://code.jquery.com">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -74,7 +81,6 @@
     }
   }
   </script>
-  
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -126,7 +132,6 @@
     }
   }
   </script>
-  
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -169,16 +174,14 @@
     }]
   }
   </script>
-
-  <link rel="preconnect" href="https://cdn.tailwindcss.com">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  <link rel="dns-prefetch" href="https://code.jquery.com">
-
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     
     :root {
       --primary: #2563EB;
@@ -195,14 +198,14 @@
     }
     
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', sans-serif;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: var(--text);
       background: var(--bg);
-      line-height: 1.6;
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      font-size: 14px;
     }
     
     .container {
@@ -295,7 +298,7 @@
       .hero-badge {
         padding: 10px 24px;
         font-size: 14px;
-        margin-bottom: 12px;
+        margin-bottom: 32px;
       }
     }
     
@@ -315,7 +318,7 @@
     }
     
     .hero-subtitle {
-      font-size: clamp(17px, 3.5vw, 28px);
+      font-size: clamp(16px, 3.5vw, 24px);
       color: var(--text-light);
       margin-bottom: 40px;
       line-height: 1.5;
@@ -770,7 +773,7 @@
     }
     
     .step-card p {
-      font-size: 16px;
+      font-size: 14px;
       color: var(--text-light);
       line-height: 1.7;
       font-weight: 500;
@@ -778,9 +781,15 @@
       z-index: 1;
     }
     
+    @media (min-width: 768px) {
+      .step-card p {
+        font-size: 15px;
+      }
+    }
+    
     @media (min-width: 1024px) {
       .step-card p {
-        font-size: 17px;
+        font-size: 16px;
       }
     }
     
@@ -1446,7 +1455,7 @@
     }
     
     .testimonial-text {
-      font-size: 16px;
+      font-size: 14px;
       color: var(--text);
       line-height: 1.8;
       margin-bottom: 24px;
@@ -1456,16 +1465,16 @@
       flex: 1;
     }
     
-    @media (min-width: 640px) {
+    @media (min-width: 768px) {
       .testimonial-text {
-        font-size: 16.5px;
+        font-size: 15px;
         margin-bottom: 26px;
       }
     }
     
     @media (min-width: 1024px) {
       .testimonial-text {
-        font-size: 17px;
+        font-size: 16px;
         margin-bottom: 28px;
       }
     }
@@ -1524,36 +1533,36 @@
     }
     
     .author-info h4 {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 800;
       color: var(--text);
       margin-bottom: 5px;
       letter-spacing: -0.01em;
     }
     
-    @media (min-width: 640px) {
+    @media (min-width: 768px) {
       .author-info h4 {
-        font-size: 16.5px;
+        font-size: 15px;
         margin-bottom: 5.5px;
       }
     }
     
     @media (min-width: 1024px) {
       .author-info h4 {
-        font-size: 17px;
+        font-size: 16px;
         margin-bottom: 6px;
       }
     }
     
     .author-info p {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
       font-weight: 600;
     }
     
     @media (min-width: 640px) {
       .author-info p {
-        font-size: 14.5px;
+        font-size: 14px;
       }
     }
     
@@ -1626,23 +1635,23 @@
     }
     
     .case-study > p {
-      font-size: 16px;
+      font-size: 14px;
       opacity: 0.95;
       line-height: 1.7;
       margin-bottom: 12px;
       font-weight: 500;
     }
     
-    @media (min-width: 640px) {
+    @media (min-width: 768px) {
       .case-study > p {
-        font-size: 17px;
+        font-size: 15px;
         margin-bottom: 36px;
       }
     }
     
     @media (min-width: 1024px) {
       .case-study > p {
-        font-size: 18px;
+        font-size: 16px;
         margin-bottom: 40px;
       }
     }
@@ -1757,7 +1766,7 @@
       padding: 22px 24px;
       cursor: pointer;
       font-weight: 800;
-      font-size: 16px;
+      font-size: 14px;
       color: var(--text);
       list-style: none;
       display: flex;
@@ -1769,17 +1778,17 @@
       -webkit-tap-highlight-color: transparent;
     }
     
-    @media (min-width: 640px) {
+    @media (min-width: 768px) {
       .faq-item summary {
         padding: 24px 28px;
-        font-size: 17px;
+        font-size: 15px;
       }
     }
     
     @media (min-width: 1024px) {
       .faq-item summary {
         padding: 28px 32px;
-        font-size: 18px;
+        font-size: 16px;
       }
     }
     
@@ -1824,17 +1833,17 @@
       font-weight: 500;
     }
     
-    @media (min-width: 640px) {
+    @media (min-width: 768px) {
       .faq-answer {
         padding: 0 28px 28px;
-        font-size: 16px;
+        font-size: 15px;
       }
     }
     
     @media (min-width: 1024px) {
       .faq-answer {
         padding: 0 32px 32px;
-        font-size: 17px;
+        font-size: 16px;
       }
     }
     
@@ -2026,136 +2035,141 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .step-card, .testimonial-card, .faq-item {
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
   </style>
 </head>
-
 <body>
   @include('includes.header')
   @include('pages.popup')
-  
-  <button id="floatingShareBtn" onclick="openSharePanel()" class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold px-5 py-3.5 sm:px-6 sm:py-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-2.5 sm:gap-3 group animate-pulse hover:animate-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-      <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
+  <button id="floatingShareBtn" onclick="openSharePanel()" class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold px-5 py-3.5 sm:px-6 sm:py-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-2.5 sm:gap-3 group animate-pulse hover:animate-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share affiliate link and earn 75% commission">
+      <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
       </svg>
       <span class="hidden sm:inline text-sm sm:text-base">Share & Earn</span>
       <span class="sm:hidden text-sm">Share</span>
-      <span class="ml-1">💰</span>
+      <span class="ml-1" aria-hidden="true">💰</span>
   </button>
-
-  <div id="shareOverlay" onclick="closeSharePanel()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300"></div>
-
-  <div id="sharePanel" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 overflow-y-auto" style="overscroll-behavior: contain;">
+  <div id="shareOverlay" onclick="closeSharePanel()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300" aria-hidden="true"></div>
+  <aside id="sharePanel" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 overflow-y-auto" style="overscroll-behavior: contain;" role="dialog" aria-labelledby="share-panel-title" aria-modal="true">
+  <div class="bg-gradient-to-r from-green-400 to-emerald-500 p-5 sm:p-6 sticky top-0 z-10">
+      <div class="flex items-center justify-between mb-3 sm:mb-4">
+          <h2 id="share-panel-title" class="text-white font-bold text-lg sm:text-xl flex items-center gap-2">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+              </svg>
+              Share & Earn 75%
+          </h2>
+          <button onclick="closeSharePanel()" class="text-white/80 hover:text-white transition-colors p-1" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Close share panel">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+          </button>
+      </div>
       
-      <div class="bg-gradient-to-r from-green-400 to-emerald-500 p-5 sm:p-6 sticky top-0 z-10">
-          <div class="flex items-center justify-between mb-3 sm:mb-4">
-              <h2 class="text-white font-bold text-lg sm:text-xl flex items-center gap-2">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
-                  </svg>
-                  Share & Earn 75%
-              </h2>
-              <button onclick="closeSharePanel()" class="text-white/80 hover:text-white transition-colors p-1" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-              </button>
+      @auth
+          <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white">
+              <p class="text-sm font-semibold mb-1">Your Affiliate Code</p>
+              <p class="text-base sm:text-lg font-bold font-mono tracking-wider">{{ Auth::user()->affiliate_code }}</p>
           </div>
+      @else
+          <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white text-sm">
+              <p class="font-semibold mb-2">🎁 Create Free Account</p>
+              <p class="text-xs opacity-90 mb-3">Get your affiliate link and earn 75% commission!</p>
+              <a href="/signup" class="block w-full bg-white text-green-600 font-bold py-2 px-4 rounded-lg text-center hover:bg-green-50 transition-colors" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Sign up for free affiliate account">
+                  Sign Up Now
+              </a>
+          </div>
+      @endauth
+  </div>
+
+  <div class="p-5 sm:p-6">
+      <h3 class="font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 text-base sm:text-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+          Share Now
+      </h3>
+
+      <div class="grid grid-cols-2 gap-2.5 sm:gap-3" role="list">
           
-          @auth
-              <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white">
-                  <p class="text-sm font-semibold mb-1">Your Affiliate Code</p>
-                  <p class="text-base sm:text-lg font-bold font-mono tracking-wider">{{ Auth::user()->affiliate_code }}</p>
-              </div>
-          @else
-              <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white text-sm">
-                  <p class="font-semibold mb-2">🎁 Create Free Account</p>
-                  <p class="text-xs opacity-90 mb-3">Get your affiliate link and earn 75% commission!</p>
-                  <a href="/signup" class="block w-full bg-white text-green-600 font-bold py-2 px-4 rounded-lg text-center hover:bg-green-50 transition-colors" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                      Sign Up Now
-                  </a>
-              </div>
-          @endauth
+          <a id="shareWhatsAppSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-500 hover:to-green-600 active:from-green-600 active:to-green-700 rounded-xl p-3.5 sm:p-4 border-2 border-green-200 hover:border-green-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on WhatsApp" role="listitem">
+              <i class="fab fa-whatsapp text-3xl sm:text-4xl text-green-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+              <span class="text-xs sm:text-sm font-bold text-green-700 group-hover:text-white uppercase tracking-wide transition-colors">WhatsApp</span>
+          </a>
+
+          <a id="shareMessengerSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-400 hover:to-blue-500 active:from-blue-500 active:to-blue-600 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-400 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on Messenger" role="listitem">
+              <i class="fab fa-facebook-messenger text-3xl sm:text-4xl text-blue-500 group-hover:text-white transition-colors" aria-hidden="true"></i>
+              <span class="text-xs sm:text-sm font-bold text-blue-600 group-hover:text-white uppercase tracking-wide transition-colors">Messenger</span>
+          </a>
+
+          <a id="shareFacebookSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-500 hover:to-blue-600 active:from-blue-600 active:to-blue-700 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on Facebook" role="listitem">
+              <i class="fab fa-facebook text-3xl sm:text-4xl text-blue-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+              <span class="text-xs sm:text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">Facebook</span>
+          </a>
+
+          <a id="shareTwitterSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-gray-50 to-gray-100 hover:from-gray-800 hover:to-black active:from-black active:to-gray-900 rounded-xl p-3.5 sm:p-4 border-2 border-gray-200 hover:border-gray-800 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on Twitter" role="listitem">
+              <i class="fab fa-x-twitter text-3xl sm:text-4xl text-gray-800 group-hover:text-white transition-colors" aria-hidden="true"></i>
+              <span class="text-xs sm:text-sm font-bold text-gray-700 group-hover:text-white uppercase tracking-wide transition-colors">Twitter</span>
+          </a>
+
+          <a id="shareLinkedInSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-600 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on LinkedIn" role="listitem">
+              <i class="fab fa-linkedin text-3xl sm:text-4xl text-blue-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+              <span class="text-xs sm:text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">LinkedIn</span>
+          </a>
+
+          <a id="shareEmailSlide" href="#" class="bg-gradient-to-br from-red-50 to-red-100 hover:from-red-500 hover:to-red-600 active:from-red-600 active:to-red-700 rounded-xl p-3.5 sm:p-4 border-2 border-red-200 hover:border-red-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share via Email" role="listitem">
+              <i class="fas fa-envelope text-3xl sm:text-4xl text-red-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+              <span class="text-xs sm:text-sm font-bold text-red-700 group-hover:text-white uppercase tracking-wide transition-colors">Email</span>
+          </a>
+
+          <button id="copyBtnSlide" class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 active:from-purple-600 active:to-purple-700 rounded-xl p-3.5 sm:p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Copy affiliate link" role="listitem">
+              <i class="fas fa-link text-3xl sm:text-4xl text-purple-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+              <span class="text-xs sm:text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copy</span>
+          </button>
+
       </div>
 
-      <div class="p-5 sm:p-6">
-          <h3 class="font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 text-base sm:text-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+      <div class="mt-5 sm:mt-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-3.5 sm:p-4 border-2 border-green-200">
+          <div class="flex items-center gap-2.5 sm:gap-3 text-green-700">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
               </svg>
-              Share Now
-          </h3>
-
-          <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
-              
-              <a id="shareWhatsAppSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-500 hover:to-green-600 active:from-green-600 active:to-green-700 rounded-xl p-3.5 sm:p-4 border-2 border-green-200 hover:border-green-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                  <i class="fab fa-whatsapp text-3xl sm:text-4xl text-green-600 group-hover:text-white transition-colors"></i>
-                  <span class="text-xs sm:text-sm font-bold text-green-700 group-hover:text-white uppercase tracking-wide transition-colors">WhatsApp</span>
-              </a>
-
-              <a id="shareMessengerSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-400 hover:to-blue-500 active:from-blue-500 active:to-blue-600 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-400 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                  <i class="fab fa-facebook-messenger text-3xl sm:text-4xl text-blue-500 group-hover:text-white transition-colors"></i>
-                  <span class="text-xs sm:text-sm font-bold text-blue-600 group-hover:text-white uppercase tracking-wide transition-colors">Messenger</span>
-              </a>
-
-              <a id="shareFacebookSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-500 hover:to-blue-600 active:from-blue-600 active:to-blue-700 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                  <i class="fab fa-facebook text-3xl sm:text-4xl text-blue-600 group-hover:text-white transition-colors"></i>
-                  <span class="text-xs sm:text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">Facebook</span>
-              </a>
-
-              <a id="shareTwitterSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-gray-50 to-gray-100 hover:from-gray-800 hover:to-black active:from-black active:to-gray-900 rounded-xl p-3.5 sm:p-4 border-2 border-gray-200 hover:border-gray-800 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                  <i class="fab fa-x-twitter text-3xl sm:text-4xl text-gray-800 group-hover:text-white transition-colors"></i>
-                  <span class="text-xs sm:text-sm font-bold text-gray-700 group-hover:text-white uppercase tracking-wide transition-colors">Twitter</span>
-              </a>
-
-              <a id="shareLinkedInSlide" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-600 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                  <i class="fab fa-linkedin text-3xl sm:text-4xl text-blue-600 group-hover:text-white transition-colors"></i>
-                  <span class="text-xs sm:text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">LinkedIn</span>
-              </a>
-
-              <a id="shareEmailSlide" href="#" class="bg-gradient-to-br from-red-50 to-red-100 hover:from-red-500 hover:to-red-600 active:from-red-600 active:to-red-700 rounded-xl p-3.5 sm:p-4 border-2 border-red-200 hover:border-red-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                  <i class="fas fa-envelope text-3xl sm:text-4xl text-red-600 group-hover:text-white transition-colors"></i>
-                  <span class="text-xs sm:text-sm font-bold text-red-700 group-hover:text-white uppercase tracking-wide transition-colors">Email</span>
-              </a>
-
-              <button id="copyBtnSlide" class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 active:from-purple-600 active:to-purple-700 rounded-xl p-3.5 sm:p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
-                  <i class="fas fa-link text-3xl sm:text-4xl text-purple-600 group-hover:text-white transition-colors"></i>
-                  <span class="text-xs sm:text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copy</span>
-              </button>
-
-          </div>
-
-          <div class="mt-5 sm:mt-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-3.5 sm:p-4 border-2 border-green-200">
-              <div class="flex items-center gap-2.5 sm:gap-3 text-green-700">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
-                  </svg>
-                  <div class="flex-1">
-                      <p class="font-bold text-sm">
-                          @auth
-                              Earn 75% commission on every sale!
-                          @else
-                              Create an account to earn money
-                          @endauth
-                      </p>
-                      <p class="text-xs text-green-600 mt-1">Every signup via your link counts!</p>
-                  </div>
+              <div class="flex-1">
+                  <p class="font-bold text-sm">
+                      @auth
+                          Earn 75% commission on every sale!
+                      @else
+                          Create an account to earn money
+                      @endauth
+                  </p>
+                  <p class="text-xs text-green-600 mt-1">Every signup via your link counts!</p>
               </div>
           </div>
       </div>
   </div>
-
-  <div id="shareSuccessPopup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4">
+  </aside>
+  <div id="shareSuccessPopup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4" role="dialog" aria-labelledby="success-popup-title" aria-modal="true">
       <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 sm:p-6 transform transition-all scale-95 opacity-0" id="popupContent">
           <div class="text-center mb-3 sm:mb-4">
               <div class="inline-block bg-gradient-to-br from-green-400 to-emerald-500 rounded-full p-3 sm:p-4 mb-2 sm:mb-3 animate-bounce">
-                  <svg class="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                       <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
                   </svg>
               </div>
-              <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">Awesome! 🎉</h3>
+              <h3 id="success-popup-title" class="text-xl sm:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">Awesome! 🎉</h3>
               <p class="text-gray-600 text-sm">You're earning commissions!</p>
           </div>
           <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3.5 sm:p-4 mb-3 sm:mb-4 border-2 border-green-200">
@@ -2169,660 +2183,637 @@
               <p class="text-xs text-gray-500 mt-2">💡 Every signup via your link earns you 75% on provider service fees!</p>
           </div>
           <div class="space-y-2">
-              <button onclick="shareAgain()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 active:from-green-700 active:to-emerald-700 text-white font-bold py-2.5 sm:py-3 px-5 sm:px-6 rounded-xl transition-all transform hover:scale-105 active:scale-95 shadow-lg text-sm sm:text-base" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
+              <button onclick="shareAgain()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 active:from-green-700 active:to-emerald-700 text-white font-bold py-2.5 sm:py-3 px-5 sm:px-6 rounded-xl transition-all transform hover:scale-105 active:scale-95 shadow-lg text-sm sm:text-base" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share again to earn more commission">
                   Share Again & Earn More 💰
               </button>
-              <button onclick="closeSharePopup()" class="w-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-medium py-2 sm:py-2 px-5 sm:px-6 rounded-xl transition-all text-sm sm:text-base" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
+              <button onclick="closeSharePopup()" class="w-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-medium py-2 sm:py-2 px-5 sm:px-6 rounded-xl transition-all text-sm sm:text-base" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Close success popup">
                   Close
               </button>
           </div>
       </div>
   </div>
-  
-  @auth
-  <input type="text" id="affiliateLinkShareNew" value="{{ url('/en/affiliate') }}?ref={{ Auth::user()->affiliate_code }}" hidden>
-  @else
-  <input type="text" id="affiliateLinkShareNew" value="{{ url('/en/affiliate') }}" hidden>
-  @endauth
-
+@auth
+<input type="hidden" id="affiliateLinkShareNew" value="{{ url('/en/affiliate') }}?ref={{ Auth::user()->affiliate_code }}">
+@else
+<input type="hidden" id="affiliateLinkShareNew" value="{{ url('/en/affiliate') }}">
+@endauth
   <section class="hero">
     <div class="container">
       <div class="hero-content">
-        <div class="hero-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <div class="hero-badge" role="status">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
           <span>3,217 people already earning 💸</span>
         </div>
-        
-        <h1>Earn 75% Commission 💰</h1>
-        
-        <p class="hero-subtitle">
-          <strong>Sign up → your link is ready instantly.</strong><br>
-          Share it and earn <strong>75% on every sale</strong>.
-        </p>
-        
-        <a href="/signup" class="hero-cta">
-          <span>Start Earning Now →</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>
-        
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <span class="hero-stat-number" id="monthlyPayout">$13,742</span>
-            <span class="hero-stat-label">Monthly Payout</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat-number">197</span>
-            <span class="hero-stat-label">Countries · All Languages</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat-number">75%</span>
-            <span class="hero-stat-label">Your Commission</span>
-          </div>
-        </div>
+    <h1>Earn 75% Commission 💰</h1>
+    
+    <p class="hero-subtitle">
+      <strong>Sign up → your link is ready instantly.</strong><br>
+      Share it and earn <strong>75% on every sale</strong>.
+    </p>
+    
+    <a href="/signup" class="hero-cta" aria-label="Sign up now to start earning 75% commission">
+      <span>Start Earning Now →</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+    
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-number" id="monthlyPayout">$13,742</span>
+        <span class="hero-stat-label">Monthly Payout</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">197</span>
+        <span class="hero-stat-label">Countries · All Languages</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">75%</span>
+        <span class="hero-stat-label">Your Commission</span>
       </div>
     </div>
+  </div>
+</div>
   </section>
-
-  <section class="section">
+  <section class="section" aria-labelledby="how-it-works">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">How It Works ⚡</h2>
+        <h2 id="how-it-works" class="section-title">How It Works ⚡</h2>
         <p class="section-subtitle">Start earning in 3 simple steps</p>
       </div>
+  <div class="carousel-container">
+    <div class="carousel-wrapper" id="stepsCarousel" role="list">
+      <article class="carousel-item" role="listitem">
+        <div class="step-card">
+          <div class="step-number" aria-hidden="true">1</div>
+          <h3>Sign Up Free</h3>
+          <p>Create your account in <strong>30 seconds</strong>. Your unique affiliate link is <span class="highlight">available instantly</span> in your dashboard.</p>
+        </div>
+      </article>
       
-      <div class="carousel-container">
-        <div class="carousel-wrapper" id="stepsCarousel">
-          <div class="carousel-item">
-            <div class="step-card">
-              <div class="step-number">1</div>
-              <h3>Sign Up Free</h3>
-              <p>Create your account in <strong>30 seconds</strong>. Your unique affiliate link is <span class="highlight">available instantly</span> in your dashboard.</p>
-            </div>
-          </div>
-          
-          <div class="carousel-item">
-            <div class="step-card">
-              <div class="step-number">2</div>
-              <h3>Share Your Link</h3>
-              <p>WhatsApp, Facebook, Instagram, LinkedIn, Telegram... Share wherever you want. <strong>Automatic attribution</strong> on every signup.</p>
-            </div>
-          </div>
-          
-          <div class="carousel-item">
-            <div class="step-card">
-              <div class="step-number">3</div>
-              <h3>Earn 75%</h3>
-              <p>Receive <span class="highlight">75% commission</span> in € or $ on every transaction. Request payout <strong>from $30</strong> directly to your bank account.</p>
-            </div>
-          </div>
+      <article class="carousel-item" role="listitem">
+        <div class="step-card">
+          <div class="step-number" aria-hidden="true">2</div>
+          <h3>Share Your Link</h3>
+          <p>WhatsApp, Facebook, Instagram, LinkedIn, Telegram... Share wherever you want. <strong>Automatic attribution</strong> on every signup.</p>
         </div>
-        
-        <div class="carousel-dots" id="stepsDots">
-          <div class="carousel-dot active"></div>
-          <div class="carousel-dot"></div>
-          <div class="carousel-dot"></div>
+      </article>
+      
+      <article class="carousel-item" role="listitem">
+        <div class="step-card">
+          <div class="step-number" aria-hidden="true">3</div>
+          <h3>Earn 75%</h3>
+          <p>Receive <span class="highlight">75% commission</span> in € or $ on every transaction. Request payout <strong>from $30</strong> directly to your bank account.</p>
         </div>
-      </div>
+      </article>
     </div>
+    
+    <div class="carousel-dots" id="stepsDots" role="tablist" aria-label="Carousel navigation">
+      <button class="carousel-dot active" aria-label="Go to step 1" role="tab" aria-selected="true"></button>
+      <button class="carousel-dot" aria-label="Go to step 2" role="tab" aria-selected="false"></button>
+      <button class="carousel-dot" aria-label="Go to step 3" role="tab" aria-selected="false"></button>
+    </div>
+  </div>
+</div>
   </section>
-
-  <section id="calculator" class="section calculator">
+  <section id="calculator" class="section calculator" aria-labelledby="calculator-title">
     <div class="container">
       <div class="section-header" style="color: white;">
-        <h2 class="section-title" style="color: white;">How Much Can You Earn? 🧮</h2>
+        <h2 id="calculator-title" class="section-title" style="color: white;">How Much Can You Earn? 🧮</h2>
         <p class="section-subtitle" style="color: rgba(255,255,255,0.95);">Simulate your monthly income in real-time</p>
       </div>
+  <div class="calculator-card">
+    <div class="slider-group">
+      <label class="slider-label" for="contacts">
+        <span>Contacts shared per month</span>
+        <span class="slider-value" id="contactsValue" aria-live="polite">200</span>
+      </label>
+      <input type="range" id="contacts" min="10" max="2000" value="200" step="10" aria-label="Number of contacts shared per month">
+      <p class="slider-hint">Number of people you share your link with</p>
+    </div>
+    
+    <div class="slider-group">
+      <label class="slider-label" for="signup">
+        <span>Signup rate (%)</span>
+        <span class="slider-value" id="signupValue" aria-live="polite">12%</span>
+      </label>
+      <input type="range" id="signup" min="1" max="50" value="12" step="1" aria-label="Signup rate percentage">
+      <p class="slider-hint">% of your contacts who create an account</p>
+    </div>
+    
+    <div class="slider-group">
+      <label class="slider-label" for="conversion">
+        <span>Conversion rate (%)</span>
+        <span class="slider-value" id="conversionValue" aria-live="polite">30%</span>
+      </label>
+      <input type="range" id="conversion" min="5" max="80" value="30" step="5" aria-label="Conversion rate percentage">
+      <p class="slider-hint">% of signups who order a service</p>
+    </div>
+    
+    <div class="slider-group">
+      <label class="slider-label" for="service">
+        <span>Average service amount ($)</span>
+        <span class="slider-value" id="serviceValue" aria-live="polite">$350</span>
+      </label>
+      <input type="range" id="service" min="50" max="2000" value="350" step="50" aria-label="Average service amount in dollars">
+      <p class="slider-hint">Average price (visa, moving, housing...)</p>
+    </div>
+    
+    <div class="commission-box">
+      <div class="commission-box-header">
+        <span style="font-size: 28px;" aria-hidden="true">💰</span>
+        <h4>Your commission: 75% automatic</h4>
+      </div>
+      <p>
+        You earn <strong>75% commission on provider service fees</strong> for every transaction. 
+        It's fixed, transparent, and paid as soon as you reach $30.
+      </p>
+    </div>
+    
+    <div class="calculator-result" role="region" aria-labelledby="results-title" aria-live="polite">
+      <div class="result-amount" id="monthlyResult">$0</div>
+      <div class="result-label" id="results-title">Estimated Monthly Income</div>
+      <div class="result-annual">
+        That's <span id="annualResult">$0</span> per year 🚀
+      </div>
       
-      <div class="calculator-card">
-        <div class="slider-group">
-          <div class="slider-label">
-            <span>Contacts shared per month</span>
-            <span class="slider-value" id="contactsValue">200</span>
-          </div>
-          <input type="range" id="contacts" min="10" max="2000" value="200" step="10">
-          <p class="slider-hint">Number of people you share your link with</p>
+      <div class="result-breakdown">
+        <div class="breakdown-item">
+          <span>👥 Expected signups</span>
+          <strong id="signupsCount">0</strong>
         </div>
-        
-        <div class="slider-group">
-          <div class="slider-label">
-            <span>Signup rate (%)</span>
-            <span class="slider-value" id="signupValue">12%</span>
-          </div>
-          <input type="range" id="signup" min="1" max="50" value="12" step="1">
-          <p class="slider-hint">% of your contacts who create an account</p>
+        <div class="breakdown-item">
+          <span>✅ Expected conversions</span>
+          <strong id="conversionsCount">0</strong>
         </div>
-        
-        <div class="slider-group">
-          <div class="slider-label">
-            <span>Conversion rate (%)</span>
-            <span class="slider-value" id="conversionValue">30%</span>
-          </div>
-          <input type="range" id="conversion" min="5" max="80" value="30" step="5">
-          <p class="slider-hint">% of signups who order a service</p>
+        <div class="breakdown-item">
+          <span>💵 Service volume</span>
+          <strong id="volumeTotal">$0</strong>
         </div>
-        
-        <div class="slider-group">
-          <div class="slider-label">
-            <span>Average service amount ($)</span>
-            <span class="slider-value" id="serviceValue">$350</span>
-          </div>
-          <input type="range" id="service" min="50" max="2000" value="350" step="50">
-          <p class="slider-hint">Average price (visa, moving, housing...)</p>
-        </div>
-        
-        <div class="commission-box">
-          <div class="commission-box-header">
-            <span style="font-size: 28px;">💰</span>
-            <h4>Your commission: 75% automatic</h4>
-          </div>
-          <p>
-            You earn <strong>75% commission on provider service fees</strong> for every transaction. 
-            It's fixed, transparent, and paid as soon as you reach $30.
-          </p>
-        </div>
-        
-        <div class="calculator-result">
-          <div class="result-amount" id="monthlyResult">$0</div>
-          <div class="result-label">Estimated Monthly Income</div>
-          <div class="result-annual">
-            That's <span id="annualResult">$0</span> per year 🚀
-          </div>
-          
-          <div class="result-breakdown">
-            <div class="breakdown-item">
-              <span>👥 Expected signups</span>
-              <strong id="signupsCount">0</strong>
-            </div>
-            <div class="breakdown-item">
-              <span>✅ Expected conversions</span>
-              <strong id="conversionsCount">0</strong>
-            </div>
-            <div class="breakdown-item">
-              <span>💵 Service volume</span>
-              <strong id="volumeTotal">$0</strong>
-            </div>
-            <div class="breakdown-item" style="padding-top: 14px; border-top: 2px solid rgba(255,255,255,0.25); margin-top: 8px;">
-              <span>💰 Commission per sale</span>
-              <strong id="commissionPerSale">$0</strong>
-            </div>
-          </div>
-        </div>
-        
-        <a href="/signup" class="btn btn-primary" style="margin-top: 32px; text-decoration: none;">
-          🚀 Create My Free Account
-        </a>
-        
-        <div class="examples-grid">
-          <div class="example-card">
-            <strong>Conservative scenario:</strong>
-            <span> 50 contacts → 6 signups → 2 sales → ~$79/month</span>
-          </div>
-          <div class="example-card">
-            <strong>Realistic scenario:</strong>
-            <span> 200 contacts → 24 signups → 7 sales → ~$276/month</span>
-          </div>
-          <div class="example-card featured">
-            <strong>Ambitious scenario:</strong>
-            <span> 1000 contacts → 120 signups → 36 sales → ~$1,417/month 🔥</span>
-          </div>
+        <div class="breakdown-item" style="padding-top: 14px; border-top: 2px solid rgba(255,255,255,0.25); margin-top: 8px;">
+          <span>💰 Commission per sale</span>
+          <strong id="commissionPerSale">$0</strong>
         </div>
       </div>
     </div>
+    
+    <a href="/signup" class="btn btn-primary" style="margin-top: 32px; text-decoration: none;" aria-label="Create free affiliate account">
+      🚀 Create My Free Account
+    </a>
+    
+    <div class="examples-grid">
+      <div class="example-card">
+        <strong>Conservative scenario:</strong>
+        <span> 50 contacts → 6 signups → 2 sales → ~$79/month</span>
+      </div>
+      <div class="example-card">
+        <strong>Realistic scenario:</strong>
+        <span> 200 contacts → 24 signups → 7 sales → ~$276/month</span>
+      </div>
+      <div class="example-card featured">
+        <strong>Ambitious scenario:</strong>
+        <span> 1000 contacts → 120 signups → 36 sales → ~$1,417/month 🔥</span>
+      </div>
+    </div>
+  </div>
+</div>
   </section>
-
-  <section class="section">
+  <section class="section" aria-labelledby="testimonials-title">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">They're Already Earning 💬</h2>
+        <h2 id="testimonials-title" class="section-title">They're Already Earning 💬</h2>
         <p class="section-subtitle">Thousands of satisfied affiliates worldwide</p>
       </div>
-      
-      <div class="carousel-container">
-        <div class="carousel-wrapper" id="testimonialsCarousel">
-          @foreach($reviews as $review)
-          <div class="carousel-item">
-            <a href="{{ route('review.show', $review['slug']) }}" class="block">
-              <div class="testimonial-card" style="cursor: pointer;">
-                @if($review['is_early_beta'] ?? false)
-                <div class="absolute top-3 right-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-lg z-10 animate-pulse">
-                  ⭐ Early Beta
-                </div>
-                @endif
-                <div class="testimonial-stars">
-                  @for($i = 0; $i < $review['rating']; $i++)⭐@endfor
-                </div>
-                <p class="testimonial-text">{{ $review['shortText'] }}</p>
-                <div class="testimonial-author">
-                  <div class="author-avatar">{{ strtoupper(substr($review['name'], 0, 2)) }}</div>
-                  <div class="author-info">
-                    <h4>{{ $review['name'] }}</h4>
-                    <p>{{ $review['flag'] }} {{ $review['nationality'] }}</p>
-                  </div>
-                </div>
+  <div class="carousel-container">
+    <div class="carousel-wrapper" id="testimonialsCarousel" role="list">
+      @foreach($reviews as $review)
+      <article class="carousel-item" role="listitem">
+        <a href="{{ route('review.show', $review['slug']) }}" class="block" aria-label="Read full review from {{ $review['name'] }}">
+          <div class="testimonial-card" style="cursor: pointer;">
+            @if($review['is_early_beta'] ?? false)
+            <div class="absolute top-3 right-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-lg z-10 animate-pulse">
+              ⭐ Early Beta
+            </div>
+            @endif
+            <div class="testimonial-stars" role="img" aria-label="{{ $review['rating'] }} out of 5 stars">
+              @for($i = 0; $i < $review['rating']; $i++)⭐@endfor
+            </div>
+            <p class="testimonial-text">{{ $review['shortText'] }}</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true">{{ strtoupper(substr($review['name'], 0, 2)) }}</div>
+              <div class="author-info">
+                <h4>{{ $review['name'] }}</h4>
+                <p>{{ $review['flag'] }} {{ $review['nationality'] }}</p>
               </div>
-            </a>
+            </div>
           </div>
-          @endforeach
-        </div>
-        
-        <div class="carousel-dots" id="testimonialsDots">
-          @foreach($reviews as $index => $review)
-          <div class="carousel-dot {{ $index === 0 ? 'active' : '' }}"></div>
-          @endforeach
-        </div>
+        </a>
+      </article>
+      @endforeach
+    </div>
+    
+    <div class="carousel-dots" id="testimonialsDots" role="tablist" aria-label="Testimonials navigation">
+      @foreach($reviews as $index => $review)
+      <button class="carousel-dot {{ $index === 0 ? 'active' : '' }}" aria-label="Go to testimonial {{ $index + 1 }}" role="tab" aria-selected="{{ $index === 0 ? 'true' : 'false' }}"></button>
+      @endforeach
+    </div>
+  </div>
+  
+  <div class="case-study">
+    <h3>📊 How Maximilian Generated $708 in 30 Days</h3>
+    <p>Maximilian, an expat in London, shared his link in 2 Facebook groups for German expats and on his LinkedIn profile. Results from the first month:</p>
+    
+    <div class="case-stats">
+      <div>
+        <span class="case-stat-number">247</span>
+        <span class="case-stat-label">Clicks Generated</span>
       </div>
-      
-      <div class="case-study">
-        <h3>📊 How Maximilian Generated $708 in 30 Days</h3>
-        <p>Maximilian, an expat in London, shared his link in 2 Facebook groups for German expats and on his LinkedIn profile. Results from the first month:</p>
-        
-        <div class="case-stats">
-          <div>
-            <span class="case-stat-number">247</span>
-            <span class="case-stat-label">Clicks Generated</span>
-          </div>
-          <div>
-            <span class="case-stat-number">31</span>
-            <span class="case-stat-label">Signups</span>
-          </div>
-          <div>
-            <span class="case-stat-number">8</span>
-            <span class="case-stat-label">Conversions</span>
-          </div>
-          <div>
-            <span class="case-stat-number">$708</span>
-            <span class="case-stat-label">Commission</span>
-          </div>
-        </div>
+      <div>
+        <span class="case-stat-number">31</span>
+        <span class="case-stat-label">Signups</span>
+      </div>
+      <div>
+        <span class="case-stat-number">8</span>
+        <span class="case-stat-label">Conversions</span>
+      </div>
+      <div>
+        <span class="case-stat-number">$708</span>
+        <span class="case-stat-label">Commission</span>
       </div>
     </div>
+  </div>
+</div>
   </section>
-
-  <section class="section" style="background: var(--bg-light);">
+  <section class="section" style="background: var(--bg-light);" aria-labelledby="faq-title">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Frequently Asked Questions ❓</h2>
+        <h2 id="faq-title" class="section-title">Frequently Asked Questions ❓</h2>
         <p class="section-subtitle">Everything you need to know to start earning</p>
       </div>
-      
-      <div class="faq-grid">
-        <details class="faq-item">
-          <summary>How do I start earning money with affiliate marketing?</summary>
-          <div class="faq-answer">
-            It's super simple: <strong>1)</strong> Sign up for free in 30 seconds, <strong>2)</strong> Get your unique affiliate link from your dashboard, <strong>3)</strong> Share it on WhatsApp, Facebook, Instagram, or anywhere. <strong>As soon as someone signs up via your link and purchases a service, you earn 75% commission on the provider service fees!</strong> It's automatic, transparent, and paid directly to your account.
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>Is it really easy to make money?</summary>
-          <div class="faq-answer">
-            <strong>Yes!</strong> If you have friends who are expats, travelers, or members of international communities, it's perfect. Share your link in WhatsApp groups, on Facebook, LinkedIn, or by private message. <strong>Many affiliates earn their first dollars in less than 2 weeks</strong> simply by sharing in 2-3 groups. No marketing expertise needed!
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>What is the exact commission rate?</summary>
-          <div class="faq-answer">
-            You receive <strong>75% commission on provider service fees</strong> for every transaction, paid directly in € or $ depending on your currency. This is one of the most generous rates in the affiliate marketing industry.
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>How and when do I get paid?</summary>
-          <div class="faq-answer">
-            You can <strong>request a payout as soon as you have $30 or €30</strong> in your account. Payments are made <strong>directly to your bank account via wire transfer</strong>. Fast, simple, and secure.
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>How many languages and countries are covered?</summary>
-          <div class="faq-answer">
-            Ulixai covers <strong>197 countries and all world languages</strong>. Whether your contacts speak English, Spanish, Arabic, Chinese, or any other language, they can use the platform and you earn your commission!
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>Can I really earn without investing money?</summary>
-          <div class="faq-answer">
-            <strong>Absolutely!</strong> Registration is 100% free. You never have to pay anything. All you need is your affiliate link and your contacts. <strong>Zero investment, 100% earnings.</strong>
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>How do I access my affiliate link?</summary>
-          <div class="faq-answer">
-            After signing up, <strong>log in to your dashboard</strong>. Your unique affiliate link is immediately available with 1-click share buttons for WhatsApp, Facebook, LinkedIn, etc. You can also see your stats in real-time.
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>Are there any geographic restrictions?</summary>
-          <div class="faq-answer">
-            <strong>None!</strong> The program is open worldwide. You can promote Ulixai in the <strong>197 countries</strong> where we operate.
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>Can I track my performance in real-time?</summary>
-          <div class="faq-answer">
-            Yes! Your <strong>affiliate dashboard</strong> displays in real-time: clicks, signups, conversions, earnings, top countries. You know exactly how much you're earning, minute by minute.
-          </div>
-        </details>
-        
-        <details class="faq-item">
-          <summary>Does it really work for everyone?</summary>
-          <div class="faq-answer">
-            <strong>Yes!</strong> Whether you're a student, employee, freelancer, content creator, or simply someone with an active social network, you can earn. <strong>Thousands of people like you are already generating income</strong> simply by sharing their link.
-          </div>
-        </details>
+  <div class="faq-grid">
+    <details class="faq-item">
+      <summary>How do I start earning money with affiliate marketing?</summary>
+      <div class="faq-answer">
+        It's super simple: <strong>1)</strong> Sign up for free in 30 seconds, <strong>2)</strong> Get your unique affiliate link from your dashboard, <strong>3)</strong> Share it on WhatsApp, Facebook, Instagram, or anywhere. <strong>As soon as someone signs up via your link and purchases a service, you earn 75% commission on the provider service fees!</strong> It's automatic, transparent, and paid directly to your account.
       </div>
-    </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>Is it really easy to make money?</summary>
+      <div class="faq-answer">
+        <strong>Yes!</strong> If you have friends who are expats, travelers, or members of international communities, it's perfect. Share your link in WhatsApp groups, on Facebook, LinkedIn, or by private message. <strong>Many affiliates earn their first dollars in less than 2 weeks</strong> simply by sharing in 2-3 groups. No marketing expertise needed!
+      </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>What is the exact commission rate?</summary>
+      <div class="faq-answer">
+        You receive <strong>75% commission on provider service fees</strong> for every transaction, paid directly in € or $ depending on your currency. This is one of the most generous rates in the affiliate marketing industry.
+      </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>How and when do I get paid?</summary>
+      <div class="faq-answer">
+        You can <strong>request a payout as soon as you have $30 or €30</strong> in your account. Payments are made <strong>directly to your bank account via wire transfer</strong>. Fast, simple, and secure.
+      </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>How many languages and countries are covered?</summary>
+      <div class="faq-answer">
+        Ulixai covers <strong>197 countries and all world languages</strong>. Whether your contacts speak English, Spanish, Arabic, Chinese, or any other language, they can use the platform and you earn your commission!
+      </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>Can I really earn without investing money?</summary>
+      <div class="faq-answer">
+        <strong>Absolutely!</strong> Registration is 100% free. You never have to pay anything. All you need is your affiliate link and your contacts. <strong>Zero investment, 100% earnings.</strong>
+      </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>How do I access my affiliate link?</summary>
+      <div class="faq-answer">
+        After signing up, <strong>log in to your dashboard</strong>. Your unique affiliate link is immediately available with 1-click share buttons for WhatsApp, Facebook, LinkedIn, etc. You can also see your stats in real-time.
+      </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>Are there any geographic restrictions?</summary>
+      <div class="faq-answer">
+        <strong>None!</strong> The program is open worldwide. You can promote Ulixai in the <strong>197 countries</strong> where we operate.
+      </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>Can I track my performance in real-time?</summary>
+      <div class="faq-answer">
+        Yes! Your <strong>affiliate dashboard</strong> displays in real-time: clicks, signups, conversions, earnings, top countries. You know exactly how much you're earning, minute by minute.
+      </div>
+    </details>
+    
+    <details class="faq-item">
+      <summary>Does it really work for everyone?</summary>
+      <div class="faq-answer">
+        <strong>Yes!</strong> Whether you're a student, employee, freelancer, content creator, or simply someone with an active social network, you can earn. <strong>Thousands of people like you are already generating income</strong> simply by sharing their link.
+      </div>
+    </details>
+  </div>
+</div>
   </section>
-
-  <section class="final-cta">
+  <section class="final-cta" aria-labelledby="final-cta-title">
     <div class="container">
-      <h2>Your Link Is Waiting 🚀</h2>
+      <h2 id="final-cta-title">Your Link Is Waiting 🚀</h2>
       <p>Sign up now and start earning in € or $</p>
-      
-      <a href="/signup" class="btn-white">
-        🎯 Create My Free Account
-      </a>
-    </div>
+  <a href="/signup" class="btn-white" aria-label="Create free affiliate account and start earning">
+    🎯 Create My Free Account
+  </a>
+</div>
   </section>
-
   <div class="mb-80"></div>
-  
-  @include('includes.footer')
-
+@include('includes.footer')
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" defer></script>
-  
   <script>
-    const supportsPassive = (() => {
-      let support = false;
-      try {
-        const opts = Object.defineProperty({}, 'passive', {
-          get: () => { support = true; }
-        });
-        window.addEventListener('test', null, opts);
-      } catch {}
-      return support;
-    })();
-    
-    const passiveOpt = supportsPassive ? { passive: true } : false;
-    
-    function initCarousel(carouselId, dotsId) {
-      const carousel = document.getElementById(carouselId);
-      const dots = document.getElementById(dotsId);
-      
-      if (!carousel || !dots) return;
-      
-      const items = carousel.children;
-      const dotElements = dots.children;
-      
-      let scrollTimeout;
-      function updateDots() {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          const scrollLeft = carousel.scrollLeft;
-          const itemWidth = items[0].offsetWidth + parseInt(getComputedStyle(carousel).gap);
-          const activeIndex = Math.round(scrollLeft / itemWidth);
-          
-          Array.from(dotElements).forEach((dot, index) => {
-            dot.classList.toggle('active', index === activeIndex);
-          });
-        }, 50);
-      }
-      
-      carousel.addEventListener('scroll', updateDots, passiveOpt);
-      
-      Array.from(dotElements).forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-          const itemWidth = items[0].offsetWidth + parseInt(getComputedStyle(carousel).gap);
-          carousel.scrollTo({
-            left: itemWidth * index,
-            behavior: 'smooth'
-          });
-        });
-      });
-      
-      updateDots();
-    }
-    
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCarousels);
-    } else {
-      initCarousels();
-    }
-    
-    function initCarousels() {
-      initCarousel('stepsCarousel', 'stepsDots');
-      initCarousel('testimonialsCarousel', 'testimonialsDots');
-    }
-    
-    const calculator = {
-      inputs: {},
-      values: {},
-      results: {},
-      
-      init() {
-        this.inputs = {
-          contacts: document.getElementById('contacts'),
-          signup: document.getElementById('signup'),
-          conversion: document.getElementById('conversion'),
-          service: document.getElementById('service')
-        };
-        
-        this.values = {
-          contacts: document.getElementById('contactsValue'),
-          signup: document.getElementById('signupValue'),
-          conversion: document.getElementById('conversionValue'),
-          service: document.getElementById('serviceValue')
-        };
-        
-        this.results = {
-          monthly: document.getElementById('monthlyResult'),
-          annual: document.getElementById('annualResult'),
-          signups: document.getElementById('signupsCount'),
-          conversions: document.getElementById('conversionsCount'),
-          volume: document.getElementById('volumeTotal'),
-          commission: document.getElementById('commissionPerSale')
-        };
-        
-        Object.values(this.inputs).forEach(input => {
-          if (!input) return;
-          input.addEventListener('input', () => {
-            this.updateSliderBackground(input);
-            this.updateResults();
-          }, passiveOpt);
-          this.updateSliderBackground(input);
-        });
-        
-        this.updateResults();
-      },
-      
-      updateSliderBackground(input) {
-        const min = parseFloat(input.min) || 0;
-        const max = parseFloat(input.max) || 100;
-        const value = parseFloat(input.value);
-        const percentage = ((value - min) / (max - min)) * 100;
-        input.style.background = `linear-gradient(to right, var(--primary) 0%, var(--primary) ${percentage}%, var(--border) ${percentage}%, var(--border) 100%)`;
-      },
-      
-      updateResults() {
-        const contacts = parseInt(this.inputs.contacts.value);
-        const signupRate = parseInt(this.inputs.signup.value);
-        const conversionRate = parseInt(this.inputs.conversion.value);
-        const serviceAmount = parseInt(this.inputs.service.value);
-        
-        this.values.contacts.textContent = contacts.toLocaleString();
-        this.values.signup.textContent = signupRate + '%';
-        this.values.conversion.textContent = conversionRate + '%';
-        this.values.service.textContent = '$' + serviceAmount.toLocaleString();
-        
-        const signups = Math.floor(contacts * (signupRate / 100));
-        const conversions = Math.floor(signups * (conversionRate / 100));
-        
-        const commissionRate = 0.1125;
-        const commissionPerConversion = serviceAmount * commissionRate;
-        const monthlyRevenue = conversions * commissionPerConversion;
-        const totalVolume = conversions * serviceAmount;
-        
-        this.results.signups.textContent = signups.toLocaleString();
-        this.results.conversions.textContent = conversions.toLocaleString();
-        this.results.volume.textContent = '$' + Math.round(totalVolume).toLocaleString();
-        this.results.commission.textContent = '$' + Math.round(commissionPerConversion).toLocaleString();
-        
-        this.results.monthly.textContent = '$' + Math.round(monthlyRevenue).toLocaleString();
-        this.results.annual.textContent = '$' + Math.round(monthlyRevenue * 12).toLocaleString();
-      }
-    };
-    
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => calculator.init());
-    } else {
-      calculator.init();
-    }
-    
-    (function animatePayout() {
-      const target = 13742;
-      const element = document.getElementById('monthlyPayout');
-      if (!element) return;
-      
-      let current = 11000;
-      const duration = 2500;
-      const fps = 60;
-      const steps = (duration / 1000) * fps;
-      const step = (target - current) / steps;
-      const frameTime = 1000 / fps;
-      
-      let lastTime = performance.now();
-      
-      function update(currentTime) {
-        const delta = currentTime - lastTime;
-        
-        if (delta >= frameTime) {
-          current += step;
-          
-          if (current >= target) {
-            element.textContent = '$' + target.toLocaleString();
-            return;
-          }
-          
-          element.textContent = '$' + Math.round(current).toLocaleString();
-          lastTime = currentTime - (delta % frameTime);
-        }
-        
-        requestAnimationFrame(update);
-      }
-      
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          requestAnimationFrame(update);
-          observer.disconnect();
-        }
-      }, { threshold: 0.1 });
-      
-      observer.observe(element);
-    })();
-  </script>
-  
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
+    (function() {
       'use strict';
       
+      const supportsPassive = (() => {
+        let support = false;
+        try {
+          const opts = Object.defineProperty({}, 'passive', {
+            get: () => { support = true; }
+          });
+          window.addEventListener('test', null, opts);
+        } catch {}
+        return support;
+      })();
+      
+      const passiveOpt = supportsPassive ? { passive: true } : false;
+      
+      function initCarousel(carouselId, dotsId) {
+        const carousel = document.getElementById(carouselId);
+        const dots = document.getElementById(dotsId);
+        
+        if (!carousel || !dots) return;
+        
+        const items = carousel.children;
+        const dotElements = dots.children;
+        
+        let scrollTimeout;
+        function updateDots() {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            const scrollLeft = carousel.scrollLeft;
+            const itemWidth = items[0].offsetWidth + parseInt(getComputedStyle(carousel).gap);
+            const activeIndex = Math.round(scrollLeft / itemWidth);
+            
+            Array.from(dotElements).forEach((dot, index) => {
+              const isActive = index === activeIndex;
+              dot.classList.toggle('active', isActive);
+              dot.setAttribute('aria-selected', isActive);
+            });
+          }, 50);
+        }
+        
+        carousel.addEventListener('scroll', updateDots, passiveOpt);
+        
+        Array.from(dotElements).forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            const itemWidth = items[0].offsetWidth + parseInt(getComputedStyle(carousel).gap);
+            carousel.scrollTo({
+              left: itemWidth * index,
+              behavior: 'smooth'
+            });
+          });
+        });
+        
+        updateDots();
+      }
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCarousels);
+      } else {
+        initCarousels();
+      }
+      
+      function initCarousels() {
+        initCarousel('stepsCarousel', 'stepsDots');
+        initCarousel('testimonialsCarousel', 'testimonialsDots');
+      }
+      
+      const calculator = {
+        inputs: {},
+        values: {},
+        results: {},
+        
+        init() {
+          this.inputs = {
+            contacts: document.getElementById('contacts'),
+            signup: document.getElementById('signup'),
+            conversion: document.getElementById('conversion'),
+            service: document.getElementById('service')
+          };
+          
+          this.values = {
+            contacts: document.getElementById('contactsValue'),
+            signup: document.getElementById('signupValue'),
+            conversion: document.getElementById('conversionValue'),
+            service: document.getElementById('serviceValue')
+          };
+          
+          this.results = {
+            monthly: document.getElementById('monthlyResult'),
+            annual: document.getElementById('annualResult'),
+            signups: document.getElementById('signupsCount'),
+            conversions: document.getElementById('conversionsCount'),
+            volume: document.getElementById('volumeTotal'),
+            commission: document.getElementById('commissionPerSale')
+          };
+          
+          Object.values(this.inputs).forEach(input => {
+            if (!input) return;
+            input.addEventListener('input', () => {
+              this.updateSliderBackground(input);
+              this.updateResults();
+            }, passiveOpt);
+            this.updateSliderBackground(input);
+          });
+          
+          this.updateResults();
+        },
+        
+        updateSliderBackground(input) {
+          const min = parseFloat(input.min) || 0;
+          const max = parseFloat(input.max) || 100;
+          const value = parseFloat(input.value);
+          const percentage = ((value - min) / (max - min)) * 100;
+          input.style.background = `linear-gradient(to right, var(--primary) 0%, var(--primary) ${percentage}%, var(--border) ${percentage}%, var(--border) 100%)`;
+        },
+        
+        updateResults() {
+          const contacts = parseInt(this.inputs.contacts.value);
+          const signupRate = parseInt(this.inputs.signup.value);
+          const conversionRate = parseInt(this.inputs.conversion.value);
+          const serviceAmount = parseInt(this.inputs.service.value);
+          
+          this.values.contacts.textContent = contacts.toLocaleString();
+          this.values.signup.textContent = signupRate + '%';
+          this.values.conversion.textContent = conversionRate + '%';
+          this.values.service.textContent = '$' + serviceAmount.toLocaleString();
+          
+          const signups = Math.floor(contacts * (signupRate / 100));
+          const conversions = Math.floor(signups * (conversionRate / 100));
+          
+          const commissionRate = 0.1125;
+          const commissionPerConversion = serviceAmount * commissionRate;
+          const monthlyRevenue = conversions * commissionPerConversion;
+          const totalVolume = conversions * serviceAmount;
+          
+          this.results.signups.textContent = signups.toLocaleString();
+          this.results.conversions.textContent = conversions.toLocaleString();
+          this.results.volume.textContent = '$' + Math.round(totalVolume).toLocaleString();
+          this.results.commission.textContent = '$' + Math.round(commissionPerConversion).toLocaleString();
+          
+          this.results.monthly.textContent = '$' + Math.round(monthlyRevenue).toLocaleString();
+          this.results.annual.textContent = '$' + Math.round(monthlyRevenue * 12).toLocaleString();
+        }
+      };
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => calculator.init());
+      } else {
+        calculator.init();
+      }
+      
+      (function animatePayout() {
+        const target = 13742;
+        const element = document.getElementById('monthlyPayout');
+        if (!element) return;
+        
+        let current = 11000;
+        const duration = 2500;
+        const fps = 60;
+        const steps = (duration / 1000) * fps;
+        const step = (target - current) / steps;
+        const frameTime = 1000 / fps;
+        
+        let lastTime = performance.now();
+        
+        function update(currentTime) {
+          const delta = currentTime - lastTime;
+          
+          if (delta >= frameTime) {
+            current += step;
+            
+            if (current >= target) {
+              element.textContent = '$' + target.toLocaleString();
+              return;
+            }
+            
+            element.textContent = '$' + Math.round(current).toLocaleString();
+            lastTime = currentTime - (delta % frameTime);
+          }
+          
+          requestAnimationFrame(update);
+        }
+        
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            requestAnimationFrame(update);
+            observer.disconnect();
+          }
+        }, { threshold: 0.1 });
+        
+        observer.observe(element);
+      })();
+      
       window.openSharePanel = function() {
-          const panel = document.getElementById('sharePanel');
-          const overlay = document.getElementById('shareOverlay');
-          const floatingBtn = document.getElementById('floatingShareBtn');
-          
-          if (overlay) {
-              overlay.classList.remove('hidden');
-              setTimeout(() => overlay.classList.add('opacity-100'), 10);
-          }
-          if (panel) {
-              panel.classList.remove('translate-x-full');
-          }
-          if (floatingBtn) {
-              floatingBtn.style.display = 'none';
-          }
-          document.body.style.overflow = 'hidden';
-          
-          console.log('✅ Share panel opened');
+        const panel = document.getElementById('sharePanel');
+        const overlay = document.getElementById('shareOverlay');
+        const floatingBtn = document.getElementById('floatingShareBtn');
+        
+        if (overlay) {
+          overlay.classList.remove('hidden');
+          setTimeout(() => overlay.classList.add('opacity-100'), 10);
+        }
+        if (panel) {
+          panel.classList.remove('translate-x-full');
+        }
+        if (floatingBtn) {
+          floatingBtn.style.display = 'none';
+        }
+        document.body.style.overflow = 'hidden';
       };
       
       window.closeSharePanel = function() {
-          const panel = document.getElementById('sharePanel');
-          const overlay = document.getElementById('shareOverlay');
-          const floatingBtn = document.getElementById('floatingShareBtn');
-          
-          if (panel) {
-              panel.classList.add('translate-x-full');
-          }
-          if (overlay) {
-              overlay.classList.remove('opacity-100');
-              setTimeout(() => overlay.classList.add('hidden'), 300);
-          }
-          if (floatingBtn) {
-              setTimeout(() => floatingBtn.style.display = 'flex', 300);
-          }
-          document.body.style.overflow = '';
-          
-          console.log('✅ Share panel closed');
+        const panel = document.getElementById('sharePanel');
+        const overlay = document.getElementById('shareOverlay');
+        const floatingBtn = document.getElementById('floatingShareBtn');
+        
+        if (panel) {
+          panel.classList.add('translate-x-full');
+        }
+        if (overlay) {
+          overlay.classList.remove('opacity-100');
+          setTimeout(() => overlay.classList.add('hidden'), 300);
+        }
+        if (floatingBtn) {
+          setTimeout(() => floatingBtn.style.display = 'flex', 300);
+        }
+        document.body.style.overflow = '';
       };
       
       window.showShareSuccessPopup = function() {
-          const popup = document.getElementById('shareSuccessPopup');
-          const content = document.getElementById('popupContent');
-          if (popup && content) {
-              popup.classList.remove('hidden');
-              popup.classList.add('flex');
-              setTimeout(() => {
-                  content.classList.remove('scale-95', 'opacity-0');
-                  content.classList.add('scale-100', 'opacity-100');
-              }, 10);
-              console.log('✅ Success popup shown');
-          }
+        const popup = document.getElementById('shareSuccessPopup');
+        const content = document.getElementById('popupContent');
+        if (popup && content) {
+          popup.classList.remove('hidden');
+          popup.classList.add('flex');
+          setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+          }, 10);
+        }
       };
       
       window.closeSharePopup = function() {
-          const popup = document.getElementById('shareSuccessPopup');
-          const content = document.getElementById('popupContent');
-          if (popup && content) {
-              content.classList.remove('scale-100', 'opacity-100');
-              content.classList.add('scale-95', 'opacity-0');
-              setTimeout(() => {
-                  popup.classList.remove('flex');
-                  popup.classList.add('hidden');
-              }, 200);
-              console.log('✅ Success popup closed');
-          }
+        const popup = document.getElementById('shareSuccessPopup');
+        const content = document.getElementById('popupContent');
+        if (popup && content) {
+          content.classList.remove('scale-100', 'opacity-100');
+          content.classList.add('scale-95', 'opacity-0');
+          setTimeout(() => {
+            popup.classList.remove('flex');
+            popup.classList.add('hidden');
+          }, 200);
+        }
       };
       
       window.shareAgain = function() {
-          closeSharePopup();
-          setTimeout(() => openSharePanel(), 300);
+        closeSharePopup();
+        setTimeout(() => openSharePanel(), 300);
       };
       
       function getShareUrl() {
-          const input = document.getElementById('affiliateLinkShareNew');
-          if (!input) return window.location.href;
-          
-          let shareUrl = input.value;
-          try {
-              const urlObj = new URL(shareUrl, window.location.origin);
-              urlObj.searchParams.set('utm_source', 'social');
-              urlObj.searchParams.set('utm_medium', 'share');
-              urlObj.searchParams.set('utm_campaign', 'affiliate');
-              shareUrl = urlObj.toString();
-          } catch (e) {
-              console.error('UTM error:', e);
-          }
-          return shareUrl;
+        const input = document.getElementById('affiliateLinkShareNew');
+        if (!input) return window.location.href;
+        
+        let shareUrl = input.value;
+        try {
+          const urlObj = new URL(shareUrl, window.location.origin);
+          urlObj.searchParams.set('utm_source', 'social');
+          urlObj.searchParams.set('utm_medium', 'share');
+          urlObj.searchParams.set('utm_campaign', 'affiliate');
+          shareUrl = urlObj.toString();
+        } catch (e) {
+          console.error('UTM error:', e);
+        }
+        return shareUrl;
       }
       
       const finalUrl = getShareUrl();
@@ -2833,74 +2824,71 @@
       const viralEmailBody = encodeURIComponent(`Hey! 👋\n\nI discovered an amazing affiliate program that pays 75% commission:\n\n${finalUrl}\n\nWhy it's perfect:\n✅ FREE signup in 30 seconds\n✅ Your affiliate link is ready instantly\n✅ 75% commission on service fees\n✅ Payout from €30/$30\n✅ 197 countries covered + all languages\n\nClick and start earning money today!\n\n---\n💡 TIP: Share this link in your groups and networks to maximize your earnings! 💰`);
       
       const socialLinks = {
-          shareWhatsAppSlide: `https://api.whatsapp.com/send?text=${viralText}%20${enc}`,
-          shareMessengerSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
-          shareFacebookSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
-          shareTwitterSlide: `https://twitter.com/intent/tweet?url=${enc}&text=${viralText}`,
-          shareLinkedInSlide: `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`,
-          shareEmailSlide: `mailto:?subject=${subject}&body=${viralEmailBody}`
+        shareWhatsAppSlide: `https://api.whatsapp.com/send?text=${viralText}%20${enc}`,
+        shareMessengerSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
+        shareFacebookSlide: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
+        shareTwitterSlide: `https://twitter.com/intent/tweet?url=${enc}&text=${viralText}`,
+        shareLinkedInSlide: `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`,
+        shareEmailSlide: `mailto:?subject=${subject}&body=${viralEmailBody}`
       };
       
       Object.entries(socialLinks).forEach(([id, href]) => {
-          const link = document.getElementById(id);
-          if (link) {
-              link.href = href;
-              console.log(`✅ Link set for ${id}`);
-          }
+        const link = document.getElementById(id);
+        if (link) {
+          link.href = href;
+        }
       });
       
       const copyBtn = document.getElementById('copyBtnSlide');
       if (copyBtn) {
-          copyBtn.addEventListener('click', function(e) {
-              e.preventDefault();
-              
-              navigator.clipboard.writeText(finalUrl).then(() => {
-                  const originalHTML = copyBtn.innerHTML;
-                  
-                  copyBtn.className = 'bg-green-500 rounded-xl p-3.5 sm:p-4 border-2 border-green-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200';
-                  copyBtn.innerHTML = `
-                      <i class="fas fa-check text-3xl sm:text-4xl text-white"></i>
-                      <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wide">Copied!</span>
-                  `;
-                  
-                  setTimeout(() => {
-                      closeSharePanel();
-                      showShareSuccessPopup();
-                  }, 800);
-                  
-                  setTimeout(() => {
-                      copyBtn.className = 'bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 active:from-purple-600 active:to-purple-700 rounded-xl p-3.5 sm:p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group';
-                      copyBtn.innerHTML = originalHTML;
-                  }, 1500);
-                  
-              }).catch(() => {
-                  console.error('Copy failed');
-              });
+        copyBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          navigator.clipboard.writeText(finalUrl).then(() => {
+            const originalHTML = copyBtn.innerHTML;
+            
+            copyBtn.className = 'bg-green-500 rounded-xl p-3.5 sm:p-4 border-2 border-green-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200';
+            copyBtn.innerHTML = `
+              <i class="fas fa-check text-3xl sm:text-4xl text-white"></i>
+              <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wide">Copied!</span>
+            `;
+            
+            setTimeout(() => {
+              closeSharePanel();
+              showShareSuccessPopup();
+            }, 800);
+            
+            setTimeout(() => {
+              copyBtn.className = 'bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 active:from-purple-600 active:to-purple-700 rounded-xl p-3.5 sm:p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group';
+              copyBtn.innerHTML = originalHTML;
+            }, 1500);
+            
+          }).catch(() => {
+            console.error('Copy failed');
           });
+        });
       }
       
       const shareButtons = document.querySelectorAll('a[id^="share"]');
       shareButtons.forEach(btn => {
-          btn.addEventListener('click', function(e) {
-              console.log('🚀 Share button clicked:', btn.id);
-              
-              setTimeout(() => {
-                  closeSharePanel();
-                  showShareSuccessPopup();
-              }, 800);
-          });
+        btn.addEventListener('click', function() {
+          setTimeout(() => {
+            closeSharePanel();
+            showShareSuccessPopup();
+          }, 800);
+        });
       });
       
       const popup = document.getElementById('shareSuccessPopup');
       if (popup) {
-          popup.addEventListener('click', function(e) {
-              if (e.target === popup) {
-                  closeSharePopup();
-              }
-          });
+        popup.addEventListener('click', function(e) {
+          if (e.target === popup) {
+            closeSharePopup();
+          }
+        });
       }
       
-      (function() {
+      (function autoRotateTestimonials() {
         const carousel = document.getElementById('testimonialsCarousel');
         if (!carousel) return;
         
@@ -2917,7 +2905,9 @@
           });
           
           dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === index);
+            const isActive = i === index;
+            dot.classList.toggle('active', isActive);
+            dot.setAttribute('aria-selected', isActive);
           });
         }
         
@@ -2927,8 +2917,7 @@
         }, 5000);
       })();
       
-      console.log('✅ Viral share system (affiliate - ENGLISH) initialized!');
-  });
+    })();
   </script>
 </body>
 </html>
