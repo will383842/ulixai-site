@@ -403,9 +403,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/press/store', [PressController::class, 'store'])->name('press.store');
         Route::get('/press/preview/{press}/{field}', [PressController::class, 'preview'])
             ->whereIn('field', ['pdf','guideline_pdf','photo','icon'])
-            ->name('admin.press.preview');
+            ->name('press.preview');
         Route::delete('/press/delete-all', [PressController::class, 'deleteAll'])->name('press.deleteAll');
-
+        Route::get('/press/files', [PressController::class, 'getFiles'])->name('press.files');
+        Route::post('/press/upload', [PressController::class, 'upload'])->name('press.upload');
+        Route::post('/press/delete', [PressController::class, 'delete'])->name('press.delete');
+        Route::delete('/press/{press}', [PressController::class, 'destroy'])->name('press.destroy');
+        Route::get('/press/by-language', [PressController::class, 'getByLanguage'])->name('press.by-language');
+        
         //Terms n conditions 
         Route::get('/terms', [TermsAndConditionsController::class, 'termsIndex'])->name('terms.index');
         Route::get('/terms/fetch', [TermsAndConditionsController::class, 'fetch'])->name('terms.fetch');

@@ -60,6 +60,136 @@ class PressController extends Controller
     }
 
     /**
+     * Upload a file for a press item (AJAX - ADMIN)
+     */
+    public function upload(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'file' => 'required|file|max:20480',
+                'type' => 'required|in:icon,pdf,guideline_pdf,photo',
+                'language' => 'required|in:en,fr,de',
+            ]);
+
+            // Find or create press item for this language
+            $press = Press::where('language', $validated['language'])
+                          ->where('type', $validated['type'])
+                          ->first();
+
+            if (!$press) {
+                $press = new Press();
+                $press->language = $validated['language'];
+                $press->type = $validated['type'];
+            }
+
+            // Delete old file if exists
+            if ($press->{$validated['type']} && Storage::disk('public')->exists($press->{$validated['type']})) {
+                Storage::disk('public')->delete($press->{$validated['type']});
+            }
+
+            // Store new file
+            $path = $request->file('file')->store('press', 'public');
+            $press->{$validated['type']} = $path;
+            $press->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Fichier uploadé avec succès'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    /**
+     * Delete a specific file from a press item (AJAX - ADMIN)
+     */
+    public function delete(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'type' => 'required|in:icon,pdf,guideline_pdf,photo',
+                'language' => 'required|in:en,fr,de',
+            ]);
+
+            $press = Press::where('language', $validated['language'])
+                          ->where('type', $validated['type'])
+                          ->first();
+
+            if (!$press) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Fichier non trouvé'
+                ], 404);
+            }
+
+            // Delete file from storage
+            if ($press->{$validated['type']} && Storage::disk('public')->exists($press->{$validated['type']})) {
+                Storage::disk('public')->delete($press->{$validated['type']});
+            }
+
+            // Delete the record
+            $press->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Fichier supprimé'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    /**
+     * Get existing files for a language (AJAX - ADMIN)
+     */
+    public function getFiles(Request $request)
+    {
+        $language = $request->query('language', 'en');
+
+        $files = Press::where('language', $language)
+                     ->get()
+                     ->keyBy('type')
+                     ->map(function ($item) {
+                         return ['id' => $item->id, 'name' => $item->title ?? 'Sans titre'];
+                     });
+
+        return response()->json([
+            'success' => true,
+            'files' => $files
+        ]);
+    }
+
+    /**
+     * Destroy a single press entry (ADMIN)
+     */
+    public function destroy($id)
+    {
+        try {
+            $press = Press::findOrFail($id);
+
+            // Delete all associated files
+            foreach (['icon', 'pdf', 'guideline_pdf', 'photo'] as $field) {
+                if ($press->$field && Storage::disk('public')->exists($press->$field)) {
+                    Storage::disk('public')->delete($press->$field);
+                }
+            }
+
+            $press->delete();
+
+            return redirect()->back()->with('success', '✅ Fichier supprimé avec succès');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', '❌ Erreur: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Delete all press items (ADMIN)
      */
     public function deleteAll()
