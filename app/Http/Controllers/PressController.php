@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Storage;
 class PressController extends Controller
 {
     /**
-     * Display press page (public)
+     * Display press page (public) - Main hub with language selector
      */
     public function index($locale = 'en')
     {
-        // Get all press items, ordered by most recent
-        $pressItems = Press::orderBy('updated_at', 'desc')->get();
+        // Get all press items for this language only
+        $pressItems = Press::where('language', $locale)
+                          ->orderBy('updated_at', 'desc')
+                          ->get();
         
         return view('press.index', [
             'pressItems' => $pressItems,
@@ -25,6 +27,7 @@ class PressController extends Controller
 
     /**
      * Store a new press item (ADMIN)
+     * Creates one item per language with all 4 file types
      */
     public function store(Request $request)
     {
@@ -38,20 +41,30 @@ class PressController extends Controller
             'photo' => 'nullable|file|mimes:png,jpg,jpeg,webp|max:10240',
         ]);
 
-        $data = [
-            'title' => $validated['title'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'language' => $validated['language'],
-        ];
+        // Find or create ONE item per language (not per type!)
+        $press = Press::where('language', $validated['language'])->first();
+        
+        if (!$press) {
+            $press = new Press();
+            $press->language = $validated['language'];
+        }
+
+        $press->title = $validated['title'] ?? $press->title;
+        $press->description = $validated['description'] ?? $press->description;
 
         // Handle file uploads
         foreach (['icon', 'pdf', 'guideline_pdf', 'photo'] as $field) {
             if ($request->hasFile($field)) {
-                $data[$field] = $request->file($field)->store('press', 'public');
+                // Delete old file if exists
+                if ($press->{$field} && Storage::disk('public')->exists($press->{$field})) {
+                    Storage::disk('public')->delete($press->{$field});
+                }
+                // Store new file
+                $press->{$field} = $request->file($field)->store('press', 'public');
             }
         }
 
-        Press::create($data);
+        $press->save();
 
         return response()->json([
             'success' => true,
@@ -60,7 +73,8 @@ class PressController extends Controller
     }
 
     /**
-     * Upload a file for a press item (AJAX - ADMIN)
+     * Upload a single file for a press item (AJAX - ADMIN)
+     * ✅ CORRECTED: Only one item per language
      */
     public function upload(Request $request)
     {
@@ -71,25 +85,26 @@ class PressController extends Controller
                 'language' => 'required|in:en,fr,de',
             ]);
 
-            // Find or create press item for this language
-            $press = Press::where('language', $validated['language'])
-                          ->where('type', $validated['type'])
-                          ->first();
+            // ✅ CORRECTED: Get ONE item per language
+            $press = Press::where('language', $validated['language'])->first();
 
             if (!$press) {
                 $press = new Press();
                 $press->language = $validated['language'];
-                $press->type = $validated['type'];
+                $press->title = null;
+                $press->description = null;
             }
 
+            $fieldName = $validated['type'];
+
             // Delete old file if exists
-            if ($press->{$validated['type']} && Storage::disk('public')->exists($press->{$validated['type']})) {
-                Storage::disk('public')->delete($press->{$validated['type']});
+            if ($press->{$fieldName} && Storage::disk('public')->exists($press->{$fieldName})) {
+                Storage::disk('public')->delete($press->{$fieldName});
             }
 
             // Store new file
             $path = $request->file('file')->store('press', 'public');
-            $press->{$validated['type']} = $path;
+            $press->{$fieldName} = $path;
             $press->save();
 
             return response()->json([
@@ -106,6 +121,7 @@ class PressController extends Controller
 
     /**
      * Delete a specific file from a press item (AJAX - ADMIN)
+     * ✅ CORRECTED: Only one item per language
      */
     public function delete(Request $request)
     {
@@ -115,9 +131,8 @@ class PressController extends Controller
                 'language' => 'required|in:en,fr,de',
             ]);
 
-            $press = Press::where('language', $validated['language'])
-                          ->where('type', $validated['type'])
-                          ->first();
+            // ✅ CORRECTED: Get ONE item per language
+            $press = Press::where('language', $validated['language'])->first();
 
             if (!$press) {
                 return response()->json([
@@ -126,13 +141,16 @@ class PressController extends Controller
                 ], 404);
             }
 
+            $fieldName = $validated['type'];
+
             // Delete file from storage
-            if ($press->{$validated['type']} && Storage::disk('public')->exists($press->{$validated['type']})) {
-                Storage::disk('public')->delete($press->{$validated['type']});
+            if ($press->{$fieldName} && Storage::disk('public')->exists($press->{$fieldName})) {
+                Storage::disk('public')->delete($press->{$fieldName});
             }
 
-            // Delete the record
-            $press->delete();
+            // Set field to null instead of deleting the item
+            $press->{$fieldName} = null;
+            $press->save();
 
             return response()->json([
                 'success' => true,
@@ -153,12 +171,24 @@ class PressController extends Controller
     {
         $language = $request->query('language', 'en');
 
-        $files = Press::where('language', $language)
-                     ->get()
-                     ->keyBy('type')
-                     ->map(function ($item) {
-                         return ['id' => $item->id, 'name' => $item->title ?? 'Sans titre'];
-                     });
+        $press = Press::where('language', $language)->first();
+
+        if (!$press) {
+            return response()->json([
+                'success' => true,
+                'files' => []
+            ]);
+        }
+
+        $files = [];
+        foreach (['icon', 'pdf', 'guideline_pdf', 'photo'] as $type) {
+            if (!empty($press->{$type})) {
+                $files[$type] = [
+                    'id' => $press->id,
+                    'name' => $press->title ?? 'Sans titre'
+                ];
+            }
+        }
 
         return response()->json([
             'success' => true,
@@ -194,10 +224,8 @@ class PressController extends Controller
      */
     public function deleteAll()
     {
-        // Get all press items
         $items = Press::all();
 
-        // Delete associated files
         foreach ($items as $item) {
             foreach (['icon', 'pdf', 'guideline_pdf', 'photo'] as $field) {
                 if ($item->$field && Storage::disk('public')->exists($item->$field)) {
@@ -206,7 +234,6 @@ class PressController extends Controller
             }
         }
 
-        // Delete all records
         Press::truncate();
 
         return redirect()->back()->with('success', 'All press entries deleted successfully');
@@ -219,7 +246,6 @@ class PressController extends Controller
     {
         $press = Press::findOrFail($id);
         
-        // Validate type
         if (!in_array($type, ['icon', 'photo', 'pdf', 'guideline_pdf'])) {
             abort(404);
         }
@@ -230,7 +256,6 @@ class PressController extends Controller
             abort(404);
         }
         
-        // Return file for download/viewing
         return response()->file(storage_path('app/public/' . $filePath));
     }
 
@@ -256,7 +281,7 @@ class PressController extends Controller
         
         return response()->file($fullPath, [
             'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline', // Display in browser instead of download
+            'Content-Disposition' => 'inline',
         ]);
     }
 }
