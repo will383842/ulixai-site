@@ -6,6 +6,7 @@ use App\Models\Press;
 use App\Models\PressInquiry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class PressController extends Controller
 {
@@ -15,12 +16,12 @@ class PressController extends Controller
     public function index($locale = 'en')
     {
         $pressItems = Press::where('language', $locale)
-                          ->orderBy('updated_at', 'desc')
-                          ->get();
-        
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
         return view('press.index', [
-            'pressItems' => $pressItems,
-            'locale' => $locale,
+            'pressItems'  => $pressItems,
+            'locale'      => $locale,
             'showContent' => true,
         ]);
     }
@@ -31,24 +32,24 @@ class PressController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'language' => 'required|in:en,fr,de',
-            'press_id' => 'nullable|integer|exists:press,id',
-            'icon' => 'nullable|file|mimes:png,jpg,jpeg,svg,webp|max:5120',
-            'pdf' => 'nullable|file|mimes:pdf|max:20480',
+            'title'         => 'nullable|string|max:255',
+            'description'   => 'nullable|string',
+            'language'      => 'required|in:en,fr,de',
+            'press_id'      => 'nullable|integer|exists:press,id',
+            'icon'          => 'nullable|file|mimes:png,jpg,jpeg,svg,webp|max:5120',
+            'pdf'           => 'nullable|file|mimes:pdf|max:20480',
             'guideline_pdf' => 'nullable|file|mimes:pdf|max:20480',
-            'photo' => 'nullable|file|mimes:png,jpg,jpeg,webp|max:10240',
+            'photo'         => 'nullable|file|mimes:png,jpg,jpeg,webp|max:10240',
         ]);
 
         $press = null;
-        
+
         if (!empty($validated['press_id'])) {
             $press = Press::find($validated['press_id']);
         } else {
             $press = Press::where('language', $validated['language'])->first();
         }
-        
+
         if (!$press) {
             $press = new Press();
             $press->language = $validated['language'];
@@ -69,8 +70,8 @@ class PressController extends Controller
         $press->save();
 
         return response()->json([
-            'success' => true,
-            'message' => 'Press item created successfully',
+            'success'  => true,
+            'message'  => 'Press item created successfully',
             'press_id' => $press->id
         ]);
     }
@@ -82,14 +83,14 @@ class PressController extends Controller
     {
         try {
             $validated = $request->validate([
-                'file' => 'required|file|max:20480',
-                'type' => 'required|in:icon,pdf,guideline_pdf,photo',
-                'language' => 'required|in:en,fr,de',
-                'press_id' => 'nullable|integer|exists:press,id',
+                'file'      => 'required|file|max:20480',
+                'type'      => 'required|in:icon,pdf,guideline_pdf,photo',
+                'language'  => 'required|in:en,fr,de',
+                'press_id'  => 'nullable|integer|exists:press,id',
             ]);
 
             $press = null;
-            
+
             if (!empty($validated['press_id'])) {
                 $press = Press::find($validated['press_id']);
             } else {
@@ -114,8 +115,8 @@ class PressController extends Controller
             $press->save();
 
             return response()->json([
-                'success' => true,
-                'message' => 'File uploaded successfully',
+                'success'  => true,
+                'message'  => 'File uploaded successfully',
                 'press_id' => $press->id
             ]);
         } catch (\Exception $e) {
@@ -133,13 +134,13 @@ class PressController extends Controller
     {
         try {
             $validated = $request->validate([
-                'type' => 'required|in:icon,pdf,guideline_pdf,photo',
-                'language' => 'required|in:en,fr,de',
-                'press_id' => 'nullable|integer|exists:press,id',
+                'type'      => 'required|in:icon,pdf,guideline_pdf,photo',
+                'language'  => 'required|in:en,fr,de',
+                'press_id'  => 'nullable|integer|exists:press,id',
             ]);
 
             $press = null;
-            
+
             if (!empty($validated['press_id'])) {
                 $press = Press::find($validated['press_id']);
             } else {
@@ -183,7 +184,7 @@ class PressController extends Controller
         $press_id = $request->query('press_id');
 
         $press = null;
-        
+
         if ($press_id) {
             $press = Press::find($press_id);
         } else {
@@ -193,7 +194,7 @@ class PressController extends Controller
         if (!$press) {
             return response()->json([
                 'success' => true,
-                'files' => []
+                'files'   => []
             ]);
         }
 
@@ -201,18 +202,18 @@ class PressController extends Controller
         foreach (['icon', 'pdf', 'guideline_pdf', 'photo'] as $type) {
             if (!empty($press->{$type})) {
                 $files[$type] = [
-                    'id' => $press->id,
+                    'id'   => $press->id,
                     'name' => $press->title ?? 'Untitled',
-                    'url' => Storage::disk('public')->url($press->{$type})
+                    'url'  => Storage::disk('public')->url($press->{$type})
                 ];
             }
         }
 
         return response()->json([
-            'success' => true,
-            'files' => $files,
+            'success'  => true,
+            'files'    => $files,
             'press_id' => $press->id,
-            'title' => $press->title
+            'title'    => $press->title
         ]);
     }
 
@@ -264,17 +265,17 @@ class PressController extends Controller
     public function asset($id, $type)
     {
         $press = Press::findOrFail($id);
-        
+
         if (!in_array($type, ['icon', 'photo', 'pdf', 'guideline_pdf'])) {
             abort(404);
         }
-        
+
         $filePath = $press->$type;
-        
+
         if (!$filePath || !Storage::disk('public')->exists($filePath)) {
             abort(404);
         }
-        
+
         return response()->file(storage_path('app/public/' . $filePath));
     }
 
@@ -284,54 +285,137 @@ class PressController extends Controller
     public function preview($id, $type)
     {
         $press = Press::findOrFail($id);
-        
+
         if (!in_array($type, ['icon', 'photo', 'pdf', 'guideline_pdf'])) {
             abort(404);
         }
-        
+
         $filePath = $press->$type;
-        
+
         if (!$filePath || !Storage::disk('public')->exists($filePath)) {
             abort(404);
         }
-        
+
         $fullPath = storage_path('app/public/' . $filePath);
         $mimeType = mime_content_type($fullPath);
-        
+
         return response()->file($fullPath, [
-            'Content-Type' => $mimeType,
+            'Content-Type'        => $mimeType,
             'Content-Disposition' => 'inline',
         ]);
     }
 
     /**
-     * 🆕 Store press inquiry from contact form (PUBLIC)
+     * Store press inquiry from contact form (PUBLIC)
+     * - Tout est REQUIS sauf website ; téléphone avec indicatif (E.164).
+     * - Accepte quelques alias de champs côté front.
      */
     public function storeInquiry(Request $request)
     {
-        $validated = $request->validate([
-            'media_name' => 'required|string|max:255',
-            'full_name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:50',
-            'website' => 'nullable|url|max:255',
-            'email' => 'required|email|max:255',
-            'languages_spoken' => 'nullable|string|max:255',
-            'how_heard' => 'nullable|string|max:255',
-            'message' => 'nullable|string|max:5000',
-        ]);
+        // Normaliser les clés (alias possibles)
+        $mediaName = $request->input('media_name') ?? $request->input('media') ?? $request->input('company');
+        $fullName  = $request->input('full_name') ?? $request->input('name')
+                   ?? trim(($request->input('first_name') ?? '').' '.($request->input('last_name') ?? ''));
+        $email     = $request->input('email') ?? $request->input('email_address');
 
-        try {
-            PressInquiry::create($validated);
+        // Téléphone : combine dial code + numéro, sortie en E.164
+        $rawPhone  = $request->input('phone') ?? $request->input('phone_number');
+        $dial      = $request->input('phone_country_code') ?? $request->input('dial_code') ?? $request->input('country_code'); // +33 ou 33
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Press inquiry submitted successfully'
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while submitting your inquiry'
-            ], 500);
+        // Nettoyage indicatif
+        if (!empty($dial)) {
+            $dial = '+' . ltrim(preg_replace('/\D+/', '', (string)$dial), '+');
         }
+
+        if (preg_match('/^\+/', (string)$rawPhone)) {
+            $normalizedPhone = '+' . ltrim(preg_replace('/\D+/', '', (string)$rawPhone), '+');
+        } elseif (!empty($dial)) {
+            $normalizedPhone = $dial . preg_replace('/\D+/', '', (string)$rawPhone);
+        } else {
+            // forcera une erreur de validation (indicatif obligatoire)
+            $normalizedPhone = (string)$rawPhone;
+        }
+
+        // Website : ajouter https:// si manquant
+        $website = $request->input('website') ?? $request->input('site');
+        if (!empty($website) && !preg_match('~^https?://~i', $website)) {
+            $website = 'https://' . $website;
+        }
+
+        $data = [
+            'media_name'       => $mediaName,
+            'full_name'        => $fullName,
+            'email'            => $email,
+            'phone'            => $normalizedPhone,
+            'website'          => $website, // seul champ non requis
+            'languages_spoken' => $request->input('languages_spoken') ?? $request->input('languages'),
+            'how_heard'        => $request->input('how_heard') ?? $request->input('source'),
+            'message'          => $request->input('message'),
+        ];
+
+        // Validation : tout requis sauf website
+        $validated = Validator::make($data, [
+            'media_name'       => 'required|string|max:255',
+            'full_name'        => 'required|string|max:255',
+            'email'            => 'required|email|max:255',
+            'phone'            => ['required', 'regex:/^\+[1-9]\d{6,14}$/'], // E.164
+            'website'          => 'nullable|url|max:255',
+            'languages_spoken' => 'required|string|max:255',
+            'how_heard'        => 'required|string|max:255',
+            'message'          => 'required|string|max:5000',
+        ], [
+            'phone.regex' => 'Le téléphone doit inclure l’indicatif pays (ex: +33...).',
+        ])->validate();
+
+        // Status par défaut: pending (dans la BDD aussi)
+        $validated['status'] = 'pending';
+
+        PressInquiry::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Press inquiry submitted successfully'
+        ], 201);
+    }
+
+    /**
+     * ADMIN — page Blade listant les messages
+     */
+    public function inquiriesPage()
+    {
+        return view('admin.press-inquiries');
+    }
+
+    /**
+     * ADMIN — API JSON paginée des messages (filtres: status, search)
+     */
+    public function inquiriesList(Request $request)
+    {
+        $q = PressInquiry::query()->orderByDesc('created_at');
+
+        if ($request->filled('status')) {
+            $q->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('search')) {
+            $s = (string) $request->input('search');
+            $q->where(function ($qq) use ($s) {
+                $qq->where('media_name', 'like', "%{$s}%")
+                   ->orWhere('full_name', 'like', "%{$s}%")
+                   ->orWhere('email', 'like', "%{$s}%")
+                   ->orWhere('message', 'like', "%{$s}%");
+            });
+        }
+
+        return response()->json($q->paginate(20));
+    }
+
+    /**
+     * ADMIN — marquer un message comme lu (status = read)
+     */
+    public function markAsRead(PressInquiry $inquiry)
+    {
+        $inquiry->update(['status' => 'read']);
+        return response()->noContent();
     }
 }

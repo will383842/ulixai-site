@@ -9,19 +9,25 @@ class PressInquiry extends Model
 {
     use HasFactory;
 
+    protected $table = 'press_inquiries';
+
+    // Aligne exactement avec les colonnes de ta table
     protected $fillable = [
         'media_name',
         'full_name',
+        'email',
         'phone',
         'website',
-        'email',
         'languages_spoken',
         'how_heard',
         'message',
-        'is_read'
+        'status',          // <= colonne existante
+        'internal_notes',
+        'assigned_to',
+        'responded_at',
     ];
 
     protected $casts = [
-        'is_read' => 'boolean',
+        'responded_at' => 'datetime',
     ];
 }

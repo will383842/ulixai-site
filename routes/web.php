@@ -1,6 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Http\Request;
+
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RegisterController;
@@ -42,9 +48,6 @@ use App\Http\Controllers\PartnershipController;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Controllers\RecruitApplicationController;
 use App\Http\Controllers\PressController;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 // ========================================
 // 🎯 ROUTES PRIORITAIRES - NE PAS DÉPLACER
@@ -60,26 +63,24 @@ Route::get('/provider/{slug}', [ServiceProviderController::class, 'providerProfi
 
 Route::post('/check-email-login', [App\Http\Controllers\AuthController::class, 'checkEmailAndLogin']);
 
-// Recruitment Route - ✅ Utilise la méthode dédiée du ReviewController
+// Recruitment Route
 Route::get('/recruitment', [ReviewController::class, 'recruitment'])->name('recruitment');
+Route::post('/recruit/apply', [RecruitApplicationController::class, 'store'])->name('recruit.apply');
 
-Route::post('/recruit/apply', [RecruitApplicationController::class, 'store'])
-    ->name('recruit.apply'); 
-
-// Affiliate Route - ✅ Utilise la méthode dédiée du ReviewController
-Route::get('/affiliate', function() {
+// Affiliate Route
+Route::get('/affiliate', function () {
     $reviewController = new \App\Http\Controllers\ReviewController();
     $reviews = $reviewController->getAffiliateReviews(3);
     return view('pages.affiliate', compact('reviews'));
 })->name('affiliate');
 
-// Partnerships Route - ✅ CORRIGÉ : Utilise maintenant la méthode dédiée du ReviewController
+// Partnerships Route
 Route::get('/partnerships', [ReviewController::class, 'partnerships'])->name('partnerships');
 
 // Partnership Request
 Route::post('/partnership/store', [PartnershipController::class, 'store'])->name('partnership.store');
 
-Route::get('/cookiemanagment', function() {
+Route::get('/cookiemanagment', function () {
     return view('pages.cookiemanagment');
 })->name('cookies.show');
 
@@ -88,74 +89,74 @@ Route::get('/cookiemanagment', function() {
 // ========================================
 
 // Page principale avec sélecteur de langues (pas de contenu)
-Route::get('/press', function() {
+Route::get('/press', function () {
     return view('pages.press', [
-        'pressItems' => collect(),
-        'locale' => 'en',
+        'pressItems'  => collect(),
+        'locale'      => 'en',
         'showContent' => false
     ]);
 })->name('press.page');
 
-// Page ANGLAISE - Documents en anglais uniquement
-Route::get('/press/en', function() {
+// Page ANGLAISE
+Route::get('/press/en', function () {
     $pressItems = App\Models\Press::where('language', 'en')
-                                   ->orderBy('created_at', 'desc')
-                                   ->get();
+        ->orderBy('created_at', 'desc')
+        ->get();
     return view('press.en', [
-        'pressItems' => $pressItems,
-        'locale' => 'en',
+        'pressItems'  => $pressItems,
+        'locale'      => 'en',
         'showContent' => true
     ]);
 })->name('press.en');
 
-// Page FRANÇAISE - Documents en français uniquement
-Route::get('/press/fr', function() {
+// Page FRANÇAISE
+Route::get('/press/fr', function () {
     $pressItems = App\Models\Press::where('language', 'fr')
-                                   ->orderBy('created_at', 'desc')
-                                   ->get();
+        ->orderBy('created_at', 'desc')
+        ->get();
     return view('press.fr', [
-        'pressItems' => $pressItems,
-        'locale' => 'fr',
+        'pressItems'  => $pressItems,
+        'locale'      => 'fr',
         'showContent' => true
     ]);
 })->name('press.fr');
 
-// Page ALLEMANDE - Documents en allemand uniquement
-Route::get('/press/de', function() {
+// Page ALLEMANDE
+Route::get('/press/de', function () {
     $pressItems = App\Models\Press::where('language', 'de')
-                                   ->orderBy('created_at', 'desc')
-                                   ->get();
+        ->orderBy('created_at', 'desc')
+        ->get();
     return view('press.de', [
-        'pressItems' => $pressItems,
-        'locale' => 'de',
+        'pressItems'  => $pressItems,
+        'locale'      => 'de',
         'showContent' => true
     ]);
 })->name('press.de');
 
-// Press inquiry form submission (PUBLIC)
+// Press inquiry form submission (PUBLIC) — anti-spam
 Route::post('/press/inquiry', [PressController::class, 'storeInquiry'])
+    ->middleware('throttle:10,1')
     ->name('press.inquiry.store');
-    
+
 // Routes de téléchargement/preview des fichiers presse (publiques)
-Route::get('/press/asset/{press}/{field}', [PressController::class, 'asset'])
-    ->whereIn('field', ['pdf','guideline_pdf','photo','icon'])
+Route::get('/press/asset/{id}/{type}', [PressController::class, 'asset'])
+    ->whereIn('type', ['pdf', 'guideline_pdf', 'photo', 'icon'])
     ->name('press.asset');
 
-Route::get('/press/preview/{press}/{field}', [PressController::class, 'preview'])
-    ->whereIn('field', ['pdf','guideline_pdf','photo','icon'])
+Route::get('/press/preview/{id}/{type}', [PressController::class, 'preview'])
+    ->whereIn('type', ['pdf', 'guideline_pdf', 'photo', 'icon'])
     ->name('press.preview');
 
 // ========================================
 // AUTRES ROUTES PUBLIQUES (suite)
 // ========================================
 
-Route::get('/termsnconditions', [TermsAndConditionsController::class, 'ShowTerms'])
-    ->name('terms.show');
+Route::get('/termsnconditions', [TermsAndConditionsController::class, 'ShowTerms'])->name('terms.show');
 
 // AJAX user signup
 Route::post('/signup/store', [UserController::class, 'storeViaSignup']);
 
-//provider details 
+// provider details
 Route::get('providers/{id}', [ServiceProviderController::class, 'providerDetails'])->name('provider-details');
 
 // User Login
@@ -167,23 +168,23 @@ Route::get('auth/google/signup', [GoogleController::class, 'redirectToGoogle'])-
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 // Forgot Password
-Route::get('/forgot-password', function() {
+Route::get('/forgot-password', function () {
     return view('user-auth.forgot-password');
 });
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
-Route::get('/signup', function() {
+Route::get('/signup', function () {
     return view('user-auth.signup');
 });
-Route::get('/affiliate/sign-up', [AffiliateController::Class, 'affliateSignup']); 
+Route::get('/affiliate/sign-up', [AffiliateController::Class, 'affliateSignup']);
 
 Route::get('/', [ServiceProviderController::class, 'main']);
 Route::get('/get-providers', [ServiceProviderController::class, 'getProviders']);
 Route::get('/get-subcategories/{categoryId}', [ServiceProviderController::class, 'getSubcategories']);
 
-Route::get('/become-service-provider',  function() {
+Route::get('/become-service-provider', function () {
     return view('pages.service-provider');
 })->name('become.service.provider');
 
@@ -193,8 +194,8 @@ Route::post('/verify-email-otp', [RegisterController::class, 'verifyEmailOtp'])-
 Route::post('/signup/register', [RegisterController::class, 'signupRegister'])->name('user.signupRegister');
 Route::post('/resend-email-otp', [RegisterController::class, 'resendEmailOtp'])->name('user.resendEmailOtp');
 
-//Legal Information
-Route::get('/legal-notice', function() {
+// Legal Information
+Route::get('/legal-notice', function () {
     return view('pages.legal-notice');
 });
 
@@ -229,7 +230,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/conversations/{conversation}/status', [ConversationController::class, 'status'])->name('conversations.status');
     Route::post('/isRead/{id}/message', [ConversationController::class, 'isRead']);
     Route::get('/attachments/{attachment}/download', [ConversationController::class, 'downloadAttachment'])->name('attachments.download');
-    
+
     Route::get('/payments', [PaymentController::class, 'index'])->name('user.payments');
     Route::get('/payments-validate', [PaymentController::class, 'paymentValidate'])->name('user.payments.validate');
     Route::get('/my-earning-payment', [PaymentController::class, 'earningAndPayments'])->name('my-earning-payment');
@@ -237,18 +238,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/review-ulysse', [ReviewsController::class, 'reviewUlysse'])->name('review-ulysse');
     Route::get('/review-options', [ReviewsController::class, 'reviewOptions'])->name('review-options');
     Route::get('/review-end', [ReviewsController::class, 'reviewEnd'])->name('review-end');
-    
+
     // Service Provider
     Route::get('/service-providers', [ServiceProviderController::class, 'serviceproviders'])->name('service-providers');
     Route::get('/view-service-providers', [ServiceProviderController::class, 'serviceproviders'])->name('view.service-providers');
 
-    //Job Routes
+    // Job Routes
     Route::get('/job-list', [JobListController::class, 'index'])->name('user.joblist');
     Route::get('/view-job', [JobListController::class, 'viewJob'])->name('view-job');
     Route::get('/quote-offer', [JobListController::class, 'quoteOffer'])->name('qoute-offer');
     Route::get('/archivejobs/{user}', [JobListController::class, 'archive'])->name('provider.jobs.archive');
 
-    //Account Routes
+    // Account Routes
     Route::get('/account', [AccountController::class, 'index'])->name('user.account');
     Route::get('/personal-info', [AccountController::class, 'personalInfo'])->name('personal-info');
     Route::get('/affiliations', [AccountController::class, 'affiliationAccounts'])->name('user.affiliate.account');
@@ -272,6 +273,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/payments/stripe/process', [StripePaymentController::class, 'processPayment'])->name('payments.stripe.process');
     Route::get('/payments/success/{mission}/{credits}', [StripePaymentController::class, 'success'])->name('payments.success');
     Route::get('/payments/cancel', [StripePaymentController::class, 'cancel'])->name('payments.stripe.cancel');
+
     Route::post('/broadcasting/auth', function (Request $request) {
         return Broadcast::auth($request);
     });
@@ -279,15 +281,15 @@ Route::middleware(['auth'])->group(function () {
     // Ulixai Reviews By Users
     Route::post('ulixai/review', [UlixaiReviewController::class, 'userReview'])->name('submit-ulixai-review');
 
-    //Stripe 
+    // Stripe
     Route::get('/provider/stripe/onboarding-link', [StripePaymentController::class, 'getOnboardingLink'])->name('stripe.kyc.link');
-    Route::get('/stripe/refresh', fn() => redirect()->back())->name('stripe.refresh');
-    Route::get('/stripe/return', fn() => redirect('/dashboard'))->name('stripe.return');
+    Route::get('/stripe/refresh', fn () => redirect()->back())->name('stripe.refresh');
+    Route::get('/stripe/return', fn () => redirect('/dashboard'))->name('stripe.return');
 
     // Withdraw Funds
     Route::post('/user/funds', [EarningsController::class, 'manageUserFunds'])->name('affiliate.withdraw');
 
-    //Personal Information
+    // Personal Information
     Route::prefix('account')->group(function () {
         Route::get('/profile', [AccountController::class, 'getProfile']);
         Route::post('/update-personal-info', [AccountController::class, 'updatePersonalInfo']);
@@ -316,7 +318,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::match(['get', 'post', 'patch', 'delete'], '/badges', [AdminDashboardController::class, 'badges'])->name('badges');
         Route::match(['get', 'post', 'patch', 'delete'], '/point-leaderboard', [ExpatsLeaderboardController::class, 'index'])->name('reputation-points');
         Route::post('/provider/{provider}/adjust-points', [ExpatsLeaderboardController::class, 'adjustPoints'])->name('provider.adjust-points');
-        
+
         Route::get('/reputation-points', [ExpatsLeaderboardController::class, 'showConfig'])->name('reputation.config');
         Route::post('/adjust-reputation-points', [ExpatsLeaderboardController::class, 'adjustReputationPoints'])->name('adjust-reputation-points');
 
@@ -334,7 +336,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
         Route::get('/users/{id}/edit-profile', [UserManagementController::class, 'editProfileView'])->name('users.edit-profile');
         Route::post('/users/{id}/update-profile', [UserManagementController::class, 'editUserProfile'])->name('users.update-profile');
-        
+
         Route::get('/missions', [MissionAdminController::class, 'index'])->name('missions');
         Route::get('/missions/{id}', [MissionAdminController::class, 'show'])->name('missions.show');
         Route::get('/admin/missions/{id}', [MissionAdminController::class, 'show'])->name('missions.show');
@@ -342,8 +344,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/missions/{id}/conversation', [MissionAdminController::class, 'conversation'])->name('missions.conversation');
         Route::post('/missions/{id}/edit', [MissionAdminController::class, 'update'])->name('missions.update');
         Route::delete('/missions/{id}', [MissionAdminController::class, 'destroy'])->name('missions.destroy');
-        
-        //Create Roles Routes
+
+        // Create Roles Routes
         Route::get('/roles/json', [RoleController::class, 'json'])->name('roles.json');
         Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
         Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
@@ -387,42 +389,50 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Bug Reports Route
         Route::get('/bug-reports', [AdminDashboardController::class, 'showReports'])->name('bug-reports');
-        
+
         Route::get('/applications', [AdminDashboardController::class, 'ShowApplications'])->name('applications');
-        Route::post('/applications/{application}/status', [AdminDashboardController::class, 'updateStatus'])->name('applications.update-status'); 
-        Route::get('/applications/{application}/cv', [AdminDashboardController::class, 'showCv'])->name('applications.cv');   
+        Route::post('/applications/{application}/status', [AdminDashboardController::class, 'updateStatus'])->name('applications.update-status');
+        Route::get('/applications/{application}/cv', [AdminDashboardController::class, 'showCv'])->name('applications.cv');
         Route::delete('/applications/{application}', [AdminDashboardController::class, 'destroyApplication'])->name('applications.destroy');
 
-        //partnership Route
+        // partnership Route
         Route::get('/partnerships', [AdminDashboardController::class, 'showpartnerships'])->name('partnerships');
 
-        //Affiliations Route
+        // Affiliations Route
         Route::get('/user-affiliations', [AdminDashboardController::class, 'showAffiliateSummary'])->name('affiliationss');
         Route::get('/affiliate-details/{id}', [AdminDashboardController::class, 'affiliateDetails'])->name('affiliates.details');
 
-        // ========================================
-        // 📰 PRESS MANAGEMENT - ADMIN ROUTES (CORRIGÉ)
-        // ========================================
+        // ============================
+        // 📰 PRESS MANAGEMENT - ADMIN
+        // ============================
         Route::get('/press', [AdminDashboardController::class, 'showPressSummary'])->name('press');
         Route::post('/press/store', [PressController::class, 'store'])->name('press.store');
-        Route::get('/press/preview/{press}/{field}', [PressController::class, 'preview'])
-            ->whereIn('field', ['pdf','guideline_pdf','photo','icon'])
+
+        // Aligné avec la signature ($id, $type)
+        Route::get('/press/preview/{id}/{type}', [PressController::class, 'preview'])
+            ->whereIn('type', ['pdf', 'guideline_pdf', 'photo', 'icon'])
             ->name('press.preview');
+
         Route::delete('/press/delete-all', [PressController::class, 'deleteAll'])->name('press.deleteAll');
         Route::get('/press/files', [PressController::class, 'getFiles'])->name('press.files');
         Route::post('/press/upload', [PressController::class, 'upload'])->name('press.upload');
         Route::post('/press/delete', [PressController::class, 'delete'])->name('press.delete');
         Route::delete('/press/{press}', [PressController::class, 'destroy'])->name('press.destroy');
         Route::get('/press/by-language', [PressController::class, 'getByLanguage'])->name('press.by-language');
-        
-        //Terms n conditions 
+
+        // 📰 Press Inquiries (Messages Presse) — Console Admin
+        Route::get('/press/inquiries', [PressController::class, 'inquiriesPage'])->name('press.inquiries');
+        Route::get('/press/inquiries/list', [PressController::class, 'inquiriesList'])->name('press.inquiries.list');
+        Route::patch('/press/inquiries/{inquiry}/read', [PressController::class, 'markAsRead'])->name('press.inquiries.read');
+
+        // Terms n conditions
         Route::get('/terms', [TermsAndConditionsController::class, 'termsIndex'])->name('terms.index');
         Route::get('/terms/fetch', [TermsAndConditionsController::class, 'fetch'])->name('terms.fetch');
         Route::post('/terms', [TermsAndConditionsController::class, 'store'])->name('terms.store');
 
         // FAQ Management Routes
         Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
-        Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store'); 
+        Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
         Route::put('/faqs/{faq}', [FaqController::class, 'update'])->name('faqs.update');
         Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->name('faqs.destroy');
         Route::post('/faqs/update-order', [FaqController::class, 'updateOrder'])->name('faqs.update-order');
@@ -515,11 +525,24 @@ Route::get('/sitemap-providers.xml', function () {
         $body = '';
         $q->chunk(1000, function ($rows) use (&$body, $src) {
             foreach ($rows as $r) {
-                if (empty($r->{$src['slug']})) continue;
-                $loc = htmlspecialchars(url('/provider/'.$r->{$src['slug']}), ENT_XML1);
-                $lastmod = !empty($r->{$src['updated']})
-                    ? \Illuminate\Support\Carbon::parse($r->{$src['updated']})->toAtomString()
+                // Noms de colonnes dynamiques
+                $slugField    = $src['slug'];
+                $updatedField = $src['updated'];
+
+                // Valeurs
+                $slug    = $r->$slugField ?? null;
+                $updated = $r->$updatedField ?? null;
+
+                if (empty($slug)) {
+                    continue;
+                }
+
+                $loc = htmlspecialchars(url('/provider/' . $slug), ENT_XML1);
+
+                $lastmod = $updated
+                    ? \Illuminate\Support\Carbon::parse($updated)->toAtomString()
                     : now()->toAtomString();
+
                 $body .= "<url><loc>{$loc}</loc><lastmod>{$lastmod}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>";
             }
         });
