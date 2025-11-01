@@ -1019,7 +1019,7 @@
         </header>
 
         @php
-          $releases = $pressItems->whereNotNull('pdf')->sortByDesc('created_at')->take(3);
+          $releases = $pressItems->filter(fn($p) => !empty($p->pdf))->sortByDesc('created_at')->slice(0, 3);
         @endphp
 
         @if($releases->isEmpty())

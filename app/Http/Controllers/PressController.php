@@ -9,11 +9,10 @@ use Illuminate\Support\Facades\Storage;
 class PressController extends Controller
 {
     /**
-     * Display press page (public) - Main hub with language selector
+     * Display press page (public)
      */
     public function index($locale = 'en')
     {
-        // Get all press items for this language only
         $pressItems = Press::where('language', $locale)
                           ->orderBy('updated_at', 'desc')
                           ->get();
@@ -27,7 +26,6 @@ class PressController extends Controller
 
     /**
      * Store a new press item (ADMIN)
-     * Creates one item per language with all 4 file types
      */
     public function store(Request $request)
     {
@@ -35,14 +33,20 @@ class PressController extends Controller
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'language' => 'required|in:en,fr,de',
+            'press_id' => 'nullable|integer|exists:press,id',
             'icon' => 'nullable|file|mimes:png,jpg,jpeg,svg,webp|max:5120',
             'pdf' => 'nullable|file|mimes:pdf|max:20480',
             'guideline_pdf' => 'nullable|file|mimes:pdf|max:20480',
             'photo' => 'nullable|file|mimes:png,jpg,jpeg,webp|max:10240',
         ]);
 
-        // Find or create ONE item per language (not per type!)
-        $press = Press::where('language', $validated['language'])->first();
+        $press = null;
+        
+        if (!empty($validated['press_id'])) {
+            $press = Press::find($validated['press_id']);
+        } else {
+            $press = Press::where('language', $validated['language'])->first();
+        }
         
         if (!$press) {
             $press = new Press();
@@ -52,14 +56,11 @@ class PressController extends Controller
         $press->title = $validated['title'] ?? $press->title;
         $press->description = $validated['description'] ?? $press->description;
 
-        // Handle file uploads
         foreach (['icon', 'pdf', 'guideline_pdf', 'photo'] as $field) {
             if ($request->hasFile($field)) {
-                // Delete old file if exists
                 if ($press->{$field} && Storage::disk('public')->exists($press->{$field})) {
                     Storage::disk('public')->delete($press->{$field});
                 }
-                // Store new file
                 $press->{$field} = $request->file($field)->store('press', 'public');
             }
         }
@@ -68,13 +69,13 @@ class PressController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Press item created successfully'
+            'message' => 'Press item created successfully',
+            'press_id' => $press->id
         ]);
     }
 
     /**
      * Upload a single file for a press item (AJAX - ADMIN)
-     * ✅ CORRECTED: Only one item per language
      */
     public function upload(Request $request)
     {
@@ -83,10 +84,16 @@ class PressController extends Controller
                 'file' => 'required|file|max:20480',
                 'type' => 'required|in:icon,pdf,guideline_pdf,photo',
                 'language' => 'required|in:en,fr,de',
+                'press_id' => 'nullable|integer|exists:press,id',
             ]);
 
-            // ✅ CORRECTED: Get ONE item per language
-            $press = Press::where('language', $validated['language'])->first();
+            $press = null;
+            
+            if (!empty($validated['press_id'])) {
+                $press = Press::find($validated['press_id']);
+            } else {
+                $press = Press::where('language', $validated['language'])->first();
+            }
 
             if (!$press) {
                 $press = new Press();
@@ -97,19 +104,18 @@ class PressController extends Controller
 
             $fieldName = $validated['type'];
 
-            // Delete old file if exists
             if ($press->{$fieldName} && Storage::disk('public')->exists($press->{$fieldName})) {
                 Storage::disk('public')->delete($press->{$fieldName});
             }
 
-            // Store new file
             $path = $request->file('file')->store('press', 'public');
             $press->{$fieldName} = $path;
             $press->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Fichier uploadé avec succès'
+                'message' => 'File uploaded successfully',
+                'press_id' => $press->id
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -121,7 +127,6 @@ class PressController extends Controller
 
     /**
      * Delete a specific file from a press item (AJAX - ADMIN)
-     * ✅ CORRECTED: Only one item per language
      */
     public function delete(Request $request)
     {
@@ -129,32 +134,36 @@ class PressController extends Controller
             $validated = $request->validate([
                 'type' => 'required|in:icon,pdf,guideline_pdf,photo',
                 'language' => 'required|in:en,fr,de',
+                'press_id' => 'nullable|integer|exists:press,id',
             ]);
 
-            // ✅ CORRECTED: Get ONE item per language
-            $press = Press::where('language', $validated['language'])->first();
+            $press = null;
+            
+            if (!empty($validated['press_id'])) {
+                $press = Press::find($validated['press_id']);
+            } else {
+                $press = Press::where('language', $validated['language'])->first();
+            }
 
             if (!$press) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Fichier non trouvé'
+                    'message' => 'File not found'
                 ], 404);
             }
 
             $fieldName = $validated['type'];
 
-            // Delete file from storage
             if ($press->{$fieldName} && Storage::disk('public')->exists($press->{$fieldName})) {
                 Storage::disk('public')->delete($press->{$fieldName});
             }
 
-            // Set field to null instead of deleting the item
             $press->{$fieldName} = null;
             $press->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Fichier supprimé'
+                'message' => 'File deleted'
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -170,8 +179,15 @@ class PressController extends Controller
     public function getFiles(Request $request)
     {
         $language = $request->query('language', 'en');
+        $press_id = $request->query('press_id');
 
-        $press = Press::where('language', $language)->first();
+        $press = null;
+        
+        if ($press_id) {
+            $press = Press::find($press_id);
+        } else {
+            $press = Press::where('language', $language)->first();
+        }
 
         if (!$press) {
             return response()->json([
@@ -185,14 +201,17 @@ class PressController extends Controller
             if (!empty($press->{$type})) {
                 $files[$type] = [
                     'id' => $press->id,
-                    'name' => $press->title ?? 'Sans titre'
+                    'name' => $press->title ?? 'Untitled',
+                    'url' => Storage::disk('public')->url($press->{$type})
                 ];
             }
         }
 
         return response()->json([
             'success' => true,
-            'files' => $files
+            'files' => $files,
+            'press_id' => $press->id,
+            'title' => $press->title
         ]);
     }
 
@@ -204,7 +223,6 @@ class PressController extends Controller
         try {
             $press = Press::findOrFail($id);
 
-            // Delete all associated files
             foreach (['icon', 'pdf', 'guideline_pdf', 'photo'] as $field) {
                 if ($press->$field && Storage::disk('public')->exists($press->$field)) {
                     Storage::disk('public')->delete($press->$field);
@@ -213,9 +231,9 @@ class PressController extends Controller
 
             $press->delete();
 
-            return redirect()->back()->with('success', '✅ Fichier supprimé avec succès');
+            return redirect()->back()->with('success', '✅ Press item deleted successfully');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', '❌ Erreur: ' . $e->getMessage());
+            return redirect()->back()->with('error', '❌ Error: ' . $e->getMessage());
         }
     }
 
