@@ -19,31 +19,50 @@
         <h1 class="text-4xl font-bold text-gray-900 mb-2">📰 Centre de Presse</h1>
         <p class="text-gray-600 mb-6">Gérez vos documents de presse en 3 langues</p>
 
-        <!-- LANGUAGE SELECTOR -->
+        <!-- LANGUAGE SELECTOR (CORRIGÉ) -->
         <div class="flex gap-2 flex-wrap mb-8">
-            <button onclick="setLang('en')" class="lang-btn px-6 py-2 rounded-lg font-medium bg-blue-600 text-white transition-all shadow-lg ring-4 ring-blue-300 hover:shadow-xl" data-lang="en">🇬🇧 English</button>
-            <button onclick="setLang('fr')" class="lang-btn px-6 py-2 rounded-lg font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all" data-lang="fr">🇫🇷 Français</button>
-            <button onclick="setLang('de')" class="lang-btn px-6 py-2 rounded-lg font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all" data-lang="de">🇩🇪 Deutsch</button>
+            <button type="button" onclick="setLang('en')" class="lang-btn" data-lang="en" style="background-color: #2563eb; color: white; padding: 0.5rem 1.5rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s;">🇬🇧 English</button>
+            <button type="button" onclick="setLang('fr')" class="lang-btn" data-lang="fr" style="background-color: #d1d5db; color: #374151; padding: 0.5rem 1.5rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; transition: all 0.3s;">🇫🇷 Français</button>
+            <button type="button" onclick="setLang('de')" class="lang-btn" data-lang="de" style="background-color: #d1d5db; color: #374151; padding: 0.5rem 1.5rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; transition: all 0.3s;">🇩🇪 Deutsch</button>
         </div>
     </div>
 
-    <!-- GRILLE DE 4 CARTES -->
-    <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"></div>
+    <!-- TABS: Kit vs Releases -->
+    <div class="mb-8 flex gap-4">
+        <button id="tab-kit" onclick="switchTab('kit')" class="tab-btn active px-6 py-3 rounded-lg font-semibold bg-blue-600 text-white transition-all">📦 Kit Presse</button>
+        <button id="tab-releases" onclick="switchTab('releases')" class="tab-btn px-6 py-3 rounded-lg font-semibold bg-gray-300 text-gray-700 transition-all">📢 Communiqués de Presse</button>
+    </div>
+
+    <!-- TAB 1: PRESS KIT -->
+    <div id="tab-content-kit" class="tab-content">
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"></div>
+    </div>
+
+    <!-- TAB 2: PRESS RELEASES -->
+    <div id="tab-content-releases" class="tab-content hidden">
+        <div class="mb-6">
+            <button onclick="openReleaseModal()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-all">+ Ajouter un Communiqué</button>
+        </div>
+        <div id="releases-list" class="bg-white rounded-2xl shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Communiqués de Presse</h2>
+            <div id="releases-container" class="space-y-4"></div>
+        </div>
+    </div>
 
     <!-- DELETE ALL BUTTON -->
     <form action="{{ route('admin.press.deleteAll') }}" method="POST" 
           onsubmit="return confirm('⚠️ Êtes-vous sûr de vouloir supprimer TOUS les fichiers de presse?')"
-          class="mb-6">
+          class="mt-8 mb-6">
         @csrf
         @method('DELETE')
-        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-all">
             🗑️ Supprimer tous les fichiers
         </button>
     </form>
 
-    <!-- EXISTING ENTRIES -->
+    <!-- EXISTING ENTRIES (ALL LANGUAGES) -->
     <div class="bg-white rounded-2xl shadow p-6">
-        <h2 class="text-xl font-semibold mb-4">Fichiers existants (Toutes les langues)</h2>
+        <h2 class="text-xl font-semibold mb-4">Tous les Fichiers Presse</h2>
         @if ($pressItems->count() === 0)
             <p class="text-gray-500">Aucun fichier pour le moment.</p>
         @else
@@ -58,11 +77,17 @@
                                     'de' => ['flag' => '🇩🇪', 'name' => 'Deutsch', 'color' => 'bg-yellow-100 text-yellow-800'],
                                 ];
                                 $lang = $langConfig[$item->language] ?? ['flag' => '🌍', 'name' => 'Unknown', 'color' => 'bg-gray-100 text-gray-800'];
+                                $typeLabel = $item->type === 'kit' ? 'Kit' : 'Communiqué';
+                                $typeColor = $item->type === 'kit' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800';
                             @endphp
-                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold {{ $lang['color'] }}">
-                                <span>{{ $lang['flag'] }}</span>
-                                <span>{{ $lang['name'] }}</span>
-                            </span>
+                            <div class="flex gap-2 mb-2 flex-wrap">
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold {{ $lang['color'] }}">
+                                    {{ $lang['flag'] }} {{ $lang['name'] }}
+                                </span>
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold {{ $typeColor }}">
+                                    {{ $typeLabel }}
+                                </span>
+                            </div>
                         </div>
                         <div class="flex items-center gap-3 mb-3">
                             @php
@@ -84,37 +109,25 @@
                         <div class="space-y-2 text-sm mb-3">
                             @if($item->pdf)
                                 <div class="flex items-center gap-3">
-                                    <button type="button" class="text-blue-600 hover:underline"
-                                            onclick="openCvModal('{{ route('press.preview', [$item->id, 'pdf']) }}')">
-                                        📄 Aperçu PDF
-                                    </button>
+                                    <button type="button" class="text-blue-600 hover:underline" onclick="openPreviewModal('{{ route('press.preview', [$item->id, 'pdf']) }}')">📄 Aperçu PDF</button>
                                     <a href="{{ asset('storage/'.$item->pdf) }}" download class="text-gray-500 hover:underline">Télécharger</a>
                                 </div>
                             @endif
                             @if($item->guideline_pdf)
                                 <div class="flex items-center gap-3">
-                                    <button type="button" class="text-blue-600 hover:underline"
-                                            onclick="openCvModal('{{ route('press.preview', [$item->id, 'guideline_pdf']) }}')">
-                                        📘 Aperçu Guide
-                                    </button>
+                                    <button type="button" class="text-blue-600 hover:underline" onclick="openPreviewModal('{{ route('press.preview', [$item->id, 'guideline_pdf']) }}')">📘 Aperçu Guide</button>
                                     <a href="{{ asset('storage/'.$item->guideline_pdf) }}" download class="text-gray-500 hover:underline">Télécharger</a>
                                 </div>
                             @endif
                             @if($item->photo)
                                 <div class="flex items-center gap-3">
-                                    <button type="button" class="text-blue-600 hover:underline"
-                                            onclick="openCvModal('{{ route('press.preview', [$item->id, 'photo']) }}')">
-                                        🖼️ Aperçu Photo
-                                    </button>
+                                    <button type="button" class="text-blue-600 hover:underline" onclick="openPreviewModal('{{ route('press.preview', [$item->id, 'photo']) }}')">🖼️ Aperçu Photo</button>
                                     <a href="{{ asset('storage/'.$item->photo) }}" download class="text-gray-500 hover:underline">Télécharger</a>
                                 </div>
                             @endif
                             @if($item->icon)
                                 <div class="flex items-center gap-3">
-                                    <button type="button" class="text-blue-600 hover:underline"
-                                            onclick="openCvModal('{{ route('press.preview', [$item->id, 'icon']) }}')">
-                                        🧩 Aperçu Logo
-                                    </button>
+                                    <button type="button" class="text-blue-600 hover:underline" onclick="openPreviewModal('{{ route('press.preview', [$item->id, 'icon']) }}')">🧩 Aperçu Logo</button>
                                     <a href="{{ asset('storage/'.$item->icon) }}" download class="text-gray-500 hover:underline">Télécharger</a>
                                 </div>
                             @endif
@@ -123,7 +136,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm font-semibold transition">
-                                🗑️ Supprimer ce fichier
+                                🗑️ Supprimer
                             </button>
                         </form>
                     </div>
@@ -135,30 +148,61 @@
 
 </div>
 
-<!-- MODAL -->
-<div id="cvModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-  <div class="bg-white w-full max-w-5xl h-5/6 rounded-xl shadow-2xl overflow-hidden animate-fade-in">
-    <div class="flex justify-between items-center px-6 py-4 bg-gray-50 border-b">
-      <h3 id="cvModalTitle" class="font-semibold text-gray-800">Aperçu</h3>
-      <button onclick="closeCvModal()" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+<!-- MODAL FOR RELEASE -->
+<div id="releaseModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+    <div class="bg-white w-full max-w-md rounded-xl shadow-2xl p-6">
+        <h2 class="text-2xl font-bold mb-4">Ajouter un Communiqué de Presse</h2>
+        <form id="releaseForm" onsubmit="submitRelease(event)">
+            <div class="mb-4">
+                <label class="block text-sm font-semibold mb-2">Titre *</label>
+                <input type="text" id="release-title" required class="w-full border-2 border-gray-300 rounded-lg p-2">
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-semibold mb-2">Description *</label>
+                <textarea id="release-description" required rows="4" class="w-full border-2 border-gray-300 rounded-lg p-2"></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-semibold mb-2">Fichier PDF *</label>
+                <input type="file" id="release-pdf" accept=".pdf" required class="w-full border-2 border-gray-300 rounded-lg p-2">
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Créer</button>
+                <button type="button" onclick="closeReleaseModal()" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition">Annuler</button>
+            </div>
+        </form>
     </div>
-    <div class="relative h-full">
-      <iframe id="cvFrame" src="" class="w-full h-full bg-gray-100"></iframe>
-      <div id="cvLoader" class="absolute inset-0 bg-white flex items-center justify-center">
-        <div class="flex items-center space-x-2">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span class="text-gray-600">Chargement...</span>
+</div>
+
+<!-- MODAL FOR PREVIEW -->
+<div id="previewModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+    <div class="bg-white w-full max-w-2xl max-h-96 rounded-xl shadow-2xl overflow-hidden">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h3 class="font-semibold">Aperçu</h3>
+            <button onclick="closePreviewModal()" class="text-2xl text-gray-400 hover:text-gray-600">×</button>
         </div>
-      </div>
+        <div class="p-4 overflow-auto max-h-72">
+            <iframe id="previewFrame" class="w-full h-full" style="min-height: 300px;"></iframe>
+        </div>
     </div>
-  </div>
 </div>
 
 <style>
-    @keyframes fade-in { from {opacity:0; transform:scale(0.95)} to {opacity:1; transform:scale(1)} }
-    .animate-fade-in { animation: fade-in 0.2s ease-out }
-    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-
+    .tab-btn {
+        transition: all 0.3s ease;
+    }
+    .tab-btn.active {
+        background-color: #2563eb;
+        color: white;
+    }
+    .tab-content.hidden {
+        display: none;
+    }
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
     .card {
         background: white;
         border-radius: 16px;
@@ -177,7 +221,6 @@
     .icon { font-size: 3rem; margin-bottom: 12px; }
     .title { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; color: #1f2937; }
     .desc { font-size: 0.875rem; color: #6b7280; margin-bottom: 16px; line-height: 1.5; }
-    
     .file-status {
         display: inline-block;
         padding: 6px 12px;
@@ -194,7 +237,6 @@
         background: #fee2e2;
         color: #991b1b;
     }
-    
     .btn {
         width: 100%;
         padding: 10px;
@@ -235,10 +277,10 @@
 <script>
     const labels = {
         en: {
-            logo: { icon: '🎨', title: 'Logo officiel', desc: 'Formats PNG/SVG • Haute résolution • Fond transparent' },
-            pdf: { icon: '📑', title: 'Dossier de presse', desc: 'Information complète • Détails sur l\'entreprise • Format PDF' },
-            guideline_pdf: { icon: '📘', title: 'Charte graphique', desc: 'Utilisation du logo • Normes de la marque • Palette de couleurs • PDF' },
-            photo: { icon: '📷', title: 'Photos HD', desc: 'Images professionnelles • Haute qualité • Prêtes à imprimer' }
+            logo: { icon: '🎨', title: 'Official Logo', desc: 'PNG/SVG formats • High resolution • Transparent background' },
+            pdf: { icon: '📑', title: 'Press Kit', desc: 'Complete information • Company details • PDF format' },
+            guideline_pdf: { icon: '📘', title: 'Brand Guidelines', desc: 'Logo usage • Brand standards • Color palette • PDF' },
+            photo: { icon: '📷', title: 'HD Photos', desc: 'Professional images • High quality • Print ready' }
         },
         fr: {
             logo: { icon: '🎨', title: 'Logo officiel', desc: 'Formats PNG/SVG • Haute résolution • Fond transparent' },
@@ -254,18 +296,30 @@
         }
     };
 
-    const langNames = {
-        en: '🇬🇧 English',
-        fr: '🇫🇷 Français',
-        de: '🇩🇪 Deutsch'
-    };
-
+    const langNames = { en: '🇬🇧 English', fr: '🇫🇷 Français', de: '🇩🇪 Deutsch' };
     const langEmojis = { en: '🇬🇧', fr: '🇫🇷', de: '🇩🇪' };
+    
     let currentLang = 'en';
+    let currentTab = 'kit';
     let existingFiles = {};
 
+    function switchTab(tab) {
+        currentTab = tab;
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.getElementById('tab-content-' + tab).classList.remove('hidden');
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        
+        if (tab === 'releases') {
+            loadReleases();
+        } else {
+            loadFiles();
+        }
+    }
+
     function loadFiles() {
-        return fetch('/admin/press/files?language=' + currentLang)
+        return fetch('/admin/press/files?language=' + currentLang + '&item_type=kit')
             .then(r => r.json())
             .then(d => {
                 if (d.success) {
@@ -279,26 +333,69 @@
             });
     }
 
+    function loadReleases() {
+        return fetch('/admin/press/files?language=' + currentLang + '&item_type=release')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) {
+                    renderReleases(d);
+                }
+            })
+            .catch(e => console.error('Erreur:', e));
+    }
+
+    function renderReleases(data) {
+        const container = document.getElementById('releases-container');
+        container.innerHTML = '';
+        
+        if (!data.releases || data.releases.length === 0) {
+            container.innerHTML = '<p class="text-gray-500">Aucun communiqué pour cette langue</p>';
+            return;
+        }
+
+        data.releases.forEach(release => {
+            const html = `
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex-1">
+                            <h3 class="font-bold">${release.title}</h3>
+                            <p class="text-sm text-gray-600">${release.description}</p>
+                        </div>
+                        <button onclick="deleteRelease(${release.id})" class="text-red-600 hover:text-red-800 ml-2">🗑️</button>
+                    </div>
+                    ${release.pdf ? `<p class="text-sm"><a href="${release.pdf_url}" class="text-blue-600 hover:underline" target="_blank">📄 PDF</a></p>` : ''}
+                </div>
+            `;
+            container.innerHTML += html;
+        });
+    }
+
     function setLang(lang) {
         currentLang = lang;
-        
-        // Update banner
         document.getElementById('langTitle').textContent = langNames[lang];
         document.getElementById('langEmoji').textContent = langEmojis[lang];
         
-        // Update buttons
-        document.querySelectorAll('.lang-btn').forEach(b => {
-            b.classList.remove('bg-blue-600', 'text-white', 'shadow-lg', 'ring-4', 'ring-blue-300', 'hover:shadow-xl');
-            b.classList.add('bg-gray-200', 'text-gray-700');
+        // Réinitialiser TOUS les boutons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.style.backgroundColor = '#d1d5db';
+            btn.style.color = '#374151';
+            btn.style.boxShadow = 'none';
         });
         
-        // Ajouter les styles au bouton actif
+        // Activer le bouton courant
         const activeBtn = document.querySelector(`[data-lang="${lang}"]`);
-        activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'ring-4', 'ring-blue-300', 'hover:shadow-xl');
-        activeBtn.classList.remove('bg-gray-200', 'text-gray-700');
+        if (activeBtn) {
+            activeBtn.style.backgroundColor = '#2563eb';
+            activeBtn.style.color = 'white';
+            activeBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+        }
         
-        // Load and render
-        loadFiles().then(() => render());
+        // Recharger selon l'onglet
+        if (currentTab === 'kit') {
+            loadFiles().then(() => render());
+        } else {
+            loadReleases();
+        }
     }
 
     function render() {
@@ -308,8 +405,24 @@
         
         Object.entries(langData).forEach(([type, item]) => {
             const hasFile = existingFiles[type] ? true : false;
+            const fileUrl = existingFiles[type] ? existingFiles[type].url : null;
+            
             const card = document.createElement('div');
             card.className = 'card';
+            
+            let buttonHtml = `
+                <button class="btn btn-upload" onclick="document.getElementById('file-${type}').click()">
+                    ${hasFile ? '🔄 Remplacer' : '📤 Uploader'}
+                </button>
+            `;
+            
+            if (hasFile) {
+                buttonHtml += `
+                    <button class="btn btn-view" onclick="previewFile('${type}', '${currentLang}', '${fileUrl}')">👁️ Voir</button>
+                    <button class="btn btn-delete" onclick="removeFile('${type}', '${currentLang}')">🗑️ Supprimer</button>
+                `;
+            }
+            
             card.innerHTML = `
                 <div class="icon">${item.icon}</div>
                 <div class="title">${item.title}</div>
@@ -319,9 +432,7 @@
                     ${hasFile ? '✅ Fichier présent' : '❌ Aucun fichier'}
                 </div>
                 
-                <button class="btn btn-upload" onclick="document.getElementById('file-${type}').click()">📤 Uploader</button>
-                <button class="btn btn-view" onclick="preview('${type}', '${currentLang}')">👁️ Voir</button>
-                <button class="btn btn-delete" onclick="remove('${type}', '${currentLang}')">🗑️ Supprimer</button>
+                ${buttonHtml}
                 <input type="file" id="file-${type}" onchange="upload('${type}', '${currentLang}', this)">
             `;
             grid.appendChild(card);
@@ -334,6 +445,7 @@
         form.append('file', input.files[0]);
         form.append('type', type);
         form.append('language', lang);
+        form.append('item_type', 'kit');
         form.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
         fetch('/admin/press/upload', { method: 'POST', body: form })
@@ -348,12 +460,12 @@
             .catch(e => notify('❌ Erreur', 'error'));
     }
 
-    function remove(type, lang) {
+    function removeFile(type, lang) {
         if (!confirm('Supprimer ce fichier?')) return;
         fetch('/admin/press/delete', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content },
-            body: JSON.stringify({ type, language: lang })
+            body: JSON.stringify({ type, language: lang, item_type: 'kit' })
         })
         .then(r => r.json())
         .then(d => {
@@ -365,8 +477,69 @@
         .catch(e => notify('❌ Erreur', 'error'));
     }
 
-    function preview(type, lang) {
-        alert('Prévisualisation à implémenter');
+    function previewFile(type, lang, url) {
+        if (!url) {
+            alert('Fichier non disponible');
+            return;
+        }
+        openPreviewModal(url);
+    }
+
+    function openReleaseModal() {
+        document.getElementById('releaseModal').classList.remove('hidden');
+    }
+
+    function closeReleaseModal() {
+        document.getElementById('releaseModal').classList.add('hidden');
+        document.getElementById('releaseForm').reset();
+    }
+
+    function submitRelease(event) {
+        event.preventDefault();
+        const form = new FormData();
+        form.append('title', document.getElementById('release-title').value);
+        form.append('description', document.getElementById('release-description').value);
+        form.append('file', document.getElementById('release-pdf').files[0]);
+        form.append('language', currentLang);
+        form.append('type', 'pdf');
+        form.append('item_type', 'release');
+        form.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+
+        fetch('/admin/press/upload', { method: 'POST', body: form })
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) {
+                    notify('✅ Communiqué créé!', 'success');
+                    closeReleaseModal();
+                    loadReleases();
+                } else {
+                    notify('❌ Erreur', 'error');
+                }
+            })
+            .catch(e => notify('❌ Erreur', 'error'));
+    }
+
+    function deleteRelease(id) {
+        if (!confirm('Supprimer ce communiqué?')) return;
+        fetch(`/admin/press/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content }
+        })
+        .then(() => {
+            notify('✅ Communiqué supprimé!', 'success');
+            loadReleases();
+        })
+        .catch(e => notify('❌ Erreur', 'error'));
+    }
+
+    function openPreviewModal(url) {
+        document.getElementById('previewModal').classList.remove('hidden');
+        document.getElementById('previewFrame').src = url;
+    }
+
+    function closePreviewModal() {
+        document.getElementById('previewModal').classList.add('hidden');
+        document.getElementById('previewFrame').src = '';
     }
 
     function notify(msg, type) {
@@ -377,40 +550,8 @@
         setTimeout(() => n.remove(), 3000);
     }
 
-    function openCvModal(url, title = 'Aperçu') {
-        const modal = document.getElementById('cvModal');
-        const frame = document.getElementById('cvFrame');
-        const loader = document.getElementById('cvLoader');
-        const heading = document.getElementById('cvModalTitle');
-        heading.textContent = title;
-        modal.classList.remove('hidden');
-        loader.style.display = 'flex';
-        frame.onload = function() { loader.style.display = 'none'; };
-        frame.src = url;
-    }
-
-    function closeCvModal() {
-        const modal = document.getElementById('cvModal');
-        const frame = document.getElementById('cvFrame');
-        const loader = document.getElementById('cvLoader');
-        frame.src = "";
-        modal.classList.add('hidden');
-        loader.style.display = 'flex';
-    }
-
-    document.getElementById('cvModal')?.addEventListener('click', function(e) {
-        if (e.target === this) closeCvModal();
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !document.getElementById('cvModal').classList.contains('hidden')) {
-            closeCvModal();
-        }
-    });
-
-    // Initialize
     window.addEventListener('DOMContentLoaded', () => {
-        loadFiles().then(() => render());
+        setLang('en');
     });
 </script>
 

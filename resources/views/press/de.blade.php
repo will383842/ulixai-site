@@ -860,10 +860,13 @@
         </header>
 
         @php
-          $icons   = $pressItems->filter(fn($p) => !empty($p->icon))->sortByDesc('updated_at');
-          $photos  = $pressItems->filter(fn($p) => !empty($p->photo))->sortByDesc('updated_at');
-          $pdfs    = $pressItems->filter(fn($p) => !empty($p->pdf))->sortByDesc('updated_at');
-          $guides  = $pressItems->filter(fn($p) => !empty($p->guideline_pdf))->sortByDesc('updated_at');
+          $kitItems = $pressItems->where('type', 'kit');
+          $releaseItems = $pressItems->where('type', 'release')->sortByDesc('created_at')->slice(0, 3);
+          
+          $icons   = $kitItems->filter(fn($p) => !empty($p->icon))->sortByDesc('updated_at');
+          $photos  = $kitItems->filter(fn($p) => !empty($p->photo))->sortByDesc('updated_at');
+          $pdfs    = $kitItems->filter(fn($p) => !empty($p->pdf))->sortByDesc('updated_at');
+          $guides  = $kitItems->filter(fn($p) => !empty($p->guideline_pdf))->sortByDesc('updated_at');
 
           $latestIcon  = $icons->first();
           $latestPhoto = $photos->first();
@@ -1141,25 +1144,19 @@
           </p>
         </header>
 
-        @php
-          $releases = $pressItems->filter(fn($p) => !empty($p->pdf))->sortByDesc('created_at')->slice(0, 3);
-        @endphp
-
-        @if($releases->isEmpty())
+        @if($releaseItems->isEmpty())
           <div class="text-center py-12" role="status" aria-live="polite">
             <div class="text-6xl mb-4" aria-hidden="true" role="img" aria-label="Newspaper">📰</div>
             <p class="text-gray-500 text-lg">Noch keine Pressemitteilungen. Bitte schauen Sie bald wieder vorbei!</p>
           </div>
         @else
-          <div class="grid md:grid-cols-3 gap-4 md:gap-6" role="list" aria-label="Press releases">
-            @foreach($releases as $index => $pr)
+          <div class="grid md:grid-cols-3 gap-4 md:gap-6" role="list" aria-label="Pressemitteilungen">
+            @foreach($releaseItems as $index => $pr)
               <article class="press-release-card stagger-animation" style="animation-delay: {{ ($index * 0.1) + 0.1 }}s;" role="listitem">
                 <div class="flex items-start justify-between mb-4">
                   <div class="flex items-center gap-2 flex-1">
                     <span class="text-2xl" aria-hidden="true" role="img" aria-label="Megaphone icon">📢</span>
-                    <h3 class="font-bold text-green-700 text-base line-clamp-2">
-                      {{ $pr->title ?: config('app.name', 'Ulixai').' Pressemitteilung' }}
-                    </h3>
+                    <h3 class="font-bold text-green-700 text-base line-clamp-2">{{ $pr->title }}</h3>
                   </div>
                   @if($pr->created_at)
                     <time datetime="{{ $pr->created_at->format('Y-m') }}" class="inline-flex items-center gap-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap ml-2">
@@ -1170,13 +1167,13 @@
                 </div>
 
                 <p class="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">
-                  {{ $pr->description ? \Illuminate\Support\Str::limit($pr->description, 160) : config('app.name', 'Ulixai').' Pressemitteilung.' }}
+                  {{ $pr->description ? \Illuminate\Support\Str::limit($pr->description, 160) : 'Pressemitteilung.' }}
                 </p>
 
                 @if($pr->pdf)
-                  <button onclick="downloadAsset('{{ route('press.asset', [$pr->id, 'pdf']) }}', '{{ $pr->title ? \Illuminate\Support\Str::slug($pr->title) : 'press-release' }}-{{ optional($pr->created_at)->format('Y-m') }}.zip')"
+                  <button onclick="downloadAsset('{{ route('press.asset', [$pr->id, 'pdf']) }}', '{{ $pr->title ? \Illuminate\Support\Str::slug($pr->title) : 'pressemitteilung' }}-{{ optional($pr->created_at)->format('Y-m') }}.zip')"
                           class="btn-primary w-full"
-                          aria-label="Download {{ $pr->title ?: 'press release' }}">
+                          aria-label="Pressemitteilung herunterladen {{ $pr->title }}">
                     <span aria-hidden="true">⬇️</span>
                     <span>Herunterladen</span>
                   </button>

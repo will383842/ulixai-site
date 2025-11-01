@@ -132,6 +132,10 @@ Route::get('/press/de', function() {
     ]);
 })->name('press.de');
 
+// Press inquiry form submission (PUBLIC)
+Route::post('/press/inquiry', [PressController::class, 'storeInquiry'])
+    ->name('press.inquiry.store');
+    
 // Routes de téléchargement/preview des fichiers presse (publiques)
 Route::get('/press/asset/{press}/{field}', [PressController::class, 'asset'])
     ->whereIn('field', ['pdf','guideline_pdf','photo','icon'])

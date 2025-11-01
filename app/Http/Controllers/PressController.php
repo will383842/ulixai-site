@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Press;
+use App\Models\PressInquiry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -75,7 +76,7 @@ class PressController extends Controller
     }
 
     /**
-     * Upload a single file for a press item (AJAX - ADMIN)
+     * Upload a single file (AJAX - ADMIN)
      */
     public function upload(Request $request)
     {
@@ -126,7 +127,7 @@ class PressController extends Controller
     }
 
     /**
-     * Delete a specific file from a press item (AJAX - ADMIN)
+     * Delete a specific file (AJAX - ADMIN)
      */
     public function delete(Request $request)
     {
@@ -174,7 +175,7 @@ class PressController extends Controller
     }
 
     /**
-     * Get existing files for a language (AJAX - ADMIN)
+     * Get existing files (AJAX - ADMIN)
      */
     public function getFiles(Request $request)
     {
@@ -216,7 +217,7 @@ class PressController extends Controller
     }
 
     /**
-     * Destroy a single press entry (ADMIN)
+     * Destroy a press entry (ADMIN)
      */
     public function destroy($id)
     {
@@ -258,7 +259,7 @@ class PressController extends Controller
     }
 
     /**
-     * Serve a press asset (download/view)
+     * Serve a press asset
      */
     public function asset($id, $type)
     {
@@ -278,7 +279,7 @@ class PressController extends Controller
     }
 
     /**
-     * Preview a press asset (for iframe viewing)
+     * Preview a press asset
      */
     public function preview($id, $type)
     {
@@ -301,5 +302,36 @@ class PressController extends Controller
             'Content-Type' => $mimeType,
             'Content-Disposition' => 'inline',
         ]);
+    }
+
+    /**
+     * 🆕 Store press inquiry from contact form (PUBLIC)
+     */
+    public function storeInquiry(Request $request)
+    {
+        $validated = $request->validate([
+            'media_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:50',
+            'website' => 'nullable|url|max:255',
+            'email' => 'required|email|max:255',
+            'languages_spoken' => 'nullable|string|max:255',
+            'how_heard' => 'nullable|string|max:255',
+            'message' => 'nullable|string|max:5000',
+        ]);
+
+        try {
+            PressInquiry::create($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Press inquiry submitted successfully'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while submitting your inquiry'
+            ], 500);
+        }
     }
 }

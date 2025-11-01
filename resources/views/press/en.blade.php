@@ -850,7 +850,7 @@
       <div class="max-w-6xl mx-auto">
         <header class="text-center mb-10">
           <h2 id="press-kit-heading" class="text-2xl md:text-3xl font-bold mb-3">
-            <span class="gradient-text">Download the @site Press Kit</span>
+            <span class="gradient-text">Download the Ulixai Press Kit</span>
           </h2>
           <div class="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full mb-4" aria-hidden="true"></div>
           <p class="text-base text-gray-600 max-w-2xl mx-auto">
@@ -859,10 +859,13 @@
         </header>
 
         @php
-          $icons   = $pressItems->filter(fn($p) => !empty($p->icon))->sortByDesc('updated_at');
-          $photos  = $pressItems->filter(fn($p) => !empty($p->photo))->sortByDesc('updated_at');
-          $pdfs    = $pressItems->filter(fn($p) => !empty($p->pdf))->sortByDesc('updated_at');
-          $guides  = $pressItems->filter(fn($p) => !empty($p->guideline_pdf))->sortByDesc('updated_at');
+          $kitItems = $pressItems->where('type', 'kit');
+          $releaseItems = $pressItems->where('type', 'release')->sortByDesc('created_at')->slice(0, 3);
+          
+          $icons   = $kitItems->filter(fn($p) => !empty($p->icon))->sortByDesc('updated_at');
+          $photos  = $kitItems->filter(fn($p) => !empty($p->photo))->sortByDesc('updated_at');
+          $pdfs    = $kitItems->filter(fn($p) => !empty($p->pdf))->sortByDesc('updated_at');
+          $guides  = $kitItems->filter(fn($p) => !empty($p->guideline_pdf))->sortByDesc('updated_at');
 
           $latestIcon  = $icons->first();
           $latestPhoto = $photos->first();
@@ -870,7 +873,7 @@
           $latestGuide = $guides->first();
         @endphp
 
-        @if($pressItems->isEmpty())
+        @if($kitItems->isEmpty())
           <div class="text-center py-12" role="status" aria-live="polite">
             <div class="text-6xl mb-4" aria-hidden="true" role="img" aria-label="Empty mailbox">📭</div>
             <p class="text-gray-500 text-lg">No press assets available yet. Please check back later.</p>
@@ -1140,25 +1143,19 @@
           </p>
         </header>
 
-        @php
-          $releases = $pressItems->whereNotNull('pdf')->sortByDesc('created_at')->take(3);
-        @endphp
-
-        @if($releases->isEmpty())
+        @if($releaseItems->isEmpty())
           <div class="text-center py-12" role="status" aria-live="polite">
             <div class="text-6xl mb-4" aria-hidden="true" role="img" aria-label="Newspaper">📰</div>
             <p class="text-gray-500 text-lg">No press releases yet. Please check back soon!</p>
           </div>
         @else
           <div class="grid md:grid-cols-3 gap-4 md:gap-6" role="list" aria-label="Press releases">
-            @foreach($releases as $index => $pr)
+            @foreach($releaseItems as $index => $pr)
               <article class="press-release-card stagger-animation" style="animation-delay: {{ ($index * 0.1) + 0.1 }}s;" role="listitem">
                 <div class="flex items-start justify-between mb-4">
                   <div class="flex items-center gap-2 flex-1">
                     <span class="text-2xl" aria-hidden="true" role="img" aria-label="Megaphone icon">📢</span>
-                    <h3 class="font-bold text-green-700 text-base line-clamp-2">
-                      {{ $pr->title ?: config('app.name', 'Ulixai').' Press Release' }}
-                    </h3>
+                    <h3 class="font-bold text-green-700 text-base line-clamp-2">{{ $pr->title }}</h3>
                   </div>
                   @if($pr->created_at)
                     <time datetime="{{ $pr->created_at->format('Y-m') }}" class="inline-flex items-center gap-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap ml-2">
@@ -1169,13 +1166,13 @@
                 </div>
 
                 <p class="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">
-                  {{ $pr->description ? \Illuminate\Support\Str::limit($pr->description, 160) : config('app.name', 'Ulixai').' press release.' }}
+                  {{ $pr->description ? \Illuminate\Support\Str::limit($pr->description, 160) : 'Press release.' }}
                 </p>
 
                 @if($pr->pdf)
                   <button onclick="downloadAsset('{{ route('press.asset', [$pr->id, 'pdf']) }}', '{{ $pr->title ? \Illuminate\Support\Str::slug($pr->title) : 'press-release' }}-{{ optional($pr->created_at)->format('Y-m') }}.zip')"
                           class="btn-primary w-full"
-                          aria-label="Download {{ $pr->title ?: 'press release' }}">
+                          aria-label="Download {{ $pr->title }}">
                     <span aria-hidden="true">⬇️</span>
                     <span>Download</span>
                   </button>
@@ -1201,8 +1198,8 @@
               <h3 class="text-xl font-bold text-blue-700">Official Quotes</h3>
             </div>
             <blockquote class="space-y-4">
-              <p class="italic text-gray-700 text-sm md:text-base">"Whether you're leaving for 6 days or 6 years, the unexpected happens fast. @site is your human Plan B abroad."</p>
-              <p class="italic text-gray-700 text-sm md:text-base">"We created @site to solve real struggles people face when far from home — with real human support."</p>
+              <p class="italic text-gray-700 text-sm md:text-base">"Whether you're leaving for 6 days or 6 years, the unexpected happens fast. Ulixai is your human Plan B abroad."</p>
+              <p class="italic text-gray-700 text-sm md:text-base">"We created Ulixai to solve real struggles people face when far from home — with real human support."</p>
             </blockquote>
           </article>
 
@@ -1212,9 +1209,9 @@
               <h3 class="text-xl font-bold text-blue-700">Suggested Headlines</h3>
             </div>
             <ul class="list-disc pl-5 text-gray-800 space-y-2 text-sm md:text-base">
-              <li>@site, the go-to platform for those on the move</li>
+              <li>Ulixai, the go-to platform for those on the move</li>
               <li>Travelers, expats, students: finally a simple solution abroad</li>
-              <li>No more searching — @site centralizes everything you need abroad</li>
+              <li>No more searching — Ulixai centralizes everything you need abroad</li>
             </ul>
           </article>
         </div>
@@ -1369,7 +1366,7 @@
       </div>
       <h2 id="thank-you-title" class="text-xl md:text-2xl font-bold text-gray-800 mb-3">Thank you for your request!</h2>
       <p class="text-gray-700 mb-2">We have received it and will get back to you <strong>within 24 hours</strong>.</p>
-      <p class="text-gray-600 text-sm">See you soon on this exciting <strong>@site</strong> journey 🌍</p>
+      <p class="text-gray-600 text-sm">See you soon on this exciting <strong>Ulixai</strong> journey 🌍</p>
     </div>
   </div>
 
