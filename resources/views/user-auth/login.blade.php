@@ -3,6 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="en">
+    
+    <!-- Critical CSS - Loaded immediately to prevent FOUC -->
+    <style>
+        body{margin:0;padding:0;background:linear-gradient(135deg,#eff6ff 0%,#ecfeff 50%,#f0fdfa 100%);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;opacity:0;animation:fadeInBody 0.3s ease-in forwards}
+        @keyframes fadeInBody{to{opacity:1}}
+        .main-login{min-height:100vh;display:flex;align-items:center;justify-content:center}
+        .page-loader{position:fixed;inset:0;background:linear-gradient(135deg,#eff6ff,#ecfeff,#f0fdfa);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s}
+        .page-loader.hidden{opacity:0;pointer-events:none}
+        .loader-content{text-align:center}
+        .loader-emoji{font-size:3rem;animation:bounceLoader 0.6s ease-in-out infinite}
+        @keyframes bounceLoader{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .loader-text{margin-top:1rem;color:#06b6d4;font-weight:600;font-size:14px}
+    </style>
     
     <!-- SEO Meta Tags -->
     <title>Login - Welcome Back to Ulixai | Secure Sign In</title>
@@ -18,6 +32,9 @@
     <meta property="og:title" content="Login to Ulixai - Your Global Help Network">
     <meta property="og:description" content="Access your Ulixai account and connect with helpers worldwide. Fast, secure login.">
     <meta property="og:image" content="{{ asset('images/og-login.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:site_name" content="Ulixai">
     
     <!-- Twitter -->
@@ -25,19 +42,22 @@
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="Login to Ulixai">
     <meta name="twitter:description" content="Access your account and connect with helpers worldwide.">
-    <meta name="twitter:image" content="{{ asset('images/twitter-login.jpg') }}">
+    <meta name="twitter:image" content="{{ asset('images/og-login.jpg') }}">
     
     <!-- Favicons -->
     <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     
-    <!-- Google Fonts - Poppins -->
+    <!-- Google Fonts - Optimized loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    </noscript>
     
-    <!-- Toastr CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- Toastr CSS - Optimized loading -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" media="print" onload="this.media='all'">
     
     <!-- JSON-LD Schema for SEO -->
     <script type="application/ld+json">
@@ -47,11 +67,17 @@
       "name": "Login - Ulixai",
       "description": "Secure login page for Ulixai global help network. Sign in to access your account and connect with helpers worldwide.",
       "url": "{{ url()->current() }}",
+      "image": "{{ asset('images/og-login.jpg') }}",
       "inLanguage": "en",
       "isPartOf": {
         "@type": "WebSite",
         "name": "Ulixai",
         "url": "{{ config('app.url') }}"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Ulixai",
+        "logo": "{{ asset('images/logo.png') }}"
       },
       "potentialAction": {
         "@type": "LoginAction",
@@ -70,8 +96,15 @@
 </head>
 <body>
 
+<!-- Page Loader -->
+<div class="page-loader" id="pageLoader">
+    <div class="loader-content">
+        <div class="loader-emoji">👋</div>
+        <p class="loader-text">Welcome back to Ulixai...</p>
+    </div>
+</div>
+
 @include('includes.header')
-@include('pages.popup')
 
 <!-- ============================================
      🎯 ULIXAI LOGIN - MOBILE-FIRST PERFECTION
@@ -109,7 +142,7 @@
           <div class="brand-icon" aria-hidden="true">
             <div class="icon-container">
               <svg class="icon-svg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0110.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
           </div>
@@ -135,7 +168,7 @@
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          <span>Sign in with Google - Super Fast!</span>
+          <span>Sign in with Google</span>
           <span class="rocket" aria-hidden="true">⚡</span>
         </a>
 
@@ -175,9 +208,9 @@
               <div class="input-glow" aria-hidden="true"></div>
             </div>
             @error('email')
-              <p id="error-email" class="error-msg" role="alert">{{ $message }}</p>
+              <p id="error-email" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
             @else
-              <p id="error-email" class="error-msg" role="alert"></p>
+              <p id="error-email" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
             @enderror
           </div>
 
@@ -208,9 +241,9 @@
               </button>
             </div>
             @error('password')
-              <p id="error-password" class="error-msg" role="alert">{{ $message }}</p>
+              <p id="error-password" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
             @else
-              <p id="error-password" class="error-msg" role="alert"></p>
+              <p id="error-password" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
             @enderror
             <div class="forgot-password-link">
               <a href="/forgot-password" class="forgot-link">
@@ -218,6 +251,19 @@
                 <span aria-hidden="true">🔑</span>
               </a>
             </div>
+          </div>
+
+          <!-- Remember Me Checkbox -->
+          <div class="form-group checkbox-group">
+            <label for="remember-me" class="checkbox-label">
+              <input 
+                type="checkbox"
+                id="remember-me"
+                name="remember_me"
+                class="checkbox-input"
+                aria-label="Remember my email and password" />
+              <span class="checkbox-text">Remember me</span>
+            </label>
           </div>
 
           <!-- Submit Button -->
@@ -235,8 +281,8 @@
         <footer class="card-footer">
           <p class="footer-text">
             <span class="already-text">New to Ulixai? 🎊</span>
-            <a href="javascript:void(0)" onclick="openSignupPopup()" class="signup-link-fun">
-              <span>Join the Adventure!</span>
+            <a href="/signup" class="signup-link-fun">
+              <span>Start Free Trial</span>
               <span aria-hidden="true">🌟✨</span>
             </a>
           </p>
@@ -247,6 +293,18 @@
   </div>
 
 </main>
+
+<!-- Fun Error Toast -->
+<div id="funToast" class="fun-toast" role="alert" aria-live="polite" aria-atomic="true">
+  <div class="toast-content">
+    <span class="toast-emoji" id="toastEmoji">😊</span>
+    <div class="toast-message">
+      <p class="toast-title" id="toastTitle">Oops!</p>
+      <p class="toast-text" id="toastText">Something needs your attention</p>
+    </div>
+    <button type="button" class="toast-close" onclick="closeFunToast()" aria-label="Close message">✕</button>
+  </div>
+</div>
 
 <!-- FAQ Section - SEO Rich -->
 <section class="faq-section" aria-labelledby="faq-title">
@@ -400,15 +458,33 @@
 <style>
 /* ============================================
    CSS - MOBILE-FIRST & OPTIMIZED
+   Tailles adaptées et responsive
    ============================================ */
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body{
   font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:14px;
+  line-height:1.6;
+  color:#333;
 }
 
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+.sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border-width:0;
+}
 
 /* Main Login Container */
 .main-login{
@@ -416,7 +492,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:1rem;
+  padding:0.5rem;
   position:relative;
   overflow:hidden;
   background:linear-gradient(135deg,#eff6ff 0%,#ecfeff 50%,#f0fdfa 100%);
@@ -435,9 +511,11 @@ body{
   border-radius:50%;
   mix-blend-mode:multiply;
   filter:blur(60px);
-  opacity:0.4;
+  opacity:0;
   will-change:transform;
   transform:translateZ(0);
+  animation:fade-in 0.8s ease-out forwards, float-1 12s ease-in-out infinite;
+  animation-delay:0.3s;
 }
 
 .blob-1{
@@ -446,7 +524,8 @@ body{
   background:#3b82f6;
   top:5rem;
   left:2.5rem;
-  animation:float-1 12s ease-in-out infinite;
+  animation:fade-in 0.8s ease-out forwards, float-1 12s ease-in-out infinite;
+  animation-delay:0.3s;
 }
 
 .blob-2{
@@ -455,7 +534,8 @@ body{
   background:#06b6d4;
   top:10rem;
   right:5rem;
-  animation:float-2 15s ease-in-out infinite;
+  animation:fade-in 0.8s ease-out forwards, float-2 15s ease-in-out infinite;
+  animation-delay:0.5s;
 }
 
 .blob-3{
@@ -464,7 +544,13 @@ body{
   background:#14b8a6;
   bottom:8rem;
   left:50%;
-  animation:float-3 18s ease-in-out infinite;
+  animation:fade-in 0.8s ease-out forwards, float-3 18s ease-in-out infinite;
+  animation-delay:0.7s;
+}
+
+@keyframes fade-in{
+  0%{opacity:0}
+  100%{opacity:0.4}
 }
 
 @keyframes float-1{
@@ -516,7 +602,7 @@ body{
 }
 
 .card-content{
-  padding:2rem 1.5rem;
+  padding:1rem 1.25rem;
   position:relative;
   background:#fff;
   border-radius:1.5rem;
@@ -525,7 +611,7 @@ body{
 /* Header */
 .login-header{
   text-align:center;
-  margin-bottom:2rem;
+  margin-bottom:0.875rem;
 }
 
 /* Brand Icon */
@@ -533,15 +619,15 @@ body{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:4rem;
-  height:4rem;
-  margin:0 auto 1.5rem;
+  width:2.25rem;
+  height:2.25rem;
+  margin:0 auto 0.5rem;
   position:relative;
 }
 
 .icon-container{
-  width:4rem;
-  height:4rem;
+  width:2.25rem;
+  height:2.25rem;
   background:linear-gradient(135deg,#06b6d4,#8b5cf6);
   border-radius:50%;
   display:flex;
@@ -551,20 +637,20 @@ body{
 }
 
 .icon-svg{
-  width:2rem;
-  height:2rem;
+  width:1.125rem;
+  height:1.125rem;
   color:#fff;
 }
 
-/* Title */
+/* Title - Responsive avec clamp */
 .main-title{
-  font-size:2rem;
+  font-size:clamp(24px, 6vw, 40px);
   font-weight:800;
   background:linear-gradient(135deg,#06b6d4,#8b5cf6);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   background-clip:text;
-  margin-bottom:0.5rem;
+  margin-bottom:0.25rem;
   letter-spacing:-0.025em;
 }
 
@@ -574,15 +660,16 @@ body{
 
 .title-emoji{
   display:inline-block;
-  margin-left:0.5rem;
-  font-size:1.75rem;
+  margin-left:0.3rem;
+  font-size:clamp(20px, 5vw, 32px);
 }
 
+/* Subtitle */
 .subtitle{
-  font-size:1.125rem;
+  font-size:clamp(13px, 2vw, 16px);
   color:#6b7280;
   font-weight:500;
-  margin-bottom:1.5rem;
+  margin-bottom:0.75rem;
 }
 
 /* Google Button */
@@ -592,17 +679,18 @@ body{
   justify-content:center;
   gap:0.75rem;
   width:100%;
-  padding:0.875rem 1.5rem;
+  padding:0.625rem 1rem;
   background:#fff;
   border:2px solid #e5e7eb;
   border-radius:0.75rem;
-  font-size:1rem;
+  font-size:13px;
   font-weight:600;
   color:#1f2937;
   text-decoration:none;
   transition:all 0.3s ease;
   box-shadow:0 1px 3px rgba(0,0,0,0.1);
-  margin-bottom:1.5rem;
+  margin-bottom:0.75rem;
+  cursor:pointer;
 }
 
 .google-btn:hover{
@@ -612,20 +700,20 @@ body{
 }
 
 .google-icon{
-  width:1.5rem;
-  height:1.5rem;
+  width:1rem;
+  height:1rem;
   flex-shrink:0;
 }
 
 .rocket{
-  font-size:1.25rem;
+  font-size:0.875rem;
 }
 
 /* Divider */
 .divider{
   position:relative;
   text-align:center;
-  margin:1.5rem 0;
+  margin:0.75rem 0;
 }
 
 .divider::before{
@@ -644,8 +732,8 @@ body{
   display:inline-block;
   padding:0 1rem;
   background:rgba(255,255,255,0.95);
-  font-size:0.875rem;
-  font-weight:900;
+  font-size:13px;
+  font-weight:600;
   color:#6b7280;
 }
 
@@ -653,7 +741,7 @@ body{
 .login-form{
   display:flex;
   flex-direction:column;
-  gap:1.25rem;
+  gap:0.75rem;
 }
 
 .form-group{
@@ -666,10 +754,10 @@ body{
   display:flex;
   align-items:center;
   gap:0.5rem;
-  font-size:0.875rem;
-  font-weight:900;
+  font-size:12px;
+  font-weight:700;
   color:#374151;
-  margin-bottom:0.5rem;
+  margin-bottom:0.25rem;
 }
 
 .input-wrapper{
@@ -678,12 +766,12 @@ body{
 
 .form-input{
   width:100%;
-  padding:1rem 1.25rem;
+  padding:0.625rem 0.875rem;
   background:#f3f4f6;
-  border:3px solid #d1d5db;
-  border-radius:1rem;
-  font-weight:700;
-  font-size:1rem;
+  border:2px solid #d1d5db;
+  border-radius:0.75rem;
+  font-weight:600;
+  font-size:14px;
   color:#111827;
   transition:all 0.3s ease;
   font-family:inherit;
@@ -692,19 +780,25 @@ body{
 .form-input::placeholder{
   color:#9ca3af;
   font-weight:500;
+  font-size:13px;
 }
 
 .form-input:focus{
   outline:none;
   border-color:#06b6d4;
   background:#fff;
-  box-shadow:0 0 0 4px rgba(6,182,212,0.1);
+  box-shadow:0 0 0 3px rgba(6,182,212,0.1);
+}
+
+.input-error{
+  border-color:#ef4444!important;
+  background:#fef2f2!important;
 }
 
 .input-glow{
   position:absolute;
   inset:0;
-  border-radius:1rem;
+  border-radius:0.75rem;
   opacity:0;
   background:linear-gradient(135deg,#06b6d4,#8b5cf6);
   filter:blur(20px);
@@ -719,14 +813,14 @@ body{
 
 .toggle-password{
   position:absolute;
-  right:1rem;
+  right:0.75rem;
   top:50%;
   transform:translateY(-50%);
   background:none;
   border:none;
   cursor:pointer;
-  font-size:1.25rem;
-  padding:0.5rem;
+  font-size:1.1rem;
+  padding:0.4rem;
   transition:transform 0.3s ease;
 }
 
@@ -736,23 +830,23 @@ body{
 
 .error-msg{
   color:#ef4444;
-  font-size:0.75rem;
-  font-weight:900;
-  margin-top:0.375rem;
+  font-size:12px;
+  font-weight:700;
+  margin-top:0.25rem;
   min-height:1rem;
 }
 
 .forgot-password-link{
   text-align:right;
-  margin-top:0.5rem;
+  margin-top:0.375rem;
 }
 
 .forgot-link{
   display:inline-flex;
   align-items:center;
   gap:0.25rem;
-  font-size:0.875rem;
-  font-weight:700;
+  font-size:13px;
+  font-weight:600;
   color:#06b6d4;
   text-decoration:none;
   transition:all 0.3s ease;
@@ -763,28 +857,55 @@ body{
   text-decoration:underline;
 }
 
+/* Checkbox Remember Me */
+.checkbox-group{
+  display:flex;
+  align-items:center;
+}
+
+.checkbox-label{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  font-size:13px;
+  font-weight:600;
+  color:#374151;
+  cursor:pointer;
+}
+
+.checkbox-input{
+  width:1.125rem;
+  height:1.125rem;
+  cursor:pointer;
+  accent-color:#06b6d4;
+}
+
+.checkbox-text{
+  user-select:none;
+}
+
 /* Submit Button */
 .submit-btn{
   position:relative;
   width:100%;
-  padding:1rem 1.5rem;
-  margin-top:0.5rem;
+  padding:0.7rem 1rem;
+  margin-top:0.125rem;
   background:linear-gradient(135deg,#06b6d4,#8b5cf6);
   border:none;
-  border-radius:1rem;
-  font-size:1rem;
-  font-weight:900;
+  border-radius:0.75rem;
+  font-size:14px;
+  font-weight:700;
   color:#fff;
   cursor:pointer;
   overflow:hidden;
   transition:all 0.3s ease;
-  box-shadow:0 10px 30px -10px rgba(6,182,212,0.5);
+  box-shadow:0 8px 25px -8px rgba(6,182,212,0.4);
   font-family:inherit;
 }
 
 .submit-btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 15px 40px -10px rgba(6,182,212,0.6);
+  box-shadow:0 12px 35px -8px rgba(6,182,212,0.5);
 }
 
 .submit-btn:active{
@@ -808,26 +929,34 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:0.5rem;
+  gap:0.4rem;
+}
+
+.submit-label{
+  font-size:14px;
+}
+
+.submit-emoji{
+  font-size:0.875rem;
 }
 
 /* Footer */
 .card-footer{
-  margin-top:1.5rem;
-  padding-top:1.5rem;
+  margin-top:0.875rem;
+  padding-top:0.875rem;
   border-top:2px dashed #d1d5db;
 }
 
 .footer-text{
   display:flex;
   flex-direction:column;
-  gap:0.75rem;
+  gap:0.375rem;
   align-items:center;
   text-align:center;
 }
 
 .already-text{
-  font-size:0.9375rem;
+  font-size:12px;
   color:#6b7280;
   font-weight:600;
 }
@@ -835,12 +964,12 @@ body{
 .signup-link-fun{
   display:inline-flex;
   align-items:center;
-  gap:0.5rem;
-  padding:0.75rem 1.5rem;
+  gap:0.3rem;
+  padding:0.5rem 1rem;
   background:linear-gradient(135deg,#06b6d4,#8b5cf6);
   color:#fff;
-  font-weight:800;
-  font-size:1rem;
+  font-weight:700;
+  font-size:12px;
   border-radius:9999px;
   text-decoration:none;
   transition:all 0.3s ease;
@@ -861,12 +990,12 @@ body{
 
 /* FAQ Section */
 .faq-section{
-  padding:4rem 1rem;
+  padding:3rem 1rem;
   background:#fff;
 }
 
 .faq-title{
-  font-size:2rem;
+  font-size:clamp(32px, 7vw, 56px);
   font-weight:900;
   text-align:center;
   margin-bottom:2rem;
@@ -879,15 +1008,15 @@ body{
 .faq-list{
   display:flex;
   flex-direction:column;
-  gap:1rem;
+  gap:0.875rem;
   max-width:48rem;
   margin:0 auto;
 }
 
 .faq-item{
   background:#fff;
-  border:3px solid #e5e7eb;
-  border-radius:1rem;
+  border:2px solid #e5e7eb;
+  border-radius:0.75rem;
   overflow:hidden;
   transition:all 0.3s ease;
 }
@@ -905,12 +1034,12 @@ body{
 .faq-question{
   display:flex;
   align-items:center;
-  gap:1rem;
-  padding:1.25rem 1.5rem;
+  gap:0.875rem;
+  padding:1rem 1.25rem;
   cursor:pointer;
   list-style:none;
-  font-size:1rem;
-  font-weight:900;
+  font-size:14px;
+  font-weight:700;
   color:#1f2937;
   background:linear-gradient(135deg,#f9fafb,#fff);
   transition:all 0.3s ease;
@@ -926,7 +1055,7 @@ body{
 }
 
 .faq-icon{
-  font-size:1.5rem;
+  font-size:1.25rem;
   flex-shrink:0;
 }
 
@@ -935,7 +1064,7 @@ body{
 }
 
 .faq-toggle{
-  font-size:1.5rem;
+  font-size:1.25rem;
   font-weight:900;
   color:#06b6d4;
   transition:transform 0.3s ease;
@@ -947,18 +1076,18 @@ body{
 }
 
 .faq-answer{
-  padding:0 1.5rem 1.5rem 4rem;
+  padding:0 1.25rem 1rem 3rem;
 }
 
 .faq-answer p{
-  line-height:1.7;
+  line-height:1.6;
   color:#4b5563;
-  font-size:0.9375rem;
+  font-size:14px;
 }
 
 /* Footer Links */
 .footer-links{
-  padding:2rem 1rem 3rem;
+  padding:1.5rem 1rem 2.25rem;
   background:linear-gradient(to bottom,#fff,#f9fafb);
   border-top:1px solid #e5e7eb;
 }
@@ -967,7 +1096,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:0.75rem;
+  gap:0.5rem;
   flex-wrap:wrap;
   margin-bottom:1rem;
 }
@@ -975,13 +1104,13 @@ body{
 .footer-link{
   display:inline-flex;
   align-items:center;
-  gap:0.35rem;
-  font-size:0.8125rem;
+  gap:0.3rem;
+  font-size:13px;
   font-weight:600;
   color:#6b7280;
   text-decoration:none;
   transition:color 0.3s ease;
-  padding:0.25rem 0.5rem;
+  padding:0.2rem 0.4rem;
 }
 
 .footer-link:hover{
@@ -989,34 +1118,72 @@ body{
 }
 
 .link-icon{
-  font-size:0.875rem;
+  font-size:0.8rem;
   opacity:0.7;
 }
 
 .link-separator{
   color:#d1d5db;
-  font-size:0.75rem;
+  font-size:0.65rem;
   user-select:none;
 }
 
 .footer-copyright{
   text-align:center;
-  font-size:0.75rem;
+  font-size:12px;
   color:#9ca3af;
   font-weight:500;
 }
 
 /* Tablet */
 @media (min-width:640px){
-  .card-content{padding:2.5rem}
-  .main-title{font-size:2.5rem}
-  .subtitle{font-size:1.25rem}
+  .card-content{
+    padding:1.5rem 1.5rem;
+  }
+  
+  .form-input{
+    font-size:15px;
+  }
+  
+  .google-btn{
+    font-size:14px;
+    padding:0.7rem 1.25rem;
+  }
+  
+  .submit-btn{
+    font-size:14px;
+    padding:0.75rem 1.25rem;
+  }
 }
 
 /* Desktop */
 @media (min-width:1024px){
-  .container{max-width:50rem}
-  .card-content{padding:3rem}
+  .container{
+    max-width:32rem;
+  }
+  
+  .card-content{
+    padding:1.75rem 1.75rem;
+  }
+  
+  .form-input{
+    font-size:16px;
+    padding:0.7rem 1rem;
+  }
+  
+  .google-btn{
+    font-size:15px;
+    padding:0.75rem 1.5rem;
+  }
+  
+  .submit-btn{
+    font-size:15px;
+    padding:0.8rem 1.5rem;
+  }
+  
+  .faq-answer{
+    font-size:15px;
+  }
 }
 
 /* Accessibility */
@@ -1029,8 +1196,22 @@ body{
 }
 
 @media (prefers-contrast:high){
-  .form-input:focus{border:4px solid #1e40af}
+  .form-input:focus{
+    border:3px solid #1e40af;
+  }
 }
+
+/* Fun Toast */
+.fun-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:linear-gradient(135deg,#06b6d4,#8b5cf6);border-radius:1.5rem;padding:2rem;z-index:9999;box-shadow:0 25px 50px -12px rgba(6,182,212,0.4);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;max-width:90%;width:100%;max-width:28rem}
+.fun-toast.show{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
+.toast-content{display:flex;align-items:center;gap:1.5rem;color:#fff}
+.toast-emoji{font-size:3rem;animation:bounce 0.6s ease-in-out}
+.toast-message{flex:1}
+.toast-title{font-size:1.25rem;font-weight:800;margin:0 0 0.25rem;letter-spacing:-0.025em}
+.toast-text{font-size:0.9375rem;margin:0;opacity:0.95}
+.toast-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.5);color:#fff;border-radius:50%;width:2.5rem;height:2.5rem;font-size:1.25rem;cursor:pointer;transition:all 0.3s ease;font-weight:700}
+.toast-close:hover{background:rgba(255,255,255,0.3);border-color:#fff;transform:rotate(90deg)}
+@keyframes bounce{0%,100%{transform:scale(0)}50%{transform:scale(1.1)}}
 </style>
 
 <!-- JavaScript -->
@@ -1038,8 +1219,68 @@ body{
 (function(){
   'use strict';
   
+  // Hide page loader when everything is loaded
+  window.addEventListener('load', function() {
+    const loader = document.getElementById('pageLoader');
+    if (loader) {
+      loader.classList.add('hidden');
+      setTimeout(function() {
+        loader.remove();
+      }, 300);
+    }
+  });
+  
+  // Fallback - hide loader after 2 seconds max
+  setTimeout(function() {
+    const loader = document.getElementById('pageLoader');
+    if (loader) {
+      loader.classList.add('hidden');
+      setTimeout(function() {
+        loader.remove();
+      }, 300);
+    }
+  }, 2000);
+  
   const form=document.getElementById('loginForm');
+  const emailInput=document.getElementById('email');
+  const passwordInput=document.getElementById('password');
+  const rememberCheckbox=document.getElementById('remember-me');
   const btn=document.getElementById('loginBtnSubmit');
+  const funToast=document.getElementById('funToast');
+  
+  // LocalStorage keys
+  const EMAIL_KEY='ulixai_login_email';
+  const PASSWORD_KEY='ulixai_login_password';
+  const REMEMBER_KEY='ulixai_remember_me';
+  
+  // Load saved credentials on page load
+  function loadSavedCredentials(){
+    const savedEmail=localStorage.getItem(EMAIL_KEY);
+    const savedPassword=localStorage.getItem(PASSWORD_KEY);
+    const isRemembered=localStorage.getItem(REMEMBER_KEY)==='true';
+    
+    if(savedEmail){
+      emailInput.value=savedEmail;
+    }
+    
+    if(savedPassword && isRemembered){
+      passwordInput.value=savedPassword;
+      rememberCheckbox.checked=true;
+    }
+  }
+  
+  // Save credentials when form is submitted
+  form.addEventListener('submit',function(e){
+    if(rememberCheckbox.checked){
+      localStorage.setItem(EMAIL_KEY,emailInput.value);
+      localStorage.setItem(PASSWORD_KEY,passwordInput.value);
+      localStorage.setItem(REMEMBER_KEY,'true');
+    } else {
+      // Clear saved credentials if checkbox is not checked
+      localStorage.removeItem(PASSWORD_KEY);
+      localStorage.setItem(REMEMBER_KEY,'false');
+    }
+  });
   
   // Password toggle
   document.addEventListener('click',function(e){
@@ -1053,7 +1294,7 @@ body{
     if(input.type==='password'){
       input.type='text';
       icon.textContent='🙈';
-    }else{
+    } else {
       input.type='password';
       icon.textContent='👁️';
     }
@@ -1066,7 +1307,7 @@ body{
       const errorEl=document.getElementById('error-'+this.name);
       if(errorEl && this.value.trim()){
         errorEl.textContent='';
-        this.classList.remove('error');
+        this.classList.remove('input-error');
       }
     });
   });
@@ -1080,7 +1321,7 @@ body{
     });
     
     inputs.forEach(function(input){
-      input.classList.remove('error');
+      input.classList.remove('input-error');
     });
     
     let valid=true;
@@ -1088,15 +1329,18 @@ body{
     const password=form.elements.password.value;
     
     if(!email){
-      showError('email','Email is required.');
+      form.elements.email.classList.add('input-error');
+      showFunToast('✉️ Hold on!', 'We need your email address!', '✉️');
       valid=false;
     }else if(!/^\S+@\S+\.\S+$/.test(email)){
-      showError('email','Invalid email address.');
+      form.elements.email.classList.add('input-error');
+      showFunToast('🤔 Hmm...', 'That doesn\'t look like a valid email!', '📧');
       valid=false;
     }
     
     if(!password){
-      showError('password','Password is required.');
+      form.elements.password.classList.add('input-error');
+      showFunToast('🔐 Oops!', 'Enter your password, please!', '🔐');
       valid=false;
     }
     
@@ -1107,31 +1351,44 @@ body{
     }
   });
   
-  function showError(field,msg){
-    const errorEl=document.getElementById('error-'+field);
-    const inputEl=form.elements[field];
-    
-    if(errorEl)errorEl.textContent=msg;
-    if(inputEl && inputEl.classList){
-      inputEl.classList.add('error');
-    }
+  function showFunToast(title, message, emoji){
+    document.getElementById('toastTitle').textContent=title;
+    document.getElementById('toastText').textContent=message;
+    document.getElementById('toastEmoji').textContent=emoji;
+    funToast.classList.add('show');
+    setTimeout(function(){
+      closeFunToast();
+    }, 4500);
   }
+  
+  // Initialize on load
+  loadSavedCredentials();
 })();
 
-// Signup popup function
-function openSignupPopup() {
-  document.getElementById('signupPopup').classList.remove('hidden');
+function closeFunToast(){
+  document.getElementById('funToast').classList.remove('show');
 }
 
-function closeSignupPopup() {
-  document.getElementById('signupPopup').classList.add('hidden');
+// Signup popup function
+function openSignupPopup(){
+  const popup=document.getElementById('signupPopup');
+  if(popup){
+    popup.classList.remove('hidden');
+  }
+}
+
+function closeSignupPopup(){
+  const popup=document.getElementById('signupPopup');
+  if(popup){
+    popup.classList.add('hidden');
+  }
 }
 </script>
 
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function(){
     @if(session('toast_success'))
         toastr.success("{{ session('toast_success') }}");
     @endif

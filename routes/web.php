@@ -39,6 +39,7 @@ use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\UlixaiReviewController;
 use App\Http\Controllers\ServiceFeesController;
 use App\Http\Controllers\PartnershipController;
+use App\Http\Controllers\CookieController;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Controllers\RecruitApplicationController;
 use App\Http\Controllers\PressController;
@@ -78,6 +79,16 @@ Route::get('/partnerships', [ReviewController::class, 'partnerships'])->name('pa
 
 // Partnership Request
 Route::post('/partnership/store', [PartnershipController::class, 'store'])->name('partnership.store');
+
+// ========================================
+// 🍪 ROUTES COOKIES
+// ========================================
+
+Route::get('/cookies', [CookieController::class, 'show'])->name('cookies.show');
+Route::post('/cookies/save', [CookieController::class, 'save'])->name('cookies.save');
+Route::post('/cookies/accept-all', [CookieController::class, 'acceptAll'])->name('cookies.acceptAll');
+Route::post('/cookies/reject-all', [CookieController::class, 'rejectAll'])->name('cookies.rejectAll');
+Route::post('/cookies/reset', [CookieController::class, 'reset'])->name('cookies.reset');
 
 // ========================================
 // 🌍 ROUTES PRESSE PUBLIQUES - MULTILINGUES
@@ -453,6 +464,7 @@ Route::get('/sitemap.xml', function () {
             ['loc' => 'https://ulixai.com/customerreviews',         'lastmod' => $now, 'priority' => '0.6'],
             ['loc' => 'https://ulixai.com/aboutUS',                 'lastmod' => $now, 'priority' => '0.5'],
             ['loc' => 'https://ulixai.com/press',                   'lastmod' => $now, 'priority' => '0.5'],
+            ['loc' => 'https://ulixai.com/cookies',                 'lastmod' => $now, 'priority' => '0.5'],
         ];
 
         $body = '';

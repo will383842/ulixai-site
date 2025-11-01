@@ -86,17 +86,6 @@
       70% { transform: translateY(-4px); }
     }
 
-    /* Shake Animation */
-    .shake-animation {
-      animation: shake 3s ease-in-out infinite;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: rotate(0deg); }
-      10%, 30% { transform: rotate(-3deg); }
-      20%, 40% { transform: rotate(3deg); }
-    }
-
     /* Pulse Badge */
     .pulse-badge {
       animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -230,7 +219,7 @@
         What Are Cookies? 🤔
       </h2>
       <p class="text-base text-gray-600 max-w-2xl mx-auto">
-        Think of cookies as little digital post-it notes. Your browser saves them, and we use them to recognize you, remember your preferences, and make your experience smoother. That's it—nothing magical, nothing scary. Complete transparency, always.
+        Think of cookies as little digital post-it notes. Your browser saves them, and we use them to recognize you, remember your preferences, and make your experience smoother. Complete transparency, always.
       </p>
     </div>
 
@@ -240,7 +229,7 @@
           <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 floating-animation" aria-hidden="true">📝</div>
           <div>
             <h3 class="font-bold text-gray-800 text-lg mb-2">What We Store</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">User preferences, session info, language settings, and anonymized analytics. We never store passwords or credit card info in cookies—that's handled securely elsewhere.</p>
+            <p class="text-gray-600 text-sm leading-relaxed">User preferences, session info, language settings, and anonymized analytics. We never store passwords or credit card info in cookies.</p>
           </div>
         </div>
       </article>
@@ -250,7 +239,7 @@
           <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 floating-animation" aria-hidden="true">🛡️</div>
           <div>
             <h3 class="font-bold text-gray-800 text-lg mb-2">How We Protect You</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">All data is encrypted, anonymized where possible, and never sold to third parties. You can delete your cookies anytime. We follow international privacy standards and best practices.</p>
+            <p class="text-gray-600 text-sm leading-relaxed">All data is encrypted, anonymized where possible, and never sold to third parties. We follow international privacy standards and best practices.</p>
           </div>
         </div>
       </article>
@@ -271,60 +260,32 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-      <!-- Strictly Necessary -->
       <article class="enhanced-card stagger-animation" style="animation-delay: 0.1s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">
-          🔐
-        </div>
+        <div class="w-16 h-16 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">🔐</div>
         <h3 class="font-bold text-gray-800 text-center mb-2">Strictly Necessary</h3>
-        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">
-          Essential for security, login, and basic site functionality. These are <strong>always active</strong>—you can't turn them off because the site wouldn't work without them!
-        </p>
-        <div class="bg-red-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-red-700">
-          ⚡ ALWAYS ON
-        </div>
+        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">Essential for security, login, and basic site functionality. <strong>Always active</strong>—you can't turn them off!</p>
+        <div class="bg-red-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-red-700">⚡ ALWAYS ON</div>
       </article>
 
-      <!-- Performance -->
       <article class="enhanced-card stagger-animation" style="animation-delay: 0.2s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">
-          📊
-        </div>
+        <div class="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">📊</div>
         <h3 class="font-bold text-gray-800 text-center mb-2">Performance</h3>
-        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">
-          Help us understand how visitors use our site. Which pages are popular? Where do people get stuck? This helps us make improvements.
-        </p>
-        <div class="bg-green-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-green-700">
-          ✓ RECOMMENDED
-        </div>
+        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">Help us understand how visitors use our site. Which pages are popular? This helps us improve.</p>
+        <div class="bg-green-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-green-700">✓ RECOMMENDED</div>
       </article>
 
-      <!-- Functionality -->
       <article class="enhanced-card stagger-animation" style="animation-delay: 0.3s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">
-          ⚙️
-        </div>
+        <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">⚙️</div>
         <h3 class="font-bold text-gray-800 text-center mb-2">Functionality</h3>
-        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">
-          Remember your preferences—language choice, color theme, saved filters. Makes your next visit feel personalized and familiar.
-        </p>
-        <div class="bg-blue-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-blue-700">
-          💝 OPTIONAL
-        </div>
+        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">Remember your preferences—language choice, color theme, saved filters. Makes visits personalized.</p>
+        <div class="bg-blue-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-blue-700">💝 OPTIONAL</div>
       </article>
 
-      <!-- Marketing -->
       <article class="enhanced-card stagger-animation" style="animation-delay: 0.4s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-pink-100 to-rose-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">
-          📣
-        </div>
+        <div class="w-16 h-16 bg-gradient-to-br from-pink-100 to-rose-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">📣</div>
         <h3 class="font-bold text-gray-800 text-center mb-2">Marketing</h3>
-        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">
-          Track activity for ads across platforms. See relevant promotions from Ulixai & SOS-Expat. Totally optional—most people turn this off!
-        </p>
-        <div class="bg-pink-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-pink-700">
-          🚫 OPTIONAL
-        </div>
+        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">Track activity for ads across platforms. See relevant promotions from Ulixai & SOS-Expat.</p>
+        <div class="bg-pink-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-pink-700">🚫 OPTIONAL</div>
       </article>
     </div>
   </div>
@@ -340,7 +301,6 @@
 
       <form id="cookieForm" class="space-y-5">
         
-        <!-- Strictly Necessary (Always On) -->
         <div class="flex items-center justify-between p-5 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border-2 border-red-200">
           <div class="flex-1">
             <h3 class="font-bold text-gray-800 text-lg">🔐 Strictly Necessary</h3>
@@ -349,34 +309,30 @@
           <div class="toggle-switch active" onclick="return false;" title="Always required"></div>
         </div>
 
-        <!-- Performance -->
         <div class="flex items-center justify-between p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200 hover:border-green-400 transition-all">
           <div class="flex-1">
             <h3 class="font-bold text-gray-800 text-lg">📊 Performance Analytics</h3>
             <p class="text-gray-600 text-sm">Help us understand how you use our platforms</p>
           </div>
-          <div class="toggle-switch" id="performanceToggle" onclick="toggleCookie(this, 'performance')"></div>
+          <div class="toggle-switch" id="performanceToggle" onclick="toggleCookie(this)"></div>
         </div>
 
-        <!-- Functionality -->
         <div class="flex items-center justify-between p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 hover:border-blue-400 transition-all">
           <div class="flex-1">
             <h3 class="font-bold text-gray-800 text-lg">⚙️ Functionality</h3>
             <p class="text-gray-600 text-sm">Remember your preferences & settings</p>
           </div>
-          <div class="toggle-switch" id="functionalityToggle" onclick="toggleCookie(this, 'functionality')"></div>
+          <div class="toggle-switch" id="functionalityToggle" onclick="toggleCookie(this)"></div>
         </div>
 
-        <!-- Marketing -->
         <div class="flex items-center justify-between p-5 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border-2 border-pink-200 hover:border-pink-400 transition-all">
           <div class="flex-1">
             <h3 class="font-bold text-gray-800 text-lg">📣 Marketing & Ads</h3>
             <p class="text-gray-600 text-sm">Personalized ads across platforms</p>
           </div>
-          <div class="toggle-switch" id="marketingToggle" onclick="toggleCookie(this, 'marketing')"></div>
+          <div class="toggle-switch" id="marketingToggle" onclick="toggleCookie(this)"></div>
         </div>
 
-        <!-- Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 pt-6">
           <button 
             type="submit" 
@@ -463,7 +419,7 @@
           <span class="text-2xl group-open:rotate-180 transition-transform" aria-hidden="true">▼</span>
         </summary>
         <p class="text-gray-600 mt-3 pt-3 border-t-2 border-gray-200">
-          Your cookie preferences are stored locally in your browser (localStorage) and remain saved indefinitely until you delete them. This means you won't have to set your preferences again each time you visit. You have full control: you can change them anytime on this page, clear them using the "Delete All My Stored Data" button below, or remove them through your browser settings. We don't send these preferences to our servers—they stay on your device.
+          Your cookie preferences are stored locally in your browser using cookies with a 365-day expiration. This means you won't have to set your preferences again for a full year. You have full control: you can change them anytime on this page, clear them using the "Delete All My Stored Data" button above, or remove them through your browser settings. These preference cookies stay on your device and are not sent to external servers.
         </p>
       </details>
 
@@ -516,87 +472,104 @@
 @include('includes.footer')
 
 <script>
-  // Initialize preferences from localStorage
+  // Charger les préférences au chargement de la page
   function initPreferences() {
-    const prefs = JSON.parse(localStorage.getItem('cookiePreferences') || '{"performance": true, "functionality": true, "marketing": false}');
+    const preferences = getCookiePreferences();
     
-    updateToggle('performanceToggle', prefs.performance);
-    updateToggle('functionalityToggle', prefs.functionality);
-    updateToggle('marketingToggle', prefs.marketing);
+    document.getElementById('performanceToggle').classList.toggle('active', preferences.performance);
+    document.getElementById('functionalityToggle').classList.toggle('active', preferences.functionality);
+    document.getElementById('marketingToggle').classList.toggle('active', preferences.marketing);
   }
 
-  // Update toggle visual state
-  function updateToggle(elementId, isActive) {
-    const toggle = document.getElementById(elementId);
-    if (toggle) {
-      if (isActive) {
-        toggle.classList.add('active');
-      } else {
-        toggle.classList.remove('active');
+  // Obtenir les préférences du cookie
+  function getCookiePreferences() {
+    const name = 'ulixai_cookie_preferences=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(';');
+    
+    for (let cookie of cookieArray) {
+      cookie = cookie.trim();
+      if (cookie.indexOf(name) === 0) {
+        try {
+          return JSON.parse(cookie.substring(name.length));
+        } catch (e) {
+          return { performance: true, functionality: true, marketing: false };
+        }
       }
     }
+    
+    return { performance: true, functionality: true, marketing: false };
   }
 
-  // Toggle cookie preference
-  function toggleCookie(element, cookieType) {
+  // Sauvegarder un cookie avec expiration
+  function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+  }
+
+  // Toggler les cookies
+  function toggleCookie(element) {
     element.classList.toggle('active');
   }
 
-  // Save preferences
+  // Sauvegarder les préférences
   document.getElementById('cookieForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     const preferences = {
+      strictly_necessary: true,
       performance: document.getElementById('performanceToggle').classList.contains('active'),
       functionality: document.getElementById('functionalityToggle').classList.contains('active'),
       marketing: document.getElementById('marketingToggle').classList.contains('active')
     };
+
+    // Sauvegarder dans un cookie avec expiration de 365 jours
+    setCookie('ulixai_cookie_preferences', JSON.stringify(preferences), 365);
     
-    localStorage.setItem('cookiePreferences', JSON.stringify(preferences));
-    
-    // Show success message
-    showNotification('✅ Your preferences have been saved!');
+    showNotification('✅ Your preferences have been saved for 365 days!');
   });
 
-  // Reset preferences
+  // Réinitialiser les préférences
   function resetPreferences() {
-    const defaults = {performance: true, functionality: true, marketing: false};
-    localStorage.setItem('cookiePreferences', JSON.stringify(defaults));
+    const defaults = { performance: true, functionality: true, marketing: false };
     
-    updateToggle('performanceToggle', defaults.performance);
-    updateToggle('functionalityToggle', defaults.functionality);
-    updateToggle('marketingToggle', defaults.marketing);
+    setCookie('ulixai_cookie_preferences', JSON.stringify(defaults), 365);
+    
+    document.getElementById('performanceToggle').classList.toggle('active', defaults.performance);
+    document.getElementById('functionalityToggle').classList.toggle('active', defaults.functionality);
+    document.getElementById('marketingToggle').classList.toggle('active', defaults.marketing);
     
     showNotification('🔄 Preferences reset to default!');
   }
 
-  // Delete all stored data
+  // Supprimer toutes les données
   function deleteAllData() {
     if (confirm('⚠️ Are you sure you want to delete all your stored preferences? This action cannot be undone.')) {
-      localStorage.removeItem('cookiePreferences');
+      // Supprimer le cookie en définissant une date d'expiration passée
+      document.cookie = 'ulixai_cookie_preferences=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       
-      // Reset toggles to default visual state
-      updateToggle('performanceToggle', true);
-      updateToggle('functionalityToggle', true);
-      updateToggle('marketingToggle', false);
+      // Réinitialiser l'affichage
+      document.getElementById('performanceToggle').classList.toggle('active', true);
+      document.getElementById('functionalityToggle').classList.toggle('active', true);
+      document.getElementById('marketingToggle').classList.toggle('active', false);
       
       showNotification('🗑️ All your stored data has been deleted!');
     }
   }
 
-  // Notification system
+  // Notification
   function showNotification(message) {
     const notification = document.createElement('div');
-    notification.className = 'fixed bottom-6 right-6 bg-white text-gray-800 px-6 py-3 rounded-full shadow-xl font-bold flex items-center gap-2 z-50 animate-pulse';
+    notification.className = 'fixed bottom-6 right-6 bg-white text-gray-800 px-6 py-3 rounded-full shadow-xl font-bold z-50 animate-pulse';
     notification.textContent = message;
     document.body.appendChild(notification);
     
-    setTimeout(() => {
-      notification.remove();
-    }, 3000);
+    setTimeout(() => notification.remove(), 3000);
   }
 
-  // Initialize on load
+  // Initialiser au chargement
   document.addEventListener('DOMContentLoaded', initPreferences);
 </script>
 

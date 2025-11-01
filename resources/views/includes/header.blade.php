@@ -2256,7 +2256,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   signupBtn?.addEventListener('click', () => {
     popup.classList.remove('hidden');
-    showStep(1); // 🆕 Commencer au Step 2 (Native Language) au lieu de Step 1
+    showStep(0); // 🆕 Commencer au Step 2 (Native Language) au lieu de Step 1
   });
 
   closePopupBtn?.addEventListener('click', () => {
@@ -3158,5 +3158,6 @@ function updateHeaderAfterLogin(userData) {
 }
 </script>
 
+@include('includes.cookie-banner')
 </body>
 </html>
