@@ -3,8 +3,8 @@
 @section('admin-content')
 <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
-<form id="termsForm" class="max-w-5xl mx-auto">
-  <!-- Terms & Conditions -->
+<form id="termsForm" class="max-w-4xl mx-auto">
+  <!-- Terms & Conditions - ONE BIG TEXT -->
   <div class="bg-white rounded-lg shadow-sm border border-gray-200">
     <div class="px-6 py-4 border-b border-gray-200">
       <h2 class="text-xl font-semibold text-gray-800 flex items-center">
@@ -14,18 +14,25 @@
         </svg>
         Terms & Conditions
       </h2>
-      <p class="text-gray-600 text-sm mt-1">Edit the section content. Titles/order are fixed.</p>
+      <p class="text-gray-600 text-sm mt-1">Edit the complete terms and conditions text below.</p>
     </div>
 
     <div class="px-6 py-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="termsGrid">
-        <!-- JS injects 10 textareas here -->
+      <!-- ONE BIG TEXTAREA FOR ALL CONTENT -->
+      <div>
+        <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
+          Complete Terms & Conditions
+        </label>
+        <textarea id="content" name="content"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 font-mono text-sm"
+          rows="25" placeholder="Write your complete terms and conditions here..."></textarea>
+        <p class="text-xs text-gray-500 mt-2">💡 Tip: You can use HTML formatting like &lt;h2&gt;, &lt;strong&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;p&gt;, etc.</p>
       </div>
     </div>
   </div>
 
   <!-- Actions -->
-  <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+  <div class="flex justify-end space-x-4 pt-6">
     <button type="button" id="cancelBtn"
             class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium">
       Cancel
@@ -44,42 +51,15 @@
 <script>
 (() => {
   const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-  const grid = document.getElementById('termsGrid');
   const form = document.getElementById('termsForm');
   const cancelBtn = document.getElementById('cancelBtn');
   const saveBtn = document.getElementById('saveBtn');
   const saveMsg = document.getElementById('saveMsg');
+  const contentField = document.getElementById('content');
 
-  // fixed titles/order/slugs; UI shows *only body* textareas
-  const MAP = [
-    {number:1,  title:'Accepting the terms',     slug:'accepting-the-terms'},
-    {number:2,  title:'Changes to terms',        slug:'changes-to-terms'},
-    {number:3,  title:'Using our product',       slug:'using-our-product'},
-    {number:4,  title:'General restrictions',    slug:'general-restrictions'},
-    {number:5,  title:'Content policy',          slug:'content-policy'},
-    {number:6,  title:'Your rights',             slug:'your-rights'},
-    {number:7,  title:'Copyright policy',        slug:'copyright-policy'},
-    {number:8,  title:'Relationship guidelines', slug:'relationship-guidelines'},
-    {number:9,  title:'Liability Policy',        slug:'liability-policy'},
-    {number:10, title:'General legal terms',     slug:'general-legal-terms'},
-  ];
+  let sectionId = null; // Keep track of the record ID
 
-  // render 10 textareas
-  MAP.forEach(item => {
-    const wrap = document.createElement('div');
-    wrap.className = 'col-span-1';
-    wrap.innerHTML = `
-      <label for="${item.slug}" class="block text-sm font-medium text-gray-700 mb-2">
-        ${item.number}. ${item.title}
-      </label>
-      <textarea id="${item.slug}" name="${item.slug}"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-        rows="4" placeholder="Write ${item.title.toLowerCase()}..."></textarea>
-    `;
-    grid.appendChild(wrap);
-  });
-
-  // load existing bodies (controller fetch seeds defaults if missing)
+  // Load existing content
   async function load() {
     saveMsg.textContent = 'Loading...';
     try {
@@ -87,15 +67,10 @@
       const data = await res.json();
       if (!data.success) throw new Error('fetch failed');
 
-      const bySlug = {};
-      (data.sections || []).forEach(s => bySlug[s.slug] = s);
-
-      MAP.forEach(m => {
-        const ta = document.getElementById(m.slug);
-        const row = bySlug[m.slug];
-        m.id = row?.id ?? null;                 // keep ID to update
-        ta.value = typeof row?.body === 'string' ? row.body : '';
-      });
+      // Get the first section (or create one if it doesn't exist)
+      const section = (data.sections || [])[0];
+      sectionId = section?.id ?? null;
+      contentField.value = typeof section?.body === 'string' ? section.body : '';
 
       saveMsg.textContent = '';
     } catch (e) {
@@ -104,39 +79,37 @@
     }
   }
 
-  // save all bodies (batch POST). UI only shows body, but we send fixed title/number.
+  // Save the big text
   async function saveAll(e) {
     e.preventDefault();
     saveBtn.disabled = true;
     saveMsg.textContent = 'Saving...';
 
-    const payloads = MAP.map(m => ({
-      id: m.id ?? null,
-      number: m.number,
-      title: m.title,
-      body: document.getElementById(m.slug).value || '',
+    const payload = {
+      id: sectionId ?? null,
+      number: 1,
+      title: 'Terms and Conditions',
+      body: contentField.value || '',
       is_active: 1,
+      slug: 'terms-and-conditions',
       version: null,
       effective_date: null,
-    }));
+    };
 
     try {
-      const results = await Promise.all(payloads.map(p =>
-        fetch(`{{ route('admin.terms.store') }}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrf,
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(p)
-        }).then(r => r.json())
-      ));
+      const res = await fetch(`{{ route('admin.terms.store') }}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrf,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }).then(r => r.json());
 
-      // update IDs after creation
-      results.forEach((res, i) => {
-        if (res?.success && res.section) MAP[i].id = res.section.id;
-      });
+      if (res?.success && res.section) {
+        sectionId = res.section.id;
+      }
 
       saveMsg.textContent = 'Saved ✓';
       setTimeout(()=> saveMsg.textContent = '', 1500);

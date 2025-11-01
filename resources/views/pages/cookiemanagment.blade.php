@@ -1,3 +1,5 @@
+@include('includes.header')
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,15 +8,6 @@
   
   <title>Cookie Preferences | Ulixai & SOS-Expat - Your Privacy, Your Choice</title>
   <meta name="description" content="Manage your cookie preferences at Ulixai.com and SOS-Expat.com. We believe in transparency and giving you control over your data.">
-  <meta name="robots" content="index, follow">
-  
-  <meta name="theme-color" content="#3b82f6">
-  <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png">
-  
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" as="style">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -32,7 +25,6 @@
       font-size: 14px;
     }
 
-    /* Gradient Text */
     .gradient-text {
       background: linear-gradient(135deg, #3b82f6, #06b6d4, #14b8a6);
       -webkit-background-clip: text;
@@ -47,67 +39,11 @@
       50% { background-position: 100% 50%; }
     }
 
-    /* Enhanced Card Styles */
-    .enhanced-card {
-      background: white;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 2px solid transparent;
-      position: relative;
-      overflow: hidden;
+    /* Toggle Switch - Checkbox Stylisé */
+    .toggle-checkbox {
+      display: none;
     }
 
-    .enhanced-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 16px 32px rgba(59, 130, 246, 0.2);
-      border-color: #3b82f6;
-    }
-
-    /* Floating Animation */
-    .floating-animation {
-      animation: floating 3s ease-in-out infinite;
-    }
-
-    @keyframes floating {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-
-    /* Bounce Animation */
-    .icon-bounce {
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
-      40%, 43% { transform: translateY(-8px); }
-      70% { transform: translateY(-4px); }
-    }
-
-    /* Shake Animation */
-    .shake-animation {
-      animation: shake 3s ease-in-out infinite;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: rotate(0deg); }
-      10%, 30% { transform: rotate(-3deg); }
-      20%, 40% { transform: rotate(3deg); }
-    }
-
-    /* Pulse Badge */
-    .pulse-badge {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
-    /* Toggle Switch - Enhanced */
     .toggle-switch {
       position: relative;
       width: 3.5rem;
@@ -118,11 +54,12 @@
       transition: all 0.3s ease;
       border: 2px solid transparent;
       flex-shrink: 0;
+      display: inline-block;
     }
 
-    .toggle-switch.active {
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      border-color: #0ea5e9;
+    .toggle-checkbox:checked + .toggle-switch {
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      border-color: #0284c7;
     }
 
     .toggle-switch::after {
@@ -138,11 +75,10 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .toggle-switch.active::after {
+    .toggle-checkbox:checked + .toggle-switch::after {
       left: calc(100% - 1.5rem - 2px);
     }
 
-    /* Glass Effect */
     .glass-effect {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -150,63 +86,33 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    /* Background Pattern */
     .bg-pattern {
       background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%233b82f6" fill-opacity="0.03"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
       opacity: 0.4;
     }
 
-    /* Stagger Animation */
-    .stagger-animation {
-      animation: fadeInUp 0.8s ease-out forwards;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Performance */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    /* Responsive */
     @media (max-width: 640px) {
       body { font-size: 13px; }
-      .enhanced-card { padding: 1.25rem; }
     }
   </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
 
-@include('includes.header')
-
 <!-- HERO SECTION -->
 <section class="relative py-16 px-4 text-center overflow-hidden" role="banner">
   <div class="absolute inset-0 bg-pattern"></div>
   
-  <!-- Top Banner -->
   <div class="absolute top-0 left-0 right-0 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 py-2 px-3 overflow-hidden">
     <div class="flex items-center justify-center gap-2 text-white font-bold text-xs md:text-sm animate-pulse">
-      <span class="text-lg icon-bounce" aria-hidden="true">🍪</span>
+      <span class="text-lg">🍪</span>
       <span>YOUR PRIVACY MATTERS TO US</span>
-      <span class="text-lg" aria-hidden="true">•</span>
+      <span class="text-lg">•</span>
       <span>YOU'RE IN CONTROL</span>
-      <span class="text-lg icon-bounce" aria-hidden="true">✨</span>
+      <span class="text-lg">✨</span>
     </div>
   </div>
   
   <div class="relative max-w-4xl mx-auto pt-8">
-    <div class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-purple-200 rounded-full px-4 py-2 mb-6 pulse-badge">
-      <span class="text-3xl floating-animation" aria-hidden="true">🍪</span>
-      <span class="text-purple-800 font-bold text-sm">Cookie Preferences & Privacy Control</span>
-    </div>
-    
     <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">
       <span class="gradient-text">Your Privacy, Your Choice</span>
     </h1>
@@ -216,116 +122,8 @@
     </p>
     
     <div class="inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-300 rounded-full px-4 py-2">
-      <span class="text-lg" aria-hidden="true">✅</span>
+      <span class="text-lg">✅</span>
       <span class="text-green-800 font-bold text-sm">100% Transparent • Always Optional</span>
-    </div>
-  </div>
-</section>
-
-<!-- WHAT ARE COOKIES SECTION -->
-<section class="py-12 px-4 bg-white/50" aria-labelledby="about-cookies">
-  <div class="max-w-4xl mx-auto">
-    <div class="text-center mb-10">
-      <h2 id="about-cookies" class="text-3xl md:text-4xl font-bold text-blue-800 mb-3">
-        What Are Cookies? 🤔
-      </h2>
-      <p class="text-base text-gray-600 max-w-2xl mx-auto">
-        Think of cookies as little digital post-it notes. Your browser saves them, and we use them to recognize you, remember your preferences, and make your experience smoother. That's it—nothing magical, nothing scary. Complete transparency, always.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <article class="enhanced-card stagger-animation" style="animation-delay: 0.1s;">
-        <div class="flex items-start gap-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 floating-animation" aria-hidden="true">📝</div>
-          <div>
-            <h3 class="font-bold text-gray-800 text-lg mb-2">What We Store</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">User preferences, session info, language settings, and anonymized analytics. We never store passwords or credit card info in cookies—that's handled securely elsewhere.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="enhanced-card stagger-animation" style="animation-delay: 0.2s;">
-        <div class="flex items-start gap-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 floating-animation" aria-hidden="true">🛡️</div>
-          <div>
-            <h3 class="font-bold text-gray-800 text-lg mb-2">How We Protect You</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">All data is encrypted, anonymized where possible, and never sold to third parties. You can delete your cookies anytime. We follow international privacy standards and best practices.</p>
-          </div>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- COOKIE TYPES SECTION -->
-<section class="py-12 px-4" aria-labelledby="cookie-types">
-  <div class="max-w-5xl mx-auto">
-    <div class="text-center mb-10">
-      <h2 id="cookie-types" class="text-3xl md:text-4xl font-bold text-blue-800 mb-3">
-        Four Types of Cookies
-      </h2>
-      <p class="text-base text-gray-600 max-w-2xl mx-auto">
-        Each type serves a different purpose. You control which ones you want to accept.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-      <!-- Strictly Necessary -->
-      <article class="enhanced-card stagger-animation" style="animation-delay: 0.1s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">
-          🔐
-        </div>
-        <h3 class="font-bold text-gray-800 text-center mb-2">Strictly Necessary</h3>
-        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">
-          Essential for security, login, and basic site functionality. These are <strong>always active</strong>—you can't turn them off because the site wouldn't work without them!
-        </p>
-        <div class="bg-red-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-red-700">
-          ⚡ ALWAYS ON
-        </div>
-      </article>
-
-      <!-- Performance -->
-      <article class="enhanced-card stagger-animation" style="animation-delay: 0.2s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">
-          📊
-        </div>
-        <h3 class="font-bold text-gray-800 text-center mb-2">Performance</h3>
-        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">
-          Help us understand how visitors use our site. Which pages are popular? Where do people get stuck? This helps us make improvements.
-        </p>
-        <div class="bg-green-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-green-700">
-          ✓ RECOMMENDED
-        </div>
-      </article>
-
-      <!-- Functionality -->
-      <article class="enhanced-card stagger-animation" style="animation-delay: 0.3s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">
-          ⚙️
-        </div>
-        <h3 class="font-bold text-gray-800 text-center mb-2">Functionality</h3>
-        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">
-          Remember your preferences—language choice, color theme, saved filters. Makes your next visit feel personalized and familiar.
-        </p>
-        <div class="bg-blue-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-blue-700">
-          💝 OPTIONAL
-        </div>
-      </article>
-
-      <!-- Marketing -->
-      <article class="enhanced-card stagger-animation" style="animation-delay: 0.4s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-pink-100 to-rose-100 rounded-xl flex items-center justify-center text-4xl mb-3 mx-auto floating-animation" aria-hidden="true">
-          📣
-        </div>
-        <h3 class="font-bold text-gray-800 text-center mb-2">Marketing</h3>
-        <p class="text-gray-600 text-center text-sm leading-relaxed mb-3">
-          Track activity for ads across platforms. See relevant promotions from Ulixai & SOS-Expat. Totally optional—most people turn this off!
-        </p>
-        <div class="bg-pink-100 rounded-lg px-3 py-1.5 text-center text-xs font-bold text-pink-700">
-          🚫 OPTIONAL
-        </div>
-      </article>
     </div>
   </div>
 </section>
@@ -340,77 +138,80 @@
 
       <form id="cookieForm" class="space-y-5">
         
-        <!-- Strictly Necessary (Always On) -->
         <div class="flex items-center justify-between p-5 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border-2 border-red-200">
           <div class="flex-1">
             <h3 class="font-bold text-gray-800 text-lg">🔐 Strictly Necessary</h3>
             <p class="text-gray-600 text-sm">Security, login, basic functionality</p>
           </div>
-          <div class="toggle-switch active" onclick="return false;" title="Always required"></div>
+          <label class="flex items-center cursor-not-allowed opacity-60">
+            <input type="checkbox" class="toggle-checkbox" disabled checked>
+            <span class="toggle-switch"></span>
+          </label>
         </div>
 
-        <!-- Performance -->
         <div class="flex items-center justify-between p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200 hover:border-green-400 transition-all">
           <div class="flex-1">
             <h3 class="font-bold text-gray-800 text-lg">📊 Performance Analytics</h3>
             <p class="text-gray-600 text-sm">Help us understand how you use our platforms</p>
           </div>
-          <div class="toggle-switch" id="performanceToggle" onclick="toggleCookie(this, 'performance')"></div>
+          <label class="flex items-center cursor-pointer">
+            <input type="checkbox" class="toggle-checkbox" id="performanceToggle">
+            <span class="toggle-switch"></span>
+          </label>
         </div>
 
-        <!-- Functionality -->
         <div class="flex items-center justify-between p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 hover:border-blue-400 transition-all">
           <div class="flex-1">
             <h3 class="font-bold text-gray-800 text-lg">⚙️ Functionality</h3>
             <p class="text-gray-600 text-sm">Remember your preferences & settings</p>
           </div>
-          <div class="toggle-switch" id="functionalityToggle" onclick="toggleCookie(this, 'functionality')"></div>
+          <label class="flex items-center cursor-pointer">
+            <input type="checkbox" class="toggle-checkbox" id="functionalityToggle">
+            <span class="toggle-switch"></span>
+          </label>
         </div>
 
-        <!-- Marketing -->
         <div class="flex items-center justify-between p-5 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border-2 border-pink-200 hover:border-pink-400 transition-all">
           <div class="flex-1">
             <h3 class="font-bold text-gray-800 text-lg">📣 Marketing & Ads</h3>
             <p class="text-gray-600 text-sm">Personalized ads across platforms</p>
           </div>
-          <div class="toggle-switch" id="marketingToggle" onclick="toggleCookie(this, 'marketing')"></div>
+          <label class="flex items-center cursor-pointer">
+            <input type="checkbox" class="toggle-checkbox" id="marketingToggle">
+            <span class="toggle-switch"></span>
+          </label>
         </div>
 
-        <!-- Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 pt-6">
           <button 
             type="submit" 
-            class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center gap-2"
-            aria-label="Save your cookie preferences"
+            class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
           >
-            <span>💾 Save My Preferences</span>
+            💾 Save My Preferences
           </button>
           <button 
             type="button" 
             onclick="resetPreferences()"
-            class="flex-1 bg-gradient-to-r from-gray-300 to-gray-400 hover:from-gray-400 hover:to-gray-500 text-gray-800 font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center gap-2"
-            aria-label="Reset to default settings"
+            class="flex-1 bg-gradient-to-r from-gray-300 to-gray-400 hover:from-gray-400 hover:to-gray-500 text-gray-800 font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
           >
-            <span>🔄 Reset to Default</span>
+            🔄 Reset to Default
           </button>
         </div>
 
-        <!-- Delete All Data Button -->
         <div class="pt-4 border-t-2 border-gray-200">
           <button 
             type="button" 
             onclick="deleteAllData()"
-            class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center gap-2"
-            aria-label="Delete all stored data"
+            class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
           >
-            <span>🗑️ Delete All My Stored Data</span>
+            🗑️ Delete All My Stored Data
           </button>
         </div>
       </form>
 
-      <div class="mt-6 p-4 bg-blue-100 border-2 border-blue-300 rounded-xl">
+      <div id="statusMessage" class="mt-6 p-4 bg-blue-100 border-2 border-blue-300 rounded-xl">
         <p class="text-blue-900 text-center text-sm">
-          <strong>💡 Pro Tip:</strong> You can change these settings anytime. Your preferences are saved in your browser.
+          <strong>💡 Pro Tip:</strong> You can change these settings anytime. Your preferences are saved locally in your browser.
         </p>
       </div>
     </div>
@@ -418,62 +219,62 @@
 </section>
 
 <!-- FAQ SECTION -->
-<section class="py-12 px-4" aria-labelledby="faq-section">
+<section class="py-12 px-4">
   <div class="max-w-3xl mx-auto">
     <div class="text-center mb-8">
-      <h2 id="faq-section" class="text-3xl md:text-4xl font-bold text-blue-800 mb-3">
+      <h2 class="text-3xl md:text-4xl font-bold text-blue-800 mb-3">
         Common Questions ❓
       </h2>
     </div>
 
     <div class="space-y-4">
-      <details class="enhanced-card cursor-pointer group">
+      <details class="bg-white rounded-lg p-5 border-2 border-gray-200 cursor-pointer group hover:border-blue-400 transition-all">
         <summary class="flex items-center justify-between font-bold text-lg text-blue-800 hover:text-blue-600 transition-colors">
           <span>🔒 Are my cookies secure?</span>
-          <span class="text-2xl group-open:rotate-180 transition-transform" aria-hidden="true">▼</span>
+          <span class="text-2xl group-open:rotate-180 transition-transform">▼</span>
         </summary>
         <p class="text-gray-600 mt-3 pt-3 border-t-2 border-gray-200">
-          Yes! All cookies are encrypted and stored securely. We follow global privacy standards and regulations. Your data is never sold to third parties without your explicit consent. We take privacy seriously—it's not just a buzzword for us.
+          Yes! Your preferences are stored locally in your browser (localStorage), which means they never leave your device. We follow international privacy standards and best practices. Your data is never sold to third parties.
         </p>
       </details>
 
-      <details class="enhanced-card cursor-pointer group">
+      <details class="bg-white rounded-lg p-5 border-2 border-gray-200 cursor-pointer group hover:border-blue-400 transition-all">
         <summary class="flex items-center justify-between font-bold text-lg text-blue-800 hover:text-blue-600 transition-colors">
           <span>🗑️ How do I delete cookies?</span>
-          <span class="text-2xl group-open:rotate-180 transition-transform" aria-hidden="true">▼</span>
+          <span class="text-2xl group-open:rotate-180 transition-transform">▼</span>
         </summary>
         <p class="text-gray-600 mt-3 pt-3 border-t-2 border-gray-200">
-          Open your browser settings, go to Privacy & Security, and select "Clear Browsing Data." You can delete all cookies or just ours. On mobile, the process varies—check your device settings. After deletion, you can still use our platforms, but you may need to log back in and reset your preferences.
+          Click the "Delete All My Stored Data" button on this page, or open your browser settings, go to Privacy & Security, and select "Clear Browsing Data." On mobile, the process varies by device. After deletion, your preferences will reset to defaults.
         </p>
       </details>
 
-      <details class="enhanced-card cursor-pointer group">
+      <details class="bg-white rounded-lg p-5 border-2 border-gray-200 cursor-pointer group hover:border-blue-400 transition-all">
         <summary class="flex items-center justify-between font-bold text-lg text-blue-800 hover:text-blue-600 transition-colors">
           <span>📵 What if I reject all optional cookies?</span>
-          <span class="text-2xl group-open:rotate-180 transition-transform" aria-hidden="true">▼</span>
+          <span class="text-2xl group-open:rotate-180 transition-transform">▼</span>
         </summary>
         <p class="text-gray-600 mt-3 pt-3 border-t-2 border-gray-200">
-          No problem! The site still works perfectly. You'll just lose some personalization features—like saved preferences and optimized recommendations. Strictly necessary cookies will still be active because we need them for security and basic functionality.
+          No problem! The site works perfectly without optional cookies. You'll just lose some personalization features like saved preferences. Strictly necessary cookies will remain active because we need them for security and basic functionality.
         </p>
       </details>
 
-      <details class="enhanced-card cursor-pointer group">
+      <details class="bg-white rounded-lg p-5 border-2 border-gray-200 cursor-pointer group hover:border-blue-400 transition-all">
         <summary class="flex items-center justify-between font-bold text-lg text-blue-800 hover:text-blue-600 transition-colors">
           <span>🌍 How long do you keep my preferences?</span>
-          <span class="text-2xl group-open:rotate-180 transition-transform" aria-hidden="true">▼</span>
+          <span class="text-2xl group-open:rotate-180 transition-transform">▼</span>
         </summary>
         <p class="text-gray-600 mt-3 pt-3 border-t-2 border-gray-200">
-          Your cookie preferences are stored locally in your browser (localStorage) and remain saved indefinitely until you delete them. This means you won't have to set your preferences again each time you visit. You have full control: you can change them anytime on this page, clear them using the "Delete All My Stored Data" button below, or remove them through your browser settings. We don't send these preferences to our servers—they stay on your device.
+          Your cookie preferences are stored locally in your browser and remain saved indefinitely until you delete them. This means you won't have to set your preferences again each time you visit. You have full control: change them anytime on this page, or remove them using "Delete All My Stored Data" or your browser settings.
         </p>
       </details>
 
-      <details class="enhanced-card cursor-pointer group">
+      <details class="bg-white rounded-lg p-5 border-2 border-gray-200 cursor-pointer group hover:border-blue-400 transition-all">
         <summary class="flex items-center justify-between font-bold text-lg text-blue-800 hover:text-blue-600 transition-colors">
           <span>✉️ Do third parties see my data?</span>
-          <span class="text-2xl group-open:rotate-180 transition-transform" aria-hidden="true">▼</span>
+          <span class="text-2xl group-open:rotate-180 transition-transform">▼</span>
         </summary>
         <p class="text-gray-600 mt-3 pt-3 border-t-2 border-gray-200">
-          Never without your consent. We use Google Analytics for anonymized traffic data (no personal info). Marketing cookies are only active if you opt-in. Even then, partners like Facebook or Google only see anonymized, aggregated insights—never your personal details. It's transparent, always optional, always your choice.
+          Never without your consent. Your preferences stay on your device. We only use Google Analytics for anonymized traffic data (no personal info). Marketing cookies are only active if you opt-in. Partners like Facebook or Google only see anonymized, aggregated insights—never your personal details.
         </p>
       </details>
     </div>
@@ -486,7 +287,7 @@
   <div class="absolute inset-0 bg-pattern opacity-20"></div>
   
   <div class="relative max-w-3xl mx-auto text-center text-white">
-    <div class="text-5xl mb-4 floating-animation" aria-hidden="true">🎉</div>
+    <div class="text-5xl mb-4">🎉</div>
     <h2 class="text-3xl md:text-4xl font-bold mb-4">
       You're in Control
     </h2>
@@ -498,14 +299,12 @@
       <a 
         href="mailto:privacy@ulixai.com" 
         class="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-full font-bold hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-xl"
-        aria-label="Contact us about privacy"
       >
         <span>📧 Contact Us</span>
       </a>
       <a 
         href="/privacy-policy" 
         class="inline-flex items-center gap-2 bg-blue-400 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-500 transition-all duration-300 hover:scale-105 shadow-xl"
-        aria-label="Read our full privacy policy"
       >
         <span>📖 Privacy Policy</span>
       </a>
@@ -516,87 +315,134 @@
 @include('includes.footer')
 
 <script>
-  // Initialize preferences from localStorage
-  function initPreferences() {
-    const prefs = JSON.parse(localStorage.getItem('cookiePreferences') || '{"performance": true, "functionality": true, "marketing": false}');
-    
-    updateToggle('performanceToggle', prefs.performance);
-    updateToggle('functionalityToggle', prefs.functionality);
-    updateToggle('marketingToggle', prefs.marketing);
-  }
+  const COOKIE_STORAGE_KEY = 'cookieConsent';
+  const CONSENT_VERSION = '1.0';
 
-  // Update toggle visual state
-  function updateToggle(elementId, isActive) {
-    const toggle = document.getElementById(elementId);
-    if (toggle) {
-      if (isActive) {
-        toggle.classList.add('active');
-      } else {
-        toggle.classList.remove('active');
+  const defaultPreferences = {
+    strictly_necessary: true,
+    performance: true,
+    functionality: true,
+    marketing: false
+  };
+
+  function getStoredPreferences() {
+    const stored = localStorage.getItem(COOKIE_STORAGE_KEY);
+    
+    if (!stored) {
+      return defaultPreferences;
+    }
+
+    try {
+      const data = JSON.parse(stored);
+      
+      if (data.preferences && data.version) {
+        return data.preferences;
       }
+      
+      if (data.strictly_necessary !== undefined) {
+        return data;
+      }
+      
+      return defaultPreferences;
+    } catch (e) {
+      console.error('Erreur de parsing des préférences:', e);
+      return defaultPreferences;
     }
   }
 
-  // Toggle cookie preference
-  function toggleCookie(element, cookieType) {
-    element.classList.toggle('active');
+  function initPreferences() {
+    const prefs = getStoredPreferences();
+    
+    document.getElementById('performanceToggle').checked = prefs.performance;
+    document.getElementById('functionalityToggle').checked = prefs.functionality;
+    document.getElementById('marketingToggle').checked = prefs.marketing;
   }
 
-  // Save preferences
+  function updateToggle(elementId, isActive) {
+    const toggle = document.getElementById(elementId);
+    if (toggle) {
+      toggle.checked = isActive;
+    }
+  }
+
   document.getElementById('cookieForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     const preferences = {
-      performance: document.getElementById('performanceToggle').classList.contains('active'),
-      functionality: document.getElementById('functionalityToggle').classList.contains('active'),
-      marketing: document.getElementById('marketingToggle').classList.contains('active')
+      strictly_necessary: true,
+      performance: document.getElementById('performanceToggle').checked,
+      functionality: document.getElementById('functionalityToggle').checked,
+      marketing: document.getElementById('marketingToggle').checked
     };
     
-    localStorage.setItem('cookiePreferences', JSON.stringify(preferences));
+    const consentData = {
+      version: CONSENT_VERSION,
+      timestamp: new Date().toISOString(),
+      preferences: preferences
+    };
     
-    // Show success message
+    localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify(consentData));
+    
     showNotification('✅ Your preferences have been saved!');
+    
+    window.dispatchEvent(new CustomEvent('cookieConsentUpdated', { 
+      detail: preferences 
+    }));
+    
+    console.log('✅ Préférences sauvegardées:', preferences);
   });
 
-  // Reset preferences
   function resetPreferences() {
-    const defaults = {performance: true, functionality: true, marketing: false};
-    localStorage.setItem('cookiePreferences', JSON.stringify(defaults));
+    const consentData = {
+      version: CONSENT_VERSION,
+      timestamp: new Date().toISOString(),
+      preferences: defaultPreferences
+    };
     
-    updateToggle('performanceToggle', defaults.performance);
-    updateToggle('functionalityToggle', defaults.functionality);
-    updateToggle('marketingToggle', defaults.marketing);
+    localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify(consentData));
+    
+    document.getElementById('performanceToggle').checked = defaultPreferences.performance;
+    document.getElementById('functionalityToggle').checked = defaultPreferences.functionality;
+    document.getElementById('marketingToggle').checked = defaultPreferences.marketing;
     
     showNotification('🔄 Preferences reset to default!');
+    
+    window.dispatchEvent(new CustomEvent('cookieConsentUpdated', { 
+      detail: defaultPreferences 
+    }));
   }
 
-  // Delete all stored data
   function deleteAllData() {
     if (confirm('⚠️ Are you sure you want to delete all your stored preferences? This action cannot be undone.')) {
-      localStorage.removeItem('cookiePreferences');
+      localStorage.removeItem(COOKIE_STORAGE_KEY);
       
-      // Reset toggles to default visual state
-      updateToggle('performanceToggle', true);
-      updateToggle('functionalityToggle', true);
-      updateToggle('marketingToggle', false);
+      document.getElementById('performanceToggle').checked = defaultPreferences.performance;
+      document.getElementById('functionalityToggle').checked = defaultPreferences.functionality;
+      document.getElementById('marketingToggle').checked = defaultPreferences.marketing;
       
       showNotification('🗑️ All your stored data has been deleted!');
+      
+      window.dispatchEvent(new CustomEvent('cookieConsentUpdated', { 
+        detail: defaultPreferences 
+      }));
     }
   }
 
-  // Notification system
   function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'fixed bottom-6 right-6 bg-white text-gray-800 px-6 py-3 rounded-full shadow-xl font-bold flex items-center gap-2 z-50 animate-pulse';
-    notification.textContent = message;
-    document.body.appendChild(notification);
+    const statusDiv = document.getElementById('statusMessage');
+    const originalContent = statusDiv.innerHTML;
+    
+    statusDiv.innerHTML = `<p class="text-center text-sm font-bold">${message}</p>`;
+    statusDiv.classList.remove('bg-blue-100', 'border-blue-300');
+    statusDiv.classList.add('bg-green-100', 'border-green-300', 'text-green-900');
     
     setTimeout(() => {
-      notification.remove();
+      statusDiv.innerHTML = originalContent;
+      statusDiv.classList.add('bg-blue-100', 'border-blue-300');
+      statusDiv.classList.remove('bg-green-100', 'border-green-300', 'text-green-900');
     }, 3000);
   }
 
-  // Initialize on load
   document.addEventListener('DOMContentLoaded', initPreferences);
 </script>
 

@@ -12,13 +12,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
 <!-- End Google Tag Manager -->
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<!-- Google Analytics - BLOQUÉ PAR DÉFAUT (RGPD) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-418ZTJHNX6"></script>
 <script>
+  // ⚠️ BLOQUER Google Analytics par défaut (conforme RGPD)
+  window['ga-disable-G-418ZTJHNX6'] = true;
+  
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
+  
+  // Mode "denied" par défaut
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'ad_storage': 'denied'
+  });
+  
+  gtag('config', 'G-418ZTJHNX6');
 </script>
 <!-- End Google Analytics -->
   <!-- CDN (Free version) -->

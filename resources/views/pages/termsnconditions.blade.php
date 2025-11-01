@@ -1,374 +1,620 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Terms & Conditions - ULIX AI</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Terms & Conditions - Ulixai | Legal Terms of Service 2025</title>
+  <meta name="description" content="Read Ulixai's Terms & Conditions. Understand your rights, responsibilities, and our policies when using our platform. Updated May 2025.">
+  <meta name="keywords" content="terms and conditions, terms of service, legal terms, user agreement, privacy policy, Ulixai terms">
+  <meta name="author" content="Ulixai - Williams Jullin">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://ulixai.com/en/terms" />
+  <meta name="theme-color" content="#2563EB">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ulixai.com/en/terms">
+  <meta property="og:title" content="Terms & Conditions - Ulixai">
+  <meta property="og:description" content="Read our Terms & Conditions to understand your rights and responsibilities when using Ulixai's platform.">
+  <meta property="og:image" content="https://ulixai.com/images/og-terms.jpg">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="Ulixai">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://ulixai.com/en/terms">
+  <meta name="twitter:title" content="Terms & Conditions - Ulixai">
+  <meta name="twitter:description" content="Read our Terms & Conditions to understand your rights and responsibilities.">
+  
+  <link rel="icon" type="image/png" sizes="64x64" href="/images/faviccon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
   <style>
-    .gradient-bg {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .section-card {
-      transition: all 0.3s ease;
-      border-left: 4px solid transparent;
+    
+    :root {
+      --primary: #2563EB;
+      --primary-light: #60A5FA;
+      --accent: #A855F7;
+      --success: #10B981;
+      --text: #0F172A;
+      --text-light: #64748B;
+      --text-muted: #94A3B8;
+      --bg: #FFFFFF;
+      --bg-light: #F8FAFC;
+      --border: #E2E8F0;
     }
-    .section-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      border-left-color: #3b82f6;
+    
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
-    .nav-link {
-      transition: all 0.3s ease;
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    @media (min-width: 640px) {
+      .container { padding: 0 24px; }
+    }
+    
+    /* Hero Section */
+    .hero {
       position: relative;
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
       overflow: hidden;
     }
-    .nav-link::before {
+    
+    @media (min-width: 768px) {
+      .hero {
+        min-height: 60vh;
+      }
+    }
+    
+    .hero::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-      transition: left 0.5s;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -200px;
+      right: -100px;
+      filter: blur(60px);
+      animation: float 25s ease-in-out infinite;
+      pointer-events: none;
     }
-    .nav-link:hover::before {
-      left: 100%;
+    
+    @media (min-width: 768px) {
+      .hero::before {
+        width: 600px;
+        height: 600px;
+        top: -250px;
+        right: -150px;
+      }
     }
-    .nav-link.active {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      color: white;
-      font-weight: 600;
-      transform: translateX(8px);
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      bottom: -80px;
+      left: -80px;
+      filter: blur(50px);
+      animation: float 20s ease-in-out infinite reverse;
+      pointer-events: none;
     }
-    .breadcrumb {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    @media (min-width: 768px) {
+      .hero::after {
+        width: 400px;
+        height: 400px;
+        bottom: -100px;
+        left: -100px;
+      }
     }
-    .floating-toc {
-      backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(59, 130, 246, 0.1);
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
     }
-    .section-number {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(37, 99, 235, 0.1);
+      border: 1.5px solid rgba(37, 99, 235, 0.3);
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--primary);
+      margin-bottom: 24px;
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .hero h1 {
+      font-size: clamp(32px, 8vw, 64px);
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      color: var(--text);
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+    }
+    
+    .hero-subtitle {
+      font-size: clamp(15px, 3vw, 20px);
+      color: var(--text-light);
+      margin-bottom: 32px;
+      line-height: 1.6;
+      font-weight: 500;
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+    }
+    
+    .last-updated {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1.5px solid rgba(16, 185, 129, 0.3);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--success);
+      margin-top: 20px;
+    }
+    
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* Main Content */
+    .content-section {
+      padding: 60px 0;
+      background: white;
+    }
+    
+    @media (min-width: 768px) {
+      .content-section {
+        padding: 80px 0;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .content-section {
+        padding: 100px 0;
+      }
+    }
+    
+    .content-card {
+      background: white;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      padding: 32px 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+    
+    @media (min-width: 640px) {
+      .content-card {
+        padding: 40px 32px;
+        border-radius: 24px;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .content-card {
+        padding: 48px 40px;
+        border-radius: 28px;
+      }
+    }
+    
+    .content-card:hover {
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+      transform: translateY(-2px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    /* Typography for content */
+    .prose {
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+    
+    .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+      color: var(--text);
       font-weight: 800;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    
+    @media (min-width: 768px) {
+      .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+        margin-top: 28px;
+        margin-bottom: 16px;
+      }
+    }
+    
+    .prose h1 { font-size: 28px; }
+    .prose h2 { font-size: 24px; }
+    .prose h3 { font-size: 20px; }
+    .prose h4 { font-size: 18px; }
+    .prose h5, .prose h6 { font-size: 16px; }
+    
+    @media (min-width: 768px) {
+      .prose h1 { font-size: 32px; }
+      .prose h2 { font-size: 28px; }
+      .prose h3 { font-size: 24px; }
+      .prose h4 { font-size: 20px; }
+      .prose h5, .prose h6 { font-size: 18px; }
+    }
+    
+    .prose p {
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+    
+    @media (min-width: 768px) {
+      .prose p {
+        margin-bottom: 20px;
+        font-size: 16px;
+      }
+    }
+    
+    .prose p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .prose strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+    
+    .prose em {
+      font-style: italic;
+      color: var(--primary);
+    }
+    
+    .prose ul, .prose ol {
+      padding-left: 28px;
+      margin-bottom: 16px;
+    }
+    
+    @media (min-width: 768px) {
+      .prose ul, .prose ol {
+        padding-left: 32px;
+        margin-bottom: 20px;
+      }
+    }
+    
+    .prose li {
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+    
+    @media (min-width: 768px) {
+      .prose li {
+        margin-bottom: 12px;
+      }
+    }
+    
+    .prose li p {
+      margin-bottom: 8px;
+    }
+    
+    .prose blockquote {
+      border-left: 4px solid var(--primary);
+      padding-left: 20px;
+      margin-left: 0;
+      margin-bottom: 16px;
+      color: var(--text-light);
+      font-style: italic;
+      background: var(--bg-light);
+      padding: 16px 20px;
+      border-radius: 8px;
+    }
+    
+    @media (min-width: 768px) {
+      .prose blockquote {
+        padding-left: 24px;
+        margin-bottom: 20px;
+        padding: 20px 24px;
+      }
+    }
+    
+    .prose code {
+      background: var(--bg-light);
+      color: var(--primary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    
+    .prose pre {
+      background: var(--text);
+      color: #E2E8F0;
+      padding: 20px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+    
+    @media (min-width: 768px) {
+      .prose pre {
+        padding: 24px;
+        margin-bottom: 20px;
+      }
+    }
+    
+    .prose pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+    }
+    
+    .prose hr {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: 24px 0;
+    }
+    
+    @media (min-width: 768px) {
+      .prose hr {
+        margin: 32px 0;
+      }
+    }
+    
+    .prose a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    
+    .prose a:hover {
+      color: var(--primary-light);
+      text-decoration: underline;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1.5px solid var(--border);
+      padding: 8px 20px;
+      border-radius: 100px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+    }
+    
+    @media (min-width: 640px) {
+      .breadcrumb {
+        font-size: 14px;
+        padding: 10px 24px;
+      }
+    }
+    
+    .breadcrumb-separator {
+      color: var(--text-muted);
+    }
+    
+    .breadcrumb-current {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    
+    .summary-box {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+      border: 2px solid rgba(37, 99, 235, 0.2);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 40px;
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
+    }
+    
+    @media (min-width: 640px) {
+      .summary-box {
+        padding: 28px;
+        border-radius: 24px;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .summary-box {
+        padding: 32px;
+      }
+    }
+    
+    .summary-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    
+    @media (min-width: 640px) {
+      .summary-title {
+        font-size: 19px;
+        margin-bottom: 14px;
+      }
+    }
+    
+    .summary-text {
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    @media (min-width: 640px) {
+      .summary-text {
+        font-size: 15px;
+      }
+    }
+    
+    .progress-bar-top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+      width: 0;
+      z-index: 100;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-@include('includes.header')
+  <div class="progress-bar-top" id="progressBar"></div>
 
-<!-- Hero Section -->
-<section class="gradient-bg relative overflow-hidden">
-  <!-- Background Pattern -->
-  <div class="absolute inset-0 opacity-10">
-    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25px 25px, white 2px, transparent 0); background-size: 50px 50px;"></div>
-  </div>
-  
-  <div class="relative py-20 px-6 text-white text-center">
-    <div class="max-w-4xl mx-auto">
-      <!-- Breadcrumb Navigation -->
-      <nav class="breadcrumb inline-flex items-center space-x-2 text-sm mb-8 px-4 py-2 rounded-full">
-        <span class="opacity-75">Home</span>
-        <span class="opacity-50">/</span>
-        <span class="font-medium">Terms & Conditions</span>
-      </nav>
-      
-      <!-- Hero Content -->
-      <div class="text-5xl mb-6">📋</div>
-      <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-        Terms & Conditions
-      </h1>
-      <p class="text-lg md:text-xl opacity-90 max-w-2xl mx-auto leading-relaxed mb-6">
-        Please read these terms carefully. By using ULIX AI, you agree to be bound by these conditions.
-      </p>
-      <div class="inline-flex items-center bg-white bg-opacity-20 rounded-full px-4 py-2 text-sm">
-        <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-        Updated May 2025
+  @include('includes.header')
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge" role="status">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Legal Document</span>
+        </div>
+        
+        <h1>Terms & Conditions 📋</h1>
+        
+        <p class="hero-subtitle">
+          Please read these terms carefully. By using Ulixai, you agree to be bound by these conditions.
+        </p>
+        
+        <div class="last-updated">
+          <div class="pulse-dot"></div>
+          <span>Last Updated: May 2025</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Main Content -->
-<section class="py-16 px-4 md:px-6">
-  <div class="max-w-7xl mx-auto">
-    <div class="flex flex-col lg:flex-row gap-8">
-
-      <!-- Enhanced Sidebar Navigation -->
-      <aside class="lg:w-80">
-        <div class="sticky top-24">
-          <!-- Mobile Toggle Button -->
-          <button class="lg:hidden w-full bg-white rounded-xl shadow-lg p-4 mb-4 flex items-center justify-between text-blue-700 font-semibold" onclick="toggleMobileTOC()">
-            <span>📋 Table of Contents</span>
-            <svg class="w-5 h-5 transform transition-transform" id="toc-arrow" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </button>
-
-          <!-- Table of Contents -->
-          <nav class="floating-toc hidden lg:block rounded-2xl shadow-xl p-6" id="toc-nav">
-            <div class="flex items-center mb-6">
-              <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white text-lg font-bold mr-3">
-                📋
-              </div>
-              <h3 class="text-lg font-bold text-blue-700">Table of Contents</h3>
-            </div>
-            
-            <ul class="space-y-2 text-sm" id="toc-list">
-              <li>
-                <a href="#section1" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group active">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">1</span>
-                  <span class="font-medium">Accepting the terms</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section2" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">2</span>
-                  <span class="font-medium">Changes to terms</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section3" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">3</span>
-                  <span class="font-medium">Using our product</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section4" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">4</span>
-                  <span class="font-medium">General restrictions</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section5" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">5</span>
-                  <span class="font-medium">Content policy</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section6" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">6</span>
-                  <span class="font-medium">Your rights</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section7" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">7</span>
-                  <span class="font-medium">Copyright policy</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section8" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-50 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">8</span>
-                  <span class="font-medium">Relationship guidelines</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section9" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">9</span>
-                  <span class="font-medium">Liability Policy</span>
-                </a>
-              </li>
-              <li>
-                <a href="#section10" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 group">
-                  <span class="section-number text-lg font-bold mr-3 min-w-[24px]">10</span>
-                  <span class="font-medium">General legal terms</span>
-                </a>
-              </li>
-            </ul>
-
-            <!-- Progress Indicator -->
-            <div class="mt-6 pt-6 border-t border-gray-200">
-              <div class="flex items-center text-sm text-gray-500 mb-2">
-                <span>Reading Progress</span>
-                <div class="flex-1 mx-3 h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <div class="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300" style="width: 10%" id="progress-bar"></div>
-                </div>
-                <span id="progress-text">10%</span>
-              </div>
-            </div>
-          </nav>
-        </div>
-      </aside>
-
-      <!-- Enhanced Terms Content -->
-      <main class="flex-1">
-        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12">
-          
-          <!-- Header Section -->
-          <div class="mb-12 pb-8 border-b border-gray-200">
-            <div class="flex items-start justify-between mb-6">
-              <div>
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Terms of Service</h1>
-                <p class="text-gray-500 flex items-center">
-                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
-                  </svg>
-                  Last updated: May 2025
-                </p>
-              </div>
-              <div class="hidden md:block">
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-medium shadow-lg">
-                  <div class="flex items-center">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                    Legal Document
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Summary Box -->
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
-              <h3 class="text-lg font-semibold text-blue-900 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                </svg>
-                Key Points
-              </h3>
-              <p class="text-blue-800 leading-relaxed">
-                By using ULIX AI's platform, you agree to these terms. We provide digital documents and connect you with international service providers. Please read all sections carefully as they outline your rights, responsibilities, and our policies.
-              </p>
-            </div>
-          </div>
-
-          <!-- Terms Sections -->
-       <div class="space-y-8">
-
-  @foreach ($sections as $sec)
-    @php
-      // Zebra backgrounds to match your original pattern
-      $zebra = $loop->odd ? 'bg-gray-50' : 'bg-white shadow-sm';
-      $last  = $sec['number'] == 10 ? 'mb-16' : '';
-      // Replace @site token with app name and allow saved HTML
-      $body  = str_replace('@site', config('app.name'), (string)($sec['body'] ?? ''));
-    @endphp
-
-    <section id="section{{ $sec['number'] }}" class="section-card {{ $zebra }} rounded-xl p-8 border border-gray-100 {{ $last }}">
-      <div class="flex items-start mb-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl mr-4 shadow-lg">
-          {{ $sec['number'] }}
-        </div>
-        <div>
-          <h2 class="text-2xl font-bold text-blue-700 mb-2">{{ $sec['title'] }}</h2>
-          <div class="w-16 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
-        </div>
+  <!-- Main Content -->
+  <section class="content-section">
+    <div class="container">
+      
+      <!-- Summary Box -->
+      <div class="summary-box" style="margin-bottom: 40px;">
+        <h3 class="summary-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Key Points</span>
+        </h3>
+        <p class="summary-text">
+          By using Ulixai's platform, you agree to these terms. We provide digital documents and connect you with international service providers. Please read all sections carefully as they outline your rights, responsibilities, and our policies.
+        </p>
       </div>
 
-      <div class="text-gray-700 leading-relaxed text-lg pl-16 prose max-w-none">
-        {!! $body !!}
-      </div>
-    </section>
-  @endforeach
-</div>
-
-
-          <!-- Contact Section -->
-          {{-- <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 text-white text-center mt-12">
-            <div class="text-3xl mb-4">📞</div>
-            <h3 class="text-2xl font-bold mb-4">Questions About These Terms?</h3>
-            <p class="text-blue-100 mb-6 max-w-2xl mx-auto">
-              If you have any questions about these terms or need clarification, please contact our support team.
-            </p>
-            <button class="bg-white text-blue-700 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-colors duration-300 shadow-lg">
-              Contact Support
-            </button>
-          </div> --}}
-
+      <!-- Content Card -->
+      <div class="content-card">
+        <div class="prose">
+          @php
+            $content = $sections[0]['body'] ?? '<p>No terms and conditions found.</p>';
+            $content = str_replace('@site', config('app.name'), (string)$content);
+          @endphp
+          {!! $content !!}
         </div>
-      </main>
+      </div>
 
     </div>
-  </div>
-</section>
+  </section>
 
-@include('includes.footer')
+  @include('includes.footer')
 
-<script>
-  // Mobile TOC Toggle
-  function toggleMobileTOC() {
-    const nav = document.getElementById('toc-nav');
-    const arrow = document.getElementById('toc-arrow');
-    nav.classList.toggle('hidden');
-    arrow.classList.toggle('rotate-180');
-  }
-
-  // Smooth scrolling and active navigation
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    });
-  });
-
-  // Update active navigation and progress
-  function updateActiveSection() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const scrollPos = window.scrollY + window.innerHeight / 3;
-    
-    let activeSection = null;
-    let sectionIndex = 0;
-    
-    sections.forEach((section, index) => {
-      const rect = section.getBoundingClientRect();
-      const sectionTop = rect.top + window.scrollY;
+  <script>
+    (function() {
+      'use strict';
       
-      if (scrollPos >= sectionTop) {
-        activeSection = section;
-        sectionIndex = index;
-      }
-    });
-    
-    // Update active nav link
-    navLinks.forEach(link => link.classList.remove('active'));
-    if (activeSection) {
-      const activeLink = document.querySelector(`a[href="#${activeSection.id}"]`);
-      if (activeLink) {
-        activeLink.classList.add('active');
-      }
-    }
-    
-    // Update progress
-    const progress = Math.min(((sectionIndex + 1) / sections.length) * 100, 100);
-    document.getElementById('progress-bar').style.width = progress + '%';
-    document.getElementById('progress-text').textContent = Math.round(progress) + '%';
-  }
-
-  // Show mobile TOC on larger screens
-  function handleResize() {
-    const nav = document.getElementById('toc-nav');
-    if (window.innerWidth >= 1024) {
-      nav.classList.remove('hidden');
-    } else {
-      nav.classList.add('hidden');
-    }
-  }
-
-  window.addEventListener('scroll', updateActiveSection);
-  window.addEventListener('resize', handleResize);
-  
-  // Initial calls
-  updateActiveSection();
-  handleResize();
-</script>
+      // Progress bar on scroll
+      window.addEventListener('scroll', function() {
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = window.scrollY;
+        const progress = (scrolled / scrollHeight) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+      }, { passive: true });
+      
+    })();
+  </script>
 
 </body>
 </html>

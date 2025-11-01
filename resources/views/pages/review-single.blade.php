@@ -44,7 +44,7 @@
     <link rel="dns-prefetch" href="https://i.pravatar.cc">
     <link rel="dns-prefetch" href="https://ui-avatars.com">
     
-    <!-- Fonts -->
+    <!-- Fonts with font-display: swap to prevent FOUT layout shift -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -303,6 +303,7 @@
             padding: 2.5rem 1rem;
             position: relative;
             overflow: hidden;
+            min-height: 300px;
         }
         
         .review-hero::before {
@@ -316,9 +317,14 @@
             animation: pulse 15s ease-in-out infinite;
         }
         
+        /* RETARD ANIMATION: Commence après le chargement */
         @keyframes pulse {
             0%, 100% { transform: translate(0, 0) scale(1); }
             50% { transform: translate(-5%, 5%) scale(1.08); }
+        }
+        
+        body.loaded .review-hero::before {
+            animation: pulse 15s ease-in-out infinite;
         }
         
         .review-hero-content {
@@ -374,14 +380,17 @@
             margin-bottom: 1.5rem;
         }
         
+        /* OPTIMISATION CLS: Dimensions fixes + aspect-ratio */
         .author-avatar-large {
             width: 5rem;
             height: 5rem;
+            aspect-ratio: 1;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid var(--blue-light);
             box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.15);
             flex-shrink: 0;
+            contain-intrinsic-size: 5rem;
         }
         
         .review-meta-info {
@@ -395,6 +404,7 @@
             color: #1F2937;
             margin-bottom: 0.75rem;
             line-height: 1.2;
+            min-height: 2rem;
         }
         
         .review-subtitle {
@@ -405,41 +415,48 @@
             color: #6B7280;
             font-size: 1rem;
             margin-bottom: 1rem;
+            min-height: 1.5rem;
         }
         
         .review-subtitle-item {
             display: flex;
             align-items: center;
             gap: 0.375rem;
+            min-height: 1.5rem;
         }
         
         .review-subtitle-icon {
             width: 1.125rem;
             height: 1.125rem;
             color: var(--primary-blue);
+            flex-shrink: 0;
         }
         
         .review-rating-large {
             display: flex;
             align-items: center;
             gap: 0.625rem;
+            min-height: 1.5rem;
         }
         
         .stars-large {
             display: flex;
             gap: 0.25rem;
+            min-height: 1.5rem;
         }
         
         .star-large {
             width: 1.5rem;
             height: 1.5rem;
             fill: #FBBF24;
+            flex-shrink: 0;
         }
         
         .rating-text-large {
             font-size: 1.125rem;
             font-weight: 700;
             color: #1F2937;
+            white-space: nowrap;
         }
         
         .review-badges {
@@ -447,6 +464,7 @@
             flex-wrap: wrap;
             gap: 0.75rem;
             margin-top: 1.25rem;
+            min-height: 2.5rem;
         }
         
         .review-badge {
@@ -458,6 +476,8 @@
             font-size: 0.875rem;
             font-weight: 700;
             letter-spacing: 0.025em;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         
         .badge-service {
@@ -497,6 +517,7 @@
             padding: 2.5rem;
             box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
+            min-height: 400px;
         }
         
         .content-section-title {
@@ -507,12 +528,14 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            min-height: 2rem;
         }
         
         .title-icon {
             width: 1.75rem;
             height: 1.75rem;
             color: var(--primary-blue);
+            flex-shrink: 0;
         }
         
         .review-full-text {
@@ -521,6 +544,7 @@
             line-height: 1.8;
             white-space: pre-wrap;
             word-wrap: break-word;
+            min-height: 200px;
         }
         
         .review-full-text::first-letter {
@@ -540,6 +564,7 @@
             padding: 2rem;
             text-align: center;
             border: 2px solid rgba(37, 99, 235, 0.2);
+            min-height: 280px;
         }
         
         .share-title {
@@ -547,12 +572,14 @@
             font-weight: 800;
             color: #1F2937;
             margin-bottom: 0.75rem;
+            min-height: 1.75rem;
         }
         
         .share-subtitle {
             color: #6B7280;
             margin-bottom: 1.5rem;
             font-size: 1rem;
+            min-height: 1.5rem;
         }
         
         .share-buttons-grid {
@@ -561,6 +588,7 @@
             gap: 1rem;
             max-width: 600px;
             margin: 0 auto;
+            min-height: 100px;
         }
         
         .share-btn {
@@ -575,6 +603,7 @@
             font-size: 0.875rem;
             transition: all 0.3s;
             border: 2px solid transparent;
+            min-height: 100px;
         }
         
         .share-btn:hover {
@@ -643,6 +672,7 @@
             background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
             padding: 3rem 1rem;
             margin-top: 2rem;
+            min-height: 400px;
         }
         
         .faq-container {
@@ -653,6 +683,7 @@
         .faq-header {
             text-align: center;
             margin-bottom: 2.5rem;
+            min-height: 100px;
         }
         
         .faq-title {
@@ -660,11 +691,13 @@
             font-weight: 900;
             color: #1F2937;
             margin-bottom: 0.625rem;
+            min-height: 2rem;
         }
         
         .faq-subtitle {
             font-size: clamp(0.9375rem, 2vw, 1.125rem);
             color: #6B7280;
+            min-height: 1.5rem;
         }
         
         .faq-item {
@@ -674,6 +707,7 @@
             overflow: hidden;
             border: 2px solid #E5E7EB;
             transition: all 0.3s;
+            min-height: 60px;
         }
         
         .faq-item:hover {
@@ -697,6 +731,7 @@
             color: #1F2937;
             font-family: inherit;
             transition: all 0.3s;
+            min-height: 60px;
         }
         
         .faq-question:hover {
@@ -736,11 +771,13 @@
         .related-reviews-section {
             padding: 3rem 0;
             background: white;
+            min-height: 400px;
         }
         
         .section-header {
             text-align: center;
             margin-bottom: 2rem;
+            min-height: 100px;
         }
         
         .section-title {
@@ -748,17 +785,20 @@
             font-weight: 800;
             color: #1F2937;
             margin-bottom: 0.5rem;
+            min-height: 2rem;
         }
         
         .section-subtitle {
             font-size: clamp(0.9375rem, 2vw, 1.125rem);
             color: #6B7280;
+            min-height: 1.5rem;
         }
         
         .reviews-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
             gap: 1.25rem;
+            auto-rows: 1fr;
         }
         
         /* REVIEW CARD */
@@ -777,6 +817,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(37, 99, 235, 0.08);
             will-change: transform;
             overflow: hidden;
+            min-height: 350px;
         }
         
         .review-card-link {
@@ -784,6 +825,7 @@
             padding: 1.25rem;
             text-decoration: none;
             color: inherit;
+            height: 100%;
         }
         
         .review-card::before {
@@ -798,6 +840,7 @@
             mask-composite: exclude;
             opacity: 0;
             transition: opacity 0.4s ease;
+            pointer-events: none;
         }
         
         @media (hover: hover) {
@@ -821,6 +864,7 @@
             align-items: flex-start;
             margin-bottom: 0.875rem;
             gap: 0.875rem;
+            min-height: 60px;
         }
         
         .review-author {
@@ -831,19 +875,23 @@
             min-width: 0;
         }
         
+        /* OPTIMISATION CLS: Dimensions + aspect-ratio */
         .author-avatar {
             width: 3rem;
             height: 3rem;
+            aspect-ratio: 1;
             border-radius: 50%;
             object-fit: cover;
             border: 2.5px solid var(--blue-light);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             flex-shrink: 0;
+            contain-intrinsic-size: 3rem;
         }
         
         .author-info {
             flex: 1;
             min-width: 0;
+            min-height: 50px;
         }
         
         .author-name {
@@ -853,6 +901,7 @@
             margin-bottom: 0.2rem;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-height: 1.3rem;
         }
         
         .author-location {
@@ -860,11 +909,16 @@
             color: #6B7280;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-height: 1.2rem;
         }
         
         .review-date {
             text-align: right;
             flex-shrink: 0;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .date-main {
@@ -872,6 +926,7 @@
             font-weight: 600;
             color: #374151;
             white-space: nowrap;
+            min-height: 1rem;
         }
         
         .review-destination {
@@ -881,6 +936,7 @@
             margin-bottom: 0.625rem;
             font-size: 0.8125rem;
             color: #6B7280;
+            min-height: 1.5rem;
         }
         
         .review-stars {
@@ -888,23 +944,27 @@
             align-items: center;
             gap: 0.4375rem;
             margin-bottom: 0.625rem;
+            min-height: 1.5rem;
         }
         
         .stars {
             display: flex;
             gap: 0.2rem;
+            min-height: 1.125rem;
         }
         
         .star-small {
             width: 1.125rem;
             height: 1.125rem;
             fill: #FBBF24;
+            flex-shrink: 0;
         }
         
         .rating-text {
             font-size: 0.8125rem;
             font-weight: 600;
             color: #374151;
+            white-space: nowrap;
         }
         
         .service-badge {
@@ -916,6 +976,7 @@
             padding: 0.3125rem 0.6875rem;
             border-radius: 9999px;
             margin-bottom: 0.875rem;
+            white-space: nowrap;
         }
         
         .review-text {
@@ -928,6 +989,7 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             font-size: 0.9375rem;
+            min-height: 60px;
         }
         
         .read-more-indicator {
@@ -943,6 +1005,7 @@
             width: 0.9375rem;
             height: 0.9375rem;
             transition: transform 0.3s ease;
+            flex-shrink: 0;
         }
         
         .review-card:hover .arrow-icon {
@@ -967,12 +1030,29 @@
             align-items: center;
             gap: 0.75rem;
             cursor: pointer;
-            animation: float 3s ease-in-out infinite;
+            opacity: 0;
+            animation: floatIn 0.6s ease-out 0.5s forwards;
+        }
+        
+        /* RETARD ANIMATION: Bouton flottant apparaît après chargement */
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
+        }
+        
+        body.loaded #floatingShareBtn {
+            animation: floatIn 0.6s ease-out 0.5s forwards, float 3s ease-in-out 1.1s infinite;
         }
         
         #floatingShareBtn:hover {
@@ -1009,6 +1089,7 @@
         @media (max-width: 768px) {
             .review-hero {
                 padding: 2rem 1rem;
+                min-height: 250px;
             }
             
             .review-header-card {
@@ -1039,6 +1120,7 @@
             
             .review-content-card {
                 padding: 1.5rem;
+                min-height: 300px;
             }
             
             .review-full-text {
@@ -1047,14 +1129,17 @@
             
             .share-review-section {
                 padding: 1.5rem;
+                min-height: 250px;
             }
             
             .share-buttons-grid {
                 grid-template-columns: repeat(2, 1fr);
+                min-height: 80px;
             }
             
             .faq-section {
                 padding: 2rem 1rem;
+                min-height: 300px;
             }
             
             .faq-question {
@@ -1077,6 +1162,7 @@
         @media (max-width: 480px) {
             .review-hero {
                 padding: 1.75rem 0.875rem;
+                min-height: 200px;
             }
             
             .back-button {
@@ -1099,6 +1185,7 @@
             
             .review-badges {
                 gap: 0.5rem;
+                min-height: 2rem;
             }
             
             .review-badge {
@@ -1109,6 +1196,7 @@
             .review-content-card {
                 padding: 1.25rem;
                 border-radius: 1.25rem;
+                min-height: 250px;
             }
             
             .content-section-title {
@@ -1117,6 +1205,7 @@
             
             .share-buttons-grid {
                 gap: 0.75rem;
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .share-btn {
@@ -1170,15 +1259,139 @@
 @include('includes.header')
 @include('pages.popup')
 
-<!-- FLOATING SHARE BUTTON -->
-<button id="floatingShareBtn" onclick="shareReview()" aria-label="Share this review">
-    <div class="share-icon-wrapper">
-        <svg style="width: 1.125rem; height: 1.125rem;" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-        </svg>
-    </div>
-    <span>SHARE</span>
+<!-- FLOATING SHARE BUTTON - Premium design avec animation retardée -->
+<button id="floatingShareBtn" onclick="openSharePanel()" class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold px-5 py-3.5 sm:px-6 sm:py-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-2.5 sm:gap-3 group animate-pulse hover:animate-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share this review and spread the word">
+    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+    </svg>
+    <span class="hidden sm:inline text-sm sm:text-base">Share</span>
+    <span class="sm:hidden text-sm">Share</span>
+    <span class="ml-1" aria-hidden="true">📢</span>
 </button>
+
+<!-- SHARE OVERLAY - Backdrop pour fermer le panel -->
+<div id="shareOverlay" onclick="closeSharePanel()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300" aria-hidden="true"></div>
+
+<!-- SHARE PANEL - Panel latéral avec boutons sociaux -->
+<aside id="sharePanel" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 overflow-y-auto" style="overscroll-behavior: contain;" role="dialog" aria-labelledby="share-panel-title" aria-modal="true">
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-5 sm:p-6 sticky top-0 z-10">
+        <div class="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 id="share-panel-title" class="text-white font-bold text-lg sm:text-xl flex items-center gap-2">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+                </svg>
+                Share Review
+            </h2>
+            <button onclick="closeSharePanel()" class="text-white/80 hover:text-white transition-colors p-1" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Close share panel">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-white">
+            <p class="text-sm font-semibold mb-1">📖 Review Link</p>
+            <p class="text-xs opacity-90 mb-3">Share this review with your friends and network</p>
+            <a href="javascript:void(0)" onclick="copyReviewLink()" class="block w-full bg-white text-blue-600 font-bold py-2 px-4 rounded-lg text-center hover:bg-blue-50 transition-colors text-xs sm:text-sm" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Copy review link">
+                📋 Copy Link
+            </a>
+        </div>
+    </div>
+
+    <div class="p-5 sm:p-6">
+        <h3 class="font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 text-base sm:text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            Share Now
+        </h3>
+
+        <div class="grid grid-cols-2 gap-2.5 sm:gap-3" role="list">
+            
+            <a id="shareWhatsAppPanel" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-500 hover:to-green-600 active:from-green-600 active:to-green-700 rounded-xl p-3.5 sm:p-4 border-2 border-green-200 hover:border-green-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on WhatsApp" role="listitem">
+                <i class="fab fa-whatsapp text-3xl sm:text-4xl text-green-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+                <span class="text-xs sm:text-sm font-bold text-green-700 group-hover:text-white uppercase tracking-wide transition-colors">WhatsApp</span>
+            </a>
+
+            <a id="shareMessengerPanel" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-400 hover:to-blue-500 active:from-blue-500 active:to-blue-600 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-400 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on Messenger" role="listitem">
+                <i class="fab fa-facebook-messenger text-3xl sm:text-4xl text-blue-500 group-hover:text-white transition-colors" aria-hidden="true"></i>
+                <span class="text-xs sm:text-sm font-bold text-blue-600 group-hover:text-white uppercase tracking-wide transition-colors">Messenger</span>
+            </a>
+
+            <a id="shareFacebookPanel" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-500 hover:to-blue-600 active:from-blue-600 active:to-blue-700 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on Facebook" role="listitem">
+                <i class="fab fa-facebook text-3xl sm:text-4xl text-blue-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+                <span class="text-xs sm:text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">Facebook</span>
+            </a>
+
+            <a id="shareTwitterPanel" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-gray-50 to-gray-100 hover:from-gray-800 hover:to-black active:from-black active:to-gray-900 rounded-xl p-3.5 sm:p-4 border-2 border-gray-200 hover:border-gray-800 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on Twitter" role="listitem">
+                <i class="fab fa-x-twitter text-3xl sm:text-4xl text-gray-800 group-hover:text-white transition-colors" aria-hidden="true"></i>
+                <span class="text-xs sm:text-sm font-bold text-gray-700 group-hover:text-white uppercase tracking-wide transition-colors">Twitter</span>
+            </a>
+
+            <a id="shareLinkedInPanel" href="#" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200 hover:border-blue-600 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share on LinkedIn" role="listitem">
+                <i class="fab fa-linkedin text-3xl sm:text-4xl text-blue-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+                <span class="text-xs sm:text-sm font-bold text-blue-700 group-hover:text-white uppercase tracking-wide transition-colors">LinkedIn</span>
+            </a>
+
+            <a id="shareEmailPanel" href="#" class="bg-gradient-to-br from-red-50 to-red-100 hover:from-red-500 hover:to-red-600 active:from-red-600 active:to-red-700 rounded-xl p-3.5 sm:p-4 border-2 border-red-200 hover:border-red-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share via Email" role="listitem">
+                <i class="fas fa-envelope text-3xl sm:text-4xl text-red-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+                <span class="text-xs sm:text-sm font-bold text-red-700 group-hover:text-white uppercase tracking-wide transition-colors">Email</span>
+            </a>
+
+            <button id="copyBtnPanel" class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 active:from-purple-600 active:to-purple-700 rounded-xl p-3.5 sm:p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-1.5 sm:gap-2 transition-all duration-200 group" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Copy review link" role="listitem">
+                <i class="fas fa-link text-3xl sm:text-4xl text-purple-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+                <span class="text-xs sm:text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copy</span>
+            </button>
+
+        </div>
+
+        <div class="mt-5 sm:mt-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-3.5 sm:p-4 border-2 border-blue-200">
+            <div class="flex items-center gap-2.5 sm:gap-3 text-blue-700">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                </svg>
+                <div class="flex-1">
+                    <p class="font-bold text-sm">
+                        Spread the word! 📢
+                    </p>
+                    <p class="text-xs text-blue-600 mt-1">Share {{ $review['name'] }}'s experience</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- SUCCESS POPUP - Confirmation après partage -->
+<div id="shareSuccessPopup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4" role="dialog" aria-labelledby="success-popup-title" aria-modal="true">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 sm:p-6 transform transition-all scale-95 opacity-0" id="popupContent">
+        <div class="text-center mb-3 sm:mb-4">
+            <div class="inline-block bg-gradient-to-br from-blue-400 to-purple-500 rounded-full p-3 sm:p-4 mb-2 sm:mb-3 animate-bounce">
+                <svg class="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <h3 id="success-popup-title" class="text-xl sm:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">Thanks for sharing! 🙏</h3>
+            <p class="text-gray-600 text-sm">Help {{ $review['name'] }} reach more people</p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-3.5 sm:p-4 mb-3 sm:mb-4 border-2 border-blue-200">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm text-gray-600">Sharing helps:</span>
+                <span class="text-lg sm:text-xl font-bold text-blue-600">✨</span>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">Every share helps other expats discover this review and make informed decisions. Thank you for being awesome!</p>
+        </div>
+        <div class="space-y-2">
+            <button onclick="shareAgain()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 active:from-blue-700 active:to-purple-800 text-white font-bold py-2.5 sm:py-3 px-5 sm:px-6 rounded-xl transition-all transform hover:scale-105 active:scale-95 shadow-lg text-sm sm:text-base" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share again">
+                Share Again 📢
+            </button>
+            <button onclick="closeSharePopup()" class="w-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-medium py-2 sm:py-2 px-5 sm:px-6 rounded-xl transition-all text-sm sm:text-base" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Close success popup">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- HIDDEN INPUT FOR SHARE URL -->
 <input type="text" id="reviewShareUrl" value="{{ url()->current() }}" hidden aria-hidden="true">
@@ -1342,68 +1555,14 @@
                     <div class="review-full-text">{{ $review['fullText'] }}</div>
                 </div>
                 
-                <!-- SHARE SECTION -->
+                <!-- SHARE SECTION - Invitation pour utiliser le bouton flottant -->
                 <div class="share-review-section">
-                    <h2 class="share-title">Found This Review Helpful?</h2>
-                    <p class="share-subtitle">Share {{ $review['name'] }}'s story with others who might need {{ $review['service'] }} help!</p>
+                    <h2 class="share-title">Loved This Review?</h2>
+                    <p class="share-subtitle">Help others discover {{ $review['name'] }}'s story by sharing it!</p>
                     
-                    <div class="share-buttons-grid">
-                        <a 
-                            href="#" 
-                            id="shareWhatsApp"
-                            class="share-btn share-btn-whatsapp" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            aria-label="Share on WhatsApp"
-                        >
-                            <i class="fab fa-whatsapp share-btn-icon" aria-hidden="true"></i>
-                            <span>WhatsApp</span>
-                        </a>
-                        
-                        <a 
-                            href="#" 
-                            id="shareFacebook"
-                            class="share-btn share-btn-facebook" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            aria-label="Share on Facebook"
-                        >
-                            <i class="fab fa-facebook share-btn-icon" aria-hidden="true"></i>
-                            <span>Facebook</span>
-                        </a>
-                        
-                        <a 
-                            href="#" 
-                            id="shareTwitter"
-                            class="share-btn share-btn-twitter" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            aria-label="Share on Twitter"
-                        >
-                            <i class="fab fa-x-twitter share-btn-icon" aria-hidden="true"></i>
-                            <span>Twitter</span>
-                        </a>
-                        
-                        <a 
-                            href="#" 
-                            id="shareLinkedIn"
-                            class="share-btn share-btn-linkedin" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            aria-label="Share on LinkedIn"
-                        >
-                            <i class="fab fa-linkedin share-btn-icon" aria-hidden="true"></i>
-                            <span>LinkedIn</span>
-                        </a>
-                        
-                        <button 
-                            id="copyLinkBtn"
-                            class="share-btn share-btn-copy"
-                            aria-label="Copy link to clipboard"
-                        >
-                            <i class="fas fa-link share-btn-icon" aria-hidden="true"></i>
-                            <span>Copy Link</span>
-                        </button>
+                    <div style="margin-top: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, #F0F9FF, #E0F2FE); border-radius: 1.5rem; border: 2px solid rgba(37, 99, 235, 0.2); text-align: center;">
+                        <p style="color: #1F2937; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem;">👉 Use the Share button below</p>
+                        <p style="color: #6B7280; font-size: 0.9375rem; line-height: 1.6;">Click the floating <strong>Share</strong> button on your screen to share this review across WhatsApp, Facebook, Twitter, LinkedIn and more!</p>
                     </div>
                 </div>
             </div>
@@ -1551,11 +1710,165 @@
 (() => {
     'use strict';
     
+    // Marquer la page comme chargée pour activer les animations
+    window.addEventListener('load', () => {
+        document.body.classList.add('loaded');
+    });
+    
+    // SYSTEM: Panel lateral share
+    window.openSharePanel = function() {
+        const panel = document.getElementById('sharePanel');
+        const overlay = document.getElementById('shareOverlay');
+        const floatingBtn = document.getElementById('floatingShareBtn');
+        
+        if (overlay) {
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.add('opacity-100'), 10);
+        }
+        if (panel) {
+            panel.classList.remove('translate-x-full');
+        }
+        if (floatingBtn) {
+            floatingBtn.style.display = 'none';
+        }
+        document.body.style.overflow = 'hidden';
+    };
+    
+    window.closeSharePanel = function() {
+        const panel = document.getElementById('sharePanel');
+        const overlay = document.getElementById('shareOverlay');
+        const floatingBtn = document.getElementById('floatingShareBtn');
+        
+        if (panel) {
+            panel.classList.add('translate-x-full');
+        }
+        if (overlay) {
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+        }
+        if (floatingBtn) {
+            setTimeout(() => floatingBtn.style.display = 'flex', 300);
+        }
+        document.body.style.overflow = '';
+    };
+    
+    window.showShareSuccessPopup = function() {
+        const popup = document.getElementById('shareSuccessPopup');
+        const content = document.getElementById('popupContent');
+        if (popup && content) {
+            popup.classList.remove('hidden');
+            popup.classList.add('flex');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+    };
+    
+    window.closeSharePopup = function() {
+        const popup = document.getElementById('shareSuccessPopup');
+        const content = document.getElementById('popupContent');
+        if (popup && content) {
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                popup.classList.remove('flex');
+                popup.classList.add('hidden');
+            }, 200);
+        }
+    };
+    
+    window.shareAgain = function() {
+        closeSharePopup();
+        setTimeout(() => openSharePanel(), 300);
+    };
+    
+    function getShareUrl() {
+        const input = document.getElementById('reviewShareUrl');
+        if (!input) return window.location.href;
+        
+        let shareUrl = input.value;
+        try {
+            const urlObj = new URL(shareUrl, window.location.origin);
+            urlObj.searchParams.set('utm_source', 'social_share');
+            urlObj.searchParams.set('utm_medium', 'share');
+            urlObj.searchParams.set('utm_campaign', 'review');
+            shareUrl = urlObj.toString();
+        } catch (e) {
+            console.error('UTM error:', e);
+        }
+        return shareUrl;
+    }
+    
+    window.copyReviewLink = function() {
+        const shareUrl = getShareUrl();
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            closeSharePanel();
+            showShareSuccessPopup();
+        }).catch(() => {
+            alert('Failed to copy link');
+        });
+    };
+    
+    const finalUrl = getShareUrl();
+    const enc = encodeURIComponent(finalUrl);
+    
+    const reviewName = "{{ addslashes($review['name']) }}";
+    const reviewService = "{{ addslashes($review['service']) }}";
+    const reviewCountry = "{{ addslashes($review['country']) }}";
+    const reviewText = "{{ addslashes(substr($review['shortText'], 0, 120)) }}";
+    
+    const viralText = encodeURIComponent(`✨ Check out {{ addslashes($review['name']) }}'s review about {{ addslashes($review['service']) }} in {{ addslashes($review['country']) }}\n\n⭐ Rating: {{ $review['rating'] }}/5\n\n"${reviewText}"\n\n👉 Read full review:`);
+    const subject = encodeURIComponent(`📖 {{ addslashes($review['name']) }}'s {{ addslashes($review['service']) }} Review`);
+    const emailBody = encodeURIComponent(`Hi!\n\nI found a great review about {{ addslashes($review['service']) }} in {{ addslashes($review['country']) }}:\n\n---\n\n{{ addslashes($review['name']) }} ({{ $review['rating'] }}/5 stars):\n"${reviewText}"\n\n---\n\nRead the full review:\n${finalUrl}`);
+    
+    const socialLinks = {
+        shareWhatsAppPanel: `https://api.whatsapp.com/send?text=${viralText}%20${enc}`,
+        shareMessengerPanel: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
+        shareFacebookPanel: `https://www.facebook.com/sharer/sharer.php?u=${enc}`,
+        shareTwitterPanel: `https://twitter.com/intent/tweet?url=${enc}&text=${viralText}`,
+        shareLinkedInPanel: `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`,
+        shareEmailPanel: `mailto:?subject=${subject}&body=${emailBody}`
+    };
+    
+    Object.entries(socialLinks).forEach(([id, href]) => {
+        const link = document.getElementById(id);
+        if (link) {
+            link.href = href;
+        }
+    });
+    
+    const copyBtn = document.getElementById('copyBtnPanel');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            copyReviewLink();
+        });
+    }
+    
+    const shareButtons = document.querySelectorAll('a[id^="share"]');
+    shareButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            setTimeout(() => {
+                closeSharePanel();
+                showShareSuccessPopup();
+            }, 800);
+        });
+    });
+    
+    const popup = document.getElementById('shareSuccessPopup');
+    if (popup) {
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                closeSharePopup();
+            }
+        });
+    }
+    
     // FAQ TOGGLE
     window.toggleFaq = function(button) {
         const faqItem = button.parentElement;
         const isActive = faqItem.classList.contains('active');
-        const wasExpanded = button.getAttribute('aria-expanded') === 'true';
         
         // Close all FAQ items
         document.querySelectorAll('.faq-item').forEach(item => {
@@ -1570,91 +1883,6 @@
             button.setAttribute('aria-expanded', 'true');
         }
     };
-    
-    // SHARE FUNCTIONALITY
-    const shareUrl = document.getElementById('reviewShareUrl')?.value || window.location.href;
-    const reviewTitle = "{{ addslashes($review['name']) }}'s {{ addslashes($review['service']) }} Review";
-    const reviewText = "{{ addslashes(Str::limit($review['shortText'], 100)) }}";
-    
-    const shareData = {
-        title: reviewTitle,
-        text: `Check out ${reviewTitle} on Ulixai: ${reviewText}`,
-        url: shareUrl
-    };
-    
-    // Native share for mobile
-    window.shareReview = async function() {
-        if (navigator.share) {
-            try {
-                await navigator.share(shareData);
-            } catch (err) {
-                if (err.name !== 'AbortError') {
-                    console.error('Share failed:', err);
-                }
-            }
-        }
-    };
-    
-    // Social share links
-    const encodedUrl = encodeURIComponent(shareUrl);
-    const encodedText = encodeURIComponent(shareData.text);
-    const encodedTitle = encodeURIComponent(shareData.title);
-    
-    const shareLinks = {
-        shareWhatsApp: `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`,
-        shareFacebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-        shareTwitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
-        shareLinkedIn: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`
-    };
-    
-    // Set share links
-    Object.entries(shareLinks).forEach(([id, href]) => {
-        const link = document.getElementById(id);
-        if (link) link.href = href;
-    });
-    
-    // Copy link functionality
-    const copyBtn = document.getElementById('copyLinkBtn');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', async function(e) {
-            e.preventDefault();
-            
-            try {
-                if (navigator.clipboard) {
-                    await navigator.clipboard.writeText(shareUrl);
-                } else {
-                    // Fallback for older browsers
-                    const textarea = document.createElement('textarea');
-                    textarea.value = shareUrl;
-                    textarea.style.position = 'fixed';
-                    textarea.style.opacity = '0';
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                }
-                
-                // Visual feedback
-                const originalHTML = copyBtn.innerHTML;
-                copyBtn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
-                copyBtn.innerHTML = `
-                    <i class="fas fa-check share-btn-icon" aria-hidden="true"></i>
-                    <span>Copied!</span>
-                `;
-                copyBtn.setAttribute('aria-label', 'Link copied to clipboard');
-                
-                setTimeout(() => {
-                    copyBtn.style.background = '';
-                    copyBtn.innerHTML = originalHTML;
-                    copyBtn.setAttribute('aria-label', 'Copy link to clipboard');
-                }, 2000);
-                
-            } catch (err) {
-                console.error('Copy failed:', err);
-                alert('Failed to copy link. Please copy manually: ' + shareUrl);
-            }
-        });
-    }
     
     // Make review cards clickable
     document.querySelectorAll('.review-card').forEach(card => {

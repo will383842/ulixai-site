@@ -16,11 +16,8 @@
         </div>
     @endif
 
-    <div class="flex flex-row">
+    <div class="flex flex-row gap-4 mb-6">
         <a href="{{ route('admin.faqs.index') }}" class="text-blue-600 hover:underline">Manage FAQ</a>
-    </div>
-
-    <div class="flex flex-row">
         <a href="{{ route('admin.terms.index') }}" class="text-blue-600 hover:underline">Manage Terms and Conditions</a>
     </div>
 
@@ -67,64 +64,26 @@
                     </svg>
                     Legal Information
                 </h2>
-                <p class="text-gray-600 text-sm mt-1">Legal disclaimers and compliance information</p>
+                <p class="text-gray-600 text-sm mt-1">Legal notices, disclaimers and compliance information</p>
             </div>
             <div class="px-6 py-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <label for="publisher" class="block text-sm font-medium text-gray-700 mb-2">Publisher Information</label>
-                        <textarea 
-                            id="publisher"
-                            name="publisher" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" 
-                            rows="4"
-                            placeholder="Enter publisher details..."
-                        >{{ old('publisher', $settings->legal_info['publisher'] ?? '') }}</textarea>
-                    </div>
-                    
-                    <div>
-                        <label for="ip" class="block text-sm font-medium text-gray-700 mb-2">Intellectual Property</label>
-                        <textarea 
-                            id="ip"
-                            name="ip" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" 
-                            rows="4"
-                            placeholder="Enter intellectual property information..."
-                        >{{ old('ip', $settings->legal_info['ip'] ?? '') }}</textarea>
-                    </div>
-                    
-                    <div>
-                        <label for="liability" class="block text-sm font-medium text-gray-700 mb-2">Liability Disclaimer</label>
-                        <textarea 
-                            id="liability"
-                            name="liability" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" 
-                            rows="4"
-                            placeholder="Enter liability disclaimer..."
-                        >{{ old('liability', $settings->legal_info['liability'] ?? '') }}</textarea>
-                    </div>
-                    
-                    <div>
-                        <label for="privacy" class="block text-sm font-medium text-gray-700 mb-2">Privacy & Data</label>
-                        <textarea 
-                            id="privacy"
-                            name="privacy" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" 
-                            rows="4"
-                            placeholder="Enter privacy and data information..."
-                        >{{ old('privacy', $settings->legal_info['privacy'] ?? '') }}</textarea>
-                    </div>
-                    
-                    <div class="lg:col-span-2">
-                        <label for="law" class="block text-sm font-medium text-gray-700 mb-2">Governing Law</label>
-                        <textarea 
-                            id="law"
-                            name="law" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" 
-                            rows="3"
-                            placeholder="Enter governing law information..."
-                        >{{ old('law', $settings->legal_info['law'] ?? '') }}</textarea>
-                    </div>
+                <div>
+                    <label for="legal_info" class="block text-sm font-medium text-gray-700 mb-2">Legal Notice Content</label>
+                    <p class="text-xs text-gray-500 mb-3">HTML is supported (h1, h2, h3, p, ul, li, strong, em, a, etc.)</p>
+                    <textarea 
+                        id="legal_info"
+                        name="legal_info" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 font-mono text-sm" 
+                        rows="16"
+                        placeholder="Enter your legal notice content here. You can use HTML formatting (e.g., <h2>Section Title</h2>, <p>Content...</p>, <ul><li>Item</li></ul>, etc.)"
+                    >@php
+    $legalValue = old('legal_info', $settings->legal_info ?? '');
+    if (is_array($legalValue)) {
+        $legalValue = json_encode($legalValue, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    }
+    echo $legalValue;
+@endphp</textarea>
+                    <p class="text-xs text-gray-500 mt-2">Tip: Use semantic HTML tags for better structure and SEO</p>
                 </div>
             </div>
         </div>
