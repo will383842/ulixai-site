@@ -10,7 +10,7 @@
 
     <div class="card">
         <div class="card-body">
-            <canvas id="ga4VisitorsChart" height="88"></canvas>
+            <div class="chart-area"><canvas id="ga4VisitorsChart"></canvas></div>
             @if(empty($visitorsTrend))
                 <p class="text-muted mt-3 mb-0">Aucune donnée disponible (GA4 inactif ou pas encore de trafic).</p>
             @endif
@@ -79,7 +79,8 @@
     const values = Object.values(trend);
 
     // Si pas de données, on initialise un graph vide (pas d’erreur)
-    new Chart(ctx, {
+    if (window._ga4Chart) { try { window._ga4Chart.destroy(); } catch(e){} }
+    window._ga4Chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,

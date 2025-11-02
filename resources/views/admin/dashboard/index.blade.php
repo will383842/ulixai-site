@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <title>Admin Dashboard - ULIXAI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,12 +41,104 @@
       }
 
       /* --- Empilement sûr : header toujours au-dessus --- */
-      .admin-header { position: sticky; top: 0; z-index: 1000; background: #fff; }
-      .admin-main   { position: relative; z-index: 0; }
+      .admin-header { position: sticky; top: 0; z-index: 99999; background: #fff; isolation: isolate; }
+      .admin-main   { position: relative; z-index: 0; padding-top: var(--admin-header-h, 64px); min-height: calc(100vh - var(--admin-header-h, 64px)); }
 
       /* Filet discret pour détacher le header */
       .admin-header { border-bottom: 1px solid rgba(0,0,0,.06); }
+    
+      /* Sticky sidebar below header */
+      .admin-sidebar { position: sticky; top: var(--admin-header-h, 64px); height: calc(100vh - var(--admin-header-h, 64px)); overflow-y: auto; }
+
+      /* Chart containers with fixed height to prevent growth loops */
+      .chart-area { position: relative; height: 360px; }
+      .chart-area.sm  { height: 220px; }
+      .chart-area.lg  { height: 480px; }
+
+      /* Keep main below header and avoid overlay */
+      .admin-main { contain: layout paint; z-index: 1; }
+      .admin-shell { position: relative; z-index: 0; }
+</style>
+    <link rel="stylesheet" href="{{ asset('css/admin-compat.css') }}">
+    <script src="{{ asset('js/admin-layout.js') }}" defer></script>
+
+    <style>
+
+      /* Cacher la bannière et les wrappers injectés par Google */
+      iframe.goog-te-banner-frame,
+      .goog-te-banner-frame { display: none !important; }
+      body > .skiptranslate { display: none !important; height: 0 !important; overflow: hidden !important; }
+      html { margin-top: 0 !important; }
+      body { top: 0 !important; position: static !important; }
+
+      /* Cacher la toolbar/tooltip */
+      #goog-gt-tt, .goog-te-balloon-frame, .goog-te-gadget { display: none !important; }
+      .VIpgJd-ZVi9od-ORHb,
+      .VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+      .VIpgJd-ZVi9od-ORHb-OEVmcd,
+      .VIpgJd-ZVi9od-ORHb-hFsbo,
+      .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+        display: none !important; visibility: hidden !important; opacity: 0 !important;
+      }
+
+      /* --- Empilement sûr : header toujours au-dessus --- */
+      .admin-header { position: sticky; top: 0; z-index: 99999; background: #fff; isolation: isolate; }
+      .admin-main   { position: relative; z-index: 0; padding-top: var(--admin-header-h, 64px); min-height: calc(100vh - var(--admin-header-h, 64px)); }
+
+      /* Filet discret pour détacher le header */
+      .admin-header { border-bottom: 1px solid rgba(0,0,0,.06); }
+    
+      /* Sticky sidebar below header */
+      .admin-sidebar { position: sticky; top: var(--admin-header-h, 64px); height: calc(100vh - var(--admin-header-h, 64px)); overflow-y: auto; }
+
+      /* Chart containers with fixed height to prevent growth loops */
+      .chart-area { position: relative; height: 360px; }
+      .chart-area.sm  { height: 220px; }
+      .chart-area.lg  { height: 480px; }
+
+      /* Keep main below header and avoid overlay */
+      .admin-main { contain: layout paint; z-index: 1; }
+      .admin-shell { position: relative; z-index: 0; }
+
+
+      /* --- Admin Grid Layout (robuste) --- */
+      .admin-grid {{ 
+        min-height: 100vh; 
+        display: grid;
+        grid-template-rows: auto 1fr;
+        grid-template-columns: 16rem 1fr; /* sidebar 256px + content */
+      }}
+      .admin-header {{ 
+        grid-row: 1; 
+        grid-column: 1 / -1; 
+        position: sticky; top: 0; z-index: 99999; background: #fff; isolation: isolate; 
+        border-bottom: 1px solid rgba(0,0,0,.06);
+      }}
+      .admin-sidebar {{ 
+        grid-row: 2; grid-column: 1; 
+        position: sticky; top: var(--admin-header-h, 64px);
+        height: calc(100vh - var(--admin-header-h, 64px));
+        overflow-y: auto;
+        background: #fff;
+        border-right: 1px solid #f3f4f6;
+      }}
+      .admin-main {{ 
+        grid-row: 2; grid-column: 2; 
+        position: relative; z-index: 1;
+        padding-top: 0; /* header est hors flux, pas besoin de padding ici */
+        contain: layout paint;
+      }}
+
+      /* Chart containers */
+      .chart-area {{ position: relative; height: 360px; }}
+      .chart-area.sm {{ height: 220px; }}
+      .chart-area.lg {{ height: 480px; }}
+
+      /* Sécurité overlay: contenu sous le header */
+      .admin-main, .admin-main * {{ z-index: initial; }}
     </style>
+    <link rel="stylesheet" href="{{ asset('css/admin-compat.css') }}">
+    <script src="{{ asset('js/admin-layout.js') }}" defer></script>
 </head>
 <body class="bg-gray-50">
 
@@ -56,68 +149,58 @@
 <script>toastr.error('{{ session('error') }}', 'Error');</script>
 @endif
 
-<!-- Admin Navbar -->
-<nav role="navigation" aria-label="Admin header" class="admin-header bg-white shadow px-6 py-4 flex justify-between items-center">
-  <!-- Left side -->
-  <div class="flex items-center gap-3">
-    <!-- Logo = même fichier que le favicon admin -->
-    <img src="{{ asset('images/logoblue-64.png') }}" alt="Ulixai" class="w-10 h-10 object-contain rounded-full">
-    <span class="font-bold text-blue-700 text-xl">Administrateur Ulixai</span>
-  </div>
+<!-- Admin Grid: header full width, then sidebar + main -->
+<div class="admin-grid">
 
-  <!-- Right side: Language + Logout -->
-  <div class="flex items-center gap-4">
-    <!-- Sélecteur de langue -->
-    <div class="relative w-full sm:w-56">
-      <!-- Hidden checkbox controls open/close -->
-      <input id="langOpen" type="checkbox" class="peer sr-only">
-
-      <!-- Toggle button -->
-      <label for="langOpen"
-             class="flex justify-between items-center w-[140px] border border-gray-300 rounded-lg px-4 py-2 text-gray-800 bg-white cursor-pointer select-none">
-        <span id="languageLabel">Language</span>
-        <img id="languageFlag" src="https://flagcdn.com/24x18/us.png" alt="Lang" class="ml-2 w-5 h-4 object-cover">
-      </label>
-
-      <!-- Menu -->
-      <ul id="languageMenu"
-          class="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-50 hidden peer-checked:block">
-        <li data-lang="en" data-flag="https://flagcdn.com/24x18/us.png"
-            class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2">
-          <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4" alt=""> English
-        </li>
-        <li data-lang="fr" data-flag="https://flagcdn.com/24x18/fr.png"
-            class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2">
-          <img src="https://flagcdn.com/24x18/fr.png" class="w-5 h-4" alt=""> Français
-        </li>
-        <li data-lang="de" data-flag="https://flagcdn.com/24x18/de.png"
-            class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2">
-          <img src="https://flagcdn.com/24x18/de.png" class="w-5 h-4" alt=""> Deutsch
-        </li>
-      </ul>
+  <!-- Admin Navbar -->
+  <nav role="navigation" aria-label="Admin header" class="admin-header px-6 py-4 flex justify-between items-center">
+    <!-- Left side -->
+    <div class="flex items-center gap-3">
+      <img src="{{ asset('images/logoblue-64.png') }}" alt="Ulixai" class="w-10 h-10 object-contain rounded-full">
+      <span class="font-bold text-blue-700 text-xl">Administrateur Ulixai</span>
     </div>
 
-    <!-- Logout Button -->
-    <form method="POST" action="{{ route('admin.logout') }}">
-      @csrf
-      <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold">
-        Logout
-      </button>
-    </form>
-  </div>
-</nav>
+    <!-- Right side (lang + disconnect) -->
+    <div class="flex items-center gap-2">
+      <div id="google_translate_element" class="hidden"></div>
+      <div class="flex items-center gap-2">
+        <div id="langDropdown" class="relative">
+          <input type="checkbox" id="langToggle" class="peer hidden" aria-hidden="true">
+          <label for="langToggle" class="border rounded px-3 py-1 text-sm cursor-pointer select-none flex items-center gap-2" aria-haspopup="listbox" aria-expanded="false">
+            <span id="currentLangLabel">Français</span>
+            <span class="fi fi-fr" aria-hidden="true"></span>
+          </label>
+          <div class="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-md z-50 hidden peer-checked:block" role="listbox" aria-label="Choisir la langue">
+            <button type="button" data-lang="fr" class="w-full flex justify-between items-center px-3 py-2 hover:bg-gray-50 text-left">
+              <span>Français</span><span class="fi fi-fr"></span>
+            </button>
+            <button type="button" data-lang="en" class="w-full flex justify-between items-center px-3 py-2 hover:bg-gray-50 text-left">
+              <span>English</span><span class="fi fi-gb"></span>
+            </button>
+            <button type="button" data-lang="de" class="w-full flex justify-between items-center px-3 py-2 hover:bg-gray-50 text-left">
+              <span>Deutsch</span><span class="fi fi-de"></span>
+            </button>
+            <button type="button" data-lang="es" class="w-full flex justify-between items-center px-3 py-2 hover:bg-gray-50 text-left">
+              <span>Español</span><span class="fi fi-es"></span>
+            </button>
+            <button type="button" data-lang="pt" class="w-full flex justify-between items-center px-3 py-2 hover:bg-gray-50 text-left">
+              <span>Português</span><span class="fi fi-pt"></span>
+            </button>
+          </div>
+        </div>
+        <form action="{{ route('admin.logout') }}" method="POST" class="ml-2">
+          @csrf
+          <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm" type="submit">Déconnexion</button>
+        </form>
+      </div>
+    </div>
+  </nav>
 
-<!-- Hidden Google Translate widget -->
-<div id="google_translate_element" class="hidden"></div>
-
-<!-- Admin Layout with Sidebar -->
-<div class="flex min-h-screen">
   <!-- Sidebar -->
   @include('admin.dashboard.sidebar')
 
   <!-- Main Content Area -->
-  <main class="admin-main flex-1 p-2" role="main" id="main-content" tabindex="-1">
-      {{-- Child admin components will load here --}}
+  <main class="admin-main p-2" role="main" id="main-content" tabindex="-1">
       @yield('admin-content')
   </main>
 </div>

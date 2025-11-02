@@ -1,0 +1,42 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Support\Facades\View;
+use Tests\TestCase;
+
+class AdminUiTest extends TestCase
+{
+    /** @test */
+    public function admin_layout_renders_header_and_sidebar()
+    {
+        $html = View::make('admin.dashboard.index')->render();
+        $this->assertStringContainsString('aria-label="Admin header"', $html);
+        $this->assertStringContainsString('aria-label="Admin sidebar"', $html);
+    }
+
+    /** @test */
+    public function seo_analytics_view_renders_without_data()
+    {
+        $html = View::make('admin.seo-analytics.index', [
+            'visitorsTrend' => [],
+            'metrics' => ['opr' => [], 'hm' => []],
+            'topPages' => [],
+        ])->render();
+
+        $this->assertStringContainsString('SEO & Analytics', $html);
+        $this->assertStringContainsString('ga4VisitorsChart', $html);
+    }
+
+    /** @test */
+    public function accounting_view_renders_with_minimal_dataset()
+    {
+        $html = View::make('admin.accounting.index', [
+            'filters' => ['country' => null, 'currency' => null, 'from' => null, 'to' => null],
+            'totals'  => collect(),
+            'providers' => collect(),
+        ])->render();
+
+        $this->assertStringContainsString('Comptabilité', $html);
+    }
+}

@@ -5,7 +5,13 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <!-- Google Tag Manager -->
+  
+
+  <!-- SEO basics injected -->
+  @php($canonical = url()->current())
+  <link rel="canonical" href="{{ $canonical }}" />
+  <meta name="robots" content="{{ isset($noindex) && $noindex ? 'noindex,nofollow' : 'index,follow' }}">
+<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=

@@ -1,0 +1,58 @@
+/* Minimal "Bootstrap-like" shim for Admin pages that were authored with Bootstrap classes.
+   This avoids pulling the full Bootstrap bundle and keeps Tailwind as-is. */
+
+.container { width: 100%; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
+.container-fluid { width: 100%; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
+
+.row { display: flex; flex-wrap: wrap; margin-left: -0.5rem; margin-right: -0.5rem; }
+[class^="col-"], [class*=" col-"] { padding-left: 0.5rem; padding-right: 0.5rem; }
+
+.col-12 { flex: 0 0 100%; max-width: 100%; }
+.col-6  { flex: 0 0 50%;  max-width: 50%; }
+.col-4  { flex: 0 0 33.3333%; max-width: 33.3333%; }
+.col-3  { flex: 0 0 25%;  max-width: 25%; }
+
+/* Responsive fragments frequently used */
+@media (min-width: 992px) { /* lg */
+  .col-lg-6 { flex: 0 0 50%; max-width: 50%; }
+  .col-lg-4 { flex: 0 0 33.3333%; max-width: 33.3333%; }
+  .col-lg-3 { flex: 0 0 25%; max-width: 25%; }
+  .d-lg-flex { display: flex; }
+}
+
+/* Utility */
+.small { font-size: 0.875rem; }
+.text-muted { color: #6b7280; } /* tailwind gray-500 */
+.text-decoration-none { text-decoration: none; }
+.mb-0 { margin-bottom: 0; }
+.mb-2 { margin-bottom: .5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-2 { margin-top: .5rem; }
+.p-2  { padding: .5rem; }
+.p-3  { padding: 1rem; }
+.p-4  { padding: 1.5rem; }
+.d-flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+.badge { display: inline-block; border-radius: 9999px; padding: .25rem .5rem; font-size: .75rem; line-height: 1; }
+.bg-success { background-color: #16a34a; color: #fff; }
+.bg-secondary { background-color: #6b7280; color: #fff; }
+.card { background: #fff; border: 1px solid #e5e7eb; border-radius: .75rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.card-header { padding: .75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+.card-body { padding: 1rem; }
+.card.h-100 { height: 100%; }
+.display-6 { font-size: 1.75rem; font-weight: 600; }
+
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: .5rem .75rem; border-bottom: 1px solid #f3f4f6; text-align: left; }
+.table thead th { font-weight: 600; color: #374151; background: #f9fafb; }
+
+/* Buttons (very light) */
+.btn { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; padding: .5rem .75rem; border-radius: .5rem; border: 1px solid transparent; cursor: pointer; }
+.btn-primary { background: #2563eb; color: #fff; }
+.btn-outline-secondary { background: transparent; border-color: #d1d5db; color: #374151; }
+.btn-sm { padding: .25rem .5rem; font-size: .875rem; }
+/* Ensure admin content never overlays header */
+.admin-main, .admin-main * { position: relative; z-index: initial; }

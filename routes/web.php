@@ -1,5 +1,7 @@
 <?php
 
+
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -498,10 +500,7 @@ XML;
 });
 
 // Pages statiques
-Route::get('/sitemap.xml', function () {
-    $xml = Cache::remember('sitemap.static', 3600, function () {
-        $now = now()->toAtomString();
-        $urls = [
+$urls = [
             ['loc' => 'https://ulixai.com/',                        'lastmod' => $now, 'priority' => '1.0'],
             ['loc' => 'https://ulixai.com/become-service-provider', 'lastmod' => $now, 'priority' => '0.8'],
             ['loc' => 'https://ulixai.com/service-providers',       'lastmod' => $now, 'priority' => '0.8'],
@@ -586,3 +585,10 @@ Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('review.s
 // ========================================
 Route::get('/{slug?}', [PageController::class, 'show'])
     ->where('slug', '^(?!provider|reviews).*$');
+
+// ========================================
+// SITEMAPS
+// ========================================
+Route::get('/sitemap_index.xml',    [SitemapController::class, 'index'])->name('sitemaps.index');
+Route::get('/sitemap.xml',          [SitemapController::class, 'static'])->name('sitemaps.static');
+Route::get('/sitemap-providers.xml',[SitemapController::class, 'providers'])->name('sitemaps.providers');

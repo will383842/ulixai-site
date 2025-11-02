@@ -1,4 +1,4 @@
-<aside class="w-64 bg-white border-r border-gray-100 shadow-sm flex-shrink-0 min-h-screen overflow-y-auto" role="navigation" aria-label="Admin sidebar">
+<aside class="admin-sidebar w-64 bg-white border-r border-gray-100 shadow-sm flex-shrink-0 min-h-screen overflow-y-auto" role="navigation" aria-label="Admin sidebar">
     <nav class="px-4 py-6 space-y-8">
         <div>
             <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Overview</p>

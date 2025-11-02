@@ -1,7 +1,7 @@
 @extends('admin.dashboard.index')
 
 @section('admin-content')
-<div class="container mx-auto px-4 py-8">
+<div class="container admin-accounting-container mx-auto px-4 py-8">
   <h1 class="text-2xl font-bold mb-6">Comptabilité</h1>
 
   <form method="get" class="flex flex-wrap items-end gap-3 mb-6">
@@ -80,14 +80,14 @@
       <h2 class="font-semibold">Revenus — 30 jours</h2>
       <a href="{{ route('admin.accounting.export',['section'=>'revenue']) }}" class="text-sm underline">Exporter CSV</a>
     </div>
-    <canvas id="revenueChart" width="400" height="180" aria-label="Graphique des revenus" role="img"></canvas>
+    <div class="chart-area sm"><canvas id="revenueChart" width="400" height="180" aria-label="Graphique des revenus" role="img"></canvas>
   </div>
   <div class="bg-white rounded shadow p-4">
     <div class="flex items-center justify-between mb-2">
       <h2 class="font-semibold">KYC vérifiés — 30 jours</h2>
       <a href="{{ route('admin.accounting.export',['section'=>'kyc']) }}" class="text-sm underline">Exporter CSV</a>
     </div>
-    <canvas id="kycChart" width="400" height="180" aria-label="Graphique KYC" role="img"></canvas>
+    <div class="chart-area sm"><canvas id="kycChart" width="400" height="180" aria-label="Graphique KYC" role="img"></canvas></div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -97,7 +97,9 @@
   const kyc = @json(($kycTrend ?? collect())->toArray());
   const rlabels = Object.keys(rev), rdata = Object.values(rev);
   const klabels = Object.keys(kyc), kdata = Object.values(kyc);
-  new Chart(document.getElementById('revenueChart').getContext('2d'), { type:'line', data:{ labels:rlabels, datasets:[{label:'€', data:rdata, tension:0.3}] }, options:{plugins:{legend:{display:false}}} });
-  new Chart(document.getElementById('kycChart').getContext('2d'), { type:'line', data:{ labels:klabels, datasets:[{label:'Vérifiés', data:kdata, tension:0.3}] }, options:{plugins:{legend:{display:false}}} });
+  if (window._revenueChart) { try { window._revenueChart.destroy(); } catch(e){} }
+  window._revenueChart = new Chart(document.getElementById('revenueChart').getContext('2d'), { type:'line', data:{ labels:rlabels, datasets:[{ label:'Revenus', data:rdata, borderWidth:2, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } } });
+  if (window._kycChart) { try { window._kycChart.destroy(); } catch(e){} }
+  window._kycChart = new Chart(document.getElementById('kycChart').getContext('2d'), { type:'bar', data:{ labels:klabels, datasets:[{ label:'KYC vérifiés', data:kdata, borderWidth:2, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } } });
 })();
 </script>
