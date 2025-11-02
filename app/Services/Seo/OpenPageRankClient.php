@@ -13,49 +13,30 @@ class OpenPageRankClient
 
     public function __construct()
     {
-        $cfg = config('seo.openpagerank');
-        $this->apiKey  = (string) ($cfg['api_key'] ?? '');
-        $this->baseUrl = rtrim($cfg['base_url'] ?? 'https://openpagerank.com/api/v1.0/', '/') . '/';
-        $this->timeout = (int) ($cfg['timeout'] ?? 15);
+        $this->apiKey  = (string) (config('seo.openpagerank.api_key') ?? '');
+        $this->baseUrl = rtrim((string) config('seo.openpagerank.base_url', 'https://openpagerank.com/api/v1.0/'), '/').'/';
+        $this->timeout = (int) (config('seo.openpagerank.timeout', 15));
     }
 
-    public function isConfigured(): bool
+    /** Retourne un score de 0 à 10 (ou null si indispo) */
+    public function getPageRank(string $domain): ?float
     {
-        return !empty($this->apiKey);
-    }
-
-    public function getPageRank(string $domain): array
-    {
-        if (!$this->isConfigured()) {
-            return ['connected' => false, 'error' => 'missing_config'];
+        if (!$this->apiKey || !$domain) {
+            return null;
         }
         try {
             $resp = Http::timeout($this->timeout)
-                ->retry(2, 500)
                 ->withHeaders(['API-OPR' => $this->apiKey])
-                ->acceptJson()
-                ->get($this->baseUrl . 'getPageRank', ['domains' => [$domain]]);
+                ->get($this->baseUrl.'getPageRank', ['domains' => $domain]);
 
-            if (!$resp->ok()) {
-                return ['connected' => false, 'error' => 'http_' . $resp->status()];
-            }
+            if (!$resp->ok()) return null;
             $json = $resp->json();
-            $first = $json['response'][0] ?? null;
-            if (!$first || ($first['status_code'] ?? 400) >= 400) {
-                return ['connected' => true, 'data' => null];
-            }
-            return [
-                'connected' => true,
-                'data' => [
-                    'domain'            => $first['domain'] ?? $domain,
-                    'page_rank_decimal' => $first['page_rank_decimal'] ?? null,
-                    'page_rank_integer' => $first['page_rank_integer'] ?? null,
-                    'rank'              => $first['rank'] ?? null,
-                ]
-            ];
+            $data = data_get($json, 'response.0', []);
+            $rank = data_get($data, 'rank', null);
+            return $rank !== null ? (float) $rank : null;
         } catch (\Throwable $e) {
-            Log::warning('OPR API error: '.$e->getMessage());
-            return ['connected' => false, 'error' => 'exception'];
+            Log::warning('OpenPageRankClient error: '.$e->getMessage());
+            return null;
         }
     }
 }

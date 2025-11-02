@@ -15,90 +15,72 @@ class BingWebmasterClient
 
     public function __construct()
     {
-        $cfg = config('seo.bing');
-        $this->apiKey  = (string) ($cfg['api_key'] ?? '');
-        $this->siteUrl = $cfg['site_url'] ?? null;
-        $this->baseUrl = rtrim($cfg['base_url'] ?? 'https://ssl.bing.com/webmaster/api.svc/json/', '/') . '/';
-        $this->maxPages = (int) ($cfg['max_pages'] ?? 5);
-        $this->timeout  = (int) ($cfg['timeout'] ?? 20);
+        $this->apiKey   = (string) (config('seo.bing.api_key') ?? '');
+        $this->siteUrl  = config('seo.bing.site_url');
+        $this->baseUrl  = rtrim((string) config('seo.bing.base_url', 'https://ssl.bing.com/webmaster/api.svc/json/'), '/').'/';
+        $this->maxPages = (int) (config('seo.bing.max_pages', 3));
+        $this->timeout  = (int) (config('seo.bing.timeout', 20));
     }
 
-    public function isConfigured(): bool
+    /** Retourne un petit résumé pour l'UI; robuste si pas de clé. */
+    public function summarizeLinkCounts(): array
     {
-        return !empty($this->apiKey) && !empty($this->siteUrl);
-    }
-
-    protected function request(string $method, array $params)
-    {
-        if (!$this->isConfigured()) {
-            return ['connected' => false, 'error' => 'missing_config'];
+        if (!$this->apiKey || !$this->siteUrl) {
+            return [
+                'connected' => false,
+                'summary' => [
+                    'approxTotalLinks' => 0,
+                    'scannedPages'     => 0,
+                    'topPages'         => [],
+                    'note'             => 'Clé API Bing/site URL manquante.',
+                ]
+            ];
         }
-        try {
-            $url = $this->baseUrl . ltrim($method, '/');
-            $resp = Http::timeout($this->timeout)
-                ->retry(2, 500)
-                ->acceptJson()
-                ->get($url, array_merge($params, ['apikey' => $this->apiKey]));
-            if (!$resp->ok()) {
-                return ['connected' => false, 'error' => 'http_' . $resp->status()];
-            }
-            $json = $resp->json();
-            return ['connected' => true, 'data' => $json['d'] ?? $json];
-        } catch (\Throwable $e) {
-            Log::warning('Bing API error: '.$e->getMessage());
-            return ['connected' => false, 'error' => 'exception'];
-        }
-    }
 
-    public function getLinkCounts(int $page = 0): array
-    {
-        return $this->request('GetLinkCounts', [
-            'siteUrl' => $this->siteUrl,
-            'page'    => $page,
-        ]);
-    }
-
-    public function getUrlLinks(string $url, int $page = 0): array
-    {
-        return $this->request('GetUrlLinks', [
-            'siteUrl' => $this->siteUrl,
-            'url'     => $url,
-            'page'    => $page,
-        ]);
-    }
-
-    /**
-     * Aggregate site-wide backlink counts based on GetLinkCounts pages.
-     * This is an approximation of total inbound link counts across site pages.
-     */
-    public function summarizeLinkCounts(?int $limitPages = null): array
-    {
-        if (!$this->isConfigured()) {
-            return ['connected' => false, 'summary' => []];
-        }
-        $limit = $limitPages ?? $this->maxPages;
-        $page  = 0;
+        // Bing Webmaster API: GetLinkCounts pour le site
         $totalLinks = 0;
+        $page = 0;
         $topPages = [];
-        $totalPages = 1;
-        do {
-            $res = $this->getLinkCounts($page);
-            if (!$res['connected']) {
-                break;
-            }
-            $data = $res['data'] ?? [];
-            $totalPages = (int) ($data['TotalPages'] ?? 1);
-            foreach (($data['Links'] ?? []) as $link) {
-                $count = (int) ($link['Count'] ?? 0);
-                $url   = (string) ($link['Url'] ?? '');
-                $totalLinks += $count;
-                $topPages[] = ['url' => $url, 'count' => $count];
-            }
-            $page++;
-        } while ($page < $totalPages && $page < $limit);
 
-        // sort top pages desc by count and limit to 10
-        usort($topPages, function ($a, $b) { return ($b['count'] <=> $a['count']); });
+        try {
+            for ($i = 0; $i < $this->maxPages; $i++) {
+                $page++;
+                $resp = Http::timeout($this->timeout)
+                    ->withHeaders(['apikey' => $this->apiKey])
+                    ->get($this->baseUrl.'GetLinkCounts', [
+                        'siteUrl' => $this->siteUrl,
+                        'page'    => $page,
+                    ]);
+
+                if (!$resp->ok()) break;
+
+                $json = $resp->json();
+                $items = data_get($json, 'd.results', []);
+                if (empty($items)) break;
+
+                foreach ($items as $row) {
+                    $count = (int) ($row['Count'] ?? 0);
+                    $url   = (string) ($row['Url'] ?? '');
+                    $totalLinks += $count;
+                    if ($url) {
+                        $topPages[] = ['url' => $url, 'count' => $count];
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning('BingWebmasterClient error: '.$e->getMessage());
+            return [
+                'connected' => false,
+                'summary' => [
+                    'approxTotalLinks' => 0,
+                    'scannedPages'     => $page,
+                    'topPages'         => [],
+                    'note'             => 'Erreur Bing: '.$e->getMessage(),
+                ]
+            ];
+        }
+
+        usort($topPages, fn($a,$b) => $b['count'] <=> $a['count']);
         $topPages = array_slice($topPages, 0, 10);
 
         return [
@@ -107,7 +89,7 @@ class BingWebmasterClient
                 'approxTotalLinks' => $totalLinks,
                 'scannedPages'     => $page,
                 'topPages'         => $topPages,
-                'note'             => 'Approximation based on Bing GetLinkCounts; may differ from other tools.',
+                'note'             => 'Approximation basée sur Bing GetLinkCounts.',
             ]
         ];
     }
