@@ -81,6 +81,9 @@
     @media (min-width:768px){.section-header{margin-bottom:40px}}
     .section-title{font-size:clamp(28px,6vw,44px);font-weight:900;margin-bottom:12px;color:var(--text);letter-spacing:-.03em;line-height:1.1}
     .section-subtitle{font-size:clamp(14px,2.5vw,18px);color:var(--text-light);line-height:1.5;font-weight:600}
+    
+    /* Utility Classes */
+    .hidden{display:none !important}
 
     /* What is Ulixai - VERSION CONDENSÉE */
     .what-card{background:#fff;border:2px solid var(--border);border-radius:24px;padding:28px 24px;max-width:900px;margin:0 auto;box-shadow:0 4px 16px rgba(37,99,235,.08)}
@@ -233,7 +236,7 @@
             <span>Access Press Kit</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
-          <button type="button" onclick="openModal(event)" class="hero-cta hero-cta-secondary js-open-press-modal">
+          <button type="button" class="hero-cta hero-cta-secondary js-open-press-modal">
             <span>Contact Press</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </button>
@@ -243,6 +246,16 @@
           <div class="hero-stat"><span class="hero-stat-number">304M</span><span class="hero-stat-label">Global Expats</span></div>
           <div class="hero-stat"><span class="hero-stat-number">1.6B</span><span class="hero-stat-label">Travelers</span></div>
           <div class="hero-stat"><span class="hero-stat-number">197</span><span class="hero-stat-label">Countries</span></div>
+        </div>
+
+        <!-- Illustration Hero -->
+        <div style="margin-top:60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:900px;margin-left:auto;margin-right:auto">
+          <div style="position:relative;border-radius:24px;overflow:hidden;aspect-ratio:16/10;box-shadow:0 12px 32px rgba(37,99,235,.2)">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=85" alt="Global team collaboration" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+          </div>
+          <div style="position:relative;border-radius:24px;overflow:hidden;aspect-ratio:16/10;box-shadow:0 12px 32px rgba(168,85,247,.2)">
+            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=900&q=85" alt="Connected world" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+          </div>
         </div>
       </div>
     </div>
@@ -361,6 +374,18 @@
         <p style="font-size:14px;color:var(--text-light);font-weight:600">We help expats <strong style="color:var(--text)">AND</strong> create income opportunities worldwide.</p>
       </div>
     </div>
+
+    <!-- Illustration dispersée -->
+    <div class="container" style="margin-top:60px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;max-width:1000px;margin:0 auto">
+        <div style="position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 12px 32px rgba(37,99,235,.18)">
+          <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=900&q=85" alt="Digital platform" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+        </div>
+        <div style="position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 12px 32px rgba(220,38,38,.18)">
+          <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=900&q=85" alt="Community collaboration" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Global Impact - VERSION COMPACTE -->
@@ -394,54 +419,14 @@
     </div>
   </section>
 
-  <!-- Press Photos Section -->
-  <section class="section" style="background:linear-gradient(135deg,#F8FAFC 0%,#EFF6FF 50%,#F8FAFC 100%)">
+  <!-- Grande illustration inspirante -->
+  <section style="padding:80px 0;background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 100%)">
     <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Press Photos 📸</h2>
-        <p class="section-subtitle">High-resolution images for your publication</p>
-      </div>
-
-      <div class="photos-grid">
-        <div class="photo-card" onclick="viewPhoto('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80')">
-          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop&q=80" alt="Team collaboration at Ulixai - diverse group working together" loading="lazy">
-          <div class="photo-overlay">
-            <span class="photo-title">🤝 Team Collaboration</span>
-          </div>
-        </div>
-
-        <div class="photo-card" onclick="viewPhoto('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80')">
-          <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=500&fit=crop&q=80" alt="Global connectivity - Ulixai platform connecting expats worldwide" loading="lazy">
-          <div class="photo-overlay">
-            <span class="photo-title">🌍 Global Connectivity</span>
-          </div>
-        </div>
-
-        <div class="photo-card" onclick="viewPhoto('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&q=80')">
-          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=500&fit=crop&q=80" alt="Business meeting - Ulixai service providers and clients" loading="lazy">
-          <div class="photo-overlay">
-            <span class="photo-title">💼 Service Providers</span>
-          </div>
-        </div>
-
-        <div class="photo-card" onclick="viewPhoto('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=80')">
-          <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=500&fit=crop&q=80" alt="Mobile app interface - Ulixai platform on smartphone" loading="lazy">
-          <div class="photo-overlay">
-            <span class="photo-title">📱 Mobile Platform</span>
-          </div>
-        </div>
-
-        <div class="photo-card" onclick="viewPhoto('https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1200&q=80')">
-          <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=500&fit=crop&q=80" alt="Community support - Ulixai expat helpers working together" loading="lazy">
-          <div class="photo-overlay">
-            <span class="photo-title">🙌 Community Support</span>
-          </div>
-        </div>
-
-        <div class="photo-card" onclick="viewPhoto('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=80')">
-          <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=500&fit=crop&q=80" alt="Virtual meeting - Remote collaboration through Ulixai" loading="lazy">
-          <div class="photo-overlay">
-            <span class="photo-title">💻 Virtual Collaboration</span>
+      <div style="max-width:1100px;margin:0 auto">
+        <div style="display:grid;grid-template-columns:1fr;gap:32px">
+          <div style="position:relative;border-radius:28px;overflow:hidden;aspect-ratio:21/9;box-shadow:0 20px 60px rgba(37,99,235,.25)">
+            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1400&q=90" alt="Professional collaboration" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,99,235,.15),rgba(168,85,247,.15))"></div>
           </div>
         </div>
       </div>
@@ -459,16 +444,12 @@
       <div class="lang-grid">
         <a href="/press/en" class="lang-card">
           <div class="lang-flag" style="display:flex;justify-content:center;align-items:center;height:100px">
-            <svg width="100" height="60" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-              <clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
-              <clipPath id="t"><path d="M30,15 h30 v15 z v-15 h-30 z h-30 v15 z v-15 h30 z"/></clipPath>
-              <g clip-path="url(#s)">
-                <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
-                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-                <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/>
-                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
-                <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
-              </g>
+            <svg width="100" height="60" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)">
+              <rect width="60" height="30" fill="#012169"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/>
+              <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+              <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
             </svg>
           </div>
           <h3 class="lang-name">English</h3>
@@ -477,7 +458,7 @@
 
         <a href="/press/fr" class="lang-card">
           <div class="lang-flag" style="display:flex;justify-content:center;align-items:center;height:100px">
-            <svg width="100" height="67" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+            <svg width="100" height="67" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" style="border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)">
               <rect width="900" height="600" fill="#ED2939"/>
               <rect width="600" height="600" fill="#fff"/>
               <rect width="300" height="600" fill="#002395"/>
@@ -489,7 +470,7 @@
 
         <a href="/press/de" class="lang-card">
           <div class="lang-flag" style="display:flex;justify-content:center;align-items:center;height:100px">
-            <svg width="100" height="60" viewBox="0 0 5 3" xmlns="http://www.w3.org/2000/svg">
+            <svg width="100" height="60" viewBox="0 0 5 3" xmlns="http://www.w3.org/2000/svg" style="border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)">
               <rect width="5" height="3" fill="#000"/>
               <rect width="5" height="2" y="1" fill="#D00"/>
               <rect width="5" height="1" y="2" fill="#FFCE00"/>
@@ -498,6 +479,16 @@
           <h3 class="lang-name">Deutsch</h3>
           <p class="lang-desc">Pressemappen & Richtlinien</p>
         </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Illustration finale élégante -->
+  <section style="padding:60px 0">
+    <div class="container">
+      <div style="max-width:800px;margin:0 auto;position:relative;border-radius:24px;overflow:hidden;aspect-ratio:16/9;box-shadow:0 16px 48px rgba(37,99,235,.2)">
+        <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=90" alt="Remote collaboration" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(37,99,235,.2),transparent 60%)"></div>
       </div>
     </div>
   </section>
@@ -676,7 +667,7 @@
       <div class="cta-content">
         <h2 class="cta-title">Need More Info? 📧</h2>
         <p class="cta-text">Our press team responds within 24 hours</p>
-        <button type="button" onclick="openModal(event)" class="hero-cta hero-cta-secondary js-open-press-modal" style="background:#fff;color:var(--primary);border:0">
+        <button type="button" class="hero-cta hero-cta-secondary js-open-press-modal" style="background:#fff;color:var(--primary);border:0">
           <span>Contact Press Team</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
@@ -718,7 +709,7 @@
           <div style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--accent))">📧</div>
           <h3 class="modal-title">Press Contact</h3>
         </div>
-        <button onclick="closeModal()" class="modal-close js-close-press-modal" aria-label="Close">×</button>
+        <button type="button" class="modal-close js-close-press-modal" aria-label="Close">×</button>
       </div>
 
       <div class="form-container">
@@ -848,10 +839,13 @@
 
     /* ========== MODAL MANAGEMENT ========== */
     window.openModal = function(ev){
-      try{ev&&ev.preventDefault&&ev.preventDefault()}catch(_){}
-      try{ev&&ev.stopPropagation&&ev.stopPropagation()}catch(_){}
+      console.log('openModal appelé');
+      try{ev&&ev.preventDefault&&ev.preventDefault()}catch(_){console.log('preventDefault error')}
+      try{ev&&ev.stopPropagation&&ev.stopPropagation()}catch(_){console.log('stopPropagation error')}
       const m=document.getElementById('contactModal');
+      console.log('Modal trouvé:', m);
       if(m){
+        console.log('Ouverture du modal...');
         m.classList.remove('hidden');
         document.body.style.overflow='hidden';
         if(typeof autoGuessDialCode==='function')autoGuessDialCode();
@@ -860,6 +854,8 @@
           const first=m.querySelector('input:not([type="hidden"])');
           if(first)first.focus();
         },100);
+      } else {
+        console.error('Modal contactModal non trouvé!');
       }
     };
     

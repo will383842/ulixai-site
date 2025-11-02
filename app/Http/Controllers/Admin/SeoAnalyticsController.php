@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Services\Seo\BingWebmasterClient;
 use App\Services\Seo\OpenPageRankClient;
+use App\Services\Analytics\GA4DataClient;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SeoAnalyticsController extends Controller
 {
@@ -32,8 +34,21 @@ class SeoAnalyticsController extends Controller
             'refreshed_at' => null,
         ]);
 
+        // Optionnel : tendance visiteurs GA4 (fail-safe : retourne [] si non configuré)
+        try {
+            $ga = new GA4DataClient();
+            $visitorsTrend = $ga->activeUsersByDate(
+                now()->subDays(29)->toDateString(),
+                now()->toDateString()
+            );
+        } catch (\Throwable $e) {
+            $visitorsTrend = [];
+            Log::warning('SEO/GA4 trend error: ' . $e->getMessage());
+        }
+
         return view('admin.seo-analytics.index', [
-            'metrics' => $metrics,
+            'metrics'        => $metrics,
+            'visitorsTrend'  => $visitorsTrend,
         ]);
     }
 
@@ -78,14 +93,24 @@ class SeoAnalyticsController extends Controller
     /** JSON: résumé Bing (appel optionnel) */
     public function bingSummary(BingWebmasterClient $bing)
     {
-        return response()->json($bing->summarizeLinkCounts());
+        try {
+            return response()->json($bing->summarizeLinkCounts());
+        } catch (\Throwable $e) {
+            Log::warning('SEO/Bing summary error: '.$e->getMessage());
+            return response()->json(['connected' => false, 'error' => $e->getMessage()], 200);
+        }
     }
 
     /** JSON: PageRank pour le domaine courant (appel optionnel) */
     public function oprSummary(OpenPageRankClient $opr, Request $request)
     {
-        $domain = $request->get('domain') ?: $this->getDomainHost();
-        return response()->json(['domain' => $domain, 'rank' => $opr->getPageRank($domain)]);
+        try {
+            $domain = $request->get('domain') ?: $this->getDomainHost();
+            return response()->json(['domain' => $domain, 'rank' => $opr->getPageRank($domain)]);
+        } catch (\Throwable $e) {
+            Log::warning('SEO/OPR summary error: '.$e->getMessage());
+            return response()->json(['domain' => null, 'rank' => null, 'error' => $e->getMessage()], 200);
+        }
     }
 
     /** JSON: pages à indexer (placeholder non bloquant) */
@@ -115,6 +140,41 @@ class SeoAnalyticsController extends Controller
         ]);
     }
 
+    /** Export CSV (visiteurs GA4) — non bloquant si GA4 inactif */
+    public function export(Request $request)
+    {
+        $section = $request->get('section','visitors');
+        $filename = "seo_export_{$section}_" . now()->format('Ymd_His') . ".csv";
+
+        return new StreamedResponse(function () use ($section) {
+            $out = fopen('php://output','w');
+
+            if ($section === 'visitors') {
+                try {
+                    $ga = new GA4DataClient();
+                    $data = $ga->activeUsersByDate(
+                        now()->subDays(29)->toDateString(),
+                        now()->toDateString()
+                    );
+                    fputcsv($out, ['date','active_users']);
+                    foreach ($data as $d => $v) {
+                        fputcsv($out, [$d, $v]);
+                    }
+                } catch (\Throwable $e) {
+                    fputcsv($out, ['error', $e->getMessage()]);
+                }
+            } else {
+                fputcsv($out, ['info','Section not supported']);
+            }
+
+            fclose($out);
+        }, 200, [
+            'Content-Type'        => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
+    }
+
+    /** Domaine (host) à partir de la config */
     private function getDomainHost(): string
     {
         $url = config('seo.bing.site_url') ?: config('app.url');

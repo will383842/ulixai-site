@@ -1,94 +1,106 @@
 @extends('admin.dashboard.index')
+@section('title', 'SEO & Analytics')
 
-@section('admin-content')
-<div class="px-6 py-6">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-semibold">SEO &amp; Analytics</h1>
-    <button id="refreshSeoBtn"
-            class="inline-flex items-center px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring">
-      Actualiser maintenant
-    </button>
-  </div>
-
-  {{-- States --}}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div class="p-4 rounded-xl border bg-white shadow-sm">
-      <div class="flex items-center justify-between">
-        <h2 class="font-medium text-gray-800">Bing Webmaster</h2>
-        <span class="text-xs px-2 py-1 rounded-full"
-              :class="''">
-          @if(data_get($metrics, 'bing.connected'))
-            <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Connecté</span>
-          @else
-            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Non connecté</span>
-          @endif
-        </span>
-      </div>
-      <div class="mt-3 text-sm text-gray-700">
-        <div>Total liens approx.: <strong>{{ data_get($metrics, 'bing.summary.approxTotalLinks', 0) }}</strong></div>
-        <div>Pages scannées: <strong>{{ data_get($metrics, 'bing.summary.scannedPages', 0) }}</strong></div>
-      </div>
-      <div class="mt-4">
-        <h3 class="text-sm font-semibold text-gray-800 mb-2">Top pages</h3>
-        <ul class="text-sm list-disc list-inside space-y-1 max-h-40 overflow-auto">
-          @forelse(data_get($metrics, 'bing.summary.topPages', []) as $row)
-            <li><a href="{{ $row['url'] ?? '#' }}" target="_blank" class="text-blue-600 hover:underline">{{ $row['url'] ?? '' }}</a>
-              — <span class="text-gray-600">liens: {{ $row['count'] ?? 0 }}</span></li>
-          @empty
-            <li class="text-gray-500">Aucune donnée.</li>
-          @endforelse
-        </ul>
-      </div>
-      @if(data_get($metrics, 'bing.summary.note'))
-        <p class="mt-3 text-xs text-gray-500">{{ data_get($metrics, 'bing.summary.note') }}</p>
-      @endif
-      @if(data_get($metrics, 'bing.error'))
-        <p class="mt-3 text-xs text-red-600">Erreur: {{ data_get($metrics, 'bing.error') }}</p>
-      @endif
+@section('content')
+<div class="container-fluid px-3 py-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Visiteurs — 30 derniers jours (GA4)</h5>
+        <a href="/admin/seo/export?section=visitors" class="small text-decoration-none">Exportateur CSV</a>
     </div>
 
-    <div class="p-4 rounded-xl border bg-white shadow-sm">
-      <div class="flex items-center justify-between">
-        <h2 class="font-medium text-gray-800">Open PageRank</h2>
-        <span class="text-xs px-2 py-1 rounded-full">
-          @if(data_get($metrics, 'opr.connected'))
-            <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Connecté</span>
-          @else
-            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Non connecté</span>
-          @endif
-        </span>
-      </div>
-      <div class="mt-3 text-sm text-gray-700">
-        <div>Score: <strong>{{ data_get($metrics, 'opr.rank', '—') }}</strong></div>
-      </div>
-      @if(data_get($metrics, 'opr.error'))
-        <p class="mt-3 text-xs text-red-600">Erreur: {{ data_get($metrics, 'opr.error') }}</p>
-      @endif
+    <div class="card">
+        <div class="card-body">
+            <canvas id="ga4VisitorsChart" height="88"></canvas>
+            @if(empty($visitorsTrend))
+                <p class="text-muted mt-3 mb-0">Aucune donnée disponible (GA4 inactif ou pas encore de trafic).</p>
+            @endif
+        </div>
     </div>
-  </div>
 
-  <p class="text-xs text-gray-500">Dernier rafraîchissement: {{ data_get($metrics, 'refreshed_at', '—') }}</p>
+    <hr class="my-4"/>
+
+    <div class="row g-3">
+        {{-- Bing summary --}}
+        <div class="col-12 col-lg-6">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Backlinks (Bing)</span>
+                    @if(($metrics['bing']['connected'] ?? false))
+                        <span class="badge bg-success">Connecté</span>
+                    @else
+                        <span class="badge bg-secondary">Hors ligne</span>
+                    @endif
+                </div>
+                <div class="card-body">
+                    @if(!empty($metrics['bing']['summary']))
+                        <pre class="mb-0" style="white-space:pre-wrap">{{ json_encode($metrics['bing']['summary'], JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) }}</pre>
+                    @else
+                        <p class="text-muted mb-0">Connecte l’API Bing Webmaster pour voir le résumé.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        {{-- Open PageRank --}}
+        <div class="col-12 col-lg-6">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Open PageRank</span>
+                    @if(($metrics['opr']['connected'] ?? false))
+                        <span class="badge bg-success">Connecté</span>
+                    @else
+                        <span class="badge bg-secondary">Hors ligne</span>
+                    @endif
+                </div>
+                <div class="card-body">
+                    @if(!is_null($metrics['opr']['rank'] ?? null))
+                        <div class="display-6">{{ $metrics['opr']['rank'] }}</div>
+                        <p class="text-muted mb-0">Rank actuel du domaine.</p>
+                    @else
+                        <p class="text-muted mb-0">Ajoute la clé OPEN_PAGERANK_API_KEY dans .env pour l’afficher.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<script>
-document.getElementById('refreshSeoBtn').addEventListener('click', async () => {
-  try {
-    const res = await fetch('{{ route('admin.seo.refresh') }}', {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        'Accept': 'application/json'
-      }
-    });
-    const data = await res.json();
-    if (data && data.ok) {
-      window.location.reload();
-    } else {
-      alert('Actualisation incomplète.');
-    }
-  } catch (e) {
-    alert('Erreur lors de l\'actualisation.');
-  }
-});
-</script>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function () {
+    const ctx = document.getElementById('ga4VisitorsChart');
+    if (!ctx) return;
+
+    // Données passées par le contrôleur (tableau {YYYY-MM-DD: value})
+    const trend = @json($visitorsTrend ?? []);
+    const labels = Object.keys(trend);
+    const values = Object.values(trend);
+
+    // Si pas de données, on initialise un graph vide (pas d’erreur)
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Visiteurs actifs',
+                data: values,
+                tension: 0.3,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { maxRotation: 0 }, grid: { display: false } },
+                y: { beginAtZero: true }
+            }
+        }
+    });
+})();
+</script>
+@endpush

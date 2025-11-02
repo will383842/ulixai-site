@@ -29,7 +29,7 @@
 @endif
 
     <!-- Admin Navbar -->
- <nav class="bg-white shadow px-6 py-4 flex justify-between items-center">
+ <nav role="navigation" aria-label="Admin header" class="bg-white shadow px-6 py-4 flex justify-between items-center">
   <!-- Left side -->
   <div class="flex items-center gap-3">
     <img src="/images/headerlogo.png" alt="Logo" class="w-10 h-10 object-contain" />
@@ -85,7 +85,7 @@
         <!-- Sidebar -->
         @include('admin.dashboard.sidebar')
         <!-- Main Content Area -->
-        <main class="flex-1 p-2">
+        <main class="flex-1 p-2" role="main" id="main-content" tabindex="-1">
             {{-- Child admin components will load here --}}
             @yield('admin-content')
         </main>

@@ -330,6 +330,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/seo/opr-summary', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'oprSummary'])->name('seo.opr');
 
         // Accounting
+        Route::get('/seo/export', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'export'])->name('seo.export');
+        Route::get('/accounting/export', [\App\Http\Controllers\Admin\AccountingController::class, 'export'])->name('accounting.export');
+
         Route::get('/accounting', [\App\Http\Controllers\Admin\AccountingController::class, 'index'])->name('accounting.index');
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');

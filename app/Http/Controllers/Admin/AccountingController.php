@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\DB;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
@@ -48,5 +51,31 @@ class AccountingController extends Controller
             'payouts' => $payouts,
             'filters' => ['country' => $country, 'currency' => $currency],
         ]);
+    }
+}
+
+    public function export(\Illuminate\Http\Request $request)
+    {
+        $section = $request->get('section','revenue');
+        $filename = "accounting_export_{$section}_" . now()->format('Ymd_His') . ".csv";
+        return new StreamedResponse(function () use ($section) {
+            $out = fopen('php://output','w');
+            if ($section==='revenue') {
+                $rows = DB::table('transactions')->selectRaw('DATE(created_at) as date, SUM(amount_paid) as total')
+                    ->where('status','paid')->where('created_at','>=', now()->subDays(29))
+                    ->groupBy('date')->orderBy('date')->get();
+                fputcsv($out, ['date','total_eur']);
+                foreach ($rows as $r) fputcsv($out, [$r->date, $r->total]);
+            } elseif ($section==='kyc') {
+                $rows = DB::table('service_providers')->selectRaw("DATE(updated_at) as date, SUM(CASE WHEN kyc_status='verified' THEN 1 ELSE 0 END) as verified")
+                    ->where('updated_at','>=', now()->subDays(29))
+                    ->groupBy('date')->orderBy('date')->get();
+                fputcsv($out, ['date','verified']);
+                foreach ($rows as $r) fputcsv($out, [$r->date, $r->verified]);
+            } else {
+                fputcsv($out, ['info','Section not supported']);
+            }
+            fclose($out);
+        }, 200, ['Content-Type'=>'text/csv','Content-Disposition'=>"attachment; filename=\"$filename\""]);
     }
 }

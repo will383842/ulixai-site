@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+use Illuminate\Support\Facades\Cache;
+use App\Services\Analytics\GoogleAnalyticsClient;
 class AdminDashboardController extends Controller
 {
     protected $paymentService;
@@ -70,6 +72,23 @@ class AdminDashboardController extends Controller
         // Recent missions
         $recentMissions = Mission::latest()->limit(5)->get();
 
+        // ---- Extra KPIs (fail-safe) ----
+        try {
+            $seoMetrics = Cache::get('seo.metrics.latest', []);
+            $backlinksTotal = (int) (data_get($seoMetrics, 'bing.summary.approxTotalLinks', 0) ?? 0);
+            $domainAuthority = data_get($seoMetrics, 'opr.rank');
+        } catch (\Throwable $e) {
+            $backlinksTotal = 0;
+            $domainAuthority = null;
+        }
+
+        try {
+            $ga = new GoogleAnalyticsClient();
+            $visitorsThisMonth = $ga->visitorsThisMonth();
+        } catch (\Throwable $e) {
+            $visitorsThisMonth = null;
+        }
+
         return view('admin.dashboard.admin-dashboard', compact(
             'totalUsers',
             'totalProviders',
@@ -84,6 +103,9 @@ class AdminDashboardController extends Controller
             'totalPendingPayouts',
             'recentMissions',
             'newUsersLastMonth',
+            'backlinksTotal',
+            'domainAuthority',
+            'visitorsThisMonth',
         ));
     }
     
