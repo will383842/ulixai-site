@@ -102,12 +102,6 @@
                 </svg>
                 Settings
             </a>
-            <a href="{{ route('admin.bug-reports') }}" class="group flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('admin.bug-reports') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                <svg class="mr-3 h-5 w-5 {{ request()->routeIs('admin.bug-reports') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.73 21a2 2 0 01-3.46 0L3 9l9-7 9 7-8.27 12z"/>
-                </svg>
-                Bug Reports
-            </a>
         </div>
     </nav>
 </aside>

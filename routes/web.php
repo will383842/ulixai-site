@@ -418,7 +418,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/service-fees/{serviceFee}', [ServiceFeesController::class, 'update'])->name('manage-fee.update');
 
         // Bug reports
-        Route::get('/bug-reports', [AdminDashboardController::class, 'showReports'])->name('bug-reports');
+        Route::get('/bug-reports', function(){ return redirect()->route('admin.messages'); })->name('bug-reports');
 
         // Applications
         Route::get('/applications', [AdminDashboardController::class, 'ShowApplications'])->name('applications');
