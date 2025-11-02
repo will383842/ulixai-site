@@ -102,6 +102,21 @@
                 @endif
             </a>
 
+            <!-- Press (inséré sous Messages reçus) -->
+            <a href="{{ route('admin.press') }}" 
+               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.press*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                <!-- Newspaper / Press Icon -->
+                <svg class="mr-3 h-5 w-5 {{ request()->routeIs('admin.press*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500' }}" 
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 20H5a2 2 0 01-2-2V7a2 2 0 012-2h2V3h10v2h2a2 2 0 012 2v11a2 2 0 01-2 2zM7 10h5m-5 4h8" />
+                </svg>
+                Press
+                @if(request()->routeIs('admin.press*'))
+                    <div class="ml-auto w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                @endif
+            </a>
+
             <!-- FIX: balise <a> correcte -->
             <a href="{{ route('admin.transactions') }}"
                class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.transactions') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
@@ -227,21 +242,7 @@
                 @endif
             </a>
 
-            {{-- DEPRECATED (migrated to Messages reçus)
-            <a href="{{ route('admin.press') }}"
-               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.press') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                <svg class="mr-3 h-5 w-5 {{ request()->routeIs('admin.press') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500' }}"
-                     fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19 20H5a2 2 0 01-2-2V7a2 2 0 012-2h2V3h10v2h2a2 2 0 012 2v11a2 2 0 01-2 2zM7 10h5m-5 4h8" />
-                </svg>
-                Press
-                @if(request()->routeIs('admin.press'))
-                    <div class="ml-auto w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
-                @endif
-            </a>
-            --}}
-
+            <!-- Ancien bloc Press supprimé (commentaires Blade retirés) -->
         </div>
 
         <!-- Site Dynamics -->

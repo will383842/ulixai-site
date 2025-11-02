@@ -50,7 +50,7 @@ use App\Http\Controllers\RecruitApplicationController;
 use App\Http\Controllers\PressController;
 
 // ✅ Nouvel onglet Admin “Messages” (agrégateur)
-use App\Http\Controllers\Admin\InboxController;
+use App\Http\Controllers\Admin\MessagesController;
 
 // ========================================
 // 🎯 ROUTES PRIORITAIRES - NE PAS DÉPLACER
@@ -440,11 +440,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('/press/inquiries/{inquiry}/read', [PressController::class, 'markAsRead'])->name('press.inquiries.read');
 
         // ============================
-        // 💬 NOUVEL ONGLET : MESSAGES
+        // 💬 MESSAGES (admin)
         // ============================
-        Route::get('/messages', [InboxController::class, 'index'])->name('messages');
-        Route::get('/messages/list', [InboxController::class, 'list'])->name('messages.list');
-        Route::post('/messages/read', [InboxController::class, 'markAsRead'])->name('messages.read');
+        Route::get('/messages', [MessagesController::class, 'index'])->name('messages');
+        Route::get('/messages/list', [MessagesController::class, 'list'])->name('messages.list');
+        Route::post('/messages/read', [MessagesController::class, 'toggle'])->name('messages.read');
 
         // Terms / FAQ
         Route::get('/terms', [TermsAndConditionsController::class, 'termsIndex'])->name('terms.index');

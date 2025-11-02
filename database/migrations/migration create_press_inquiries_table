@@ -15,8 +15,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('website')->nullable();
             $table->string('email');
-            $table->string('languages_spoken')->nullable();
-            $table->string('how_heard')->nullable();
+            $table->string('lang
+            _heard')->nullable();
             $table->text('message')->nullable();
             $table->boolean('is_read')->default(false);
             $table->timestamps();
