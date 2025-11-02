@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
@@ -334,9 +333,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Accounting
         Route::get('/seo/export', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'export'])->name('seo.export');
         Route::get('/accounting/export', [\App\Http\Controllers\Admin\AccountingController::class, 'export'])->name('accounting.export');
-
         Route::get('/accounting', [\App\Http\Controllers\Admin\AccountingController::class, 'index'])->name('accounting.index');
 
+        // Dashboard
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/transactions', [AdminDashboardController::class, 'transactions'])->name('transactions');
 
@@ -370,7 +369,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/missions/{id}', [MissionAdminController::class, 'show'])->name('missions.show');
         // 🔁 Alias historique (conserve exactement tes routes existantes)
         Route::get('/admin/missions/{id}', [MissionAdminController::class, 'show'])->name('missions.show');
-
         Route::get('/missions/{id}/edit', [MissionAdminController::class, 'edit'])->name('missions.edit');
         Route::get('/missions/{id}/conversation', [MissionAdminController::class, 'conversation'])->name('missions.conversation');
         Route::post('/missions/{id}/edit', [MissionAdminController::class, 'update'])->name('missions.update');
@@ -420,7 +418,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/service-fees/{serviceFee}', [ServiceFeesController::class, 'update'])->name('manage-fee.update');
 
         // Bug reports
-        Route::get('/bug-reports', function(){ return redirect()->route('admin.messages'); })->name('bug-reports');
+        Route::get('/bug-reports', function () { return redirect()->route('admin.messages'); })->name('bug-reports');
 
         // Applications
         Route::get('/applications', [AdminDashboardController::class, 'ShowApplications'])->name('applications');
@@ -483,91 +481,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // ========================================
-// SITEMAPS
+// SITEMAPS (déclarer AVANT le catch-all)
 // ========================================
-
-// Index
-Route::get('/sitemap_index.xml', function () {
-    $xml = <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap><loc>https://ulixai.com/sitemap.xml</loc></sitemap>
-  <sitemap><loc>https://ulixai.com/sitemap-providers.xml</loc></sitemap>
-  <sitemap><loc>https://blog.ulixai.com/sitemap_index.xml</loc></sitemap>
-</sitemapindex>
-XML;
-    return response($xml, 200)->header('Content-Type', 'application/xml');
-});
-
-// Pages statiques
-$urls = [
-            ['loc' => 'https://ulixai.com/',                        'lastmod' => $now, 'priority' => '1.0'],
-            ['loc' => 'https://ulixai.com/become-service-provider', 'lastmod' => $now, 'priority' => '0.8'],
-            ['loc' => 'https://ulixai.com/service-providers',       'lastmod' => $now, 'priority' => '0.8'],
-            ['loc' => 'https://ulixai.com/recruitment',             'lastmod' => $now, 'priority' => '0.7'],
-            ['loc' => 'https://ulixai.com/partnerships',            'lastmod' => $now, 'priority' => '0.7'],
-            ['loc' => 'https://ulixai.com/affiliate',               'lastmod' => $now, 'priority' => '0.7'],
-            ['loc' => 'https://ulixai.com/affiliate/sign-up',       'lastmod' => $now, 'priority' => '0.6'],
-            ['loc' => 'https://ulixai.com/customerreviews',         'lastmod' => $now, 'priority' => '0.6'],
-            ['loc' => 'https://ulixai.com/aboutUS',                 'lastmod' => $now, 'priority' => '0.5'],
-            ['loc' => 'https://ulixai.com/press',                   'lastmod' => $now, 'priority' => '0.5'],
-            ['loc' => 'https://ulixai.com/cookiemanagment',         'lastmod' => $now, 'priority' => '0.5'],
-        ];
-        $body = '';
-        foreach ($urls as $u) {
-            $loc = htmlspecialchars($u['loc'], ENT_XML1);
-            $body .= "<url><loc>{$loc}</loc><lastmod>{$u['lastmod']}</lastmod><changefreq>daily</changefreq><priority>{$u['priority']}</priority></url>";
-        }
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">{$body}</urlset>";
-    });
-
-    return response($xml, 200)->header('Content-Type', 'application/xml')
-                              ->header('Cache-Control', 'public, max-age=3600');
-});
-
-// Providers dynamiques
-Route::get('/sitemap-providers.xml', function () {
-    $xml = Cache::remember('sitemap.providers', 3600, function () {
-        $candidates = [
-            ['table' => 'service_providers', 'slug' => 'slug', 'updated' => 'updated_at', 'public' => 'is_public'],
-            ['table' => 'providers',         'slug' => 'slug', 'updated' => 'updated_at', 'public' => 'is_public'],
-        ];
-        $src = null;
-        foreach ($candidates as $c) {
-            if (Schema::hasTable($c['table']) && Schema::hasColumn($c['table'], $c['slug'])) {
-                $src = $c; break;
-            }
-        }
-        if (!$src) {
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"></urlset>";
-        }
-
-        $q = DB::table($src['table'])->select([$src['slug'], $src['updated']]);
-        if (!empty($src['public']) && Schema::hasColumn($src['table'], $src['public'])) {
-            $q->where($src['public'], 1);
-        }
-        if (Schema::hasColumn($src['table'], 'id')) {
-            $q->orderBy('id');
-        }
-
-        $body = '';
-        $q->chunk(1000, function ($rows) use (&$body, $src) {
-            foreach ($rows as $r) {
-                $slug    = $r->{$src['slug']} ?? null;
-                $updated = $r->{$src['updated']} ?? null;
-                if (!$slug) continue;
-                $loc = htmlspecialchars(url('/provider/'.$slug), ENT_XML1);
-                $lastmod = $updated ? \Illuminate\Support\Carbon::parse($updated)->toAtomString() : now()->toAtomString();
-                $body .= "<url><loc>{$loc}</loc><lastmod>{$lastmod}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>";
-            }
-        });
-
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">{$body}</urlset>";
-    });
-
-    return response($xml, 200)->header('Content-Type', 'application/xml')
-                              ->header('Cache-Control', 'public, max-age=3600');
-});
+Route::get('/sitemap_index.xml',     [SitemapController::class, 'index'])->name('sitemaps.index');
+Route::get('/sitemap.xml',           [SitemapController::class, 'static'])->name('sitemaps.static');
+Route::get('/sitemap-providers.xml', [SitemapController::class, 'providers'])->name('sitemaps.providers');
 
 // ========================================
 // CONVERSATION REPORT (Auth)
@@ -584,11 +502,4 @@ Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('review.s
 // ⚠️ CATCH-ALL (garder en dernier)
 // ========================================
 Route::get('/{slug?}', [PageController::class, 'show'])
-    ->where('slug', '^(?!provider|reviews).*$');
-
-// ========================================
-// SITEMAPS
-// ========================================
-Route::get('/sitemap_index.xml',    [SitemapController::class, 'index'])->name('sitemaps.index');
-Route::get('/sitemap.xml',          [SitemapController::class, 'static'])->name('sitemaps.static');
-Route::get('/sitemap-providers.xml',[SitemapController::class, 'providers'])->name('sitemaps.providers');
+    ->where('slug', '^(?!provider|reviews|sitemap|sitemap_index\\.xml).*$');

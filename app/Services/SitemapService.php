@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Carbon\Carbon;
+
+class SitemapService
+{
+    public function buildIndex(): string
+    {
+        $xml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap><loc>https://ulixai.com/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://ulixai.com/sitemap-providers.xml</loc></sitemap>
+  <sitemap><loc>https://blog.ulixai.com/sitemap_index.xml</loc></sitemap>
+</sitemapindex>
+XML;
+        return $xml;
+    }
+
+    public function buildStatic(): string
+    {
+        return Cache::remember('sitemap.static', 3600, function () {
+            $now = now()->toAtomString();
+            $urls = [
+                ['loc' => 'https://ulixai.com/',                        'priority' => '1.0'],
+                ['loc' => 'https://ulixai.com/become-service-provider', 'priority' => '0.8'],
+                ['loc' => 'https://ulixai.com/service-providers',       'priority' => '0.8'],
+                ['loc' => 'https://ulixai.com/recruitment',             'priority' => '0.7'],
+                ['loc' => 'https://ulixai.com/partnerships',            'priority' => '0.7'],
+                ['loc' => 'https://ulixai.com/affiliate',               'priority' => '0.7'],
+                ['loc' => 'https://ulixai.com/affiliate/sign-up',       'priority' => '0.6'],
+                ['loc' => 'https://ulixai.com/customerreviews',         'priority' => '0.6'],
+                ['loc' => 'https://ulixai.com/aboutUS',                 'priority' => '0.5'],
+                ['loc' => 'https://ulixai.com/press',                   'priority' => '0.5'],
+                ['loc' => 'https://ulixai.com/cookiemanagment',         'priority' => '0.5'],
+            ];
+
+            $body = '';
+            foreach ($urls as $u) {
+                $loc = htmlspecialchars($u['loc'], ENT_XML1);
+                $lastmod = htmlspecialchars($now, ENT_XML1);
+                $priority = htmlspecialchars($u['priority'], ENT_XML1);
+                $body .= "<url><loc>{$loc}</loc><lastmod>{$lastmod}</lastmod><changefreq>weekly</changefreq><priority>{$priority}</priority></url>";
+            }
+
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">{$body}</urlset>";
+        });
+    }
+
+    public function buildProviders(): string
+    {
+        return Cache::remember('sitemap.providers', 3600, function () {
+            $candidates = [
+                ['table' => 'service_providers', 'slug' => 'slug', 'updated' => 'updated_at', 'public' => 'is_public'],
+                ['table' => 'providers',         'slug' => 'slug', 'updated' => 'updated_at', 'public' => 'is_public'],
+            ];
+
+            $src = null;
+            foreach ($candidates as $c) {
+                if (Schema::hasTable($c['table']) && Schema::hasColumn($c['table'], $c['slug'])) {
+                    $src = $c; break;
+                }
+            }
+
+            if (!$src) {
+                return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"></urlset>";
+            }
+
+            $q = DB::table($src['table'])->select([$src['slug'], $src['updated']]);
+
+            if (!empty($src['public']) && Schema::hasColumn($src['table'], $src['public'])) {
+                $q->where($src['public'], 1);
+            }
+            if (Schema::hasColumn($src['table'], 'id')) {
+                $q->orderBy('id');
+            }
+
+            $body = '';
+            $q->chunk(1000, function ($rows) use (&$body, $src) {
+                foreach ($rows as $r) {
+                    $slug    = $r->{$src['slug']} ?? null;
+                    $updated = $r->{$src['updated']} ?? null;
+                    if (!$slug) continue;
+
+                    $loc = htmlspecialchars(url('/provider/'.$slug), ENT_XML1);
+                    $lastmod = $updated ? Carbon::parse($updated)->toAtomString() : now()->toAtomString();
+                    $body .= "<url><loc>{$loc}</loc><lastmod>{$lastmod}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>";
+                }
+            });
+
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">{$body}</urlset>";
+        });
+    }
+}
