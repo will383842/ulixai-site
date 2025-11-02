@@ -55,4 +55,40 @@ class SeoAnalyticsController extends Controller
         $domain = $request->get('domain') ?: (parse_url(config('seo.bing.site_url') ?? config('app.url'), PHP_URL_HOST));
         return response()->json($opr->getPageRank($domain));
     }
+
+
+    public function gscIssues(Request $request)
+    {
+        $site = config('seo.gsc.site_url');
+        return response()->json([
+            'connected' => !empty($site),
+            'site_url'  => $site,
+            'issues'    => [],
+            'note'      => 'GSC non branché côté API; affichage statut uniquement.',
+        ]);
+
+    }
+
+
+    public function pagesToIndex(Request $request)
+    {
+        return response()->json([
+            'connected' => true,
+            'items'     => [],
+            'note'      => 'Logique de détection à implémenter (sitemap/queue/indexNow).',
+        ]);
+
+    }
+
+
+    public function backlinks(Request $request)
+    {
+        $metrics = \Cache::get('seo.metrics.latest');
+        return response()->json([
+            'connected' => (bool) ($metrics['bing']['connected'] ?? false),
+            'summary'   => $metrics['bing']['summary'] ?? [],
+            'note'      => 'Résumé basé sur cache Bing GetLinkCounts.',
+        ]);
+
+    }
 }

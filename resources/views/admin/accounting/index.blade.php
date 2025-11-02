@@ -7,11 +7,11 @@
   <form method="get" class="flex flex-wrap items-end gap-3 mb-6">
     <div>
       <label class="block text-xs text-gray-500">Pays</label>
-      <input type="text" name="country" value="{{ $filters['country'] }}" class="border rounded px-3 py-2" placeholder="FR, US, ...">
+      <input type="text" name="country" value="{{ $filters['country'] ?? '' }}" class="border rounded px-3 py-2" placeholder="FR, US, ...">
     </div>
     <div>
       <label class="block text-xs text-gray-500">Devise</label>
-      <input type="text" name="currency" value="{{ $filters['currency'] }}" class="border rounded px-3 py-2" placeholder="eur, usd, ...">
+      <input type="text" name="currency" value="{{ $filters['currency'] ?? '' }}" class="border rounded px-3 py-2" placeholder="eur, usd, ...">
     </div>
     <button class="px-4 py-2 border rounded">Filtrer</button>
   </form>
