@@ -319,6 +319,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     Route::middleware(['auth:admin', AdminAuthenticate::class])->group(function () {
+        // SEO & Analytics
+        Route::get('/seo', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'index'])->name('seo.index');
+        Route::get('/seo/gsc-issues', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'gscIssues'])->name('seo.gscIssues');
+        Route::get('/seo/pages-to-index', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'pagesToIndex'])->name('seo.pagesToIndex');
+        Route::get('/seo/backlinks', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'backlinks'])->name('seo.backlinks');
+        // ➕ Ajouts demandés
+        Route::post('/seo/refresh', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'refresh'])->name('seo.refresh');
+        Route::get('/seo/bing-summary', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'bingSummary'])->name('seo.bing');
+        Route::get('/seo/opr-summary', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'oprSummary'])->name('seo.opr');
+
+        // Accounting
+        Route::get('/accounting', [\App\Http\Controllers\Admin\AccountingController::class, 'index'])->name('accounting.index');
+
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/transactions', [AdminDashboardController::class, 'transactions'])->name('transactions');
 

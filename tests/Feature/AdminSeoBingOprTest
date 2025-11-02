@@ -1,0 +1,49 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
+
+class AdminSeoBingOprTest extends TestCase
+{
+    /** @test */
+    public function admin_seo_refresh_returns_json_when_configured()
+    {
+        // Fake APIs
+        Http::fake([
+            'ssl.bing.com/*' => Http::response([
+                'd' => [
+                    'Links' => [
+                        ['Url' => 'https://ulixai.com/page-a', 'Count' => 5],
+                        ['Url' => 'https://ulixai.com/page-b', 'Count' => 2],
+                    ],
+                    'TotalPages' => 1
+                ]
+            ], 200),
+            'openpagerank.com/*' => Http::response([
+                'status_code' => 200,
+                'response' => [[
+                    'status_code' => 200,
+                    'page_rank_decimal' => 5.67,
+                    'page_rank_integer' => 6,
+                    'rank' => '123456',
+                    'domain' => 'ulixai.com'
+                ]]
+            ], 200),
+        ]);
+
+        config()->set('seo.bing.api_key', 'TESTKEY');
+        config()->set('seo.bing.site_url', 'https://ulixai.com/');
+        config()->set('seo.openpagerank.api_key', 'OPRKEY');
+
+        // You may need to adapt auth for your app. Replace with your admin user helper if necessary.
+        $this->withoutMiddleware();
+
+        $res = $this->post(route('admin.seo.refresh'));
+
+        $res->assertStatus(200)->assertJsonStructure([
+            'generated_at','domain','bing'=>['connected','summary'=>['approxTotalLinks','scannedPages','topPages']],'openpagerank'=>['connected']
+        ]);
+    }
+}

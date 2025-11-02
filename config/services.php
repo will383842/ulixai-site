@@ -33,9 +33,33 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+
     'google' => [
         'client_id'     => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => env('GOOGLE_REDIRECT_URI'),
+    ],
+
+    // ----------------------------
+    // Analytics / SEO integrations
+    // ----------------------------
+    'ga4' => [
+        'property_id' => env('GA4_PROPERTY_ID'),
+    ],
+
+    'gtm' => [
+        'container_id' => env('GTM_CONTAINER_ID'),
+    ],
+
+    'gsc' => [
+        // For GSC Domain property: "sc-domain:ulixai.com"
+        // For URL-prefix property: "https://ulixai.com/"
+        'site_url' => env('GSC_SITE_URL'),
+    ],
+
+    'backlinks' => [
+        // Example values: ahrefs | semrush | majestic | bing
+        'provider' => env('BACKLINKS_PROVIDER'),
+        'api_key'  => env('BACKLINKS_API_KEY'),
     ],
 ];

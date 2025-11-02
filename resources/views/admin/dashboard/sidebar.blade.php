@@ -306,5 +306,39 @@
                 @endif
             </a>
         </div>
-    </nav>
+    <div class="space-y-1 mt-8">
+    <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">SEO & Analytics</p>
+    <a href="{{ route('admin.seo.index') }}"
+       class="group flex items-center px-3 py-2.5 text-sm rounded-md transition
+              {{ request()->routeIs('admin.seo.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+        <svg class="mr-3 h-5 w-5 {{ request()->routeIs('admin.seo.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500' }}"
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 3a8 8 0 018 8v1a4 4 0 01-4 4H9l-4 4v-4H5a6 6 0 01-6-6 8 8 0 0112-7z"/>
+        </svg>
+        SEO & Analytics
+        @if(request()->routeIs('admin.seo.*'))
+            <div class="ml-auto w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+        @endif
+    </a>
+</div>
+
+<div class="space-y-1 mt-8">
+    <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Comptabilité</p>
+    <a href="{{ route('admin.accounting.index') }}"
+       class="group flex items-center px-3 py-2.5 text-sm rounded-md transition
+              {{ request()->routeIs('admin.accounting.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+        <svg class="mr-3 h-5 w-5 {{ request()->routeIs('admin.accounting.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500' }}"
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 10h18M7 15h10m-8 4h6M5 6h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z"/>
+        </svg>
+        Comptabilité
+        @if(request()->routeIs('admin.accounting.*'))
+            <div class="ml-auto w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+        @endif
+    </a>
+</div>
+
+</nav>
 </aside>
