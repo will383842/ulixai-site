@@ -2176,24 +2176,26 @@
     <div class="max-w-7xl mx-auto">
       <div class="relative">
         <div class="category-scroll flex gap-12 overflow-x-auto pb-4 justify-center items-center" id="categoryContainer">
-          @foreach($category as $index => $cat)
-          <div onclick="openHelpPopup()" class="category-bubble" 
-               style="background: {{ 
-                 $index % 9 == 0 ? 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' : 
-                 ($index % 9 == 1 ? 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)' : 
-                 ($index % 9 == 2 ? 'linear-gradient(135deg, #A855F7 0%, #9333EA 100%)' : 
-                 ($index % 9 == 3 ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' : 
-                 ($index % 9 == 4 ? 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)' : 
-                 ($index % 9 == 5 ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : 
-                 ($index % 9 == 6 ? 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)' : 
-                 ($index % 9 == 7 ? 'linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)' : 
-                 'linear-gradient(135deg, #EC4899 0%, #DB2777 100%)'))))))) }};"
-               data-aos="zoom-in" 
-               data-aos-delay="{{ $index * 30 }}"
-               data-aos-duration="600">
-            <span>{{ $cat->name }}</span>
-          </div>
-          @endforeach
+@foreach($category as $cat)
+    @if($cat && is_object($cat) && isset($cat->name))
+        <div onclick="openHelpPopup()" class="category-bubble"
+             style="background: {{
+               $loop->index % 9 == 0 ? 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' :
+               ($loop->index % 9 == 1 ? 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)' :
+               ($loop->index % 9 == 2 ? 'linear-gradient(135deg, #A855F7 0%, #9333EA 100%)' :
+               ($loop->index % 9 == 3 ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' :
+               ($loop->index % 9 == 4 ? 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)' :
+               ($loop->index % 9 == 5 ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' :
+               ($loop->index % 9 == 6 ? 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)' :
+               ($loop->index % 9 == 7 ? 'linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)' :
+               'linear-gradient(135deg, #EC4899 0%, #DB2777 100%)'))))))) }};"
+             data-aos="zoom-in"
+             data-aos-delay="{{ $loop->index * 30 }}"
+             data-aos-duration="600">
+          <span>{{ $cat->name }}</span>
+        </div>
+    @endif
+@endforeach
         </div>
 
         <!-- Navigation Arrows -->

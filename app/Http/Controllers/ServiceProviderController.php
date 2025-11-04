@@ -31,14 +31,18 @@ class ServiceProviderController extends Controller
     }
     
     public function serviceproviders(Request $request) {
-        // Fetch all service providers with their user info
-        if($request->input('providers')) {
-            $providers = ServiceProvider::with('user')->whereIn('slug', json_decode($request->input('providers')))->latest()->get();
-        } else {
-            $providers = ServiceProvider::with('user')->latest()->get();
-        }
-        return view('dashboard.provider.service-providers', compact('providers'));
+    // Fetch all service providers with their user info
+    if($request->input('providers')) {
+        $providers = ServiceProvider::with('user')->whereIn('slug', json_decode($request->input('providers')))->latest()->get();
+    } else {
+        $providers = ServiceProvider::with('user')->latest()->get();
     }
+    
+    // ✅ AJOUT : Récupération des catégories pour la vue
+    $category = Category::all();
+    
+    return view('dashboard.provider.service-providers', compact('providers', 'category'));
+}
 
     public function providerDetails(Request $request)
     {

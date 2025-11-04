@@ -1,5 +1,105 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/private/
+Disallow: /user/
+Disallow: /account/
+Disallow: /*.json$
+Disallow: /*?*session=
+Disallow: /*?*token=
+Disallow: /search?
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /login
+Disallow: /register
+Disallow: /password/
 
+# Allow CSS and JS for proper rendering
+Allow: /css/
+Allow: /js/
+Allow: *.css
+Allow: *.js
+
+# Sitemaps
 Sitemap: https://ulixai.com/sitemap_index.xml
 Sitemap: https://blog.ulixai.com/sitemap_index.xml
+
+# Google Bot - No crawl delay
+User-agent: Googlebot
+Crawl-delay: 0
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /user/
+
+# Google Image Bot
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /uploads/
+
+# Bing Bot - Slight delay
+User-agent: Bingbot
+Crawl-delay: 1
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+
+# Yandex
+User-agent: Yandex
+Crawl-delay: 2
+Allow: /
+
+# Baidu
+User-agent: Baiduspider
+Crawl-delay: 2
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+# Block aggressive crawlers
+User-agent: PetalBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+# Social Media Bots (Allow for previews)
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+```

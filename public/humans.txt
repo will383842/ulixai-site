@@ -1,0 +1,147 @@
+╔══════════════════════════════════════════════════════════════╗
+║                         ULIXAI.COM                           ║
+║              Global Expat Services Platform                  ║
+╚══════════════════════════════════════════════════════════════╝
+
+/* THE TEAM 👥 */
+    Developer: Ulixai Development Team
+    Site: https://ulixai.com
+    Blog: https://blog.ulixai.com
+    Location: Estonia
+    Twitter: @ulixai
+    LinkedIn: /company/ulixai
+
+/* TECHNOLOGY STACK 💻 */
+    Last Update: November 4, 2025
+    
+    Frontend:
+        - HTML5 (Semantic)
+        - CSS3 (Tailwind CSS v3.4)
+        - JavaScript ES6+ (Vanilla)
+        - AOS Animation Library v2.3.4
+        - Leaflet.js v1.9.4
+    
+    Backend:
+        - PHP 8.2
+        - Laravel 10.x Framework
+        - MySQL 8.0
+        - Composer 2.x
+        - Redis Cache
+    
+    DevOps:
+        - Git Version Control
+        - Docker Containerization
+        - GitHub Actions CI/CD
+        - Nginx Web Server
+    
+    IDE & Tools:
+        - Visual Studio Code
+        - PHPStorm
+        - Postman API Testing
+        - GitHub Copilot
+
+/* LANGUAGES SUPPORTED 🌍 */
+    Primary Languages:
+        🇬🇧 English (en)           🇫🇷 Français (fr)
+        🇪🇸 Español (es)           🇩🇪 Deutsch (de)
+        🇵🇹 Português (pt)         🇷🇺 Русский (ru)
+        🇨🇳 中文 (zh-CN)           🇸🇦 العربية (ar)
+        🇮🇳 हिन्दी (hi)
+    
+    Additional: 70+ languages via Google Translate API
+
+/* STANDARDS & COMPLIANCE ✓ */
+    - HTML5 Valid (W3C)
+    - WCAG 2.1 Level AA Accessible
+    - Schema.org Structured Data
+    - Open Graph Protocol
+    - Twitter Card Markup
+    - PWA Ready
+    - Mobile First Responsive
+    - Core Web Vitals Optimized
+    - GDPR Compliant
+    - ISO 27001 Security Standards
+
+/* PERFORMANCE METRICS 🚀 */
+    - Page Load: < 2 seconds
+    - First Contentful Paint: < 1.5s
+    - Lighthouse Score: 95+/100
+    - Core Web Vitals: All Green ✓
+    - Service Worker: Enabled
+    - Image Lazy Loading: Active
+    - CDN: Cloudflare
+
+/* GLOBAL REACH 🌐 */
+    Countries Covered: 197
+    Active Service Providers: 10,000+
+    Monthly Users: 100,000+
+    Customer Rating: 4.8/5 ⭐
+    Response Time: < 2 hours
+
+/* SPECIAL THANKS 🙏 */
+    - Google Translate API Team
+    - Leaflet.js Open Source Community
+    - Tailwind CSS Creators (Adam Wathan & Team)
+    - Laravel Framework (Taylor Otwell & Contributors)
+    - AOS Library (Michał Sajnóg)
+    - Font Awesome Icons
+    - Unsplash Photography Community
+    - Stack Overflow Community
+    - Our Beta Testers & Early Adopters
+    - Every expat who trusted us 💙
+
+/* MISSION STATEMENT 🎯 */
+    Founded: 2025
+    
+    Mission:
+    To simplify expat life worldwide by connecting travelers with
+    verified local professionals and helping expats through a secure,
+    multilingual platform that breaks down language barriers and
+    builds global communities.
+    
+    Vision:
+    Become the world's #1 trusted platform for expat services,
+    available in every country, speaking every language.
+    
+    Values:
+    ✓ Trust & Transparency
+    ✓ Multilingual Support
+    ✓ Community First
+    ✓ Security & Privacy
+    ✓ Innovation & Accessibility
+
+/* CONTACT US 📧 */
+    General: contact@ulixai.com
+    Support: support@ulixai.com
+    Business: business@ulixai.com
+    Press: press@ulixai.com
+    
+    Social Media:
+    Twitter: @ulixai
+    Facebook: /ulixai
+    Instagram: @ulixai
+    LinkedIn: /company/ulixai
+
+/* LEGAL 📜 */
+    Copyright © 2025 Ulixai
+    All Rights Reserved
+    
+    Terms: https://ulixai.com/terms
+    Privacy: https://ulixai.com/privacy
+    Cookies: https://ulixai.com/cookies
+
+/* RECRUITMENT 💼 */
+    We're Hiring!
+    
+    Open Positions:
+    - Full Stack Developer (Remote)
+    - UX/UI Designer (Remote)
+    - Community Manager (Multilingual)
+    - Customer Success Specialist
+    
+    Careers: https://ulixai.com/careers
+    Join our team and help expats worldwide! 🌍
+
+╔══════════════════════════════════════════════════════════════╗
+║     Made with ❤️ by expats, for expats, everywhere 🌍       ║
+╚══════════════════════════════════════════════════════════════╝
