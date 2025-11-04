@@ -603,7 +603,18 @@
         img {
             height: auto;
         }
-        
+        /* Screen Reader Only - Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
         /* Share button styles */
         #floatingShareBtn {
             position: fixed;
@@ -752,7 +763,15 @@
                     <span class="text-sm font-bold text-red-700 group-hover:text-white uppercase tracking-wide transition-colors">Email</span>
                 </a>
 
-                <button id="copyBtnSlide" class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 rounded-xl p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-2 transition-all duration-200 group" aria-label="Copier le lien">
+                <button 
+    id="copyBtnSlide" 
+    type="button"
+    aria-label="Copier le lien d'affiliation dans le presse-papiers"
+    class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-500 hover:to-purple-600 rounded-xl p-4 border-2 border-purple-200 hover:border-purple-500 flex flex-col items-center gap-2 transition-all duration-200 group"
+>
+    <i class="fas fa-link text-4xl text-purple-600 group-hover:text-white transition-colors" aria-hidden="true"></i>
+    <span class="text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copier</span>
+</button>
                     <i class="fas fa-link text-4xl text-purple-600 group-hover:text-white transition-colors"></i>
                     <span class="text-sm font-bold text-purple-700 group-hover:text-white uppercase tracking-wide transition-colors">Copier</span>
                 </button>
@@ -867,67 +886,85 @@
                     Filtrer les prestataires
                 </h2>
                 <div class="ml-auto">
-                    <button class="reset-filters" onclick="resetFilters()">
-                        <i class="fas fa-redo-alt mr-2"></i>
-                        Réinitialiser
-                    </button>
+                    <button 
+    class="reset-filters" 
+    onclick="resetFilters()"
+    type="button"
+    aria-label="Réinitialiser tous les filtres de recherche"
+>
+    <i class="fas fa-redo-alt mr-2" aria-hidden="true"></i>
+    Réinitialiser
+</button>
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Languages Filter -->
                 <div class="filter-dropdown">
-                    <button class="filter-button" onclick="toggleFilter('languages')">
+                    <button 
+                        id="languagesButton"
+                        class="filter-button" 
+                        onclick="toggleFilter('languages')"
+                        type="button"
+                        aria-label="Filtrer les prestataires par langues parlées"
+                        aria-expanded="false"
+                        aria-controls="languagesMenu"
+                    >
                         <span class="flex items-center gap-2">
-                            <i class="fas fa-language"></i>
+                            <i class="fas fa-language" aria-hidden="true"></i>
                             <span id="languagesLabel">Langues</span>
                         </span>
-                        <i class="fas fa-chevron-down transition-transform" id="languagesIcon"></i>
+                        <i class="fas fa-chevron-down transition-transform" id="languagesIcon" aria-hidden="true"></i>
                     </button>
-                    <div class="filter-menu" id="languagesMenu">
+                    <div class="filter-menu" id="languagesMenu" role="menu">
                         <div class="filter-search">
-                            <i class="fas fa-search"></i>
-                            <input type="text" placeholder="Rechercher une langue..." oninput="filterOptions('languages', this.value)">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <input 
+                                type="text" 
+                                placeholder="Rechercher une langue..." 
+                                oninput="filterOptions('languages', this.value)"
+                                aria-label="Rechercher une langue"
+                            >
                         </div>
                         <div class="filter-options" id="languagesOptions">
-                            <div class="filter-option" onclick="selectFilter('languages', 'fr')">
-                                <span class="flag">🇫🇷</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'fr')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇫🇷</span>
                                 <span>Français</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'en')">
-                                <span class="flag">🇬🇧</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'en')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇬🇧</span>
                                 <span>Anglais</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'es')">
-                                <span class="flag">🇪🇸</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'es')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇪🇸</span>
                                 <span>Espagnol</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'de')">
-                                <span class="flag">🇩🇪</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'de')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇩🇪</span>
                                 <span>Allemand</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'it')">
-                                <span class="flag">🇮🇹</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'it')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇮🇹</span>
                                 <span>Italien</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'pt')">
-                                <span class="flag">🇵🇹</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'pt')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇵🇹</span>
                                 <span>Portugais</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'ar')">
-                                <span class="flag">🇸🇦</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'ar')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇸🇦</span>
                                 <span>Arabe</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'zh')">
-                                <span class="flag">🇨🇳</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'zh')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇨🇳</span>
                                 <span>Chinois</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'ja')">
-                                <span class="flag">🇯🇵</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'ja')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇯🇵</span>
                                 <span>Japonais</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('languages', 'ru')">
-                                <span class="flag">🇷🇺</span>
+                            <div class="filter-option" onclick="selectFilter('languages', 'ru')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇷🇺</span>
                                 <span>Russe</span>
                             </div>
                         </div>
@@ -936,57 +973,70 @@
 
                 <!-- Countries Filter -->
                 <div class="filter-dropdown">
-                    <button class="filter-button" onclick="toggleFilter('countries')">
+                    <button 
+                        id="countriesButton"
+                        class="filter-button" 
+                        onclick="toggleFilter('countries')"
+                        type="button"
+                        aria-label="Filtrer les prestataires par pays"
+                        aria-expanded="false"
+                        aria-controls="countriesMenu"
+                    >
                         <span class="flex items-center gap-2">
-                            <i class="fas fa-globe"></i>
+                            <i class="fas fa-globe" aria-hidden="true"></i>
                             <span id="countriesLabel">Pays</span>
                         </span>
-                        <i class="fas fa-chevron-down transition-transform" id="countriesIcon"></i>
+                        <i class="fas fa-chevron-down transition-transform" id="countriesIcon" aria-hidden="true"></i>
                     </button>
-                    <div class="filter-menu" id="countriesMenu">
+                    <div class="filter-menu" id="countriesMenu" role="menu">
                         <div class="filter-search">
-                            <i class="fas fa-search"></i>
-                            <input type="text" placeholder="Rechercher un pays..." oninput="filterOptions('countries', this.value)">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <input 
+                                type="text" 
+                                placeholder="Rechercher un pays..." 
+                                oninput="filterOptions('countries', this.value)"
+                                aria-label="Rechercher un pays"
+                            >
                         </div>
                         <div class="filter-options" id="countriesOptions">
-                            <div class="filter-option" onclick="selectFilter('countries', 'fr')">
-                                <span class="flag">🇫🇷</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'fr')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇫🇷</span>
                                 <span>France</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'us')">
-                                <span class="flag">🇺🇸</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'us')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇺🇸</span>
                                 <span>États-Unis</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'uk')">
-                                <span class="flag">🇬🇧</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'uk')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇬🇧</span>
                                 <span>Royaume-Uni</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'de')">
-                                <span class="flag">🇩🇪</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'de')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇩🇪</span>
                                 <span>Allemagne</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'es')">
-                                <span class="flag">🇪🇸</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'es')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇪🇸</span>
                                 <span>Espagne</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'it')">
-                                <span class="flag">🇮🇹</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'it')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇮🇹</span>
                                 <span>Italie</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'ca')">
-                                <span class="flag">🇨🇦</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'ca')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇨🇦</span>
                                 <span>Canada</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'au')">
-                                <span class="flag">🇦🇺</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'au')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇦🇺</span>
                                 <span>Australie</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'jp')">
-                                <span class="flag">🇯🇵</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'jp')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇯🇵</span>
                                 <span>Japon</span>
                             </div>
-                            <div class="filter-option" onclick="selectFilter('countries', 'br')">
-                                <span class="flag">🇧🇷</span>
+                            <div class="filter-option" onclick="selectFilter('countries', 'br')" role="menuitem" tabindex="0">
+                                <span class="flag" aria-hidden="true">🇧🇷</span>
                                 <span>Brésil</span>
                             </div>
                         </div>
@@ -995,25 +1045,38 @@
 
                 <!-- Categories Filter -->
                 <div class="filter-dropdown">
-                    <button class="filter-button" onclick="toggleFilter('categories')">
+                    <button 
+                        id="categoriesButton"
+                        class="filter-button" 
+                        onclick="toggleFilter('categories')"
+                        type="button"
+                        aria-label="Filtrer les prestataires par spécialités"
+                        aria-expanded="false"
+                        aria-controls="categoriesMenu"
+                    >
                         <span class="flex items-center gap-2">
-                            <i class="fas fa-tags"></i>
+                            <i class="fas fa-tags" aria-hidden="true"></i>
                             <span id="categoriesLabel">Spécialités</span>
                         </span>
-                        <i class="fas fa-chevron-down transition-transform" id="categoriesIcon"></i>
+                        <i class="fas fa-chevron-down transition-transform" id="categoriesIcon" aria-hidden="true"></i>
                     </button>
-                    <div class="filter-menu" id="categoriesMenu">
+                    <div class="filter-menu" id="categoriesMenu" role="menu">
                         <div class="filter-search">
-                            <i class="fas fa-search"></i>
-                            <input type="text" placeholder="Rechercher une spécialité..." oninput="filterOptions('categories', this.value)">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <input 
+                                type="text" 
+                                placeholder="Rechercher une spécialité..." 
+                                oninput="filterOptions('categories', this.value)"
+                                aria-label="Rechercher une spécialité"
+                            >
                         </div>
                         <div class="filter-options" id="categoriesOptions">
                             @php
                                 $categories = \App\Models\Category::all();
                             @endphp
                             @foreach($categories as $category)
-                            <div class="filter-option" onclick="selectFilter('categories', '{{ $category->id }}')">
-                                <i class="fas fa-briefcase text-primary"></i>
+                            <div class="filter-option" onclick="selectFilter('categories', '{{ $category->id }}')" role="menuitem" tabindex="0">
+                                <i class="fas fa-briefcase text-primary" aria-hidden="true"></i>
                                 <span>{{ $category->name }}</span>
                             </div>
                             @endforeach
@@ -1023,7 +1086,7 @@
             </div>
             
             <!-- Active Filters Display -->
-            <div id="activeFilters" class="mt-4 flex flex-wrap gap-2 hidden">
+            <div id="activeFilters" class="mt-4 flex flex-wrap gap-2 hidden" role="region" aria-label="Filtres actifs">
                 <!-- Active filter badges will be inserted here -->
             </div>
             
@@ -1043,14 +1106,27 @@
                      data-languages="{{ json_encode($provider->languages ?? []) }}"
                      data-country="{{ $provider->country ?? '' }}"
                      data-categories="{{ $provider->services_to_offer ?? '[]' }}">
-                <!-- Avatar -->
-                <div class="provider-avatar">
-                    @if($provider->profile_photo)
-                        <img src="{{ asset($provider->profile_photo) }}" alt="{{ $provider->first_name }} {{ $provider->last_name }}" loading="lazy">
-                    @else
-                        <i class="fas fa-user text-5xl text-white"></i>
-                    @endif
-                </div>
+                <!-- Avatar - VERSION OPTIMISÉE 2025 -->
+<div class="provider-avatar">
+    @if($provider->profile_photo)
+        <img 
+            src="{{ asset($provider->profile_photo) }}" 
+            srcset="{{ asset($provider->profile_photo) }} 1x,
+                    {{ asset(str_replace('.jpg', '@2x.jpg', $provider->profile_photo)) }} 2x"
+            alt="Photo de profil de {{ $provider->first_name }} {{ $provider->last_name }}, prestataire de services {{ $provider->services_to_offer ? json_decode($provider->services_to_offer)[0] ?? 'vérifié' : 'vérifié' }} - Ulixai"
+            width="100"
+            height="100"
+            loading="{{ $loop->index < 6 ? 'eager' : 'lazy' }}"
+            decoding="async"
+            fetchpriority="{{ $loop->index < 3 ? 'high' : 'auto' }}"
+            class="provider-image w-full h-full object-cover rounded-full"
+            onerror="this.onerror=null; this.src='/images/default-avatar.png';"
+        >
+    @else
+        <i class="fas fa-user text-5xl text-white" aria-hidden="true"></i>
+        <span class="sr-only">Photo de profil non disponible pour {{ $provider->first_name }} {{ $provider->last_name }}</span>
+    @endif
+</div>
                 
                 <!-- Verified Badge -->
                 <div class="flex justify-center">
@@ -1124,11 +1200,11 @@
         </div>
     </div>
 
-    @include('dashboard.partials.dashboard-mobile-navbar')
+   @include('dashboard.partials.dashboard-mobile-navbar')
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<!-- Scripts - Optimisés avec defer -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" defer></script>
     
     <script>
         // Toastr Configuration
@@ -2123,9 +2199,9 @@
 
     <div class="max-w-5xl mx-auto text-center relative z-10">
       <!-- Title -->
-      <h1 class="hero-title font-display font-black text-white mb-6 leading-tight text-3xl sm:text-4xl lg:text-6xl" data-aos="fade-up" data-aos-duration="800">
+      <h2 class="hero-title font-display font-black text-white mb-6 leading-tight text-3xl sm:text-4xl lg:text-6xl" data-aos="fade-up" data-aos-duration="800">
         Besoin d'aide à l'étranger ? Envie d'aider des expatriés et voyageurs ?
-      </h1>
+      </h2>
 
       <!-- Subtitle -->
       <p class="text-white/90 text-lg sm:text-xl mb-10 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">

@@ -2,7 +2,7 @@
 ============================================
 🚀 STEP 1 - VERSION COMPACTE 2025/2026
 ============================================
-✨ Design System Blue/Cyan/Teal STRICT
+✨ Design System avec différenciation des profils
 📏 Optimisé pour popup sans scrolle
 🔗 Redirection vers ulixai.com/signup
 ============================================
@@ -12,20 +12,20 @@
   
   <!-- Ambient Background Effects - réduits -->
   <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-    <div class="absolute top-0 -left-4 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-blob"></div>
-    <div class="absolute -bottom-4 right-0 w-48 h-48 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-blob animation-delay-2000"></div>
+    <div class="absolute top-0 -left-4 w-48 h-48 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-blob"></div>
+    <div class="absolute -bottom-4 right-0 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-blob animation-delay-2000"></div>
   </div>
 
-  <!-- Card 1: I Need Help - Compact -->
+  <!-- Card 1: Inscription Multi-Profils (Non-Providers) - Compact -->
   <article class="group relative">
     <a 
       href="/signup"
-      class="modern-card modern-card-primary w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 block"
+      class="modern-card modern-card-users w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-purple-500/50 focus:ring-offset-2 block"
       role="button"
-      aria-label="Request urgent help - Create account">
+      aria-label="Join UlixAI community - Create account">
       
-      <!-- Animated gradient background -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-cyan-500 to-teal-600 animate-gradient"></div>
+      <!-- Animated gradient background - Purple/Pink theme -->
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-fuchsia-500 to-pink-600 animate-gradient"></div>
       
       <!-- Glossy overlay -->
       <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -37,10 +37,9 @@
           <div class="flex items-center gap-3 flex-1 min-w-0">
             <!-- Icon compact -->
             <div class="flex-shrink-0">
-              <div class="w-11 h-11 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg ring-2 ring-white/30 transform group-hover:rotate-12 transition-transform duration-300">
+              <div class="w-11 h-11 bg-gradient-to-br from-purple-500 via-fuchsia-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg ring-2 ring-white/30 transform group-hover:rotate-12 transition-transform duration-300">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M12 8v4m0 4h.01" stroke-linecap="round"/>
+                  <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
             </div>
@@ -48,30 +47,43 @@
             <!-- Title compact -->
             <div class="flex-1 min-w-0">
               <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                I Need Help! 🆘
+                Join Us! 🌟
               </h2>
-              <p class="text-sm font-medium text-blue-100 mt-0.5">
-                Get instant assistance
+              <p class="text-sm font-medium text-purple-100 mt-0.5">
+                Instant registration
               </p>
             </div>
           </div>
           
           <!-- Badge -->
           <span class="flex-shrink-0 px-2.5 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-xs font-bold shadow-lg">
-            ⚡ LIVE
+            ✨ FREE
           </span>
         </div>
         
         <!-- Description compact -->
         <div class="mb-3">
-          <p class="text-sm text-blue-50 leading-relaxed">
-            <strong class="text-white">Verified assistants</strong> in 197 countries ready to help 🌍
+          <p class="text-sm text-purple-50 leading-relaxed">
+            <strong class="text-white">Requesters</strong>, 
+            <strong class="text-white">Influencers</strong>, 
+            <strong class="text-white">Ambassadors</strong>, 
+            <strong class="text-white">Associations</strong>, 
+            <strong class="text-white">YouTubers</strong>, 
+            <strong class="text-white">TikTokers</strong>, 
+            <strong class="text-white">Expats</strong> 🌍✨
+          </p>
+        </div>
+        
+        <!-- Séparateur avec indication -->
+        <div class="mb-3 pb-3 border-b border-white/20">
+          <p class="text-xs text-purple-100 text-center italic">
+            💼 Want to become a <strong>provider</strong>? Click on the blue block 💙
           </p>
         </div>
         
         <!-- CTA Button compact -->
-        <div class="cta-button">
-          <span class="font-bold text-sm">CREATE MY REQUEST</span>
+        <div class="cta-button cta-button-users">
+          <span class="font-bold text-sm">CREATE MY ACCOUNT</span>
           <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
           </svg>
@@ -83,16 +95,17 @@
     </a>
   </article>
 
-  <!-- Card 2: Help Expats - Compact -->
+  <!-- Card 2: Providers (Prestataires) - Compact -->
   <article class="group relative">
     <button 
       type="button"
       id="whiteCardBtn"
-      class="modern-card modern-card-secondary w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
+      class="modern-card modern-card-providers w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 pointer-events-auto cursor-pointer"
       role="button"
-      aria-label="Become a service provider">
+      aria-label="Become a service provider"
+      onclick="(function(){try{if(window.showStep){window.showStep(1);}else{var s1=document.getElementById('step1'),s2=document.getElementById('step2');if(s1&&s2){s1.classList.add('hidden');s2.classList.remove('hidden');}}if(typeof window.updateNavigationButtons==='function'){window.updateNavigationButtons();}if(typeof window.updateHeaderButtons==='function'){window.updateHeaderButtons();}}catch(e){console&&console.warn&&console.warn('whiteCardBtn fallback:',e);}})();">
       
-      <!-- Gradient border effect -->
+      <!-- Gradient border effect - Blue/Cyan theme -->
       <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 animate-gradient-slow"></div>
       <div class="absolute inset-[3px] bg-white rounded-[18px]"></div>
       
@@ -108,8 +121,7 @@
             <div class="flex-shrink-0">
               <div class="w-11 h-11 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg ring-2 ring-blue-200/50 transform group-hover:rotate-12 transition-transform duration-300">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M8 12l2 2 4-4" stroke-linecap="round"/>
+                  <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
             </div>
@@ -117,10 +129,10 @@
             <!-- Title compact -->
             <div class="flex-1 min-w-0">
               <h2 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent tracking-tight">
-                Help Expats! 💰
+                Become a Provider! 💼
               </h2>
               <p class="text-sm font-medium text-gray-600 mt-0.5">
-                Earn income helping
+                Generate income
               </p>
             </div>
           </div>
@@ -134,13 +146,14 @@
         <!-- Description compact -->
         <div class="mb-3">
           <p class="text-sm text-gray-900 leading-relaxed">
-            Transform <strong class="text-blue-600">local expertise</strong> into income ✨
+            Transform your <strong class="text-blue-600">local expertise</strong> into income. 
+            Help expats and earn money! ✨
           </p>
         </div>
         
         <!-- CTA Button compact -->
-        <div class="cta-button-secondary">
-          <span class="font-bold text-sm">START HELPING NOW</span>
+        <div class="cta-button-providers">
+          <span class="font-bold text-sm">BECOME A PROVIDER</span>
           <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
           </svg>
@@ -156,7 +169,7 @@
 
 <style>
 /* ============================================
-   🎨 DESIGN SYSTEM STRICT - COMPACT VERSION
+   🎨 DESIGN SYSTEM - DIFFERENTIATION DES PROFILS
    ============================================ */
 
 /* CARDS - Version compacte */
@@ -170,16 +183,22 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.modern-card-primary {
-  box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.4);
-  border: 2px solid #60a5fa;
+/* Card Users (Purple/Pink) */
+.modern-card-users {
+  box-shadow: 0 15px 35px -10px rgba(168, 85, 247, 0.4);
+  border: 2px solid #c084fc;
 }
 
-.modern-card-secondary {
-  box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.2);
+.modern-card-users:hover {
+  box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.6);
 }
 
-.modern-card:hover {
+/* Card Providers (Blue/Cyan) */
+.modern-card-providers {
+  box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.3);
+}
+
+.modern-card-providers:hover {
   box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.5);
 }
 
@@ -233,8 +252,8 @@
   );
 }
 
-/* CTA BUTTONS - Compact */
-.cta-button {
+/* CTA BUTTONS - Users (Purple theme) */
+.cta-button-users {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -242,18 +261,19 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 14px;
-  color: rgb(37, 99, 235);
-  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.3);
+  color: rgb(147, 51, 234);
+  box-shadow: 0 8px 20px -8px rgba(168, 85, 247, 0.4);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
-.cta-button:hover {
+.cta-button-users:hover {
   transform: translateY(-1px);
-  box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 15px 30px -8px rgba(168, 85, 247, 0.5);
 }
 
-.cta-button-secondary {
+/* CTA BUTTONS - Providers (Blue theme) */
+.cta-button-providers {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -266,7 +286,7 @@
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.cta-button-secondary:hover {
+.cta-button-providers:hover {
   transform: translateY(-1px);
   box-shadow: 0 15px 30px -8px rgba(59, 130, 246, 0.6);
 }
@@ -299,8 +319,8 @@
     border-radius: 16px;
   }
   
-  .cta-button,
-  .cta-button-secondary {
+  .cta-button-users,
+  .cta-button-providers {
     padding: 0.625rem 1rem;
   }
 }
@@ -326,7 +346,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .modern-card-secondary .absolute.inset-\[3px\] {
+  .modern-card-providers .absolute.inset-\[3px\] {
     background: #1a1a1a;
   }
 }
@@ -346,3 +366,25 @@
   contain: layout style paint;
 }
 </style>
+
+<script>
+// ============================================
+// 🛡️ SCRIPT DE SECOURS POUR whiteCardBtn
+// ============================================
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.getElementById('whiteCardBtn');
+  if (!btn) return;
+  
+  // Éviter la double liaison
+  if (btn.__ulixaiBound) return;
+  btn.__ulixaiBound = true;
+  
+  // Attacher le listener de secours
+  btn.addEventListener('click', function(e) {
+    if (window.showStep) {
+      e.preventDefault();
+      window.showStep(1);
+    }
+  });
+});
+</script>

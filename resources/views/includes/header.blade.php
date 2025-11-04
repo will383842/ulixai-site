@@ -1290,8 +1290,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Sur Step 2+ : Afficher les containers
-    if (mobileNavButtons) mobileNavButtons.style.display = '';
-    if (desktopNavButtons) desktopNavButtons.style.display = '';
+    if (mobileNavButtons) { mobileNavButtons.style.display = ''; mobileNavButtons.classList.remove('hidden'); }
+    if (desktopNavButtons) { desktopNavButtons.style.display = ''; desktopNavButtons.classList.remove('hidden'); }
 
     // Masquer le bouton Back uniquement sur Step 1
     if (mobileBackBtn) mobileBackBtn.style.display = isStep1 ? 'none' : 'flex';
