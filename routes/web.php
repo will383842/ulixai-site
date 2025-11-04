@@ -181,7 +181,8 @@ Route::get('/signup', function () {
 Route::get('/affiliate/sign-up', [AffiliateController::Class, 'affliateSignup']);
 
 Route::get('/', [ServiceProviderController::class, 'main']);
-Route::get('/get-providers', [ServiceProviderController::class, 'getProviders']);
+Route::get('/get-providers', [ServiceProviderController::class, 'getProviders']); // ✅ Ancienne (garde-la)
+Route::get('/filter-providers', [ServiceProviderController::class, 'filterProviders']); // 🆕 Nouvelle pour la barre de filtres
 Route::get('/get-subcategories/{categoryId}', [ServiceProviderController::class, 'getSubcategories']);
 
 // ✅ PUBLIC : liste de tous les prestataires (toujours accessible)
