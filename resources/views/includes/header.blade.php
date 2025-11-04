@@ -7,7 +7,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <!-- SEO basics injected -->
-  @php($canonical = url()->current())
+ @php $canonical = url()->current(); @endphp
   <link rel="canonical" href="{{ $canonical }}" />
   <meta name="robots" content="{{ isset($noindex) && $noindex ? 'noindex,nofollow' : 'index,follow' }}">
 
@@ -36,26 +36,37 @@
     });
 
     gtag('config', 'G-418ZTJHNX6');
-  </script>
+    
+ </script>
   <!-- End Google Analytics -->
 
-  <!-- CDN (Free version) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css"> <!-- fixed rel attribute -->
+  <!-- ═══════════════════════════════════════════════════════════
+       📦 EXTERNAL RESOURCES - CDN
+       ═══════════════════════════════════════════════════════════ -->
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Custom Styles - Laravel Asset -->
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
-  <!-- Toastr (single include) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <!-- Toastr Notifications -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <!-- International Telephone Input -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
-  <!-- Google Translate widget script (single load) -->
+  <!-- Google Translate Widget -->
   <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+  <!-- Tailwind CSS CDN (Development Only) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       ⚙️ TAILWIND CONFIGURATION
+       ═══════════════════════════════════════════════════════════ -->
   <script>
     tailwind.config = {
       theme: {
@@ -63,10 +74,9 @@
           animation: {
             'fade-in': 'fadeIn 0.3s ease-out',
             'slide-down': 'slideDown 0.3s ease-out',
+            'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
             'bounce-subtle': 'bounceSubtle 0.6s ease-out',
             'glow': 'glow 2s ease-in-out infinite alternate',
-            'slideUp': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-            'fadeIn': 'fadeIn 0.3s ease-out',
           },
           keyframes: {
             fadeIn: {
@@ -95,158 +105,352 @@
     }
   </script>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       🎨 GLOBAL STYLES
+       ═══════════════════════════════════════════════════════════ -->
   <style>
-  /* hide the top banner frame Google injects */
-  iframe.goog-te-banner-frame { display: none !important; }
-  body > .skiptranslate { display: none !important; }
-  html { margin-top: 0 !important; }
-
-  /* hide the inline toolbar / popup */
-  .goog-te-gadget { height: 0 !important; overflow: hidden !important; }
-  .VIpgJd-ZVi9od-ORHb, 
-  .VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
-  .VIpgJd-ZVi9od-ORHb-OEVmcd,
-  .VIpgJd-ZVi9od-ORHb-hFsbo,
-  .VIpgJd-ZVi9od-l4eHX-hSRGPd {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     🎨 UX 2025/2026 MOBILE MENU - CSS MODERNE
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-  /* GPU Acceleration pour performances */
-  #mobile-menu {
-    will-change: transform, opacity;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
-  /* Smooth transitions */
-  #mobile-menu a { transition: transform 0.2s ease, background-color 0.2s ease; }
-
-  #mobile-menu a:hover {
-    transform: translateX(4px);
-    background-color: rgba(59, 130, 246, 0.05);
-  }
-
-  /* Boutons avec effects */
-  .nav-button {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .nav-button:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); }
-  .nav-button:active { transform: translateY(0); }
-
-  /* Language selector moderne */
-  #languageMenu li { transition: background-color 0.2s ease; }
-  #languageMenu li:hover { background-color: rgba(59, 130, 246, 0.08); }
-
-  /* Hamburger animation */
-  #menu-toggle-top, #menu-toggle { transition: transform 0.2s ease, background-color 0.2s ease; }
-  #menu-toggle-top:active, #menu-toggle:active { transform: scale(0.95); }
-
-  /* Responsive touch targets */
-  @media (max-width: 768px) {
-    button, a { min-height: 44px; min-width: 44px; }
-  }
-
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       🌐 GOOGLE TRANSLATE - HIDE UI ELEMENTS
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    
+    /* Hide top banner frame */
+    iframe.goog-te-banner-frame,
+    .goog-te-banner-frame {
+      display: none !important;
     }
 
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     🍔 HAMBURGER → X ANIMATION (ULTRA VISIBLE)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    /* Hide skiptranslate wrapper */
+    body > .skiptranslate {
+      display: none !important;
+      height: 0 !important;
+      overflow: hidden !important;
+    }
 
-  .hamburger-line { transform-origin: center; }
+    /* Reset Google's margin adjustments */
+    html {
+      margin-top: 0 !important;
+    }
 
-  #menu-toggle-top.menu-active .hamburger-line:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-    background-color: #1f2937;
-  }
-  #menu-toggle-top.menu-active .hamburger-line:nth-child(2) {
-    opacity: 0;
-    transform: scaleX(0);
-  }
-  #menu-toggle-top.menu-active .hamburger-line:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-    background-color: #1f2937;
-  }
+    body {
+      top: 0 !important;
+      position: static !important;
+    }
 
-  /* Effet hover amélioré */
-  #menu-toggle-top:hover .hamburger-line { background-color: #2563eb; }
-  #menu-toggle-top.menu-active:hover .hamburger-line { background-color: #dc2626; }
-  }
+    /* Hide inline toolbar and popup */
+    .goog-te-gadget,
+    #goog-gt-tt,
+    .goog-te-balloon-frame {
+      height: 0 !important;
+      overflow: hidden !important;
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
 
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     ⚡ ULTRA PERFORMANCE OPTIMIZATIONS
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    /* Hide all Google Translate UI elements */
+    .VIpgJd-ZVi9od-ORHb,
+    .VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+    .VIpgJd-ZVi9od-ORHb-OEVmcd,
+    .VIpgJd-ZVi9od-ORHb-hFsbo,
+    .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
 
-  /* will-change dynamique géré par JS - pas ici */
-  #mobile-menu.menu-animating { will-change: transform, opacity; }
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       📱 MOBILE MENU - MODERN UX 2025/2026
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    
+    /* GPU Acceleration for performance */
+    #mobile-menu {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
 
-  /* Containment pour isolation */
-  #mobile-menu { contain: layout style paint; }
+    /* Smooth transitions for links */
+    #mobile-menu a {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
 
-  /* Content visibility pour lazy rendering */
-  #mobile-menu:not(.menu-open) { content-visibility: hidden; } /* requires JS to toggle .menu-open */
+    #mobile-menu a:hover {
+      transform: translateX(4px);
+      background-color: rgba(59, 130, 246, 0.05);
+    }
 
-  /* Réduire les repaints */
-  .nav-button, #mobile-menu a, #languageMenu li { contain: layout style; }
+    /* Navigation buttons with effects */
+    .nav-button {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-  /* GPU layers optimisés */
-  .hamburger-line { will-change: transform, opacity; }
-  #mobileMenuCloseBtn svg { will-change: transform; }
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-button:active {
+      transform: translateY(0);
+    }
+
+    /* Language selector modern styles */
+    #languageMenu li {
+      transition: background-color 0.2s ease;
+    }
+
+    #languageMenu li:hover {
+      background-color: rgba(59, 130, 246, 0.08);
+    }
+
+    /* Hamburger menu animation */
+    #menu-toggle-top,
+    #menu-toggle {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    #menu-toggle-top:active,
+    #menu-toggle:active {
+      transform: scale(0.95);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       🍔 HAMBURGER → X ANIMATION (ULTRA VISIBLE)
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    
+    .hamburger-line {
+      transform-origin: center;
+      transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Active state - Transform to X */
+    #menu-toggle-top.menu-active .hamburger-line:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+      background-color: #1f2937;
+    }
+
+    #menu-toggle-top.menu-active .hamburger-line:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    #menu-toggle-top.menu-active .hamburger-line:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+      background-color: #1f2937;
+    }
+
+    /* Hover effects */
+    #menu-toggle-top:hover .hamburger-line {
+      background-color: #2563eb;
+    }
+
+    #menu-toggle-top.menu-active:hover .hamburger-line {
+      background-color: #dc2626;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       ⚡ PERFORMANCE OPTIMIZATIONS
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    
+    /* Dynamic will-change managed by JS */
+    #mobile-menu.menu-animating {
+      will-change: transform, opacity;
+    }
+
+    /* Containment for isolation */
+    #mobile-menu {
+      contain: layout style paint;
+    }
+
+    /* Content visibility for lazy rendering */
+    #mobile-menu:not(.menu-open) {
+      content-visibility: hidden;
+    }
+
+    /* Reduce repaints */
+    .nav-button,
+    #mobile-menu a,
+    #languageMenu li {
+      contain: layout style;
+    }
+
+    /* Optimized GPU layers */
+    .hamburger-line {
+      will-change: transform, opacity;
+    }
+
+    #mobileMenuCloseBtn svg {
+      will-change: transform;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       📞 INTERNATIONAL TELEPHONE INPUT - CUSTOM STYLES
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    
+    .iti {
+      width: 100%;
+      position: relative;
+    }
+
+    .iti__flag-container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .iti__selected-flag {
+      padding: 0 6px 0 8px;
+      background: transparent;
+      border-radius: 3px 0 0 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .iti__selected-flag:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .iti__arrow {
+      margin-left: 6px;
+      width: 0;
+      height: 0;
+      border-left: 3px solid transparent;
+      border-right: 3px solid transparent;
+      border-top: 4px solid #666;
+      transition: border-top-color 0.2s;
+    }
+
+    .iti__selected-flag:hover .iti__arrow {
+      border-top-color: #333;
+    }
+
+    .iti__country-list {
+      position: absolute;
+      z-index: 1000;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-height: 200px;
+      overflow-y: auto;
+      width: 320px;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+    }
+
+    .iti__country {
+      padding: 10px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.2s;
+      border-radius: 4px;
+      margin: 2px 4px;
+    }
+
+    .iti__country:hover {
+      background-color: #f3f4f6;
+    }
+
+    .iti__country.iti__highlight {
+      background-color: #eff6ff;
+    }
+
+    .iti__flag {
+      margin-right: 8px;
+      width: 20px;
+      height: 15px;
+      background-size: cover;
+      border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .iti__country-name {
+      flex: 1;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    .iti__dial-code {
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .iti input[type="tel"] {
+      padding-left: 80px !important;
+      border-radius: 9999px !important;
+      border: 1px solid #d1d5db !important;
+      transition: all 0.2s ease;
+    }
+
+    .iti input[type="tel"]:focus {
+      outline: none !important;
+      ring: 2px !important;
+      ring-color: #3b82f6 !important;
+      border-color: #3b82f6 !important;
+    }
+
+    .iti input[type="tel"].border-red-500 {
+      border-color: #ef4444 !important;
+    }
+
+    .iti input[type="tel"].border-green-500 {
+      border-color: #10b981 !important;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       📱 RESPONSIVE DESIGN
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    
+    /* Mobile: Touch-friendly targets */
+    @media (max-width: 768px) {
+      button,
+      a {
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      .iti__country-list {
+        width: 280px;
+      }
+
+      .iti input[type="tel"] {
+        padding-left: 70px !important;
+      }
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       ♿ ACCESSIBILITY
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Focus visible for keyboard navigation */
+    *:focus-visible {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
   </style>
 
-  <style>
-    /* Kill the top banner and any wrapper space */
-    iframe.goog-te-banner-frame, .goog-te-banner-frame { display: none !important; }
-
-    /* Google wraps the page with a div.skiptranslate that still takes space */
-    body > .skiptranslate { display: none !important; height: 0 !important; overflow: hidden !important; }
-
-    /* Google sometimes adds a top margin to html */
-    html { margin-top: 0 !important; }
-
-    /* Google sometimes sets body { top: 40px } */
-    body { top: 0 !important; position: static !important; }
-
-    /* Optional: hide floating tooltip/mini-toolbar */
-    #goog-gt-tt, .goog-te-balloon-frame, .goog-te-gadget { display: none !important; }
-  </style>
-
-  <!-- International Telephone Input Custom Styles -->
-  <style>
-  .iti { width: 100%; position: relative; }
-  .iti__flag-container { position: absolute; top: 0; bottom: 0; left: 0; padding: 0 8px; display: flex; align-items: center; z-index: 1; }
-  .iti__selected-flag { padding: 0 6px 0 8px; background: transparent; border-radius: 3px 0 0 3px; cursor: pointer; display: flex; align-items: center; transition: background-color 0.2s; }
-  .iti__selected-flag:hover { background-color: rgba(59, 130, 246, 0.1); }
-  .iti__arrow { margin-left: 6px; width: 0; height: 0; border-left: 3px solid transparent; border-right: 3px solid transparent; border-top: 4px solid #666; transition: border-top-color 0.2s; }
-  .iti__selected-flag:hover .iti__arrow { border-top-color: #333; }
-  .iti__country-list { position: absolute; z-index: 1000; background: white; border: 1px solid #d1d5db; border-radius: 8px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); max-height: 200px; overflow-y: auto; width: 320px; top: 100%; left: 0; margin-top: 4px; }
-  .iti__country { padding: 10px 12px; cursor: pointer; display: flex; align-items: center; transition: background-color 0.2s; border-radius: 4px; margin: 2px 4px; }
-  .iti__country:hover { background-color: #f3f4f6; }
-  .iti__country.iti__highlight { background-color: #eff6ff; }
-  .iti__flag { margin-right: 8px; width: 20px; height: 15px; background-size: cover; border-radius: 2px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
-  .iti__country-name { flex: 1; font-size: 14px; color: #374151; }
-  .iti__dial-code { color: #6b7280; font-size: 13px; font-weight: 500; }
-  .iti input[type="tel"] { padding-left: 80px !important; border-radius: 9999px !important; border: 1px solid #d1d5db !important; transition: all 0.2s ease; }
-  .iti input[type="tel"]:focus { outline: none !important; ring: 2px !important; ring-color: #3b82f6 !important; border-color: #3b82f6 !important; }
-  .iti input[type="tel"].border-red-500 { border-color: #ef4444 !important; }
-  .iti input[type="tel"].border-green-500 { border-color: #10b981 !important; }
-  @media (max-width: 640px) {
-    .iti__country-list { width: 280px; }
-    .iti input[type="tel"] { padding-left: 70px !important; }
-  }
-  </style>
-
+  
   <style>
   /* ============================================
      🎯 MOBILE-FIRST POPUP 2025/2026
@@ -337,7 +541,6 @@
   }
   </style>
 
-  {{-- keep these 2 lines somewhere globally once --}}
   <style>[x-cloak]{display:none !important}</style>
   <script src="https://unpkg.com/alpinejs@3.x.x" defer></script>
   <script>
@@ -655,24 +858,62 @@ function closeComingSoonPopup(){ var el=document.getElementById('sos-popup'); if
     };
   })();
 
-  // Alias rétro-compat
+  // Alias rétro-compat (fin de providerWizard)
   window.goToStep        = window.goToStep        || function(n){ try{ providerWizard.goto((n|0)-1); }catch(e){} };
   window.nextStep        = window.nextStep        || function(){ try{ providerWizard.next(); }catch(e){} };
   window.prevStep        = window.prevStep        || function(){ try{ providerWizard.prev(); }catch(e){} };
   window.refreshWizardUI = window.refreshWizardUI || function(){ try{ providerWizard.update(); }catch(e){} };
 })();
 </script>
+
+<script>
+/* 🔥 PROTECTION ROBUSTE DU MENU DE LANGUE
+   - Ne fait rien si les éléments manquent
+   - Ferme le menu en cliquant à l'extérieur ou sur Escape
+*/
+document.addEventListener('DOMContentLoaded', function() {
+  const langBtn = document.getElementById('langBtn');
+  const langMenu = document.getElementById('langMenu');
+
+  if (!langBtn || !langMenu) return;
+
+  // Toggle dropdown safely
+  langBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    langMenu.classList.toggle('hidden');
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!langBtn.contains(e.target) && !langMenu.contains(e.target)) {
+      langMenu.classList.add('hidden');
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !langMenu.classList.contains('hidden')) {
+      langMenu.classList.add('hidden');
+    }
+  });
+});
+</script>
+
 </head>
+
 @php
+    // récupération sûre de la configuration du site (évite erreur si pas d'enregistrement)
     $settings = \App\Models\SiteSetting::first();
-    $legal = $settings->legal_info ?? [];
+    $legal = $settings ? ($settings->legal_info ?? []) : [];
 @endphp
 
 @php 
   use App\Models\Country;
   $countries = Country::where('status', 1)->get();
 @endphp
+
 <body class="min-h-screen bg-white">
+
 
 <!-- 🚀 Bouton Flèche Retour en Haut -->
 <button id="scrollToTopBtn" aria-label="Retour en haut">
@@ -771,128 +1012,116 @@ function closeComingSoonPopup(){ var el=document.getElementById('sos-popup'); if
         <!-- Hidden Google Translate widget (single instance) -->
         <div id="google_translate_element" class="hidden"></div>
 
-        <script type="text/javascript">
+<script type="text/javascript">
+        // 🔥 VERSION CORRIGÉE - Protégée contre les erreurs
+        document.addEventListener('DOMContentLoaded', function() {
           // Cookie helpers
           function domains() {
-              const host = location.hostname;
-              const naked = host.replace(/^www\./, '');
-              const list = [undefined];
-              if (naked && !/^(\d{1,3}\.){3}\d{1,3}$/.test(naked)) list.push(naked);
-              if (naked !== host) list.push(host);
-              return list;
+            const host = location.hostname;
+            const naked = host.replace(/^www\./, '');
+            const list = [undefined];
+            if (naked && !/^(\d{1,3}\.){3}\d{1,3}$/.test(naked)) list.push(naked);
+            if (naked !== host) list.push(host);
+            return list;
           }
+          
           function setCookie(name, value, days = 365) {
-              const exp = new Date(Date.now() + days * 864e5).toUTCString();
-              domains().forEach(d => {
-                  document.cookie = `${name}=${value}; expires=${exp}; path=/` + (d ? `; domain=${d}` : '');
-              });
+            const exp = new Date(Date.now() + days * 864e5).toUTCString();
+            domains().forEach(d => {
+              document.cookie = `${name}=${value}; expires=${exp}; path=/` + (d ? `; domain=${d}` : '');
+            });
           }
+          
           function clearCookie(name) {
-              const past = 'Thu, 01 Jan 1970 00:00:01 GMT';
-              domains().forEach(d => {
-                  document.cookie = `${name}=; expires=${past}; path=/` + (d ? `; domain=${d}` : '');
-              });
+            const past = 'Thu, 01 Jan 1970 00:00:01 GMT';
+            domains().forEach(d => {
+              document.cookie = `${name}=; expires=${past}; path=/` + (d ? `; domain=${d}` : '');
+            });
           }
+          
           function alignCookiesFor(lang) {
-              if (!lang || lang === 'en') {
-                  clearCookie('googtrans');
-                  clearCookie('googtransopt');
-              } else {
-                  const val = `/auto/${lang}`;
-                  setCookie('googtrans', val);
-                  setCookie('googtransopt', val);
-              }
+            if (!lang || lang === 'en') {
+              clearCookie('googtrans');
+              clearCookie('googtransopt');
+            } else {
+              const val = `/auto/${lang}`;
+              setCookie('googtrans', val);
+              setCookie('googtransopt', val);
+            }
           }
 
-          function googleTranslateElementInit() {
-              new google.translate.TranslateElement({
-                  pageLanguage: 'en',
-                  includedLanguages: 'en,fr,de',
-                  layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                  autoDisplay: false
-              }, 'google_translate_element');
-          }
-
-          // Language selector functionality
+          // Éléments du DOM
           const langBtn = document.getElementById('langBtn');
           const langMenu = document.getElementById('langMenu');
           const langFlag = document.getElementById('langFlag');
 
+          // ✅ VÉRIFICATION DE SÉCURITÉ
+          if (!langBtn || !langMenu || !langFlag) {
+            console.warn('⚠️ Language selector elements not found');
+            return;
+          }
+
           // Toggle dropdown
           langBtn.addEventListener('click', function(e) {
-              e.stopPropagation();
-              langMenu.classList.toggle('hidden');
+            e.stopPropagation();
+            langMenu.classList.toggle('hidden');
           });
 
           // Close dropdown when clicking outside
-          document.addEventListener('click', function() {
+          document.addEventListener('click', function(e) {
+            if (!langBtn.contains(e.target) && !langMenu.contains(e.target)) {
               langMenu.classList.add('hidden');
+            }
           });
 
           // Handle language selection
           langMenu.addEventListener('click', function(e) {
-              if (e.target.closest('li')) {
-                  const li = e.target.closest('li');
-                  const lang = li.getAttribute('data-lang');
-                  const flag = li.getAttribute('data-flag');
-                  setLanguage(lang, flag);
-                  langMenu.classList.add('hidden');
+            const li = e.target.closest('li');
+            if (li) {
+              const lang = li.getAttribute('data-lang');
+              const flag = li.getAttribute('data-flag');
+              if (lang && flag) {
+                setLanguage(lang, flag);
+                langMenu.classList.add('hidden');
               }
+            }
           });
 
           function setLanguage(lang, flag) {
-              localStorage.setItem('selectedLang', lang);
-              localStorage.setItem('selectedFlag', flag);
-              langFlag.src = flag;
-              alignCookiesFor(lang);
-              if (lang === 'en') {
-                  window.location.hash = '';
-              } else {
-                  window.location.hash = 'googtrans(en|' + lang + ')';
-              }
-              waitForSelect(select => {
-                  select.value = lang;
-                  select.dispatchEvent(new Event('change'));
-                  setTimeout(() => location.reload(), 100);
-              }, 2000);
-              setTimeout(() => {
-                  if (!document.querySelector('#google_translate_element select')) {
-                      location.reload();
-                  }
-              }, 2100);
+            localStorage.setItem('selectedLang', lang);
+            localStorage.setItem('selectedFlag', flag);
+            langFlag.src = flag;
+            alignCookiesFor(lang);
+            
+            if (lang === 'en') {
+              window.location.hash = '';
+            } else {
+              window.location.hash = 'googtrans(en|' + lang + ')';
+            }
+            
+            setTimeout(() => location.reload(), 100);
           }
 
-          function waitForSelect(callback, timeout = 5000) {
-              const start = Date.now();
-              const check = () => {
-                  const select = document.querySelector('#google_translate_element select.goog-te-combo');
-                  if (select) {
-                      callback(select);
-                  } else if (Date.now() - start < timeout) {
-                      setTimeout(check, 100);
-                  } else {
-                      const savedLang = localStorage.getItem('selectedLang') || 'en';
-                      if (savedLang !== 'en') {
-                          window.location.hash = 'googtrans(en|' + savedLang + ')';
-                      }
-                  }
-              };
-              check();
+          // Restore saved language
+          const savedLang = localStorage.getItem('selectedLang') || 'en';
+          const savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
+          langFlag.src = savedFlag;
+          alignCookiesFor(savedLang);
+          
+          if (savedLang !== 'en') {
+            window.location.hash = 'googtrans(en|' + savedLang + ')';
           }
+        });
 
-          document.addEventListener('DOMContentLoaded', function() {
-              const savedLang = localStorage.getItem('selectedLang') || 'en';
-              const savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
-              langFlag.src = savedFlag;
-              alignCookiesFor(savedLang);
-              if (savedLang !== 'en') {
-                  window.location.hash = 'googtrans(en|' + savedLang + ')';
-                  waitForSelect(select => {
-                      select.value = savedLang;
-                      select.dispatchEvent(new Event('change'));
-                  });
-              }
-          });
+        // Google Translate Init (global)
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,fr,de',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+          }, 'google_translate_element');
+        }
         </script>
 
         <!-- Auth Buttons / User menu -->
