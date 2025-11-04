@@ -591,3 +591,8 @@
   }
 })();
 </script>
+<script>
+document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
+document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
+document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
+</script>

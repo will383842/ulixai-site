@@ -84,7 +84,8 @@
   <meta name="available-languages" content="en,fr,es,de,pt,ru,zh-CN,ar,hi,ja,ko,it,nl,pl,sv,no,da,fi,tr">
   
   <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
+  @verbatim
+<script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
@@ -319,6 +320,7 @@
     ]
   }
   </script>
+@endverbatim
   
   <!-- Preconnect to required origins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -389,7 +391,8 @@
   <script async type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   
-  <style>
+  @verbatim
+<style>
     /* CSS Variables */
     :root {
       --primary: #3B82F6;
@@ -932,6 +935,7 @@
       display: block;
     }
   </style>
+@endverbatim
 
   <script>
     tailwind.config = {
@@ -964,8 +968,6 @@
     <div id="google_translate_element"></div>
   </div>
   
-  @include('pages.popup')
-
   <!-- HERO SECTION -->
   <section id="main-content" class="relative bg-blue-600 pt-20 pb-32 px-4 overflow-hidden" style="background-color: #3B82F6;" role="banner">
     <div class="max-w-5xl mx-auto text-center relative z-10">

@@ -417,6 +417,251 @@
     });
   });
   </script>
+<script>
+function showComingSoonPopup(e){ if(e&&e.preventDefault)e.preventDefault(); var el=document.getElementById('sos-popup'); if(el) el.classList.remove('hidden'); }
+function closeComingSoonPopup(){ var el=document.getElementById('sos-popup'); if(el) el.classList.add('hidden'); }
+
+(function(){
+  if (window.providerWizard) return;
+
+  window.providerWizard = (function(){
+    var storeKey = 'pw.state';
+    var S = {
+      save: function(state){
+        try{ sessionStorage.setItem(storeKey, JSON.stringify(state)); }catch(e){}
+        try{ localStorage.setItem(storeKey, JSON.stringify(state)); }catch(e){}
+      },
+      load: function(){
+        try{
+          var raw = sessionStorage.getItem(storeKey) || localStorage.getItem(storeKey) || '{}';
+          return JSON.parse(raw);
+        }catch(e){ return {}; }
+      }
+    };
+
+    var steps = [];
+    var current = 0;
+    var state = S.load(); // { current }
+
+    function detectSteps(){
+      steps = Array.prototype.slice.call(document.querySelectorAll('[id^="step"]'))
+        .filter(function(el){ return /^step\d+$/i.test(el.id); });
+    }
+
+    function getIndexFromHash(){
+      var m = /^#step(\d+)$/i.exec(location.hash || '');
+      if (m){ return Math.max(0, Math.min(steps.length-1, (parseInt(m[1],10)-1))); }
+      return null;
+    }
+
+    function setBtnEnabled(sel, enabled){
+      var nodes = document.querySelectorAll(sel);
+      for (var i=0;i<nodes.length;i++){
+        var el = nodes[i];
+        if (el.tagName === 'A'){
+          el.setAttribute('aria-disabled', (!enabled).toString());
+          if (!enabled) el.classList.add('opacity-50'); else el.classList.remove('opacity-50');
+        } else {
+          el.disabled = !enabled;
+          el.setAttribute('aria-disabled', (!enabled).toString());
+          if (!enabled) el.classList.add('opacity-50'); else el.classList.remove('opacity-50');
+        }
+      }
+    }
+
+    function updateUI(){
+      detectSteps();
+      var ok = validate(current);
+      // Couvrir tous les boutons "next/finish" usuels
+      setBtnEnabled('#mobileNextBtn, #nextBtn, .btn-next, [data-action=\"next\"], [data-action=\"finish\"]', ok);
+      setBtnEnabled('#finishBtn, .btn-finish', ok && current === steps.length-1);
+      var progEl = document.querySelector('[data-progress]');
+      if (progEl){
+        var pct = Math.round(((current+1) / Math.max(steps.length,1)) * 100);
+        progEl.style.width = pct + '%';
+        progEl.setAttribute('aria-valuenow', pct);
+      }
+    }
+
+    function show(i, opt){
+      if (i < 0 || i >= steps.length) return;
+      for (var k=0;k<steps.length;k++){
+        steps[k].classList.toggle('hidden', k !== i);
+      }
+      current = i;
+      state.current = current; S.save(state);
+      if (!opt || opt.push !== false){
+        var hash = '#step' + (i+1);
+        if (location.hash !== hash) history.pushState({pw:true, i:i}, '', hash);
+      }
+      updateUI();
+    }
+
+    function goto(i){
+      detectSteps();
+      if (i < 0 || i >= steps.length) return;
+      if (!validate(i)) return;
+      show(i);
+    }
+
+    function restore(){
+      detectSteps();
+      var t = getIndexFromHash();
+      if (t === null){
+        if (typeof state.current === 'number') t = Math.max(0, Math.min(steps.length-1, state.current));
+        else t = 0;
+      }
+      for (var k=0;k<steps.length;k++){
+        steps[k].classList.toggle('hidden', k !== t);
+      }
+      current = t;
+      updateUI();
+    }
+
+    function elementSelected(el){
+      if (!el) return false;
+      if (el.classList.contains('selected')) return true;
+      if (el.getAttribute('aria-checked') === 'true') return true;
+      var input = el.querySelector('input[type=\"checkbox\"], input[type=\"radio\"]');
+      if (input) return !!input.checked;
+      return false;
+    }
+
+    function validate(i){
+      var step = steps[i];
+      if (!step) return true;
+
+      // 1) Champs [required]
+      var req = step.querySelectorAll('[required]');
+      for (var r=0;r<req.length;r++){
+        var f = req[r];
+        if (f.type === 'checkbox' || f.type === 'radio'){
+          var name = f.name;
+          if (name){
+            var group = step.querySelectorAll('input[name=\"'+CSS.escape(name)+'\"]:checked');
+            if (group.length === 0) return false;
+          } else if (!f.checked) { return false; }
+        } else {
+          if (!f.value) return false;
+        }
+      }
+
+      // 2) Groupes cliquables usuels
+      var clickable = step.querySelectorAll('.language-card, .lang-btn, .service-card, [role=\"checkbox\"], [role=\"radio\"], [data-toggle=\"select\"]');
+      if (clickable.length){
+        var any = false;
+        for (var c=0;c<clickable.length;c++){
+          if (elementSelected(clickable[c])){ any = true; break; }
+        }
+        if (!any){
+          // fallback: inputs cochés dans le step
+          var anyInput = step.querySelector('input[type=\"checkbox\"]:checked, input[type=\"radio\"]:checked, select option:checked');
+          if (!anyInput) return false;
+        }
+      }
+
+      return true;
+    }
+
+    // Délégation de clic: bascule .selected / aria-checked et inputs internes
+    document.addEventListener('click', function(e){
+      var card = e.target.closest('.language-card, .lang-btn, .service-card, [data-toggle=\"select\"], [role=\"checkbox\"], [role=\"radio\"]');
+      if (!card) return;
+      // Eviter que des liens scrollent
+      if (card.tagName === 'A') e.preventDefault();
+
+      var isRadioLike = card.getAttribute('role') === 'radio' || card.dataset.select === 'single' || card.querySelector('input[type=\"radio\"]');
+      var input = card.querySelector('input[type=\"checkbox\"], input[type=\"radio\"]');
+
+      if (isRadioLike){
+        // un seul actif parmi les frères
+        var scope = card.parentElement || document;
+        // si input radio: scope par name
+        if (input && input.type === 'radio' && input.name){
+          var all = document.querySelectorAll('input[type=\"radio\"][name=\"'+CSS.escape(input.name)+'\"]');
+          for (var i=0;i<all.length;i++){
+            var el = all[i];
+            var wrapper = el.closest('.language-card, .lang-btn, .service-card, [data-toggle=\"select\"], [role=\"radio\"]');
+            if (wrapper){
+              wrapper.classList.toggle('selected', el === input);
+              wrapper.setAttribute('aria-checked', (el === input).toString());
+            }
+          }
+          input.checked = true;
+        } else {
+          // radio visuel sans input radio
+          var siblings = scope.querySelectorAll('.language-card, .lang-btn, .service-card, [data-toggle=\"select\"], [role=\"radio\"]');
+          for (var j=0;j<siblings.length;j++){
+            siblings[j].classList.remove('selected');
+            siblings[j].setAttribute('aria-checked', 'false');
+          }
+          card.classList.add('selected');
+          card.setAttribute('aria-checked', 'true');
+          if (input) input.checked = true;
+        }
+      } else {
+        // multi-select (checkbox-like)
+        var now = !card.classList.contains('selected');
+        card.classList.toggle('selected', now);
+        card.setAttribute('aria-checked', now ? 'true' : 'false');
+        if (input){
+          if (input.type === 'checkbox') input.checked = now;
+          if (input.type === 'radio') input.checked = true;
+        }
+      }
+      updateUI();
+    }, true);
+
+    // écouteurs génériques pour maj état
+    ['input','change'].forEach(function(evt){
+      document.addEventListener(evt, function(){ updateUI(); }, true);
+    });
+
+    // Boutons data-action + alias
+    document.addEventListener('click', function(e){
+      var act = e.target.closest('[data-action]');
+      if (!act) return;
+      var a = act.getAttribute('data-action');
+      if (a === 'next'){ e.preventDefault(); goto(current+1); }
+      if (a === 'prev'){ e.preventDefault(); goto(current-1); }
+      if (a === 'finish'){ e.preventDefault(); if (validate(current)) goto(current); }
+    }, true);
+
+    window.addEventListener('popstate', function(ev){
+      if (ev.state && ev.state.pw === true && typeof ev.state.i === 'number'){
+        detectSteps();
+        var i = Math.max(0, Math.min(steps.length-1, ev.state.i));
+        for (var k=0;k<steps.length;k++){
+          steps[k].classList.toggle('hidden', k !== i);
+        }
+        current = i;
+        state.current = i; S.save(state);
+        updateUI();
+      } else {
+        var idx = getIndexFromHash();
+        if (idx !== null) goto(idx);
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function(){
+      restore();
+    });
+
+    return {
+      next: function(){ goto(current+1); },
+      prev: function(){ goto(current-1); },
+      goto: goto,
+      update: updateUI
+    };
+  })();
+
+  // Alias rétro-compat
+  window.goToStep        = window.goToStep        || function(n){ try{ providerWizard.goto((n|0)-1); }catch(e){} };
+  window.nextStep        = window.nextStep        || function(){ try{ providerWizard.next(); }catch(e){} };
+  window.prevStep        = window.prevStep        || function(){ try{ providerWizard.prev(); }catch(e){} };
+  window.refreshWizardUI = window.refreshWizardUI || function(){ try{ providerWizard.update(); }catch(e){} };
+})();
+</script>
 </head>
 @php
     $settings = \App\Models\SiteSetting::first();
@@ -876,7 +1121,7 @@
           <div id="step5CountrySuccess" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3" role="status">
             <div class="flex items-start gap-2">
               <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
               </svg>
               <div>
                 <p class="text-sm font-semibold text-green-800">Country selected!</p>
@@ -2193,3 +2438,47 @@ function updateHeaderAfterLogin(userData) {
 @include('includes.cookie-banner')
 </body>
 </html>
+
+<script>
+document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
+document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
+document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
+</script>
+
+<!-- 🩹 HOTFIX: synchro boutons & "Become a provider" -> ouvre Step 1 -->
+<script>
+(function(){
+  // Intercepter "Become a provider" (desktop + mobile). Si le popup existe, on ouvre Step 1, sinon on laisse naviguer.
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href="/become-service-provider"]');
+    if(!a) return;
+    var popup = document.getElementById('signupPopup');
+    if (popup){
+      e.preventDefault();
+      popup.classList.remove('hidden');
+      if (typeof window.showStep === 'function') window.showStep(0);
+    }
+  }, true);
+
+  // Après n'importe quelle interaction, revalider et (si présent) synchroniser les boutons.
+  ['click','input','change'].forEach(function(evt){
+    document.addEventListener(evt, function(){
+      if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+      if (window.providerWizard && typeof window.providerWizard.update === 'function') window.providerWizard.update();
+    }, true);
+  });
+
+  // Renforcer la validation du Step 2 (pré-sélections visuelles)
+  window.validateStep = (function(orig){
+    return function(i){
+      if (i === 1){
+        if (document.querySelector('#step2 input[type="radio"]:checked')) return true;
+        if (document.querySelector('#step2 .language-card.selected, #step2 .language-card[aria-checked="true"]')) return true;
+        if (document.querySelector('#step2 .lang-btn.bg-blue-900, #step2 .lang-btn[aria-pressed="true"], #step2 .lang-btn.selected, #step2 .lang-btn.text-white')) return true;
+        return false;
+      }
+      return orig ? orig(i) : true;
+    };
+  })(window.validateStep);
+})();
+</script>
