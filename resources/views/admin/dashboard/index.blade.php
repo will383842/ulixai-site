@@ -102,40 +102,40 @@
 
 
       /* --- Admin Grid Layout (robuste) --- */
-      .admin-grid {{ 
+      .admin-grid { 
         min-height: 100vh; 
         display: grid;
         grid-template-rows: auto 1fr;
         grid-template-columns: 16rem 1fr; /* sidebar 256px + content */
-      }}
-      .admin-header {{ 
+      }
+      .admin-header { 
         grid-row: 1; 
         grid-column: 1 / -1; 
         position: sticky; top: 0; z-index: 99999; background: #fff; isolation: isolate; 
         border-bottom: 1px solid rgba(0,0,0,.06);
-      }}
-      .admin-sidebar {{ 
+      }
+      .admin-sidebar { 
         grid-row: 2; grid-column: 1; 
         position: sticky; top: var(--admin-header-h, 64px);
         height: calc(100vh - var(--admin-header-h, 64px));
         overflow-y: auto;
         background: #fff;
         border-right: 1px solid #f3f4f6;
-      }}
-      .admin-main {{ 
+      }
+      .admin-main { 
         grid-row: 2; grid-column: 2; 
         position: relative; z-index: 1;
         padding-top: 0; /* header est hors flux, pas besoin de padding ici */
         contain: layout paint;
-      }}
+      }
 
       /* Chart containers */
-      .chart-area {{ position: relative; height: 360px; }}
-      .chart-area.sm {{ height: 220px; }}
-      .chart-area.lg {{ height: 480px; }}
+      .chart-area { position: relative; height: 360px; }
+      .chart-area.sm { height: 220px; }
+      .chart-area.lg { height: 480px; }
 
       /* Sécurité overlay: contenu sous le header */
-      .admin-main, .admin-main * {{ z-index: initial; }}
+      .admin-main, .admin-main * { z-index: initial; }
     </style>
     <link rel="stylesheet" href="{{ asset('css/admin-compat.css') }}">
     <script src="{{ asset('js/admin-layout.js') }}" defer></script>

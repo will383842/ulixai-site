@@ -184,6 +184,15 @@ Route::get('/', [ServiceProviderController::class, 'main']);
 Route::get('/get-providers', [ServiceProviderController::class, 'getProviders']);
 Route::get('/get-subcategories/{categoryId}', [ServiceProviderController::class, 'getSubcategories']);
 
+// ✅ PUBLIC : liste de tous les prestataires (toujours accessible)
+Route::get('/service-providers', [ServiceProviderController::class, 'serviceproviders'])
+    ->name('service-providers')
+    ->withoutMiddleware(['auth', \App\Http\Middleware\Authenticate::class, 'verified', 'auth:sanctum']);
+
+Route::get('/view-service-providers', [ServiceProviderController::class, 'serviceproviders'])
+    ->name('view.service-providers')
+    ->withoutMiddleware(['auth', \App\Http\Middleware\Authenticate::class, 'verified', 'auth:sanctum']);
+
 Route::get('/become-service-provider', function () {
     return view('pages.service-provider');
 })->name('become.service.provider');
@@ -243,9 +252,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/review-options', [ReviewsController::class, 'reviewOptions'])->name('review-options');
     Route::get('/review-end', [ReviewsController::class, 'reviewEnd'])->name('review-end');
 
-    // Providers
-    Route::get('/service-providers', [ServiceProviderController::class, 'serviceproviders'])->name('service-providers');
-    Route::get('/view-service-providers', [ServiceProviderController::class, 'serviceproviders'])->name('view.service-providers');
+    // Providers (⚠️ retiré d'ici pour être public)
 
     // Jobs
     Route::get('/job-list', [JobListController::class, 'index'])->name('user.joblist');
@@ -332,8 +339,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Accounting
         Route::get('/seo/export', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'export'])->name('seo.export');
-        Route::get('/accounting/export', [\App\Http\Controllers\Admin\AccountingController::class, 'export'])->name('accounting.export');
         Route::get('/accounting', [\App\Http\Controllers\Admin\AccountingController::class, 'index'])->name('accounting.index');
+        Route::get('/accounting/export', [\App\Http\Controllers\Admin\AccountingController::class, 'export'])->name('accounting.export');
 
         // Dashboard
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
