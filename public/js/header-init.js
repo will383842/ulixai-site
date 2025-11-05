@@ -12,7 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   initializeCategoryPopups: () => (/* binding */ initializeCategoryPopups)
 /* harmony export */ });
-Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./categoryColors.js */ "./resources/js/modules/categoryColors.js");
 
 function initializeCategoryPopups() {
   console.log('🎯 Category popups: START');
@@ -56,7 +56,7 @@ function initializeCategoryPopups() {
           // Icône avec couleur de bulle
           var iconHtml = '';
           var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
-          var iconColor = Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).main[index % Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).main.length];
+          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.main[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.main.length];
           if (cat.icon_image) {
             iconHtml = "<div class=\"".concat(iconSize, " rounded-full overflow-hidden mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' + '</div>';
           } else {
@@ -116,7 +116,7 @@ function initializeCategoryPopups() {
           // Icône avec couleur de bulle
           var iconHtml = '';
           var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
-          var iconColor = Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).sub[index % Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).sub.length];
+          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.sub[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.sub.length];
           if (sub.icon_image) {
             iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
           } else {
@@ -176,7 +176,7 @@ function initializeCategoryPopups() {
           // Icône avec couleur de bulle
           var iconHtml = '';
           var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
-          var iconColor = Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).child[index % Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).child.length];
+          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.child[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.child.length];
           if (child.icon_image) {
             iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
           } else {
@@ -238,6 +238,29 @@ function initializeCategoryPopups() {
 
 /***/ }),
 
+/***/ "./resources/js/modules/categoryColors.js":
+/*!************************************************!*\
+  !*** ./resources/js/modules/categoryColors.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   categoryColors: () => (/* binding */ categoryColors)
+/* harmony export */ });
+// Palette de 20 couleurs pour les différents niveaux de catégories
+
+var categoryColors = {
+  // Niveau 1 : Catégories principales (vives)
+  main: ['#FF6B9D', '#4A90E2', '#50C878', '#FFB347', '#BA55D3', '#F4D03F', '#FF7F50', '#5DADE2', '#FF85A2', '#7FCDCD', '#FFE66D', '#FF9AA2', '#DA70D6', '#87CEEB', '#98D8C8', '#FDFD96', '#FFB6C1', '#6495ED', '#90EE90', '#FFDAB9'],
+  // Niveau 2 : Sous-catégories (moyennement vives)
+  sub: ['#FFB6C1', '#87CEEB', '#98FB98', '#FFD700', '#DDA0DD', '#F0E68C', '#FFA07A', '#B0E0E6', '#FFCCCB', '#ADD8E6', '#C9E4CA', '#FFEAA7', '#E6B3E6', '#C5DFF8', '#D5F4E6', '#FFF9C4', '#FFC0CB', '#B0C4DE', '#C1E1C1', '#FFDEAD'],
+  // Niveau 3 : Sous-sous-catégories (douces/pastels)
+  child: ['#FFE4E1', '#E0F2F7', '#F0FFF0', '#FFF8DC', '#F5E6FF', '#FFFACD', '#FFE5CC', '#E1F5FE', '#FFF0F5', '#F0F8FF', '#F5FFFA', '#FFFAF0', '#FAF0E6', '#F8F8FF', '#F0FFFF', '#FFFEF0', '#FFF5EE', '#F5F5DC', '#FAEBD7', '#FFF0DB']
+};
+
+/***/ }),
+
 /***/ "./resources/js/modules/language-manager.js":
 /*!**************************************************!*\
   !*** ./resources/js/modules/language-manager.js ***!
@@ -257,7 +280,7 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * Language Manager - Gestion langue desktop + mobile
- * SAFE: Code extrait exact sans modification
+ * FIXED: Initialisation améliorée avec attente du DOM
  */
 
 var LanguageManager = /*#__PURE__*/function () {
@@ -265,13 +288,35 @@ var LanguageManager = /*#__PURE__*/function () {
     _classCallCheck(this, LanguageManager);
     this.selectedLang = 'en';
     this.selectedFlag = 'https://flagcdn.com/24x18/us.png';
+    this.googleTranslateReady = false;
   }
   return _createClass(LanguageManager, [{
     key: "init",
     value: function init() {
-      this.initDesktopLanguageSelector();
-      this.initMobileLanguageSelector();
-      this.initGoogleTranslate();
+      var _this = this;
+      console.log('🌐 Language Manager init() called');
+
+      // Fonction d'initialisation
+      var initialize = function initialize() {
+        console.log('🔄 Attempting to initialize language selectors...');
+        _this.initDesktopLanguageSelector();
+        _this.initMobileLanguageSelector();
+        _this.initGoogleTranslate();
+      };
+
+      // Attendre que le DOM soit vraiment prêt
+      if (document.readyState === 'loading') {
+        console.log('⏳ DOM is loading, waiting for DOMContentLoaded...');
+        document.addEventListener('DOMContentLoaded', function () {
+          console.log('✅ DOMContentLoaded fired');
+          // Double sécurité : attendre encore 100ms après DOMContentLoaded
+          setTimeout(initialize, 100);
+        });
+      } else {
+        console.log('✅ DOM already loaded');
+        // Si DOM déjà chargé, attendre quand même 100ms pour être sûr
+        setTimeout(initialize, 100);
+      }
     }
   }, {
     key: "domains",
@@ -315,117 +360,138 @@ var LanguageManager = /*#__PURE__*/function () {
   }, {
     key: "initDesktopLanguageSelector",
     value: function initDesktopLanguageSelector() {
-      var _this = this;
-      var langBtn = document.getElementById('langBtn');
-      var langMenu = document.getElementById('langMenu');
-      var langFlag = document.getElementById('langFlag');
-      if (!langBtn || !langMenu || !langFlag) {
-        console.warn('⚠️ Language selector elements not found');
-        return;
-      }
-      langBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        langMenu.classList.toggle('hidden');
-      });
-      document.addEventListener('click', function (e) {
-        if (!langBtn.contains(e.target) && !langMenu.contains(e.target)) {
-          langMenu.classList.add('hidden');
-        }
-      });
-      langMenu.addEventListener('click', function (e) {
-        var li = e.target.closest('li');
-        if (li) {
-          var lang = li.getAttribute('data-lang');
-          var flag = li.getAttribute('data-flag');
-          if (lang && flag) {
-            _this.setLanguage(lang, flag);
-            langMenu.classList.add('hidden');
+      var _this2 = this;
+      console.log('🖥️ Initializing desktop language selector...');
+
+      // Retry mechanism si éléments pas trouvés
+      var retryCount = 0;
+      var maxRetries = 5;
+      var _attemptInit = function attemptInit() {
+        var langBtn = document.getElementById('langBtn');
+        var langMenu = document.getElementById('langMenu');
+        var langFlag = document.getElementById('langFlag');
+        if (!langBtn || !langMenu || !langFlag) {
+          retryCount++;
+          console.warn("\u26A0\uFE0F Desktop language selector elements not found (attempt ".concat(retryCount, "/").concat(maxRetries, "):"), {
+            langBtn: !!langBtn,
+            langMenu: !!langMenu,
+            langFlag: !!langFlag
+          });
+          if (retryCount < maxRetries) {
+            setTimeout(_attemptInit, 200);
+          } else {
+            console.error('❌ Failed to initialize desktop language selector after', maxRetries, 'attempts');
           }
+          return;
         }
-      });
-      var savedLang = localStorage.getItem('selectedLang') || 'en';
-      var savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
-      langFlag.src = savedFlag;
-      this.alignCookiesFor(savedLang);
-      if (savedLang !== 'en') {
-        window.location.hash = 'googtrans(en|' + savedLang + ')';
-      }
+        console.log('✅ Desktop language elements found');
+
+        // ⚡ Utiliser event delegation sur document pour éviter conflits avec Alpine.js
+        var isOpen = false;
+
+        // Event delegation sur le document entier (capture phase)
+        document.addEventListener('click', function (e) {
+          // Clic sur le bouton de langue
+          if (e.target.closest('#langBtn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            console.log('🖱️ Language button clicked (delegated)');
+            isOpen = !isOpen;
+            if (isOpen) {
+              langMenu.classList.remove('hidden');
+            } else {
+              langMenu.classList.add('hidden');
+            }
+            return false;
+          }
+
+          // Clic sur un élément de langue
+          var langItem = e.target.closest('#langMenu li[data-lang]');
+          if (langItem) {
+            e.preventDefault();
+            e.stopPropagation();
+            var lang = langItem.getAttribute('data-lang');
+            var flag = langItem.getAttribute('data-flag');
+            if (lang && flag) {
+              console.log('🌐 Desktop language selected:', lang);
+              langFlag.src = flag;
+              _this2.setLanguage(lang, flag);
+              langMenu.classList.add('hidden');
+              isOpen = false;
+            }
+            return false;
+          }
+
+          // Fermer si clic en dehors
+          if (isOpen && !e.target.closest('#langMenu')) {
+            langMenu.classList.add('hidden');
+            isOpen = false;
+          }
+        }, true); // ⚡ IMPORTANT: true = capture phase (avant Alpine.js)
+
+        // Restore saved language
+        var savedLang = localStorage.getItem('selectedLang') || 'en';
+        var savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
+        langFlag.src = savedFlag;
+        _this2.alignCookiesFor(savedLang);
+        if (savedLang !== 'en') {
+          window.location.hash = 'googtrans(en|' + savedLang + ')';
+        }
+        console.log('✅ Desktop language selector initialized with event delegation');
+      };
+
+      // Démarrer la tentative
+      _attemptInit();
     }
   }, {
     key: "initMobileLanguageSelector",
     value: function initMobileLanguageSelector() {
-      var _this2 = this;
+      var _this3 = this;
+      console.log('📱 Initializing mobile language selector...');
       var checkbox = document.getElementById('langOpen');
       var menu = document.getElementById('languageMenu');
       var flag = document.getElementById('languageFlag');
       var label = document.getElementById('languageLabel');
-      if (!checkbox || !menu || !flag || !label) return;
-      var pendingLang = null;
-      var applyLanguage = function applyLanguage(code) {
-        var select = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (select) {
-          select.value = code;
-          var ev = document.createEvent('HTMLEvents');
-          ev.initEvent('change', true, true);
-          select.dispatchEvent(ev);
-          pendingLang = null;
-        } else {
-          pendingLang = code;
-        }
-      };
+      if (!checkbox || !menu || !flag || !label) {
+        console.warn('⚠️ Mobile language selector elements not found:', {
+          checkbox: !!checkbox,
+          menu: !!menu,
+          flag: !!flag,
+          label: !!label
+        });
+        return;
+      }
+      console.log('✅ Mobile language elements found');
+
+      // Handle language selection
       menu.addEventListener('click', function (e) {
         var li = e.target.closest('li[data-lang]');
         if (!li) return;
         var code = li.dataset.lang;
         var flagUrl = li.dataset.flag;
         var name = li.textContent.trim();
+        console.log('🌐 Mobile language selected:', code);
+
+        // Update UI
         flag.src = flagUrl;
         label.textContent = name;
+
+        // Save to localStorage
         localStorage.setItem('selectedLang', code);
         localStorage.setItem('selectedFlag', flagUrl);
-        _this2.alignCookiesFor(code);
-        if (code === 'en') {
-          window.location.hash = '';
-        } else {
-          window.location.hash = 'googtrans(en|' + code + ')';
-        }
-        var select = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (select) {
-          select.value = code;
-          select.dispatchEvent(new Event('change'));
-          setTimeout(function () {
-            return location.reload();
-          }, 100);
-        } else {
-          var _start = Date.now();
-          (function wait() {
-            var sel = document.querySelector('#google_translate_element select.goog-te-combo');
-            if (sel) {
-              sel.value = code;
-              sel.dispatchEvent(new Event('change'));
-              setTimeout(function () {
-                return location.reload();
-              }, 100);
-            } else if (Date.now() - _start < 2000) {
-              setTimeout(wait, 100);
-            } else {
-              setTimeout(function () {
-                return location.reload();
-              }, 100);
-            }
-          })();
-        }
+
+        // Update cookies
+        _this3.alignCookiesFor(code);
+
+        // Apply language change
+        _this3.setLanguage(code, flagUrl);
+
+        // Close menu
         checkbox.checked = false;
       });
-      var start = Date.now();
-      (function waitForSelect() {
-        var select = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (select) {
-          if (pendingLang) applyLanguage(pendingLang);
-          return;
-        }
-        if (Date.now() - start < 12000) setTimeout(waitForSelect, 200);
-      })();
+
+      // Restore saved language
       var savedLang = localStorage.getItem('selectedLang') || 'en';
       var savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
       var langNames = {
@@ -438,58 +504,105 @@ var LanguageManager = /*#__PURE__*/function () {
       this.alignCookiesFor(savedLang);
       if (savedLang !== 'en') {
         window.location.hash = 'googtrans(en|' + savedLang + ')';
-        var select = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (select) {
-          select.value = savedLang;
-          select.dispatchEvent(new Event('change'));
-        } else {
-          var _start2 = Date.now();
-          (function wait() {
-            var sel = document.querySelector('#google_translate_element select.goog-te-combo');
-            if (sel) {
-              sel.value = savedLang;
-              sel.dispatchEvent(new Event('change'));
-            } else if (Date.now() - _start2 < 5000) {
-              setTimeout(wait, 100);
-            }
-          })();
-        }
       }
+      console.log('✅ Mobile language selector initialized');
     }
   }, {
     key: "setLanguage",
     value: function setLanguage(lang, flag) {
+      console.log('🔄 Changing language to:', lang);
+
+      // Update storage
       localStorage.setItem('selectedLang', lang);
       localStorage.setItem('selectedFlag', flag);
+
+      // Update cookies
       this.alignCookiesFor(lang);
+
+      // Update hash
       if (lang === 'en') {
         window.location.hash = '';
       } else {
         window.location.hash = 'googtrans(en|' + lang + ')';
       }
-      setTimeout(function () {
-        return location.reload();
-      }, 100);
+
+      // Wait for Google Translate then reload
+      this.waitForGoogleTranslate(function () {
+        console.log('✅ Google Translate ready, triggering change');
+        var select = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (select) {
+          select.value = lang;
+          select.dispatchEvent(new Event('change', {
+            bubbles: true
+          }));
+        }
+        setTimeout(function () {
+          console.log('🔄 Reloading page...');
+          location.reload();
+        }, 100);
+      });
+    }
+  }, {
+    key: "waitForGoogleTranslate",
+    value: function waitForGoogleTranslate(callback) {
+      var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
+      var startTime = Date.now();
+      var _check = function check() {
+        var select = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (select) {
+          console.log('✅ Google Translate widget found');
+          callback();
+          return;
+        }
+        if (Date.now() - startTime < timeout) {
+          setTimeout(_check, 100);
+        } else {
+          console.warn('⚠️ Google Translate timeout, reloading anyway');
+          callback();
+        }
+      };
+      _check();
     }
   }, {
     key: "initGoogleTranslate",
     value: function initGoogleTranslate() {
+      var _this4 = this;
+      console.log('🌐 Initializing Google Translate...');
+
+      // Define the callback for Google Translate
       window.googleTranslateElementInit = function () {
-        new google.translate.TranslateElement({
-          pageLanguage: 'en',
-          includedLanguages: 'en,fr,de',
-          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false
-        }, 'google_translate_element');
+        console.log('✅ Google Translate callback triggered');
+        try {
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,fr,de',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+          }, 'google_translate_element');
+          _this4.googleTranslateReady = true;
+          console.log('✅ Google Translate initialized successfully');
+        } catch (error) {
+          console.error('❌ Google Translate initialization failed:', error);
+        }
       };
+
+      // If Google Translate script is already loaded, initialize immediately
+      if (typeof google !== 'undefined' && google.translate) {
+        console.log('🔄 Google Translate already loaded, initializing now');
+        window.googleTranslateElementInit();
+      }
     }
   }]);
 }();
 function initializeLanguageManager() {
+  console.log('🚀 Starting Language Manager...');
   var languageManager = new LanguageManager();
-  document.addEventListener('DOMContentLoaded', function () {
-    languageManager.init();
-  });
+
+  // Toujours appeler init(), qui gère lui-même l'attente du DOM
+  languageManager.init();
+
+  // ⚡ EXPOSER GLOBALEMENT
+  window.providerLanguageManager = languageManager;
   return languageManager;
 }
 
@@ -1430,6 +1543,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_language_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/language-manager.js */ "./resources/js/modules/language-manager.js");
 /* harmony import */ var _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/category-popups.js */ "./resources/js/modules/category-popups.js");
 /* harmony import */ var _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/scroll-utils.js */ "./resources/js/modules/scroll-utils.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 /**
  * Header Initialization - Laravel Mix Compatible
  * Point d'entrée principal pour tous les modules header
@@ -1445,28 +1559,59 @@ __webpack_require__.r(__webpack_exports__);
 /** Exécute une init en isolant les erreurs pour ne pas bloquer les autres modules */
 function safeInit(name, fn) {
   try {
-    return fn();
+    console.log("\uD83D\uDD04 Initializing ".concat(name, "..."));
+    var result = fn();
+    console.log("\u2705 ".concat(name, " initialized successfully"));
+    return result;
   } catch (e) {
-    console.error("\u274C ".concat(name, " failed"), e);
+    console.error("\u274C ".concat(name, " failed:"), e);
     return null;
   }
 }
 function initializeAll() {
   console.log('🚀 Initializing header modules...');
+  console.log('📦 Available modules:', {
+    wizard: _typeof(_modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard),
+    steps: _typeof(_modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps),
+    menu: _typeof(_modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_2__.initializeMobileMenu),
+    language: _typeof(_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_3__.initializeLanguageManager),
+    popups: _typeof(_modules_category_popups_js__WEBPACK_IMPORTED_MODULE_4__.initializeCategoryPopups),
+    scroll: _typeof(_modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_5__.initializeScrollUtils)
+  });
 
   // 1) Core (popups SignUp / croix / ESC / backdrop) d'abord
-  var wizard = safeInit('initializeWizard', _modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard);
+  var wizard = safeInit('Wizard', _modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard);
 
-  // 2) Steps (wizard-steps) ensuite — isolé pour ne pas bloquer le reste en cas d’erreur
-  var steps = safeInit('initializeWizardSteps', _modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps);
+  // 2) Steps (wizard-steps) ensuite — isolé pour ne pas bloquer le reste en cas d'erreur
+  var steps = safeInit('WizardSteps', _modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps);
 
   // 3) Autres features du header
-  safeInit('initializeMobileMenu', _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_2__.initializeMobileMenu);
-  safeInit('initializeLanguageManager', _modules_language_manager_js__WEBPACK_IMPORTED_MODULE_3__.initializeLanguageManager);
-  safeInit('initializeCategoryPopups', _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_4__.initializeCategoryPopups);
-  safeInit('initializeScrollUtils', _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_5__.initializeScrollUtils);
+  safeInit('MobileMenu', _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_2__.initializeMobileMenu);
 
-  // 4) Wrappers globaux attendus par le markup (onclick="showStep(1)" etc.)
+  // 4) Language Manager avec vérification
+  var langManager = safeInit('LanguageManager', function () {
+    var manager = (0,_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_3__.initializeLanguageManager)();
+
+    // Vérifier après 500ms si les éléments sont bien initialisés
+    setTimeout(function () {
+      var langBtn = document.getElementById('langBtn');
+      console.log('🔍 Language button check:', {
+        exists: !!langBtn,
+        manager: !!window.providerLanguageManager
+      });
+      if (!langBtn) {
+        console.error('❌ Language button not found in DOM!');
+      }
+      if (!window.providerLanguageManager) {
+        console.error('❌ Language manager not exposed globally!');
+      }
+    }, 500);
+    return manager;
+  });
+  safeInit('CategoryPopups', _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_4__.initializeCategoryPopups);
+  safeInit('ScrollUtils', _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_5__.initializeScrollUtils);
+
+  // 5) Wrappers globaux attendus par le markup (onclick="showStep(1)" etc.)
   (function exposeWrappers() {
     try {
       if (!window.showStep) {
@@ -1492,7 +1637,7 @@ function initializeAll() {
     }
   })();
 
-  // 5) Synchroniser l'état des boutons (phase BUBBLE, sans double logique)
+  // 6) Synchroniser l'état des boutons (phase BUBBLE, sans double logique)
   ['input', 'change', 'click'].forEach(function (evt) {
     document.addEventListener(evt, function () {
       try {
@@ -1510,14 +1655,21 @@ function initializeAll() {
     } catch (e) {}
   });
   console.log('✅ All header modules initialized');
+  console.log('🔍 Global objects:', {
+    providerWizard: !!window.providerWizard,
+    providerWizardSteps: !!window.providerWizardSteps,
+    providerLanguageManager: !!window.providerLanguageManager
+  });
 }
 
-// Lancer l’init quand le DOM est prêt
+// Lancer l'init quand le DOM est prêt
 if (document.readyState === 'loading') {
+  console.log('⏳ DOM is loading, waiting for DOMContentLoaded...');
   document.addEventListener('DOMContentLoaded', initializeAll, {
     once: true
   });
 } else {
+  console.log('✅ DOM already loaded, initializing now');
   initializeAll();
 }
 })();

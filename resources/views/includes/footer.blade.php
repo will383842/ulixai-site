@@ -303,7 +303,6 @@
                             <h2 id="quick-links" class="font-bold text-gray-900 mb-2">Quick Links</h2>
                             <ul class="space-y-1.5" role="list">
                                 <li><a href="/" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Home</a></li>
-                                <li><a href="{{ auth()->check() ? url('/inviteFriend') : route('login') }}" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Invite Friends</a></li>
                                 <li><a href="/affiliate" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Affiliate</a></li>
                                 <li><a href="/becomepartner" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Partners</a></li>
                                 <li><a href="{{ route('recruitment') }}" class="link-item text-gray-600 hover:text-blue-600 block py-0.5">Recruitment</a></li>

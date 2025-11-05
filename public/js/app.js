@@ -13992,7 +13992,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! toastr */ "./node_modules/toastr/toastr.js");
 /* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(toastr__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var toastr_build_toastr_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! toastr/build/toastr.min.css */ "./node_modules/toastr/build/toastr.min.css");
-Object(function webpackMissingModule() { var e = new Error("Cannot find module './category-popups.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/category-popups.js */ "./resources/js/modules/category-popups.js");
 
 
 
@@ -14002,11 +14002,11 @@ Object(function webpackMissingModule() { var e = new Error("Cannot find module '
 
 // Initialise quand le DOM est prêt
 document.addEventListener('DOMContentLoaded', function () {
-  Object(function webpackMissingModule() { var e = new Error("Cannot find module './category-popups.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())();
+  (0,_modules_category_popups_js__WEBPACK_IMPORTED_MODULE_3__.initializeCategoryPopups)();
 });
 
 // Rend la fonction globale pour les boutons onclick=""
-window.initializeCategoryPopups = Object(function webpackMissingModule() { var e = new Error("Cannot find module './category-popups.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+window.initializeCategoryPopups = _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_3__.initializeCategoryPopups;
 
 /***/ }),
 
@@ -14023,6 +14023,267 @@ __webpack_require__.r(__webpack_exports__);
 
 window.axios = (axios__WEBPACK_IMPORTED_MODULE_0___default());
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+/***/ }),
+
+/***/ "./resources/js/modules/category-popups.js":
+/*!*************************************************!*\
+  !*** ./resources/js/modules/category-popups.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   initializeCategoryPopups: () => (/* binding */ initializeCategoryPopups)
+/* harmony export */ });
+/* harmony import */ var _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./categoryColors.js */ "./resources/js/modules/categoryColors.js");
+
+function initializeCategoryPopups() {
+  console.log('🎯 Category popups: START');
+
+  // ========================================
+  // FONCTION PRINCIPALE : OUVRIR LE POPUP
+  // ========================================
+  window.openHelpPopup = function () {
+    console.log('✅ openHelpPopup CALLED');
+    var popup = document.getElementById('searchPopup');
+    if (!popup) {
+      console.error('❌ searchPopup not found');
+      return;
+    }
+    popup.classList.remove('hidden');
+    console.log('✅ Popup is now visible');
+    fetch('/api/categories').then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      console.log('Categories data:', data);
+      if (data.success) {
+        var container = document.querySelector('#searchPopup .main-categories');
+        if (!container) {
+          console.error('❌ .main-categories not found');
+          return;
+        }
+        container.innerHTML = '';
+        // Ajout du style pour la grille 2 colonnes
+        container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+        console.log('✅ Building categories...');
+        data.categories.forEach(function (cat, index) {
+          var div = document.createElement('div');
+          div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.style.backgroundColor = '#ffffff';
+
+          // Padding adaptatif
+          if (window.innerWidth >= 768) {
+            div.style.padding = '2rem';
+          }
+
+          // Icône avec couleur de bulle
+          var iconHtml = '';
+          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.main[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.main.length];
+          if (cat.icon_image) {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full overflow-hidden mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' + '</div>';
+          } else {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          }
+          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+          div.innerHTML = iconHtml + "<h3 class=\"".concat(textSize, " font-semibold text-gray-800\">") + cat.name + '</h3>';
+          div.onclick = function () {
+            window.handleCategoryClick(cat.id, cat.name);
+          };
+          container.appendChild(div);
+        });
+        console.log('✅ Categories rendered');
+      }
+    })["catch"](function (err) {
+      return console.error('❌ Fetch error:', err);
+    });
+  };
+
+  // ========================================
+  // CLIC SUR CATÉGORIE → SOUS-CATÉGORIES
+  // ========================================
+  window.handleCategoryClick = function (categoryId, categoryName) {
+    var _document$getElementB, _document$getElementB2;
+    console.log('Category clicked:', categoryId, categoryName);
+    (_document$getElementB = document.getElementById('searchPopup')) === null || _document$getElementB === void 0 || _document$getElementB.classList.add('hidden');
+    (_document$getElementB2 = document.getElementById('expatriesPopup')) === null || _document$getElementB2 === void 0 || _document$getElementB2.classList.remove('hidden');
+    var createRequest = {
+      category: JSON.stringify({
+        id: categoryId,
+        name: categoryName
+      })
+    };
+    localStorage.setItem('create-request', JSON.stringify(createRequest));
+    fetch('/api/categories/' + categoryId + '/subcategories').then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      if (data.success) {
+        var subContainer = document.querySelector('#expatriesPopup .sub-category');
+        if (!subContainer) {
+          console.error('❌ .sub-category not found');
+          return;
+        }
+        subContainer.innerHTML = '';
+        // Ajout du style pour la grille 2 colonnes
+        subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+        data.subcategories.forEach(function (sub, index) {
+          var div = document.createElement('div');
+          div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.style.backgroundColor = '#ffffff';
+
+          // Padding adaptatif
+          if (window.innerWidth >= 768) {
+            div.style.padding = '2rem';
+          }
+
+          // Icône avec couleur de bulle
+          var iconHtml = '';
+          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.sub[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.sub.length];
+          if (sub.icon_image) {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
+          } else {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          }
+          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800\">") + sub.name + '</div>';
+          div.onclick = function () {
+            window.handleSubcategoryClick(sub.id, sub.name);
+          };
+          subContainer.appendChild(div);
+        });
+        console.log('✅ Subcategories rendered');
+      }
+    })["catch"](function (err) {
+      return console.error('❌ Error:', err);
+    });
+  };
+
+  // ========================================
+  // CLIC SUR SOUS-CATÉGORIE → ENFANTS
+  // ========================================
+  window.handleSubcategoryClick = function (parentId, categoryName) {
+    console.log('Subcategory clicked:', parentId, categoryName);
+    var createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
+    createRequest.sub_category = JSON.stringify({
+      id: parentId,
+      name: categoryName
+    });
+    localStorage.setItem('create-request', JSON.stringify(createRequest));
+    fetch('/api/categories/' + parentId + '/children').then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      if (data.success && data.subcategories.length > 0) {
+        var _document$getElementB3, _document$getElementB4;
+        // Il y a des sous-sous-catégories
+        (_document$getElementB3 = document.getElementById('expatriesPopup')) === null || _document$getElementB3 === void 0 || _document$getElementB3.classList.add('hidden');
+        (_document$getElementB4 = document.getElementById('vacanciersAutresBesoinsPopup')) === null || _document$getElementB4 === void 0 || _document$getElementB4.classList.remove('hidden');
+        var childContainer = document.querySelector('#vacanciersAutresBesoinsPopup .child-categories');
+        if (!childContainer) {
+          console.error('❌ .child-categories not found');
+          return;
+        }
+        childContainer.innerHTML = '';
+        // Ajout du style pour la grille 2 colonnes
+        childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+        data.subcategories.forEach(function (child, index) {
+          var div = document.createElement('div');
+          div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.style.backgroundColor = '#ffffff';
+
+          // Padding adaptatif
+          if (window.innerWidth >= 768) {
+            div.style.padding = '2rem';
+          }
+
+          // Icône avec couleur de bulle
+          var iconHtml = '';
+          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.child[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.child.length];
+          if (child.icon_image) {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
+          } else {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          }
+          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800\">") + child.name + '</div>';
+          div.onclick = function () {
+            window.requestForHelp(child.id, child.name);
+          };
+          childContainer.appendChild(div);
+        });
+        console.log('✅ Child categories rendered');
+      } else {
+        // Pas de sous-sous-catégories → redirection directe
+        console.log('No children, redirecting...');
+        window.requestForHelp(parentId, categoryName);
+      }
+    })["catch"](function (err) {
+      return console.error('❌ Error:', err);
+    });
+  };
+
+  // ========================================
+  // REDIRECTION FINALE
+  // ========================================
+  window.requestForHelp = function (childId, childName) {
+    console.log('Request help:', childId, childName);
+    var createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
+    createRequest.child_category = JSON.stringify({
+      id: childId,
+      name: childName
+    });
+    localStorage.setItem('create-request', JSON.stringify(createRequest));
+    window.location.href = '/create-request';
+  };
+
+  // ========================================
+  // FONCTIONS UTILITAIRES
+  // ========================================
+  window.closeSearchPopup = function () {
+    var _document$getElementB5;
+    (_document$getElementB5 = document.getElementById('searchPopup')) === null || _document$getElementB5 === void 0 || _document$getElementB5.classList.add('hidden');
+  };
+  window.closeAllPopups = function () {
+    ['searchPopup', 'expatriesPopup', 'vacanciersPopup', 'vacanciersAutresBesoinsPopup'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    });
+    localStorage.removeItem('create-request');
+  };
+  window.goBackToVacanciersSubcategories = function () {
+    var _document$getElementB6, _document$getElementB7;
+    (_document$getElementB6 = document.getElementById('vacanciersAutresBesoinsPopup')) === null || _document$getElementB6 === void 0 || _document$getElementB6.classList.add('hidden');
+    (_document$getElementB7 = document.getElementById('expatriesPopup')) === null || _document$getElementB7 === void 0 || _document$getElementB7.classList.remove('hidden');
+  };
+  console.log('✅ Category popups: READY');
+}
+
+/***/ }),
+
+/***/ "./resources/js/modules/categoryColors.js":
+/*!************************************************!*\
+  !*** ./resources/js/modules/categoryColors.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   categoryColors: () => (/* binding */ categoryColors)
+/* harmony export */ });
+// Palette de 20 couleurs pour les différents niveaux de catégories
+
+var categoryColors = {
+  // Niveau 1 : Catégories principales (vives)
+  main: ['#FF6B9D', '#4A90E2', '#50C878', '#FFB347', '#BA55D3', '#F4D03F', '#FF7F50', '#5DADE2', '#FF85A2', '#7FCDCD', '#FFE66D', '#FF9AA2', '#DA70D6', '#87CEEB', '#98D8C8', '#FDFD96', '#FFB6C1', '#6495ED', '#90EE90', '#FFDAB9'],
+  // Niveau 2 : Sous-catégories (moyennement vives)
+  sub: ['#FFB6C1', '#87CEEB', '#98FB98', '#FFD700', '#DDA0DD', '#F0E68C', '#FFA07A', '#B0E0E6', '#FFCCCB', '#ADD8E6', '#C9E4CA', '#FFEAA7', '#E6B3E6', '#C5DFF8', '#D5F4E6', '#FFF9C4', '#FFC0CB', '#B0C4DE', '#C1E1C1', '#FFDEAD'],
+  // Niveau 3 : Sous-sous-catégories (douces/pastels)
+  child: ['#FFE4E1', '#E0F2F7', '#F0FFF0', '#FFF8DC', '#F5E6FF', '#FFFACD', '#FFE5CC', '#E1F5FE', '#FFF0F5', '#F0F8FF', '#F5FFFA', '#FFFAF0', '#FAF0E6', '#F8F8FF', '#F0FFFF', '#FFFEF0', '#FFF5EE', '#F5F5DC', '#FAEBD7', '#FFF0DB']
+};
 
 /***/ })
 

@@ -425,7 +425,7 @@
   </div>
 </header>
 
-<!-- Mobile Menu -->
+<!-- 🎨 Mobile Menu -->
 <nav id="mobile-menu" class="lg:hidden fixed top-[64px] left-0 w-full bg-white z-40 shadow-md hidden px-6 py-4 space-y-4" role="navigation" aria-label="Mobile menu" aria-hidden="true">
   <div class="flex justify-end mb-2">
     <button id="mobileMenuCloseBtn" class="p-3 rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-110" aria-label="Close menu">
@@ -436,12 +436,137 @@
   </div>
 
   <ul class="space-y-2" role="menu">
-    <li role="none"><a href="/become-service-provider" class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" role="menuitem">Become a provider</a></li>
-    <li role="none"><a href="/login" class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" role="menuitem">Log in</a></li>
-    <li role="none"><a href="/signup" class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" role="menuitem">Sign up</a></li>
-    <li role="none"><a href="/affiliate" class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" role="menuitem">Affiliate Program</a></li>
+    @if(Auth::check())
+      {{-- ============================================
+           UTILISATEUR CONNECTÉ
+           ============================================ --}}
+      
+      {{-- Profil utilisateur --}}
+      <li role="none" class="border-b border-gray-200 pb-3 mb-3">
+        <div class="flex items-center gap-3 px-4 py-2">
+          @php
+            $user = Auth::user();
+            $provider = $user?->serviceProvider;
+            $profilePhoto = $provider?->profile_photo ? asset($provider->profile_photo) : null;
+            $avatar = $user?->avatar ? asset($user->avatar) : null;
+            $default = asset('images/helpexpat.png');
+            $backgroundImage = "url('{$profilePhoto}'), url('{$avatar}'), url('{$default}')";
+          @endphp
+          
+          <div class="w-10 h-10 rounded-full border bg-center bg-cover"
+               style="background-image: {{ $backgroundImage }};"></div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-800 truncate">{{ $user->name }}</p>
+            @php
+              $rawRole = (string)($user->user_role ?? '');
+              $key = strtolower(str_replace(['-', ' '], '_', $rawRole));
+              $roles = [
+                'service_provider' => ['label' => 'Service Provider', 'cls' => 'bg-emerald-100 text-emerald-700'],
+                'service_requester' => ['label' => 'Service Requester', 'cls' => 'bg-indigo-100 text-indigo-700'],
+                'admin' => ['label' => 'Admin', 'cls' => 'bg-rose-100 text-rose-700'],
+              ];
+              $role = $roles[$key] ?? ['label' => 'User', 'cls' => 'bg-gray-100 text-gray-700'];
+            @endphp
+            <span class="inline-block text-xs px-2 py-0.5 rounded-full {{ $role['cls'] }} font-medium">
+              {{ $role['label'] }}
+            </span>
+          </div>
+        </div>
+      </li>
+
+      {{-- Dashboard --}}
+      <li role="none">
+        <a href="{{ Route::has('dashboard') ? route('dashboard') : '/dashboard' }}" 
+           class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+           role="menuitem">
+          <i class="fas fa-gauge text-blue-600"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      {{-- Become a provider (seulement si pas déjà provider) --}}
+      @if(Auth::user()->user_role != 'service_provider')
+        <li role="none">
+          <a href="/become-service-provider" 
+             class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+             role="menuitem">
+            <i class="fas fa-file-signature text-blue-600"></i>
+            <span>Become a provider</span>
+          </a>
+        </li>
+      @endif
+
+      {{-- Affiliate Program --}}
+      <li role="none">
+        <a href="/affiliate" 
+           class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+           role="menuitem">
+          <i class="fas fa-handshake text-blue-600"></i>
+          <span>Affiliate Program</span>
+        </a>
+      </li>
+
+      {{-- Logout --}}
+      <li role="none" class="border-t border-gray-200 pt-2 mt-2">
+        <form method="POST" action="{{ route('logout') }}" class="w-full">
+          @csrf
+          <button type="submit" 
+                  class="w-full text-left text-red-600 text-base font-semibold py-3 px-4 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-3" 
+                  role="menuitem">
+            <i class="fas fa-right-from-bracket"></i>
+            <span>Log out</span>
+          </button>
+        </form>
+      </li>
+
+    @else
+      {{-- ============================================
+           UTILISATEUR NON CONNECTÉ
+           ============================================ --}}
+      
+      {{-- Become a provider --}}
+      <li role="none">
+        <a href="/become-service-provider" 
+           class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+           role="menuitem">
+          <i class="fas fa-file-signature text-blue-600"></i>
+          <span>Become a provider</span>
+        </a>
+      </li>
+
+      {{-- Login --}}
+      <li role="none">
+        <a href="/login" 
+           class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+           role="menuitem">
+          <i class="fas fa-user text-blue-600"></i>
+          <span>Log in</span>
+        </a>
+      </li>
+
+      {{-- Sign up --}}
+      <li role="none">
+        <a href="/signup" 
+           class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+           role="menuitem">
+          <i class="fas fa-user-plus text-blue-600"></i>
+          <span>Sign up</span>
+        </a>
+      </li>
+
+      {{-- Affiliate Program --}}
+      <li role="none">
+        <a href="/affiliate" 
+           class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+           role="menuitem">
+          <i class="fas fa-handshake text-blue-600"></i>
+          <span>Affiliate Program</span>
+        </a>
+      </li>
+    @endif
   </ul>
 
+  {{-- Sélecteur de langue --}}
   <div class="relative w-full sm:w-56">
     <input id="langOpen" type="checkbox" class="peer sr-only" />
     <label for="langOpen"
@@ -467,7 +592,8 @@
     </ul>
   </div>
 
-  <a href="https://sos-expat.com/" target="_blank"  class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
+  {{-- Bouton S.O.S --}}
+  <a href="https://sos-expat.com/" target="_blank" class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
     <i class="fas fa-phone-alt mr-1"></i> S.O.S
   </a>
 </nav>
