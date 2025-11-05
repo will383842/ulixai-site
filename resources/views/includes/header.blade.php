@@ -919,6 +919,22 @@
             </div>
           </div>
         </div>
+<script>
+  // Validation Step 5 : require at least one country selected
+  window.validateStep5 = function() {
+    const countEl = document.getElementById('step5SelectedCount');
+    if (countEl && parseInt(countEl.textContent, 10) > 0) return true;
+    const s5 = document.getElementById('step5');
+    if (!s5) return false;
+    if (s5.querySelector('[aria-checked="true"], [aria-selected="true"], .selected, .is-selected')) return true;
+    return false;
+  };
+  // Re-évaluer lorsqu'on interagit dans Step 5 (si cartes / boutons non-input)
+  document.getElementById('step5')?.addEventListener('click', () => {
+    if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+  });
+</script>
+
 
         <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
           <div id="step5CountryError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">

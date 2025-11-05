@@ -701,3 +701,16 @@ document.addEventListener('input',  function(){ if (window.providerWizard) provi
 document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
 document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>
+
+<script>
+  // Validation Step 15: OTP code present (6-8 digits)
+  window.validateStep15 = function() {
+    const el = document.getElementById('otp_input');
+    if (!el) return false;
+    const v = (el.value || '').trim();
+    return /^\d{6,8}$/.test(v);
+  };
+  document.getElementById('otp_input')?.addEventListener('input', () => {
+    if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+  });
+</script>

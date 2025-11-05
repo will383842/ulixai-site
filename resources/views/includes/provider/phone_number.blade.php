@@ -715,3 +715,16 @@ document.addEventListener('input',  function(){ if (window.providerWizard) provi
 document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
 document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>
+
+<script>
+  // Validation Step 14: phone format (simple)
+  window.validateStep14 = function() {
+    const el = document.getElementById('phone_number_input');
+    if (!el) return false;
+    const v = (el.value || '').trim();
+    return /^[+0-9][0-9\s\-()]{6,}$/.test(v);
+  };
+  document.getElementById('phone_number_input')?.addEventListener('input', () => {
+    if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+  });
+</script>

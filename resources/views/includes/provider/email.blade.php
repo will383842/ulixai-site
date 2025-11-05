@@ -596,3 +596,16 @@ document.addEventListener('input',  function(){ if (window.providerWizard) provi
 document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
 document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>
+
+<script>
+  // Validation Step 13: email format
+  window.validateStep13 = function() {
+    const el = document.getElementById('email_input');
+    if (!el) return false;
+    const v = (el.value || '').trim();
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  };
+  document.getElementById('email_input')?.addEventListener('input', () => {
+    if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+  });
+</script>

@@ -15,8 +15,8 @@ export class WizardCore {
     try {
       const raw = sessionStorage.getItem(this.storeKey) || localStorage.getItem(this.storeKey) || '{}';
       return JSON.parse(raw);
-    } catch(e) { 
-      return {}; 
+    } catch (e) {
+      return {};
     }
   }
 
@@ -24,7 +24,7 @@ export class WizardCore {
     try {
       sessionStorage.setItem(this.storeKey, JSON.stringify(state));
       localStorage.setItem(this.storeKey, JSON.stringify(state));
-    } catch(e) {
+    } catch (e) {
       console.error('Failed to save state', e);
     }
   }
@@ -43,15 +43,15 @@ export class WizardCore {
   setBtnEnabled(selector, enabled) {
     const nodes = document.querySelectorAll(selector);
     nodes.forEach(el => {
-      el.disabled = !enabled;
+      try { el.disabled = !enabled; } catch (_) {}
       el.classList.toggle('opacity-50', !enabled);
+      el.classList.toggle('cursor-not-allowed', !enabled);
     });
   }
 
   validate(i) {
     const step = this.steps[i];
     if (!step) return true;
-
     const required = step.querySelectorAll('[required]');
     for (let r = 0; r < required.length; r++) {
       const f = required[r];
@@ -68,54 +68,75 @@ export class WizardCore {
   }
 
   initCloseButtons() {
-    const closeBtn = document.getElementById('closePopup');
     const popup = document.getElementById('signupPopup');
-    const signupBtn = document.getElementById('signupBtn');
-    
-    // Bouton close (X)
-    if (closeBtn && popup) {
-      closeBtn.addEventListener('click', () => {
-        console.log('🔒 Closing signup popup via close button');
-        this.closePopup();
-      });
-      console.log('✅ Close button attached');
-    } else {
-      console.warn('⚠️ Close button or popup not found');
-    }
-    
-    // Bouton Sign Up dans le header
-    if (signupBtn && popup) {
-      signupBtn.addEventListener('click', (e) => {
+
+    // --- DÉLÉGATION ROBUSTE (capture) ---
+    document.addEventListener('click', (e) => {
+      const t = e.target;
+      if (!t || !t.closest) return;
+
+      // OUVRIR SIGN UP (toutes variantes courantes)
+      const openSignup = t.closest(
+        '#signupBtn, [data-open="signup"], .js-open-signup, [data-action="open-signup"], a[href="#signupPopup"], [data-target="#signupPopup"], [aria-controls="signupPopup"]'
+      );
+      if (openSignup) {
         e.preventDefault();
-        console.log('🔓 Opening signup popup via Sign Up button');
         this.openPopup();
-      });
-      console.log('✅ Sign Up button attached');
+        return;
+      }
+
+      // OUVRIR REQUEST HELP (délégué à category-popups.js)
+      const openHelp = t.closest(
+        '#requestHelpBtn, #helpBtn, [data-open="help"], .js-open-help, [data-action="open-help"], a[href="#helpPopup"], [data-target="#helpPopup"]'
+      );
+      if (openHelp) {
+        e.preventDefault();
+        if (typeof window.openHelpPopup === 'function') {
+          window.openHelpPopup();
+        } else {
+          console.warn('openHelpPopup() non disponible – vérifier initializeCategoryPopups()');
+        }
+        return;
+      }
+
+      // FERMER SIGN UP (croix + variantes)
+      const closeBtn = t.closest(
+        '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"], .modal-close, [aria-label="Close"]'
+      );
+      if (closeBtn) {
+        e.preventDefault();
+        this.closePopup();
+        return;
+      }
+
+      // FERMETURE via BACKDROP
+      if (popup && e.target === popup) {
+        this.closePopup();
+      }
+    }, true); // capture=true pour intercepter tôt
+
+    // Fallback direct si éléments présents à l'init (au cas où)
+    const directOpen = document.getElementById('signupBtn');
+    if (directOpen) {
+      directOpen.addEventListener('click', (e) => { e.preventDefault(); this.openPopup(); });
     }
-    
-    // Fermer avec Escape
+    const directClose = document.getElementById('closePopup');
+    if (directClose) {
+      directClose.addEventListener('click', (e) => { e.preventDefault(); this.closePopup(); });
+    }
+
+    // ESC pour fermer
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
-        console.log('⌨️ Closing popup with Escape');
         this.closePopup();
       }
     });
-    
-    // Fermer en cliquant sur le backdrop
-    if (popup) {
-      popup.addEventListener('click', (e) => {
-        if (e.target === popup) {
-          console.log('🖱️ Closing popup via backdrop');
-          this.closePopup();
-        }
-      });
-    }
-    
-    // Exposer globalement pour usage depuis HTML (onclick="openSignupPopup()")
+
+    // Globals pour compatibilité HTML inline
+    window.openSignupPopup  = () => this.openPopup();
     window.closeSignupPopup = () => this.closePopup();
-    window.openSignupPopup = () => this.openPopup();
-    
-    console.log('✅ Popup controls initialized');
+
+    console.log('✅ Popup controls initialized (delegated, signup + help)');
   }
 
   closePopup() {
@@ -124,11 +145,12 @@ export class WizardCore {
       console.warn('⚠️ Popup not found');
       return;
     }
-    
-    popup.classList.add('hidden');
+    // Ajoute toutes les classes de masquage usuelles
+    popup.classList.add('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
+    popup.setAttribute('aria-hidden', 'true');
+    popup.style.display = 'none';
+
     console.log('✅ Popup closed');
-    
-    // Réinitialiser à l'étape 1
     this.resetToFirstStep();
   }
 
@@ -138,18 +160,18 @@ export class WizardCore {
       console.warn('⚠️ Popup not found');
       return;
     }
-    
-    popup.classList.remove('hidden');
+    // Retire toutes les classes de masquage usuelles
+    popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
+    popup.removeAttribute('aria-hidden');
+    popup.style.display = 'block';
+
     console.log('✅ Popup opened');
-    
-    // Afficher step 1
     this.resetToFirstStep();
   }
 
   resetToFirstStep() {
     const allSteps = document.querySelectorAll('[id^="step"]');
     allSteps.forEach(step => step.classList.add('hidden'));
-    
     const step1 = document.getElementById('step1');
     if (step1) {
       step1.classList.remove('hidden');
@@ -164,15 +186,15 @@ export function initializeWizard() {
     console.log('⚠️ Wizard already initialized');
     return window.providerWizard;
   }
-  
+
   const wizard = new WizardCore();
   wizard.init();
-  
+
   window.providerWizard = {
     update: () => wizard.updateUI(),
     close: () => wizard.closePopup(),
-    open: () => wizard.openPopup()
+    open: () => wizard.openPopup(),
   };
-  
+
   return window.providerWizard;
 }
