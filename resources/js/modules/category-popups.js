@@ -1,6 +1,5 @@
-import { categoryColors, getCategoryColor, categoryLevels } from './categoryColors.js';
+import { getCategoryColorByLevel, categoryLevels } from './categoryColors.js';
 
-// Configuration
 const CONFIG = {
   GRID: {
     MOBILE_COLUMNS: 'repeat(2, 1fr)',
@@ -19,12 +18,11 @@ const CONFIG = {
   },
   ANIMATION: {
     HOVER_TRANSFORM: 'translateY(-8px) scale(1.02)',
-    DEFAULT_TRANSFORM: 'translateY(0) scale(1)',
-    TRANSITION: '0.5s'
+    DEFAULT_TRANSFORM: 'translateY(0) scale(1)'
   },
   CACHE: {
     ENABLED: true,
-    DURATION: 5 * 60 * 1000 // 5 minutes
+    DURATION: 300000
   }
 };
 
@@ -34,42 +32,31 @@ const API_ENDPOINTS = {
   CHILDREN: (id) => `/api/categories/${id}/children`
 };
 
-// Cache system
 const cache = {
   data: new Map(),
-  
   get(key) {
     if (!CONFIG.CACHE.ENABLED) return null;
     const cached = this.data.get(key);
-    if (!cached) return null;
-    const now = Date.now();
-    if (now - cached.timestamp > CONFIG.CACHE.DURATION) {
+    if (!cached || Date.now() - cached.timestamp > CONFIG.CACHE.DURATION) {
       this.data.delete(key);
       return null;
     }
     return cached.value;
   },
-  
   set(key, value) {
-    if (!CONFIG.CACHE.ENABLED) return;
-    this.data.set(key, { value, timestamp: Date.now() });
-  },
-  
-  clear() {
-    this.data.clear();
+    if (CONFIG.CACHE.ENABLED) {
+      this.data.set(key, { value, timestamp: Date.now() });
+    }
   }
 };
 
-// Utility functions
+const imageCache = new Set();
+
 function debounce(func, wait) {
   let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
+  return (...args) => {
     clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+    timeout = setTimeout(() => func(...args), wait);
   };
 }
 
@@ -85,13 +72,18 @@ function getResponsiveSize(mobileValue, desktopValue) {
 }
 
 function createShineEffect() {
-  return '<div class="shine-effect"></div>';
+  return '<div class="shine-effect" aria-hidden="true"></div>';
 }
 
 function preloadImage(src) {
+  if (imageCache.has(src)) return Promise.resolve(src);
+  
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onload = () => resolve(src);
+    img.onload = () => {
+      imageCache.add(src);
+      resolve(src);
+    };
     img.onerror = reject;
     img.src = src;
   });
@@ -99,25 +91,29 @@ function preloadImage(src) {
 
 function createIconHtml(item, iconColor) {
   const iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
+  const escapedName = item.name.replace(/"/g, '&quot;');
   
   if (item.icon_image) {
     const imagePath = item.icon_image.startsWith('/') ? item.icon_image : '/' + item.icon_image;
     preloadImage(imagePath).catch(() => {});
     
-    return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; padding: ${CONFIG.ICONS.PADDING}; display: flex; align-items: center; justify-content: center; overflow: hidden;">` +
-           `<img src="${imagePath}" alt="${item.name}" class="w-full h-full object-contain rounded-full" loading="lazy">` +
+    return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; padding: ${CONFIG.ICONS.PADDING}; display: flex; align-items: center; justify-content: center; overflow: hidden;" role="img" aria-label="${escapedName}">` +
+           `<img src="${imagePath}" alt="${escapedName}" class="w-full h-full object-contain rounded-full" loading="lazy" decoding="async">` +
            '</div>';
-  } else {
-    return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; display: flex; align-items: center; justify-content: center;">` +
-           '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
-           '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
-           '</svg></div>';
   }
+  
+  return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; display: flex; align-items: center; justify-content: center;" role="img" aria-label="${escapedName}">` +
+         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">' +
+         '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
+         '</svg></div>';
 }
 
-function createCategoryCard(item, index, level, onClickHandler) {
-  const div = document.createElement('div');
+function createCategoryCard(item, level, allIds, onClickHandler) {
+  const div = document.createElement('button');
+  div.type = 'button';
   div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
+  div.setAttribute('aria-label', `Sélectionner ${item.name}`);
+  div.setAttribute('role', 'button');
   
   div.style.cssText = `
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -136,24 +132,27 @@ function createCategoryCard(item, index, level, onClickHandler) {
     div.style.padding = '1rem';
   }
   
-  const iconColor = getCategoryColor(level, index);
+  const iconColor = getCategoryColorByLevel(level, item.id, allIds);
   const shadowColor = categoryLevels[level]?.shadowColor || 'rgba(59, 130, 246, 0.15)';
   
-  div.onmouseenter = function() {
-    this.style.willChange = 'transform, box-shadow';
-    this.style.transform = CONFIG.ANIMATION.HOVER_TRANSFORM;
-    this.style.boxShadow = `0 20px 40px ${shadowColor}`;
-    const shine = this.querySelector('.shine-effect');
+  const onMouseEnter = () => {
+    div.style.willChange = 'transform, box-shadow';
+    div.style.transform = CONFIG.ANIMATION.HOVER_TRANSFORM;
+    div.style.boxShadow = `0 20px 40px ${shadowColor}`;
+    const shine = div.querySelector('.shine-effect');
     if (shine) shine.style.left = '100%';
   };
   
-  div.onmouseleave = function() {
-    this.style.transform = CONFIG.ANIMATION.DEFAULT_TRANSFORM;
-    this.style.boxShadow = '';
-    this.style.willChange = 'auto';
-    const shine = this.querySelector('.shine-effect');
+  const onMouseLeave = () => {
+    div.style.transform = CONFIG.ANIMATION.DEFAULT_TRANSFORM;
+    div.style.boxShadow = '';
+    div.style.willChange = 'auto';
+    const shine = div.querySelector('.shine-effect');
     if (shine) shine.style.left = '-100%';
   };
+  
+  div.addEventListener('mouseenter', onMouseEnter, { passive: true });
+  div.addEventListener('mouseleave', onMouseLeave, { passive: true });
   
   const shineEffect = createShineEffect();
   const iconHtml = createIconHtml(item, iconColor);
@@ -161,29 +160,27 @@ function createCategoryCard(item, index, level, onClickHandler) {
   const textHtml = `<div class="${textSize} font-semibold text-gray-800 category-text">${item.name}</div>`;
   
   div.innerHTML = shineEffect + iconHtml + textHtml;
-  div.onclick = function() {
-    onClickHandler(item.id, item.name);
-  };
+  div.addEventListener('click', () => onClickHandler(item.id, item.name), { passive: true });
   
   return div;
 }
 
 function renderCategories(items, containerSelector, level, clickHandler) {
   const container = document.querySelector(containerSelector);
-  if (!container) {
-    console.error('Container not found:', containerSelector);
-    return;
-  }
+  if (!container) return;
   
   const fragment = document.createDocumentFragment();
   container.innerHTML = '';
   setupResponsiveGrid(container);
   
+  const allIds = items.map(item => item.id);
+  
   requestAnimationFrame(() => {
-    items.forEach((item, index) => {
-      const card = createCategoryCard(item, index, level, clickHandler);
+    const len = items.length;
+    for (let i = 0; i < len; i++) {
+      const card = createCategoryCard(items[i], level, allIds, clickHandler);
       fragment.appendChild(card);
-    });
+    }
     container.appendChild(fragment);
   });
 }
@@ -198,15 +195,14 @@ async function fetchWithCache(url) {
   return data;
 }
 
-// Module initialization
 export function initializeCategoryPopups() {
   
-  // Open popup
   window.openHelpPopup = function() {
     const popup = document.getElementById(categoryLevels.main.popupId);
     if (!popup) return;
     
     popup.classList.remove('hidden');
+    popup.setAttribute('aria-hidden', 'false');
     
     fetchWithCache(API_ENDPOINTS.CATEGORIES)
       .then(data => {
@@ -222,10 +218,18 @@ export function initializeCategoryPopups() {
       .catch(err => console.error('Fetch error:', err));
   };
   
-  // Category click
   window.handleCategoryClick = function(categoryId, categoryName) {
-    document.getElementById(categoryLevels.main.popupId)?.classList.add('hidden');
-    document.getElementById(categoryLevels.sub.popupId)?.classList.remove('hidden');
+    const mainPopup = document.getElementById(categoryLevels.main.popupId);
+    const subPopup = document.getElementById(categoryLevels.sub.popupId);
+    
+    if (mainPopup) {
+      mainPopup.classList.add('hidden');
+      mainPopup.setAttribute('aria-hidden', 'true');
+    }
+    if (subPopup) {
+      subPopup.classList.remove('hidden');
+      subPopup.setAttribute('aria-hidden', 'false');
+    }
     
     const createRequest = { category: JSON.stringify({ id: categoryId, name: categoryName }) };
     localStorage.setItem('create-request', JSON.stringify(createRequest));
@@ -244,7 +248,6 @@ export function initializeCategoryPopups() {
       .catch(err => console.error('Error:', err));
   };
   
-  // Subcategory click
   window.handleSubcategoryClick = function(parentId, categoryName) {
     const createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
     createRequest.sub_category = JSON.stringify({ id: parentId, name: categoryName });
@@ -253,8 +256,17 @@ export function initializeCategoryPopups() {
     fetchWithCache(API_ENDPOINTS.CHILDREN(parentId))
       .then(data => {
         if (data.success && data.subcategories.length > 0) {
-          document.getElementById(categoryLevels.sub.popupId)?.classList.add('hidden');
-          document.getElementById(categoryLevels.child.popupId)?.classList.remove('hidden');
+          const subPopup = document.getElementById(categoryLevels.sub.popupId);
+          const childPopup = document.getElementById(categoryLevels.child.popupId);
+          
+          if (subPopup) {
+            subPopup.classList.add('hidden');
+            subPopup.setAttribute('aria-hidden', 'true');
+          }
+          if (childPopup) {
+            childPopup.classList.remove('hidden');
+            childPopup.setAttribute('aria-hidden', 'false');
+          }
           
           renderCategories(
             data.subcategories,
@@ -269,7 +281,6 @@ export function initializeCategoryPopups() {
       .catch(err => console.error('Error:', err));
   };
   
-  // Final redirect
   window.requestForHelp = function(childId, childName) {
     const createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
     createRequest.child_category = JSON.stringify({ id: childId, name: childName });
@@ -277,8 +288,7 @@ export function initializeCategoryPopups() {
     window.location.href = '/create-request';
   };
   
-  // Debounced resize
-  const debouncedResize = debounce(function() {
+  const debouncedResize = debounce(() => {
     Object.values(categoryLevels).forEach(level => {
       const container = document.querySelector(`#${level.popupId} .${level.containerClass}`);
       if (container && !container.classList.contains('hidden')) {
@@ -287,5 +297,5 @@ export function initializeCategoryPopups() {
     });
   }, 250);
   
-  window.addEventListener('resize', debouncedResize);
+  window.addEventListener('resize', debouncedResize, { passive: true });
 }

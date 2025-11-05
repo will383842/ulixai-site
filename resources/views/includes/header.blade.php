@@ -1,15 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <!-- SEO basics injected -->
- @php $canonical = url()->current(); @endphp
+  @php $canonical = url()->current(); @endphp
   <link rel="canonical" href="{{ $canonical }}" />
   <meta name="robots" content="{{ isset($noindex) && $noindex ? 'noindex,nofollow' : 'index,follow' }}">
+
+  <!-- Performance hints -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://code.jquery.com">
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+
+  <!-- PWA / Mobile -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#ffffff">
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -618,7 +635,7 @@
 
 <!-- 🚀 Bouton Flèche Retour en Haut -->
 <button id="scrollToTopBtn" aria-label="Retour en haut">
-  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5">
+  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
     <polyline points="18 15 12 9 6 15"></polyline>
   </svg>
 </button>
@@ -643,16 +660,16 @@
         </div>
         <div class="flex items-center h-full">
           <a href="/">
-            <img src="/images/headerlogos.png" alt="Logo" class="w-25 h-auto max-h-14 object-contain" />
+            <img src="/images/headerlogos.png" alt="Logo ULIXAI" class="w-25 h-auto max-h-14 object-contain" width="100" height="56" />
           </a>
         </div>
       </div>
 
       <!-- Desktop Buttons -->
       <div class="hidden lg:flex items-center space-x-3 group">
-        <button onclick="openHelpPopup()" class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover-glow transform hover:scale-105 shadow-lg">
+        <button onclick="openHelpPopup()" class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover-glow transform hover:scale-105 shadow-lg" aria-label="Request Help">
           <span class="flex items-center space-x-2">
-            <i class="fas fa-lock text-white-600 text-xl"></i>
+            <i class="fas fa-lock text-white-600 text-xl" aria-hidden="true"></i>
             <span>Request Help</span>
           </span>
         </button>
@@ -660,10 +677,11 @@
         <!-- SOS Button -->
         <a href="https://sos-expat.com/" 
            target="_blank"
-           rel="noopener"
-           class="nav-button bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 animate-glow transform hover:scale-105 shadow-lg">
+           rel="noopener noreferrer"
+           class="nav-button bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 animate-glow transform hover:scale-105 shadow-lg"
+           aria-label="Emergency SOS">
           <span class="flex items-center space-x-2">
-            <i class="fas fa-phone-alt text-white-600 text-xl"></i>
+            <i class="fas fa-phone-alt text-white-600 text-xl" aria-hidden="true"></i>
             <span>S.O.S</span>
           </span>
         </a>
@@ -671,7 +689,7 @@
         @if(Auth::check() && Auth::user()->user_role != 'service_provider' || Auth::check() === false)
           <a href="/become-service-provider" class="nav-button border-2 border-gradient-to-r from-purple-500 to-blue-500 bg-gradient-to-r from-purple-50 to-blue-50 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 rounded-full text-sm font-semibold hover:bg-gradient-to-r hover:from-purple-100 hover:to-blue-100 transition-all duration-300 transform hover:scale-105 shadow-lg border-blue-300">
             <span class="flex items-center space-x-2 text-blue-600">
-              <i class="fas fa-file-signature text-blue-600 text-2xl"></i>
+              <i class="fas fa-file-signature text-blue-600 text-2xl" aria-hidden="true"></i>
               <span>Become a Provider</span>
             </span>
           </a>
@@ -683,29 +701,36 @@
         <!-- Language Selector with Google Translate -->
         <div class="relative group inline-block">
           <button id="langBtn" type="button"
-            class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white shadow hover:bg-gray-50 transition">
+            class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white shadow hover:bg-gray-50 transition"
+            aria-label="Select language"
+            aria-haspopup="menu"
+            aria-expanded="false">
             <div class="w-6 h-6 rounded-full overflow-hidden border border-gray-300">
-              <img id="langFlag" src="https://flagcdn.com/24x18/us.png" alt="EN" class="w-full h-full object-cover">
+              <img id="langFlag" src="https://flagcdn.com/24x18/us.png" alt="EN" class="w-full h-full object-cover" width="24" height="18">
             </div>
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
 
           <!-- Dropdown -->
           <ul id="langMenu"
-              class="absolute right-0 hidden bg-white shadow-lg border border-gray-200 rounded-lg mt-2 w-40 z-20">
+              class="absolute right-0 hidden bg-white shadow-lg border border-gray-200 rounded-lg mt-2 w-40 z-20"
+              role="menu">
             <li data-lang="en" data-flag="https://flagcdn.com/24x18/us.png"
-                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100">
-              <img src="https://flagcdn.com/20x15/us.png" class="w-5 h-4 mr-2"> English
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="https://flagcdn.com/20x15/us.png" alt="" class="w-5 h-4 mr-2" width="20" height="15"> English
             </li>
             <li data-lang="fr" data-flag="https://flagcdn.com/24x18/fr.png"
-                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100">
-              <img src="https://flagcdn.com/20x15/fr.png" class="w-5 h-4 mr-2"> Français
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="https://flagcdn.com/20x15/fr.png" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Français
             </li>
             <li data-lang="de" data-flag="https://flagcdn.com/24x18/de.png"
-                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100">
-              <img src="https://flagcdn.com/20x15/de.png" class="w-5 h-4 mr-2"> Deutsch
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="https://flagcdn.com/20x15/de.png" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Deutsch
             </li>
           </ul>
         </div>
@@ -721,12 +746,12 @@
 
         @if(!$isActive)
           <a href="/login" class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 group">
-            <i class="fas fa-user mr-2 text-lg text-blue-600"></i>
+            <i class="fas fa-user mr-2 text-lg text-blue-600" aria-hidden="true"></i>
             <span class="font-medium text-blue-600"> Log in</span>
           </a>
 
           <button id="signupBtn" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2">
-            <i class="fas fa-user-plus mr-2 text-lg "></i>
+            <i class="fas fa-user-plus mr-2 text-lg" aria-hidden="true"></i>
             <span>Sign Up</span>
           </button>
 
@@ -750,12 +775,12 @@
               class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100"
               aria-haspopup="menu"
               :aria-expanded="open.toString()"
-            >
+              aria-label="User menu">
               <div class="w-8 h-8 rounded-full border bg-center bg-cover"
                 style="background-image: {{ $backgroundImage }};">
               </div>
               <span id="header-user-name" class="font-medium text-gray-700 truncate max-w-[10rem]">{{ $user->name }}</span>
-              <i class="fas fa-chevron-down text-gray-500 text-sm"></i>
+              <i class="fas fa-chevron-down text-gray-500 text-sm" aria-hidden="true"></i>
             </button>
 
             <div
@@ -766,8 +791,7 @@
               @keydown.escape.window="open = false"
               style="display:none"
               class="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden z-50"
-              role="menu"
-            >
+              role="menu">
               <div class="p-3 flex items-center gap-3 border-b">
                   <div class="w-8 h-8 rounded-full border bg-center bg-cover"
                 style="background-image: {{ $backgroundImage }};">
@@ -816,7 +840,7 @@
 
                   <div class="text-xs">
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-medium {{ $role['cls'] }} truncate max-w-[12rem]">
-                      <i class="fas {{ $role['icon'] }} text-[11px]"></i>
+                      <i class="fas {{ $role['icon'] }} text-[11px]" aria-hidden="true"></i>
                       {{ $role['label'] }}
                     </span>
                   </div>
@@ -827,14 +851,14 @@
 
               <nav class="py-1">
                 <a href="{{ Route::has('dashboard') ? route('dashboard') : '/dashboard' }}" class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-gray-50" role="menuitem">
-                  <i class="fas fa-gauge"></i>
+                  <i class="fas fa-gauge" aria-hidden="true"></i>
                   <span>Dashboard</span>
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-1">
                   @csrf
                   <button type="submit" class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-red-600 hover:bg-red-50" role="menuitem">
-                    <i class="fas fa-right-from-bracket"></i>
+                    <i class="fas fa-right-from-bracket" aria-hidden="true"></i>
                     <span>Log out</span>
                   </button>
                 </form>
@@ -851,7 +875,7 @@
 <!-- ============================================
      🚀 POPUP MODERNISÉ 2025/2026
      ============================================ -->
-<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6">
+<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
   <!-- CONTAINER RESPONSIVE -->
   <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col">
     <!-- HEADER STICKY -->
@@ -862,7 +886,7 @@
             <span class="text-xs font-medium text-gray-500">Step <span id="currentStepNum">1</span> of 16</span>
             <span class="text-xs font-semibold text-blue-600"><span id="progressPercentage">6</span>%</span>
           </div>
-          <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100">
             <div id="mobileProgressBar" class="h-full bg-gradient-to-r from-blue-600 to-blue-500 transition-all duration-300 ease-out" style="width: 6.25%"></div>
           </div>
         </div>
@@ -872,7 +896,7 @@
       <button id="closePopup" 
               class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all active:scale-95 text-gray-500 hover:text-gray-800 shrink-0 absolute top-2 right-2" 
               aria-label="Close signup form">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
@@ -897,13 +921,13 @@
           <div class="text-center space-y-2 relative">
             <div class="flex justify-center">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
-                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
             </div>
             <div>
-              <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
+              <h2 id="step5-title" class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
                 Where Do You Live? 🌍
               </h2>
               <p class="text-sm sm:text-base font-semibold text-gray-600">
@@ -911,7 +935,7 @@
               </p>
             </div>
             <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
-              <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
               </svg>
               <span class="text-xs font-bold text-blue-700">
@@ -940,7 +964,7 @@
         <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
           <div id="step5CountryError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
             <div class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
               </svg>
               <div>
@@ -952,7 +976,7 @@
 
           <div id="step5CountrySuccess" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3" role="status">
             <div class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
               </svg>
               <div>
@@ -963,8 +987,8 @@
           </div>
 
           <div class="relative">
-            <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-              <span class="text-lg">🌎</span>
+            <label for="location-input" class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+              <span class="text-lg" aria-hidden="true">🌎</span>
               <span class="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">Country of Residence</span>
             </label>
             <div class="relative">
@@ -972,6 +996,7 @@
                 id="location-input" 
                 name="location" 
                 class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all appearance-none cursor-pointer text-sm font-medium hover:border-blue-400"
+                aria-required="true"
               >
                 <option value="" disabled selected>Choose your country...</option>
                 @foreach($countries as $country)
@@ -979,7 +1004,7 @@
                 @endforeach
               </select>
               <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                 </svg>
               </div>
@@ -1017,30 +1042,30 @@
 
     <!-- NAVIGATION BUTTONS -->
     <div id="mobileNavButtons" class="sm:hidden">
-      <button id="mobileBackBtn" class="btn-back" style="display:none;">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <button id="mobileBackBtn" class="btn-back" style="display:none;" aria-label="Go back">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
         <span>Back</span>
       </button>
-      <button id="mobileNextBtn" class="btn-next">
+      <button id="mobileNextBtn" class="btn-next" aria-label="Continue to next step">
         <span>Continue</span>
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
         </svg>
       </button>
     </div>
 
     <div id="desktopNavButtons" class="hidden sm:flex px-8 pb-6">
-      <button id="desktopBackBtn" class="btn-back" style="display:none;">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <button id="desktopBackBtn" class="btn-back" style="display:none;" aria-label="Go back">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
         <span>Back</span>
       </button>
-      <button id="desktopNextBtn" class="btn-next">
+      <button id="desktopNextBtn" class="btn-next" aria-label="Continue to next step">
         <span>Continue</span>
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
         </svg>
       </button>
@@ -1140,7 +1165,7 @@
         <a href="{{ Route::has('dashboard') ? route('dashboard') : '/dashboard' }}" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
-          <i class="fas fa-gauge text-blue-600"></i>
+          <i class="fas fa-gauge text-blue-600" aria-hidden="true"></i>
           <span>Dashboard</span>
         </a>
       </li>
@@ -1151,7 +1176,7 @@
           <a href="/become-service-provider" 
              class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
              role="menuitem">
-            <i class="fas fa-file-signature text-blue-600"></i>
+            <i class="fas fa-file-signature text-blue-600" aria-hidden="true"></i>
             <span>Become a provider</span>
           </a>
         </li>
@@ -1162,7 +1187,7 @@
         <a href="/affiliate" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
-          <i class="fas fa-handshake text-blue-600"></i>
+          <i class="fas fa-handshake text-blue-600" aria-hidden="true"></i>
           <span>Affiliate Program</span>
         </a>
       </li>
@@ -1174,7 +1199,7 @@
           <button type="submit" 
                   class="w-full text-left text-red-600 text-base font-semibold py-3 px-4 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-3" 
                   role="menuitem">
-            <i class="fas fa-right-from-bracket"></i>
+            <i class="fas fa-right-from-bracket" aria-hidden="true"></i>
             <span>Log out</span>
           </button>
         </form>
@@ -1190,7 +1215,7 @@
         <a href="/become-service-provider" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
-          <i class="fas fa-file-signature text-blue-600"></i>
+          <i class="fas fa-file-signature text-blue-600" aria-hidden="true"></i>
           <span>Become a provider</span>
         </a>
       </li>
@@ -1200,7 +1225,7 @@
         <a href="/login" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
-          <i class="fas fa-user text-blue-600"></i>
+          <i class="fas fa-user text-blue-600" aria-hidden="true"></i>
           <span>Log in</span>
         </a>
       </li>
@@ -1210,7 +1235,7 @@
         <a href="/signup" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
-          <i class="fas fa-user-plus text-blue-600"></i>
+          <i class="fas fa-user-plus text-blue-600" aria-hidden="true"></i>
           <span>Sign up</span>
         </a>
       </li>
@@ -1220,7 +1245,7 @@
         <a href="/affiliate" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
-          <i class="fas fa-handshake text-blue-600"></i>
+          <i class="fas fa-handshake text-blue-600" aria-hidden="true"></i>
           <span>Affiliate Program</span>
         </a>
       </li>
@@ -1233,29 +1258,33 @@
     <label for="langOpen"
           class="flex justify-between items-center w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-800 bg-white cursor-pointer select-none">
       <span id="languageLabel">Language</span>
-      <img id="languageFlag" src="https://flagcdn.com/24x18/us.png" alt="Lang" class="ml-2 w-5 h-4 object-cover" />
+      <img id="languageFlag" src="https://flagcdn.com/24x18/us.png" alt="" class="ml-2 w-5 h-4 object-cover" width="20" height="16" />
     </label>
 
     <ul id="languageMenu"
-        class="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-50 hidden peer-checked:block">
+        class="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-50 hidden peer-checked:block"
+        role="menu">
       <li data-lang="fr" data-flag="https://flagcdn.com/24x18/fr.png"
-          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2">
-        <img src="https://flagcdn.com/24x18/fr.png" class="w-5 h-4" /> Français
+          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2"
+          role="menuitem">
+        <img src="https://flagcdn.com/24x18/fr.png" alt="" class="w-5 h-4" width="20" height="16" /> Français
       </li>
       <li data-lang="en" data-flag="https://flagcdn.com/24x18/us.png"
-          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2">
-        <img src="https://flagcdn.com/24x18/us.png" class="w-5 h-4" /> English
+          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2"
+          role="menuitem">
+        <img src="https://flagcdn.com/24x18/us.png" alt="" class="w-5 h-4" width="20" height="16" /> English
       </li>
       <li data-lang="de" data-flag="https://flagcdn.com/24x18/de.png"
-          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2">
-        <img src="https://flagcdn.com/24x18/de.png" class="w-5 h-4" /> Deutsch
+          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2"
+          role="menuitem">
+        <img src="https://flagcdn.com/24x18/de.png" alt="" class="w-5 h-4" width="20" height="16" /> Deutsch
       </li>
     </ul>
   </div>
 
   {{-- Bouton S.O.S --}}
-  <a href="https://sos-expat.com/" target="_blank" class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
-    <i class="fas fa-phone-alt mr-1"></i> S.O.S
+  <a href="https://sos-expat.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
+    <i class="fas fa-phone-alt mr-1" aria-hidden="true"></i> S.O.S
   </a>
 </nav>
 
@@ -1263,10 +1292,10 @@
 
 <!-- 🍞 Fil d'Ariane -->
 <div class="breadcrumb-container">
-  <nav class="breadcrumb">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
     <div class="breadcrumb-item">
       <a href="/">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
@@ -1286,10 +1315,10 @@
       $title = ucfirst(str_replace(['-', '_'], ' ', $segment));
       @endphp
 
-      <span class="breadcrumb-separator">›</span>
+      <span class="breadcrumb-separator" aria-hidden="true">›</span>
 
       @if($isLast)
-        <div class="breadcrumb-item active">{{ $title }}</div>
+        <div class="breadcrumb-item active" aria-current="page">{{ $title }}</div>
       @else
         <div class="breadcrumb-item"><a href="{{ $url }}">{{ $title }}</a></div>
       @endif
