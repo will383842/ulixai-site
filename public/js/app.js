@@ -14038,82 +14038,222 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   initializeCategoryPopups: () => (/* binding */ initializeCategoryPopups)
 /* harmony export */ });
 /* harmony import */ var _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./categoryColors.js */ "./resources/js/modules/categoryColors.js");
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
-function initializeCategoryPopups() {
-  console.log('🎯 Category popups: START');
 
-  // ========================================
-  // FONCTION PRINCIPALE : OUVRIR LE POPUP
-  // ========================================
-  window.openHelpPopup = function () {
-    console.log('✅ openHelpPopup CALLED');
-    var popup = document.getElementById('searchPopup');
-    if (!popup) {
-      console.error('❌ searchPopup not found');
-      return;
+// Configuration
+var CONFIG = {
+  GRID: {
+    MOBILE_COLUMNS: 'repeat(2, 1fr)',
+    DESKTOP_COLUMNS: 'repeat(3, 1fr)',
+    GAP: '0.75rem',
+    BREAKPOINT: 768
+  },
+  ICONS: {
+    MOBILE_SIZE: 'w-12 h-12',
+    DESKTOP_SIZE: 'w-14 h-14',
+    PADDING: '0.4rem'
+  },
+  TEXT: {
+    MOBILE_SIZE: 'text-xs',
+    DESKTOP_SIZE: 'text-xs'
+  },
+  ANIMATION: {
+    HOVER_TRANSFORM: 'translateY(-8px) scale(1.02)',
+    DEFAULT_TRANSFORM: 'translateY(0) scale(1)',
+    TRANSITION: '0.5s'
+  },
+  CACHE: {
+    ENABLED: true,
+    DURATION: 5 * 60 * 1000 // 5 minutes
+  }
+};
+var API_ENDPOINTS = {
+  CATEGORIES: '/api/categories',
+  SUBCATEGORIES: function SUBCATEGORIES(id) {
+    return "/api/categories/".concat(id, "/subcategories");
+  },
+  CHILDREN: function CHILDREN(id) {
+    return "/api/categories/".concat(id, "/children");
+  }
+};
+
+// Cache system
+var cache = {
+  data: new Map(),
+  get: function get(key) {
+    if (!CONFIG.CACHE.ENABLED) return null;
+    var cached = this.data.get(key);
+    if (!cached) return null;
+    var now = Date.now();
+    if (now - cached.timestamp > CONFIG.CACHE.DURATION) {
+      this.data["delete"](key);
+      return null;
     }
+    return cached.value;
+  },
+  set: function set(key, value) {
+    if (!CONFIG.CACHE.ENABLED) return;
+    this.data.set(key, {
+      value: value,
+      timestamp: Date.now()
+    });
+  },
+  clear: function clear() {
+    this.data.clear();
+  }
+};
+
+// Utility functions
+function debounce(func, wait) {
+  var timeout;
+  return function executedFunction() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    var later = function later() {
+      clearTimeout(timeout);
+      func.apply(void 0, args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+function setupResponsiveGrid(container) {
+  var columns = window.innerWidth >= CONFIG.GRID.BREAKPOINT ? CONFIG.GRID.DESKTOP_COLUMNS : CONFIG.GRID.MOBILE_COLUMNS;
+  container.style.cssText = "display: grid; grid-template-columns: ".concat(columns, "; gap: ").concat(CONFIG.GRID.GAP, ";");
+}
+function getResponsiveSize(mobileValue, desktopValue) {
+  return window.innerWidth >= CONFIG.GRID.BREAKPOINT ? desktopValue : mobileValue;
+}
+function createShineEffect() {
+  return '<div class="shine-effect"></div>';
+}
+function preloadImage(src) {
+  return new Promise(function (resolve, reject) {
+    var img = new Image();
+    img.onload = function () {
+      return resolve(src);
+    };
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+function createIconHtml(item, iconColor) {
+  var iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
+  if (item.icon_image) {
+    var imagePath = item.icon_image.startsWith('/') ? item.icon_image : '/' + item.icon_image;
+    preloadImage(imagePath)["catch"](function () {});
+    return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; padding: ").concat(CONFIG.ICONS.PADDING, "; display: flex; align-items: center; justify-content: center; overflow: hidden;\">") + "<img src=\"".concat(imagePath, "\" alt=\"").concat(item.name, "\" class=\"w-full h-full object-contain rounded-full\" loading=\"lazy\">") + '</div>';
+  } else {
+    return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; display: flex; align-items: center; justify-content: center;\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+  }
+}
+function createCategoryCard(item, index, level, onClickHandler) {
+  var _categoryLevels$level;
+  var div = document.createElement('div');
+  div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
+  div.style.cssText = "\n    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);\n    transform-style: preserve-3d;\n    position: relative;\n    overflow: visible;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    text-align: center;\n    min-height: fit-content;\n    height: auto;\n  ";
+  if (window.innerWidth >= CONFIG.GRID.BREAKPOINT) {
+    div.style.padding = '1rem';
+  }
+  var iconColor = (0,_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.getCategoryColor)(level, index);
+  var shadowColor = ((_categoryLevels$level = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels[level]) === null || _categoryLevels$level === void 0 ? void 0 : _categoryLevels$level.shadowColor) || 'rgba(59, 130, 246, 0.15)';
+  div.onmouseenter = function () {
+    this.style.willChange = 'transform, box-shadow';
+    this.style.transform = CONFIG.ANIMATION.HOVER_TRANSFORM;
+    this.style.boxShadow = "0 20px 40px ".concat(shadowColor);
+    var shine = this.querySelector('.shine-effect');
+    if (shine) shine.style.left = '100%';
+  };
+  div.onmouseleave = function () {
+    this.style.transform = CONFIG.ANIMATION.DEFAULT_TRANSFORM;
+    this.style.boxShadow = '';
+    this.style.willChange = 'auto';
+    var shine = this.querySelector('.shine-effect');
+    if (shine) shine.style.left = '-100%';
+  };
+  var shineEffect = createShineEffect();
+  var iconHtml = createIconHtml(item, iconColor);
+  var textSize = getResponsiveSize(CONFIG.TEXT.MOBILE_SIZE, CONFIG.TEXT.DESKTOP_SIZE);
+  var textHtml = "<div class=\"".concat(textSize, " font-semibold text-gray-800 category-text\">").concat(item.name, "</div>");
+  div.innerHTML = shineEffect + iconHtml + textHtml;
+  div.onclick = function () {
+    onClickHandler(item.id, item.name);
+  };
+  return div;
+}
+function renderCategories(items, containerSelector, level, clickHandler) {
+  var container = document.querySelector(containerSelector);
+  if (!container) {
+    console.error('Container not found:', containerSelector);
+    return;
+  }
+  var fragment = document.createDocumentFragment();
+  container.innerHTML = '';
+  setupResponsiveGrid(container);
+  requestAnimationFrame(function () {
+    items.forEach(function (item, index) {
+      var card = createCategoryCard(item, index, level, clickHandler);
+      fragment.appendChild(card);
+    });
+    container.appendChild(fragment);
+  });
+}
+function fetchWithCache(_x) {
+  return _fetchWithCache.apply(this, arguments);
+} // Module initialization
+function _fetchWithCache() {
+  _fetchWithCache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
+    var cached, response, data;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          cached = cache.get(url);
+          if (!cached) {
+            _context.n = 1;
+            break;
+          }
+          return _context.a(2, cached);
+        case 1:
+          _context.n = 2;
+          return fetch(url);
+        case 2:
+          response = _context.v;
+          _context.n = 3;
+          return response.json();
+        case 3:
+          data = _context.v;
+          cache.set(url, data);
+          return _context.a(2, data);
+      }
+    }, _callee);
+  }));
+  return _fetchWithCache.apply(this, arguments);
+}
+function initializeCategoryPopups() {
+  // Open popup
+  window.openHelpPopup = function () {
+    var popup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
+    if (!popup) return;
     popup.classList.remove('hidden');
-    console.log('✅ Popup is now visible');
-    fetch('/api/categories').then(function (res) {
-      return res.json();
-    }).then(function (data) {
-      console.log('Categories data:', data);
+    fetchWithCache(API_ENDPOINTS.CATEGORIES).then(function (data) {
       if (data.success) {
-        var container = document.querySelector('#searchPopup .main-categories');
-        if (!container) {
-          console.error('❌ .main-categories not found');
-          return;
-        }
-        container.innerHTML = '';
-        // Grille 4 colonnes desktop, 2 mobile avec gap réduit
-        container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
-
-        // Media query pour desktop (4 colonnes)
-        if (window.innerWidth >= 768) {
-          container.style.gridTemplateColumns = 'repeat(4, 1fr)';
-        }
-        console.log('✅ Building categories...');
-        data.categories.forEach(function (cat, index) {
-          var div = document.createElement('div');
-          div.className = "category-card rounded-xl p-3 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
-          div.style.backgroundColor = '#ffffff';
-
-          // Padding réduit et adaptatif
-          if (window.innerWidth >= 768) {
-            div.style.padding = '1rem';
-          }
-
-          // Icône avec couleur de bulle (taille réduite)
-          var iconHtml = '';
-          var iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
-          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.main[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.main.length];
-          if (cat.icon_image) {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full overflow-hidden mb-2 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, "; padding: 0.4rem;\">") + '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' + '</div>';
-          } else {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
-          }
-          var textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
-          div.innerHTML = iconHtml + "<h3 class=\"".concat(textSize, " font-semibold text-gray-800 line-clamp-2\">") + cat.name + '</h3>';
-          div.onclick = function () {
-            window.handleCategoryClick(cat.id, cat.name);
-          };
-          container.appendChild(div);
-        });
-        console.log('✅ Categories rendered');
+        renderCategories(data.categories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass), 'main', window.handleCategoryClick);
       }
     })["catch"](function (err) {
-      return console.error('❌ Fetch error:', err);
+      return console.error('Fetch error:', err);
     });
   };
 
-  // ========================================
-  // CLIC SUR CATÉGORIE → SOUS-CATÉGORIES
-  // ========================================
+  // Category click
   window.handleCategoryClick = function (categoryId, categoryName) {
     var _document$getElementB, _document$getElementB2;
-    console.log('Category clicked:', categoryId, categoryName);
-    (_document$getElementB = document.getElementById('searchPopup')) === null || _document$getElementB === void 0 || _document$getElementB.classList.add('hidden');
-    (_document$getElementB2 = document.getElementById('expatriesPopup')) === null || _document$getElementB2 === void 0 || _document$getElementB2.classList.remove('hidden');
+    (_document$getElementB = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId)) === null || _document$getElementB === void 0 || _document$getElementB.classList.add('hidden');
+    (_document$getElementB2 = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId)) === null || _document$getElementB2 === void 0 || _document$getElementB2.classList.remove('hidden');
     var createRequest = {
       category: JSON.stringify({
         id: categoryId,
@@ -14121,130 +14261,39 @@ function initializeCategoryPopups() {
       })
     };
     localStorage.setItem('create-request', JSON.stringify(createRequest));
-    fetch('/api/categories/' + categoryId + '/subcategories').then(function (res) {
-      return res.json();
-    }).then(function (data) {
+    fetchWithCache(API_ENDPOINTS.SUBCATEGORIES(categoryId)).then(function (data) {
       if (data.success) {
-        var subContainer = document.querySelector('#expatriesPopup .sub-category');
-        if (!subContainer) {
-          console.error('❌ .sub-category not found');
-          return;
-        }
-        subContainer.innerHTML = '';
-        // Grille 4 colonnes desktop, 2 mobile avec gap réduit
-        subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
-
-        // Media query pour desktop (4 colonnes)
-        if (window.innerWidth >= 768) {
-          subContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
-        }
-        data.subcategories.forEach(function (sub, index) {
-          var div = document.createElement('div');
-          div.className = "category-card rounded-xl p-3 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
-          div.style.backgroundColor = '#ffffff';
-
-          // Padding réduit et adaptatif
-          if (window.innerWidth >= 768) {
-            div.style.padding = '1rem';
-          }
-
-          // Icône avec couleur de bulle (taille réduite)
-          var iconHtml = '';
-          var iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
-          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.sub[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.sub.length];
-          if (sub.icon_image) {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.4rem;\">") + '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
-          } else {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
-          }
-          var textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
-          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800 line-clamp-2\">") + sub.name + '</div>';
-          div.onclick = function () {
-            window.handleSubcategoryClick(sub.id, sub.name);
-          };
-          subContainer.appendChild(div);
-        });
-        console.log('✅ Subcategories rendered');
+        renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.containerClass), 'sub', window.handleSubcategoryClick);
       }
     })["catch"](function (err) {
-      return console.error('❌ Error:', err);
+      return console.error('Error:', err);
     });
   };
 
-  // ========================================
-  // CLIC SUR SOUS-CATÉGORIE → ENFANTS
-  // ========================================
+  // Subcategory click
   window.handleSubcategoryClick = function (parentId, categoryName) {
-    console.log('Subcategory clicked:', parentId, categoryName);
     var createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
     createRequest.sub_category = JSON.stringify({
       id: parentId,
       name: categoryName
     });
     localStorage.setItem('create-request', JSON.stringify(createRequest));
-    fetch('/api/categories/' + parentId + '/children').then(function (res) {
-      return res.json();
-    }).then(function (data) {
+    fetchWithCache(API_ENDPOINTS.CHILDREN(parentId)).then(function (data) {
       if (data.success && data.subcategories.length > 0) {
         var _document$getElementB3, _document$getElementB4;
-        // Il y a des sous-sous-catégories
-        (_document$getElementB3 = document.getElementById('expatriesPopup')) === null || _document$getElementB3 === void 0 || _document$getElementB3.classList.add('hidden');
-        (_document$getElementB4 = document.getElementById('vacanciersAutresBesoinsPopup')) === null || _document$getElementB4 === void 0 || _document$getElementB4.classList.remove('hidden');
-        var childContainer = document.querySelector('#vacanciersAutresBesoinsPopup .child-categories');
-        if (!childContainer) {
-          console.error('❌ .child-categories not found');
-          return;
-        }
-        childContainer.innerHTML = '';
-        // Grille 4 colonnes desktop, 2 mobile avec gap réduit
-        childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
-
-        // Media query pour desktop (4 colonnes)
-        if (window.innerWidth >= 768) {
-          childContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
-        }
-        data.subcategories.forEach(function (child, index) {
-          var div = document.createElement('div');
-          div.className = "category-card rounded-xl p-3 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
-          div.style.backgroundColor = '#ffffff';
-
-          // Padding réduit et adaptatif
-          if (window.innerWidth >= 768) {
-            div.style.padding = '1rem';
-          }
-
-          // Icône avec couleur de bulle (taille réduite)
-          var iconHtml = '';
-          var iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
-          var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.child[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.child.length];
-          if (child.icon_image) {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.4rem;\">") + '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
-          } else {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
-          }
-          var textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
-          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800 line-clamp-2\">") + child.name + '</div>';
-          div.onclick = function () {
-            window.requestForHelp(child.id, child.name);
-          };
-          childContainer.appendChild(div);
-        });
-        console.log('✅ Child categories rendered');
+        (_document$getElementB3 = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId)) === null || _document$getElementB3 === void 0 || _document$getElementB3.classList.add('hidden');
+        (_document$getElementB4 = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId)) === null || _document$getElementB4 === void 0 || _document$getElementB4.classList.remove('hidden');
+        renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass), 'child', window.requestForHelp);
       } else {
-        // Pas de sous-sous-catégories → redirection directe
-        console.log('No children, redirecting...');
         window.requestForHelp(parentId, categoryName);
       }
     })["catch"](function (err) {
-      return console.error('❌ Error:', err);
+      return console.error('Error:', err);
     });
   };
 
-  // ========================================
-  // REDIRECTION FINALE
-  // ========================================
+  // Final redirect
   window.requestForHelp = function (childId, childName) {
-    console.log('Request help:', childId, childName);
     var createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
     createRequest.child_category = JSON.stringify({
       id: childId,
@@ -14254,48 +14303,16 @@ function initializeCategoryPopups() {
     window.location.href = '/create-request';
   };
 
-  // ========================================
-  // FONCTIONS UTILITAIRES
-  // ========================================
-  window.closeSearchPopup = function () {
-    var _document$getElementB5;
-    (_document$getElementB5 = document.getElementById('searchPopup')) === null || _document$getElementB5 === void 0 || _document$getElementB5.classList.add('hidden');
-  };
-  window.closeAllPopups = function () {
-    ['searchPopup', 'expatriesPopup', 'vacanciersPopup', 'vacanciersAutresBesoinsPopup'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.add('hidden');
-    });
-    localStorage.removeItem('create-request');
-  };
-  window.goBackToCategories = function () {
-    var _document$getElementB6, _document$getElementB7;
-    (_document$getElementB6 = document.getElementById('expatriesPopup')) === null || _document$getElementB6 === void 0 || _document$getElementB6.classList.add('hidden');
-    (_document$getElementB7 = document.getElementById('searchPopup')) === null || _document$getElementB7 === void 0 || _document$getElementB7.classList.remove('hidden');
-  };
-  window.goBackToSubcategories = function () {
-    var _document$getElementB8, _document$getElementB9;
-    (_document$getElementB8 = document.getElementById('vacanciersAutresBesoinsPopup')) === null || _document$getElementB8 === void 0 || _document$getElementB8.classList.add('hidden');
-    (_document$getElementB9 = document.getElementById('expatriesPopup')) === null || _document$getElementB9 === void 0 || _document$getElementB9.classList.remove('hidden');
-  };
-
-  // Réajuster la grille lors du redimensionnement
-  window.addEventListener('resize', function () {
-    var mainContainer = document.querySelector('#searchPopup .main-categories');
-    var subContainer = document.querySelector('#expatriesPopup .sub-category');
-    var childContainer = document.querySelector('#vacanciersAutresBesoinsPopup .child-categories');
-    var containers = [mainContainer, subContainer, childContainer].filter(function (c) {
-      return c;
-    });
-    containers.forEach(function (container) {
-      if (window.innerWidth >= 768) {
-        container.style.gridTemplateColumns = 'repeat(4, 1fr)';
-      } else {
-        container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+  // Debounced resize
+  var debouncedResize = debounce(function () {
+    Object.values(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels).forEach(function (level) {
+      var container = document.querySelector("#".concat(level.popupId, " .").concat(level.containerClass));
+      if (container && !container.classList.contains('hidden')) {
+        setupResponsiveGrid(container);
       }
     });
-  });
-  console.log('✅ Category popups: READY');
+  }, 250);
+  window.addEventListener('resize', debouncedResize);
 }
 
 /***/ }),
@@ -14309,17 +14326,45 @@ function initializeCategoryPopups() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   categoryColors: () => (/* binding */ categoryColors)
+/* harmony export */   categoryColors: () => (/* binding */ categoryColors),
+/* harmony export */   categoryLevels: () => (/* binding */ categoryLevels),
+/* harmony export */   getCategoryColor: () => (/* binding */ getCategoryColor)
 /* harmony export */ });
-// Palette de 25 couleurs pour les différents niveaux de catégories
-
+// Color palette with 25 colors for different category levels
 var categoryColors = {
-  // Niveau 1 : Catégories principales (couleurs vives et saturées)
+  // Level 1: Main categories (vibrant and saturated colors)
   main: ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12', '#9B59B6', '#E67E22', '#1ABC9C', '#E91E63', '#2980B9', '#27AE60', '#F1C40F', '#8E44AD', '#D35400', '#16A085', '#C0392B', '#2C3E50', '#D63031', '#0984E3', '#00B894', '#FDCB6E', '#6C5CE7', '#FD79A8', '#00CEC9', '#FF7675', '#74B9FF'],
-  // Niveau 2 : Sous-catégories (couleurs moyennement saturées)
+  // Level 2: Subcategories (medium saturated colors)
   sub: ['#FF7979', '#74B9FF', '#55EFC4', '#FFA502', '#A29BFE', '#FF6348', '#48DBFB', '#FF6B81', '#5F27CD', '#01A3A4', '#FECA57', '#EE5A6F', '#C44569', '#4834DF', '#26DE81', '#FDA7DF', '#F8B500', '#10AC84', '#EE5A24', '#576574', '#FA8231', '#20BF6B', '#778BEB', '#F8A5C2', '#EA8685'],
-  // Niveau 3 : Sous-sous-catégories (couleurs moins saturées mais visibles)
-  child: ['#FFB3BA', '#BAE1FF', '#B4F8C8', '#FFD6A5', '#D4A5FF', '#FFC9C9', '#A0E7E5', '#FFABAB', '#C7CEEA', '#B2FEFA', '#FFF4A3', '#FFC3A0', '#E0BBE4', '#A8E6CF', '#FFDFD3', '#C1E1EC', '#FFE5B4', '#D5AAFF', '#B0DFE5', '#FFCCE5', '#BFEFFF', '#FFD9A0', '#C4FAF8', '#FFCCF9', '#D4E4FF']
+  // Level 3: Sub-subcategories (darker colors)
+  child: ['#FF8A9A', '#8FC7FF', '#6FECCD', '#FFB65E', '#C4A5FF', '#FFB3C1', '#70D9F0', '#FF9AB0', '#B8A5E0', '#55D4E8', '#FFE185', '#FFA8A8', '#E2B3DC', '#88E5CD', '#FFCFB3', '#B5DBF5', '#FFDB70', '#BF9ADB', '#98D9E5', '#FFC1D9', '#B5E4FF', '#FFD685', '#A8E7E9', '#FFB8C8', '#CDB0FF']
+};
+function getCategoryColor(level, index) {
+  if (!categoryColors[level]) {
+    level = 'main';
+  }
+  var colors = categoryColors[level];
+  return colors[index % colors.length];
+}
+var categoryLevels = {
+  main: {
+    name: 'Main Categories',
+    shadowColor: 'rgba(59, 130, 246, 0.15)',
+    containerClass: 'main-categories',
+    popupId: 'searchPopup'
+  },
+  sub: {
+    name: 'Subcategories',
+    shadowColor: 'rgba(16, 185, 129, 0.15)',
+    containerClass: 'sub-category',
+    popupId: 'expatriesPopup'
+  },
+  child: {
+    name: 'Specific Needs',
+    shadowColor: 'rgba(251, 146, 60, 0.15)',
+    containerClass: 'child-categories',
+    popupId: 'vacanciersAutresBesoinsPopup'
+  }
 };
 
 /***/ })

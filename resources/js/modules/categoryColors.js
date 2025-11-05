@@ -1,7 +1,6 @@
-// Palette de 25 couleurs pour les différents niveaux de catégories
-
+// Color palette with 25 colors for different category levels
 export const categoryColors = {
-  // Niveau 1 : Catégories principales (couleurs vives et saturées)
+  // Level 1: Main categories (vibrant and saturated colors)
   main: [
     '#E74C3C', '#3498DB', '#2ECC71', '#F39C12', 
     '#9B59B6', '#E67E22', '#1ABC9C', '#E91E63',
@@ -12,7 +11,7 @@ export const categoryColors = {
     '#74B9FF'
   ],
   
-  // Niveau 2 : Sous-catégories (couleurs moyennement saturées)
+  // Level 2: Subcategories (medium saturated colors)
   sub: [
     '#FF7979', '#74B9FF', '#55EFC4', '#FFA502',
     '#A29BFE', '#FF6348', '#48DBFB', '#FF6B81',
@@ -23,14 +22,43 @@ export const categoryColors = {
     '#EA8685'
   ],
   
-  // Niveau 3 : Sous-sous-catégories (couleurs moins saturées mais visibles)
+  // Level 3: Sub-subcategories (darker colors)
   child: [
-    '#FFB3BA', '#BAE1FF', '#B4F8C8', '#FFD6A5',
-    '#D4A5FF', '#FFC9C9', '#A0E7E5', '#FFABAB',
-    '#C7CEEA', '#B2FEFA', '#FFF4A3', '#FFC3A0',
-    '#E0BBE4', '#A8E6CF', '#FFDFD3', '#C1E1EC',
-    '#FFE5B4', '#D5AAFF', '#B0DFE5', '#FFCCE5',
-    '#BFEFFF', '#FFD9A0', '#C4FAF8', '#FFCCF9',
-    '#D4E4FF'
+    '#FF8A9A', '#8FC7FF', '#6FECCD', '#FFB65E',
+    '#C4A5FF', '#FFB3C1', '#70D9F0', '#FF9AB0',
+    '#B8A5E0', '#55D4E8', '#FFE185', '#FFA8A8',
+    '#E2B3DC', '#88E5CD', '#FFCFB3', '#B5DBF5',
+    '#FFDB70', '#BF9ADB', '#98D9E5', '#FFC1D9',
+    '#B5E4FF', '#FFD685', '#A8E7E9', '#FFB8C8',
+    '#CDB0FF'
   ]
+};
+
+export function getCategoryColor(level, index) {
+  if (!categoryColors[level]) {
+    level = 'main';
+  }
+  const colors = categoryColors[level];
+  return colors[index % colors.length];
+}
+
+export const categoryLevels = {
+  main: {
+    name: 'Main Categories',
+    shadowColor: 'rgba(59, 130, 246, 0.15)',
+    containerClass: 'main-categories',
+    popupId: 'searchPopup'
+  },
+  sub: {
+    name: 'Subcategories',
+    shadowColor: 'rgba(16, 185, 129, 0.15)',
+    containerClass: 'sub-category',
+    popupId: 'expatriesPopup'
+  },
+  child: {
+    name: 'Specific Needs',
+    shadowColor: 'rgba(251, 146, 60, 0.15)',
+    containerClass: 'child-categories',
+    popupId: 'vacanciersAutresBesoinsPopup'
+  }
 };

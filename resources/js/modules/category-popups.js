@@ -1,347 +1,291 @@
-import { categoryColors } from './categoryColors.js';
+import { categoryColors, getCategoryColor, categoryLevels } from './categoryColors.js';
 
-export function initializeCategoryPopups() {
-  console.log('🎯 Category popups: START');
+// Configuration
+const CONFIG = {
+  GRID: {
+    MOBILE_COLUMNS: 'repeat(2, 1fr)',
+    DESKTOP_COLUMNS: 'repeat(3, 1fr)',
+    GAP: '0.75rem',
+    BREAKPOINT: 768
+  },
+  ICONS: {
+    MOBILE_SIZE: 'w-12 h-12',
+    DESKTOP_SIZE: 'w-14 h-14',
+    PADDING: '0.4rem'
+  },
+  TEXT: {
+    MOBILE_SIZE: 'text-xs',
+    DESKTOP_SIZE: 'text-xs'
+  },
+  ANIMATION: {
+    HOVER_TRANSFORM: 'translateY(-8px) scale(1.02)',
+    DEFAULT_TRANSFORM: 'translateY(0) scale(1)',
+    TRANSITION: '0.5s'
+  },
+  CACHE: {
+    ENABLED: true,
+    DURATION: 5 * 60 * 1000 // 5 minutes
+  }
+};
+
+const API_ENDPOINTS = {
+  CATEGORIES: '/api/categories',
+  SUBCATEGORIES: (id) => `/api/categories/${id}/subcategories`,
+  CHILDREN: (id) => `/api/categories/${id}/children`
+};
+
+// Cache system
+const cache = {
+  data: new Map(),
   
-  // ========================================
-  // FONCTION PRINCIPALE : OUVRIR LE POPUP
-  // ========================================
-  window.openHelpPopup = function() {
-    console.log('✅ openHelpPopup CALLED');
-    const popup = document.getElementById('searchPopup');
-    if (!popup) {
-      console.error('❌ searchPopup not found');
-      return;
+  get(key) {
+    if (!CONFIG.CACHE.ENABLED) return null;
+    const cached = this.data.get(key);
+    if (!cached) return null;
+    const now = Date.now();
+    if (now - cached.timestamp > CONFIG.CACHE.DURATION) {
+      this.data.delete(key);
+      return null;
     }
+    return cached.value;
+  },
+  
+  set(key, value) {
+    if (!CONFIG.CACHE.ENABLED) return;
+    this.data.set(key, { value, timestamp: Date.now() });
+  },
+  
+  clear() {
+    this.data.clear();
+  }
+};
+
+// Utility functions
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+function setupResponsiveGrid(container) {
+  const columns = window.innerWidth >= CONFIG.GRID.BREAKPOINT 
+    ? CONFIG.GRID.DESKTOP_COLUMNS 
+    : CONFIG.GRID.MOBILE_COLUMNS;
+  container.style.cssText = `display: grid; grid-template-columns: ${columns}; gap: ${CONFIG.GRID.GAP};`;
+}
+
+function getResponsiveSize(mobileValue, desktopValue) {
+  return window.innerWidth >= CONFIG.GRID.BREAKPOINT ? desktopValue : mobileValue;
+}
+
+function createShineEffect() {
+  return '<div class="shine-effect"></div>';
+}
+
+function preloadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(src);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function createIconHtml(item, iconColor) {
+  const iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
+  
+  if (item.icon_image) {
+    const imagePath = item.icon_image.startsWith('/') ? item.icon_image : '/' + item.icon_image;
+    preloadImage(imagePath).catch(() => {});
     
-    popup.classList.remove('hidden');
-    console.log('✅ Popup is now visible');
-    
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => {
-        console.log('Categories data:', data);
-        if (data.success) {
-          const container = document.querySelector('#searchPopup .main-categories');
-          if (!container) {
-            console.error('❌ .main-categories not found');
-            return;
-          }
-          
-          container.innerHTML = '';
-          // Grille 4 colonnes desktop, 2 mobile avec gap réduit
-          container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
-          
-          // Media query pour desktop (4 colonnes)
-          if (window.innerWidth >= 768) {
-            container.style.gridTemplateColumns = 'repeat(4, 1fr)';
-          }
-          
-          console.log('✅ Building categories...');
-          
-          data.categories.forEach((cat, index) => {
-            const div = document.createElement('div');
-            div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer flex flex-col items-center text-center group transition-all duration-300";
-            div.style.cssText = 'background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transform-style: preserve-3d;';
-            
-            // Padding réduit et adaptatif
-            if (window.innerWidth >= 768) {
-              div.style.padding = '1rem';
-            }
-            
-            // Effet 3D au hover
-            div.onmouseenter = function() {
-              this.style.transform = 'translateY(-8px) scale(1.02)';
-              this.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.15)';
-            };
-            div.onmouseleave = function() {
-              this.style.transform = 'translateY(0) scale(1)';
-              this.style.boxShadow = '';
-            };
-            
-            // Icône avec couleur de bulle (taille réduite)
-            let iconHtml = '';
-            const iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
-            const iconColor = categoryColors.main[index % categoryColors.main.length];
-            
-            // Effet brillance
-            const shineEffect = '<div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition: left 0.5s;"></div>';
-            div.style.position = 'relative';
-            div.style.overflow = 'hidden';
-            div.onmouseenter = function() {
-              this.style.transform = 'translateY(-8px) scale(1.02)';
-              this.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.15)';
-              const shine = this.querySelector('div[style*="left: -100%"]');
-              if (shine) shine.style.left = '100%';
-            };
-            div.onmouseleave = function() {
-              this.style.transform = 'translateY(0) scale(1)';
-              this.style.boxShadow = '';
-              const shine = this.querySelector('div[style*="left:"]');
-              if (shine) shine.style.left = '-100%';
-            };
-            
-            if (cat.icon_image) {
-              iconHtml = `<div class="${iconSize} rounded-full overflow-hidden mb-2 group-hover:scale-110 transition-transform" style="background-color: ${iconColor}; padding: 0.4rem;">` +
-                         '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' +
-                         '</div>';
-            } else {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
-                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
-                         '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
-                         '</svg></div>';
-            }
-            
-            const textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
-            div.innerHTML = shineEffect + iconHtml + `<h3 class="${textSize} font-semibold text-gray-800 line-clamp-2">` + cat.name + '</h3>';
-            
-            div.onclick = function() {
-              window.handleCategoryClick(cat.id, cat.name);
-            };
-            
-            container.appendChild(div);
-          });
-          
-          console.log('✅ Categories rendered');
-        }
-      })
-      .catch(err => console.error('❌ Fetch error:', err));
+    return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; padding: ${CONFIG.ICONS.PADDING}; display: flex; align-items: center; justify-content: center; overflow: hidden;">` +
+           `<img src="${imagePath}" alt="${item.name}" class="w-full h-full object-contain rounded-full" loading="lazy">` +
+           '</div>';
+  } else {
+    return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; display: flex; align-items: center; justify-content: center;">` +
+           '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
+           '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
+           '</svg></div>';
+  }
+}
+
+function createCategoryCard(item, index, level, onClickHandler) {
+  const div = document.createElement('div');
+  div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
+  
+  div.style.cssText = `
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: fit-content;
+    height: auto;
+  `;
+  
+  if (window.innerWidth >= CONFIG.GRID.BREAKPOINT) {
+    div.style.padding = '1rem';
+  }
+  
+  const iconColor = getCategoryColor(level, index);
+  const shadowColor = categoryLevels[level]?.shadowColor || 'rgba(59, 130, 246, 0.15)';
+  
+  div.onmouseenter = function() {
+    this.style.willChange = 'transform, box-shadow';
+    this.style.transform = CONFIG.ANIMATION.HOVER_TRANSFORM;
+    this.style.boxShadow = `0 20px 40px ${shadowColor}`;
+    const shine = this.querySelector('.shine-effect');
+    if (shine) shine.style.left = '100%';
   };
   
-  // ========================================
-  // CLIC SUR CATÉGORIE → SOUS-CATÉGORIES
-  // ========================================
-  window.handleCategoryClick = function(categoryId, categoryName) {
-    console.log('Category clicked:', categoryId, categoryName);
+  div.onmouseleave = function() {
+    this.style.transform = CONFIG.ANIMATION.DEFAULT_TRANSFORM;
+    this.style.boxShadow = '';
+    this.style.willChange = 'auto';
+    const shine = this.querySelector('.shine-effect');
+    if (shine) shine.style.left = '-100%';
+  };
+  
+  const shineEffect = createShineEffect();
+  const iconHtml = createIconHtml(item, iconColor);
+  const textSize = getResponsiveSize(CONFIG.TEXT.MOBILE_SIZE, CONFIG.TEXT.DESKTOP_SIZE);
+  const textHtml = `<div class="${textSize} font-semibold text-gray-800 category-text">${item.name}</div>`;
+  
+  div.innerHTML = shineEffect + iconHtml + textHtml;
+  div.onclick = function() {
+    onClickHandler(item.id, item.name);
+  };
+  
+  return div;
+}
+
+function renderCategories(items, containerSelector, level, clickHandler) {
+  const container = document.querySelector(containerSelector);
+  if (!container) {
+    console.error('Container not found:', containerSelector);
+    return;
+  }
+  
+  const fragment = document.createDocumentFragment();
+  container.innerHTML = '';
+  setupResponsiveGrid(container);
+  
+  requestAnimationFrame(() => {
+    items.forEach((item, index) => {
+      const card = createCategoryCard(item, index, level, clickHandler);
+      fragment.appendChild(card);
+    });
+    container.appendChild(fragment);
+  });
+}
+
+async function fetchWithCache(url) {
+  const cached = cache.get(url);
+  if (cached) return cached;
+  
+  const response = await fetch(url);
+  const data = await response.json();
+  cache.set(url, data);
+  return data;
+}
+
+// Module initialization
+export function initializeCategoryPopups() {
+  
+  // Open popup
+  window.openHelpPopup = function() {
+    const popup = document.getElementById(categoryLevels.main.popupId);
+    if (!popup) return;
     
-    document.getElementById('searchPopup')?.classList.add('hidden');
-    document.getElementById('expatriesPopup')?.classList.remove('hidden');
+    popup.classList.remove('hidden');
+    
+    fetchWithCache(API_ENDPOINTS.CATEGORIES)
+      .then(data => {
+        if (data.success) {
+          renderCategories(
+            data.categories,
+            `#${categoryLevels.main.popupId} .${categoryLevels.main.containerClass}`,
+            'main',
+            window.handleCategoryClick
+          );
+        }
+      })
+      .catch(err => console.error('Fetch error:', err));
+  };
+  
+  // Category click
+  window.handleCategoryClick = function(categoryId, categoryName) {
+    document.getElementById(categoryLevels.main.popupId)?.classList.add('hidden');
+    document.getElementById(categoryLevels.sub.popupId)?.classList.remove('hidden');
     
     const createRequest = { category: JSON.stringify({ id: categoryId, name: categoryName }) };
     localStorage.setItem('create-request', JSON.stringify(createRequest));
     
-    fetch('/api/categories/' + categoryId + '/subcategories')
-      .then(res => res.json())
+    fetchWithCache(API_ENDPOINTS.SUBCATEGORIES(categoryId))
       .then(data => {
         if (data.success) {
-          const subContainer = document.querySelector('#expatriesPopup .sub-category');
-          if (!subContainer) {
-            console.error('❌ .sub-category not found');
-            return;
-          }
-          
-          subContainer.innerHTML = '';
-          // Grille 4 colonnes desktop, 2 mobile avec gap réduit
-          subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
-          
-          // Media query pour desktop (4 colonnes)
-          if (window.innerWidth >= 768) {
-            subContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
-          }
-          
-          data.subcategories.forEach((sub, index) => {
-            const div = document.createElement('div');
-            div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer flex flex-col items-center text-center group transition-all duration-300";
-            div.style.cssText = 'background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transform-style: preserve-3d;';
-            
-            // Padding réduit et adaptatif
-            if (window.innerWidth >= 768) {
-              div.style.padding = '1rem';
-            }
-            
-            // Effet 3D au hover
-            div.onmouseenter = function() {
-              this.style.transform = 'translateY(-8px) scale(1.02)';
-              this.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.15)';
-            };
-            div.onmouseleave = function() {
-              this.style.transform = 'translateY(0) scale(1)';
-              this.style.boxShadow = '';
-            };
-            
-            // Icône avec couleur de bulle (taille réduite)
-            let iconHtml = '';
-            const iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
-            const iconColor = categoryColors.sub[index % categoryColors.sub.length];
-            
-            // Effet brillance
-            const shineEffect = '<div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition: left 0.5s; pointer-events: none; z-index: 1;"></div>';
-            div.style.position = 'relative';
-            div.style.overflow = 'hidden';
-            
-            if (sub.icon_image) {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform overflow-hidden" style="background-color: ${iconColor}; padding: 0.4rem;">` +
-                         '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' +
-                         '</div>';
-            } else {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
-                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
-                         '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
-                         '</svg></div>';
-            }
-            
-            const textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
-            div.innerHTML = shineEffect + iconHtml + `<div class="${textSize} font-semibold text-gray-800 line-clamp-2" style="position: relative; z-index: 2;">` + sub.name + '</div>';
-            
-            div.onclick = function() {
-              window.handleSubcategoryClick(sub.id, sub.name);
-            };
-            
-            subContainer.appendChild(div);
-          });
-          
-          console.log('✅ Subcategories rendered');
+          renderCategories(
+            data.subcategories,
+            `#${categoryLevels.sub.popupId} .${categoryLevels.sub.containerClass}`,
+            'sub',
+            window.handleSubcategoryClick
+          );
         }
       })
-      .catch(err => console.error('❌ Error:', err));
+      .catch(err => console.error('Error:', err));
   };
   
-  // ========================================
-  // CLIC SUR SOUS-CATÉGORIE → ENFANTS
-  // ========================================
+  // Subcategory click
   window.handleSubcategoryClick = function(parentId, categoryName) {
-    console.log('Subcategory clicked:', parentId, categoryName);
-    
     const createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
     createRequest.sub_category = JSON.stringify({ id: parentId, name: categoryName });
     localStorage.setItem('create-request', JSON.stringify(createRequest));
     
-    fetch('/api/categories/' + parentId + '/children')
-      .then(res => res.json())
+    fetchWithCache(API_ENDPOINTS.CHILDREN(parentId))
       .then(data => {
         if (data.success && data.subcategories.length > 0) {
-          // Il y a des sous-sous-catégories
-          document.getElementById('expatriesPopup')?.classList.add('hidden');
-          document.getElementById('vacanciersAutresBesoinsPopup')?.classList.remove('hidden');
+          document.getElementById(categoryLevels.sub.popupId)?.classList.add('hidden');
+          document.getElementById(categoryLevels.child.popupId)?.classList.remove('hidden');
           
-          const childContainer = document.querySelector('#vacanciersAutresBesoinsPopup .child-categories');
-          if (!childContainer) {
-            console.error('❌ .child-categories not found');
-            return;
-          }
-          
-          childContainer.innerHTML = '';
-          // Grille 4 colonnes desktop, 2 mobile avec gap réduit
-          childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
-          
-          // Media query pour desktop (4 colonnes)
-          if (window.innerWidth >= 768) {
-            childContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
-          }
-          
-          data.subcategories.forEach((child, index) => {
-            const div = document.createElement('div');
-            div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer flex flex-col items-center text-center group transition-all duration-300";
-            div.style.cssText = 'background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transform-style: preserve-3d;';
-            
-            // Padding réduit et adaptatif
-            if (window.innerWidth >= 768) {
-              div.style.padding = '1rem';
-            }
-            
-            // Effet 3D au hover
-            div.onmouseenter = function() {
-              this.style.transform = 'translateY(-8px) scale(1.02)';
-              this.style.boxShadow = '0 20px 40px rgba(251, 146, 60, 0.15)';
-            };
-            div.onmouseleave = function() {
-              this.style.transform = 'translateY(0) scale(1)';
-              this.style.boxShadow = '';
-            };
-            
-            // Icône avec couleur de bulle (taille réduite)
-            let iconHtml = '';
-            const iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
-            const iconColor = categoryColors.child[index % categoryColors.child.length];
-            
-            // Effet brillance
-            const shineEffect = '<div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition: left 0.5s; pointer-events: none; z-index: 1;"></div>';
-            div.style.position = 'relative';
-            div.style.overflow = 'hidden';
-            
-            if (child.icon_image) {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform overflow-hidden" style="background-color: ${iconColor}; padding: 0.4rem;">` +
-                         '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' +
-                         '</div>';
-            } else {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
-                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
-                         '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
-                         '</svg></div>';
-            }
-            
-            const textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
-            div.innerHTML = shineEffect + iconHtml + `<div class="${textSize} font-semibold text-gray-800 line-clamp-2" style="position: relative; z-index: 2;">` + child.name + '</div>';
-            
-            div.onclick = function() {
-              window.requestForHelp(child.id, child.name);
-            };
-            
-            childContainer.appendChild(div);
-          });
-          
-          console.log('✅ Child categories rendered');
+          renderCategories(
+            data.subcategories,
+            `#${categoryLevels.child.popupId} .${categoryLevels.child.containerClass}`,
+            'child',
+            window.requestForHelp
+          );
         } else {
-          // Pas de sous-sous-catégories → redirection directe
-          console.log('No children, redirecting...');
           window.requestForHelp(parentId, categoryName);
         }
       })
-      .catch(err => console.error('❌ Error:', err));
+      .catch(err => console.error('Error:', err));
   };
   
-  // ========================================
-  // REDIRECTION FINALE
-  // ========================================
+  // Final redirect
   window.requestForHelp = function(childId, childName) {
-    console.log('Request help:', childId, childName);
     const createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
     createRequest.child_category = JSON.stringify({ id: childId, name: childName });
     localStorage.setItem('create-request', JSON.stringify(createRequest));
     window.location.href = '/create-request';
   };
   
-  // ========================================
-  // FONCTIONS UTILITAIRES
-  // ========================================
-  window.closeSearchPopup = function() {
-    document.getElementById('searchPopup')?.classList.add('hidden');
-  };
-  
-  window.closeAllPopups = function() {
-    ['searchPopup', 'expatriesPopup', 'vacanciersPopup', 'vacanciersAutresBesoinsPopup'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('hidden');
-    });
-    localStorage.removeItem('create-request');
-  };
-  
-  window.goBackToCategories = function() {
-    document.getElementById('expatriesPopup')?.classList.add('hidden');
-    document.getElementById('searchPopup')?.classList.remove('hidden');
-  };
-  
-  window.goBackToSubcategories = function() {
-    document.getElementById('vacanciersAutresBesoinsPopup')?.classList.add('hidden');
-    document.getElementById('expatriesPopup')?.classList.remove('hidden');
-  };
-  
-  // Réajuster la grille lors du redimensionnement
-  window.addEventListener('resize', function() {
-    const mainContainer = document.querySelector('#searchPopup .main-categories');
-    const subContainer = document.querySelector('#expatriesPopup .sub-category');
-    const childContainer = document.querySelector('#vacanciersAutresBesoinsPopup .child-categories');
-    
-    const containers = [mainContainer, subContainer, childContainer].filter(c => c);
-    
-    containers.forEach(container => {
-      if (window.innerWidth >= 768) {
-        container.style.gridTemplateColumns = 'repeat(4, 1fr)';
-      } else {
-        container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+  // Debounced resize
+  const debouncedResize = debounce(function() {
+    Object.values(categoryLevels).forEach(level => {
+      const container = document.querySelector(`#${level.popupId} .${level.containerClass}`);
+      if (container && !container.classList.contains('hidden')) {
+        setupResponsiveGrid(container);
       }
     });
-  });
+  }, 250);
   
-  console.log('✅ Category popups: READY');
+  window.addEventListener('resize', debouncedResize);
 }
