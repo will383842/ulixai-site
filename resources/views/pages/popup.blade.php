@@ -6,15 +6,27 @@
     </div>
     <div class="flex-shrink-0 bg-gradient-to-b from-white via-white to-gray-50/30 border-b border-gray-200/60 px-5 pt-4 pb-5 sm:p-6 flex items-center justify-between backdrop-blur-xl bg-white/95 sticky top-0 z-10">
       <div class="flex-1 min-w-0 mr-4">
-        <h2 class="text-[1.375rem] sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight">Choose Your Category</h2>
-        <p class="text-[0.8125rem] sm:text-sm text-gray-500 mt-1 leading-snug">Select a category to continue</p>
+        <h2 class="text-[1.375rem] sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight">
+          What Type of Help Do You Need? 🎯
+        </h2>
+        <p class="text-[0.8125rem] sm:text-sm text-gray-500 mt-1 leading-snug">
+          Choose the main category that fits your situation
+        </p>
       </div>
-      <button onclick="closeAllPopups()" class="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 text-white shadow-lg shadow-blue-500/40 hover:shadow-xl hover:shadow-blue-500/50 transition-all duration-300 active:scale-95 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/30" aria-label="Close popup">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-full shadow-lg shadow-orange-500/30">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Service Request
+        </span>
+        <button onclick="closeAllPopups()" class="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 active:scale-95 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300/50" aria-label="Close popup">
+          <svg class="w-6 h-6 text-blue-900" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain scroll-smooth px-4 sm:px-6">
       <div class="py-5 sm:py-6 pb-6 sm:pb-8">
@@ -39,16 +51,28 @@
           </svg>
         </button>
         <div class="min-w-0 flex-1">
-          <h2 class="text-[1.375rem] sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight truncate">Choose Your Need</h2>
-          <p class="text-[0.8125rem] sm:text-sm text-gray-500 mt-1 leading-snug truncate">Select a service option</p>
+          <h2 class="text-[1.375rem] sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight truncate">
+            Which Subcategory Fits Best? 🎨
+          </h2>
+          <p class="text-[0.8125rem] sm:text-sm text-gray-500 mt-1 leading-snug truncate">
+            Help us understand your needs better
+          </p>
         </div>
       </div>
-      <button onclick="closeAllPopups()" class="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 text-white shadow-lg shadow-blue-500/40 hover:shadow-xl hover:shadow-blue-500/50 transition-all duration-300 active:scale-95 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/30" aria-label="Close popup">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-full shadow-lg shadow-orange-500/30">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Service Request
+        </span>
+        <button onclick="closeAllPopups()" class="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 active:scale-95 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300/50" aria-label="Close popup">
+          <svg class="w-6 h-6 text-blue-900" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain scroll-smooth px-4 sm:px-6">
       <div class="py-5 sm:py-6 pb-6 sm:pb-8">
@@ -59,7 +83,7 @@
   </div>
 </div>
 
-<!-- Vacanciers - Autres besoins sub-subcategories Popup -->
+<!-- Expat & Traveler - Specific Needs Popup -->
 <div id="vacanciersAutresBesoinsPopup" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4">
   <div class="bg-white w-full sm:max-w-4xl sm:rounded-[2rem] rounded-t-[2rem] shadow-[0_-4px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.3)] max-h-[95dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden will-change-transform">
     <div class="sm:hidden flex justify-center pt-3 pb-2 bg-white rounded-t-[2rem]">
@@ -73,16 +97,28 @@
           </svg>
         </button>
         <div class="min-w-0 flex-1">
-          <h2 class="text-[1.375rem] sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight truncate">Choose Your Need</h2>
-          <p class="text-[0.8125rem] sm:text-sm text-gray-500 mt-1 leading-snug truncate">Select a specific service</p>
+          <h2 class="text-[1.375rem] sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight truncate">
+            What Exactly Do You Need? 🔍
+          </h2>
+          <p class="text-[0.8125rem] sm:text-sm text-gray-500 mt-1 leading-snug truncate">
+            Pick the most specific option that matches your request
+          </p>
         </div>
       </div>
-      <button onclick="closeAllPopups()" class="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 text-white shadow-lg shadow-blue-500/40 hover:shadow-xl hover:shadow-blue-500/50 transition-all duration-300 active:scale-95 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/30" aria-label="Close popup">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-full shadow-lg shadow-orange-500/30">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Service Request
+        </span>
+        <button onclick="closeAllPopups()" class="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 active:scale-95 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300/50" aria-label="Close popup">
+          <svg class="w-6 h-6 text-blue-900" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain scroll-smooth px-4 sm:px-6">
       <div class="py-5 sm:py-6 pb-6 sm:pb-8">
