@@ -13992,9 +13992,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! toastr */ "./node_modules/toastr/toastr.js");
 /* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(toastr__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var toastr_build_toastr_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! toastr/build/toastr.min.css */ "./node_modules/toastr/build/toastr.min.css");
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './category-popups.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 
 
 
+
+// Import des popups de catégories
+
+
+// Initialise quand le DOM est prêt
+document.addEventListener('DOMContentLoaded', function () {
+  Object(function webpackMissingModule() { var e = new Error("Cannot find module './category-popups.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())();
+});
+
+// Rend la fonction globale pour les boutons onclick=""
+window.initializeCategoryPopups = Object(function webpackMissingModule() { var e = new Error("Cannot find module './category-popups.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 
 /***/ }),
 

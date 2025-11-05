@@ -1,23 +1,424 @@
 <!doctype html>
 <html lang="en" dir="ltr">
+    <style>
+        /* Navigation buttons */
+        .nav-button {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-button:active {
+            transform: translateY(0);
+        }
+
+        /* Hamburger menu animation */
+        .hamburger-line {
+            transform-origin: center;
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+        }
+
+        #menu-toggle-top.menu-active .hamburger-line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+            background-color: #1f2937;
+        }
+
+        #menu-toggle-top.menu-active .hamburger-line:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        #menu-toggle-top.menu-active .hamburger-line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+            background-color: #1f2937;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-container {
+            background: transparent;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            padding: 12px 0;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .breadcrumb-item svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .breadcrumb-item a {
+            color: #64748b;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            background: transparent;
+        }
+
+        .breadcrumb-item a:hover {
+            background: rgba(59, 130, 246, 0.08);
+            color: #3b82f6;
+            transform: translateX(2px);
+        }
+
+        .breadcrumb-item.active {
+            color: #1e293b;
+            font-weight: 600;
+            padding: 6px 12px;
+            background: rgba(226, 232, 240, 0.4);
+            border-radius: 20px;
+        }
+
+        .breadcrumb-separator {
+            color: #cbd5e1;
+            margin: 0 4px;
+            font-size: 14px;
+        }
+
+        /* Scroll to top button */
+        #scrollToTopBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        #scrollToTopBtn:hover {
+            background: #2563eb;
+        }
+
+        #scrollToTopBtn.show {
+            display: flex;
+        }
+
+        /* Photo upload boxes - Blocs carrés PLUS PETITS */
+        .photo-upload-box {
+            aspect-ratio: 1 / 1;
+            position: relative;
+            overflow: hidden;
+            min-height: 100px;
+            max-height: 140px;
+        }
+
+        .photo-upload-box .photo-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .photo-upload-box.has-photo .photo-menu-btn {
+            position: absolute;
+            inset: 0;
+            background: transparent;
+        }
+
+        .photo-upload-box.has-photo .photo-preview {
+            cursor: pointer;
+        }
+
+        .photo-upload-box:not(.has-photo) .photo-preview {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .photo-upload-box:not(.has-photo) .photo-label {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Zoom modal */
+        #photoZoomModal {
+            backdrop-filter: blur(8px);
+        }
+
+        #photoZoomModal img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .zoom-controls {
+            gap: 0.5rem;
+        }
+
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .zoom-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* Enlever le double trait des inputs */
+        input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), 
+        select, 
+        textarea {
+            border: 2px solid #93c5fd;
+            transition: all 0.2s ease;
+        }
+
+        input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus, 
+        select:focus, 
+        textarea:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Suppression du ring par défaut Tailwind */
+        .focus\:ring-2:focus,
+        .focus\:ring-blue-200:focus {
+            --tw-ring-offset-shadow: none !important;
+            --tw-ring-shadow: none !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+        }
+
+        /* Optimisation Desktop - Contenus compacts */
+        @media (min-width: 768px) {
+            .form-step {
+                max-height: 70vh;
+                overflow-y: auto;
+                padding: 0.5rem;
+            }
+            
+            .info-box {
+                padding: 0.625rem !important;
+                margin-top: 0.625rem !important;
+            }
+            
+            .info-box p {
+                font-size: 0.8125rem !important;
+                line-height: 1.35 !important;
+            }
+            
+            input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), 
+            select, 
+            textarea {
+                padding: 0.625rem !important;
+                font-size: 0.9375rem !important;
+            }
+            
+            .option-btn, .duration-btn {
+                padding: 0.625rem 0.875rem !important;
+                font-size: 0.8125rem !important;
+            }
+            
+            .support-option, .urgency-option {
+                padding: 0.625rem 0.875rem !important;
+            }
+            
+            .lang-option {
+                padding: 0.5rem 0.625rem !important;
+                font-size: 0.75rem !important;
+            }
+            
+            h1 {
+                font-size: 1.25rem !important;
+            }
+            
+            .max-w-3xl {
+                max-width: 56rem;
+            }
+            
+            /* Blocs photos encore plus petits sur desktop */
+            .photo-upload-box {
+                max-height: 120px;
+            }
+        }
+
+        /* Optimisation Mobile - UX Exceptionnelle */
+        @media (max-width: 767px) {
+            body {
+                padding-bottom: 5rem;
+            }
+            
+            .form-step {
+                padding: 0.75rem;
+            }
+            
+            input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), 
+            select, 
+            textarea {
+                padding: 0.875rem !important;
+                font-size: 1rem !important;
+                border-radius: 1rem !important;
+            }
+            
+            .info-box {
+                padding: 0.75rem !important;
+                margin-top: 0.75rem !important;
+                border-radius: 1rem !important;
+            }
+            
+            .option-btn, .duration-btn {
+                padding: 0.875rem !important;
+                font-size: 0.875rem !important;
+                border-radius: 1rem !important;
+            }
+            
+            .support-option, .urgency-option {
+                padding: 0.875rem !important;
+                border-radius: 1rem !important;
+            }
+            
+            .lang-option {
+                padding: 0.625rem !important;
+                font-size: 0.8125rem !important;
+            }
+            
+            /* Sticky nav plus accessible sur mobile */
+            #stickyNav {
+                padding: 0.75rem 1rem;
+            }
+            
+            #nextBtn, #prevBtn {
+                padding: 0.875rem 1.5rem !important;
+                font-size: 0.9375rem !important;
+            }
+            
+            /* Blocs photos optimisés mobile */
+            .photo-upload-box {
+                min-height: 110px;
+                max-height: 130px;
+                border-radius: 1rem !important;
+            }
+            
+            /* Header plus compact sur mobile */
+            header.sticky-header {
+                padding: 0.625rem 1rem !important;
+            }
+            
+            #formStepLabel {
+                font-size: 1rem !important;
+                line-height: 1.3 !important;
+            }
+            
+            #stepCounter, #funText {
+                font-size: 0.75rem !important;
+            }
+
+            #scrollToTopBtn {
+                display: none !important;
+            }
+
+            .breadcrumb-container {
+                padding: 12px 0;
+            }
+
+            .breadcrumb {
+                padding: 0 16px;
+                font-size: 13px;
+                gap: 6px;
+            }
+
+            .breadcrumb-item svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .breadcrumb-item a {
+                padding: 5px 10px;
+            }
+
+            .breadcrumb-item.active {
+                padding: 5px 12px;
+            }
+        }
+
+        /* Alpine.js cloak */
+        [x-cloak] {
+            display: none !important;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-slideUp {
+            animation: slideUp 0.5s ease;
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <!-- SEO Meta Tags -->
     <title>Create Your Help Request - Find Qualified Service Providers Worldwide | ULIX AI</title>
     <meta name="description" content="Get help from qualified local and expat service providers in 197 countries. Create your help request in minutes and receive offers from verified professionals. Free to post.">
     <meta name="keywords" content="help request, service providers, expat helpers, international assistance, 197 countries, local help, verified professionals">
     <meta name="author" content="ULIX AI">
     <meta name="robots" content="index, follow, max-image-preview:large">
     
-    <!-- Canonical & Language Alternates -->
     <link rel="canonical" href="{{ url()->current() }}">
     <link rel="alternate" hreflang="en" href="{{ url()->current() }}">
     <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="Need Help Abroad? Create Your Request - ULIX AI">
@@ -28,43 +429,35 @@
     <meta property="og:site_name" content="ULIX AI">
     <meta property="og:locale" content="en_US">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="Need Help Abroad? Create Your Request">
     <meta name="twitter:description" content="Get help from qualified service providers in 197 countries.">
     <meta name="twitter:image" content="{{ asset('images/share-form-request.jpg') }}">
+
+    <!-- ✅ PRELOAD des ressources critiques -->
+    <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
+    <link rel="preload" href="{{ mix('js/request-form.js') }}" as="script">
     
-    <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('images/faviccon.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/faviccon.png') }}">
     
-    <!-- Preconnect for Performance -->
-    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     
-    <!-- Tailwind CSS (TODO: Replace with compiled CSS in production) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS compilé localement -->
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     
-    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
-    <!-- Font Awesome -->
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    
-    <!-- Toastr -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" media="print" onload="this.media='all'">
-    
-    <!-- Country Select -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/css/countrySelect.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/css/countrySelect.min.css" media="print" onload="this.media='all'">
     
     <style>
-        /* Performance & Touch Optimization */
         * {
             -webkit-tap-highlight-color: rgba(37, 99, 235, 0.1);
             box-sizing: border-box;
@@ -86,7 +479,6 @@
             padding-inline-end: env(safe-area-inset-right);
         }
         
-        /* Prevent iOS zoom on input focus */
         input[type="text"],
         input[type="email"],
         input[type="password"],
@@ -95,7 +487,6 @@
             font-size: 16px;
         }
         
-        /* Touch targets minimum 44x44px */
         button,
         a,
         input[type="radio"],
@@ -105,12 +496,10 @@
             touch-action: manipulation;
         }
         
-        /* Alpine Cloak */
         [x-cloak] {
             display: none !important;
         }
         
-        /* Skip to content link */
         .skip-link {
             position: absolute;
             top: -40px;
@@ -127,7 +516,6 @@
             top: 0;
         }
         
-        /* Custom Animations */
         @keyframes slideUp {
             from {
                 transform: translateY(100px);
@@ -168,7 +556,6 @@
             animation: spin 1s linear infinite;
         }
         
-        /* Backdrop Blur Support */
         @supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
             .backdrop-blur-md {
                 backdrop-filter: blur(12px);
@@ -176,7 +563,6 @@
             }
         }
         
-        /* Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -191,24 +577,20 @@
             }
         }
         
-        /* Performance: Content Visibility */
         .below-fold {
             content-visibility: auto;
             contain-intrinsic-size: auto 500px;
         }
         
-        /* Focus Visible */
         *:focus-visible {
             outline: 2px solid #2563eb;
             outline-offset: 2px;
         }
         
-        /* Custom Progress Bar Animation */
         #progressBar {
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* Touch targets - minimum 44x44px */
         button,
         a,
         input[type="radio"],
@@ -219,20 +601,17 @@
             touch-action: manipulation;
         }
         
-        /* Logical properties for RTL support */
         .section-spacing {
             padding-block: clamp(0.5rem, 2vw, 1rem);
             padding-inline: clamp(0.5rem, 2vw, 0.75rem);
         }
         
-        /* Container query support with fallback */
         @supports (container-type: inline-size) {
             .responsive-container {
                 container-type: inline-size;
             }
         }
         
-        /* High contrast support */
         @media (prefers-contrast: high) {
             button,
             .btn {
@@ -240,46 +619,15 @@
             }
         }
         
-        /* Fix z-index for sticky header - lower than modals */
         .sticky-header {
             z-index: 30 !important;
         }
         
-        /* Ensure modals are above everything */
         .modal-overlay {
             z-index: 9999 !important;
         }
-
-        /* Compact spacing for desktop */
-        @media (min-width: 768px) {
-            .form-step {
-                max-height: 65vh;
-                overflow-y: auto;
-            }
-            .info-box {
-                padding: 0.75rem !important;
-                margin-top: 0.75rem !important;
-            }
-            .info-box p {
-                font-size: 0.875rem !important;
-                line-height: 1.4 !important;
-            }
-            input, select, textarea {
-                padding: 0.75rem !important;
-            }
-            .option-btn, .duration-btn {
-                padding: 0.75rem 1rem !important;
-            }
-            .support-option, .urgency-option {
-                padding: 0.75rem 1rem !important;
-            }
-            .lang-option {
-                padding: 0.5rem 0.75rem !important;
-            }
-        }
     </style>
     
-    <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -297,7 +645,6 @@
     }
     </script>
 
-    <!-- 💫 LOADING SCREEN -->
     <div id="pageLoader" class="fixed inset-0 z-[99999] bg-white flex items-center justify-center">
       <div class="text-center">
         <div class="relative">
@@ -325,10 +672,9 @@
 </head>
 
 <body class="min-h-screen bg-gradient-to-tr from-white to-blue-50 pb-20 sm:pb-24">
-    <!-- Skip to content link -->
     <a href="#main-content" class="skip-link">Skip to content</a>
     
-    @include('includes.header')
+    @include('includes.header-content-only')
     
     @php 
         use App\Models\Country;
@@ -373,22 +719,21 @@
         $durations = ["Not arrived yet", "1-7 days", "1-4 weeks", "1-12 months", "1-2 years", "2-5 years", "More than 5 years"];
         
         $languages = [
-            ['name' => 'English', 'flag' => 'us'],
-            ['name' => 'Français', 'flag' => 'fr'],
-            ['name' => 'Español', 'flag' => 'es'],
-            ['name' => 'Português', 'flag' => 'pt'],
-            ['name' => 'Deutsch', 'flag' => 'de'],
-            ['name' => 'Italiano', 'flag' => 'it'],
-            ['name' => 'العربية', 'flag' => 'sa'],
-            ['name' => '日本語', 'flag' => 'jp'],
-            ['name' => '한국어', 'flag' => 'kr'],
-            ['name' => 'हिन्दी', 'flag' => 'in'],
-            ['name' => '中文', 'flag' => 'cn'],
-            ['name' => 'Русский', 'flag' => 'ru']
+            ['name' => 'English', 'code' => 'us'],
+            ['name' => 'Français', 'code' => 'fr'],
+            ['name' => 'Español', 'code' => 'es'],
+            ['name' => 'Português', 'code' => 'pt'],
+            ['name' => 'Deutsch', 'code' => 'de'],
+            ['name' => 'Italiano', 'code' => 'it'],
+            ['name' => 'العربية', 'code' => 'sa'],
+            ['name' => '日本語', 'code' => 'jp'],
+            ['name' => '한국어', 'code' => 'kr'],
+            ['name' => 'हिन्दी', 'code' => 'in'],
+            ['name' => '中文', 'code' => 'cn'],
+            ['name' => 'Русский', 'code' => 'ru']
         ];
     @endphp
     
-    <!-- Sticky Header with Progress -->
     <header class="sticky top-0 sticky-header bg-white/98 backdrop-blur-md border-b-2 border-gray-200 section-spacing shadow-sm">
         <div class="max-w-3xl mx-auto">
             <div class="w-full bg-gray-200 h-1.5 rounded-full mb-2 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -403,20 +748,19 @@
         </div>
     </header>
     
-    <!-- Main Content -->
     <main id="main-content" class="max-w-3xl mx-auto section-spacing py-3 sm:py-4">
         <div class="md:border-4 md:border-blue-300 md:rounded-3xl md:p-4 lg:p-6 md:bg-white md:shadow-xl">
-            <form action="{{ route('save-request-form') }}" id="helpRequestForm" method="POST" novalidate>
+            <form action="{{ route('save-request-form') }}" id="helpRequestForm" method="POST" novalidate enctype="multipart/form-data">
                 @csrf
                 
-                <!-- Step 1: Country Need -->
+                <!-- STEP 1: Country Need -->
                 <fieldset class="form-step">
                     <legend class="sr-only">Select the country where you need help</legend>
                     <label for="countryNeed" class="sr-only">Country where you need help</label>
                     <select 
                         id="countryNeed" 
                         name="countryNeed" 
-                        class="w-full p-4 text-base bg-white border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-white border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
                         required
                         aria-required="true"
                         aria-describedby="countryNeed-help">
@@ -433,14 +777,14 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 2: Origin Country -->
+                <!-- STEP 2: Origin Country -->
                 <fieldset class="form-step hidden">
                     <legend class="sr-only">Select your country of origin</legend>
                     <label for="originCountry" class="sr-only">Country of origin</label>
                     <select 
                         id="originCountry" 
                         name="originCountry" 
-                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
                         required
                         aria-required="true"
                         aria-describedby="originCountry-help">
@@ -457,7 +801,7 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 3: Current City -->
+                <!-- STEP 3: Current City -->
                 <fieldset class="form-step hidden">
                     <legend class="sr-only">Enter your current city</legend>
                     <label for="currentCity" class="sr-only">Current city</label>
@@ -466,7 +810,7 @@
                         id="currentCity"
                         name="currentCity"
                         placeholder="E.g.: Paris, Lyon, Marseille..."
-                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
                         autocomplete="address-level2"
                         aria-describedby="currentCity-help"
                     />
@@ -478,7 +822,7 @@
                     <p class="mt-2 text-xs text-gray-500 italic text-center">⚠️ Optional but recommended for local help</p>
                 </fieldset>
                 
-                <!-- Step 4: Duration -->
+                <!-- STEP 4: Duration Here -->
                 <fieldset class="form-step hidden">
                     <legend class="sr-only">How long have you been in this country?</legend>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" role="group" aria-labelledby="duration-label">
@@ -497,7 +841,7 @@
                     <p class="text-xs text-red-500 mt-3 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 5: Request Details -->
+                <!-- STEP 5: Request Details -->
                 <fieldset class="form-step hidden space-y-4">
                     <legend class="sr-only">Describe your help request</legend>
                     <div>
@@ -507,7 +851,7 @@
                             id="requestTitle"
                             name="requestTitle"
                             placeholder="E.g.: Help with moving, Document translation..."
-                            class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                            class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
                             required
                             aria-required="true"
                             aria-describedby="titleCounter"
@@ -526,7 +870,7 @@
                             rows="5"
                             maxlength="1500"
                             placeholder="Describe the circumstances, dates, locations, people involved..."
-                            class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl resize-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                            class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl resize-none transition-all shadow-sm"
                             required
                             aria-required="true"
                             aria-describedby="detailsCounter"
@@ -544,28 +888,28 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 6: Photos -->
-                <fieldset class="form-step hidden space-y-4">
+                <!-- STEP 6: Photos -->
+                <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">Add photos to your request (optional)</legend>
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-2 gap-2 max-w-md mx-auto">
                         @for ($i = 1; $i <= 4; $i++)
-                        <div class="photo-upload-box border-2 border-blue-400 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-100 hover:border-blue-500 transition-all min-h-[120px] active:scale-95 bg-blue-50 shadow-sm">
+                        <div class="photo-upload-box border-2 border-blue-400 rounded-xl p-2 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-100 hover:border-blue-500 transition-all active:scale-95 bg-blue-50 shadow-sm" data-photo-index="{{ $i }}">
                             <button type="button" class="photo-menu-btn w-full h-full flex flex-col items-center justify-center focus:outline-none" aria-label="Upload photo {{ $i }}">
-                                <img src="{{ asset('images/uploadpng.png') }}" alt="" class="w-10 h-10 mb-2 photo-preview" loading="lazy" decoding="async" />
-                                <span class="text-sm text-blue-700 font-semibold">Add photo</span>
+                                <img src="{{ asset('images/uploadpng.png') }}" alt="" class="photo-preview" loading="lazy" decoding="async" data-default-src="{{ asset('images/uploadpng.png') }}" />
+                                <span class="text-xs text-blue-700 font-semibold photo-label">Add photo</span>
                             </button>
                             <input type="file" name="photo{{ $i }}" class="hidden photo-input" accept="image/*" aria-label="Photo {{ $i }}" />
                         </div>
                         @endfor
                     </div>
-                    <div class="info-box bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-2xl p-3 shadow-sm">
-                        <p class="text-sm text-indigo-900 leading-relaxed">
-                            🖼️ <strong>Optional</strong> — Only <strong>photos</strong> are accepted
+                    <div class="info-box bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-xl p-2.5 shadow-sm">
+                        <p class="text-xs text-indigo-900 leading-relaxed">
+                            🖼️ <strong>Optional</strong> — Click on a photo to view it larger.
                         </p>
                     </div>
                 </fieldset>
                 
-                <!-- Step 7: Support Type -->
+                <!-- STEP 7: Support Type -->
                 <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">How would you like to be helped?</legend>
                     <div class="grid grid-cols-1 gap-3 max-w-md mx-auto" role="radiogroup" aria-labelledby="support-type-label">
@@ -591,7 +935,7 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 8: Urgency -->
+                <!-- STEP 8: Urgency -->
                 <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">How soon do you need this service?</legend>
                     <div class="grid grid-cols-1 gap-3 max-w-lg mx-auto" role="radiogroup" aria-labelledby="urgency-label">
@@ -635,14 +979,17 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 9: Languages -->
+                <!-- STEP 9: Languages -->
                 <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">What languages do you speak?</legend>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-2xl mx-auto" role="group" aria-labelledby="languages-label">
                         <span id="languages-label" class="sr-only">Select languages you speak</span>
                         @foreach($languages as $lang)
                         <label class="lang-option border-2 rounded-2xl px-3 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 border-blue-400 bg-blue-50 hover:bg-blue-100 active:scale-95">
-                            <img src="https://flagcdn.com/{{ $lang['flag'] }}.svg" alt="{{ $lang['name'] }} flag" class="w-5 h-3 rounded pointer-events-none" loading="lazy" decoding="async" />
+                            <img src="{{ asset('images/flags/' . $lang['code'] . '.svg') }}" 
+                                 alt="{{ $lang['name'] }}" 
+                                 class="w-6 h-4 pointer-events-none" 
+                                 loading="lazy" />
                             <span class="font-semibold text-xs pointer-events-none">{{ $lang['name'] }}</span>
                             <input type="checkbox" name="languages[]" value="{{ $lang['name'] }}" class="hidden lang-checkbox" />
                         </label>
@@ -656,7 +1003,7 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required (at least one)</p>
                 </fieldset>
                 
-                <!-- Step 10: First Name -->
+                <!-- STEP 10: First Name -->
                 <fieldset class="form-step hidden" id="step10-name">
                     <legend class="sr-only">Enter your first name</legend>
                     <label for="firstName" class="sr-only">First name</label>
@@ -665,7 +1012,7 @@
                         id="firstName"
                         name="firstName"
                         placeholder="Your first name"
-                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
                         required
                         aria-required="true"
                         autocomplete="given-name"
@@ -682,7 +1029,7 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 11: Email -->
+                <!-- STEP 11: Email -->
                 <fieldset class="form-step hidden" id="step11-email">
                     <legend class="sr-only">Enter your email address</legend>
                     <label for="email" class="sr-only">Email address</label>
@@ -691,7 +1038,7 @@
                         id="email"
                         name="email"
                         placeholder="your-email@example.com"
-                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
                         required
                         aria-required="true"
                         autocomplete="email"
@@ -709,7 +1056,7 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 12: Password -->
+                <!-- STEP 12: Password -->
                 <fieldset class="form-step hidden" id="step12-password">
                     <legend class="sr-only">Choose a password</legend>
                     <label for="password" class="sr-only">Password (minimum 6 characters)</label>
@@ -718,7 +1065,7 @@
                         id="password"
                         name="password"
                         placeholder="Choose a secure password (min 6 chars)"
-                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+                        class="w-full p-4 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
                         required
                         aria-required="true"
                         aria-describedby="passwordStrength"
@@ -745,7 +1092,7 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 13: Service Duration -->
+                <!-- STEP 13: Service Duration -->
                 <fieldset class="form-step hidden space-y-3">
                     <legend class="sr-only">How long should your request remain visible?</legend>
                     <div class="flex flex-col sm:flex-row justify-center gap-3" role="group" aria-labelledby="duration-label-13">
@@ -771,7 +1118,7 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- Step 14: Loading -->
+                <!-- STEP 14: Processing -->
                 <div class="form-step hidden flex flex-col items-center justify-center space-y-4 py-8" role="status" aria-live="polite" aria-label="Processing your request">
                     <div class="relative">
                         <div class="w-20 h-20 border-8 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
@@ -787,7 +1134,7 @@
                     </div>
                 </div>
                 
-                <!-- Step 15: Success -->
+                <!-- STEP 15: Success -->
                 <div class="form-step hidden flex flex-col items-center space-y-4 py-6" role="status" aria-live="polite">
                     <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-3 shadow-lg">
                         <svg class="w-14 h-14 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -811,7 +1158,7 @@
         </div>
     </main>
     
-    <!-- Popup for Expat Helper -->
+    <!-- Expat Popup -->
     <aside id="expatPopup" class="fixed bottom-28 right-4 left-4 md:left-auto md:right-6 max-w-sm bg-gradient-to-br from-purple-600 to-indigo-600 text-white p-4 rounded-2xl shadow-2xl hidden animate-slideUp modal-overlay" role="complementary" aria-labelledby="popup-title">
         <button type="button" onclick="document.getElementById('expatPopup').classList.add('hidden')" class="absolute top-1 right-1 text-white text-2xl font-bold hover:bg-white/20 w-7 h-7 rounded-full flex items-center justify-center" aria-label="Close popup">×</button>
         <p id="popup-title" class="text-sm font-bold mb-1">👋 Hey! Did you know?</p>
@@ -821,17 +1168,17 @@
         </p>
     </aside>
     
-    <!-- Validation Error Popup -->
+    <!-- Validation Error -->
     <div id="validationError" class="fixed top-20 left-1/2 transform -translate-x-1/2 max-w-md bg-gradient-to-r from-orange-500 to-red-500 text-white px-5 py-3 rounded-2xl shadow-2xl hidden animate-slideDown modal-overlay" role="alert" aria-live="assertive">
         <p id="validationMessage" class="text-sm font-bold text-center"></p>
     </div>
     
-    <!-- CGV Warning Popup -->
+    <!-- CGV Warning -->
     <div id="cgvWarning" class="fixed top-20 left-1/2 transform -translate-x-1/2 max-w-md bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-5 py-3 rounded-2xl shadow-2xl hidden animate-slideDown modal-overlay" role="alert" aria-live="assertive">
         <p class="text-sm font-bold text-center">⚠️ Don't forget to check the T&C below! 📝✅</p>
     </div>
     
-    <!-- Sticky Footer Navigation -->
+    <!-- Sticky Navigation -->
     <nav id="stickyNav" class="fixed md:sticky bottom-0 left-0 right-0 z-40 bg-white/98 backdrop-blur-md border-t-2 border-gray-200 section-spacing shadow-lg" aria-label="Form navigation">
         <div class="max-w-3xl mx-auto flex items-center justify-between gap-3">
             <button
@@ -858,11 +1205,15 @@
             <h2 id="photo-modal-title" class="text-lg font-bold mb-3 text-gray-900">Choose a source</h2>
             <div class="space-y-2">
                 <button type="button" class="photo-menu-option w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 transition-all border-2 border-transparent hover:border-blue-200" data-action="library">
-                    <i class="fa fa-image text-blue-600" aria-hidden="true"></i>
+                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                    </svg>
                     <span class="text-sm font-medium">Photo library</span>
                 </button>
                 <button type="button" class="photo-menu-option w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 transition-all border-2 border-transparent hover:border-blue-200" data-action="camera">
-                    <i class="fa fa-camera text-blue-600" aria-hidden="true"></i>
+                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                    </svg>
                     <span class="text-sm font-medium">Take photo</span>
                 </button>
                 <button type="button" id="closePhotoMenuModal" class="w-full mt-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all text-sm font-medium">Cancel</button>
@@ -881,6 +1232,40 @@
             </div>
         </div>
     </div>
+
+    <!-- Photo Zoom Modal -->
+    <div id="photoZoomModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center p-4 modal-overlay" role="dialog" aria-modal="true" aria-labelledby="zoom-title" style="z-index: 10000;">
+        <div class="relative max-w-full max-h-full">
+            <button type="button" id="closeZoomModal" class="absolute top-4 right-4 text-white text-3xl font-bold hover:bg-white/20 w-12 h-12 rounded-full flex items-center justify-center z-10 transition-all" aria-label="Close preview">
+                ×
+            </button>
+            
+            <div class="zoom-controls absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3">
+                <button type="button" id="zoomOut" class="zoom-btn" aria-label="Zoom out">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/>
+                    </svg>
+                </button>
+                <button type="button" id="resetZoom" class="zoom-btn" aria-label="Reset zoom">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                    </svg>
+                </button>
+                <button type="button" id="zoomIn" class="zoom-btn" aria-label="Zoom in">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                    </svg>
+                </button>
+                <button type="button" id="deletePhoto" class="zoom-btn bg-red-500 text-white hover:bg-red-600" aria-label="Delete photo">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <img id="zoomedImage" src="" alt="Preview" class="rounded-lg shadow-2xl" style="transform-origin: center; transition: transform 0.2s ease;" />
+        </div>
+    </div>
     
     <!-- Share Button -->
     <button id="shareBtn" onclick="openSimpleShare()" class="fixed bottom-20 right-6 z-50 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group" aria-label="Share this page">
@@ -889,6 +1274,7 @@
       </svg>
     </button>
 
+    <!-- Share Popup -->
     <div id="sharePopup" class="hidden fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeSimpleShare()">
       <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-5" style="animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);" onclick="event.stopPropagation()">
         <div class="flex items-center justify-between mb-3">
@@ -976,950 +1362,20 @@
       }
       document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSimpleShare(); });
     </script>
-
-    <div id="shareSuccessPopup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="success-title">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 transform transition-all scale-95 opacity-0" id="popupContent">
-            <div class="text-center mb-3">
-                <div class="inline-block bg-gradient-to-br from-green-400 to-emerald-500 rounded-full p-3 mb-2 animate-bounce">
-                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <h3 id="success-title" class="text-xl font-bold text-gray-900 mb-1">Awesome! 🎉</h3>
-                <p class="text-gray-600 text-xs">Thank you for sharing!</p>
-            </div>
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 mb-3 border border-green-200">
-                <div class="flex items-center justify-center">
-                    <span class="text-base font-bold text-green-600 text-center">Share and earn 75% affiliate commission</span>
-                </div>
-            </div>
-            <button onclick="closeSharePopup()" class="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-2.5 rounded-xl transition-all text-sm">
-                Got it!
-            </button>
-        </div>
-    </div>
     
-    <!-- Scripts -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/js/countrySelect.min.js"></script>
     
+    <!-- Variables globales pour request-form.js -->
     <script>
-    (function() {
-        'use strict';
-        
-        const funTexts = @json($funTexts);
-        const stepLabels = @json($stepLabels);
-        
-        const steps = document.querySelectorAll('.form-step');
-        const nextBtn = document.getElementById('nextBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const progressBar = document.getElementById('progressBar');
-        const stepLabel = document.getElementById('formStepLabel');
-        const stepCounter = document.getElementById('stepCounter');
-        const funText = document.getElementById('funText');
-        const stickyNav = document.getElementById('stickyNav');
-        
-        let currentStep = 0;
-        const totalSteps = 15;
-        
-        // Character counters
-        const requestTitle = document.getElementById('requestTitle');
-        const titleCount = document.getElementById('titleCount');
-        const titleCounter = document.getElementById('titleCounter');
-        const moreDetails = document.getElementById('moreDetails');
-        const detailsCount = document.getElementById('detailsCount');
-        const detailsCounter = document.getElementById('detailsCounter');
-        
-        if (requestTitle && titleCount) {
-            requestTitle.addEventListener('input', function() {
-                const length = this.value.length;
-                titleCount.textContent = length + '/15';
-                if (length >= 15) {
-                    titleCounter.className = 'mt-3 text-sm text-green-700 bg-green-50 border-green-300 p-3 rounded-xl border-2 shadow-sm';
-                    titleCounter.innerHTML = '✅ Minimum 15 characters • <span id="titleCount">' + length + '/15</span>';
-                } else {
-                    titleCounter.className = 'mt-3 text-sm text-orange-600 bg-orange-50 border-orange-300 p-3 rounded-xl border-2 shadow-sm';
-                    titleCounter.innerHTML = '⚠️ Minimum 15 characters • <span id="titleCount">' + length + '/15</span>';
-                }
-                updateNextButton();
-            });
-        }
-        
-        if (moreDetails && detailsCount) {
-            moreDetails.addEventListener('input', function() {
-                const length = this.value.length;
-                detailsCount.textContent = length;
-                if (length >= 50) {
-                    detailsCounter.className = 'mt-3 text-sm flex justify-between text-green-700 bg-green-50 border-green-300 p-3 rounded-xl border-2 shadow-sm';
-                    detailsCounter.innerHTML = '<span>✅ Min 50 chars</span><span class="text-gray-700"><span id="detailsCount">' + length + '</span>/50 (max 1500)</span>';
-                } else {
-                    detailsCounter.className = 'mt-3 text-sm flex justify-between text-orange-600 bg-orange-50 border-orange-300 p-3 rounded-xl border-2 shadow-sm';
-                    detailsCounter.innerHTML = '<span>⚠️ Min 50 chars</span><span class="text-gray-700"><span id="detailsCount">' + length + '</span>/50 (max 1500)</span>';
-                }
-                updateNextButton();
-            });
-        }
-        
-        // Password strength
-        const password = document.getElementById('password');
-        const strengthBar = document.getElementById('strengthBar');
-        const strengthLabel = document.getElementById('strengthLabel');
-        
-        if (password && strengthBar) {
-            password.addEventListener('input', function() {
-                const length = this.value.length;
-                let strength = 0;
-                let text = 'Too short';
-                let color = 'bg-gray-300';
-                
-                if (length < 6) {
-                    strength = 0;
-                    text = 'Too short';
-                    color = 'bg-gray-300';
-                } else if (length < 8) {
-                    strength = 33;
-                    text = 'Weak';
-                    color = 'bg-red-500';
-                } else if (length < 10) {
-                    strength = 66;
-                    text = 'Medium';
-                    color = 'bg-yellow-500';
-                } else {
-                    strength = 100;
-                    text = 'Strong';
-                    color = 'bg-green-500';
-                }
-                
-                strengthBar.style.width = strength + '%';
-                strengthBar.setAttribute('aria-valuenow', strength);
-                strengthBar.className = 'h-full transition-all duration-300 ' + color;
-                strengthLabel.textContent = text;
-                updateNextButton();
-            });
-        }
-        
-        // Duration buttons
-        const durationButtons = document.querySelectorAll('.option-btn');
-        const durationInput = document.getElementById('durationHere');
-        
-        durationButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                durationButtons.forEach(btn => {
-                    btn.className = 'option-btn border-2 rounded-2xl py-4 px-3 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100';
-                    btn.setAttribute('aria-pressed', 'false');
-                    if (btn.classList.contains('sm:col-span-2')) {
-                        btn.classList.add('sm:col-span-2');
-                    }
-                });
-                this.className = 'option-btn border-2 rounded-2xl py-4 px-3 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 bg-blue-600 text-white border-blue-700 shadow-lg';
-                this.setAttribute('aria-pressed', 'true');
-                if (this.classList.contains('sm:col-span-2')) {
-                    this.classList.add('sm:col-span-2');
-                }
-                durationInput.value = this.getAttribute('data-value');
-                
-                // Show popup for long durations
-                const value = this.getAttribute('data-value');
-                if (['1-2 years', '2-5 years', 'More than 5 years'].includes(value)) {
-                    const popup = document.getElementById('expatPopup');
-                    popup.classList.remove('hidden');
-                    popup.style.zIndex = '9999';
-                    setTimeout(() => popup.classList.add('hidden'), 5000);
-                }
-                updateNextButton();
-            });
-        });
-        
-        // Support type radios
-        const supportOptions = document.querySelectorAll('.support-option');
-        supportOptions.forEach(option => {
-            const radio = option.querySelector('input[type="radio"]');
-            radio.addEventListener('change', function() {
-                supportOptions.forEach(opt => {
-                    opt.className = 'support-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 text-blue-900 hover:bg-blue-100';
-                });
-                if (this.checked) {
-                    option.className = 'support-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md bg-blue-600 text-white border-blue-700';
-                }
-                updateNextButton();
-            });
-        });
-        
-        // Urgency radios
-        const urgencyOptions = document.querySelectorAll('.urgency-option');
-        urgencyOptions.forEach(option => {
-            const radio = option.querySelector('input[type="radio"]');
-            radio.addEventListener('change', function() {
-                urgencyOptions.forEach(opt => {
-                    opt.className = 'urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md border-blue-500 bg-blue-50 hover:bg-blue-100';
-                });
-                if (this.checked) {
-                    option.className = 'urgency-option flex items-center justify-between gap-3 border-2 rounded-2xl px-4 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md bg-blue-600 text-white border-blue-700';
-                }
-                updateNextButton();
-            });
-        });
-        
-        // Language selection
-        const langOptions = document.querySelectorAll('.lang-option');
-        langOptions.forEach(option => {
-            const checkbox = option.querySelector('.lang-checkbox');
-            
-            option.addEventListener('click', function(e) {
-                checkbox.checked = !checkbox.checked;
-                
-                if (checkbox.checked) {
-                    this.className = 'lang-option border-2 rounded-2xl px-3 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 bg-blue-600 text-white border-blue-700';
-                } else {
-                    this.className = 'lang-option border-2 rounded-2xl px-3 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 border-blue-400 bg-blue-50 hover:bg-blue-100 active:scale-95';
-                }
-                
-                updateNextButton();
-            });
-            
-            checkbox.addEventListener('click', function(e) {
-                e.preventDefault();
-            });
-        });
-        
-        // Service duration buttons
-        const serviceDurationBtns = document.querySelectorAll('.duration-btn');
-        const serviceDurationInput = document.getElementById('serviceDuration');
-        
-        serviceDurationBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                serviceDurationBtns.forEach(b => {
-                    b.className = 'duration-btn border-2 rounded-2xl py-3 px-5 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 border-blue-400 text-blue-700 bg-blue-50 hover:bg-blue-100';
-                    b.setAttribute('aria-pressed', 'false');
-                });
-                this.className = 'duration-btn border-2 rounded-2xl py-3 px-5 text-center font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95 bg-blue-600 text-white border-blue-700 shadow-lg';
-                this.setAttribute('aria-pressed', 'true');
-                serviceDurationInput.value = this.getAttribute('data-duration');
-                updateNextButton();
-            });
-        });
-        
-        // Terms checkbox
-        const termsCheckbox = document.getElementById('termsCheckbox');
-        if (termsCheckbox) {
-            termsCheckbox.addEventListener('change', updateNextButton);
-        }
-        
-        // Show step
-        function showStep(index) {
-            @if(Auth::check())
-            if (index >= 9 && index <= 11) {
-                currentStep = 12;
-                index = 12;
-            }
-            @endif
-            
-            steps.forEach((step, i) => step.classList.toggle('hidden', i !== index));
-            
-            const progress = ((index + 1) / totalSteps) * 100;
-            progressBar.style.width = progress + '%';
-            progressBar.setAttribute('aria-valuenow', Math.round(progress));
-            
-            if (stepLabel && stepLabels[index]) {
-                stepLabel.textContent = stepLabels[index];
-            }
-            
-            if (stepCounter) {
-                if (index < 12) {
-                    stepCounter.textContent = 'Step ' + (index + 1);
-                } else if (index === 12) {
-                    stepCounter.textContent = 'Step 12b';
-                } else {
-                    stepCounter.textContent = '';
-                }
-            }
-            
-            if (funText && funTexts[index]) {
-                funText.textContent = funTexts[index].text;
-                funText.style.color = funTexts[index].color;
-            }
-            
-            // Navigation visibility
-            if (index === 0) {
-                prevBtn.style.visibility = 'hidden';
-            } else {
-                prevBtn.style.visibility = 'visible';
-            }
-            
-            if (index === 13 || index === 14) {
-                stickyNav.classList.add('hidden');
-            } else {
-                stickyNav.classList.remove('hidden');
-            }
-            
-            // Auto-advance on loading step
-            if (index === 13) {
-                setTimeout(() => {
-                    currentStep++;
-                    showStep(currentStep);
-                }, 2000);
-            }
-            
-            // Focus management
-            const currentStepEl = steps[index];
-            if (currentStepEl) {
-                const firstInput = currentStepEl.querySelector('input:not([type="hidden"]):not(.lang-checkbox), select, textarea, button[type="button"]:not(.photo-menu-btn)');
-                if (firstInput && index !== 13 && index !== 14) {
-                    setTimeout(() => firstInput.focus(), 100);
-                }
-            }
-            
-            updateNextButton();
-        }
-        
-        // Validate step
-        function validateStep(stepIndex) {
-            if ([13, 14].includes(stepIndex)) return true;
-            
-            const step = steps[stepIndex];
-            let valid = true;
-            let message = '';
-            
-            switch(stepIndex) {
-                case 0:
-                    const countryNeed = document.getElementById('countryNeed');
-                    if (!countryNeed.value) {
-                        message = 'Please select a country';
-                        valid = false;
-                        countryNeed.focus();
-                    }
-                    break;
-                    
-                case 1:
-                    const originCountry = document.getElementById('originCountry');
-                    if (!originCountry.value) {
-                        message = 'Please select your country of origin';
-                        valid = false;
-                        originCountry.focus();
-                    }
-                    break;
-                    
-                case 2:
-                    valid = true;
-                    break;
-                    
-                case 3:
-                    const durationHere = document.getElementById('durationHere');
-                    if (!durationHere.value) {
-                        message = 'Please select how long you have been here';
-                        valid = false;
-                    }
-                    break;
-                    
-                case 4:
-                    const title = document.getElementById('requestTitle');
-                    const details = document.getElementById('moreDetails');
-                    if (!title.value || title.value.length < 15) {
-                        message = 'Title must be at least 15 characters';
-                        valid = false;
-                        title.focus();
-                    } else if (!details.value || details.value.length < 50) {
-                        message = 'Details must be at least 50 characters';
-                        valid = false;
-                        details.focus();
-                    }
-                    break;
-                    
-                case 5:
-                    valid = true;
-                    break;
-                    
-                case 6:
-                    const supportType = document.querySelector('input[name="supportType"]:checked');
-                    if (!supportType) {
-                        message = 'Please select a support type';
-                        valid = false;
-                    }
-                    break;
-                    
-                case 7:
-                    const urgency = document.querySelector('input[name="urgency"]:checked');
-                    if (!urgency) {
-                        message = 'Please select urgency level';
-                        valid = false;
-                    }
-                    break;
-                    
-                case 8:
-                    const languages = document.querySelectorAll('input[name="languages[]"]:checked');
-                    if (languages.length === 0) {
-                        message = 'Please select at least one language';
-                        valid = false;
-                    }
-                    break;
-                    
-                case 9:
-                    const firstName = document.getElementById('firstName');
-                    if (!firstName.value) {
-                        message = 'Please enter your first name';
-                        valid = false;
-                        firstName.focus();
-                    }
-                    break;
-                    
-                case 10:
-                    const email = document.getElementById('email');
-                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!email.value || !emailPattern.test(email.value)) {
-                        message = 'Please enter a valid email address';
-                        valid = false;
-                        email.focus();
-                    } else {
-                        checkEmailAndLogin(email.value);
-                    }
-                    break;
-                    
-                case 11:
-                    const pwd = document.getElementById('password');
-                    if (!pwd.value || pwd.value.length < 6) {
-                        message = 'Password must be at least 6 characters';
-                        valid = false;
-                        pwd.focus();
-                    }
-                    break;
-                    
-                case 12:
-                    const duration = document.getElementById('serviceDuration');
-                    const terms = document.getElementById('termsCheckbox');
-                    if (!duration.value) {
-                        message = 'Please select service duration';
-                        valid = false;
-                    } else if (!terms.checked) {
-                        showCGVWarning();
-                        valid = false;
-                        terms.focus();
-                    }
-                    break;
-            }
-            
-            if (!valid && message) {
-                showValidationError(message);
-            }
-            
-            return valid;
-        }
-        
-        // Show validation error
-        function showValidationError(message) {
-            const errorDiv = document.getElementById('validationError');
-            const messageEl = document.getElementById('validationMessage');
-            messageEl.textContent = message;
-            errorDiv.classList.remove('hidden');
-            errorDiv.style.zIndex = '9999';
-            setTimeout(() => errorDiv.classList.add('hidden'), 3000);
-        }
-        
-        // Show CGV warning
-        function showCGVWarning() {
-            const warningDiv = document.getElementById('cgvWarning');
-            warningDiv.classList.remove('hidden');
-            warningDiv.style.zIndex = '9999';
-            setTimeout(() => warningDiv.classList.add('hidden'), 3000);
-        }
-        
-        // Update next button
-        function updateNextButton() {
-            let canProceed = false;
-            
-            switch(currentStep) {
-                case 0:
-                    canProceed = !!document.getElementById('countryNeed').value;
-                    break;
-                case 1:
-                    canProceed = !!document.getElementById('originCountry').value;
-                    break;
-                case 2:
-                    canProceed = true;
-                    break;
-                case 3:
-                    canProceed = !!document.getElementById('durationHere').value;
-                    break;
-                case 4:
-                    const title = document.getElementById('requestTitle').value;
-                    const details = document.getElementById('moreDetails').value;
-                    canProceed = title.length >= 15 && details.length >= 50;
-                    break;
-                case 5:
-                    canProceed = true;
-                    break;
-                case 6:
-                    canProceed = !!document.querySelector('input[name="supportType"]:checked');
-                    break;
-                case 7:
-                    canProceed = !!document.querySelector('input[name="urgency"]:checked');
-                    break;
-                case 8:
-                    canProceed = document.querySelectorAll('input[name="languages[]"]:checked').length > 0;
-                    break;
-                case 9:
-                    canProceed = !!document.getElementById('firstName').value;
-                    break;
-                case 10:
-                    const email = document.getElementById('email').value;
-                    canProceed = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-                    break;
-                case 11:
-                    canProceed = document.getElementById('password').value.length >= 6;
-                    break;
-                case 12:
-                    canProceed = !!document.getElementById('serviceDuration').value && document.getElementById('termsCheckbox').checked;
-                    break;
-                default:
-                    canProceed = true;
-            }
-            
-            if (canProceed) {
-                nextBtn.className = 'px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg active:scale-95 cursor-pointer';
-                nextBtn.disabled = false;
-            } else {
-                nextBtn.className = 'px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md bg-gray-300 text-gray-500 cursor-not-allowed';
-                nextBtn.disabled = true;
-            }
-        }
-        
-        // Store step data
-        function storeStepData(stepIndex) {
-            const expats = JSON.parse(localStorage.getItem('help-request')) || {};
-            
-            switch (stepIndex) {
-                case 0:
-                    expats.countryNeed = document.getElementById('countryNeed').value;
-                    break;
-                case 1:
-                    expats.originCountry = document.getElementById('originCountry').value;
-                    break;
-                case 2:
-                    expats.currentCity = document.getElementById('currentCity').value;
-                    break;
-                case 3:
-                    expats.durationHere = document.getElementById('durationHere').value;
-                    break;
-                case 4:
-                    expats.requestTitle = document.getElementById('requestTitle').value;
-                    expats.moreDetails = document.getElementById('moreDetails').value;
-                    break;
-                case 6:
-                    const supportType = document.querySelector('input[name="supportType"]:checked');
-                    expats.supportType = supportType ? supportType.value : null;
-                    break;
-                case 7:
-                    const urgency = document.querySelector('input[name="urgency"]:checked');
-                    expats.urgency = urgency ? urgency.value : null;
-                    break;
-                case 8:
-                    const languages = Array.from(document.querySelectorAll('input[name="languages[]"]:checked')).map(cb => cb.value);
-                    expats.languages = languages;
-                    break;
-                case 9:
-                    expats.firstName = document.getElementById('firstName').value;
-                    break;
-                case 10:
-                    expats.email = document.getElementById('email').value;
-                    break;
-                case 11:
-                    expats.password = document.getElementById('password').value;
-                    break;
-                case 12:
-                    expats.serviceDuration = document.getElementById('serviceDuration').value;
-                    break;
-            }
-            
-            localStorage.setItem('help-request', JSON.stringify(expats));
-        }
-        
-        // Restore step data
-        function restoreStepData() {
-            const expats = JSON.parse(localStorage.getItem('help-request')) || {};
-            
-            if (expats.countryNeed) document.getElementById('countryNeed').value = expats.countryNeed;
-            if (expats.originCountry) document.getElementById('originCountry').value = expats.originCountry;
-            if (expats.currentCity) document.getElementById('currentCity').value = expats.currentCity;
-            if (expats.durationHere) document.getElementById('durationHere').value = expats.durationHere;
-            if (expats.requestTitle) {
-                document.getElementById('requestTitle').value = expats.requestTitle;
-                document.getElementById('requestTitle').dispatchEvent(new Event('input'));
-            }
-            if (expats.moreDetails) {
-                document.getElementById('moreDetails').value = expats.moreDetails;
-                document.getElementById('moreDetails').dispatchEvent(new Event('input'));
-            }
-            if (expats.firstName) document.getElementById('firstName').value = expats.firstName;
-            if (expats.email) document.getElementById('email').value = expats.email;
-            if (expats.password) {
-                document.getElementById('password').value = expats.password;
-                document.getElementById('password').dispatchEvent(new Event('input'));
-            }
-            if (expats.serviceDuration) document.getElementById('serviceDuration').value = expats.serviceDuration;
-            
-            // Restore language selections
-            if (expats.languages && Array.isArray(expats.languages)) {
-                expats.languages.forEach(lang => {
-                    const checkbox = document.querySelector('input[name="languages[]"][value="' + lang + '"]');
-                    if (checkbox) {
-                        checkbox.checked = true;
-                        const option = checkbox.closest('.lang-option');
-                        if (option) {
-                            option.className = 'lang-option border-2 rounded-2xl px-3 py-3 cursor-pointer transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 bg-blue-600 text-white border-blue-700';
-                        }
-                    }
-                });
-            }
-        }
-        
-        restoreStepData();
-        
-        // Input listeners for real-time button updates
-        document.querySelectorAll('input:not([type="hidden"]):not(.lang-checkbox), select, textarea').forEach(el => {
-            el.addEventListener('input', updateNextButton);
-            el.addEventListener('change', updateNextButton);
-        });
-        
-        // Next button
-        nextBtn.addEventListener('click', () => {
-            if (currentStep < totalSteps - 1) {
-                if (!validateStep(currentStep)) return;
-                
-                storeStepData(currentStep);
-                
-                @if(Auth::check())
-                if (currentStep === 8) {
-                    currentStep = 11;
-                }
-                @endif
-                
-                if (currentStep === 12) {
-                    // AJAX submit
-                    const form = document.getElementById('helpRequestForm');
-                    const formData = new FormData(form);
-                    const expats = JSON.parse(localStorage.getItem('help-request')) || {};
-                    
-                    Object.entries(expats).forEach(([key, val]) => {
-                        if (!formData.has(key)) {
-                            if (Array.isArray(val)) {
-                                val.forEach(v => formData.append(key + '[]', v));
-                            } else {
-                                formData.append(key, val);
-                            }
-                        }
-                    });
-                    
-                    const categories = JSON.parse(localStorage.getItem('create-request')) || {};
-                    if (categories) {
-                        formData.append('category', categories.category || '');
-                        formData.append('subcategory', categories.sub_category || '');
-                        formData.append('subcategory2', categories.child_category || '');
-                    }
-                    
-                    nextBtn.disabled = true;
-                    nextBtn.setAttribute('aria-busy', 'true');
-                    
-                    fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: formData
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        localStorage.removeItem('help-request');
-                        localStorage.removeItem('create-request');
-                        currentStep++;
-                        showStep(currentStep);
-                        const adLink = document.getElementById('see-my-ad');
-                        if (data.mission_id && adLink) {
-                            adLink.href = '/quote-offer?id=' + data.mission_id;
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Submission failed:', error);
-                        showValidationError('Submission failed. Please try again.');
-                    })
-                    .finally(() => {
-                        nextBtn.disabled = false;
-                        nextBtn.setAttribute('aria-busy', 'false');
-                    });
-                    return;
-                }
-                
-                currentStep++;
-                showStep(currentStep);
-            }
-        });
-        
-        // Previous button
-        prevBtn.addEventListener('click', () => {
-            if (currentStep > 0) {
-                storeStepData(currentStep);
-                currentStep--;
-                showStep(currentStep);
-            }
-        });
-        
-        // Photo upload
-        const photoBoxes = document.querySelectorAll('.photo-upload-box');
-        const photoMenuModal = document.getElementById('photoMenuModal');
-        const photoMenuOptions = document.querySelectorAll('.photo-menu-option');
-        const closePhotoMenuModal = document.getElementById('closePhotoMenuModal');
-        let activePhotoInput = null;
-        let activePhotoPreview = null;
-        
-        const cameraModal = document.getElementById('cameraModal');
-        const cameraVideo = document.getElementById('cameraVideo');
-        const capturePhotoBtn = document.getElementById('capturePhotoBtn');
-        const closeCameraModal = document.getElementById('closeCameraModal');
-        let cameraStream = null;
-        
-        photoBoxes.forEach(box => {
-            const menuBtn = box.querySelector('.photo-menu-btn');
-            const input = box.querySelector('.photo-input');
-            const preview = box.querySelector('.photo-preview');
-            
-            menuBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                activePhotoInput = input;
-                activePhotoPreview = preview;
-                photoMenuModal.classList.remove('hidden');
-                photoMenuModal.style.zIndex = '9999';
-            });
-            
-            input.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                // Validate file size (max 5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    showValidationError('File size must be less than 5MB');
-                    return;
-                }
-                
-                // Validate file type
-                if (!file.type.startsWith('image/')) {
-                    showValidationError('Only image files are allowed');
-                    return;
-                }
-                
-                preview.src = URL.createObjectURL(file);
-            });
-        });
-        
-        photoMenuOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const action = option.getAttribute('data-action');
-                photoMenuModal.classList.add('hidden');
-                if (!activePhotoInput) return;
-                
-                if (action === 'library' || action === 'file') {
-                    activePhotoInput.click();
-                } else if (action === 'camera') {
-                    cameraModal.classList.remove('hidden');
-                    cameraModal.style.zIndex = '9999';
-                    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                        navigator.mediaDevices.getUserMedia({ 
-                            video: { 
-                                facingMode: 'environment',
-                                width: { ideal: 1280 },
-                                height: { ideal: 720 }
-                            } 
-                        })
-                        .then(function(stream) {
-                            cameraStream = stream;
-                            cameraVideo.srcObject = stream;
-                            cameraVideo.play();
-                        })
-                        .catch(function(err) {
-                            console.error('Camera access denied:', err);
-                            showValidationError('Camera access denied');
-                            cameraModal.classList.add('hidden');
-                        });
-                    }
-                }
-            });
-        });
-        
-        if (closePhotoMenuModal) {
-            closePhotoMenuModal.onclick = function() {
-                photoMenuModal.classList.add('hidden');
-            };
-        }
-        
-        photoMenuModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.add('hidden');
-            }
-        });
-        
-        // Close camera modal properly
-        function closeCameraAndStream() {
-            cameraModal.classList.add('hidden');
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            if (cameraVideo.srcObject) {
-                cameraVideo.srcObject.getTracks().forEach(track => track.stop());
-                cameraVideo.srcObject = null;
-            }
-        }
-        
-        if (closeCameraModal) {
-            closeCameraModal.onclick = closeCameraAndStream;
-        }
-        
-        cameraModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeCameraAndStream();
-            }
-        });
-        
-        if (capturePhotoBtn) {
-            capturePhotoBtn.onclick = function() {
-                if (!cameraVideo.srcObject) return;
-                const canvas = document.createElement('canvas');
-                canvas.width = cameraVideo.videoWidth;
-                canvas.height = cameraVideo.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
-                const dataURL = canvas.toDataURL('image/png');
-                if (activePhotoPreview) {
-                    activePhotoPreview.src = dataURL;
-                }
-                closeCameraAndStream();
-            };
-        }
-        
-        // Check email and login
-        function checkEmailAndLogin(email) {
-            fetch('/check-email-login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ email: email })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    updateHeaderUI(data.user);
-                    currentStep = 12;
-                    showStep(currentStep);
-                }
-            })
-            .catch(err => {
-                console.error('Error checking email:', err);
-            });
-        }
-        
-        // Update header UI
-        function updateHeaderUI(user) {
-            const authButtonsContainer = document.querySelector('.flex.items-center.space-x-3');
-            if (!authButtonsContainer) return;
-            
-            const userMenuHTML = `
-                <div class="relative" x-data="{ open:false }">
-                    <button 
-                        type="button"
-                        @click="open = !open"
-                        @keydown.escape.window="open = false"
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100"
-                        aria-haspopup="menu"
-                        :aria-expanded="open.toString()"
-                    >
-                        <div class="w-8 h-8 rounded-full border bg-center bg-cover"
-                             style="background-image: url('${user.avatar || '/images/helpexpat.png'}');">
-                        </div>
-                        <span id="header-user-name" class="font-medium text-gray-700 truncate max-w-[10rem]">
-                            ${user.name || 'User'}
-                        </span>
-                        <i class="fas fa-chevron-down text-gray-500 text-sm"></i>
-                    </button>
-                    <div
-                        x-cloak
-                        x-show="open"
-                        x-transition
-                        @click.outside="open = false"
-                        @keydown.escape.window="open = false"
-                        style="display:none"
-                        class="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden z-50"
-                        role="menu"
-                    >
-                        <div class="p-3 flex items-center gap-3 border-b">
-                            <div class="w-8 h-8 rounded-full border bg-center bg-cover"
-                                 style="background-image: url('${user.avatar || '/images/helpexpat.png'}');">
-                            </div>
-                            <div class="min-w-0">
-                                <div id="header-user-fullname" class="font-semibold truncate mb-1">
-                                    ${user.name || 'User'}
-                                </div>
-                                <div class="text-xs">
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20 truncate max-w-[12rem]">
-                                        <i class="fas fa-toolbox text-[11px]"></i>
-                                        Service Provider
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <nav class="py-1">
-                            <a href="/dashboard" 
-                               class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-gray-50" 
-                               role="menuitem">
-                                <i class="fas fa-gauge"></i>
-                                <span>Dashboard</span>
-                            </a>
-                            <form method="POST" action="/logout" class="mt-1">
-                                @csrf
-                                <button type="submit" 
-                                        class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-red-600 hover:bg-red-50" 
-                                        role="menuitem">
-                                    <i class="fas fa-right-from-bracket"></i>
-                                    <span>Log out</span>
-                                </button>
-                            </form>
-                        </nav>
-                    </div>
-                </div>
-            `;
-            
-            authButtonsContainer.innerHTML = userMenuHTML;
-            if (window.Alpine) {
-                window.Alpine.initTree(authButtonsContainer);
-            }
-        }
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Enter key on Next button
-            if (e.key === 'Enter' && !e.shiftKey && !nextBtn.disabled) {
-                const activeEl = document.activeElement;
-                if (activeEl && activeEl.tagName !== 'TEXTAREA') {
-                    e.preventDefault();
-                    nextBtn.click();
-                }
-            }
-        });
-        
-        // Initialize
-        showStep(currentStep);
-        
-        // Country select
-        if (window.countrySelect) {
-            document.querySelectorAll('.country-select').forEach(function(select) {
-                window.countrySelect(select, {
-                    defaultCountry: "us",
-                    onlyCountries: null,
-                    responsiveDropdown: true
-                });
-            });
-        }
-    })();
+        window.formConfig = {
+            funTexts: @json($funTexts),
+            stepLabels: @json($stepLabels),
+            isAuthenticated: @json(Auth::check())
+        };
     </script>
+    
+    <!-- JavaScript principal -->
+    <script defer src="{{ mix('js/request-form.js') }}"></script>
 </body>
 </html>

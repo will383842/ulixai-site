@@ -1979,6 +1979,7 @@ body {
 
 <!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script src="{{ mix('js/app.js') }}"></script>
 
 <script>
   // Initialize AOS with reduced effects
@@ -2336,5 +2337,6 @@ body {
     });
   }
 </script>
+
 </body>
 </html>

@@ -598,179 +598,118 @@
 </style>
 
 <script>
-/* ============================================
-   🎯 STEP 2 - CORRECTED VERSION
-   ✅ Gestion correcte des boutons (activation/désactivation)
-   ✅ Persistance des sélections au retour en arrière
-   ============================================ */
+/**
+ * STEP 2 - Native Language (Hardened)
+ * - capture-phase delegation (survives stopPropagation)
+ * - toggles .selected + aria-checked
+ * - stores in hidden #nativeLanguage + localStorage (provider-signup-data)
+ * - exposes window.validateStep2()
+ * - triggers window.updateNavigationButtons() after selection
+ */
+(function(){
+  var step2 = document.getElementById('step2');
+  if (!step2) return;
+  var storageKey = 'provider-signup-data';
+  var countEl = document.getElementById('step2SelectedCount');
 
-// État global
-window.selectedLanguage = null;
-
-// Cache des éléments DOM
-let cachedElements = null;
-
-function getCachedElements() {
-  if (!cachedElements) {
-    cachedElements = {
-      cards: document.querySelectorAll('#step2 .language-card'),
-      errorAlert: document.getElementById('step2LanguageError'),
-      selectedCount: document.getElementById('step2SelectedCount'),
-      hiddenInput: document.getElementById('nativeLanguage')
-    };
+  function setCount(n){ if (countEl) countEl.textContent = String(n); }
+  function cards(){ return Array.prototype.slice.call(step2.querySelectorAll('.language-card')); }
+  function langFromCard(card){
+    if (!card) return '';
+    var byData = (card.getAttribute('data-language') || '').trim();
+    if (byData) return byData;
+    var byChild = card.querySelector('[data-language]');
+    if (byChild) { var v = (byChild.getAttribute('data-language') || '').trim(); if (v) return v; }
+    var byName = card.querySelector('.language-name');
+    return byName ? (byName.textContent || '').trim() : '';
   }
-  return cachedElements;
-}
-
-// Fonction pour mettre à jour l'état des boutons
-function updateStep2Buttons() {
-  const mobileNextBtn = document.getElementById('mobileNextBtn');
-  const desktopNextBtn = document.getElementById('desktopNextBtn');
-  
-  if (window.selectedLanguage) {
-    // Si une langue est sélectionnée, activer les boutons
-    if (mobileNextBtn) mobileNextBtn.disabled = false;
-    if (desktopNextBtn) desktopNextBtn.disabled = false;
-  } else {
-    // Sinon, désactiver les boutons
-    if (mobileNextBtn) mobileNextBtn.disabled = true;
-    if (desktopNextBtn) desktopNextBtn.disabled = true;
-  }
-}
-
-// Fonction de sélection de langue (accessible depuis le header)
-window.selectLanguage = function(card) {
-  if (!card) return;
-  
-  const elements = getCachedElements();
-  const language = card.getAttribute('data-language');
-  
-  // Désélectionner toutes les autres cartes (optimisé)
-  elements.cards.forEach(c => {
-    if (c !== card) {
-      c.classList.remove('selected');
-      c.setAttribute('aria-checked', 'false');
+  function ensureHidden(){
+    var el = document.getElementById('nativeLanguage') || step2.querySelector('input[name="native_language"]');
+    if (!el) {
+      el = document.createElement('input');
+      el.type = 'hidden';
+      el.id = 'nativeLanguage';
+      el.name = 'native_language';
+      step2.appendChild(el);
     }
-  });
-  
-  // Sélectionner la carte cliquée
-  card.classList.add('selected');
-  card.setAttribute('aria-checked', 'true');
-  
-  // Mettre à jour l'état global
-  window.selectedLanguage = language;
-  
-  // Mettre à jour l'input hidden (compatibilité ancien système)
-  if (elements.hiddenInput) {
-    elements.hiddenInput.value = language;
+    return el;
   }
-  
-  // Mettre à jour le compteur
-  if (elements.selectedCount) {
-    elements.selectedCount.textContent = '1';
+  function setState(lang){
+    try {
+      var raw = localStorage.getItem(storageKey) || '{}';
+      var s = JSON.parse(raw);
+      s.native_language = lang;
+      localStorage.setItem(storageKey, JSON.stringify(s));
+    } catch(_) {}
   }
-  
-  // Sauvegarder dans localStorage (avec try-catch pour navigation privée)
-  try {
-    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-    expats.native_language = language;
-    localStorage.setItem('expats', JSON.stringify(expats));
-  } catch (e) {
-    console.warn('localStorage not available:', e.message);
-  }
-  
-  // Cacher l'erreur si visible
-  if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
-    elements.errorAlert.classList.add('hidden');
-  }
-  
-  // Mettre à jour l'état des boutons
-  updateStep2Buttons();
-};
-
-// Fonction de validation (accessible depuis le header)
-window.validateStep2 = function() {
-  const elements = getCachedElements();
-  
-  if (!window.selectedLanguage) {
-    if (elements.errorAlert) {
-      elements.errorAlert.classList.remove('hidden');
-      elements.errorAlert.classList.add('shake-animation');
-      setTimeout(() => {
-        elements.errorAlert.classList.remove('shake-animation');
-      }, 500);
-    }
-    return false;
-  }
-  
-  return true;
-};
-
-// Initialisation optimisée (event delegation + passive listeners)
-document.addEventListener('DOMContentLoaded', function() {
-  const elements = getCachedElements();
-  
-  // Event delegation pour meilleure performance
-  const container = document.querySelector('#step2');
-  if (!container) return;
-  
-  // Un seul listener au lieu de 13 (optimisation CPU)
-  container.addEventListener('click', function(e) {
-    const card = e.target.closest('.language-card');
-    if (card) {
-      window.selectLanguage(card);
-    }
-  }, { passive: true });
-  
-  // Support clavier avec event delegation
-  container.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      const card = e.target.closest('.language-card');
-      if (card) {
-        e.preventDefault();
-        window.selectLanguage(card);
-      }
-    }
-  });
-  
-  // Observer pour détecter quand le step devient visible
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        if (!container.classList.contains('hidden')) {
-          // Le step est maintenant visible, restaurer la sélection et mettre à jour les boutons
-          updateStep2Buttons();
-        }
-      }
+  function select(card){
+    var lang = langFromCard(card);
+    if (!lang) return;
+    // reset
+    cards().forEach(function(c){ 
+      c.classList.remove('selected'); 
+      c.setAttribute('aria-checked','false'); 
+      c.removeAttribute('data-selected');
     });
-  });
-  
-  observer.observe(container, { attributes: true });
-  
-  // Restaurer la sélection depuis localStorage (avec try-catch)
-  try {
-    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-    if (expats.native_language) {
-      const savedCard = document.querySelector(`#step2 .language-card[data-language="${expats.native_language}"]`);
-      if (savedCard) {
-        // Utiliser requestAnimationFrame pour éviter layout thrashing
-        requestAnimationFrame(() => {
-          window.selectLanguage(savedCard);
-        });
-      }
-    } else {
-      // Si aucune sélection sauvegardée, désactiver les boutons
-      updateStep2Buttons();
-    }
-  } catch (e) {
-    console.warn('Could not restore selection:', e.message);
-    // En cas d'erreur, désactiver les boutons par sécurité
-    updateStep2Buttons();
+    // mark
+    card.classList.add('selected');
+    card.setAttribute('aria-checked','true');
+    card.setAttribute('data-selected','true');
+    // hidden + state
+    var hidden = ensureHidden();
+    hidden.value = lang;
+    window.selectedLanguage = lang;
+    setState(lang);
+    setCount(1);
+    // notifier + recalcul nav (post-microtask)
+    try { document.dispatchEvent(new CustomEvent('pw:step2:changed')); } catch(_) {}
+    setTimeout(function(){
+      if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+    }, 0);
   }
-});
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
+
+  // Validator consulté par wizard-steps.js
+  window.validateStep2 = function(){
+    if (window.selectedLanguage && String(window.selectedLanguage).trim()) return true;
+    var hidden = document.getElementById('nativeLanguage') || step2.querySelector('input[name="native_language"]');
+    if (hidden && String(hidden.value||'').trim()) return true;
+    if (step2.querySelector('.language-card.selected, .language-card[aria-checked="true"], .language-card[data-selected="true"]')) return true;
+    return false;
+  };
+
+  // Capture-phase click + keyboard (survit aux stopPropagation)
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    var card = t && t.closest ? t.closest('#step2 .language-card') : null;
+    if (card) { e.preventDefault(); select(card); }
+  }, true);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') {
+      var t = e.target;
+      var card = t && t.closest ? t.closest('#step2 .language-card') : null;
+      if (card) { e.preventDefault(); select(card); }
+    }
+  }, true);
+
+  // Restore previous selection
+  document.addEventListener('DOMContentLoaded', function(){
+    try {
+      var raw = localStorage.getItem(storageKey) || '{}';
+      var s = JSON.parse(raw);
+      var lang = (s.native_language || '').trim();
+      if (lang) {
+        var all = cards();
+        var match = null;
+        for (var i=0;i<all.length;i++){ if (langFromCard(all[i]) === lang) { match = all[i]; break; } }
+        if (match) select(match); else setCount(0);
+      } else {
+        setCount(0);
+        if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+      }
+    } catch(_) {
+      setCount(0);
+      if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+    }
+  }, { once: true });
+})();
 </script>

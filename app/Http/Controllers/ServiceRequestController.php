@@ -76,7 +76,7 @@ class ServiceRequestController extends Controller
             // 'lastName' => 'required|string|max:255',
             // 'password' => 'required|string|min:6',
             'countryNeed' => 'required|string',
-            'currentCity' => 'required|string',
+            'currentCity' => 'nullable|string',
             'requestTitle' => 'required|string',
             'moreDetails' => 'required|string',
         ]);

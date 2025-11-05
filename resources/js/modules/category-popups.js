@@ -1,3 +1,5 @@
+import { categoryColors } from './categoryColors.js';
+
 export function initializeCategoryPopups() {
   console.log('🎯 Category popups: START');
   
@@ -27,30 +29,38 @@ export function initializeCategoryPopups() {
           }
           
           container.innerHTML = '';
+          // Ajout du style pour la grille 2 colonnes
+          container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
           console.log('✅ Building categories...');
           
-          data.categories.forEach(cat => {
+          data.categories.forEach((cat, index) => {
             const div = document.createElement('div');
             div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+            div.style.backgroundColor = '#ffffff';
             
-            // Couleur de fond
-            const color = cat.bg_color || '#ffffff';
-            div.style.setProperty('background-color', color, 'important');
+            // Padding adaptatif
+            if (window.innerWidth >= 768) {
+              div.style.padding = '2rem';
+            }
             
-            // Icône avec image
+            // Icône avec couleur de bulle
             let iconHtml = '';
+            const iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+            const iconColor = categoryColors.main[index % categoryColors.main.length];
+            
             if (cat.icon_image) {
-              iconHtml = '<div class="w-12 h-12 rounded-full overflow-hidden mb-2 group-hover:scale-110 transition-transform bg-gray-100">' +
-                         '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-cover rounded-full">' +
+              iconHtml = `<div class="${iconSize} rounded-full overflow-hidden mb-3 group-hover:scale-110 transition-transform" style="background-color: ${iconColor}; padding: 0.5rem;">` +
+                         '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' +
                          '</div>';
             } else {
-              iconHtml = '<div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">' +
-                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
+                         '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' +
                          '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
                          '</svg></div>';
             }
             
-            div.innerHTML = iconHtml + '<h3 class="text-sm font-semibold text-gray-800">' + cat.name + '</h3>';
+            const textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+            div.innerHTML = iconHtml + `<h3 class="${textSize} font-semibold text-gray-800">` + cat.name + '</h3>';
             
             div.onclick = function() {
               window.handleCategoryClick(cat.id, cat.name);
@@ -88,34 +98,37 @@ export function initializeCategoryPopups() {
           }
           
           subContainer.innerHTML = '';
+          // Ajout du style pour la grille 2 colonnes
+          subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
           
-          data.subcategories.forEach(sub => {
+          data.subcategories.forEach((sub, index) => {
             const div = document.createElement('div');
-            div.className = "category-card rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group";
+            div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+            div.style.backgroundColor = '#ffffff';
             
-            // Couleur de fond
-            const color = sub.bg_color || '#ffffff';
-            div.style.setProperty('background-color', color, 'important');
+            // Padding adaptatif
+            if (window.innerWidth >= 768) {
+              div.style.padding = '2rem';
+            }
             
-            // Icône avec image
+            // Icône avec couleur de bulle
             let iconHtml = '';
+            const iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+            const iconColor = categoryColors.sub[index % categoryColors.sub.length];
+            
             if (sub.icon_image) {
-              iconHtml = '<div class="w-14 h-14 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform overflow-hidden bg-gray-100">' +
-                         '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-cover rounded-full">' +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden" style="background-color: ${iconColor}; padding: 0.5rem;">` +
+                         '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' +
                          '</div>';
             } else {
-              iconHtml = '<div class="w-14 h-14 bg-cyan-300 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">' +
-                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
+                         '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' +
                          '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
                          '</svg></div>';
             }
             
-            div.innerHTML = iconHtml +
-                           '<div class="flex-grow font-semibold text-gray-800">' + sub.name + '</div>' +
-                           '<div class="text-gray-400 group-hover:text-gray-600 transition-colors">' +
-                           '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' +
-                           '<polyline points="9,18 15,12 9,6"></polyline>' +
-                           '</svg></div>';
+            const textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+            div.innerHTML = iconHtml + `<div class="${textSize} font-semibold text-gray-800">` + sub.name + '</div>';
             
             div.onclick = function() {
               window.handleSubcategoryClick(sub.id, sub.name);
@@ -155,34 +168,37 @@ export function initializeCategoryPopups() {
           }
           
           childContainer.innerHTML = '';
+          // Ajout du style pour la grille 2 colonnes
+          childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
           
-          data.subcategories.forEach(child => {
+          data.subcategories.forEach((child, index) => {
             const div = document.createElement('div');
-            div.className = "category-card rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group";
+            div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+            div.style.backgroundColor = '#ffffff';
             
-            // Couleur de fond
-            const color = child.bg_color || '#ffffff';
-            div.style.setProperty('background-color', color, 'important');
+            // Padding adaptatif
+            if (window.innerWidth >= 768) {
+              div.style.padding = '2rem';
+            }
             
-            // Icône avec image
+            // Icône avec couleur de bulle
             let iconHtml = '';
+            const iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+            const iconColor = categoryColors.child[index % categoryColors.child.length];
+            
             if (child.icon_image) {
-              iconHtml = '<div class="w-14 h-14 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform overflow-hidden bg-gray-100">' +
-                         '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-cover rounded-full">' +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden" style="background-color: ${iconColor}; padding: 0.5rem;">` +
+                         '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' +
                          '</div>';
             } else {
-              iconHtml = '<div class="w-14 h-14 bg-cyan-300 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">' +
-                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
+                         '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' +
                          '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
                          '</svg></div>';
             }
             
-            div.innerHTML = iconHtml +
-                           '<div class="flex-grow font-semibold text-gray-800">' + child.name + '</div>' +
-                           '<div class="text-gray-400 group-hover:text-gray-600 transition-colors">' +
-                           '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' +
-                           '<polyline points="9,18 15,12 9,6"></polyline>' +
-                           '</svg></div>';
+            const textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+            div.innerHTML = iconHtml + `<div class="${textSize} font-semibold text-gray-800">` + child.name + '</div>';
             
             div.onclick = function() {
               window.requestForHelp(child.id, child.name);

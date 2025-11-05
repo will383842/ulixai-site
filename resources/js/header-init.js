@@ -61,14 +61,20 @@ function initializeAll() {
     }
   })();
 
-  // 5) Synchroniser l'état des boutons quand l'utilisateur interagit
-  ['click', 'input', 'change'].forEach((evt) => {
+  // 5) Synchroniser l'état des boutons (phase BUBBLE, sans double logique)
+  ['input','change','click'].forEach((evt) => {
     document.addEventListener(evt, () => {
       try {
-        if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
-        if (window.providerWizard && typeof window.providerWizard.update === 'function') window.providerWizard.update();
-      } catch(e) { console.debug('sync buttons skipped', e); }
-    }, true);
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
+        }
+      } catch(e) {}
+    }, false);
+  });
+
+  // Signal spécifique Step 2 (si émis)
+  document.addEventListener('pw:step2:changed', () => {
+    try { if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons(); } catch(e) {}
   });
 
   console.log('✅ All header modules initialized');

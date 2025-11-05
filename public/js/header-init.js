@@ -12,6 +12,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   initializeCategoryPopups: () => (/* binding */ initializeCategoryPopups)
 /* harmony export */ });
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+
 function initializeCategoryPopups() {
   console.log('🎯 Category popups: START');
 
@@ -38,23 +40,30 @@ function initializeCategoryPopups() {
           return;
         }
         container.innerHTML = '';
+        // Ajout du style pour la grille 2 colonnes
+        container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
         console.log('✅ Building categories...');
-        data.categories.forEach(function (cat) {
+        data.categories.forEach(function (cat, index) {
           var div = document.createElement('div');
           div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.style.backgroundColor = '#ffffff';
 
-          // Couleur de fond
-          var color = cat.bg_color || '#ffffff';
-          div.style.setProperty('background-color', color, 'important');
-
-          // Icône avec image
-          var iconHtml = '';
-          if (cat.icon_image) {
-            iconHtml = '<div class="w-12 h-12 rounded-full overflow-hidden mb-2 group-hover:scale-110 transition-transform bg-gray-100">' + '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-cover rounded-full">' + '</div>';
-          } else {
-            iconHtml = '<div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">' + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          // Padding adaptatif
+          if (window.innerWidth >= 768) {
+            div.style.padding = '2rem';
           }
-          div.innerHTML = iconHtml + '<h3 class="text-sm font-semibold text-gray-800">' + cat.name + '</h3>';
+
+          // Icône avec couleur de bulle
+          var iconHtml = '';
+          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconColor = Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).main[index % Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).main.length];
+          if (cat.icon_image) {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full overflow-hidden mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' + '</div>';
+          } else {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          }
+          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+          div.innerHTML = iconHtml + "<h3 class=\"".concat(textSize, " font-semibold text-gray-800\">") + cat.name + '</h3>';
           div.onclick = function () {
             window.handleCategoryClick(cat.id, cat.name);
           };
@@ -92,22 +101,29 @@ function initializeCategoryPopups() {
           return;
         }
         subContainer.innerHTML = '';
-        data.subcategories.forEach(function (sub) {
+        // Ajout du style pour la grille 2 colonnes
+        subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+        data.subcategories.forEach(function (sub, index) {
           var div = document.createElement('div');
-          div.className = "category-card rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group";
+          div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.style.backgroundColor = '#ffffff';
 
-          // Couleur de fond
-          var color = sub.bg_color || '#ffffff';
-          div.style.setProperty('background-color', color, 'important');
-
-          // Icône avec image
-          var iconHtml = '';
-          if (sub.icon_image) {
-            iconHtml = '<div class="w-14 h-14 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform overflow-hidden bg-gray-100">' + '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-cover rounded-full">' + '</div>';
-          } else {
-            iconHtml = '<div class="w-14 h-14 bg-cyan-300 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">' + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          // Padding adaptatif
+          if (window.innerWidth >= 768) {
+            div.style.padding = '2rem';
           }
-          div.innerHTML = iconHtml + '<div class="flex-grow font-semibold text-gray-800">' + sub.name + '</div>' + '<div class="text-gray-400 group-hover:text-gray-600 transition-colors">' + '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' + '<polyline points="9,18 15,12 9,6"></polyline>' + '</svg></div>';
+
+          // Icône avec couleur de bulle
+          var iconHtml = '';
+          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconColor = Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).sub[index % Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).sub.length];
+          if (sub.icon_image) {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
+          } else {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          }
+          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800\">") + sub.name + '</div>';
           div.onclick = function () {
             window.handleSubcategoryClick(sub.id, sub.name);
           };
@@ -145,22 +161,29 @@ function initializeCategoryPopups() {
           return;
         }
         childContainer.innerHTML = '';
-        data.subcategories.forEach(function (child) {
+        // Ajout du style pour la grille 2 colonnes
+        childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+        data.subcategories.forEach(function (child, index) {
           var div = document.createElement('div');
-          div.className = "category-card rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex items-center group";
+          div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.style.backgroundColor = '#ffffff';
 
-          // Couleur de fond
-          var color = child.bg_color || '#ffffff';
-          div.style.setProperty('background-color', color, 'important');
-
-          // Icône avec image
-          var iconHtml = '';
-          if (child.icon_image) {
-            iconHtml = '<div class="w-14 h-14 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform overflow-hidden bg-gray-100">' + '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-cover rounded-full">' + '</div>';
-          } else {
-            iconHtml = '<div class="w-14 h-14 bg-cyan-300 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">' + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          // Padding adaptatif
+          if (window.innerWidth >= 768) {
+            div.style.padding = '2rem';
           }
-          div.innerHTML = iconHtml + '<div class="flex-grow font-semibold text-gray-800">' + child.name + '</div>' + '<div class="text-gray-400 group-hover:text-gray-600 transition-colors">' + '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' + '<polyline points="9,18 15,12 9,6"></polyline>' + '</svg></div>';
+
+          // Icône avec couleur de bulle
+          var iconHtml = '';
+          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconColor = Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).child[index % Object(function webpackMissingModule() { var e = new Error("Cannot find module './categoryColors.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).child.length];
+          if (child.icon_image) {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
+          } else {
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+          }
+          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
+          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800\">") + child.name + '</div>';
           div.onclick = function () {
             window.requestForHelp(child.id, child.name);
           };
@@ -1040,9 +1063,11 @@ function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), 
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
- * Wizard Steps - Logique complète des 16 étapes du formulaire provider
- * Version corrigée (navigation Step 1 masquée, validation réelle Steps 2+)
- * ESM compatible
+ * Wizard Steps – version anti-conflit
+ * - Step 1 : nav masquée
+ * - Click [data-go-step] : navigation fiable (ex: bloc bleu → data-go-step="2")
+ * - Auto-sync : si un step est montré par le DOM, on met à jour currentStep
+ * - Déverrouillage centralisé
  */
 
 var WizardSteps = /*#__PURE__*/function () {
@@ -1052,15 +1077,12 @@ var WizardSteps = /*#__PURE__*/function () {
     this.totalSteps = 16;
     this.formData = this.loadFormData();
   }
-
-  // =============== STATE PERSISTENCE ===============
   return _createClass(WizardSteps, [{
     key: "loadFormData",
     value: function loadFormData() {
       try {
-        var data = localStorage.getItem('provider-signup-data');
-        return data ? JSON.parse(data) : {};
-      } catch (e) {
+        return JSON.parse(localStorage.getItem('provider-signup-data')) || {};
+      } catch (_unused) {
         return {};
       }
     }
@@ -1069,71 +1091,90 @@ var WizardSteps = /*#__PURE__*/function () {
     value: function saveFormData() {
       try {
         localStorage.setItem('provider-signup-data', JSON.stringify(this.formData));
-      } catch (e) {
-        console.error('Failed to save form data', e);
-      }
+      } catch (_unused2) {}
     }
-
-    // =============== INIT ===============
   }, {
     key: "init",
     value: function init() {
-      console.log('🎯 Wizard steps: initializing...');
       this.initNavigationButtons();
+      this.initDelegatedGoTo(); // <— NEW
       this.initStepValidation();
       this.initProgressBar();
       this.showStep(0);
-
-      // Exposer globalement (back-compat)
       window.wizardSteps = this;
-      console.log('✅ Wizard steps initialized');
     }
 
-    // Branche les boutons Next/Back (mobile & desktop)
+    // Délégation globale : tout élément avec data-go-step="N" provoque showStep(N)
+  }, {
+    key: "initDelegatedGoTo",
+    value: function initDelegatedGoTo() {
+      var _this = this;
+      document.addEventListener('click', function (e) {
+        var go = e.target && e.target.closest && e.target.closest('[data-go-step]');
+        if (!go) return;
+        var to = parseInt(go.getAttribute('data-go-step'), 10);
+        if (!Number.isFinite(to) || to < 1 || to > _this.totalSteps) return;
+        e.preventDefault();
+        _this.showStep(to - 1);
+      }, true); // capture pour passer avant d’éventuels stopPropagation
+    }
+
+    // Mets à jour currentStep à partir du DOM (si quelqu’un a affiché un step sans passer par showStep)
+  }, {
+    key: "syncCurrentFromDOM",
+    value: function syncCurrentFromDOM() {
+      for (var i = 1; i <= this.totalSteps; i++) {
+        var s = document.getElementById("step".concat(i));
+        if (s && !s.classList.contains('hidden')) {
+          this.currentStep = i - 1;
+          return;
+        }
+      }
+    }
   }, {
     key: "initNavigationButtons",
     value: function initNavigationButtons() {
-      var _this = this;
-      var nextButtons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
-      nextButtons.forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
+      var _this2 = this;
+      document.querySelectorAll('#mobileNextBtn, #desktopNextBtn').forEach(function (btn) {
+        return btn.addEventListener('click', function (e) {
           e.preventDefault();
-          e.stopPropagation();
-          _this.nextStep();
+          if (_this2.validateCurrentStep()) _this2.nextStep();
         });
       });
-      var backButtons = document.querySelectorAll('#mobileBackBtn, #desktopBackBtn');
-      backButtons.forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
+      document.querySelectorAll('#mobileBackBtn, #desktopBackBtn').forEach(function (btn) {
+        return btn.addEventListener('click', function (e) {
           e.preventDefault();
-          e.stopPropagation();
-          _this.previousStep();
+          _this2.previousStep();
         });
       });
     }
-
-    // Écoute les inputs pour revalider dynamiquement
   }, {
     key: "initStepValidation",
     value: function initStepValidation() {
-      var _this2 = this;
+      var _this3 = this;
       var _loop = function _loop() {
-        var stepEl = document.getElementById("step".concat(i));
-        if (!stepEl) return 1; // continue
-        var handler = function handler() {
-          return _this2.updateNavigationButtons();
+        var el = document.getElementById("step".concat(i));
+        if (!el) return 1; // continue
+        var h = function h() {
+          return _this3.updateNavigationButtons();
         };
-        stepEl.querySelectorAll('input, select, textarea').forEach(function (el) {
-          el.addEventListener('input', handler);
-          el.addEventListener('change', handler);
+        el.querySelectorAll('input, select, textarea').forEach(function (n) {
+          n.addEventListener('input', h);
+          n.addEventListener('change', h);
         });
       };
       for (var i = 1; i <= this.totalSteps; i++) {
         if (_loop()) continue;
       }
+      // sécurise Step 2 : recalcule après n’importe quel clic dans #step2
+      document.addEventListener('click', function (e) {
+        if (e.target && e.target.closest && e.target.closest('#step2')) {
+          setTimeout(function () {
+            return _this3.updateNavigationButtons();
+          }, 0);
+        }
+      }, true);
     }
-
-    // =============== PROGRESS BAR ===============
   }, {
     key: "initProgressBar",
     value: function initProgressBar() {
@@ -1142,85 +1183,70 @@ var WizardSteps = /*#__PURE__*/function () {
   }, {
     key: "updateProgressBar",
     value: function updateProgressBar() {
-      var currentNum = document.getElementById('currentStepNum');
-      var percentage = document.getElementById('progressPercentage');
-      var mobileBar = document.getElementById('mobileProgressBar');
-      if (currentNum) currentNum.textContent = String(this.currentStep + 1);
+      var n = document.getElementById('currentStepNum');
+      var p = document.getElementById('progressPercentage');
+      var bar = document.getElementById('mobileProgressBar');
+      if (n) n.textContent = String(this.currentStep + 1);
       var pct = Math.round((this.currentStep + 1) / this.totalSteps * 100);
-      if (percentage) percentage.textContent = String(pct);
-      if (mobileBar) mobileBar.style.width = "".concat(pct, "%");
+      if (p) p.textContent = String(pct);
+      if (bar) bar.style.width = "".concat(pct, "%");
     }
-
-    // =============== NAVIGATION ===============
   }, {
     key: "showStep",
-    value: function showStep(stepIndex) {
-      if (stepIndex < 0 || stepIndex >= this.totalSteps) {
-        console.warn("\u26A0\uFE0F Invalid step index: ".concat(stepIndex));
-        return;
+    value: function showStep(i) {
+      if (i < 0 || i >= this.totalSteps) return;
+      for (var k = 1; k <= this.totalSteps; k++) {
+        var s = document.getElementById("step".concat(k));
+        if (s) s.classList.add('hidden');
       }
-
-      // Cacher toutes les étapes
-      for (var i = 1; i <= this.totalSteps; i++) {
-        var step = document.getElementById("step".concat(i));
-        if (step) step.classList.add('hidden');
-      }
-
-      // Afficher l'étape demandée
-      var currentStep = document.getElementById("step".concat(stepIndex + 1));
-      if (!currentStep) {
-        console.error("\u274C Step ".concat(stepIndex + 1, " not found in DOM"));
-        return;
-      }
-      currentStep.classList.remove('hidden');
-      this.currentStep = stepIndex;
+      var cur = document.getElementById("step".concat(i + 1));
+      if (!cur) return;
+      cur.classList.remove('hidden');
+      this.currentStep = i;
       this.updateProgressBar();
       this.updateNavigationButtons();
     }
   }, {
     key: "nextStep",
     value: function nextStep() {
-      if (!this.validateCurrentStep()) {
-        console.warn("\u26A0\uFE0F Validation failed for step ".concat(this.currentStep + 1));
-        return;
-      }
       this.saveCurrentStepData();
-      if (this.currentStep < this.totalSteps - 1) {
-        this.showStep(this.currentStep + 1);
-      } else {
-        this.submitForm();
-      }
+      if (this.currentStep < this.totalSteps - 1) this.showStep(this.currentStep + 1);else this.submitForm();
     }
   }, {
     key: "previousStep",
     value: function previousStep() {
-      if (this.currentStep > 0) {
-        this.showStep(this.currentStep - 1);
-      }
+      if (this.currentStep > 0) this.showStep(this.currentStep - 1);
     }
-
-    // =============== VALIDATION & UI ===============
   }, {
     key: "validateCurrentStep",
     value: function validateCurrentStep() {
+      // TRES IMPORTANT : si quelqu’un a montré un autre step sans passer par showStep, on se resynchronise
+      this.syncCurrentFromDOM();
       var stepNum = this.currentStep + 1;
       var el = document.getElementById("step".concat(stepNum));
       if (!el) return true;
-
-      // Validateur spécifique : window.validateStepX
       var custom = window["validateStep".concat(stepNum)];
       if (typeof custom === 'function') {
         try {
           return !!custom();
-        } catch (e) {
-          console.warn('validateStep error', e);
+        } catch (_unused3) {
           return false;
         }
       }
-
-      // Fallback : tous les [data-required] doivent être remplis/cochés
+      if (stepNum === 2) {
+        var hidden = el.querySelector('input[name="native_language"], #nativeLanguage, #native_language');
+        var hasHidden = !!(hidden && String(hidden.value || '').trim());
+        var hasCard = !!el.querySelector('.language-card.selected, .language-card[aria-checked="true"], [data-selected="true"], .active, [aria-selected="true"]');
+        var countEl = el.querySelector('#selectedCount, .selected-count, [data-selected-count], #step2SelectedCount');
+        var hasCount = false;
+        if (countEl) {
+          var n = parseInt((countEl.textContent || '').replace(/[^\d]/g, ''), 10);
+          hasCount = Number.isFinite(n) && n > 0;
+        }
+        return hasHidden || hasCard || hasCount;
+      }
       var req = el.querySelectorAll('[data-required]');
-      if (req.length === 0) return true;
+      if (!req.length) return true;
       var _iterator = _createForOfIteratorHelper(req),
         _step;
       try {
@@ -1242,13 +1268,13 @@ var WizardSteps = /*#__PURE__*/function () {
   }, {
     key: "updateNavigationButtons",
     value: function updateNavigationButtons() {
-      var _this3 = this;
+      var _this4 = this;
+      // resync au cas où le DOM montre un autre step
+      this.syncCurrentFromDOM();
       var mobileWrap = document.getElementById('mobileNavButtons');
       var desktopWrap = document.getElementById('desktopNavButtons');
       var backButtons = document.querySelectorAll('#mobileBackBtn, #desktopBackBtn');
       var nextButtons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
-
-      // Step 1 : cacher totalement la navigation
       if (this.currentStep === 0) {
         if (mobileWrap) mobileWrap.style.display = 'none';
         if (desktopWrap) desktopWrap.style.display = 'none';
@@ -1256,85 +1282,81 @@ var WizardSteps = /*#__PURE__*/function () {
         if (mobileWrap) mobileWrap.style.display = '';
         if (desktopWrap) desktopWrap.style.display = '';
       }
-
-      // Back visible à partir du Step 2
-      backButtons.forEach(function (btn) {
-        btn.style.display = _this3.currentStep === 0 ? 'none' : 'flex';
+      backButtons.forEach(function (b) {
+        return b.style.display = _this4.currentStep === 0 ? 'none' : 'flex';
       });
-
-      // Libellé du bouton Next
       nextButtons.forEach(function (btn) {
         var span = btn.querySelector('span');
-        if (span) span.textContent = _this3.currentStep === _this3.totalSteps - 1 ? 'Submit' : 'Continue';
+        if (span) span.textContent = _this4.currentStep === _this4.totalSteps - 1 ? 'Submit' : 'Continue';
       });
-
-      // Déverrouiller selon la validation du step courant
       var isValid = this.currentStep === 0 ? false : this.validateCurrentStep();
       nextButtons.forEach(function (btn) {
-        btn.disabled = !isValid;
+        try {
+          btn.disabled = !isValid;
+        } catch (_unused4) {}
+        btn.setAttribute('aria-disabled', String(!isValid));
         btn.classList.toggle('opacity-50', !isValid);
         btn.classList.toggle('cursor-not-allowed', !isValid);
+        btn.classList.toggle('pointer-events-none', !isValid);
+        btn.style.pointerEvents = isValid ? 'auto' : 'none';
       });
-      console.log("\uD83D\uDD18 Navigation buttons updated (step ".concat(this.currentStep + 1, ", valid=").concat(isValid, ")"));
+      [mobileWrap, desktopWrap].forEach(function (w) {
+        if (!w) return;
+        w.classList.toggle('opacity-50', !isValid && _this4.currentStep !== 0);
+        w.classList.toggle('pointer-events-none', !isValid && _this4.currentStep !== 0);
+        w.style.pointerEvents = !isValid && _this4.currentStep !== 0 ? 'none' : 'auto';
+      });
     }
-
-    // =============== DATA CAPTURE ===============
   }, {
     key: "saveCurrentStepData",
     value: function saveCurrentStepData() {
-      var _this4 = this;
+      var _this5 = this;
       var el = document.getElementById("step".concat(this.currentStep + 1));
       if (!el) return;
-      var inputs = el.querySelectorAll('input, select, textarea');
-      inputs.forEach(function (input) {
+      el.querySelectorAll('input, select, textarea').forEach(function (input) {
         if (!input.name) return;
         if (input.type === 'checkbox') {
-          if (!_this4.formData[input.name]) _this4.formData[input.name] = [];
+          if (!_this5.formData[input.name]) _this5.formData[input.name] = [];
           if (input.checked) {
-            if (!_this4.formData[input.name].includes(input.value)) {
-              _this4.formData[input.name].push(input.value);
-            }
+            if (!_this5.formData[input.name].includes(input.value)) _this5.formData[input.name].push(input.value);
           } else {
-            _this4.formData[input.name] = (_this4.formData[input.name] || []).filter(function (v) {
+            _this5.formData[input.name] = (_this5.formData[input.name] || []).filter(function (v) {
               return v !== input.value;
             });
           }
         } else if (input.type === 'radio') {
-          if (input.checked) {
-            _this4.formData[input.name] = input.value;
-          }
+          if (input.checked) _this5.formData[input.name] = input.value;
         } else {
-          _this4.formData[input.name] = input.value || '';
+          _this5.formData[input.name] = input.value || '';
         }
       });
       this.saveFormData();
     }
-
-    // =============== SUBMIT ===============
   }, {
     key: "submitForm",
     value: function submitForm() {
-      // Hook custom optionnel
       if (typeof window.onProviderSignupSubmit === 'function') {
         try {
           window.onProviderSignupSubmit(this.formData);
           return;
-        } catch (e) {
-          console.warn('onProviderSignupSubmit error', e);
-        }
+        } catch (_unused5) {}
       }
       console.log('📤 Submitting form...', this.formData);
-      alert('Form submission not yet implemented');
+      alert('Form submission not implemented');
     }
   }]);
 }();
 function initializeWizardSteps() {
-  var wizardSteps = new WizardSteps();
-  wizardSteps.init();
-
-  // Exposer globalement pour usage externe
-  window.providerWizardSteps = wizardSteps;
-  return wizardSteps;
+  var ws = new WizardSteps();
+  ws.init();
+  window.providerWizardSteps = ws;
+  if (!window.showStep) window.showStep = function (i) {
+    return ws.showStep(i);
+  };
+  if (!window.updateNavigationButtons) window.updateNavigationButtons = function () {
+    return ws.updateNavigationButtons();
+  };
+  return ws;
 }
 
 /***/ })
@@ -1470,16 +1492,22 @@ function initializeAll() {
     }
   })();
 
-  // 5) Synchroniser l'état des boutons quand l'utilisateur interagit
-  ['click', 'input', 'change'].forEach(function (evt) {
+  // 5) Synchroniser l'état des boutons (phase BUBBLE, sans double logique)
+  ['input', 'change', 'click'].forEach(function (evt) {
     document.addEventListener(evt, function () {
       try {
-        if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
-        if (window.providerWizard && typeof window.providerWizard.update === 'function') window.providerWizard.update();
-      } catch (e) {
-        console.debug('sync buttons skipped', e);
-      }
-    }, true);
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
+        }
+      } catch (e) {}
+    }, false);
+  });
+
+  // Signal spécifique Step 2 (si émis)
+  document.addEventListener('pw:step2:changed', function () {
+    try {
+      if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+    } catch (e) {}
   });
   console.log('✅ All header modules initialized');
 }
