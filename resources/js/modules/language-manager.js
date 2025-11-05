@@ -1,189 +1,150 @@
 /**
- * Language Manager - Gestion langue desktop + mobile
- * FIXED: Initialisation améliorée avec attente du DOM
+ * Language Manager - Professional Architecture
+ * Manages UI interactions only, Google Translate init handled in header
  */
 
 export class LanguageManager {
   constructor() {
-    this.selectedLang = 'en';
-    this.selectedFlag = 'https://flagcdn.com/24x18/us.png';
+    this.selectedLang = localStorage.getItem('ulixai_lang') || 'en';
+    this.selectedFlag = localStorage.getItem('ulixai_flag') || 'https://flagcdn.com/24x18/us.png';
     this.googleTranslateReady = false;
+    this.initPromise = null;
   }
 
-  init() {
-    console.log('🌐 Language Manager init() called');
-    
-    // Fonction d'initialisation
-    const initialize = () => {
-      console.log('🔄 Attempting to initialize language selectors...');
-      this.initDesktopLanguageSelector();
-      this.initMobileLanguageSelector();
-      this.initGoogleTranslate();
-    };
-    
-    // Attendre que le DOM soit vraiment prêt
-    if (document.readyState === 'loading') {
-      console.log('⏳ DOM is loading, waiting for DOMContentLoaded...');
-      document.addEventListener('DOMContentLoaded', () => {
-        console.log('✅ DOMContentLoaded fired');
-        // Double sécurité : attendre encore 100ms après DOMContentLoaded
-        setTimeout(initialize, 100);
-      });
-    } else {
-      console.log('✅ DOM already loaded');
-      // Si DOM déjà chargé, attendre quand même 100ms pour être sûr
-      setTimeout(initialize, 100);
-    }
+  /**
+   * Initialize language manager
+   * Waits for DOM and Google Translate to be ready
+   */
+  async init() {
+    console.log('🌐 [LangManager] Initializing...');
+
+    // Wait for DOM
+    await this.waitForDOM();
+
+    // Wait for Google Translate
+    await this.waitForGoogleTranslate();
+
+    // Initialize UI
+    this.initDesktopLanguageSelector();
+    this.initMobileLanguageSelector();
+
+    console.log('✅ [LangManager] Initialized');
   }
 
-  domains() {
-    const host = location.hostname;
-    const naked = host.replace(/^www\./, '');
-    const list = [undefined];
-    if (naked && !/^(\d{1,3}\.){3}\d{1,3}$/.test(naked)) list.push(naked);
-    if (naked !== host) list.push(host);
-    return list;
-  }
-
-  setCookie(name, value, days = 365) {
-    const exp = new Date(Date.now() + days * 864e5).toUTCString();
-    this.domains().forEach(d => {
-      document.cookie = `${name}=${value}; expires=${exp}; path=/` + (d ? `; domain=${d}` : '');
+  /**
+   * Wait for DOM to be ready
+   */
+  waitForDOM() {
+    return new Promise((resolve) => {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', resolve, { once: true });
+      } else {
+        resolve();
+      }
     });
   }
 
-  clearCookie(name) {
-    const past = 'Thu, 01 Jan 1970 00:00:01 GMT';
-    this.domains().forEach(d => {
-      document.cookie = `${name}=; expires=${past}; path=/` + (d ? `; domain=${d}` : '');
-    });
-  }
-
-  alignCookiesFor(lang) {
-    if (!lang || lang === 'en') {
-      this.clearCookie('googtrans');
-      this.clearCookie('googtransopt');
-    } else {
-      const val = `/auto/${lang}`;
-      this.setCookie('googtrans', val);
-      this.setCookie('googtransopt', val);
-    }
-  }
-
-  initDesktopLanguageSelector() {
-    console.log('🖥️ Initializing desktop language selector...');
-    
-    // Retry mechanism si éléments pas trouvés
-    let retryCount = 0;
-    const maxRetries = 5;
-    
-    const attemptInit = () => {
-      const langBtn = document.getElementById('langBtn');
-      const langMenu = document.getElementById('langMenu');
-      const langFlag = document.getElementById('langFlag');
-
-      if (!langBtn || !langMenu || !langFlag) {
-        retryCount++;
-        console.warn(`⚠️ Desktop language selector elements not found (attempt ${retryCount}/${maxRetries}):`, {
-          langBtn: !!langBtn,
-          langMenu: !!langMenu,
-          langFlag: !!langFlag
-        });
-        
-        if (retryCount < maxRetries) {
-          setTimeout(attemptInit, 200);
-        } else {
-          console.error('❌ Failed to initialize desktop language selector after', maxRetries, 'attempts');
-        }
+  /**
+   * Wait for Google Translate to be ready
+   */
+  waitForGoogleTranslate(timeout = 10000) {
+    return new Promise((resolve) => {
+      if (window.googleTranslateReady) {
+        console.log('✅ [LangManager] Google Translate already ready');
+        resolve();
         return;
       }
 
-      console.log('✅ Desktop language elements found');
+      const timeoutId = setTimeout(() => {
+        console.warn('⚠️ [LangManager] Google Translate timeout');
+        resolve(); // Continue anyway
+      }, timeout);
 
-      // ⚡ Utiliser event delegation sur document pour éviter conflits avec Alpine.js
-      let isOpen = false;
-
-      // Event delegation sur le document entier (capture phase)
-      document.addEventListener('click', (e) => {
-        // Clic sur le bouton de langue
-        if (e.target.closest('#langBtn')) {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          
-          console.log('🖱️ Language button clicked (delegated)');
-          
-          isOpen = !isOpen;
-          if (isOpen) {
-            langMenu.classList.remove('hidden');
-          } else {
-            langMenu.classList.add('hidden');
-          }
-          return false;
-        }
-        
-        // Clic sur un élément de langue
-        const langItem = e.target.closest('#langMenu li[data-lang]');
-        if (langItem) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const lang = langItem.getAttribute('data-lang');
-          const flag = langItem.getAttribute('data-flag');
-          
-          if (lang && flag) {
-            console.log('🌐 Desktop language selected:', lang);
-            langFlag.src = flag;
-            this.setLanguage(lang, flag);
-            langMenu.classList.add('hidden');
-            isOpen = false;
-          }
-          return false;
-        }
-        
-        // Fermer si clic en dehors
-        if (isOpen && !e.target.closest('#langMenu')) {
-          langMenu.classList.add('hidden');
-          isOpen = false;
-        }
-      }, true); // ⚡ IMPORTANT: true = capture phase (avant Alpine.js)
-
-      // Restore saved language
-      const savedLang = localStorage.getItem('selectedLang') || 'en';
-      const savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
-      langFlag.src = savedFlag;
-      this.alignCookiesFor(savedLang);
-
-      if (savedLang !== 'en') {
-        window.location.hash = 'googtrans(en|' + savedLang + ')';
-      }
-
-      console.log('✅ Desktop language selector initialized with event delegation');
-    };
-    
-    // Démarrer la tentative
-    attemptInit();
+      window.addEventListener('googleTranslateReady', () => {
+        clearTimeout(timeoutId);
+        this.googleTranslateReady = true;
+        console.log('✅ [LangManager] Google Translate ready event received');
+        resolve();
+      }, { once: true });
+    });
   }
 
+  /**
+   * Initialize desktop language selector
+   */
+  initDesktopLanguageSelector() {
+    const langBtn = document.getElementById('langBtn');
+    const langMenu = document.getElementById('langMenu');
+    const langFlag = document.getElementById('langFlag');
+
+    if (!langBtn || !langMenu || !langFlag) {
+      console.warn('⚠️ [LangManager] Desktop elements not found');
+      return;
+    }
+
+    console.log('✅ [LangManager] Desktop selector found');
+
+    let isOpen = false;
+
+    // Toggle menu
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isOpen = !isOpen;
+      langMenu.classList.toggle('hidden', !isOpen);
+      langBtn.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Select language
+    langMenu.addEventListener('click', (e) => {
+      const li = e.target.closest('li[data-lang]');
+      if (!li) return;
+
+      const lang = li.getAttribute('data-lang');
+      const flag = li.getAttribute('data-flag');
+
+      if (lang && flag) {
+        console.log('🌐 [LangManager] Language selected:', lang);
+        langFlag.src = flag;
+        this.setLanguage(lang, flag);
+        langMenu.classList.add('hidden');
+        isOpen = false;
+      }
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (isOpen && !langBtn.contains(e.target) && !langMenu.contains(e.target)) {
+        langMenu.classList.add('hidden');
+        isOpen = false;
+        langBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Restore saved language
+    langFlag.src = this.selectedFlag;
+  }
+
+  /**
+   * Initialize mobile language selector
+   */
   initMobileLanguageSelector() {
-    console.log('📱 Initializing mobile language selector...');
-    
     const checkbox = document.getElementById('langOpen');
     const menu = document.getElementById('languageMenu');
     const flag = document.getElementById('languageFlag');
     const label = document.getElementById('languageLabel');
 
     if (!checkbox || !menu || !flag || !label) {
-      console.warn('⚠️ Mobile language selector elements not found:', {
-        checkbox: !!checkbox,
-        menu: !!menu,
-        flag: !!flag,
-        label: !!label
-      });
+      console.warn('⚠️ [LangManager] Mobile elements not found');
       return;
     }
 
-    console.log('✅ Mobile language elements found');
+    console.log('✅ [LangManager] Mobile selector found');
+
+    const langNames = {
+      en: 'English',
+      fr: 'Français',
+      de: 'Deutsch'
+    };
 
     // Handle language selection
     menu.addEventListener('click', (e) => {
@@ -192,22 +153,15 @@ export class LanguageManager {
 
       const code = li.dataset.lang;
       const flagUrl = li.dataset.flag;
-      const name = li.textContent.trim();
+      const name = langNames[code] || code;
 
-      console.log('🌐 Mobile language selected:', code);
+      console.log('🌐 [LangManager] Mobile language selected:', code);
 
       // Update UI
       flag.src = flagUrl;
       label.textContent = name;
 
-      // Save to localStorage
-      localStorage.setItem('selectedLang', code);
-      localStorage.setItem('selectedFlag', flagUrl);
-
-      // Update cookies
-      this.alignCookiesFor(code);
-
-      // Apply language change
+      // Save and apply
       this.setLanguage(code, flagUrl);
 
       // Close menu
@@ -215,117 +169,64 @@ export class LanguageManager {
     });
 
     // Restore saved language
-    const savedLang = localStorage.getItem('selectedLang') || 'en';
-    const savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
-    const langNames = { en: 'English', fr: 'Français', de: 'Deutsch' };
-
-    flag.src = savedFlag;
-    label.textContent = langNames[savedLang] || 'Language';
-    this.alignCookiesFor(savedLang);
-
-    if (savedLang !== 'en') {
-      window.location.hash = 'googtrans(en|' + savedLang + ')';
-    }
-
-    console.log('✅ Mobile language selector initialized');
+    flag.src = this.selectedFlag;
+    label.textContent = langNames[this.selectedLang] || 'Language';
   }
 
+  /**
+   * Set language and reload page
+   */
   setLanguage(lang, flag) {
-    console.log('🔄 Changing language to:', lang);
+    console.log('🔄 [LangManager] Changing language to:', lang);
 
     // Update storage
-    localStorage.setItem('selectedLang', lang);
-    localStorage.setItem('selectedFlag', flag);
+    localStorage.setItem('ulixai_lang', lang);
+    localStorage.setItem('ulixai_flag', flag);
 
-    // Update cookies
-    this.alignCookiesFor(lang);
+    // Update cookies for Google Translate
+    this.setCookiesForLanguage(lang);
 
-    // Update hash
-    if (lang === 'en') {
-      window.location.hash = '';
-    } else {
-      window.location.hash = 'googtrans(en|' + lang + ')';
-    }
-
-    // Wait for Google Translate then reload
-    this.waitForGoogleTranslate(() => {
-      console.log('✅ Google Translate ready, triggering change');
-      
-      const select = document.querySelector('#google_translate_element select.goog-te-combo');
-      if (select) {
-        select.value = lang;
-        select.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-      
-      setTimeout(() => {
-        console.log('🔄 Reloading page...');
-        location.reload();
-      }, 100);
-    });
-  }
-
-  waitForGoogleTranslate(callback, timeout = 5000) {
-    const startTime = Date.now();
+    // Reload page to apply
+    console.log('🔄 [LangManager] Reloading page...');
     
-    const check = () => {
-      const select = document.querySelector('#google_translate_element select.goog-te-combo');
-      
-      if (select) {
-        console.log('✅ Google Translate widget found');
-        callback();
-        return;
-      }
-
-      if (Date.now() - startTime < timeout) {
-        setTimeout(check, 100);
-      } else {
-        console.warn('⚠️ Google Translate timeout, reloading anyway');
-        callback();
-      }
-    };
-
-    check();
+    // Small delay to ensure cookies are set
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   }
 
-  initGoogleTranslate() {
-    console.log('🌐 Initializing Google Translate...');
-
-    // Define the callback for Google Translate
-    window.googleTranslateElementInit = () => {
-      console.log('✅ Google Translate callback triggered');
-      
-      try {
-        new google.translate.TranslateElement({
-          pageLanguage: 'en',
-          includedLanguages: 'en,fr,de',
-          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false
-        }, 'google_translate_element');
-        
-        this.googleTranslateReady = true;
-        console.log('✅ Google Translate initialized successfully');
-      } catch (error) {
-        console.error('❌ Google Translate initialization failed:', error);
-      }
-    };
-
-    // If Google Translate script is already loaded, initialize immediately
-    if (typeof google !== 'undefined' && google.translate) {
-      console.log('🔄 Google Translate already loaded, initializing now');
-      window.googleTranslateElementInit();
+  /**
+   * Set cookies for Google Translate
+   */
+  setCookiesForLanguage(lang) {
+    const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
+    
+    if (lang === 'en') {
+      // Clear cookies for English
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'googtransopt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    } else {
+      // Set cookies for other languages
+      const val = `/auto/${lang}`;
+      document.cookie = `googtrans=${val}; expires=${expires}; path=/`;
+      document.cookie = `googtransopt=${val}; expires=${expires}; path=/`;
     }
+
+    console.log('✅ [LangManager] Cookies set for language:', lang);
   }
 }
 
+/**
+ * Initialize and expose globally
+ */
 export function initializeLanguageManager() {
-  console.log('🚀 Starting Language Manager...');
+  console.log('🚀 [LangManager] Starting initialization...');
+  
   const languageManager = new LanguageManager();
-
-  // Toujours appeler init(), qui gère lui-même l'attente du DOM
   languageManager.init();
 
-  // ⚡ EXPOSER GLOBALEMENT
-  window.providerLanguageManager = languageManager;
+  // Expose globally for debugging
+  window.ulixaiLanguageManager = languageManager;
 
   return languageManager;
 }
