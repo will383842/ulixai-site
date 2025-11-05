@@ -1,30 +1,36 @@
-// Palette de 20 couleurs pour les différents niveaux de catégories
+// Palette de 25 couleurs pour les différents niveaux de catégories
 
 export const categoryColors = {
-  // Niveau 1 : Catégories principales (vives)
+  // Niveau 1 : Catégories principales (couleurs vives et saturées)
   main: [
-    '#FF6B9D', '#4A90E2', '#50C878', '#FFB347', 
-    '#BA55D3', '#F4D03F', '#FF7F50', '#5DADE2',
-    '#FF85A2', '#7FCDCD', '#FFE66D', '#FF9AA2',
-    '#DA70D6', '#87CEEB', '#98D8C8', '#FDFD96',
-    '#FFB6C1', '#6495ED', '#90EE90', '#FFDAB9'
+    '#E74C3C', '#3498DB', '#2ECC71', '#F39C12', 
+    '#9B59B6', '#E67E22', '#1ABC9C', '#E91E63',
+    '#2980B9', '#27AE60', '#F1C40F', '#8E44AD',
+    '#D35400', '#16A085', '#C0392B', '#2C3E50',
+    '#D63031', '#0984E3', '#00B894', '#FDCB6E',
+    '#6C5CE7', '#FD79A8', '#00CEC9', '#FF7675',
+    '#74B9FF'
   ],
   
-  // Niveau 2 : Sous-catégories (moyennement vives)
+  // Niveau 2 : Sous-catégories (couleurs moyennement saturées)
   sub: [
-    '#FFB6C1', '#87CEEB', '#98FB98', '#FFD700', 
-    '#DDA0DD', '#F0E68C', '#FFA07A', '#B0E0E6',
-    '#FFCCCB', '#ADD8E6', '#C9E4CA', '#FFEAA7',
-    '#E6B3E6', '#C5DFF8', '#D5F4E6', '#FFF9C4',
-    '#FFC0CB', '#B0C4DE', '#C1E1C1', '#FFDEAD'
+    '#FF7979', '#74B9FF', '#55EFC4', '#FFA502',
+    '#A29BFE', '#FF6348', '#48DBFB', '#FF6B81',
+    '#5F27CD', '#01A3A4', '#FECA57', '#EE5A6F',
+    '#C44569', '#4834DF', '#26DE81', '#FDA7DF',
+    '#F8B500', '#10AC84', '#EE5A24', '#576574',
+    '#FA8231', '#20BF6B', '#778BEB', '#F8A5C2',
+    '#EA8685'
   ],
   
-  // Niveau 3 : Sous-sous-catégories (douces/pastels)
+  // Niveau 3 : Sous-sous-catégories (couleurs moins saturées mais visibles)
   child: [
-    '#FFE4E1', '#E0F2F7', '#F0FFF0', '#FFF8DC', 
-    '#F5E6FF', '#FFFACD', '#FFE5CC', '#E1F5FE',
-    '#FFF0F5', '#F0F8FF', '#F5FFFA', '#FFFAF0',
-    '#FAF0E6', '#F8F8FF', '#F0FFFF', '#FFFEF0',
-    '#FFF5EE', '#F5F5DC', '#FAEBD7', '#FFF0DB'
+    '#FFB3BA', '#BAE1FF', '#B4F8C8', '#FFD6A5',
+    '#D4A5FF', '#FFC9C9', '#A0E7E5', '#FFABAB',
+    '#C7CEEA', '#B2FEFA', '#FFF4A3', '#FFC3A0',
+    '#E0BBE4', '#A8E6CF', '#FFDFD3', '#C1E1EC',
+    '#FFE5B4', '#D5AAFF', '#B0DFE5', '#FFCCE5',
+    '#BFEFFF', '#FFD9A0', '#C4FAF8', '#FFCCF9',
+    '#D4E4FF'
   ]
 };

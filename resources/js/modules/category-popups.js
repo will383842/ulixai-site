@@ -29,38 +29,71 @@ export function initializeCategoryPopups() {
           }
           
           container.innerHTML = '';
-          // Ajout du style pour la grille 2 colonnes
-          container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+          // Grille 4 colonnes desktop, 2 mobile avec gap réduit
+          container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
+          
+          // Media query pour desktop (4 colonnes)
+          if (window.innerWidth >= 768) {
+            container.style.gridTemplateColumns = 'repeat(4, 1fr)';
+          }
+          
           console.log('✅ Building categories...');
           
           data.categories.forEach((cat, index) => {
             const div = document.createElement('div');
-            div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
-            div.style.backgroundColor = '#ffffff';
+            div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer flex flex-col items-center text-center group transition-all duration-300";
+            div.style.cssText = 'background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transform-style: preserve-3d;';
             
-            // Padding adaptatif
+            // Padding réduit et adaptatif
             if (window.innerWidth >= 768) {
-              div.style.padding = '2rem';
+              div.style.padding = '1rem';
             }
             
-            // Icône avec couleur de bulle
+            // Effet 3D au hover
+            div.onmouseenter = function() {
+              this.style.transform = 'translateY(-8px) scale(1.02)';
+              this.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.15)';
+            };
+            div.onmouseleave = function() {
+              this.style.transform = 'translateY(0) scale(1)';
+              this.style.boxShadow = '';
+            };
+            
+            // Icône avec couleur de bulle (taille réduite)
             let iconHtml = '';
-            const iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+            const iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
             const iconColor = categoryColors.main[index % categoryColors.main.length];
             
+            // Effet brillance
+            const shineEffect = '<div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition: left 0.5s;"></div>';
+            div.style.position = 'relative';
+            div.style.overflow = 'hidden';
+            div.onmouseenter = function() {
+              this.style.transform = 'translateY(-8px) scale(1.02)';
+              this.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.15)';
+              const shine = this.querySelector('div[style*="left: -100%"]');
+              if (shine) shine.style.left = '100%';
+            };
+            div.onmouseleave = function() {
+              this.style.transform = 'translateY(0) scale(1)';
+              this.style.boxShadow = '';
+              const shine = this.querySelector('div[style*="left:"]');
+              if (shine) shine.style.left = '-100%';
+            };
+            
             if (cat.icon_image) {
-              iconHtml = `<div class="${iconSize} rounded-full overflow-hidden mb-3 group-hover:scale-110 transition-transform" style="background-color: ${iconColor}; padding: 0.5rem;">` +
+              iconHtml = `<div class="${iconSize} rounded-full overflow-hidden mb-2 group-hover:scale-110 transition-transform" style="background-color: ${iconColor}; padding: 0.4rem;">` +
                          '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' +
                          '</div>';
             } else {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
-                         '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
+                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
                          '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
                          '</svg></div>';
             }
             
-            const textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
-            div.innerHTML = iconHtml + `<h3 class="${textSize} font-semibold text-gray-800">` + cat.name + '</h3>';
+            const textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
+            div.innerHTML = shineEffect + iconHtml + `<h3 class="${textSize} font-semibold text-gray-800 line-clamp-2">` + cat.name + '</h3>';
             
             div.onclick = function() {
               window.handleCategoryClick(cat.id, cat.name);
@@ -98,37 +131,57 @@ export function initializeCategoryPopups() {
           }
           
           subContainer.innerHTML = '';
-          // Ajout du style pour la grille 2 colonnes
-          subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+          // Grille 4 colonnes desktop, 2 mobile avec gap réduit
+          subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
+          
+          // Media query pour desktop (4 colonnes)
+          if (window.innerWidth >= 768) {
+            subContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
+          }
           
           data.subcategories.forEach((sub, index) => {
             const div = document.createElement('div');
-            div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
-            div.style.backgroundColor = '#ffffff';
+            div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer flex flex-col items-center text-center group transition-all duration-300";
+            div.style.cssText = 'background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transform-style: preserve-3d;';
             
-            // Padding adaptatif
+            // Padding réduit et adaptatif
             if (window.innerWidth >= 768) {
-              div.style.padding = '2rem';
+              div.style.padding = '1rem';
             }
             
-            // Icône avec couleur de bulle
+            // Effet 3D au hover
+            div.onmouseenter = function() {
+              this.style.transform = 'translateY(-8px) scale(1.02)';
+              this.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.15)';
+            };
+            div.onmouseleave = function() {
+              this.style.transform = 'translateY(0) scale(1)';
+              this.style.boxShadow = '';
+            };
+            
+            // Icône avec couleur de bulle (taille réduite)
             let iconHtml = '';
-            const iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+            const iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
             const iconColor = categoryColors.sub[index % categoryColors.sub.length];
             
+            // Effet brillance
+            const shineEffect = '<div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition: left 0.5s; pointer-events: none; z-index: 1;"></div>';
+            div.style.position = 'relative';
+            div.style.overflow = 'hidden';
+            
             if (sub.icon_image) {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden" style="background-color: ${iconColor}; padding: 0.5rem;">` +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform overflow-hidden" style="background-color: ${iconColor}; padding: 0.4rem;">` +
                          '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' +
                          '</div>';
             } else {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
-                         '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
+                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
                          '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
                          '</svg></div>';
             }
             
-            const textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
-            div.innerHTML = iconHtml + `<div class="${textSize} font-semibold text-gray-800">` + sub.name + '</div>';
+            const textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
+            div.innerHTML = shineEffect + iconHtml + `<div class="${textSize} font-semibold text-gray-800 line-clamp-2" style="position: relative; z-index: 2;">` + sub.name + '</div>';
             
             div.onclick = function() {
               window.handleSubcategoryClick(sub.id, sub.name);
@@ -168,37 +221,57 @@ export function initializeCategoryPopups() {
           }
           
           childContainer.innerHTML = '';
-          // Ajout du style pour la grille 2 colonnes
-          childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+          // Grille 4 colonnes desktop, 2 mobile avec gap réduit
+          childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
+          
+          // Media query pour desktop (4 colonnes)
+          if (window.innerWidth >= 768) {
+            childContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
+          }
           
           data.subcategories.forEach((child, index) => {
             const div = document.createElement('div');
-            div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
-            div.style.backgroundColor = '#ffffff';
+            div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer flex flex-col items-center text-center group transition-all duration-300";
+            div.style.cssText = 'background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transform-style: preserve-3d;';
             
-            // Padding adaptatif
+            // Padding réduit et adaptatif
             if (window.innerWidth >= 768) {
-              div.style.padding = '2rem';
+              div.style.padding = '1rem';
             }
             
-            // Icône avec couleur de bulle
+            // Effet 3D au hover
+            div.onmouseenter = function() {
+              this.style.transform = 'translateY(-8px) scale(1.02)';
+              this.style.boxShadow = '0 20px 40px rgba(251, 146, 60, 0.15)';
+            };
+            div.onmouseleave = function() {
+              this.style.transform = 'translateY(0) scale(1)';
+              this.style.boxShadow = '';
+            };
+            
+            // Icône avec couleur de bulle (taille réduite)
             let iconHtml = '';
-            const iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+            const iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
             const iconColor = categoryColors.child[index % categoryColors.child.length];
             
+            // Effet brillance
+            const shineEffect = '<div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition: left 0.5s; pointer-events: none; z-index: 1;"></div>';
+            div.style.position = 'relative';
+            div.style.overflow = 'hidden';
+            
             if (child.icon_image) {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden" style="background-color: ${iconColor}; padding: 0.5rem;">` +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform overflow-hidden" style="background-color: ${iconColor}; padding: 0.4rem;">` +
                          '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' +
                          '</div>';
             } else {
-              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
-                         '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' +
+              iconHtml = `<div class="${iconSize} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform" style="background-color: ${iconColor};">` +
+                         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' +
                          '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
                          '</svg></div>';
             }
             
-            const textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
-            div.innerHTML = iconHtml + `<div class="${textSize} font-semibold text-gray-800">` + child.name + '</div>';
+            const textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
+            div.innerHTML = shineEffect + iconHtml + `<div class="${textSize} font-semibold text-gray-800 line-clamp-2" style="position: relative; z-index: 2;">` + child.name + '</div>';
             
             div.onclick = function() {
               window.requestForHelp(child.id, child.name);
@@ -243,10 +316,32 @@ export function initializeCategoryPopups() {
     localStorage.removeItem('create-request');
   };
   
-  window.goBackToVacanciersSubcategories = function() {
+  window.goBackToCategories = function() {
+    document.getElementById('expatriesPopup')?.classList.add('hidden');
+    document.getElementById('searchPopup')?.classList.remove('hidden');
+  };
+  
+  window.goBackToSubcategories = function() {
     document.getElementById('vacanciersAutresBesoinsPopup')?.classList.add('hidden');
     document.getElementById('expatriesPopup')?.classList.remove('hidden');
   };
+  
+  // Réajuster la grille lors du redimensionnement
+  window.addEventListener('resize', function() {
+    const mainContainer = document.querySelector('#searchPopup .main-categories');
+    const subContainer = document.querySelector('#expatriesPopup .sub-category');
+    const childContainer = document.querySelector('#vacanciersAutresBesoinsPopup .child-categories');
+    
+    const containers = [mainContainer, subContainer, childContainer].filter(c => c);
+    
+    containers.forEach(container => {
+      if (window.innerWidth >= 768) {
+        container.style.gridTemplateColumns = 'repeat(4, 1fr)';
+      } else {
+        container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      }
+    });
+  });
   
   console.log('✅ Category popups: READY');
 }

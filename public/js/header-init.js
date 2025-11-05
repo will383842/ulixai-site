@@ -40,30 +40,35 @@ function initializeCategoryPopups() {
           return;
         }
         container.innerHTML = '';
-        // Ajout du style pour la grille 2 colonnes
-        container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+        // Grille 4 colonnes desktop, 2 mobile avec gap réduit
+        container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
+
+        // Media query pour desktop (4 colonnes)
+        if (window.innerWidth >= 768) {
+          container.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        }
         console.log('✅ Building categories...');
         data.categories.forEach(function (cat, index) {
           var div = document.createElement('div');
-          div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.className = "category-card rounded-xl p-3 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
           div.style.backgroundColor = '#ffffff';
 
-          // Padding adaptatif
+          // Padding réduit et adaptatif
           if (window.innerWidth >= 768) {
-            div.style.padding = '2rem';
+            div.style.padding = '1rem';
           }
 
-          // Icône avec couleur de bulle
+          // Icône avec couleur de bulle (taille réduite)
           var iconHtml = '';
-          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
           var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.main[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.main.length];
           if (cat.icon_image) {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full overflow-hidden mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' + '</div>';
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full overflow-hidden mb-2 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, "; padding: 0.4rem;\">") + '<img src="/' + cat.icon_image + '" alt="' + cat.name + '" class="w-full h-full object-contain rounded-full">' + '</div>';
           } else {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
           }
-          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
-          div.innerHTML = iconHtml + "<h3 class=\"".concat(textSize, " font-semibold text-gray-800\">") + cat.name + '</h3>';
+          var textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
+          div.innerHTML = iconHtml + "<h3 class=\"".concat(textSize, " font-semibold text-gray-800 line-clamp-2\">") + cat.name + '</h3>';
           div.onclick = function () {
             window.handleCategoryClick(cat.id, cat.name);
           };
@@ -101,29 +106,34 @@ function initializeCategoryPopups() {
           return;
         }
         subContainer.innerHTML = '';
-        // Ajout du style pour la grille 2 colonnes
-        subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+        // Grille 4 colonnes desktop, 2 mobile avec gap réduit
+        subContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
+
+        // Media query pour desktop (4 colonnes)
+        if (window.innerWidth >= 768) {
+          subContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        }
         data.subcategories.forEach(function (sub, index) {
           var div = document.createElement('div');
-          div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.className = "category-card rounded-xl p-3 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
           div.style.backgroundColor = '#ffffff';
 
-          // Padding adaptatif
+          // Padding réduit et adaptatif
           if (window.innerWidth >= 768) {
-            div.style.padding = '2rem';
+            div.style.padding = '1rem';
           }
 
-          // Icône avec couleur de bulle
+          // Icône avec couleur de bulle (taille réduite)
           var iconHtml = '';
-          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
           var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.sub[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.sub.length];
           if (sub.icon_image) {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.4rem;\">") + '<img src="' + sub.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
           } else {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
           }
-          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
-          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800\">") + sub.name + '</div>';
+          var textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
+          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800 line-clamp-2\">") + sub.name + '</div>';
           div.onclick = function () {
             window.handleSubcategoryClick(sub.id, sub.name);
           };
@@ -161,29 +171,34 @@ function initializeCategoryPopups() {
           return;
         }
         childContainer.innerHTML = '';
-        // Ajout du style pour la grille 2 colonnes
-        childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;';
+        // Grille 4 colonnes desktop, 2 mobile avec gap réduit
+        childContainer.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;';
+
+        // Media query pour desktop (4 colonnes)
+        if (window.innerWidth >= 768) {
+          childContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        }
         data.subcategories.forEach(function (child, index) {
           var div = document.createElement('div');
-          div.className = "category-card rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
+          div.className = "category-card rounded-xl p-3 border border-gray-100 shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center text-center group";
           div.style.backgroundColor = '#ffffff';
 
-          // Padding adaptatif
+          // Padding réduit et adaptatif
           if (window.innerWidth >= 768) {
-            div.style.padding = '2rem';
+            div.style.padding = '1rem';
           }
 
-          // Icône avec couleur de bulle
+          // Icône avec couleur de bulle (taille réduite)
           var iconHtml = '';
-          var iconSize = window.innerWidth >= 768 ? 'w-20 h-20' : 'w-16 h-16';
+          var iconSize = window.innerWidth >= 768 ? 'w-14 h-14' : 'w-12 h-12';
           var iconColor = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.child[index % _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryColors.child.length];
           if (child.icon_image) {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.5rem;\">") + '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform overflow-hidden\" style=\"background-color: ").concat(iconColor, "; padding: 0.4rem;\">") + '<img src="' + child.icon_image + '" alt="" class="w-full h-full object-contain rounded-full">' + '</div>';
           } else {
-            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+            iconHtml = "<div class=\"".concat(iconSize, " rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform\" style=\"background-color: ").concat(iconColor, ";\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
           }
-          var textSize = window.innerWidth >= 768 ? 'text-base' : 'text-sm';
-          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800\">") + child.name + '</div>';
+          var textSize = window.innerWidth >= 768 ? 'text-sm' : 'text-xs';
+          div.innerHTML = iconHtml + "<div class=\"".concat(textSize, " font-semibold text-gray-800 line-clamp-2\">") + child.name + '</div>';
           div.onclick = function () {
             window.requestForHelp(child.id, child.name);
           };
@@ -228,11 +243,33 @@ function initializeCategoryPopups() {
     });
     localStorage.removeItem('create-request');
   };
-  window.goBackToVacanciersSubcategories = function () {
+  window.goBackToCategories = function () {
     var _document$getElementB6, _document$getElementB7;
-    (_document$getElementB6 = document.getElementById('vacanciersAutresBesoinsPopup')) === null || _document$getElementB6 === void 0 || _document$getElementB6.classList.add('hidden');
-    (_document$getElementB7 = document.getElementById('expatriesPopup')) === null || _document$getElementB7 === void 0 || _document$getElementB7.classList.remove('hidden');
+    (_document$getElementB6 = document.getElementById('expatriesPopup')) === null || _document$getElementB6 === void 0 || _document$getElementB6.classList.add('hidden');
+    (_document$getElementB7 = document.getElementById('searchPopup')) === null || _document$getElementB7 === void 0 || _document$getElementB7.classList.remove('hidden');
   };
+  window.goBackToSubcategories = function () {
+    var _document$getElementB8, _document$getElementB9;
+    (_document$getElementB8 = document.getElementById('vacanciersAutresBesoinsPopup')) === null || _document$getElementB8 === void 0 || _document$getElementB8.classList.add('hidden');
+    (_document$getElementB9 = document.getElementById('expatriesPopup')) === null || _document$getElementB9 === void 0 || _document$getElementB9.classList.remove('hidden');
+  };
+
+  // Réajuster la grille lors du redimensionnement
+  window.addEventListener('resize', function () {
+    var mainContainer = document.querySelector('#searchPopup .main-categories');
+    var subContainer = document.querySelector('#expatriesPopup .sub-category');
+    var childContainer = document.querySelector('#vacanciersAutresBesoinsPopup .child-categories');
+    var containers = [mainContainer, subContainer, childContainer].filter(function (c) {
+      return c;
+    });
+    containers.forEach(function (container) {
+      if (window.innerWidth >= 768) {
+        container.style.gridTemplateColumns = 'repeat(4, 1fr)';
+      } else {
+        container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      }
+    });
+  });
   console.log('✅ Category popups: READY');
 }
 
@@ -248,15 +285,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   categoryColors: () => (/* binding */ categoryColors)
 /* harmony export */ });
-// Palette de 20 couleurs pour les différents niveaux de catégories
+// Palette de 25 couleurs pour les différents niveaux de catégories
 
 var categoryColors = {
-  // Niveau 1 : Catégories principales (vives)
-  main: ['#FF6B9D', '#4A90E2', '#50C878', '#FFB347', '#BA55D3', '#F4D03F', '#FF7F50', '#5DADE2', '#FF85A2', '#7FCDCD', '#FFE66D', '#FF9AA2', '#DA70D6', '#87CEEB', '#98D8C8', '#FDFD96', '#FFB6C1', '#6495ED', '#90EE90', '#FFDAB9'],
-  // Niveau 2 : Sous-catégories (moyennement vives)
-  sub: ['#FFB6C1', '#87CEEB', '#98FB98', '#FFD700', '#DDA0DD', '#F0E68C', '#FFA07A', '#B0E0E6', '#FFCCCB', '#ADD8E6', '#C9E4CA', '#FFEAA7', '#E6B3E6', '#C5DFF8', '#D5F4E6', '#FFF9C4', '#FFC0CB', '#B0C4DE', '#C1E1C1', '#FFDEAD'],
-  // Niveau 3 : Sous-sous-catégories (douces/pastels)
-  child: ['#FFE4E1', '#E0F2F7', '#F0FFF0', '#FFF8DC', '#F5E6FF', '#FFFACD', '#FFE5CC', '#E1F5FE', '#FFF0F5', '#F0F8FF', '#F5FFFA', '#FFFAF0', '#FAF0E6', '#F8F8FF', '#F0FFFF', '#FFFEF0', '#FFF5EE', '#F5F5DC', '#FAEBD7', '#FFF0DB']
+  // Niveau 1 : Catégories principales (couleurs vives et saturées)
+  main: ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12', '#9B59B6', '#E67E22', '#1ABC9C', '#E91E63', '#2980B9', '#27AE60', '#F1C40F', '#8E44AD', '#D35400', '#16A085', '#C0392B', '#2C3E50', '#D63031', '#0984E3', '#00B894', '#FDCB6E', '#6C5CE7', '#FD79A8', '#00CEC9', '#FF7675', '#74B9FF'],
+  // Niveau 2 : Sous-catégories (couleurs moyennement saturées)
+  sub: ['#FF7979', '#74B9FF', '#55EFC4', '#FFA502', '#A29BFE', '#FF6348', '#48DBFB', '#FF6B81', '#5F27CD', '#01A3A4', '#FECA57', '#EE5A6F', '#C44569', '#4834DF', '#26DE81', '#FDA7DF', '#F8B500', '#10AC84', '#EE5A24', '#576574', '#FA8231', '#20BF6B', '#778BEB', '#F8A5C2', '#EA8685'],
+  // Niveau 3 : Sous-sous-catégories (couleurs moins saturées mais visibles)
+  child: ['#FFB3BA', '#BAE1FF', '#B4F8C8', '#FFD6A5', '#D4A5FF', '#FFC9C9', '#A0E7E5', '#FFABAB', '#C7CEEA', '#B2FEFA', '#FFF4A3', '#FFC3A0', '#E0BBE4', '#A8E6CF', '#FFDFD3', '#C1E1EC', '#FFE5B4', '#D5AAFF', '#B0DFE5', '#FFCCE5', '#BFEFFF', '#FFD9A0', '#C4FAF8', '#FFCCF9', '#D4E4FF']
 };
 
 /***/ }),
@@ -273,196 +310,184 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   initializeLanguageManager: () => (/* binding */ initializeLanguageManager)
 /* harmony export */ });
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
- * Language Manager - Gestion langue desktop + mobile
- * FIXED: Initialisation améliorée avec attente du DOM
+ * Language Manager - Professional Architecture
+ * Manages UI interactions only, Google Translate init handled in header
  */
 
 var LanguageManager = /*#__PURE__*/function () {
   function LanguageManager() {
     _classCallCheck(this, LanguageManager);
-    this.selectedLang = 'en';
-    this.selectedFlag = 'https://flagcdn.com/24x18/us.png';
+    this.selectedLang = localStorage.getItem('ulixai_lang') || 'en';
+    this.selectedFlag = localStorage.getItem('ulixai_flag') || 'https://flagcdn.com/24x18/us.png';
     this.googleTranslateReady = false;
+    this.initPromise = null;
   }
+
+  /**
+   * Initialize language manager
+   * Waits for DOM and Google Translate to be ready
+   */
   return _createClass(LanguageManager, [{
     key: "init",
-    value: function init() {
+    value: (function () {
+      var _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              console.log('🌐 [LangManager] Initializing...');
+
+              // Wait for DOM
+              _context.n = 1;
+              return this.waitForDOM();
+            case 1:
+              _context.n = 2;
+              return this.waitForGoogleTranslate();
+            case 2:
+              // Initialize UI
+              this.initDesktopLanguageSelector();
+              this.initMobileLanguageSelector();
+              console.log('✅ [LangManager] Initialized');
+            case 3:
+              return _context.a(2);
+          }
+        }, _callee, this);
+      }));
+      function init() {
+        return _init.apply(this, arguments);
+      }
+      return init;
+    }()
+    /**
+     * Wait for DOM to be ready
+     */
+    )
+  }, {
+    key: "waitForDOM",
+    value: function waitForDOM() {
+      return new Promise(function (resolve) {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', resolve, {
+            once: true
+          });
+        } else {
+          resolve();
+        }
+      });
+    }
+
+    /**
+     * Wait for Google Translate to be ready
+     */
+  }, {
+    key: "waitForGoogleTranslate",
+    value: function waitForGoogleTranslate() {
       var _this = this;
-      console.log('🌐 Language Manager init() called');
-
-      // Fonction d'initialisation
-      var initialize = function initialize() {
-        console.log('🔄 Attempting to initialize language selectors...');
-        _this.initDesktopLanguageSelector();
-        _this.initMobileLanguageSelector();
-        _this.initGoogleTranslate();
-      };
-
-      // Attendre que le DOM soit vraiment prêt
-      if (document.readyState === 'loading') {
-        console.log('⏳ DOM is loading, waiting for DOMContentLoaded...');
-        document.addEventListener('DOMContentLoaded', function () {
-          console.log('✅ DOMContentLoaded fired');
-          // Double sécurité : attendre encore 100ms après DOMContentLoaded
-          setTimeout(initialize, 100);
+      var timeout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10000;
+      return new Promise(function (resolve) {
+        if (window.googleTranslateReady) {
+          console.log('✅ [LangManager] Google Translate already ready');
+          resolve();
+          return;
+        }
+        var timeoutId = setTimeout(function () {
+          console.warn('⚠️ [LangManager] Google Translate timeout');
+          resolve(); // Continue anyway
+        }, timeout);
+        window.addEventListener('googleTranslateReady', function () {
+          clearTimeout(timeoutId);
+          _this.googleTranslateReady = true;
+          console.log('✅ [LangManager] Google Translate ready event received');
+          resolve();
+        }, {
+          once: true
         });
-      } else {
-        console.log('✅ DOM already loaded');
-        // Si DOM déjà chargé, attendre quand même 100ms pour être sûr
-        setTimeout(initialize, 100);
-      }
-    }
-  }, {
-    key: "domains",
-    value: function domains() {
-      var host = location.hostname;
-      var naked = host.replace(/^www\./, '');
-      var list = [undefined];
-      if (naked && !/^(\d{1,3}\.){3}\d{1,3}$/.test(naked)) list.push(naked);
-      if (naked !== host) list.push(host);
-      return list;
-    }
-  }, {
-    key: "setCookie",
-    value: function setCookie(name, value) {
-      var days = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 365;
-      var exp = new Date(Date.now() + days * 864e5).toUTCString();
-      this.domains().forEach(function (d) {
-        document.cookie = "".concat(name, "=").concat(value, "; expires=").concat(exp, "; path=/") + (d ? "; domain=".concat(d) : '');
       });
     }
-  }, {
-    key: "clearCookie",
-    value: function clearCookie(name) {
-      var past = 'Thu, 01 Jan 1970 00:00:01 GMT';
-      this.domains().forEach(function (d) {
-        document.cookie = "".concat(name, "=; expires=").concat(past, "; path=/") + (d ? "; domain=".concat(d) : '');
-      });
-    }
-  }, {
-    key: "alignCookiesFor",
-    value: function alignCookiesFor(lang) {
-      if (!lang || lang === 'en') {
-        this.clearCookie('googtrans');
-        this.clearCookie('googtransopt');
-      } else {
-        var val = "/auto/".concat(lang);
-        this.setCookie('googtrans', val);
-        this.setCookie('googtransopt', val);
-      }
-    }
+
+    /**
+     * Initialize desktop language selector
+     */
   }, {
     key: "initDesktopLanguageSelector",
     value: function initDesktopLanguageSelector() {
       var _this2 = this;
-      console.log('🖥️ Initializing desktop language selector...');
+      var langBtn = document.getElementById('langBtn');
+      var langMenu = document.getElementById('langMenu');
+      var langFlag = document.getElementById('langFlag');
+      if (!langBtn || !langMenu || !langFlag) {
+        console.warn('⚠️ [LangManager] Desktop elements not found');
+        return;
+      }
+      console.log('✅ [LangManager] Desktop selector found');
+      var isOpen = false;
 
-      // Retry mechanism si éléments pas trouvés
-      var retryCount = 0;
-      var maxRetries = 5;
-      var _attemptInit = function attemptInit() {
-        var langBtn = document.getElementById('langBtn');
-        var langMenu = document.getElementById('langMenu');
-        var langFlag = document.getElementById('langFlag');
-        if (!langBtn || !langMenu || !langFlag) {
-          retryCount++;
-          console.warn("\u26A0\uFE0F Desktop language selector elements not found (attempt ".concat(retryCount, "/").concat(maxRetries, "):"), {
-            langBtn: !!langBtn,
-            langMenu: !!langMenu,
-            langFlag: !!langFlag
-          });
-          if (retryCount < maxRetries) {
-            setTimeout(_attemptInit, 200);
-          } else {
-            console.error('❌ Failed to initialize desktop language selector after', maxRetries, 'attempts');
-          }
-          return;
+      // Toggle menu
+      langBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        isOpen = !isOpen;
+        langMenu.classList.toggle('hidden', !isOpen);
+        langBtn.setAttribute('aria-expanded', isOpen);
+      });
+
+      // Select language
+      langMenu.addEventListener('click', function (e) {
+        var li = e.target.closest('li[data-lang]');
+        if (!li) return;
+        var lang = li.getAttribute('data-lang');
+        var flag = li.getAttribute('data-flag');
+        if (lang && flag) {
+          console.log('🌐 [LangManager] Language selected:', lang);
+          langFlag.src = flag;
+          _this2.setLanguage(lang, flag);
+          langMenu.classList.add('hidden');
+          isOpen = false;
         }
-        console.log('✅ Desktop language elements found');
+      });
 
-        // ⚡ Utiliser event delegation sur document pour éviter conflits avec Alpine.js
-        var isOpen = false;
-
-        // Event delegation sur le document entier (capture phase)
-        document.addEventListener('click', function (e) {
-          // Clic sur le bouton de langue
-          if (e.target.closest('#langBtn')) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            console.log('🖱️ Language button clicked (delegated)');
-            isOpen = !isOpen;
-            if (isOpen) {
-              langMenu.classList.remove('hidden');
-            } else {
-              langMenu.classList.add('hidden');
-            }
-            return false;
-          }
-
-          // Clic sur un élément de langue
-          var langItem = e.target.closest('#langMenu li[data-lang]');
-          if (langItem) {
-            e.preventDefault();
-            e.stopPropagation();
-            var lang = langItem.getAttribute('data-lang');
-            var flag = langItem.getAttribute('data-flag');
-            if (lang && flag) {
-              console.log('🌐 Desktop language selected:', lang);
-              langFlag.src = flag;
-              _this2.setLanguage(lang, flag);
-              langMenu.classList.add('hidden');
-              isOpen = false;
-            }
-            return false;
-          }
-
-          // Fermer si clic en dehors
-          if (isOpen && !e.target.closest('#langMenu')) {
-            langMenu.classList.add('hidden');
-            isOpen = false;
-          }
-        }, true); // ⚡ IMPORTANT: true = capture phase (avant Alpine.js)
-
-        // Restore saved language
-        var savedLang = localStorage.getItem('selectedLang') || 'en';
-        var savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
-        langFlag.src = savedFlag;
-        _this2.alignCookiesFor(savedLang);
-        if (savedLang !== 'en') {
-          window.location.hash = 'googtrans(en|' + savedLang + ')';
+      // Close on outside click
+      document.addEventListener('click', function (e) {
+        if (isOpen && !langBtn.contains(e.target) && !langMenu.contains(e.target)) {
+          langMenu.classList.add('hidden');
+          isOpen = false;
+          langBtn.setAttribute('aria-expanded', 'false');
         }
-        console.log('✅ Desktop language selector initialized with event delegation');
-      };
+      });
 
-      // Démarrer la tentative
-      _attemptInit();
+      // Restore saved language
+      langFlag.src = this.selectedFlag;
     }
+
+    /**
+     * Initialize mobile language selector
+     */
   }, {
     key: "initMobileLanguageSelector",
     value: function initMobileLanguageSelector() {
       var _this3 = this;
-      console.log('📱 Initializing mobile language selector...');
       var checkbox = document.getElementById('langOpen');
       var menu = document.getElementById('languageMenu');
       var flag = document.getElementById('languageFlag');
       var label = document.getElementById('languageLabel');
       if (!checkbox || !menu || !flag || !label) {
-        console.warn('⚠️ Mobile language selector elements not found:', {
-          checkbox: !!checkbox,
-          menu: !!menu,
-          flag: !!flag,
-          label: !!label
-        });
+        console.warn('⚠️ [LangManager] Mobile elements not found');
         return;
       }
-      console.log('✅ Mobile language elements found');
+      console.log('✅ [LangManager] Mobile selector found');
+      var langNames = {
+        en: 'English',
+        fr: 'Français',
+        de: 'Deutsch'
+      };
 
       // Handle language selection
       menu.addEventListener('click', function (e) {
@@ -470,21 +495,14 @@ var LanguageManager = /*#__PURE__*/function () {
         if (!li) return;
         var code = li.dataset.lang;
         var flagUrl = li.dataset.flag;
-        var name = li.textContent.trim();
-        console.log('🌐 Mobile language selected:', code);
+        var name = langNames[code] || code;
+        console.log('🌐 [LangManager] Mobile language selected:', code);
 
         // Update UI
         flag.src = flagUrl;
         label.textContent = name;
 
-        // Save to localStorage
-        localStorage.setItem('selectedLang', code);
-        localStorage.setItem('selectedFlag', flagUrl);
-
-        // Update cookies
-        _this3.alignCookiesFor(code);
-
-        // Apply language change
+        // Save and apply
         _this3.setLanguage(code, flagUrl);
 
         // Close menu
@@ -492,117 +510,66 @@ var LanguageManager = /*#__PURE__*/function () {
       });
 
       // Restore saved language
-      var savedLang = localStorage.getItem('selectedLang') || 'en';
-      var savedFlag = localStorage.getItem('selectedFlag') || 'https://flagcdn.com/24x18/us.png';
-      var langNames = {
-        en: 'English',
-        fr: 'Français',
-        de: 'Deutsch'
-      };
-      flag.src = savedFlag;
-      label.textContent = langNames[savedLang] || 'Language';
-      this.alignCookiesFor(savedLang);
-      if (savedLang !== 'en') {
-        window.location.hash = 'googtrans(en|' + savedLang + ')';
-      }
-      console.log('✅ Mobile language selector initialized');
+      flag.src = this.selectedFlag;
+      label.textContent = langNames[this.selectedLang] || 'Language';
     }
+
+    /**
+     * Set language and reload page
+     */
   }, {
     key: "setLanguage",
     value: function setLanguage(lang, flag) {
-      console.log('🔄 Changing language to:', lang);
+      console.log('🔄 [LangManager] Changing language to:', lang);
 
       // Update storage
-      localStorage.setItem('selectedLang', lang);
-      localStorage.setItem('selectedFlag', flag);
+      localStorage.setItem('ulixai_lang', lang);
+      localStorage.setItem('ulixai_flag', flag);
 
-      // Update cookies
-      this.alignCookiesFor(lang);
+      // Update cookies for Google Translate
+      this.setCookiesForLanguage(lang);
 
-      // Update hash
+      // Reload page to apply
+      console.log('🔄 [LangManager] Reloading page...');
+
+      // Small delay to ensure cookies are set
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
+    }
+
+    /**
+     * Set cookies for Google Translate
+     */
+  }, {
+    key: "setCookiesForLanguage",
+    value: function setCookiesForLanguage(lang) {
+      var expires = new Date(Date.now() + 365 * 864e5).toUTCString();
       if (lang === 'en') {
-        window.location.hash = '';
+        // Clear cookies for English
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'googtransopt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       } else {
-        window.location.hash = 'googtrans(en|' + lang + ')';
+        // Set cookies for other languages
+        var val = "/auto/".concat(lang);
+        document.cookie = "googtrans=".concat(val, "; expires=").concat(expires, "; path=/");
+        document.cookie = "googtransopt=".concat(val, "; expires=").concat(expires, "; path=/");
       }
-
-      // Wait for Google Translate then reload
-      this.waitForGoogleTranslate(function () {
-        console.log('✅ Google Translate ready, triggering change');
-        var select = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (select) {
-          select.value = lang;
-          select.dispatchEvent(new Event('change', {
-            bubbles: true
-          }));
-        }
-        setTimeout(function () {
-          console.log('🔄 Reloading page...');
-          location.reload();
-        }, 100);
-      });
-    }
-  }, {
-    key: "waitForGoogleTranslate",
-    value: function waitForGoogleTranslate(callback) {
-      var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
-      var startTime = Date.now();
-      var _check = function check() {
-        var select = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (select) {
-          console.log('✅ Google Translate widget found');
-          callback();
-          return;
-        }
-        if (Date.now() - startTime < timeout) {
-          setTimeout(_check, 100);
-        } else {
-          console.warn('⚠️ Google Translate timeout, reloading anyway');
-          callback();
-        }
-      };
-      _check();
-    }
-  }, {
-    key: "initGoogleTranslate",
-    value: function initGoogleTranslate() {
-      var _this4 = this;
-      console.log('🌐 Initializing Google Translate...');
-
-      // Define the callback for Google Translate
-      window.googleTranslateElementInit = function () {
-        console.log('✅ Google Translate callback triggered');
-        try {
-          new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'en,fr,de',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false
-          }, 'google_translate_element');
-          _this4.googleTranslateReady = true;
-          console.log('✅ Google Translate initialized successfully');
-        } catch (error) {
-          console.error('❌ Google Translate initialization failed:', error);
-        }
-      };
-
-      // If Google Translate script is already loaded, initialize immediately
-      if (typeof google !== 'undefined' && google.translate) {
-        console.log('🔄 Google Translate already loaded, initializing now');
-        window.googleTranslateElementInit();
-      }
+      console.log('✅ [LangManager] Cookies set for language:', lang);
     }
   }]);
 }();
-function initializeLanguageManager() {
-  console.log('🚀 Starting Language Manager...');
-  var languageManager = new LanguageManager();
 
-  // Toujours appeler init(), qui gère lui-même l'attente du DOM
+/**
+ * Initialize and expose globally
+ */
+function initializeLanguageManager() {
+  console.log('🚀 [LangManager] Starting initialization...');
+  var languageManager = new LanguageManager();
   languageManager.init();
 
-  // ⚡ EXPOSER GLOBALEMENT
-  window.providerLanguageManager = languageManager;
+  // Expose globally for debugging
+  window.ulixaiLanguageManager = languageManager;
   return languageManager;
 }
 
