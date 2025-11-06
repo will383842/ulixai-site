@@ -9,7 +9,7 @@
 🔧 Optimisations CPU, RAM, GPU
 ✅ Fetch API pour vérification
 ⚡ Performance maximale
-🔑 Code de test: 11111111 (pour développement)
+🔑 Code de test: 111111 (pour développement)
 ============================================
 -->
 
@@ -72,7 +72,7 @@
         </div>
         <div class="flex-1">
           <p class="text-blue-900 font-bold text-sm sm:text-base">Check your inbox (and spam folder)</p>
-          <p class="text-blue-700 text-xs sm:text-sm font-medium mt-1">The code expires in 10 minutes • Test code: 11111111</p>
+          <p class="text-blue-700 text-xs sm:text-sm font-medium mt-1">The code expires in 10 minutes • Test code: 111111</p>
         </div>
       </div>
     </div>
@@ -89,13 +89,13 @@
           type="text" 
           placeholder="● ● ● ● ● ●" 
           class="otp-input"
-          maxlength="8"
+          maxlength="6"
           inputmode="numeric"
-          pattern="[0-9]*"
+          pattern="[0-9]{6}"
           autocomplete="one-time-code"
-        />
+        / name="otp">
       </div>
-      <p class="input-hint">Enter the 6-digit code sent to your email (or 11111111 for testing)</p>
+      <p class="input-hint">Enter the 6-digit code sent to your email (or 111111 for testing)</p>
     </div>
 
     <!-- Error Alert (Hidden by default) -->
@@ -283,8 +283,8 @@
 /* ============================================
    🎯 STEP 15 - OTP VERIFICATION
    ✅ Activation/désactivation des boutons
-   ✅ Validation OTP (6 chiffres ou code test 11111111)
-   ✅ Code de test pour développement: 11111111
+   ✅ Validation OTP (6 chiffres ou code test 111111)
+   ✅ Code de test pour développement: 111111
    ✅ Fetch API pour vérification réelle
    ============================================ */
 
@@ -295,7 +295,7 @@
   // 📦 STATE & CONSTANTS
   // ============================================
   
-  const TEST_CODE = '11111111'; // Code de test pour le développement
+  const TEST_CODE = '111111'; // Code de test pour le développement
   
   const state = {
     otp: '',
@@ -564,7 +564,7 @@
   // Fonction globale pour la vérification (appelée par le bouton du header)
   window.verifyStep15OTP = function() {
     if (!validateOTP()) {
-      showError('Please enter a valid code (6 digits or test code 11111111).');
+      showError('Please enter a valid code (6 digits or test code 111111).');
       return false;
     }
     

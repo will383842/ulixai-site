@@ -546,12 +546,11 @@
 
       {{-- Sign up --}}
       <li role="none">
-        <a href="/signup" 
-           class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+        <button id="mobileSignupBtn" class="w-full text-left text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
           <i class="fas fa-user-plus text-blue-600"></i>
           <span>Sign up</span>
-        </a>
+        </button>
       </li>
 
       {{-- Affiliate Program --}}
@@ -568,15 +567,14 @@
 
   {{-- Sélecteur de langue --}}
   <div class="relative w-full sm:w-56">
-    <input id="langOpen" type="checkbox" class="peer sr-only" />
-    <label for="langOpen"
-          class="flex justify-between items-center w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-800 bg-white cursor-pointer select-none">
-      <span id="languageLabel">Language</span>
-      <img id="languageFlag" src="https://flagcdn.com/24x18/us.png" alt="Lang" class="ml-2 w-5 h-4 object-cover" />
-    </label>
+    <button id="mobileLangBtn" type="button"
+          class="flex justify-between items-center w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-800 bg-white hover:bg-gray-50 transition">
+      <span id="mobileLangLabel">Language</span>
+      <img id="mobileLangFlag" src="https://flagcdn.com/24x18/us.png" alt="Lang" class="ml-2 w-5 h-4 object-cover" />
+    </button>
 
-    <ul id="languageMenu"
-        class="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-50 hidden peer-checked:block">
+    <ul id="mobileLangMenu"
+        class="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-50 hidden">
       <li data-lang="fr" data-flag="https://flagcdn.com/24x18/fr.png"
           class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2">
         <img src="https://flagcdn.com/24x18/fr.png" class="w-5 h-4" /> Français
@@ -643,6 +641,185 @@
 </button>
 
 <script>
+// ============================================
+// 🚀 LANGUAGE SELECTOR - DESKTOP & MOBILE
+// ============================================
+
+(function() {
+  'use strict';
+
+  // ========== DESKTOP LANGUAGE SELECTOR ==========
+  const langBtn = document.getElementById('langBtn');
+  const langMenu = document.getElementById('langMenu');
+  const langFlag = document.getElementById('langFlag');
+
+  if (langBtn && langMenu) {
+    // Toggle menu
+    langBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      langMenu.classList.toggle('hidden');
+    });
+
+    // Select language
+    const langItems = langMenu.querySelectorAll('li[data-lang]');
+    langItems.forEach(function(item) {
+      item.addEventListener('click', function() {
+        const flag = this.getAttribute('data-flag');
+        const lang = this.getAttribute('data-lang');
+        
+        if (langFlag && flag) {
+          langFlag.src = flag;
+        }
+        
+        langMenu.classList.add('hidden');
+        
+        // Trigger Google Translate
+        triggerGoogleTranslate(lang);
+      });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!langBtn.contains(e.target) && !langMenu.contains(e.target)) {
+        langMenu.classList.add('hidden');
+      }
+    });
+  }
+
+  // ========== MOBILE LANGUAGE SELECTOR ==========
+  const mobileLangBtn = document.getElementById('mobileLangBtn');
+  const mobileLangMenu = document.getElementById('mobileLangMenu');
+  const mobileLangFlag = document.getElementById('mobileLangFlag');
+  const mobileLangLabel = document.getElementById('mobileLangLabel');
+
+  if (mobileLangBtn && mobileLangMenu) {
+    // Toggle menu
+    mobileLangBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      mobileLangMenu.classList.toggle('hidden');
+    });
+
+    // Select language
+    const mobileLangItems = mobileLangMenu.querySelectorAll('li[data-lang]');
+    mobileLangItems.forEach(function(item) {
+      item.addEventListener('click', function() {
+        const flag = this.getAttribute('data-flag');
+        const lang = this.getAttribute('data-lang');
+        const text = this.textContent.trim();
+        
+        if (mobileLangFlag && flag) {
+          mobileLangFlag.src = flag;
+        }
+        
+        if (mobileLangLabel) {
+          mobileLangLabel.textContent = text;
+        }
+        
+        mobileLangMenu.classList.add('hidden');
+        
+        // Trigger Google Translate
+        triggerGoogleTranslate(lang);
+      });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!mobileLangBtn.contains(e.target) && !mobileLangMenu.contains(e.target)) {
+        mobileLangMenu.classList.add('hidden');
+      }
+    });
+  }
+
+  // ========== GOOGLE TRANSLATE INTEGRATION ==========
+  function triggerGoogleTranslate(lang) {
+    const googleTranslateElement = document.querySelector('.goog-te-combo');
+    if (googleTranslateElement) {
+      googleTranslateElement.value = lang;
+      googleTranslateElement.dispatchEvent(new Event('change'));
+    }
+  }
+
+  // Initialize Google Translate
+  window.googleTranslateElementInit = function() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,fr,de',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+  };
+
+})();
+
+// ============================================
+// 🚀 SIGNUP POPUP - SCRIPT COMPLET
+// ============================================
+
+(function() {
+  'use strict';
+
+  // Éléments du DOM
+  const signupPopup = document.getElementById('signupPopup');
+  const signupBtn = document.getElementById('signupBtn');
+  const mobileSignupBtn = document.getElementById('mobileSignupBtn');
+  const closePopup = document.getElementById('closePopup');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  // Fonction pour ouvrir le popup
+  function openSignupPopup() {
+    if (signupPopup) {
+      signupPopup.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      // Fermer le menu mobile si ouvert
+      if (mobileMenu) {
+        mobileMenu.classList.add('hidden');
+      }
+    }
+  }
+
+  // Fonction pour fermer le popup
+  function closeSignupPopup() {
+    if (signupPopup) {
+      signupPopup.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Event listeners
+  if (signupBtn) {
+    signupBtn.addEventListener('click', openSignupPopup);
+  }
+
+  if (mobileSignupBtn) {
+    mobileSignupBtn.addEventListener('click', openSignupPopup);
+  }
+
+  if (closePopup) {
+    closePopup.addEventListener('click', closeSignupPopup);
+  }
+
+  // Fermer en cliquant sur le backdrop
+  if (signupPopup) {
+    signupPopup.addEventListener('click', function(e) {
+      if (e.target === signupPopup) {
+        closeSignupPopup();
+      }
+    });
+  }
+
+  // Fermer avec la touche Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && signupPopup && !signupPopup.classList.contains('hidden')) {
+      closeSignupPopup();
+    }
+  });
+
+})();
+
+// ============================================
+// Validation Step 5
+// ============================================
 window.validateStep5 = function() {
   const countEl = document.getElementById('step5SelectedCount');
   if (countEl && parseInt(countEl.textContent, 10) > 0) return true;
@@ -656,6 +833,9 @@ document.getElementById('step5')?.addEventListener('click', () => {
   if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
 });
 
+// ============================================
+// Fix Google Translate Gap
+// ============================================
 (function fixGoogleTranslateGap() {
   function zap() {
     const banner = document.querySelector('iframe.goog-te-banner-frame');
@@ -679,6 +859,9 @@ document.getElementById('step5')?.addEventListener('click', () => {
   window.addEventListener('resize', zap);
 })();
 
+// ============================================
+// Scroll to Top Button
+// ============================================
 window.addEventListener('load', function() {
   const btn = document.getElementById('scrollToTopBtn');
   if (btn) {
@@ -692,6 +875,33 @@ window.addEventListener('load', function() {
     btn.addEventListener('click', function() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+  }
+});
+
+// ============================================
+// Mobile Menu Toggle
+// ============================================
+const menuToggle = document.getElementById('menu-toggle-top');
+const mobileMenu = document.getElementById('mobile-menu');
+const closeBtn = document.getElementById('mobileMenuCloseBtn');
+
+function toggleMenu() {
+  mobileMenu?.classList.toggle('hidden');
+  menuToggle?.classList.toggle('menu-active');
+  const isOpen = !mobileMenu?.classList.contains('hidden');
+  menuToggle?.setAttribute('aria-expanded', isOpen);
+  mobileMenu?.setAttribute('aria-hidden', !isOpen);
+}
+
+menuToggle?.addEventListener('click', toggleMenu);
+closeBtn?.addEventListener('click', toggleMenu);
+
+document.addEventListener('click', (e) => {
+  if (mobileMenu && menuToggle && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+    mobileMenu.classList.add('hidden');
+    menuToggle.classList.remove('menu-active');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    mobileMenu.setAttribute('aria-hidden', 'true');
   }
 });
 </script>

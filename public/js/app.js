@@ -14043,8 +14043,6 @@ function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { 
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
-
-// Configuration
 var CONFIG = {
   GRID: {
     MOBILE_COLUMNS: 'repeat(2, 1fr)',
@@ -14063,12 +14061,11 @@ var CONFIG = {
   },
   ANIMATION: {
     HOVER_TRANSFORM: 'translateY(-8px) scale(1.02)',
-    DEFAULT_TRANSFORM: 'translateY(0) scale(1)',
-    TRANSITION: '0.5s'
+    DEFAULT_TRANSFORM: 'translateY(0) scale(1)'
   },
   CACHE: {
     ENABLED: true,
-    DURATION: 5 * 60 * 1000 // 5 minutes
+    DURATION: 300000
   }
 };
 var API_ENDPOINTS = {
@@ -14080,46 +14077,37 @@ var API_ENDPOINTS = {
     return "/api/categories/".concat(id, "/children");
   }
 };
-
-// Cache system
 var cache = {
   data: new Map(),
   get: function get(key) {
     if (!CONFIG.CACHE.ENABLED) return null;
     var cached = this.data.get(key);
-    if (!cached) return null;
-    var now = Date.now();
-    if (now - cached.timestamp > CONFIG.CACHE.DURATION) {
+    if (!cached || Date.now() - cached.timestamp > CONFIG.CACHE.DURATION) {
       this.data["delete"](key);
       return null;
     }
     return cached.value;
   },
   set: function set(key, value) {
-    if (!CONFIG.CACHE.ENABLED) return;
-    this.data.set(key, {
-      value: value,
-      timestamp: Date.now()
-    });
-  },
-  clear: function clear() {
-    this.data.clear();
+    if (CONFIG.CACHE.ENABLED) {
+      this.data.set(key, {
+        value: value,
+        timestamp: Date.now()
+      });
+    }
   }
 };
-
-// Utility functions
+var imageCache = new Set();
 function debounce(func, wait) {
   var timeout;
-  return function executedFunction() {
+  return function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-    var later = function later() {
-      clearTimeout(timeout);
-      func.apply(void 0, args);
-    };
     clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+    timeout = setTimeout(function () {
+      return func.apply(void 0, args);
+    }, wait);
   };
 }
 function setupResponsiveGrid(container) {
@@ -14130,13 +14118,15 @@ function getResponsiveSize(mobileValue, desktopValue) {
   return window.innerWidth >= CONFIG.GRID.BREAKPOINT ? desktopValue : mobileValue;
 }
 function createShineEffect() {
-  return '<div class="shine-effect"></div>';
+  return '<div class="shine-effect" aria-hidden="true"></div>';
 }
 function preloadImage(src) {
+  if (imageCache.has(src)) return Promise.resolve(src);
   return new Promise(function (resolve, reject) {
     var img = new Image();
     img.onload = function () {
-      return resolve(src);
+      imageCache.add(src);
+      resolve(src);
     };
     img.onerror = reject;
     img.src = src;
@@ -14144,68 +14134,80 @@ function preloadImage(src) {
 }
 function createIconHtml(item, iconColor) {
   var iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
+  var escapedName = item.name.replace(/"/g, '&quot;');
   if (item.icon_image) {
     var imagePath = item.icon_image.startsWith('/') ? item.icon_image : '/' + item.icon_image;
     preloadImage(imagePath)["catch"](function () {});
-    return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; padding: ").concat(CONFIG.ICONS.PADDING, "; display: flex; align-items: center; justify-content: center; overflow: hidden;\">") + "<img src=\"".concat(imagePath, "\" alt=\"").concat(item.name, "\" class=\"w-full h-full object-contain rounded-full\" loading=\"lazy\">") + '</div>';
-  } else {
-    return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; display: flex; align-items: center; justify-content: center;\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
+    return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; padding: ").concat(CONFIG.ICONS.PADDING, "; display: flex; align-items: center; justify-content: center; overflow: hidden;\" role=\"img\" aria-label=\"").concat(escapedName, "\">") + "<img src=\"".concat(imagePath, "\" alt=\"").concat(escapedName, "\" class=\"w-full h-full object-contain rounded-full\" loading=\"lazy\" decoding=\"async\">") + '</div>';
   }
+  return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; display: flex; align-items: center; justify-content: center;\" role=\"img\" aria-label=\"").concat(escapedName, "\">") + '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">' + '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' + '</svg></div>';
 }
-function createCategoryCard(item, index, level, onClickHandler) {
+function createCategoryCard(item, level, allIds, onClickHandler) {
   var _categoryLevels$level;
-  var div = document.createElement('div');
+  var div = document.createElement('button');
+  div.type = 'button';
   div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
+  div.setAttribute('aria-label', "S\xE9lectionner ".concat(item.name));
+  div.setAttribute('role', 'button');
   div.style.cssText = "\n    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);\n    transform-style: preserve-3d;\n    position: relative;\n    overflow: visible;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    text-align: center;\n    min-height: fit-content;\n    height: auto;\n  ";
   if (window.innerWidth >= CONFIG.GRID.BREAKPOINT) {
     div.style.padding = '1rem';
   }
-  var iconColor = (0,_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.getCategoryColor)(level, index);
+  var iconColor = (0,_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.getCategoryColorByLevel)(level, item.id, allIds);
   var shadowColor = ((_categoryLevels$level = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels[level]) === null || _categoryLevels$level === void 0 ? void 0 : _categoryLevels$level.shadowColor) || 'rgba(59, 130, 246, 0.15)';
-  div.onmouseenter = function () {
-    this.style.willChange = 'transform, box-shadow';
-    this.style.transform = CONFIG.ANIMATION.HOVER_TRANSFORM;
-    this.style.boxShadow = "0 20px 40px ".concat(shadowColor);
-    var shine = this.querySelector('.shine-effect');
+  var onMouseEnter = function onMouseEnter() {
+    div.style.willChange = 'transform, box-shadow';
+    div.style.transform = CONFIG.ANIMATION.HOVER_TRANSFORM;
+    div.style.boxShadow = "0 20px 40px ".concat(shadowColor);
+    var shine = div.querySelector('.shine-effect');
     if (shine) shine.style.left = '100%';
   };
-  div.onmouseleave = function () {
-    this.style.transform = CONFIG.ANIMATION.DEFAULT_TRANSFORM;
-    this.style.boxShadow = '';
-    this.style.willChange = 'auto';
-    var shine = this.querySelector('.shine-effect');
+  var onMouseLeave = function onMouseLeave() {
+    div.style.transform = CONFIG.ANIMATION.DEFAULT_TRANSFORM;
+    div.style.boxShadow = '';
+    div.style.willChange = 'auto';
+    var shine = div.querySelector('.shine-effect');
     if (shine) shine.style.left = '-100%';
   };
+  div.addEventListener('mouseenter', onMouseEnter, {
+    passive: true
+  });
+  div.addEventListener('mouseleave', onMouseLeave, {
+    passive: true
+  });
   var shineEffect = createShineEffect();
   var iconHtml = createIconHtml(item, iconColor);
   var textSize = getResponsiveSize(CONFIG.TEXT.MOBILE_SIZE, CONFIG.TEXT.DESKTOP_SIZE);
   var textHtml = "<div class=\"".concat(textSize, " font-semibold text-gray-800 category-text\">").concat(item.name, "</div>");
   div.innerHTML = shineEffect + iconHtml + textHtml;
-  div.onclick = function () {
-    onClickHandler(item.id, item.name);
-  };
+  div.addEventListener('click', function () {
+    return onClickHandler(item.id, item.name);
+  }, {
+    passive: true
+  });
   return div;
 }
 function renderCategories(items, containerSelector, level, clickHandler) {
   var container = document.querySelector(containerSelector);
-  if (!container) {
-    console.error('Container not found:', containerSelector);
-    return;
-  }
+  if (!container) return;
   var fragment = document.createDocumentFragment();
   container.innerHTML = '';
   setupResponsiveGrid(container);
+  var allIds = items.map(function (item) {
+    return item.id;
+  });
   requestAnimationFrame(function () {
-    items.forEach(function (item, index) {
-      var card = createCategoryCard(item, index, level, clickHandler);
+    var len = items.length;
+    for (var i = 0; i < len; i++) {
+      var card = createCategoryCard(items[i], level, allIds, clickHandler);
       fragment.appendChild(card);
-    });
+    }
     container.appendChild(fragment);
   });
 }
 function fetchWithCache(_x) {
   return _fetchWithCache.apply(this, arguments);
-} // Module initialization
+}
 function _fetchWithCache() {
   _fetchWithCache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
     var cached, response, data;
@@ -14235,11 +14237,11 @@ function _fetchWithCache() {
   return _fetchWithCache.apply(this, arguments);
 }
 function initializeCategoryPopups() {
-  // Open popup
   window.openHelpPopup = function () {
     var popup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
     if (!popup) return;
     popup.classList.remove('hidden');
+    popup.setAttribute('aria-hidden', 'false');
     fetchWithCache(API_ENDPOINTS.CATEGORIES).then(function (data) {
       if (data.success) {
         renderCategories(data.categories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass), 'main', window.handleCategoryClick);
@@ -14248,12 +14250,17 @@ function initializeCategoryPopups() {
       return console.error('Fetch error:', err);
     });
   };
-
-  // Category click
   window.handleCategoryClick = function (categoryId, categoryName) {
-    var _document$getElementB, _document$getElementB2;
-    (_document$getElementB = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId)) === null || _document$getElementB === void 0 || _document$getElementB.classList.add('hidden');
-    (_document$getElementB2 = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId)) === null || _document$getElementB2 === void 0 || _document$getElementB2.classList.remove('hidden');
+    var mainPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
+    var subPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId);
+    if (mainPopup) {
+      mainPopup.classList.add('hidden');
+      mainPopup.setAttribute('aria-hidden', 'true');
+    }
+    if (subPopup) {
+      subPopup.classList.remove('hidden');
+      subPopup.setAttribute('aria-hidden', 'false');
+    }
     var createRequest = {
       category: JSON.stringify({
         id: categoryId,
@@ -14269,8 +14276,6 @@ function initializeCategoryPopups() {
       return console.error('Error:', err);
     });
   };
-
-  // Subcategory click
   window.handleSubcategoryClick = function (parentId, categoryName) {
     var createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
     createRequest.sub_category = JSON.stringify({
@@ -14280,9 +14285,16 @@ function initializeCategoryPopups() {
     localStorage.setItem('create-request', JSON.stringify(createRequest));
     fetchWithCache(API_ENDPOINTS.CHILDREN(parentId)).then(function (data) {
       if (data.success && data.subcategories.length > 0) {
-        var _document$getElementB3, _document$getElementB4;
-        (_document$getElementB3 = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId)) === null || _document$getElementB3 === void 0 || _document$getElementB3.classList.add('hidden');
-        (_document$getElementB4 = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId)) === null || _document$getElementB4 === void 0 || _document$getElementB4.classList.remove('hidden');
+        var subPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId);
+        var childPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId);
+        if (subPopup) {
+          subPopup.classList.add('hidden');
+          subPopup.setAttribute('aria-hidden', 'true');
+        }
+        if (childPopup) {
+          childPopup.classList.remove('hidden');
+          childPopup.setAttribute('aria-hidden', 'false');
+        }
         renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass), 'child', window.requestForHelp);
       } else {
         window.requestForHelp(parentId, categoryName);
@@ -14291,8 +14303,6 @@ function initializeCategoryPopups() {
       return console.error('Error:', err);
     });
   };
-
-  // Final redirect
   window.requestForHelp = function (childId, childName) {
     var createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
     createRequest.child_category = JSON.stringify({
@@ -14302,8 +14312,6 @@ function initializeCategoryPopups() {
     localStorage.setItem('create-request', JSON.stringify(createRequest));
     window.location.href = '/create-request';
   };
-
-  // Debounced resize
   var debouncedResize = debounce(function () {
     Object.values(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels).forEach(function (level) {
       var container = document.querySelector("#".concat(level.popupId, " .").concat(level.containerClass));
@@ -14312,7 +14320,9 @@ function initializeCategoryPopups() {
       }
     });
   }, 250);
-  window.addEventListener('resize', debouncedResize);
+  window.addEventListener('resize', debouncedResize, {
+    passive: true
+  });
 }
 
 /***/ }),
@@ -14328,24 +14338,189 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   categoryColors: () => (/* binding */ categoryColors),
 /* harmony export */   categoryLevels: () => (/* binding */ categoryLevels),
-/* harmony export */   getCategoryColor: () => (/* binding */ getCategoryColor)
+/* harmony export */   getCategoryColor: () => (/* binding */ getCategoryColor),
+/* harmony export */   getCategoryColorByLevel: () => (/* binding */ getCategoryColorByLevel),
+/* harmony export */   testColorSystem: () => (/* binding */ testColorSystem)
 /* harmony export */ });
-// Color palette with 25 colors for different category levels
+// Palette étendue de 80 couleurs uniques et distinctes visuellement
 var categoryColors = {
-  // Level 1: Main categories (vibrant and saturated colors)
-  main: ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12', '#9B59B6', '#E67E22', '#1ABC9C', '#E91E63', '#2980B9', '#27AE60', '#F1C40F', '#8E44AD', '#D35400', '#16A085', '#C0392B', '#2C3E50', '#D63031', '#0984E3', '#00B894', '#FDCB6E', '#6C5CE7', '#FD79A8', '#00CEC9', '#FF7675', '#74B9FF'],
-  // Level 2: Subcategories (medium saturated colors)
-  sub: ['#FF7979', '#74B9FF', '#55EFC4', '#FFA502', '#A29BFE', '#FF6348', '#48DBFB', '#FF6B81', '#5F27CD', '#01A3A4', '#FECA57', '#EE5A6F', '#C44569', '#4834DF', '#26DE81', '#FDA7DF', '#F8B500', '#10AC84', '#EE5A24', '#576574', '#FA8231', '#20BF6B', '#778BEB', '#F8A5C2', '#EA8685'],
-  // Level 3: Sub-subcategories (darker colors)
-  child: ['#FF8A9A', '#8FC7FF', '#6FECCD', '#FFB65E', '#C4A5FF', '#FFB3C1', '#70D9F0', '#FF9AB0', '#B8A5E0', '#55D4E8', '#FFE185', '#FFA8A8', '#E2B3DC', '#88E5CD', '#FFCFB3', '#B5DBF5', '#FFDB70', '#BF9ADB', '#98D9E5', '#FFC1D9', '#B5E4FF', '#FFD685', '#A8E7E9', '#FFB8C8', '#CDB0FF']
+  // Palette principale : 80 couleurs variées et distinctes
+  palette: [
+  // Rouges (8)
+  '#E74C3C', '#C0392B', '#E63946', '#D62828', '#F77F00', '#DC2F02', '#D00000', '#9D0208',
+  // Oranges (8)
+  '#E67E22', '#D35400', '#F39C12', '#F4A261', '#E76F51', '#EE6C4D', '#F08080', '#FF6B6B',
+  // Jaunes (8)
+  '#F1C40F', '#F39C12', '#FFB703', '#FFBA08', '#FBBF24', '#FCD34D', '#FDE047', '#FACC15',
+  // Verts clairs (8)
+  '#2ECC71', '#27AE60', '#16A085', '#06D6A0', '#10B981', '#14B8A6', '#22D3EE', '#06B6D4',
+  // Verts foncés (8)
+  '#1ABC9C', '#00B894', '#00D9A5', '#26DE81', '#20BF6B', '#118AB2', '#0D9488', '#059669',
+  // Bleus clairs (8)
+  '#3498DB', '#2980B9', '#0984E3', '#74B9FF', '#60A5FA', '#3B82F6', '#2563EB', '#4F46E5',
+  // Bleus foncés (8)
+  '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB', '#0369A1', '#075985', '#0C4A6E', '#1F2937',
+  // Violets (8)
+  '#9B59B6', '#8E44AD', '#6C5CE7', '#A29BFE', '#7C3AED', '#6D28D9', '#5B21B6', '#4C1D95',
+  // Roses (8)
+  '#E91E63', '#D81B60', '#C2185B', '#FD79A8', '#F687B3', '#EC4899', '#DB2777', '#BE185D',
+  // Bruns/Neutres (8)
+  '#795548', '#6D4C41', '#5D4037', '#4E342E', '#78716C', '#57534E', '#44403C', '#292524']
 };
-function getCategoryColor(level, index) {
-  if (!categoryColors[level]) {
-    level = 'main';
+
+/**
+ * Génère un hash stable à partir d'un ID
+ * Garantit que le même ID produit toujours le même hash
+ */
+function generateStableHash(id) {
+  // Convertir l'ID en chaîne pour le traitement
+  var str = String(id);
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var _char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + _char;
+    hash = hash & hash; // Convertir en entier 32bit
   }
-  var colors = categoryColors[level];
-  return colors[index % colors.length];
+  return Math.abs(hash);
 }
+
+/**
+ * Convertit une couleur hex en RGB
+ */
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+/**
+ * Convertit RGB en hex
+ */
+function rgbToHex(r, g, b) {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+}
+
+/**
+ * Applique une variation à une couleur pour la rendre distincte
+ * @param {string} color - Couleur hex de base
+ * @param {number} variation - Niveau de variation (1-5)
+ */
+function applyColorVariation(color, variation) {
+  var rgb = hexToRgb(color);
+  if (!rgb) return color;
+
+  // Appliquer des variations subtiles mais visibles
+  var factor = variation * 15; // 15, 30, 45, 60, 75
+
+  // Alterner entre éclaircir et assombrir
+  var modifier = variation % 2 === 0 ? factor : -factor;
+  var r = Math.max(0, Math.min(255, rgb.r + modifier));
+  var g = Math.max(0, Math.min(255, rgb.g + modifier));
+  var b = Math.max(0, Math.min(255, rgb.b + modifier));
+  return rgbToHex(r, g, b);
+}
+
+/**
+ * Calcule la distance de couleur entre deux couleurs (simplicité)
+ */
+function colorDistance(color1, color2) {
+  var rgb1 = hexToRgb(color1);
+  var rgb2 = hexToRgb(color2);
+  if (!rgb1 || !rgb2) return 1000;
+  return Math.sqrt(Math.pow(rgb1.r - rgb2.r, 2) + Math.pow(rgb1.g - rgb2.g, 2) + Math.pow(rgb1.b - rgb2.b, 2));
+}
+
+/**
+ * Obtient la couleur d'une catégorie basée sur son ID
+ * @param {string} level - Le niveau de catégorie ('main', 'sub', 'child')
+ * @param {number|string} id - L'ID unique de la catégorie
+ * @param {Array} allIds - Tous les IDs à afficher sur la page actuelle
+ * @returns {string} Code couleur hexadécimal
+ */
+function getCategoryColor(level, id) {
+  var allIds = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  var colors = categoryColors.palette;
+
+  // Générer un hash stable pour cet ID
+  var hash = generateStableHash(id);
+  var baseColorIndex = hash % colors.length;
+  var baseColor = colors[baseColorIndex];
+
+  // Si on n'a pas la liste complète, retourner la couleur de base
+  if (allIds.length === 0) {
+    return baseColor;
+  }
+
+  // Créer un mapping de tous les IDs vers leurs couleurs de base
+  var colorMapping = new Map();
+  var colorUsageCount = new Map();
+  allIds.forEach(function (itemId) {
+    var itemHash = generateStableHash(itemId);
+    var itemColorIndex = itemHash % colors.length;
+    var itemBaseColor = colors[itemColorIndex];
+    colorMapping.set(itemId, itemBaseColor);
+
+    // Compter combien de fois chaque couleur est utilisée
+    var count = colorUsageCount.get(itemBaseColor) || 0;
+    colorUsageCount.set(itemBaseColor, count + 1);
+  });
+
+  // Si la couleur de base n'est utilisée qu'une fois, la retourner telle quelle
+  if (colorUsageCount.get(baseColor) === 1) {
+    return baseColor;
+  }
+
+  // Si plusieurs catégories ont la même couleur de base, appliquer des variations
+  var idsWithSameColor = allIds.filter(function (itemId) {
+    return colorMapping.get(itemId) === baseColor;
+  });
+  var indexInGroup = idsWithSameColor.indexOf(id);
+
+  // Appliquer une variation si ce n'est pas le premier de la couleur
+  if (indexInGroup > 0) {
+    return applyColorVariation(baseColor, indexInGroup);
+  }
+  return baseColor;
+}
+
+/**
+ * Obtient une couleur pour un niveau spécifique (pour compatibilité)
+ * Applique une légère teinte selon le niveau pour différencier visuellement
+ */
+function getCategoryColorByLevel(level, id) {
+  var allIds = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  var baseColor = getCategoryColor(level, id, allIds);
+  var rgb = hexToRgb(baseColor);
+  if (!rgb) return baseColor;
+
+  // Appliquer une légère modification selon le niveau
+  var r = rgb.r,
+    g = rgb.g,
+    b = rgb.b;
+  switch (level) {
+    case 'main':
+      // Catégories principales : couleurs plus saturées
+      r = Math.min(255, r + 10);
+      g = Math.min(255, g + 10);
+      b = Math.min(255, b + 10);
+      break;
+    case 'sub':
+      // Sous-catégories : couleurs moyennes (pas de modification)
+      break;
+    case 'child':
+      // Sous-sous-catégories : couleurs légèrement plus sombres
+      r = Math.max(0, r - 15);
+      g = Math.max(0, g - 15);
+      b = Math.max(0, b - 15);
+      break;
+  }
+  return rgbToHex(r, g, b);
+}
+
+// Configuration des niveaux de catégories
 var categoryLevels = {
   main: {
     name: 'Main Categories',
@@ -14366,6 +14541,37 @@ var categoryLevels = {
     popupId: 'vacanciersAutresBesoinsPopup'
   }
 };
+
+/**
+ * Fonction de test pour vérifier le système de couleurs
+ */
+function testColorSystem() {
+  console.log('=== TEST DU SYSTÈME DE COULEURS ===');
+  console.log("Nombre de couleurs disponibles: ".concat(categoryColors.palette.length));
+
+  // Tester avec des IDs typiques
+  var testIds = [1, 2, 3, 50, 100, 150, 200, 250, 300, 350, 400];
+  console.log('\n--- Couleurs de base (sans doublons) ---');
+  testIds.forEach(function (id) {
+    var color = getCategoryColor('main', id, []);
+    console.log("ID ".concat(id, " \u2192 ").concat(color));
+  });
+
+  // Tester avec des IDs qui pourraient avoir la même couleur
+  var conflictIds = [1, 81, 161, 241]; // Ces IDs auront la même couleur de base
+
+  console.log('\n--- Gestion des doublons ---');
+  conflictIds.forEach(function (id) {
+    var color = getCategoryColor('main', id, conflictIds);
+    console.log("ID ".concat(id, " \u2192 ").concat(color, " (avec variations)"));
+  });
+  console.log('\n--- Stabilité (même ID = même couleur) ---');
+  var stableId = 42;
+  for (var i = 0; i < 5; i++) {
+    var color = getCategoryColor('main', stableId, []);
+    console.log("Appel ".concat(i + 1, ": ID ").concat(stableId, " \u2192 ").concat(color));
+  }
+}
 
 /***/ })
 

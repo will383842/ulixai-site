@@ -1434,3 +1434,205 @@
         });
     });
 </script>
+
+
+
+<!-- === PROVIDER SIGNUP POPUP (Appended by fix) === -->
+<div id="signupPopup" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/50" aria-hidden="true" onclick="closeSignupPopup()"></div>
+  <div class="relative mx-auto w-full max-w-3xl bg-white rounded-2xl shadow-xl h-[90vh] overflow-hidden">
+    <div class="flex items-center justify-between p-4 border-b">
+      <div class="text-sm text-gray-700">
+        Step <span id="currentStepNum">1</span>/15 — <span id="progressPercentage">0</span>%
+      </div>
+      <button id="closePopup" type="button" class="p-2 rounded hover:bg-gray-100" aria-label="Close" onclick="closeSignupPopup()">✕</button>
+    </div>
+
+    <div id="wizardStepsContainer" class="p-4 h-[calc(90vh-120px)] overflow-y-auto space-y-6">
+      <section class="wizard-step" data-step="1">
+        @include('includes.provider.choose_step')
+      </section>
+      <section class="wizard-step" data-step="2">
+        @include('includes.provider.native_language')
+      </section>
+      <section class="wizard-step" data-step="3">
+        @include('includes.provider.spoken_language')
+      </section>
+      <section class="wizard-step" data-step="4">
+        @include('includes.provider.first_last_name')
+      </section>
+      <section class="wizard-step" data-step="5">
+        @include('includes.provider.phone_number')
+      </section>
+      <section class="wizard-step" data-step="6">
+        @include('includes.provider.email')
+      </section>
+      <section class="wizard-step" data-step="7">
+        @include('includes.provider.profile_picture')
+      </section>
+      <section class="wizard-step" data-step="8">
+        @include('includes.provider.profile_description')
+      </section>
+      <section class="wizard-step" data-step="9">
+        @include('includes.provider.provider_services')
+      </section>
+      <section class="wizard-step" data-step="10">
+        @include('includes.provider.operational_countries')
+      </section>
+      <section class="wizard-step" data-step="11">
+        @include('includes.provider.special_status')
+      </section>
+      <section class="wizard-step" data-step="12">
+        @include('includes.provider.identity_documents')
+      </section>
+      <section class="wizard-step" data-step="13">
+        @include('includes.provider.communication_preference')
+      </section>
+      <section class="wizard-step" data-step="14">
+        <div class="text-gray-700">Please review your details and proceed.</div>
+      </section>
+      <section class="wizard-step" data-step="15">
+        @include('includes.provider.verify_email')
+      </section>
+    </div>
+
+    <div id="desktopNavWrapper" class="hidden md:flex items-center justify-between p-4 border-t">
+      <button id="desktopBackBtn" type="button" class="px-4 py-2 rounded-lg border">Back</button>
+      <button id="desktopNextBtn" type="button" class="px-4 py-2 rounded-lg bg-blue-600 text-white" disabled aria-disabled="true">Next</button>
+    </div>
+
+    <div id="mobileNavWrapper" class="md:hidden p-3 border-t">
+      <div class="h-1 w-full bg-gray-200 rounded">
+        <div id="mobileProgressBar" class="h-1 w-0 bg-blue-600 rounded"></div>
+      </div>
+      <div class="mt-3 flex justify-between">
+        <button id="mobileBackBtn" type="button" class="px-4 py-2 rounded-lg border">Back</button>
+        <button id="mobileNextBtn" type="button" class="px-4 py-2 rounded-lg bg-blue-600 text-white" disabled aria-disabled="true">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openSignupPopup(){ document.getElementById('signupPopup').classList.remove('hidden'); }
+  function closeSignupPopup(){ document.getElementById('signupPopup').classList.add('hidden'); }
+</script>
+
+<script>
+// Minimal inline wizard (fallback if modules not bundled)
+(function () {
+  if (window.UlixaiWizard) return; // use existing one if present
+
+  function qs(sel) { return document.querySelector(sel); }
+  function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
+
+  const state = {
+    current: 1, total: 1, steps: [],
+    els: {
+      mobileNext: null, desktopNext: null,
+      mobileBack: null, desktopBack: null,
+      mobileProgress: null, currentNum: null, percentTxt: null
+    }
+  };
+
+  function setNextEnabled(enabled) {
+    ['#mobileNextBtn', '#desktopNextBtn'].forEach(sel => {
+      const btn = qs(sel);
+      if (!btn) return;
+      if (enabled) { btn.removeAttribute('disabled'); btn.setAttribute('aria-disabled','false'); }
+      else { btn.setAttribute('disabled','true'); btn.setAttribute('aria-disabled','true'); }
+    });
+  }
+
+  function updateProgressUI() {
+    const percent = Math.round((state.current - 1) * 100 / (state.total - 1 || 1));
+    if (state.els.currentNum) state.els.currentNum.textContent = String(state.current);
+    if (state.els.percentTxt) state.els.percentTxt.textContent = String(percent);
+    if (state.els.mobileProgress) state.els.mobileProgress.style.width = percent + '%';
+  }
+
+  function showStep(n) {
+    state.current = Math.max(1, Math.min(n, state.total));
+    state.steps.forEach((el, i) => el.style.display = (i+1) === state.current ? '' : 'none');
+    updateProgressUI();
+    document.dispatchEvent(new CustomEvent('wizard:stepenter', { detail: { index: state.current } }));
+  }
+
+  function validateCurrentStep() {
+    const current = state.steps[state.current - 1];
+    if (!current) { setNextEnabled(true); return; }
+    const inputs = Array.from(current.querySelectorAll('input, select, textarea'));
+    if (inputs.length === 0) { setNextEnabled(true); return; }
+
+    const byName = {};
+    inputs.forEach(el => {
+      if (el.type === 'radio' || el.type === 'checkbox') {
+        const key = (el.name || el.id || 'anon') + '::' + el.type;
+        (byName[key] = byName[key] || []).push(el);
+      }
+    });
+
+    function filled(el) {
+      if (el.disabled) return true;
+      if ((el.offsetParent === null)) return true;
+      if (el.type === 'radio' || el.type === 'checkbox') {
+        const key = (el.name || el.id || 'anon') + '::' + el.type;
+        const group = byName[key] || [el];
+        const required = group.some(g => g.required || g.hasAttribute('data-required'));
+        if (!required) return true;
+        return group.some(g => g.checked && g.offsetParent !== null);
+      }
+      if (el.required || el.hasAttribute('data-required')) {
+        if (el.type === 'file') return el.files && el.files.length > 0;
+        if (el.type === 'email') return el.value && el.validity && el.validity.valid;
+        return (el.value || '').trim().length > 0;
+      }
+      return true;
+    }
+
+    // OTP special case 6 digits
+    const otp = current.querySelector('#otp_input, input[name="otp"]');
+    if (otp) {
+      const ok = /^\d{6}$/.test((otp.value || '').trim());
+      setNextEnabled(ok);
+      return;
+    }
+
+    setNextEnabled(inputs.every(filled));
+  }
+
+  function bind() {
+    state.els.mobileNext = qs('#mobileNextBtn');
+    state.els.desktopNext = qs('#desktopNextBtn');
+    state.els.mobileBack = qs('#mobileBackBtn');
+    state.els.desktopBack = qs('#desktopBackBtn');
+    state.els.mobileProgress = qs('#mobileProgressBar');
+    state.els.currentNum = qs('#currentStepNum');
+    state.els.percentTxt = qs('#progressPercentage');
+
+    if (state.els.mobileNext) state.els.mobileNext.addEventListener('click', () => showStep(state.current + 1));
+    if (state.els.desktopNext) state.els.desktopNext.addEventListener('click', () => showStep(state.current + 1));
+    if (state.els.mobileBack) state.els.mobileBack.addEventListener('click', () => showStep(state.current - 1));
+    if (state.els.desktopBack) state.els.desktopBack.addEventListener('click', () => showStep(state.current - 1));
+
+    document.addEventListener('input', e => {
+      if (e.target && (e.target.matches('input, select, textarea'))) validateCurrentStep();
+    }, true);
+    document.addEventListener('change', e => {
+      if (e.target && (e.target.matches('input, select, textarea'))) validateCurrentStep();
+    }, true);
+    document.addEventListener('wizard:stepenter', validateCurrentStep, true);
+  }
+
+  function init() {
+    state.steps = qsa('.wizard-step');
+    state.total = state.steps.length || 1;
+    bind();
+    setNextEnabled(false);
+    showStep(1);
+  }
+
+  window.UlixaiWizard = { initialize: init, setNextEnabled: setNextEnabled, goToStep: showStep };
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>

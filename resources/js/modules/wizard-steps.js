@@ -9,7 +9,7 @@
 export class WizardSteps {
   constructor() {
     this.currentStep = 0;
-    this.totalSteps = 16;
+    this.totalSteps = 15;
     this.formData = this.loadFormData();
   }
 

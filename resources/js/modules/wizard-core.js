@@ -37,7 +37,7 @@ export class WizardCore {
   updateUI() {
     this.detectSteps();
     const ok = this.validate(this.current);
-    this.setBtnEnabled('#mobileNextBtn, #nextBtn, .btn-next, [data-action="next"]', ok);
+    this.setBtnEnabled('#mobileNextBtn, #desktopNextBtn', ok);
   }
 
   setBtnEnabled(selector, enabled) {

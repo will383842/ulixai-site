@@ -929,12 +929,6 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
   }
-  .line-clamp-6 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
-  }
   .\!hidden {
     display: none !important;
   }
@@ -1073,11 +1067,17 @@
   .h-\[72px\] {
     height: 72px;
   }
+  .h-\[90vh\] {
+    height: 90vh;
+  }
   .h-\[100dvh\] {
     height: 100dvh;
   }
   .h-\[600px\] {
     height: 600px;
+  }
+  .h-\[calc\(90vh-120px\)\] {
+    height: calc(90vh - 120px);
   }
   .h-\[calc\(100vh-200px\)\] {
     height: calc(100vh - 200px);
