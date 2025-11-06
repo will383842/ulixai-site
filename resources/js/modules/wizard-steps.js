@@ -1,15 +1,11 @@
 /**
- * Wizard Steps – version anti-conflit
- * - Step 1 : nav masquée
- * - Click [data-go-step] : navigation fiable (ex: bloc bleu → data-go-step="2")
- * - Auto-sync : si un step est montré par le DOM, on met à jour currentStep
- * - Déverrouillage centralisé
+ * Wizard Steps – CORRIGÉ
  */
 
 export class WizardSteps {
   constructor() {
     this.currentStep = 0;
-    this.totalSteps = 15;
+    this.totalSteps = 16; // ✅ CORRIGÉ : 16 steps au lieu de 15
     this.formData = this.loadFormData();
   }
 
@@ -23,14 +19,13 @@ export class WizardSteps {
 
   init() {
     this.initNavigationButtons();
-    this.initDelegatedGoTo();        // <— NEW
+    this.initDelegatedGoTo();
     this.initStepValidation();
     this.initProgressBar();
     this.showStep(0);
     window.wizardSteps = this;
   }
 
-  // Délégation globale : tout élément avec data-go-step="N" provoque showStep(N)
   initDelegatedGoTo() {
     document.addEventListener('click', (e) => {
       const go = e.target && e.target.closest && e.target.closest('[data-go-step]');
@@ -39,10 +34,9 @@ export class WizardSteps {
       if (!Number.isFinite(to) || to < 1 || to > this.totalSteps) return;
       e.preventDefault();
       this.showStep(to - 1);
-    }, true); // capture pour passer avant d’éventuels stopPropagation
+    }, true);
   }
 
-  // Mets à jour currentStep à partir du DOM (si quelqu’un a affiché un step sans passer par showStep)
   syncCurrentFromDOM() {
     for (let i = 1; i <= this.totalSteps; i++) {
       const s = document.getElementById(`step${i}`);
@@ -55,9 +49,15 @@ export class WizardSteps {
 
   initNavigationButtons() {
     document.querySelectorAll('#mobileNextBtn, #desktopNextBtn')
-      .forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); if (this.validateCurrentStep()) this.nextStep(); }));
+      .forEach(btn => btn.addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        if (this.validateCurrentStep()) this.nextStep(); 
+      }));
     document.querySelectorAll('#mobileBackBtn, #desktopBackBtn')
-      .forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); this.previousStep(); }));
+      .forEach(btn => btn.addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        this.previousStep(); 
+      }));
   }
 
   initStepValidation() {
@@ -69,10 +69,9 @@ export class WizardSteps {
         n.addEventListener('change', h);
       });
     }
-    // sécurise Step 2 : recalcule après n’importe quel clic dans #step2
     document.addEventListener('click', (e) => {
-      if (e.target && e.target.closest && e.target.closest('#step2')) {
-        setTimeout(() => this.updateNavigationButtons(), 0);
+      if (e.target && e.target.closest && e.target.closest('[id^="step"]')) {
+        setTimeout(() => this.updateNavigationButtons(), 50);
       }
     }, true);
   }
@@ -108,41 +107,41 @@ export class WizardSteps {
   previousStep() { if (this.currentStep > 0) this.showStep(this.currentStep - 1); }
 
   validateCurrentStep() {
-    // TRES IMPORTANT : si quelqu’un a montré un autre step sans passer par showStep, on se resynchronise
     this.syncCurrentFromDOM();
-
     const stepNum = this.currentStep + 1;
-    const el = document.getElementById(`step${stepNum}`); if (!el) return true;
+    const el = document.getElementById(`step${stepNum}`); 
+    if (!el) return true;
 
-    const custom = window[`validateStep${stepNum}`];
-    if (typeof custom === 'function') { try { return !!custom(); } catch { return false; } }
-
-    if (stepNum === 2) {
-      const hidden = el.querySelector('input[name="native_language"], #nativeLanguage, #native_language');
-      const hasHidden = !!(hidden && String(hidden.value || '').trim());
-      const hasCard = !!el.querySelector(
-        '.language-card.selected, .language-card[aria-checked="true"], [data-selected="true"], .active, [aria-selected="true"]'
-      );
-      const countEl = el.querySelector('#selectedCount, .selected-count, [data-selected-count], #step2SelectedCount');
-      let hasCount = false;
-      if (countEl) {
-        const n = parseInt((countEl.textContent || '').replace(/[^\d]/g, ''), 10);
-        hasCount = Number.isFinite(n) && n > 0;
-      }
-      return hasHidden || hasCard || hasCount;
+    // ✅ VALIDATION STEP 1 : toujours valide (choix de profil)
+    if (stepNum === 1) {
+      return true;
     }
 
+    // ✅ APPELER LA VALIDATION CUSTOM EN PREMIER
+    const custom = window[`validateStep${stepNum}`];
+    if (typeof custom === 'function') { 
+      try { 
+        return !!custom(); 
+      } catch (e) { 
+        console.error(`validateStep${stepNum} error:`, e);
+        return false; 
+      } 
+    }
+
+    // Validation générique
     const req = el.querySelectorAll('[data-required]');
     if (!req.length) return true;
     for (const input of req) {
-      if (['checkbox','radio'].includes(input.type)) { if (!input.checked) return false; }
-      else { if (String(input.value || '').trim() === '') return false; }
+      if (['checkbox','radio'].includes(input.type)) { 
+        if (!input.checked) return false; 
+      } else { 
+        if (String(input.value || '').trim() === '') return false; 
+      }
     }
     return true;
   }
 
   updateNavigationButtons() {
-    // resync au cas où le DOM montre un autre step
     this.syncCurrentFromDOM();
 
     const mobileWrap  = document.getElementById('mobileNavButtons');
@@ -150,35 +149,36 @@ export class WizardSteps {
     const backButtons = document.querySelectorAll('#mobileBackBtn, #desktopBackBtn');
     const nextButtons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
 
-    if (this.currentStep === 0) {
-      if (mobileWrap)  mobileWrap.style.display  = 'none';
-      if (desktopWrap) desktopWrap.style.display = 'none';
-    } else {
-      if (mobileWrap)  mobileWrap.style.display  = '';
-      if (desktopWrap) desktopWrap.style.display = '';
-    }
+    // ✅ CORRIGÉ : Afficher les boutons dès le Step 1
+    if (mobileWrap)  mobileWrap.style.display  = '';
+    if (desktopWrap) desktopWrap.style.display = '';
 
+    // Back masqué uniquement au Step 1
     backButtons.forEach(b => b.style.display = (this.currentStep === 0 ? 'none' : 'flex'));
+    
     nextButtons.forEach(btn => {
       const span = btn.querySelector('span');
       if (span) span.textContent = (this.currentStep === this.totalSteps - 1) ? 'Submit' : 'Continue';
     });
 
-    const isValid = (this.currentStep === 0) ? false : this.validateCurrentStep();
+    // ✅ CORRIGÉ : Validation normale sans blocage du Step 1
+    const isValid = this.validateCurrentStep();
 
     nextButtons.forEach(btn => {
-      try { btn.disabled = !isValid; } catch {}
+      btn.disabled = !isValid;
       btn.setAttribute('aria-disabled', String(!isValid));
       btn.classList.toggle('opacity-50', !isValid);
       btn.classList.toggle('cursor-not-allowed', !isValid);
       btn.classList.toggle('pointer-events-none', !isValid);
       btn.style.pointerEvents = isValid ? 'auto' : 'none';
+      btn.style.opacity = isValid ? '1' : '0.5';
     });
+
     [mobileWrap, desktopWrap].forEach(w => {
       if (!w) return;
-      w.classList.toggle('opacity-50', !isValid && this.currentStep !== 0);
-      w.classList.toggle('pointer-events-none', !isValid && this.currentStep !== 0);
-      w.style.pointerEvents = (!isValid && this.currentStep !== 0) ? 'none' : 'auto';
+      w.classList.toggle('opacity-50', !isValid);
+      w.classList.toggle('pointer-events-none', !isValid);
+      w.style.pointerEvents = isValid ? 'auto' : 'none';
     });
   }
 

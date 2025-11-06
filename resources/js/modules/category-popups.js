@@ -74,19 +74,19 @@ function createShineEffect() {
   return '<div class="shine-effect" aria-hidden="true"></div>';
 }
 
-function createIconHtml(item, iconColor) {
+function createIconHtml(item, iconColor, parentId = 'root') {
   const iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
   const escapedName = item.name.replace(/"/g, '&quot;');
   
-  // ✅ TOUJOURS utiliser l'icône SVG automatique (ignorer item.icon_image)
-  const iconSVG = getCategoryIcon(item.name, item.id);
+  // ✅ Utiliser l'icône SVG automatique avec parentId pour éviter les doublons
+  const iconSVG = getCategoryIcon(item.name, item.id, parentId);
   
   return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; display: flex; align-items: center; justify-content: center;" role="img" aria-label="${escapedName}">` +
          `<div class="w-8 h-8 text-white" style="width: 2rem; height: 2rem;">${iconSVG}</div>` +
          '</div>';
 }
 
-function createCategoryCard(item, level, allIds, onClickHandler) {
+function createCategoryCard(item, level, allIds, onClickHandler, parentId = 'root') {
   const div = document.createElement('button');
   div.type = 'button';
   div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
@@ -133,7 +133,7 @@ function createCategoryCard(item, level, allIds, onClickHandler) {
   div.addEventListener('mouseleave', onMouseLeave, { passive: true });
   
   const shineEffect = createShineEffect();
-  const iconHtml = createIconHtml(item, iconColor);
+  const iconHtml = createIconHtml(item, iconColor, parentId);
   const textSize = getResponsiveSize(CONFIG.TEXT.MOBILE_SIZE, CONFIG.TEXT.DESKTOP_SIZE);
   const textHtml = `<div class="${textSize} font-semibold text-gray-800 category-text">${item.name}</div>`;
   
@@ -143,7 +143,7 @@ function createCategoryCard(item, level, allIds, onClickHandler) {
   return div;
 }
 
-function renderCategories(items, containerSelector, level, clickHandler) {
+function renderCategories(items, containerSelector, level, clickHandler, parentId = 'root') {
   const container = document.querySelector(containerSelector);
   if (!container) return;
   
@@ -156,7 +156,7 @@ function renderCategories(items, containerSelector, level, clickHandler) {
   requestAnimationFrame(() => {
     const len = items.length;
     for (let i = 0; i < len; i++) {
-      const card = createCategoryCard(items[i], level, allIds, clickHandler);
+      const card = createCategoryCard(items[i], level, allIds, clickHandler, parentId);
       fragment.appendChild(card);
     }
     container.appendChild(fragment);
@@ -189,7 +189,8 @@ export function initializeCategoryPopups() {
             data.categories,
             `#${categoryLevels.main.popupId} .${categoryLevels.main.containerClass}`,
             'main',
-            window.handleCategoryClick
+            window.handleCategoryClick,
+            'root'
           );
         }
       })
@@ -219,7 +220,8 @@ export function initializeCategoryPopups() {
             data.subcategories,
             `#${categoryLevels.sub.popupId} .${categoryLevels.sub.containerClass}`,
             'sub',
-            window.handleSubcategoryClick
+            window.handleSubcategoryClick,
+            categoryId
           );
         }
       })
@@ -250,7 +252,8 @@ export function initializeCategoryPopups() {
             data.subcategories,
             `#${categoryLevels.child.popupId} .${categoryLevels.child.containerClass}`,
             'child',
-            window.requestForHelp
+            window.requestForHelp,
+            parentId
           );
         } else {
           window.requestForHelp(parentId, categoryName);

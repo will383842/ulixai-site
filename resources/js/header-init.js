@@ -10,6 +10,7 @@ import { initializeLanguageManager } from './modules/language-manager.js';
 import { initializeCategoryPopups } from './modules/category-popups.js';
 import { initializeScrollUtils } from './modules/scroll-utils.js';
 
+
 /** Exécute une init en isolant les erreurs pour ne pas bloquer les autres modules */
 function safeInit(name, fn) {
   try {
@@ -96,20 +97,20 @@ function initializeAll() {
     }
   })();
 
-  // 6) Synchroniser l'état des boutons (phase BUBBLE, sans double logique)
-  ['input','change','click'].forEach((evt) => {
-    document.addEventListener(evt, () => {
-      try {
-        if (typeof window.updateNavigationButtons === 'function') {
-          window.updateNavigationButtons();
-        }
-      } catch(e) {}
-    }, false);
-  });
+  // 6) ✅ LISTENER OPTIMISÉ - Un seul event suffisant
+  document.addEventListener('change', () => {
+    if (typeof window.updateNavigationButtons === 'function') {
+      requestAnimationFrame(() => window.updateNavigationButtons());
+    }
+  }, { passive: true });
 
   // Signal spécifique Step 2 (si émis)
   document.addEventListener('pw:step2:changed', () => {
-    try { if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons(); } catch(e) {}
+    try { 
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons(); 
+      }
+    } catch(e) {}
   });
 
   console.log('✅ All header modules initialized');

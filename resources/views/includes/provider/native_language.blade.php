@@ -661,11 +661,16 @@
     window.selectedLanguage = lang;
     setState(lang);
     setCount(1);
-    // notifier + recalcul nav (post-microtask)
-    try { document.dispatchEvent(new CustomEvent('pw:step2:changed')); } catch(_) {}
-    setTimeout(function(){
-      if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
-    }, 0);
+    
+    // ✅ NOTIFICATION + RECALCUL NAV (correction appliquée)
+    try { 
+      document.dispatchEvent(new CustomEvent('pw:step2:changed')); 
+    } catch(_) {}
+    
+    // ✅ Mise à jour des boutons de navigation
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
   }
 
   // Validator consulté par wizard-steps.js

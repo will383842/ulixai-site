@@ -1,12 +1,12 @@
 <!-- 
 ============================================
-🚀 STEP 6 - WHERE DO YOU OPERATE (OPTIMIZED)
+🚀 STEP 6 - WHERE DO YOU OPERATE (CORRECTED)
 ============================================
 ✨ Design System Blue/Cyan/Teal STRICT
 🎨 Multi-sélection avec drapeaux de pays
 💎 Validation et états interactifs
 ⚡ Responsive 2 cols mobile / 3 cols / 4 cols desktop
-🔧 Gestion correcte des boutons (activation/désactivation)
+🔧 Intégré avec wizard-steps.js
 ✅ Persistance des sélections au retour en arrière
 🚀 OPTIMISATIONS MAXIMALES (CPU, GPU, Police, Taille, Rapidité)
 ============================================
@@ -929,11 +929,10 @@
 
 <script>
 /* ============================================
-   🎯 STEP 6 - OPTIMIZED VERSION
-   ✅ Gestion correcte des boutons (activation/désactivation)
-   ✅ Persistance des sélections au retour en arrière
-   ⚡ Optimisations maximales: Event delegation, debouncing, RAF, passive listeners
-   🚀 Performance: Cache DOM, containment CSS, GPU acceleration
+   🎯 STEP 6 - CORRECTED VERSION
+   ✅ Intégré avec wizard-steps.js
+   ✅ Persistance des sélections
+   ⚡ Optimisations maximales
    ============================================ */
 
 // État global
@@ -956,25 +955,6 @@ function getCachedElementsStep6() {
     };
   }
   return cachedElementsStep6;
-}
-
-/**
- * Mise à jour de l'état des boutons Next
- * Active/désactive selon la sélection
- */
-function updateStep6Buttons() {
-  const mobileNextBtn = document.getElementById('mobileNextBtn');
-  const desktopNextBtn = document.getElementById('desktopNextBtn');
-  
-  if (window.selectedCountries && window.selectedCountries.length > 0) {
-    // Au moins un pays sélectionné → activer
-    if (mobileNextBtn) mobileNextBtn.disabled = false;
-    if (desktopNextBtn) desktopNextBtn.disabled = false;
-  } else {
-    // Aucune sélection → désactiver
-    if (mobileNextBtn) mobileNextBtn.disabled = true;
-    if (desktopNextBtn) desktopNextBtn.disabled = true;
-  }
 }
 
 /**
@@ -1012,17 +992,19 @@ window.toggleCountrySelection = function(country) {
     elements.errorAlert.classList.add('hidden');
   }
   
-  // Sauvegarde localStorage avec try-catch (navigation privée)
+  // Sauvegarde localStorage
   try {
-    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-    expats.operational_countries = window.selectedCountries;
-    localStorage.setItem('expats', JSON.stringify(expats));
+    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    data.operational_countries = window.selectedCountries;
+    localStorage.setItem('provider-signup-data', JSON.stringify(data));
   } catch (e) {
     console.warn('localStorage not available:', e.message);
   }
   
-  // Mise à jour boutons
-  updateStep6Buttons();
+  // ✅ Notifier wizard-steps.js
+  if (typeof window.updateNavigationButtons === 'function') {
+    window.updateNavigationButtons();
+  }
 };
 
 /**
@@ -1129,8 +1111,10 @@ document.addEventListener('DOMContentLoaded', function() {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
         if (!container.classList.contains('hidden')) {
-          // Step visible → mettre à jour les boutons
-          updateStep6Buttons();
+          // ✅ Notifier wizard-steps.js
+          if (typeof window.updateNavigationButtons === 'function') {
+            window.updateNavigationButtons();
+          }
         }
       }
     });
@@ -1146,10 +1130,10 @@ document.addEventListener('DOMContentLoaded', function() {
      Avec requestAnimationFrame pour éviter blocking
      ========================================== */
   try {
-    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
+    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
     
-    if (expats.operational_countries && Array.isArray(expats.operational_countries)) {
-      window.selectedCountries = expats.operational_countries;
+    if (data.operational_countries && Array.isArray(data.operational_countries)) {
+      window.selectedCountries = data.operational_countries;
       
       // Utiliser RAF pour éviter layout thrashing
       requestAnimationFrame(() => {
@@ -1168,17 +1152,14 @@ document.addEventListener('DOMContentLoaded', function() {
           elements.selectedCount.textContent = window.selectedCountries.length;
         }
         
-        // Mise à jour boutons
-        updateStep6Buttons();
+        // ✅ Notifier wizard-steps.js
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
+        }
       });
-    } else {
-      // Aucune sélection sauvegardée → désactiver les boutons
-      updateStep6Buttons();
     }
   } catch (e) {
     console.warn('Could not restore selection:', e.message);
-    // En cas d'erreur → désactiver les boutons par sécurité
-    updateStep6Buttons();
   }
 });
 
@@ -1190,15 +1171,10 @@ document.addEventListener('DOMContentLoaded', function() {
    3. RAF (requestAnimationFrame): Évite layout thrashing
    4. Debouncing: Optimise la recherche (150ms)
    5. Cache DOM: Évite querySelectorAll répétés
-   6. DocumentFragment: Minimise les reflows
-   7. CSS Containment: Isole les calculs de layout
-   8. GPU Acceleration: translateZ(0) + backface-visibility
-   9. Will-change: Optimise les propriétés animées
-   10. MutationObserver: Détection efficace de visibilité
+   6. CSS Containment: Isole les calculs de layout
+   7. GPU Acceleration: translateZ(0) + backface-visibility
+   8. Will-change: Optimise les propriétés animées
+   9. MutationObserver: Détection efficace de visibilité
+   10. Intégration wizard-steps.js: Coordination parfaite
    ========================================== */
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>

@@ -1,11 +1,11 @@
 <!-- 
 ============================================
-🚀 STEP 7 - SPECIAL STATUS (OPTIMIZED)
+🚀 STEP 7 - SPECIAL STATUS (CORRECTED)
 ============================================
 ✨ Design System Blue/Cyan/Teal STRICT
 🎨 Multi-sélection de statuses spéciaux
 ⚡ Structure header fixe + contenu scrollable
-🔧 Optimisations CPU, RAM, GPU
+🔧 Intégré avec wizard-steps.js
 ✅ Persistance localStorage
 ⚡ Performance maximale
 ============================================
@@ -285,7 +285,7 @@
 </style>
 
 <!-- ============================================
-     JAVASCRIPT OPTIMISÉ
+     JAVASCRIPT OPTIMISÉ ET CORRIGÉ
      ============================================ -->
 <script>
 (function() {
@@ -322,7 +322,7 @@
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('expats') || '{}');
+      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
     } catch (e) {
       console.warn('localStorage read error:', e.message);
       return {};
@@ -331,25 +331,12 @@
 
   function saveToLocalStorage() {
     try {
-      const expats = getLocalStorage();
-      expats.special_statuses = state.selectedStatuses;
-      localStorage.setItem('expats', JSON.stringify(expats));
+      const data = getLocalStorage();
+      data.special_statuses = state.selectedStatuses;
+      localStorage.setItem('provider-signup-data', JSON.stringify(data));
     } catch (e) {
       console.warn('localStorage write error:', e.message);
     }
-  }
-
-  // ============================================
-  // 🔘 UPDATE BUTTONS
-  // ============================================
-  
-  function updateStep7Buttons() {
-    // Step 7 est optionnel, donc les boutons sont toujours activés
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
-    
-    if (mobileNextBtn) mobileNextBtn.disabled = false;
-    if (desktopNextBtn) desktopNextBtn.disabled = false;
   }
 
   // ============================================
@@ -387,8 +374,10 @@
     // Sauvegarder
     saveToLocalStorage();
     
-    // Mettre à jour les boutons
-    updateStep7Buttons();
+    // ✅ Notifier wizard-steps.js (au lieu de updateStep7Buttons)
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
   }
 
   // ============================================
@@ -434,11 +423,11 @@
   
   function restoreState() {
     const elements = getCachedElements();
-    const expats = getLocalStorage();
+    const data = getLocalStorage();
     
     // Restaurer les statuses depuis localStorage
-    if (expats.special_statuses && Array.isArray(expats.special_statuses)) {
-      state.selectedStatuses = expats.special_statuses;
+    if (data.special_statuses && Array.isArray(data.special_statuses)) {
+      state.selectedStatuses = data.special_statuses;
       
       requestAnimationFrame(() => {
         // Restaurer les états des cartes
@@ -455,28 +444,31 @@
           elements.selectedCount.textContent = state.selectedStatuses.length;
         }
         
-        // Mettre à jour les boutons
-        updateStep7Buttons();
+        // ✅ Notifier wizard-steps.js
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
+        }
       });
-    } else {
-      // Aucune sélection sauvegardée → activer les boutons quand même (step optionnel)
-      updateStep7Buttons();
     }
   }
+
+  // ============================================
+  // 🎬 VALIDATION (STEP OPTIONNEL)
+  // ============================================
+  
+  // ✅ Step 7 est optionnel → toujours valide
+  window.validateStep7 = function() {
+    return true;
+  };
+
+  // Exposer les fonctions globalement pour compatibilité
+  window.toggleStatusSelection = toggleStatusSelection;
+  window.selectedStatuses = state.selectedStatuses;
 
   // ============================================
   // 🎬 INITIALIZATION
   // ============================================
   
-  // Fonction publique pour validation externe (optionnel, toujours valide)
-  window.validateStep7 = function() {
-    return true;
-  };
-
-  // Exposer la fonction globalement pour compatibilité
-  window.toggleStatusSelection = toggleStatusSelection;
-  window.selectedStatuses = state.selectedStatuses;
-
   function init() {
     // Init event delegation
     initEventDelegation();
@@ -488,9 +480,13 @@
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             if (!elements.step.classList.contains('hidden')) {
-              // Step est visible, restaurer l'état et mettre à jour les boutons
+              // Step est visible, restaurer l'état
               restoreState();
-              updateStep7Buttons();
+              
+              // ✅ Notifier wizard-steps.js
+              if (typeof window.updateNavigationButtons === 'function') {
+                window.updateNavigationButtons();
+              }
             }
           }
         });
@@ -501,9 +497,6 @@
 
     // Restaurer l'état initial
     restoreState();
-    
-    // Activer les boutons (step optionnel)
-    updateStep7Buttons();
   }
 
   // Start when DOM is ready
@@ -513,9 +506,4 @@
     init();
   }
 })();
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>

@@ -750,7 +750,10 @@
             <span class="font-medium text-blue-600"> Log in</span>
           </a>
 
-          <button id="signupBtn" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2">
+          <button 
+            id="signupBtn" 
+            data-open="signup"
+            class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2">
             <i class="fas fa-user-plus mr-2 text-lg" aria-hidden="true"></i>
             <span>Sign Up</span>
           </button>
@@ -873,9 +876,9 @@
 </nav>
 
 <!-- ============================================
-     🚀 POPUP MODERNISÉ 2025/2026
+     🚀 POPUP MODERNISÉ 2025/2026 - CENTRÉ SUR DESKTOP UNIQUEMENT
      ============================================ -->
-<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
+<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden sm:flex items-center justify-center p-0 sm:p-4 md:p-6" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
   <!-- CONTAINER RESPONSIVE -->
   <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col">
     <!-- HEADER STICKY -->
@@ -944,22 +947,6 @@
             </div>
           </div>
         </div>
-<script>
-  // Validation Step 5 : require at least one country selected
-  window.validateStep5 = function() {
-    const countEl = document.getElementById('step5SelectedCount');
-    if (countEl && parseInt(countEl.textContent, 10) > 0) return true;
-    const s5 = document.getElementById('step5');
-    if (!s5) return false;
-    if (s5.querySelector('[aria-checked="true"], [aria-selected="true"], .selected, .is-selected')) return true;
-    return false;
-  };
-  // Re-évaluer lorsqu'on interagit dans Step 5 (si cartes / boutons non-input)
-  document.getElementById('step5')?.addEventListener('click', () => {
-    if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
-  });
-</script>
-
 
         <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
           <div id="step5CountryError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
@@ -1013,6 +1000,73 @@
 
         </div>
       </div>
+
+      <script>
+      (function(){
+        const select = document.getElementById('location-input');
+        const countEl = document.getElementById('step5SelectedCount');
+        const errorEl = document.getElementById('step5CountryError');
+        const successEl = document.getElementById('step5CountrySuccess');
+        
+        if (!select) return;
+        
+        select.addEventListener('change', function() {
+          const value = this.value;
+          
+          // Mettre à jour le compteur
+          if (countEl) {
+            countEl.textContent = value ? '1' : '0';
+          }
+          
+          // Afficher/masquer messages
+          if (value) {
+            if (errorEl) errorEl.classList.add('hidden');
+            if (successEl) successEl.classList.remove('hidden');
+          } else {
+            if (errorEl) errorEl.classList.remove('hidden');
+            if (successEl) successEl.classList.add('hidden');
+          }
+          
+          // Sauvegarder dans localStorage
+          try {
+            const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+            data.location = value;
+            localStorage.setItem('provider-signup-data', JSON.stringify(data));
+          } catch(e) {}
+          
+          // Notifier wizard-steps pour débloquer le bouton
+          if (typeof window.updateNavigationButtons === 'function') {
+            window.updateNavigationButtons();
+          }
+        });
+        
+        // Restaurer la valeur au chargement
+        try {
+          const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+          if (data.location) {
+            select.value = data.location;
+            if (countEl) countEl.textContent = '1';
+            if (successEl) successEl.classList.remove('hidden');
+          }
+        } catch(e) {}
+      })();
+      </script>
+
+      <script>
+        // Validation Step 5 : require at least one country selected
+        window.validateStep5 = function() {
+          const countEl = document.getElementById('step5SelectedCount');
+          if (countEl && parseInt(countEl.textContent, 10) > 0) return true;
+          const s5 = document.getElementById('step5');
+          if (!s5) return false;
+          if (s5.querySelector('[aria-checked="true"], [aria-selected="true"], .selected, .is-selected')) return true;
+          return false;
+        };
+        // Re-évaluer lorsqu'on interagit dans Step 5 (si cartes / boutons non-input)
+        document.getElementById('step5')?.addEventListener('click', () => {
+          if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+        });
+      </script>
 
       @include('includes.provider.operational_countries', ['countries' => $countries])
       @include('includes.provider.special_status')
@@ -1230,14 +1284,16 @@
         </a>
       </li>
 
-      {{-- Sign up --}}
+      {{-- Sign up - OUVRE LE POPUP --}}
       <li role="none">
-        <a href="/signup" 
-           class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
+        <button 
+           id="mobileSignupBtn"
+           data-open="signup" 
+           class="w-full text-left block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
           <i class="fas fa-user-plus text-blue-600" aria-hidden="true"></i>
           <span>Sign up</span>
-        </a>
+        </button>
       </li>
 
       {{-- Affiliate Program --}}
@@ -1291,6 +1347,14 @@
 @include('pages.popup')
 
 <!-- 🍞 Fil d'Ariane -->
+@php
+  $currentPath = request()->path();
+  $isHome = $currentPath === '/' || $currentPath === '';
+  $isDashboard = str_starts_with($currentPath, 'dashboard');
+  $showBreadcrumb = !$isHome && !$isDashboard;
+@endphp
+
+@if($showBreadcrumb)
 <div class="breadcrumb-container">
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <div class="breadcrumb-item">
@@ -1325,6 +1389,7 @@
     @endforeach
   </nav>
 </div>
+@endif
 
 @include('includes.cookie-banner')
 

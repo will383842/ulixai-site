@@ -1,11 +1,10 @@
 /**
- * Wizard Core - Gestion de base du wizard provider
- * Gère l'état, la validation et les boutons
+ * Wizard Core - CORRIGÉ
  */
 
 export class WizardCore {
   constructor() {
-    this.storeKey = 'pw.state';
+    this.storeKey = 'provider-signup-data'; // ✅ CORRIGÉ : Harmonisé avec wizard-steps.js
     this.steps = [];
     this.current = 0;
     this.state = this.loadState();
@@ -46,12 +45,28 @@ export class WizardCore {
       try { el.disabled = !enabled; } catch (_) {}
       el.classList.toggle('opacity-50', !enabled);
       el.classList.toggle('cursor-not-allowed', !enabled);
+      el.style.pointerEvents = enabled ? 'auto' : 'none';
+      el.style.opacity = enabled ? '1' : '0.5';
     });
   }
 
   validate(i) {
+    const stepNum = i + 1;
     const step = this.steps[i];
     if (!step) return true;
+    
+    // ✅ APPELER LA VALIDATION CUSTOM EN PREMIER
+    const customValidate = window[`validateStep${stepNum}`];
+    if (typeof customValidate === 'function') {
+      try {
+        return !!customValidate();
+      } catch (e) {
+        console.error(`validateStep${stepNum} error:`, e);
+        return false;
+      }
+    }
+    
+    // Validation générique
     const required = step.querySelectorAll('[required]');
     for (let r = 0; r < required.length; r++) {
       const f = required[r];
@@ -70,12 +85,10 @@ export class WizardCore {
   initCloseButtons() {
     const popup = document.getElementById('signupPopup');
 
-    // --- DÉLÉGATION ROBUSTE (capture) ---
     document.addEventListener('click', (e) => {
       const t = e.target;
       if (!t || !t.closest) return;
 
-      // OUVRIR SIGN UP (toutes variantes courantes)
       const openSignup = t.closest(
         '#signupBtn, [data-open="signup"], .js-open-signup, [data-action="open-signup"], a[href="#signupPopup"], [data-target="#signupPopup"], [aria-controls="signupPopup"]'
       );
@@ -85,7 +98,6 @@ export class WizardCore {
         return;
       }
 
-      // OUVRIR REQUEST HELP (délégué à category-popups.js)
       const openHelp = t.closest(
         '#requestHelpBtn, #helpBtn, [data-open="help"], .js-open-help, [data-action="open-help"], a[href="#helpPopup"], [data-target="#helpPopup"]'
       );
@@ -94,12 +106,11 @@ export class WizardCore {
         if (typeof window.openHelpPopup === 'function') {
           window.openHelpPopup();
         } else {
-          console.warn('openHelpPopup() non disponible – vérifier initializeCategoryPopups()');
+          console.warn('openHelpPopup() non disponible');
         }
         return;
       }
 
-      // FERMER SIGN UP (croix + variantes)
       const closeBtn = t.closest(
         '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"], .modal-close, [aria-label="Close"]'
       );
@@ -109,13 +120,11 @@ export class WizardCore {
         return;
       }
 
-      // FERMETURE via BACKDROP
       if (popup && e.target === popup) {
         this.closePopup();
       }
-    }, true); // capture=true pour intercepter tôt
+    }, true);
 
-    // Fallback direct si éléments présents à l'init (au cas où)
     const directOpen = document.getElementById('signupBtn');
     if (directOpen) {
       directOpen.addEventListener('click', (e) => { e.preventDefault(); this.openPopup(); });
@@ -125,18 +134,16 @@ export class WizardCore {
       directClose.addEventListener('click', (e) => { e.preventDefault(); this.closePopup(); });
     }
 
-    // ESC pour fermer
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
         this.closePopup();
       }
     });
 
-    // Globals pour compatibilité HTML inline
     window.openSignupPopup  = () => this.openPopup();
     window.closeSignupPopup = () => this.closePopup();
 
-    console.log('✅ Popup controls initialized (delegated, signup + help)');
+    console.log('✅ Popup controls initialized');
   }
 
   closePopup() {
@@ -145,7 +152,6 @@ export class WizardCore {
       console.warn('⚠️ Popup not found');
       return;
     }
-    // Ajoute toutes les classes de masquage usuelles
     popup.classList.add('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.setAttribute('aria-hidden', 'true');
     popup.style.display = 'none';
@@ -160,7 +166,6 @@ export class WizardCore {
       console.warn('⚠️ Popup not found');
       return;
     }
-    // Retire toutes les classes de masquage usuelles
     popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.removeAttribute('aria-hidden');
     popup.style.display = 'block';

@@ -374,6 +374,9 @@
     }
   }
 
+  // ✅ EXPOSER GLOBALEMENT pour wizard-steps.js
+  window.updateStep8Buttons = updateStep8Buttons;
+
   // ============================================
   // ✅ VALIDATION
   // ============================================

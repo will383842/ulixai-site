@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test des Icônes et Couleurs</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      padding: 2rem;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+    
+    .section {
+      margin-bottom: 3rem;
+    }
+    
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #333;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 0.5rem;
+    }
+    
+    .stats {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      flex: 1;
+      min-width: 200px;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stat-number {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .icon-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .icon-card:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      border-color: #667eea;
+    }
+    
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .icon-card:hover .icon-circle {
+      transform: scale(1.1);
+    }
+    
+    .icon-circle svg {
+      width: 50px;
+      height: 50px;
+      color: white;
+    }
+    
+    .icon-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.3rem;
+    }
+    
+    .icon-keywords {
+      font-size: 0.75rem;
+      color: #666;
+      line-height: 1.4;
+    }
+    
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 1rem;
+    }
+    
+    .color-card {
+      aspect-ratio: 1;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.85rem;
+    }
+    
+    .color-card:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      z-index: 10;
+    }
+    
+    .search-box {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 15px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .search-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+    
+    .alert {
+      background: #f8f9fa;
+      border-left: 4px solid #667eea;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+    }
+    
+    .alert-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #667eea;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+      background: #6c757d;
+    }
+    
+    .btn-secondary:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+      }
+      
+      .color-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Test des Icônes et Couleurs</h1>
+    <p class="subtitle">Visualisez toutes les icônes et couleurs disponibles dans le système</p>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="iconCount">0</div>
+        <div class="stat-label">Icônes disponibles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="colorCount">0</div>
+        <div class="stat-label">Couleurs uniques</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="keywordCount">0</div>
+        <div class="stat-label">Mots-clés mappés</div>
+      </div>
+    </div>
+    
+    <div class="alert">
+      <div class="alert-title">💡 Comment utiliser ce test</div>
+      <p>Survolez les icônes pour voir l'effet d'animation. Cliquez sur une icône pour copier son nom. Utilisez la recherche pour filtrer les icônes.</p>
+    </div>
+    
+    <!-- SECTION ICÔNES -->
+    <div class="section">
+      <h2>📦 Bibliothèque d'Icônes</h2>
+      
+      <div class="search-box">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="iconSearch" 
+          placeholder="🔍 Rechercher une icône (ex: passport, visa, santé...)"
+        >
+      </div>
+      
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="showAllIcons()">Afficher toutes</button>
+        <button class="btn btn-secondary" onclick="testRandomIcons()">Tester 10 icônes aléatoires</button>
+      </div>
+      
+      <div class="grid" id="iconGrid"></div>
+    </div>
+    
+    <!-- SECTION COULEURS -->
+    <div class="section">
+      <h2>🎨 Palette de Couleurs</h2>
+      <div class="color-grid" id="colorGrid"></div>
+    </div>
+  </div>
+  
+  <script type="module">
+    // Import des modules (adaptez le chemin selon votre structure)
+    import { iconLibrary, keywordToIcon, getCategoryIcon, getCategoryIconName } from '../resources/js/modules/categoryIcons.js';
+import { categoryColors, getCategoryColor } from '../resources/js/modules/categoryColors.js';
+
+    // Statistiques
+    document.getElementById('iconCount').textContent = Object.keys(iconLibrary).length;
+    document.getElementById('colorCount').textContent = categoryColors.palette.length;
+    document.getElementById('keywordCount').textContent = Object.keys(keywordToIcon).length;
+    
+    // Fonction pour afficher toutes les icônes
+    window.showAllIcons = function() {
+      const grid = document.getElementById('iconGrid');
+      grid.innerHTML = '';
+      
+      Object.entries(iconLibrary).forEach(([name, svg], index) => {
+        const color = getCategoryColor('main', index, []);
+        
+        // Trouver les mots-clés associés
+        const keywords = Object.entries(keywordToIcon)
+          .filter(([, iconName]) => iconName === name)
+          .map(([keyword]) => keyword)
+          .slice(0, 3);
+        
+        const card = document.createElement('div');
+        card.className = 'icon-card';
+        card.innerHTML = `
+          <div class="icon-circle" style="background-color: ${color};">
+            ${svg}
+          </div>
+          <div class="icon-name">${name}</div>
+          <div class="icon-keywords">${keywords.join(', ') || 'Aucun mot-clé'}</div>
+        `;
+        
+        card.onclick = () => {
+          navigator.clipboard.writeText(name);
+          alert(`✅ "${name}" copié dans le presse-papiers!`);
+        };
+        
+        grid.appendChild(card);
+      });
+    };
+    
+    // Fonction pour tester des icônes aléatoires
+    window.testRandomIcons = function() {
+      const grid = document.getElementById('iconGrid');
+      grid.innerHTML = '';
+      
+      const icons = Object.keys(iconLibrary);
+      const randomIcons = [];
+      
+      for (let i = 0; i < Math.min(10, icons.length); i++) {
+        const randomIndex = Math.floor(Math.random() * icons.length);
+        if (!randomIcons.includes(icons[randomIndex])) {
+          randomIcons.push(icons[randomIndex]);
+        }
+      }
+      
+      randomIcons.forEach((name, index) => {
+        const svg = iconLibrary[name];
+        const color = getCategoryColor('main', index, randomIcons.map((_, i) => i));
+        
+        const card = document.createElement('div');
+        card.className = 'icon-card';
+        card.innerHTML = `
+          <div class="icon-circle" style="background-color: ${color};">
+            ${svg}
+          </div>
+          <div class="icon-name">${name}</div>
+        `;
+        
+        grid.appendChild(card);
+      });
+    };
+    
+    // Recherche d'icônes
+    document.getElementById('iconSearch').addEventListener('input', (e) => {
+      const search = e.target.value.toLowerCase();
+      const cards = document.querySelectorAll('.icon-card');
+      
+      cards.forEach(card => {
+        const name = card.querySelector('.icon-name').textContent.toLowerCase();
+        const keywords = card.querySelector('.icon-keywords').textContent.toLowerCase();
+        
+        if (name.includes(search) || keywords.includes(search)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+    
+    // Afficher toutes les couleurs
+    const colorGrid = document.getElementById('colorGrid');
+    categoryColors.palette.forEach((color, index) => {
+      const card = document.createElement('div');
+      card.className = 'color-card';
+      card.style.backgroundColor = color;
+      card.textContent = `#${index + 1}`;
+      card.title = color;
+      
+      card.onclick = () => {
+        navigator.clipboard.writeText(color);
+        alert(`✅ ${color} copié dans le presse-papiers!`);
+      };
+      
+      colorGrid.appendChild(card);
+    });
+    
+    // Afficher toutes les icônes au chargement
+    showAllIcons();
+    
+    console.log('✅ Page de test chargée avec succès!');
+    console.log(`📦 ${Object.keys(iconLibrary).length} icônes disponibles`);
+    console.log(`🎨 ${categoryColors.palette.length} couleurs disponibles`);
+    console.log(`🔑 ${Object.keys(keywordToIcon).length} mots-clés mappés`);
+  </script>
+</body>
+</html>

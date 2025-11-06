@@ -14122,15 +14122,17 @@ function createShineEffect() {
   return '<div class="shine-effect" aria-hidden="true"></div>';
 }
 function createIconHtml(item, iconColor) {
+  var parentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'root';
   var iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
   var escapedName = item.name.replace(/"/g, '&quot;');
 
-  // ✅ TOUJOURS utiliser l'icône SVG automatique (ignorer item.icon_image)
-  var iconSVG = (0,_categoryIcons_js__WEBPACK_IMPORTED_MODULE_1__.getCategoryIcon)(item.name, item.id);
+  // ✅ Utiliser l'icône SVG automatique avec parentId pour éviter les doublons
+  var iconSVG = (0,_categoryIcons_js__WEBPACK_IMPORTED_MODULE_1__.getCategoryIcon)(item.name, item.id, parentId);
   return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; display: flex; align-items: center; justify-content: center;\" role=\"img\" aria-label=\"").concat(escapedName, "\">") + "<div class=\"w-8 h-8 text-white\" style=\"width: 2rem; height: 2rem;\">".concat(iconSVG, "</div>") + '</div>';
 }
 function createCategoryCard(item, level, allIds, onClickHandler) {
   var _categoryLevels$level;
+  var parentId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'root';
   var div = document.createElement('button');
   div.type = 'button';
   div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
@@ -14163,7 +14165,7 @@ function createCategoryCard(item, level, allIds, onClickHandler) {
     passive: true
   });
   var shineEffect = createShineEffect();
-  var iconHtml = createIconHtml(item, iconColor);
+  var iconHtml = createIconHtml(item, iconColor, parentId);
   var textSize = getResponsiveSize(CONFIG.TEXT.MOBILE_SIZE, CONFIG.TEXT.DESKTOP_SIZE);
   var textHtml = "<div class=\"".concat(textSize, " font-semibold text-gray-800 category-text\">").concat(item.name, "</div>");
   div.innerHTML = shineEffect + iconHtml + textHtml;
@@ -14175,6 +14177,7 @@ function createCategoryCard(item, level, allIds, onClickHandler) {
   return div;
 }
 function renderCategories(items, containerSelector, level, clickHandler) {
+  var parentId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'root';
   var container = document.querySelector(containerSelector);
   if (!container) return;
   var fragment = document.createDocumentFragment();
@@ -14186,7 +14189,7 @@ function renderCategories(items, containerSelector, level, clickHandler) {
   requestAnimationFrame(function () {
     var len = items.length;
     for (var i = 0; i < len; i++) {
-      var card = createCategoryCard(items[i], level, allIds, clickHandler);
+      var card = createCategoryCard(items[i], level, allIds, clickHandler, parentId);
       fragment.appendChild(card);
     }
     container.appendChild(fragment);
@@ -14231,7 +14234,7 @@ function initializeCategoryPopups() {
     popup.setAttribute('aria-hidden', 'false');
     fetchWithCache(API_ENDPOINTS.CATEGORIES).then(function (data) {
       if (data.success) {
-        renderCategories(data.categories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass), 'main', window.handleCategoryClick);
+        renderCategories(data.categories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass), 'main', window.handleCategoryClick, 'root');
       }
     })["catch"](function (err) {
       return console.error('Fetch error:', err);
@@ -14257,7 +14260,7 @@ function initializeCategoryPopups() {
     localStorage.setItem('create-request', JSON.stringify(createRequest));
     fetchWithCache(API_ENDPOINTS.SUBCATEGORIES(categoryId)).then(function (data) {
       if (data.success) {
-        renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.containerClass), 'sub', window.handleSubcategoryClick);
+        renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.containerClass), 'sub', window.handleSubcategoryClick, categoryId);
       }
     })["catch"](function (err) {
       return console.error('Error:', err);
@@ -14282,7 +14285,7 @@ function initializeCategoryPopups() {
           childPopup.classList.remove('hidden');
           childPopup.setAttribute('aria-hidden', 'false');
         }
-        renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass), 'child', window.requestForHelp);
+        renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass), 'child', window.requestForHelp, parentId);
       } else {
         window.requestForHelp(parentId, categoryName);
       }
@@ -14327,48 +14330,87 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   categoryLevels: () => (/* binding */ categoryLevels),
 /* harmony export */   getCategoryColor: () => (/* binding */ getCategoryColor),
 /* harmony export */   getCategoryColorByLevel: () => (/* binding */ getCategoryColorByLevel),
-/* harmony export */   testColorSystem: () => (/* binding */ testColorSystem)
+/* harmony export */   testColorSystem: () => (/* binding */ testColorSystem),
+/* harmony export */   validateColorDistinctness: () => (/* binding */ validateColorDistinctness)
 /* harmony export */ });
-// Palette étendue de 80 couleurs uniques et distinctes visuellement
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+// Système de couleurs optimisé avec distribution maximale et distinction visuelle
+// Palette chaude et vive pour les catégories
 var categoryColors = {
-  // Palette principale : 80 couleurs variées et distinctes
+  // Palette de base : 100 couleurs chaudes et vives organisées par groupes de teintes
   palette: [
-  // Rouges (8)
-  '#E74C3C', '#C0392B', '#E63946', '#D62828', '#F77F00', '#DC2F02', '#D00000', '#9D0208',
-  // Oranges (8)
-  '#E67E22', '#D35400', '#F39C12', '#F4A261', '#E76F51', '#EE6C4D', '#F08080', '#FF6B6B',
-  // Jaunes (8)
-  '#F1C40F', '#F39C12', '#FFB703', '#FFBA08', '#FBBF24', '#FCD34D', '#FDE047', '#FACC15',
-  // Verts clairs (8)
-  '#2ECC71', '#27AE60', '#16A085', '#06D6A0', '#10B981', '#14B8A6', '#22D3EE', '#06B6D4',
-  // Verts foncés (8)
-  '#1ABC9C', '#00B894', '#00D9A5', '#26DE81', '#20BF6B', '#118AB2', '#0D9488', '#059669',
-  // Bleus clairs (8)
-  '#3498DB', '#2980B9', '#0984E3', '#74B9FF', '#60A5FA', '#3B82F6', '#2563EB', '#4F46E5',
-  // Bleus foncés (8)
-  '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB', '#0369A1', '#075985', '#0C4A6E', '#1F2937',
-  // Violets (8)
-  '#9B59B6', '#8E44AD', '#6C5CE7', '#A29BFE', '#7C3AED', '#6D28D9', '#5B21B6', '#4C1D95',
-  // Roses (8)
-  '#E91E63', '#D81B60', '#C2185B', '#FD79A8', '#F687B3', '#EC4899', '#DB2777', '#BE185D',
-  // Bruns/Neutres (8)
-  '#795548', '#6D4C41', '#5D4037', '#4E342E', '#78716C', '#57534E', '#44403C', '#292524']
+  // === ROUGES CHAUDS (10) - Tons vifs et énergiques ===
+  '#FF4444', '#E63946', '#DC2626', '#EF4444', '#F87171', '#DC143C', '#FF6B6B', '#E74C3C', '#C0392B', '#D32F2F',
+  // === ORANGES VIFS (10) - Tons chaleureux et dynamiques ===
+  '#FF6B35', '#FF8C42', '#FFA500', '#FF8C00', '#FF7F50', '#F77F00', '#FB8500', '#FF9E40', '#FF8E53', '#FF9966',
+  // === JAUNES DORÉS (10) - Tons lumineux et chaleureux ===
+  '#FFD700', '#FFC300', '#FFB300', '#FFBA08', '#FAA307', '#FFC107', '#FFD54F', '#FFCA28', '#FFB74D', '#FFE082',
+  // === CORAILS/SAUMONS (10) - Tons doux et chaleureux ===
+  '#FF6F61', '#FA8072', '#FF7F7F', '#FFB6AB', '#FF9999', '#FFA07A', '#FFB6C1', '#FF9AA2', '#FFB3B3', '#FF8787',
+  // === BLEUS VIFS (10) - Tons clairs et lumineux ===
+  '#4A90E2', '#5DADE2', '#3498DB', '#5DADE2', '#85C1E9', '#6BB6FF', '#4FC3F7', '#42A5F5', '#64B5F6', '#7EC8E3',
+  // === BLEUS PROFONDS (10) - Tons riches et intenses ===
+  '#2E86DE', '#1E88E5', '#1976D2', '#2C3E50', '#1565C0', '#0D47A1', '#34495E', '#2471A3', '#1F618D', '#154360',
+  // === VIOLETS/POURPRES (10) - Tons chauds et sophistiqués ===
+  '#9B59B6', '#8E44AD', '#A569BD', '#AF7AC5', '#BB8FCE', '#7D3C98', '#6C3483', '#5B2C6F', '#884EA0', '#9C27B0',
+  // === ROSES/FUCHSIAS (10) - Tons vibrants et énergiques ===
+  '#E91E63', '#EC407A', '#F06292', '#F48FB1', '#FF4081', '#D81B60', '#C2185B', '#FF6B9D', '#FF69B4', '#DA70D6',
+  // === MARRONS CHAUDS (10) - Tons terreux et confortables ===
+  '#8B4513', '#A0522D', '#CD853F', '#D2691E', '#BC8F8F', '#A0826D', '#8D6E63', '#6D4C41', '#795548', '#937264',
+  // === GRIS/TAUPES (10) - Tons neutres et élégants ===
+  '#95A5A6', '#7F8C8D', '#546E7A', '#607D8B', '#78909C', '#90A4AE', '#B0BEC5', '#8E8E93', '#9E9E9E', '#BDBDBD']
 };
 
 /**
- * Génère un hash stable à partir d'un ID
- * Garantit que le même ID produit toujours le même hash
+ * Génère un index stable basé sur un ID
+ * Utilise une distribution uniforme pour maximiser l'écart entre les couleurs consécutives
  */
-function generateStableHash(id) {
-  // Convertir l'ID en chaîne pour le traitement
+function generateOptimalColorIndex(id, totalColors) {
+  var usedIndices = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Set();
   var str = String(id);
   var hash = 0;
+
+  // Générer un hash stable
   for (var i = 0; i < str.length; i++) {
     var _char = str.charCodeAt(i);
     hash = (hash << 5) - hash + _char;
-    hash = hash & hash; // Convertir en entier 32bit
+    hash = hash & hash;
   }
-  return Math.abs(hash);
+  hash = Math.abs(hash);
+
+  // Distribution en saut d'indices pour maximiser la distinction
+  // Utiliser un nombre premier pour garantir une bonne distribution
+  var step = 37; // Nombre premier pour meilleure distribution
+  var index = hash * step % totalColors;
+
+  // Si l'index est déjà utilisé, trouver le suivant disponible
+  var attempts = 0;
+  while (usedIndices.has(index) && attempts < totalColors) {
+    index = (index + step) % totalColors;
+    attempts++;
+  }
+  return index;
+}
+
+/**
+ * Calcule la luminosité d'une couleur (0-255)
+ */
+function getLuminance(hex) {
+  var rgb = hexToRgb(hex);
+  if (!rgb) return 128;
+
+  // Formule de luminosité perceptuelle
+  return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
 }
 
 /**
@@ -14387,124 +14429,254 @@ function hexToRgb(hex) {
  * Convertit RGB en hex
  */
 function rgbToHex(r, g, b) {
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+  var toHex = function toHex(n) {
+    var hex = Math.round(Math.max(0, Math.min(255, n))).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+  return "#".concat(toHex(r)).concat(toHex(g)).concat(toHex(b)).toUpperCase();
 }
 
 /**
- * Applique une variation à une couleur pour la rendre distincte
- * @param {string} color - Couleur hex de base
- * @param {number} variation - Niveau de variation (1-5)
+ * Calcule la distance perceptuelle entre deux couleurs
+ * Utilise la formule CIEDE2000 simplifiée
  */
-function applyColorVariation(color, variation) {
-  var rgb = hexToRgb(color);
-  if (!rgb) return color;
-
-  // Appliquer des variations subtiles mais visibles
-  var factor = variation * 15; // 15, 30, 45, 60, 75
-
-  // Alterner entre éclaircir et assombrir
-  var modifier = variation % 2 === 0 ? factor : -factor;
-  var r = Math.max(0, Math.min(255, rgb.r + modifier));
-  var g = Math.max(0, Math.min(255, rgb.g + modifier));
-  var b = Math.max(0, Math.min(255, rgb.b + modifier));
-  return rgbToHex(r, g, b);
-}
-
-/**
- * Calcule la distance de couleur entre deux couleurs (simplicité)
- */
-function colorDistance(color1, color2) {
+function calculateColorDistance(color1, color2) {
   var rgb1 = hexToRgb(color1);
   var rgb2 = hexToRgb(color2);
   if (!rgb1 || !rgb2) return 1000;
-  return Math.sqrt(Math.pow(rgb1.r - rgb2.r, 2) + Math.pow(rgb1.g - rgb2.g, 2) + Math.pow(rgb1.b - rgb2.b, 2));
+
+  // Distance euclidienne pondérée dans l'espace RGB
+  // Les coefficients reflètent la perception humaine
+  var rDiff = rgb1.r - rgb2.r;
+  var gDiff = rgb1.g - rgb2.g;
+  var bDiff = rgb1.b - rgb2.b;
+  var rMean = (rgb1.r + rgb2.r) / 2;
+
+  // Formule de distance perceptuelle améliorée
+  var weightR = 2 + rMean / 256;
+  var weightG = 4.0;
+  var weightB = 2 + (255 - rMean) / 256;
+  return Math.sqrt(weightR * rDiff * rDiff + weightG * gDiff * gDiff + weightB * bDiff * bDiff);
 }
 
 /**
- * Obtient la couleur d'une catégorie basée sur son ID
- * @param {string} level - Le niveau de catégorie ('main', 'sub', 'child')
- * @param {number|string} id - L'ID unique de la catégorie
- * @param {Array} allIds - Tous les IDs à afficher sur la page actuelle
+ * Ajuste la saturation et la luminosité d'une couleur selon le niveau
+ */
+function adjustColorForLevel(hex, level) {
+  var rgb = hexToRgb(hex);
+  if (!rgb) return hex;
+
+  // Convertir en HSL pour manipuler saturation et luminosité
+  var r = rgb.r / 255;
+  var g = rgb.g / 255;
+  var b = rgb.b / 255;
+  var max = Math.max(r, g, b);
+  var min = Math.min(r, g, b);
+  var h,
+    s,
+    l = (max + min) / 2;
+  if (max === min) {
+    h = s = 0; // Gris
+  } else {
+    var d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        break;
+      case g:
+        h = ((b - r) / d + 2) / 6;
+        break;
+      case b:
+        h = ((r - g) / d + 4) / 6;
+        break;
+    }
+  }
+
+  // Ajuster selon le niveau
+  switch (level) {
+    case 'main':
+      // Catégories principales : saturation maximale, luminosité moyenne-haute
+      s = Math.min(1, s * 1.2); // +20% saturation
+      l = Math.max(0.45, Math.min(0.65, l)); // Luminosité contrôlée
+      break;
+    case 'sub':
+      // Sous-catégories : saturation légèrement réduite
+      s = Math.min(1, s * 1.0); // Saturation normale
+      l = Math.max(0.40, Math.min(0.60, l * 0.95)); // Légèrement plus sombre
+      break;
+    case 'child':
+      // Sous-sous-catégories : saturation réduite, plus sombre
+      s = Math.min(1, s * 0.85); // -15% saturation
+      l = Math.max(0.35, Math.min(0.55, l * 0.85)); // Plus sombre
+      break;
+  }
+
+  // Convertir HSL vers RGB
+  var r2, g2, b2;
+  if (s === 0) {
+    r2 = g2 = b2 = l;
+  } else {
+    var hue2rgb = function hue2rgb(p, q, t) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    r2 = hue2rgb(p, q, h + 1 / 3);
+    g2 = hue2rgb(p, q, h);
+    b2 = hue2rgb(p, q, h - 1 / 3);
+  }
+  return rgbToHex(r2 * 255, g2 * 255, b2 * 255);
+}
+
+/**
+ * Sélectionne les couleurs les plus distinctes pour un ensemble d'IDs
+ * Garantit une distance maximale entre toutes les couleurs utilisées
+ */
+function selectDistinctColors(ids, level) {
+  var colors = categoryColors.palette;
+  var selectedColors = new Map();
+  var usedIndices = new Set();
+
+  // Trier les IDs pour garantir une attribution stable
+  var sortedIds = _toConsumableArray(ids).sort(function (a, b) {
+    var aStr = String(a);
+    var bStr = String(b);
+    return aStr.localeCompare(bStr, undefined, {
+      numeric: true
+    });
+  });
+
+  // Pour chaque ID, trouver la couleur la plus distincte
+  sortedIds.forEach(function (id) {
+    var bestIndex = -1;
+    var bestMinDistance = -1;
+
+    // Essayer plusieurs candidats
+    var candidates = [];
+    for (var i = 0; i < 5; i++) {
+      var index = generateOptimalColorIndex(id + i * 1000, colors.length, usedIndices);
+      if (!usedIndices.has(index)) {
+        candidates.push(index);
+      }
+    }
+
+    // Sélectionner le candidat avec la distance minimale maximale
+    for (var _i = 0, _candidates = candidates; _i < _candidates.length; _i++) {
+      var candidateIndex = _candidates[_i];
+      var candidateColor = colors[candidateIndex];
+
+      // Calculer la distance minimale avec toutes les couleurs déjà sélectionnées
+      var minDistance = Infinity;
+      var _iterator = _createForOfIteratorHelper(selectedColors),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var _step$value = _slicedToArray(_step.value, 2),
+            selectedId = _step$value[0],
+            selectedColor = _step$value[1];
+          var distance = calculateColorDistance(candidateColor, selectedColor);
+          minDistance = Math.min(minDistance, distance);
+        }
+
+        // Si c'est la première couleur ou si cette couleur est plus distincte
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+      if (selectedColors.size === 0 || minDistance > bestMinDistance) {
+        bestMinDistance = minDistance;
+        bestIndex = candidateIndex;
+      }
+    }
+
+    // Si aucun candidat n'est satisfaisant, prendre le premier disponible
+    if (bestIndex === -1) {
+      bestIndex = generateOptimalColorIndex(id, colors.length, usedIndices);
+    }
+    usedIndices.add(bestIndex);
+    var baseColor = colors[bestIndex];
+    var adjustedColor = adjustColorForLevel(baseColor, level);
+    selectedColors.set(id, adjustedColor);
+  });
+  return selectedColors;
+}
+
+/**
+ * Obtient la couleur d'une catégorie
+ * @param {string} level - Le niveau ('main', 'sub', 'child')
+ * @param {number|string} id - L'ID de la catégorie
+ * @param {Array} allIds - Tous les IDs du contexte actuel
  * @returns {string} Code couleur hexadécimal
  */
 function getCategoryColor(level, id) {
   var allIds = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-  var colors = categoryColors.palette;
-
-  // Générer un hash stable pour cet ID
-  var hash = generateStableHash(id);
-  var baseColorIndex = hash % colors.length;
-  var baseColor = colors[baseColorIndex];
-
-  // Si on n'a pas la liste complète, retourner la couleur de base
-  if (allIds.length === 0) {
-    return baseColor;
+  // Si pas d'IDs fournis, utiliser une couleur de base ajustée
+  if (!allIds || allIds.length === 0) {
+    var colors = categoryColors.palette;
+    var index = generateOptimalColorIndex(id, colors.length);
+    return adjustColorForLevel(colors[index], level);
   }
 
-  // Créer un mapping de tous les IDs vers leurs couleurs de base
-  var colorMapping = new Map();
-  var colorUsageCount = new Map();
-  allIds.forEach(function (itemId) {
-    var itemHash = generateStableHash(itemId);
-    var itemColorIndex = itemHash % colors.length;
-    var itemBaseColor = colors[itemColorIndex];
-    colorMapping.set(itemId, itemBaseColor);
+  // Sélectionner toutes les couleurs distinctes pour ce contexte
+  var colorMap = selectDistinctColors(allIds, level);
 
-    // Compter combien de fois chaque couleur est utilisée
-    var count = colorUsageCount.get(itemBaseColor) || 0;
-    colorUsageCount.set(itemBaseColor, count + 1);
-  });
-
-  // Si la couleur de base n'est utilisée qu'une fois, la retourner telle quelle
-  if (colorUsageCount.get(baseColor) === 1) {
-    return baseColor;
-  }
-
-  // Si plusieurs catégories ont la même couleur de base, appliquer des variations
-  var idsWithSameColor = allIds.filter(function (itemId) {
-    return colorMapping.get(itemId) === baseColor;
-  });
-  var indexInGroup = idsWithSameColor.indexOf(id);
-
-  // Appliquer une variation si ce n'est pas le premier de la couleur
-  if (indexInGroup > 0) {
-    return applyColorVariation(baseColor, indexInGroup);
-  }
-  return baseColor;
+  // Retourner la couleur pour cet ID
+  return colorMap.get(id) || adjustColorForLevel(categoryColors.palette[0], level);
 }
 
 /**
- * Obtient une couleur pour un niveau spécifique (pour compatibilité)
- * Applique une légère teinte selon le niveau pour différencier visuellement
+ * Obtient une couleur pour un niveau spécifique
+ * Alias de getCategoryColor pour compatibilité
  */
 function getCategoryColorByLevel(level, id) {
   var allIds = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-  var baseColor = getCategoryColor(level, id, allIds);
-  var rgb = hexToRgb(baseColor);
-  if (!rgb) return baseColor;
+  return getCategoryColor(level, id, allIds);
+}
 
-  // Appliquer une légère modification selon le niveau
-  var r = rgb.r,
-    g = rgb.g,
-    b = rgb.b;
-  switch (level) {
-    case 'main':
-      // Catégories principales : couleurs plus saturées
-      r = Math.min(255, r + 10);
-      g = Math.min(255, g + 10);
-      b = Math.min(255, b + 10);
-      break;
-    case 'sub':
-      // Sous-catégories : couleurs moyennes (pas de modification)
-      break;
-    case 'child':
-      // Sous-sous-catégories : couleurs légèrement plus sombres
-      r = Math.max(0, r - 15);
-      g = Math.max(0, g - 15);
-      b = Math.max(0, b - 15);
-      break;
+/**
+ * Validation du système : vérifie que toutes les couleurs sont distinctes
+ */
+function validateColorDistinctness(ids) {
+  var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'main';
+  var colorMap = selectDistinctColors(ids, level);
+  var colors = Array.from(colorMap.values());
+  var minDistance = Infinity;
+  var problematicPairs = [];
+  for (var i = 0; i < colors.length; i++) {
+    for (var j = i + 1; j < colors.length; j++) {
+      var distance = calculateColorDistance(colors[i], colors[j]);
+      if (distance < minDistance) {
+        minDistance = distance;
+      }
+
+      // Seuil de distinction : 50 est considéré comme trop proche
+      if (distance < 50) {
+        problematicPairs.push({
+          color1: colors[i],
+          color2: colors[j],
+          distance: distance.toFixed(2)
+        });
+      }
+    }
   }
-  return rgbToHex(r, g, b);
+  return {
+    valid: problematicPairs.length === 0,
+    minDistance: minDistance.toFixed(2),
+    problematicPairs: problematicPairs,
+    totalColors: colors.length,
+    averageDistance: colors.length > 1 ? (colors.reduce(function (sum, c1, i) {
+      return sum + colors.slice(i + 1).reduce(function (s, c2) {
+        return s + calculateColorDistance(c1, c2);
+      }, 0);
+    }, 0) / (colors.length * (colors.length - 1) / 2)).toFixed(2) : 0
+  };
 }
 
 // Configuration des niveaux de catégories
@@ -14530,34 +14702,72 @@ var categoryLevels = {
 };
 
 /**
- * Fonction de test pour vérifier le système de couleurs
+ * Fonction de test complète du système
  */
 function testColorSystem() {
-  console.log('=== TEST DU SYSTÈME DE COULEURS ===');
-  console.log("Nombre de couleurs disponibles: ".concat(categoryColors.palette.length));
+  console.log('=== TEST DU SYSTÈME DE COULEURS AMÉLIORÉ ===\n');
 
-  // Tester avec des IDs typiques
-  var testIds = [1, 2, 3, 50, 100, 150, 200, 250, 300, 350, 400];
-  console.log('\n--- Couleurs de base (sans doublons) ---');
-  testIds.forEach(function (id) {
-    var color = getCategoryColor('main', id, []);
-    console.log("ID ".concat(id, " \u2192 ").concat(color));
-  });
-
-  // Tester avec des IDs qui pourraient avoir la même couleur
-  var conflictIds = [1, 81, 161, 241]; // Ces IDs auront la même couleur de base
-
-  console.log('\n--- Gestion des doublons ---');
-  conflictIds.forEach(function (id) {
-    var color = getCategoryColor('main', id, conflictIds);
-    console.log("ID ".concat(id, " \u2192 ").concat(color, " (avec variations)"));
-  });
-  console.log('\n--- Stabilité (même ID = même couleur) ---');
-  var stableId = 42;
+  // Test 1 : Stabilité
+  console.log('--- Test 1 : Stabilité (même ID = même couleur) ---');
+  var testId = 42;
+  var colors = [];
   for (var i = 0; i < 5; i++) {
-    var color = getCategoryColor('main', stableId, []);
-    console.log("Appel ".concat(i + 1, ": ID ").concat(stableId, " \u2192 ").concat(color));
+    var color = getCategoryColor('main', testId, [testId, 43, 44]);
+    colors.push(color);
+    console.log("Appel ".concat(i + 1, ": ID ").concat(testId, " \u2192 ").concat(color));
   }
+  var allSame = colors.every(function (c) {
+    return c === colors[0];
+  });
+  console.log("\u2713 Stabilit\xE9: ".concat(allSame ? 'OK' : 'ÉCHEC', "\n"));
+
+  // Test 2 : Distinction avec beaucoup de catégories
+  console.log('--- Test 2 : Distinction avec 50 catégories ---');
+  var manyIds = Array.from({
+    length: 50
+  }, function (_, i) {
+    return i + 1;
+  });
+  var validation = validateColorDistinctness(manyIds, 'main');
+  console.log("Nombre de couleurs: ".concat(validation.totalColors));
+  console.log("Distance minimale: ".concat(validation.minDistance));
+  console.log("Distance moyenne: ".concat(validation.averageDistance));
+  console.log("Paires probl\xE9matiques: ".concat(validation.problematicPairs.length));
+  console.log("\u2713 Validation: ".concat(validation.valid ? 'OK' : 'ATTENTION', "\n"));
+
+  // Test 3 : Différences entre niveaux
+  console.log('--- Test 3 : Ajustement par niveau ---');
+  var testIds = [10, 20, 30];
+  ['main', 'sub', 'child'].forEach(function (level) {
+    console.log("\nNiveau \"".concat(level, "\":"));
+    testIds.forEach(function (id) {
+      var color = getCategoryColor(level, id, testIds);
+      var luminance = getLuminance(color);
+      console.log("  ID ".concat(id, " \u2192 ").concat(color, " (luminosit\xE9: ").concat(luminance.toFixed(0), ")"));
+    });
+  });
+
+  // Test 4 : Scénario réel (ajout/suppression)
+  console.log('\n--- Test 4 : Ajout/suppression dynamique ---');
+  var dynamicIds = [1, 2, 3, 4, 5];
+  console.log('Couleurs initiales (IDs 1-5):');
+  dynamicIds.forEach(function (id) {
+    console.log("  ID ".concat(id, " \u2192 ").concat(getCategoryColor('main', id, dynamicIds)));
+  });
+
+  // Ajouter des IDs
+  dynamicIds = [1, 2, 3, 4, 5, 6, 7];
+  console.log('\nAprès ajout des IDs 6-7:');
+  [6, 7].forEach(function (id) {
+    console.log("  ID ".concat(id, " \u2192 ").concat(getCategoryColor('main', id, dynamicIds)));
+  });
+
+  // Vérifier que les anciennes couleurs n'ont pas changé
+  console.log('\nVérification des couleurs existantes (doivent être identiques):');
+  [1, 2, 3, 4, 5].forEach(function (id) {
+    console.log("  ID ".concat(id, " \u2192 ").concat(getCategoryColor('main', id, dynamicIds)));
+  });
+  console.log('\n=== FIN DES TESTS ===');
 }
 
 /***/ }),
@@ -14571,60 +14781,275 @@ function testColorSystem() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clearIconCache: () => (/* binding */ clearIconCache),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   getCategoryIcon: () => (/* binding */ getCategoryIcon),
 /* harmony export */   getCategoryIconName: () => (/* binding */ getCategoryIconName),
 /* harmony export */   iconLibrary: () => (/* binding */ iconLibrary),
 /* harmony export */   keywordToIcon: () => (/* binding */ keywordToIcon)
 /* harmony export */ });
+var _keywordToIcon;
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * ===================================================================
- * SYSTÈME D'ICÔNES AVEC FINESSE ULTIME
+ * SYSTÈME D'ICÔNES INTELLIGENT ET STABLE
  * ===================================================================
  * 
- * 80+ icônes de QUALITÉ MAXIMALE
- * Personnages ultra-anatomiques : 50-100 paths par icône
- * Accessoires ultra-détaillés avec éléments narratifs
+ * Garantit :
+ * 1. Correspondance sémantique (icône = sens de la catégorie)
+ * 2. Stabilité absolue (même catégorie = même icône toujours)
+ * 3. Pas de doublons dans une famille
  */
 
+// ==================== BIBLIOTHÈQUE D'ICÔNES ====================
+
 var iconLibrary = {
-  // DOCUMENTS & ADMINISTRATION - FINESSE ULTIME
-
-  passport: "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n    <!-- PERSONNAGE ULTRA-D\xC9TAILL\xC9 -->\n    <!-- T\xEAte avec visage -->\n    <circle cx=\"6.8\" cy=\"3.8\" r=\"1.4\"/>\n    <circle cx=\"6.3\" cy=\"3.5\" r=\"0.25\" opacity=\"0.8\"/>\n    <circle cx=\"7.3\" cy=\"3.5\" r=\"0.25\" opacity=\"0.8\"/>\n    <path d=\"M6.5 4.2c0.1 0.1 0.2 0.15 0.3 0.15s0.2-0.05 0.3-0.15\" stroke=\"white\" stroke-width=\"0.2\" fill=\"none\"/>\n    <path d=\"M6.2 3.8c0.1-0.1 0.2-0.1 0.3-0.1M7.4 3.8c-0.1-0.1-0.2-0.1-0.3-0.1\" stroke=\"white\" stroke-width=\"0.15\" fill=\"none\"/>\n    \n    <!-- Cheveux -->\n    <path d=\"M5.8 3.2c0.3-0.4 0.7-0.6 1.2-0.6s0.9 0.2 1.2 0.6\" opacity=\"0.6\"/>\n    \n    <!-- Cou -->\n    <rect x=\"6.5\" y=\"5.1\" width=\"0.6\" height=\"0.7\" rx=\"0.2\"/>\n    \n    <!-- \xC9paules et torse -->\n    <path d=\"M5.3 6.2c0-0.4 0.3-0.7 0.7-0.7h1c0.4 0 0.7 0.3 0.7 0.7v2.2c0 0.2-0.15 0.4-0.35 0.4h-2c-0.2 0-0.35-0.2-0.35-0.4V6.2z\"/>\n    <path d=\"M5.5 6.5h1.6v0.4H5.5z\" opacity=\"0.2\"/>\n    \n    <!-- Bras gauche d\xE9taill\xE9 -->\n    <path d=\"M5.1 6.5c-0.2 0-0.4 0.15-0.5 0.4l-0.7 2.3c-0.1 0.2 0 0.5 0.2 0.6l0.4 0.15\"/>\n    <circle cx=\"4.9\" cy=\"7.2\" r=\"0.2\" opacity=\"0.3\"/>\n    <circle cx=\"4.4\" cy=\"9.3\" r=\"0.2\" opacity=\"0.3\"/>\n    <circle cx=\"4.3\" cy=\"10\" r=\"0.35\"/>\n    <!-- Main gauche avec doigts -->\n    <ellipse cx=\"3.9\" cy=\"10.3\" rx=\"0.25\" ry=\"0.4\"/>\n    <rect x=\"3.7\" y=\"10.5\" width=\"0.12\" height=\"0.3\" rx=\"0.06\" opacity=\"0.6\"/>\n    <rect x=\"3.85\" y=\"10.5\" width=\"0.12\" height=\"0.35\" rx=\"0.06\" opacity=\"0.6\"/>\n    <rect x=\"4\" y=\"10.5\" width=\"0.12\" height=\"0.3\" rx=\"0.06\" opacity=\"0.6\"/>\n    \n    <!-- Bras droit tenant passeport -->\n    <path d=\"M8.6 6.5c0.2 0 0.4 0.15 0.5 0.4l1.1 2.8\"/>\n    <circle cx=\"9\" cy=\"7.2\" r=\"0.2\" opacity=\"0.3\"/>\n    <circle cx=\"10.3\" cy=\"9.5\" r=\"0.2\" opacity=\"0.3\"/>\n    <circle cx=\"10.6\" cy=\"10.2\" r=\"0.35\"/>\n    <!-- Main droite avec doigts tenant -->\n    <ellipse cx=\"11\" cy=\"10.5\" rx=\"0.25\" ry=\"0.4\"/>\n    <rect x=\"10.9\" y=\"10.7\" width=\"0.12\" height=\"0.3\" rx=\"0.06\" opacity=\"0.6\"/>\n    <rect x=\"11.05\" y=\"10.7\" width=\"0.12\" height=\"0.35\" rx=\"0.06\" opacity=\"0.6\"/>\n    \n    <!-- Jambes d\xE9taill\xE9es -->\n    <rect x=\"5.9\" y=\"8.8\" width=\"0.65\" height=\"1.8\" rx=\"0.25\"/>\n    <circle cx=\"6.22\" cy=\"10.7\" r=\"0.25\" opacity=\"0.3\"/>\n    <rect x=\"5.9\" y=\"10.9\" width=\"0.65\" height=\"1.8\" rx=\"0.25\"/>\n    \n    <rect x=\"7\" y=\"8.8\" width=\"0.65\" height=\"1.8\" rx=\"0.25\"/>\n    <circle cx=\"7.32\" cy=\"10.7\" r=\"0.25\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"10.9\" width=\"0.65\" height=\"1.8\" rx=\"0.25\"/>\n    \n    <!-- Pieds d\xE9taill\xE9s -->\n    <ellipse cx=\"6.22\" cy=\"12.9\" rx=\"0.55\" ry=\"0.28\"/>\n    <rect x=\"5.9\" y=\"12.8\" width=\"0.2\" height=\"0.15\" rx=\"0.05\" opacity=\"0.4\"/>\n    <ellipse cx=\"7.32\" cy=\"12.9\" rx=\"0.55\" ry=\"0.28\"/>\n    <rect x=\"7.3\" y=\"12.8\" width=\"0.2\" height=\"0.15\" rx=\"0.05\" opacity=\"0.4\"/>\n    \n    <!-- PASSEPORT ULTRA-D\xC9TAILL\xC9 -->\n    <rect x=\"11.5\" y=\"8\" width=\"9.5\" height=\"7.5\" rx=\"0.5\"/>\n    <rect x=\"11.8\" y=\"8.3\" width=\"8.9\" height=\"6.9\" rx=\"0.3\" opacity=\"0.1\"/>\n    \n    <!-- Pliure centrale -->\n    <path d=\"M16.25 8v7.5\" stroke=\"white\" stroke-width=\"0.25\" opacity=\"0.3\"/>\n    \n    <!-- Page gauche avec photo -->\n    <circle cx=\"13.8\" cy=\"10.3\" r=\"1.1\" opacity=\"0.25\"/>\n    <circle cx=\"13.8\" cy=\"10.3\" r=\"0.8\" opacity=\"0.15\"/>\n    <circle cx=\"13.4\" cy=\"10.1\" r=\"0.2\" opacity=\"0.3\"/>\n    <circle cx=\"14.2\" cy=\"10.1\" r=\"0.2\" opacity=\"0.3\"/>\n    <path d=\"M13.5 10.6c0.1 0.1 0.2 0.1 0.3 0.1s0.2 0 0.3-0.1\" stroke=\"white\" stroke-width=\"0.15\" fill=\"none\" opacity=\"0.3\"/>\n    \n    <!-- Lignes de texte page gauche -->\n    <rect x=\"12.6\" y=\"11.8\" width=\"2.4\" height=\"0.25\" rx=\"0.12\" opacity=\"0.25\"/>\n    <rect x=\"12.6\" y=\"12.3\" width=\"2.1\" height=\"0.2\" rx=\"0.1\" opacity=\"0.25\"/>\n    <rect x=\"12.6\" y=\"12.7\" width=\"2.3\" height=\"0.2\" rx=\"0.1\" opacity=\"0.25\"/>\n    <rect x=\"12.6\" y=\"13.1\" width=\"1.9\" height=\"0.2\" rx=\"0.1\" opacity=\"0.25\"/>\n    <rect x=\"12.6\" y=\"13.5\" width=\"2.2\" height=\"0.2\" rx=\"0.1\" opacity=\"0.25\"/>\n    \n    <!-- Page droite avec informations -->\n    <rect x=\"17\" y=\"8.8\" width=\"3.2\" height=\"0.3\" rx=\"0.15\" opacity=\"0.25\"/>\n    <rect x=\"17\" y=\"9.3\" width=\"3.2\" height=\"0.3\" rx=\"0.15\" opacity=\"0.25\"/>\n    <rect x=\"17\" y=\"9.8\" width=\"2.8\" height=\"0.25\" rx=\"0.12\" opacity=\"0.25\"/>\n    <rect x=\"17\" y=\"10.3\" width=\"3\" height=\"0.25\" rx=\"0.12\" opacity=\"0.25\"/>\n    <rect x=\"17\" y=\"10.8\" width=\"2.6\" height=\"0.25\" rx=\"0.12\" opacity=\"0.25\"/>\n    \n    <!-- Tampon circulaire ultra-d\xE9taill\xE9 -->\n    <circle cx=\"18.8\" cy=\"13\" r=\"1.4\" opacity=\"0.15\"/>\n    <circle cx=\"18.8\" cy=\"13\" r=\"1.1\" opacity=\"0.12\"/>\n    <circle cx=\"18.8\" cy=\"13\" r=\"0.8\" opacity=\"0.1\"/>\n    <path d=\"M18.8 11.8v2.4M17.6 13h2.4\" stroke=\"currentColor\" stroke-width=\"0.4\" opacity=\"0.2\"/>\n    <path d=\"M17.9 12.3l1.8 1.4M19.7 12.3l-1.8 1.4\" stroke=\"currentColor\" stroke-width=\"0.3\" opacity=\"0.15\"/>\n    <!-- Texte circulaire du tampon -->\n    <path d=\"M17.8 12c0.3-0.4 0.6-0.6 1-0.6s0.7 0.2 1 0.6\" opacity=\"0.2\"/>\n    <path d=\"M17.8 14c0.3 0.4 0.6 0.6 1 0.6s0.7-0.2 1-0.6\" opacity=\"0.2\"/>\n  </svg>",
-  visa: "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n    <!-- PERSONNAGE ULTRA-D\xC9TAILL\xC9 -->\n    <circle cx=\"5.8\" cy=\"4.3\" r=\"1.3\"/>\n    <circle cx=\"5.4\" cy=\"4\" r=\"0.22\" opacity=\"0.8\"/>\n    <circle cx=\"6.2\" cy=\"4\" r=\"0.22\" opacity=\"0.8\"/>\n    <path d=\"M5.5 4.5c0.1 0.08 0.18 0.12 0.28 0.12s0.18-0.04 0.28-0.12\" stroke=\"white\" stroke-width=\"0.18\" fill=\"none\"/>\n    <rect x=\"5.5\" y=\"5.5\" width=\"0.6\" height=\"0.65\" rx=\"0.2\"/>\n    <path d=\"M4.4 6.5c0-0.4 0.3-0.7 0.7-0.7h1c0.4 0 0.7 0.3 0.7 0.7v2h-2.4V6.5z\"/>\n    <path d=\"M4.6 6.8h1.4v0.35H4.6z\" opacity=\"0.2\"/>\n    \n    <!-- Bras et mains d\xE9taill\xE9s -->\n    <path d=\"M4.1 6.8l-0.55 2c-0.08 0.18 0 0.4 0.18 0.5l0.35 0.12\"/>\n    <circle cx=\"3.9\" cy=\"7.4\" r=\"0.18\" opacity=\"0.3\"/>\n    <circle cx=\"3.4\" cy=\"9\" r=\"0.32\"/>\n    <ellipse cx=\"3.1\" cy=\"9.3\" rx=\"0.22\" ry=\"0.35\"/>\n    <rect x=\"2.9\" y=\"9.5\" width=\"0.1\" height=\"0.28\" rx=\"0.05\" opacity=\"0.6\"/>\n    <rect x=\"3.02\" y=\"9.5\" width=\"0.1\" height=\"0.32\" rx=\"0.05\" opacity=\"0.6\"/>\n    \n    <path d=\"M7.5 6.8l0.9 2.3\"/>\n    <circle cx=\"8.5\" cy=\"9.3\" r=\"0.32\"/>\n    <ellipse cx=\"8.8\" cy=\"9.6\" rx=\"0.22\" ry=\"0.35\"/>\n    \n    <!-- Jambes et pieds -->\n    <rect x=\"5.1\" y=\"8.5\" width=\"0.6\" height=\"1.6\" rx=\"0.22\"/>\n    <circle cx=\"5.4\" cy=\"10.2\" r=\"0.22\" opacity=\"0.3\"/>\n    <rect x=\"5.1\" y=\"10.4\" width=\"0.6\" height=\"1.6\" rx=\"0.22\"/>\n    <ellipse cx=\"5.4\" cy=\"12.2\" rx=\"0.5\" ry=\"0.25\"/>\n    \n    <rect x=\"6\" y=\"8.5\" width=\"0.6\" height=\"1.6\" rx=\"0.22\"/>\n    <circle cx=\"6.3\" cy=\"10.2\" r=\"0.22\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"10.4\" width=\"0.6\" height=\"1.6\" rx=\"0.22\"/>\n    <ellipse cx=\"6.3\" cy=\"12.2\" rx=\"0.5\" ry=\"0.25\"/>\n    \n    <!-- CARTE VISA ULTRA-D\xC9TAILL\xC9E -->\n    <rect x=\"10\" y=\"7\" width=\"11.5\" height=\"7\" rx=\"0.8\"/>\n    <rect x=\"10.3\" y=\"7.3\" width=\"10.9\" height=\"6.4\" rx=\"0.5\" opacity=\"0.08\"/>\n    \n    <!-- Bande magn\xE9tique -->\n    <rect x=\"10\" y=\"9.2\" width=\"11.5\" height=\"1.2\" opacity=\"0.25\"/>\n    \n    <!-- Puce -->\n    <rect x=\"11.2\" y=\"10.8\" width=\"1.8\" height=\"1.4\" rx=\"0.25\" opacity=\"0.3\"/>\n    <rect x=\"11.4\" y=\"11\" width=\"1.4\" height=\"1\" rx=\"0.15\" opacity=\"0.2\"/>\n    <path d=\"M11.6 11.2h1M11.6 11.5h1M11.6 11.8h1\" stroke=\"white\" stroke-width=\"0.12\" opacity=\"0.3\"/>\n    \n    <!-- Num\xE9ro de carte -->\n    <rect x=\"11.2\" y=\"13\" width=\"1.2\" height=\"0.5\" rx=\"0.15\" opacity=\"0.25\"/>\n    <rect x=\"12.6\" y=\"13\" width=\"1.2\" height=\"0.5\" rx=\"0.15\" opacity=\"0.25\"/>\n    <rect x=\"14\" y=\"13\" width=\"1.2\" height=\"0.5\" rx=\"0.15\" opacity=\"0.25\"/>\n    <rect x=\"15.4\" y=\"13\" width=\"1.2\" height=\"0.5\" rx=\"0.15\" opacity=\"0.25\"/>\n    \n    <!-- Nom -->\n    <rect x=\"11.2\" y=\"11.5\" width=\"2.8\" height=\"0.35\" rx=\"0.12\" opacity=\"0.25\"/>\n    <rect x=\"11.2\" y=\"12.1\" width=\"2.3\" height=\"0.3\" rx=\"0.1\" opacity=\"0.25\"/>\n    \n    <!-- Logo visa stylis\xE9 -->\n    <circle cx=\"19\" cy=\"11.8\" r=\"1.2\" opacity=\"0.2\"/>\n    <path d=\"M19 10.8v2M18 11.8h2\" stroke=\"white\" stroke-width=\"0.5\" opacity=\"0.3\"/>\n    <path d=\"M18.3 11.2l1.4 1.2M19.7 11.2l-1.4 1.2\" stroke=\"white\" stroke-width=\"0.4\" opacity=\"0.25\"/>\n  </svg>",
-  // Pour gagner du temps et de l'espace, je vais créer les autres icônes avec un niveau de détail similaire
-  // mais en utilisant des templates plus efficaces
-
-  document: "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n    <circle cx=\"6.3\" cy=\"3.8\" r=\"1.3\"/>\n    <circle cx=\"5.9\" cy=\"3.6\" r=\"0.2\" opacity=\"0.8\"/>\n    <circle cx=\"6.7\" cy=\"3.6\" r=\"0.2\" opacity=\"0.8\"/>\n    <path d=\"M6.1 4.1c0.08 0.08 0.15 0.1 0.25 0.1s0.17-0.02 0.25-0.1\" stroke=\"white\" stroke-width=\"0.15\" fill=\"none\"/>\n    <rect x=\"6\" y=\"5\" width=\"0.6\" height=\"0.6\" rx=\"0.2\"/>\n    <path d=\"M4.8 5.9c0-0.35 0.28-0.65 0.65-0.65h1c0.37 0 0.65 0.3 0.65 0.65v2h-2.3V5.9z\"/>\n    <path d=\"M4.1 6.3l-0.5 1.9\"/>\n    <circle cx=\"3.5\" cy=\"8.3\" r=\"0.3\"/>\n    <path d=\"M7.9 6.3l0.85 2.1\"/>\n    <circle cx=\"8.8\" cy=\"8.5\" r=\"0.3\"/>\n    <rect x=\"5.5\" y=\"8\" width=\"0.58\" height=\"1.5\" rx=\"0.2\"/>\n    <circle cx=\"5.79\" cy=\"9.6\" r=\"0.2\" opacity=\"0.3\"/>\n    <rect x=\"5.5\" y=\"9.8\" width=\"0.58\" height=\"1.5\" rx=\"0.2\"/>\n    <ellipse cx=\"5.79\" cy=\"11.5\" rx=\"0.48\" ry=\"0.23\"/>\n    <rect x=\"6.3\" y=\"8\" width=\"0.58\" height=\"1.5\" rx=\"0.2\"/>\n    <circle cx=\"6.59\" cy=\"9.6\" r=\"0.2\" opacity=\"0.3\"/>\n    <rect x=\"6.3\" y=\"9.8\" width=\"0.58\" height=\"1.5\" rx=\"0.2\"/>\n    <ellipse cx=\"6.59\" cy=\"11.5\" rx=\"0.48\" ry=\"0.23\"/>\n    \n    <rect x=\"10.8\" y=\"3.2\" width=\"10.8\" height=\"14.5\" rx=\"0.7\"/>\n    <rect x=\"11.2\" y=\"3.6\" width=\"10\" height=\"13.7\" rx=\"0.4\" opacity=\"0.08\"/>\n    <path d=\"M10.8 6h10.8\" opacity=\"0.18\"/>\n    <rect x=\"12.3\" y=\"7.2\" width=\"6.8\" height=\"0.45\" rx=\"0.22\" opacity=\"0.28\"/>\n    <rect x=\"12.3\" y=\"8.1\" width=\"6.8\" height=\"0.45\" rx=\"0.22\" opacity=\"0.28\"/>\n    <rect x=\"12.3\" y=\"9\" width=\"6\" height=\"0.4\" rx=\"0.2\" opacity=\"0.28\"/>\n    <rect x=\"12.3\" y=\"9.8\" width=\"6.8\" height=\"0.4\" rx=\"0.2\" opacity=\"0.28\"/>\n    <rect x=\"12.3\" y=\"10.6\" width=\"5.5\" height=\"0.4\" rx=\"0.2\" opacity=\"0.28\"/>\n    <rect x=\"12.3\" y=\"11.4\" width=\"6.3\" height=\"0.4\" rx=\"0.2\" opacity=\"0.28\"/>\n    <rect x=\"12.3\" y=\"12.2\" width=\"5.8\" height=\"0.4\" rx=\"0.2\" opacity=\"0.28\"/>\n    <rect x=\"12.8\" y=\"4.2\" width=\"5.5\" height=\"4.2\" rx=\"0.4\" opacity=\"0.12\"/>\n    <circle cx=\"15.5\" cy=\"6.3\" r=\"0.9\" opacity=\"0.18\"/>\n    <path d=\"M14.8 14.3l1.1 1.1l2.3-2.3\" stroke=\"white\" stroke-width=\"0.55\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M15.2 14.7l0.7 0.7l1.5-1.5\" stroke=\"white\" stroke-width=\"0.35\" fill=\"none\" stroke-linecap=\"round\" opacity=\"0.5\"/>\n  </svg>",
-  certificate: "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n    <rect x=\"3.2\" y=\"4.8\" width=\"17.6\" height=\"10.5\" rx=\"0.7\"/>\n    <rect x=\"3.6\" y=\"5.2\" width=\"16.8\" height=\"9.7\" rx=\"0.4\" opacity=\"0.08\"/>\n    <rect x=\"3.6\" y=\"5.2\" width=\"16.8\" height=\"2.2\" rx=\"0.4\" opacity=\"0.12\"/>\n    <rect x=\"5.2\" y=\"8.2\" width=\"13.6\" height=\"0.5\" rx=\"0.25\" opacity=\"0.28\"/>\n    <rect x=\"5.2\" y=\"9.3\" width=\"13.6\" height=\"0.5\" rx=\"0.25\" opacity=\"0.28\"/>\n    <rect x=\"5.2\" y=\"10.4\" width=\"9.8\" height=\"0.45\" rx=\"0.22\" opacity=\"0.28\"/>\n    <rect x=\"5.2\" y=\"11.4\" width=\"11.2\" height=\"0.45\" rx=\"0.22\" opacity=\"0.28\"/>\n    <circle cx=\"17\" cy=\"9.8\" r=\"2.1\" opacity=\"0.15\"/>\n    <circle cx=\"17\" cy=\"9.8\" r=\"1.6\" opacity=\"0.12\"/>\n    <circle cx=\"17\" cy=\"9.8\" r=\"1.1\" opacity=\"0.08\"/>\n    <path d=\"M17 8.2v3.2M15.4 9.8h3.2\" stroke=\"white\" stroke-width=\"0.55\" opacity=\"0.3\"/>\n    <path d=\"M15.8 8.6l2.4 2.4M18.2 8.6l-2.4 2.4\" stroke=\"white\" stroke-width=\"0.4\" opacity=\"0.2\"/>\n    \n    <path d=\"M10.8 15.3l1.4 4l0.95-1.7l1.7-0.38l-0.95-1.7z\"/>\n    <circle cx=\"12.2\" cy=\"16.2\" r=\"0.95\"/>\n    <circle cx=\"12.2\" cy=\"16.2\" r=\"0.5\" opacity=\"0.25\"/>\n    <path d=\"M13.5 15.3l1.4 4l0.95-1.7l1.7-0.38l-0.95-1.7z\"/>\n    <circle cx=\"14.9\" cy=\"16.2\" r=\"0.95\"/>\n    <circle cx=\"14.9\" cy=\"16.2\" r=\"0.5\" opacity=\"0.25\"/>\n    <path d=\"M11.8 16.8l0.4 0.8l-0.4 0.8\" opacity=\"0.3\"/>\n    <path d=\"M14.5 16.8l0.4 0.8l-0.4 0.8\" opacity=\"0.3\"/>\n  </svg>",
-  // Je continue avec un format plus condensé pour créer rapidement toutes les icônes
-  // en maintenant un niveau de détail élevé
-
-  stamp: "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n    <circle cx=\"12\" cy=\"7.8\" r=\"4.3\"/>\n    <circle cx=\"12\" cy=\"7.8\" r=\"3.5\" opacity=\"0.15\"/>\n    <circle cx=\"12\" cy=\"7.8\" r=\"2.7\" opacity=\"0.12\"/>\n    <circle cx=\"12\" cy=\"7.8\" r=\"1.9\" opacity=\"0.08\"/>\n    <path d=\"M12 4.2v7.2M9.3 5.8l2.7-1.4l2.7 1.4M9.3 9.8l2.7 1.4l2.7-1.4\"/>\n    <rect x=\"10.9\" y=\"7.3\" width=\"2.2\" height=\"0.45\" rx=\"0.22\" opacity=\"0.18\"/>\n    <path d=\"M10 7.8h4M10.5 8.3h3\" stroke=\"white\" stroke-width=\"0.2\" opacity=\"0.15\"/>\n    <rect x=\"5.8\" y=\"13.8\" width=\"12.4\" height=\"2.1\" rx=\"0.7\"/>\n    <rect x=\"4.8\" y=\"16.2\" width=\"14.4\" height=\"1.7\" rx=\"0.7\"/>\n    <rect x=\"4\" y=\"18.2\" width=\"16\" height=\"2.2\" rx=\"0.9\"/>\n    <rect x=\"6\" y=\"14.2\" width=\"12\" height=\"0.8\" rx=\"0.3\" opacity=\"0.12\"/>\n    <path d=\"M16.8 11.8c0.65 0.38 1.2 0.85 1.7 1.35l0.38 0.38c0.28 0.28 0.42 0.58 0.42 0.95v0.75h-1.7v-1.15c0-0.18-0.08-0.28-0.18-0.38l-0.6-0.75z\"/>\n    <ellipse cx=\"17.6\" cy=\"12.5\" rx=\"0.48\" ry=\"0.28\"/>\n    <circle cx=\"18.2\" cy=\"11.8\" r=\"0.35\" opacity=\"0.4\"/>\n  </svg>",
-  folder: "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n    <path d=\"M10.2 4.8H4.2c-0.68 0-1.25 0.57-1.25 1.25v12c0 0.68 0.57 1.25 1.25 1.25h15.6c0.68 0 1.25-0.57 1.25-1.25V8.2c0-0.68-0.57-1.25-1.25-1.25h-7.8L10.2 4.8z\"/>\n    <path d=\"M2.95 9.2h18.1\" opacity=\"0.28\"/>\n    <rect x=\"3.2\" y=\"5.2\" width=\"6.8\" height=\"0.95\" rx=\"0.28\" opacity=\"0.12\"/>\n    <circle cx=\"12\" cy=\"13.2\" r=\"1.95\"/>\n    <circle cx=\"12\" cy=\"13.2\" r=\"1.3\" opacity=\"0.15\"/>\n    <circle cx=\"11.4\" cy=\"12.8\" r=\"0.35\" opacity=\"0.35\"/>\n    <circle cx=\"12.6\" cy=\"12.8\" r=\"0.35\" opacity=\"0.35\"/>\n    <path d=\"M11.5 13.5c0.15 0.15 0.32 0.22 0.5 0.22s0.35-0.07 0.5-0.22\" stroke=\"white\" stroke-width=\"0.25\" fill=\"none\"/>\n    <rect x=\"11.7\" y=\"15\" width=\"0.6\" height=\"2.3\" rx=\"0.25\"/>\n    <ellipse cx=\"12\" cy=\"17.5\" rx=\"0.85\" ry=\"0.38\"/>\n    <path d=\"M10.2 18.2c0-1.15 0.85-1.7 1.8-1.7s1.8 0.55 1.8 1.7\"/>\n    <circle cx=\"17\" cy=\"10.8\" r=\"0.85\" opacity=\"0.28\"/>\n    <path d=\"M17 10.2l0.23 0.55l0.55 0.08l-0.42 0.38l0.1 0.55l-0.46-0.28l-0.46 0.28l0.1-0.55l-0.42-0.38l0.55-0.08z\" opacity=\"0.28\"/>\n  </svg>"
-
-  // Je vais maintenant créer toutes les autres icônes avec ce niveau de détail...
-  // [La suite du fichier suit le même pattern de complexité]
+  // ==================== ADMINISTRATIVE & VISAS ====================
+  passport: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"6\" y=\"3\" width=\"9\" height=\"13\" rx=\"0.8\" stroke=\"white\" stroke-width=\"1.2\" fill=\"white\"/>\n    <circle cx=\"10.5\" cy=\"7\" r=\"1.5\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8\" y=\"9.5\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8\" y=\"11\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M16 12 L21 12 L21 20 L16 20 Z\" fill=\"white\"/>\n    <circle cx=\"18.5\" cy=\"15\" r=\"1.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"17\" y=\"17\" width=\"3\" height=\"0.3\" rx=\"0.15\" fill=\"white\" opacity=\"0.3\"/>\n  </svg>",
+  visa: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"8\" width=\"11\" height=\"9\" rx=\"0.5\" stroke=\"white\" stroke-width=\"1\" fill=\"white\"/>\n    <rect x=\"6\" y=\"10\" width=\"2.5\" height=\"3\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"9\" y=\"10.5\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"9\" y=\"12\" width=\"3\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"10.5\" cy=\"14.5\" r=\"1\" fill=\"white\" opacity=\"0.2\"/>\n    <circle cx=\"18\" cy=\"10\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M16 10 L18 12 L20 8\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  document: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M6 3 L6 21 L14 21 L14 8 L9 3 Z\" fill=\"white\"/>\n    <path d=\"M9 3 L9 8 L14 8\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8\" y=\"11\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8\" y=\"13\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8\" y=\"15\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M16 12 L20 12 L20 20 L16 20 Z\" fill=\"white\"/>\n    <path d=\"M17 14 L19 16 L17 18\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  certificate: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"5\" width=\"14\" height=\"9\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"11\" cy=\"9.5\" r=\"1.3\" stroke=\"white\" stroke-width=\"0.8\" fill=\"none\" opacity=\"0.3\"/>\n    <path d=\"M9 15 L10 19 L10.5 17 L12 17 L10.5 15.5 Z\" fill=\"white\"/>\n    <path d=\"M13 15 L12 19 L11.5 17 L10 17 L11.5 15.5 Z\" fill=\"white\"/>\n    <circle cx=\"18.5\" cy=\"16\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17 16 L18.5 17.5 L20 15\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  embassy: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L5 6.5 L5 7.5 L17 7.5 L17 6.5 Z\" fill=\"white\"/>\n    <rect x=\"6.5\" y=\"8.5\" width=\"1.5\" height=\"7\" fill=\"white\"/>\n    <rect x=\"10\" y=\"8.5\" width=\"1.5\" height=\"7\" fill=\"white\"/>\n    <rect x=\"13.5\" y=\"8.5\" width=\"1.5\" height=\"7\" fill=\"white\"/>\n    <rect x=\"5\" y=\"15.5\" width=\"12\" height=\"1.5\" fill=\"white\"/>\n    <circle cx=\"19\" cy=\"10\" r=\"2.5\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M19 8 L19 12 M17 10 L21 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  stamp: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"10\" cy=\"7\" r=\"2.5\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <path d=\"M10 4.5 L10 9.5 M7.5 7 L12.5 7\" stroke=\"white\" stroke-width=\"0.8\"/>\n    <rect x=\"5\" y=\"11\" width=\"10\" height=\"1.2\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"4\" y=\"12.5\" width=\"12\" height=\"1.2\" rx=\"0.6\" fill=\"white\"/>\n    <rect x=\"3\" y=\"14\" width=\"14\" height=\"1.8\" rx=\"0.8\" fill=\"white\"/>\n    <path d=\"M18 6 L21 6 L21 16 L18 16\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n    <circle cx=\"19.5\" cy=\"11\" r=\"1.5\" fill=\"white\"/>\n  </svg>",
+  // ==================== BANKS & MONEY ====================
+  bank: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L4 6.5 L4 7.5 L18 7.5 L18 6.5 Z\" fill=\"white\"/>\n    <rect x=\"5.5\" y=\"8.5\" width=\"1.5\" height=\"6\" fill=\"white\"/>\n    <rect x=\"10.5\" y=\"8.5\" width=\"1.5\" height=\"6\" fill=\"white\"/>\n    <rect x=\"15.5\" y=\"8.5\" width=\"1.5\" height=\"6\" fill=\"white\"/>\n    <rect x=\"4\" y=\"14.5\" width=\"14\" height=\"1.5\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"10\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M18.5 10 L19.5 11 L21 9\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  money: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"3\" y=\"9\" width=\"14\" height=\"7\" rx=\"0.8\" fill=\"white\"/>\n    <circle cx=\"10\" cy=\"12.5\" r=\"2\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <circle cx=\"6\" cy=\"12.5\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"14\" cy=\"12.5\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M18 8 L22 8 L22 18 L18 18\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <path d=\"M19 11 L21 11 M19 13 L21 13 M19 15 L21 15\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\"/>\n  </svg>",
+  card: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"2\" y=\"7\" width=\"16\" height=\"9\" rx=\"1\" fill=\"white\"/>\n    <rect x=\"2\" y=\"9\" width=\"16\" height=\"1.8\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"4\" y=\"12.5\" width=\"3\" height=\"2\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"11.5\" r=\"2.5\" fill=\"white\"/>\n    <rect x=\"18.5\" y=\"11\" width=\"3\" height=\"1\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n  </svg>",
+  tax: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"3\" width=\"10\" height=\"14\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"7\" y=\"6\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"8\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"10\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M12 12 L14 14 L12 16\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\"/>\n    <circle cx=\"18.5\" cy=\"13\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M18.5 11.5 L18.5 14.5\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <path d=\"M17 13 L20 13\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  insurance: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L5 5.5 L5 11 Q5 15 11 18 Q17 15 17 11 L17 5.5 Z\" fill=\"white\"/>\n    <path d=\"M8 11 L10 13 L14 9\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"16\" r=\"2\" fill=\"white\"/>\n    <path d=\"M18 16 L19 17 L20.5 15\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  investment: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M3 15 L7 11 L11 13 L18 6\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M14 6 L18 6 L18 10\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <circle cx=\"20.5\" cy=\"15\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M20.5 13.5 L20.5 16.5 M18.5 15 L22.5 15\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  pension: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"8\" width=\"12\" height=\"10\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"10\" cy=\"11.5\" r=\"1.5\" stroke=\"white\" stroke-width=\"0.8\" fill=\"none\" opacity=\"0.3\"/>\n    <path d=\"M7 14.5 Q10 13 13 14.5\" stroke=\"white\" stroke-width=\"1\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"12\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19 10 L19 14 M17 12 L21 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  loan: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"3\" y=\"8\" width=\"14\" height=\"8\" rx=\"1\" fill=\"white\"/>\n    <circle cx=\"10\" cy=\"12\" r=\"2.5\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <path d=\"M18 12 L22 12 M20 10 L20 14\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <path d=\"M8.5 12 L9.5 12 M10.5 12 L11.5 12\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  // ==================== MOVING & LOGISTICS ====================
+  box: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M4 8 L11 4 L18 8 L18 15 L11 19 L4 15 Z\" fill=\"white\"/>\n    <path d=\"M4 8 L11 12 L18 8 M11 12 L11 19\" stroke=\"white\" stroke-width=\"1\" opacity=\"0.3\"/>\n    <path d=\"M19 10 L22 12 L22 16 L19 18\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n    <path d=\"M19 14 L22 14\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  truck: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"2\" y=\"9\" width=\"11\" height=\"6\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M13 10 L16 10 L18 13 L18 15 L13 15 Z\" fill=\"white\"/>\n    <circle cx=\"6\" cy=\"16\" r=\"1.3\" fill=\"white\"/>\n    <circle cx=\"15\" cy=\"16\" r=\"1.3\" fill=\"white\"/>\n    <circle cx=\"20.5\" cy=\"11\" r=\"2\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M19 11 L20.5 12.5 L22 10\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  storage: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"5\" width=\"12\" height=\"12\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"4\" y=\"9\" width=\"12\" height=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"4\" y=\"13\" width=\"12\" height=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"7\" cy=\"11\" r=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"7\" cy=\"15\" r=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M17 8 L21 10 L21 16 L17 14 Z\" fill=\"white\"/>\n    <path d=\"M17 11 L21 13\" stroke=\"white\" stroke-width=\"0.5\" opacity=\"0.3\"/>\n  </svg>",
+  "package": "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"6\" width=\"10\" height=\"10\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M5 9 L15 9 M10 6 L10 16\" stroke=\"white\" stroke-width=\"1\" opacity=\"0.3\"/>\n    <circle cx=\"18.5\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17 13 L18.5 14.5 L20 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  customs: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"6\" width=\"12\" height=\"10\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M8 10 L10 12 L13 9\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"13\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M17 8 L21 8 L21 16 L17 16\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n    <path d=\"M18 12 L20 12\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n  </svg>",
+  international_moving: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M4 8 L10 5 L16 8 L16 14 L10 17 L4 14 Z\" fill=\"white\"/>\n    <path d=\"M4 8 L10 11 L16 8 M10 11 L10 17\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"11.5\" r=\"4\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M14.5 11.5 L24.5 11.5 M19.5 6.5 Q17 11.5 19.5 16.5 M19.5 6.5 Q22 11.5 19.5 16.5\" stroke=\"white\" stroke-width=\"0.6\" opacity=\"0.3\"/>\n  </svg>",
+  packing: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"6\" width=\"12\" height=\"11\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M4 9 L16 9 M10 6 L10 17\" stroke=\"white\" stroke-width=\"1\" opacity=\"0.3\"/>\n    <path d=\"M7 12 L9 12 M11 12 L13 12 M7 14 L9 14\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"12.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 12.5 L19.5 14 L21 11.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== TRANSPORT ====================
+  car: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M5 12 L7 8 L14 8 L16 12 L16 16 L5 16 Z\" fill=\"white\"/>\n    <rect x=\"6\" y=\"9\" width=\"3\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"11\" y=\"9\" width=\"3\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"7\" cy=\"16\" r=\"1.2\" fill=\"white\"/>\n    <circle cx=\"13\" cy=\"16\" r=\"1.2\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 11 L19.5 12.5 L21 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  license: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"7\" width=\"13\" height=\"9\" rx=\"0.8\" fill=\"white\"/>\n    <rect x=\"6\" y=\"9\" width=\"3\" height=\"3.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"10\" y=\"9.5\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"10\" y=\"11\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"10\" y=\"12.5\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"11.5\" r=\"2\" fill=\"white\"/>\n    <path d=\"M18.5 11.5 L19.5 12.5 L20.5 10.5\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  scooter: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"6\" cy=\"16\" r=\"1.8\" fill=\"white\"/>\n    <circle cx=\"15\" cy=\"16\" r=\"1.8\" fill=\"white\"/>\n    <path d=\"M7.5 16 L10.5 10 L13 10\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <circle cx=\"13\" cy=\"8\" r=\"0.8\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"10\" r=\"2.2\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M18 10 L19.5 11.5 L21 9\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  ticket: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"3\" y=\"8\" width=\"14\" height=\"7\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"3\" cy=\"11.5\" r=\"0.8\" fill=\"white\"/>\n    <circle cx=\"17\" cy=\"11.5\" r=\"0.8\" fill=\"white\"/>\n    <rect x=\"8.5\" y=\"10\" width=\"0.4\" height=\"3\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"10\" y=\"10\" width=\"0.4\" height=\"3\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"11.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19 11.5 L20 12.5 L21.5 10.5\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  transport: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"8\" width=\"12\" height=\"7\" rx=\"0.8\" fill=\"white\"/>\n    <circle cx=\"8\" cy=\"16\" r=\"1.2\" fill=\"white\"/>\n    <circle cx=\"13\" cy=\"16\" r=\"1.2\" fill=\"white\"/>\n    <rect x=\"6\" y=\"10\" width=\"2.5\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"12\" y=\"10\" width=\"2.5\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M17 9 L21 11 L21 15 L17 13 Z\" fill=\"white\"/>\n  </svg>",
+  metro: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"6\" width=\"10\" height=\"10\" rx=\"1.8\" fill=\"white\"/>\n    <rect x=\"7\" y=\"8\" width=\"3\" height=\"4\" rx=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"11.5\" y=\"8\" width=\"2\" height=\"4\" rx=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"8\" cy=\"17\" r=\"0.8\" fill=\"white\"/>\n    <circle cx=\"13\" cy=\"17\" r=\"0.8\" fill=\"white\"/>\n    <path d=\"M16 9 L20 11 L20 14 L16 12 Z\" fill=\"white\"/>\n  </svg>",
+  bus: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"7\" width=\"12\" height=\"9\" rx=\"1.2\" fill=\"white\"/>\n    <rect x=\"6\" y=\"9\" width=\"2.5\" height=\"3\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"9.5\" y=\"9\" width=\"2.5\" height=\"3\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"13\" y=\"9\" width=\"2\" height=\"3\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"7\" cy=\"17\" r=\"1\" fill=\"white\"/>\n    <circle cx=\"13\" cy=\"17\" r=\"1\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"11.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 11.5 L19.5 13 L21 10.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  ferry: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M4 12 L4 14 L16 14 L16 12 L10 8 Z\" fill=\"white\"/>\n    <rect x=\"7\" y=\"9\" width=\"2\" height=\"3\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M3 15 Q10 13 17 15\" stroke=\"white\" stroke-width=\"1.2\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"10\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 10 L20 11.5 L21.5 9\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  taxi: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"9\" y=\"5\" width=\"3.5\" height=\"1.8\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M5 10 L7 7.5 L14 7.5 L16 10 L16 14.5 L5 14.5 Z\" fill=\"white\"/>\n    <rect x=\"6\" y=\"8.5\" width=\"3.5\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"11.5\" y=\"8.5\" width=\"3.5\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"7\" cy=\"15\" r=\"1.2\" fill=\"white\"/>\n    <circle cx=\"14\" cy=\"15\" r=\"1.2\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"11\" r=\"2\" fill=\"white\"/>\n    <path d=\"M18.5 11 L20 12.5 L21.5 10\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  // ==================== HEALTH ====================
+  health: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 5 L8 8 L8 11 L11 14 L14 11 L14 8 Z\" fill=\"white\"/>\n    <path d=\"M11 8 L11 12 M9 10 L13 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"18.5\" cy=\"14\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17 14 L18.5 15.5 L20 13\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  medicine: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"7\" y=\"6\" width=\"7\" height=\"11\" rx=\"0.8\" fill=\"white\"/>\n    <path d=\"M10.5 9 L10.5 14 M8 11.5 L13 11.5\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"18\" cy=\"13\" r=\"2.2\" fill=\"white\"/>\n    <path d=\"M16.5 13 L17.5 14 L19.5 12\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  hospital: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"5\" width=\"10\" height=\"14\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M10 8 L10 13 M7.5 10.5 L12.5 10.5\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <rect x=\"7.5\" y=\"15\" width=\"1.5\" height=\"4\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"11\" y=\"15\" width=\"1.5\" height=\"4\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19 9 L19 13 M17 11 L21 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  wellbeing: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 4 Q7 6.5 7 10.5 Q7 14.5 11 17 Q15 14.5 15 10.5 Q15 6.5 11 4\" fill=\"white\"/>\n    <path d=\"M9 10 Q11 8 13 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" fill=\"none\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"14\" r=\"2\" fill=\"white\"/>\n    <path d=\"M18 14 L19 15 L20.5 13\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  dentist: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M10 5 Q8 6 8 8 L8 13 Q8 15 9 16.5 L9 19\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <path d=\"M13 5 Q15 6 15 8 L15 13 Q15 15 14 16.5 L14 19\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <circle cx=\"19.5\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 11 L19.5 12.5 L21 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  optician: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"7\" cy=\"11\" r=\"3.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <circle cx=\"14\" cy=\"11\" r=\"3.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M10.5 11 L10.5 11\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\"/>\n    <circle cx=\"19.5\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 11 L19.5 12.5 L21 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  physiotherapy: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"9\" cy=\"6\" r=\"2\" fill=\"white\"/>\n    <path d=\"M9 8 L9 12 M6.5 10 L11.5 10\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <path d=\"M9 12 L7 16 M9 12 L11 16\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <path d=\"M15 9 L18 9 M15 12 L18 12 M15 15 L18 15\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <circle cx=\"20\" cy=\"12\" r=\"1.5\" fill=\"white\"/>\n  </svg>",
+  spa: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 4 Q7 6.5 7 10.5 Q7 14.5 11 17 Q15 14.5 15 10.5 Q15 6.5 11 4\" fill=\"white\"/>\n    <path d=\"M9 11 Q11 9 13 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" fill=\"none\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"1\" fill=\"white\"/>\n  </svg>",
+  massage: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"9\" cy=\"6\" r=\"2.2\" fill=\"white\"/>\n    <path d=\"M9 8.5 L9 13 M6.5 11 L11.5 11\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <ellipse cx=\"9\" cy=\"15.5\" rx=\"3\" ry=\"1.8\" fill=\"white\"/>\n    <circle cx=\"18\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <circle cx=\"18\" cy=\"11\" r=\"1\" fill=\"white\"/>\n  </svg>",
+  // ==================== FAMILY & EDUCATION ====================
+  child: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"10\" cy=\"6\" r=\"2\" fill=\"white\"/>\n    <path d=\"M10 8.5 L10 13 M7 10.5 L13 10.5\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n    <path d=\"M10 13 L7.5 17 M10 13 L12.5 17\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n    <circle cx=\"18\" cy=\"8\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M18 11 L18 15 M15.5 13 L20.5 13\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  school: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L4 6.5 L4 15 L11 18.5 L18 15 L18 6.5 Z\" fill=\"white\"/>\n    <path d=\"M11 6.5 L11 18.5\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <circle cx=\"11\" cy=\"5\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M19 9 L22 9 M19 12 L22 12 M19 15 L22 15\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  book: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M5 4 L5 18 L15 18 L15 4 Z\" fill=\"white\"/>\n    <path d=\"M10 4 L10 18\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"7\" width=\"2.5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"9\" width=\"2.5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M17.5 11 L19 12.5 L20.5 10\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  language: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"10\" cy=\"11\" r=\"7\" fill=\"white\"/>\n    <path d=\"M3 11 L17 11 M10 4 Q7 11 10 18 M10 4 Q13 11 10 18\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <path d=\"M18 8 L21 8 M18 11 L21 11 M18 14 L21 14\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  teacher: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"6\" width=\"12\" height=\"9\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"6\" y=\"8\" width=\"3.5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"10\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M11 10 L13 12 L15 10\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2\" fill=\"white\"/>\n    <path d=\"M19 9 L19 11 L21 11\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n  </svg>",
+  university: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L3 6.5 L3 16 L11 19.5 L19 16 L19 6.5 Z\" fill=\"white\"/>\n    <path d=\"M11 6.5 L11 19.5\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <path d=\"M7 8.5 L7 15\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <path d=\"M15 8.5 L15 15\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <rect x=\"9\" y=\"2\" width=\"4\" height=\"1.5\" rx=\"0.5\" fill=\"white\"/>\n  </svg>",
+  training_center: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"6\" width=\"12\" height=\"12\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"10\" cy=\"11\" r=\"2\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"14.5\" width=\"8\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 11 L19 12.5 L20.5 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  wedding: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"7\" cy=\"7\" r=\"2\" fill=\"white\"/>\n    <circle cx=\"14\" cy=\"7\" r=\"2\" fill=\"white\"/>\n    <path d=\"M4 13 Q7 11 10.5 13\" fill=\"white\"/>\n    <path d=\"M10.5 13 Q14 11 17.5 13\" fill=\"white\"/>\n    <path d=\"M7 13 L7 17 M14 13 L14 17\" stroke=\"white\" stroke-width=\"1.2\"/>\n    <circle cx=\"20\" cy=\"11\" r=\"2\" fill=\"white\"/>\n    <path d=\"M19 11 L20 12 L21.5 10\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  birthday: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"12\" width=\"10\" height=\"6\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"7\" y=\"9\" width=\"2\" height=\"3\" rx=\"0.3\" fill=\"white\"/>\n    <rect x=\"11\" y=\"9\" width=\"2\" height=\"3\" rx=\"0.3\" fill=\"white\"/>\n    <path d=\"M8 7 L8 9 M12 7 L12 9\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 13 L19 14.5 L20.5 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== WORK & BUSINESS ====================
+  briefcase: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"3\" y=\"9\" width=\"14\" height=\"9\" rx=\"0.8\" fill=\"white\"/>\n    <rect x=\"7\" y=\"6\" width=\"6\" height=\"3\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"3\" y=\"12\" width=\"14\" height=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"13.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 13.5 L19.5 15 L21 12.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  cv: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"3\" width=\"10\" height=\"16\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"10\" cy=\"6.5\" r=\"1.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"9\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"11\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"13\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"15\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M16 7 L20 7 L20 17 L16 17\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n    <circle cx=\"18\" cy=\"12\" r=\"1.5\" fill=\"white\"/>\n  </svg>",
+  company: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"8\" width=\"12\" height=\"11\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"7\" y=\"11\" width=\"1.5\" height=\"1.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"12\" y=\"11\" width=\"1.5\" height=\"1.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"14\" width=\"1.5\" height=\"1.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"12\" y=\"14\" width=\"1.5\" height=\"1.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8.5\" y=\"5\" width=\"3\" height=\"3\" rx=\"0.3\" fill=\"white\"/>\n    <circle cx=\"19\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19 11 L19 15 M17 13 L21 13\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  interview: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"10\" cy=\"7\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M5 15 Q10 12 15 15\" fill=\"white\"/>\n    <rect x=\"7\" y=\"17\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2\" fill=\"white\"/>\n    <rect x=\"17.5\" y=\"13\" width=\"3\" height=\"0.8\" rx=\"0.3\" fill=\"white\"/>\n    <path d=\"M19 13 L19 15\" stroke=\"white\" stroke-width=\"0.8\"/>\n  </svg>",
+  freelance: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"7\" width=\"12\" height=\"9\" rx=\"0.8\" fill=\"white\"/>\n    <rect x=\"6\" y=\"9\" width=\"3.5\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M11 10 L15 10 M11 12 L14 12\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"13\" width=\"8\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <circle cx=\"19\" cy=\"11.5\" r=\"1\" fill=\"white\"/>\n  </svg>",
+  architect: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M4 8 L4 18 L12 18 L12 8\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M2 8 L14 8 L13 5 L3 5 Z\" fill=\"white\"/>\n    <rect x=\"6\" y=\"11\" width=\"2\" height=\"2\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"10\" y=\"11\" width=\"2\" height=\"2\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M15 10 L22 10 M15 13 L20 13 M15 16 L21 16\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  engineer: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"10\" cy=\"8\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M10 10.5 L10 13.5\" stroke=\"white\" stroke-width=\"1.2\"/>\n    <circle cx=\"10\" cy=\"15\" r=\"1.5\" fill=\"white\"/>\n    <path d=\"M8.5 15 L5 18 M11.5 15 L15 18\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n    <path d=\"M16 6 L22 9 L22 13 L16 10 Z\" fill=\"white\"/>\n    <path d=\"M16 8 L22 11\" stroke=\"white\" stroke-width=\"0.5\" opacity=\"0.3\"/>\n  </svg>",
+  accountant: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"5\" width=\"12\" height=\"14\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"6\" y=\"8\" width=\"8\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"10\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"12\" width=\"7\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"14\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M17 9 L21 9 M17 12 L21 12 M17 15 L21 15\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n  </svg>",
+  consultant: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"9\" cy=\"7\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M5 13.5 Q9 11 13 13.5 L13 17 L5 17 Z\" fill=\"white\"/>\n    <rect x=\"7.5\" y=\"9.5\" width=\"3\" height=\"1.5\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"16\" y=\"8\" width=\"6\" height=\"9\" rx=\"0.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 11 L20.5 11 M17.5 13 L20.5 13 M17.5 15 L19.5 15\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n  </svg>",
+  // ==================== HOME ====================
+  home: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L4 9 L4 18 L18 18 L18 9 Z\" fill=\"white\"/>\n    <rect x=\"9\" y=\"13\" width=\"3\" height=\"5\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"10\" width=\"2.5\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"13\" y=\"10\" width=\"2.5\" height=\"2.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M19 7 L22 9 L22 16 L19 14 Z\" fill=\"white\"/>\n  </svg>",
+  key: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"15\" cy=\"7\" r=\"3.5\" fill=\"white\"/>\n    <rect x=\"3\" y=\"12\" width=\"9\" height=\"1.8\" rx=\"0.9\" fill=\"white\"/>\n    <rect x=\"6\" y=\"11\" width=\"0.7\" height=\"3.5\" rx=\"0.35\" fill=\"white\"/>\n    <rect x=\"9\" y=\"11\" width=\"0.7\" height=\"3.5\" rx=\"0.35\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"16\" r=\"2\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M19 16 L20 17 L21.5 15\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  cleaning: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"7\" cy=\"5\" r=\"1.8\" fill=\"white\"/>\n    <rect x=\"6\" y=\"7\" width=\"2\" height=\"9\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M4.5 16 L9.5 16 L8 18 L6 18 Z\" fill=\"white\"/>\n    <circle cx=\"17\" cy=\"9\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M15.5 9 L17 10.5 L18.5 8\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M16 12 L16 17\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n  </svg>",
+  repair: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M7 7 L14 14 M7 14 L14 7\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n    <circle cx=\"7\" cy=\"7\" r=\"1.8\" fill=\"white\"/>\n    <circle cx=\"14\" cy=\"14\" r=\"1.8\" fill=\"white\"/>\n    <circle cx=\"19\" cy=\"16\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 16 L19 17.5 L20.5 15\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  renovation: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"8\" width=\"12\" height=\"9\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M7 11 L10 11 M12 11 L15 11 M7 13 L10 13 M12 13 L15 13\" stroke=\"white\" stroke-width=\"1.2\" opacity=\"0.3\"/>\n    <rect x=\"9\" y=\"5\" width=\"3\" height=\"3\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"19\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 13 L19 14 L21 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  inspection: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"9\" cy=\"10\" r=\"6\" fill=\"white\"/>\n    <path d=\"M14 14 L18 18\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n    <path d=\"M7 10 L9 12 L12 8\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"8\" r=\"2\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M19 8 L20 9 L21.5 7\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  gardening: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M10 14 L10 18\" stroke=\"white\" stroke-width=\"1.5\"/>\n    <path d=\"M7 7 Q7 4 10 4 Q13 4 13 7\" fill=\"white\"/>\n    <path d=\"M5 10 Q5 7 10 7 Q15 7 15 10\" fill=\"white\"/>\n    <rect x=\"8.5\" y=\"17.5\" width=\"3\" height=\"1.5\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 11 L19 12.5 L20.5 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  plumbing: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M5 8 L5 15\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <path d=\"M5 11 L12 11\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <path d=\"M12 8 L12 15\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <circle cx=\"8.5\" cy=\"13\" r=\"1.5\" fill=\"white\"/>\n    <path d=\"M16 8 L20 8 M16 11 L20 11 M16 14 L20 14\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n  </svg>",
+  painting: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"7\" y=\"4\" width=\"3\" height=\"8\" rx=\"0.3\" fill=\"white\"/>\n    <path d=\"M8.5 12 L8.5 18\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <rect x=\"6\" y=\"18\" width=\"5\" height=\"2\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"17\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M15.5 11 L17 12.5 L18.5 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  carpentry: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M5 7 L12 14 M5 14 L12 7\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <circle cx=\"5\" cy=\"7\" r=\"1.5\" fill=\"white\"/>\n    <circle cx=\"12\" cy=\"14\" r=\"1.5\" fill=\"white\"/>\n    <path d=\"M15 9 L19 9 M15 12 L19 12 M15 15 L19 15\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <circle cx=\"21\" cy=\"12\" r=\"1.2\" fill=\"white\"/>\n  </svg>",
+  // ==================== SERVICES ====================
+  phone: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"6\" y=\"3\" width=\"9\" height=\"16\" rx=\"0.8\" fill=\"white\"/>\n    <circle cx=\"10.5\" cy=\"16.5\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8\" y=\"5\" width=\"5\" height=\"9\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"18.5\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17 13 L18.5 14.5 L20 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  wifi: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M3 9 Q10 4 17 9\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\" fill=\"none\"/>\n    <path d=\"M6 12 Q10 9 14 12\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\" fill=\"none\"/>\n    <path d=\"M8.5 15 Q10 13.5 11.5 15\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\" fill=\"none\"/>\n    <circle cx=\"10\" cy=\"17\" r=\"0.8\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 11 L20 12.5 L21.5 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  mail: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"2\" y=\"6\" width=\"16\" height=\"11\" rx=\"0.8\" fill=\"white\"/>\n    <path d=\"M2 6 L10 12 L18 6\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <circle cx=\"20.5\" cy=\"14\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19 14 L20.5 15.5 L22 13\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  translation: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"3\" y=\"6\" width=\"7\" height=\"5.5\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"10.5\" y=\"11.5\" width=\"7\" height=\"5.5\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M5 8.5 L7 8.5 M6 7.5 L6 9.5 M5 12.5 L7 12.5\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <path d=\"M12.5 14 L14.5 14 M13.5 13 L13.5 15\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"9\" r=\"2\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M18.5 9 L20 10.5 L21.5 8\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  interpreter: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"8\" cy=\"7\" r=\"2.2\" fill=\"white\"/>\n    <circle cx=\"14\" cy=\"15\" r=\"2.2\" fill=\"white\"/>\n    <path d=\"M8 9.5 L8 13.5 L14 12\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <circle cx=\"19.5\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 11 L19.5 12.5 L21 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== ANIMALS ====================
+  pet: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"7\" cy=\"7\" r=\"1.3\" fill=\"white\"/>\n    <circle cx=\"14\" cy=\"7\" r=\"1.3\" fill=\"white\"/>\n    <circle cx=\"5\" cy=\"11\" r=\"1.3\" fill=\"white\"/>\n    <circle cx=\"16\" cy=\"11\" r=\"1.3\" fill=\"white\"/>\n    <ellipse cx=\"10.5\" cy=\"13\" rx=\"3.5\" ry=\"4.5\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 13 L20 14.5 L21.5 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  veterinary: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 5 L8 8 L8 11 L11 14 L14 11 L14 8 Z\" fill=\"white\"/>\n    <ellipse cx=\"11\" cy=\"16\" rx=\"2.2\" ry=\"1.3\" fill=\"white\"/>\n    <path d=\"M11 8.5 L11 12 M9 10.25 L13 10.25\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 11 L19 12.5 L20.5 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== CONCIERGE ====================
+  calendar: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"5\" width=\"12\" height=\"12\" rx=\"0.8\" fill=\"white\"/>\n    <rect x=\"4\" y=\"5\" width=\"12\" height=\"2.5\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"10\" width=\"1.5\" height=\"1.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"10\" y=\"10\" width=\"1.5\" height=\"1.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"13\" y=\"10\" width=\"1.5\" height=\"1.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"13.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 13.5 L19.5 15 L21 12.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  shopping: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M5 6 L7 16 L16 16 L18 6 Z\" fill=\"white\"/>\n    <path d=\"M8 6 L8 4.5 Q8 3.5 9 3.5 L12 3.5 Q13 3.5 13 4.5 L13 6\" stroke=\"white\" stroke-width=\"1.3\" fill=\"none\"/>\n    <circle cx=\"9\" cy=\"17.5\" r=\"0.8\" fill=\"white\"/>\n    <circle cx=\"14\" cy=\"17.5\" r=\"0.8\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"12\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 12 L20 13.5 L21.5 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  food: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M4 8 L4 18 M7 8 L7 18 M10 8 L10 11.5 Q10 14 7 14\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <path d=\"M13 8 Q16 8 16 10.5 L16 18\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <path d=\"M13 10.5 L16 10.5\" stroke=\"white\" stroke-width=\"1.3\"/>\n    <circle cx=\"20\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 13 L20 14.5 L21.5 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  delivery: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"10\" width=\"7\" height=\"5.5\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M11 11.5 L14 11.5 L16 14 L16 15.5 L11 15.5 Z\" fill=\"white\"/>\n    <circle cx=\"7\" cy=\"16.5\" r=\"1.2\" fill=\"white\"/>\n    <circle cx=\"14\" cy=\"16.5\" r=\"1.2\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"10\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 10 L19.5 11.5 L21 9\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  concierge: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"10\" cy=\"6.5\" r=\"2.2\" fill=\"white\"/>\n    <path d=\"M6 13.5 Q10 11 14 13.5 L14 17 L6 17 Z\" fill=\"white\"/>\n    <rect x=\"8.5\" y=\"9\" width=\"3\" height=\"1.8\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"19\" cy=\"11.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 11.5 L19 13 L20.5 10.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== TECH ====================
+  computer: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"2\" y=\"5\" width=\"16\" height=\"10\" rx=\"0.8\" fill=\"white\"/>\n    <rect x=\"4\" y=\"7\" width=\"12\" height=\"6\" rx=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"16\" width=\"7\" height=\"0.8\" rx=\"0.4\" fill=\"white\"/>\n    <rect x=\"9\" y=\"15\" width=\"3\" height=\"1\" fill=\"white\"/>\n    <circle cx=\"20.5\" cy=\"10\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19 10 L20.5 11.5 L22 9\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  settings: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"10\" cy=\"11\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M10 5 L10 7 M10 15 L10 17 M4 11 L6 11 M14 11 L16 11\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n    <path d=\"M6 6 L7.5 7.5 M12.5 14.5 L14 16 M14 6 L12.5 7.5 M7.5 14.5 L6 16\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n    <circle cx=\"20\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M20 9 L20 13 M18 11 L22 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  software: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"5\" width=\"12\" height=\"12\" rx=\"0.8\" fill=\"white\"/>\n    <path d=\"M8 9.5 L10 11.5 L8 13.5 M11 9.5 L13 11.5 L11 13.5\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 11 L19.5 12.5 L21 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  backup: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M6 13 Q6 9 10.5 9 Q15 9 15 13\" fill=\"white\"/>\n    <path d=\"M10.5 9 L10.5 16 M8 14 L10.5 11.5 L13 14\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <rect x=\"4\" y=\"16.5\" width=\"12\" height=\"1.8\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 13 L19.5 14.5 L21 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== LEGAL ====================
+  lawyer: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M7 10 L7 18 L14 18 L14 10\" fill=\"white\"/>\n    <path d=\"M5 10 L16 10 L15 6.5 L6 6.5 Z\" fill=\"white\"/>\n    <rect x=\"9 13\" width=\"3\" height=\"3.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 13 L19 14.5 L20.5 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  contract: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"3\" width=\"10\" height=\"16\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"7\" y=\"6\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"8\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"10\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M8 15 Q10 13 12 15\" stroke=\"white\" stroke-width=\"1.3\" fill=\"none\"/>\n    <circle cx=\"18.5\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17 13 L18.5 14.5 L20 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  notary: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"5\" width=\"10\" height=\"12\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"10\" cy=\"10\" r=\"1.8\" stroke=\"white\" stroke-width=\"0.8\" fill=\"none\" opacity=\"0.3\"/>\n    <path d=\"M10 12 L10 14\" stroke=\"white\" stroke-width=\"1\"/>\n    <rect x=\"7\" y=\"14.5\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 11.5 L19 13 L20.5 10.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  complaint: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L3 18 L19 18 Z\" fill=\"white\"/>\n    <rect x=\"10\" y=\"9\" width=\"2\" height=\"4.5\" rx=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"11\" cy=\"15\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"20.5\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M20.5 9.5 L20.5 12.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  dispute: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"11\" cy=\"11\" r=\"8\" fill=\"white\"/>\n    <path d=\"M7 11 L15 11 M11 7 L11 15\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"15\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M20 13 L20 17\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  hearing: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M7 10 L7 18 L14 18 L14 10\" fill=\"white\"/>\n    <path d=\"M5 10 L16 10 L15 6.5 L6 6.5 Z\" fill=\"white\"/>\n    <circle cx=\"10.5\" cy=\"13.5\" r=\"1.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"12\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 12 L19.5 13.5 L21 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== TRAVEL ====================
+  plane: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M2 11 L9 11 L9 7.5 L12.5 7.5 L12.5 11 L19 11 L17.5 13.5 L12.5 13.5 L12.5 16 L11 17 L9.5 16 L9.5 13.5 L4.5 13.5 Z\" fill=\"white\"/>\n    <circle cx=\"21\" cy=\"7\" r=\"2\" fill=\"white\"/>\n    <path d=\"M19.5 7 L21 8.5 L22.5 6.5\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  hotel: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"3\" y=\"6\" width=\"14\" height=\"12\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"6\" y=\"9\" width=\"2.5\" height=\"3.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"12\" y=\"9\" width=\"2.5\" height=\"3.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"6\" y=\"13.5\" width=\"2.5\" height=\"3.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"12\" y=\"13.5\" width=\"2.5\" height=\"3.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 11 L20 12.5 L21.5 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  suitcase: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"9\" width=\"12\" height=\"9\" rx=\"0.8\" fill=\"white\"/>\n    <rect x=\"8\" y=\"6\" width=\"5\" height=\"3\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"9.5\" y=\"9\" width=\"1.8\" height=\"9\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"13.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 13.5 L19.5 15 L21 12.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  train: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"6\" width=\"10\" height=\"9\" rx=\"1.5\" fill=\"white\"/>\n    <rect x=\"7\" y=\"8\" width=\"3.5\" height=\"3.5\" rx=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"12\" y=\"8\" width=\"1.5\" height=\"3.5\" rx=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"8\" cy=\"16\" r=\"0.8\" fill=\"white\"/>\n    <circle cx=\"13\" cy=\"16\" r=\"0.8\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 11 L19.5 12.5 L21 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== GARDEN ====================
+  garden: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 15 L11 18.5\" stroke=\"white\" stroke-width=\"1.8\"/>\n    <path d=\"M7.5 7.5 Q7.5 4 11 4 Q14.5 4 14.5 7.5\" fill=\"white\"/>\n    <path d=\"M5 11 Q5 7.5 11 7.5 Q17 7.5 17 11\" fill=\"white\"/>\n    <rect x=\"9\" y=\"18\" width=\"4\" height=\"1.8\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"12\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 12 L20 13.5 L21.5 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  outdoor: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L5 11 L7 11 L4 16 L8.5 14.5 L9.5 18 L11 13.5 L12.5 18 L13.5 14.5 L18 16 L15 11 L17 11 Z\" fill=\"white\"/>\n    <circle cx=\"20.5\" cy=\"9\" r=\"2\" fill=\"white\"/>\n    <path d=\"M19 9 L20.5 10.5 L22 8.5\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  pool: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"10\" width=\"12\" height=\"7\" rx=\"0.8\" fill=\"white\"/>\n    <path d=\"M6 12.5 Q8 10.5 10 12.5 Q12 14.5 14 12.5 Q16 10.5 18 12.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\" opacity=\"0.3\"/>\n    <circle cx=\"7\" cy=\"7\" r=\"1.3\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"13.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 13.5 L19.5 15 L21 12.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== ENERGY ====================
+  electricity: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M13 3 L6 11 L10 11 L9 19 L16 11 L12 11 Z\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"12\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 12 L20 13.5 L21.5 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  water: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 Q7 7.5 7 12 Q7 16.5 11 19 Q15 16.5 15 12 Q15 7.5 11 3\" fill=\"white\"/>\n    <path d=\"M9 13 Q11 11 13 13\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 13 L19.5 14.5 L21 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  gas: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M8 17 L8 10 Q8 8 10 8 L12 8 Q14 8 14 10 L14 17\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n    <circle cx=\"11\" cy=\"12.5\" r=\"1.8\" fill=\"white\"/>\n    <rect x=\"6\" y=\"17\" width=\"9\" height=\"1.8\" rx=\"0.9\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"12.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 12.5 L19.5 14 L21 11.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== FOLDER ====================
+  folder: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M3 6 L3 17 L18 17 L18 8 L11 8 L9 6 Z\" fill=\"white\"/>\n    <path d=\"M3 8 L18 8\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <circle cx=\"20.5\" cy=\"12.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19 12.5 L20.5 14 L22 11.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  file: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M6 3 L6 19 L15 19 L15 8 L11 3 Z\" fill=\"white\"/>\n    <path d=\"M11 3 L11 8 L15 8\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8\" y=\"11\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"8\" y=\"13\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"12\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 12 L19 13.5 L20.5 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== EMERGENCY ====================
+  alert: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L3 18 L19 18 Z\" fill=\"white\"/>\n    <rect x=\"10\" y=\"9\" width=\"2\" height=\"4.5\" rx=\"0.5\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"11\" cy=\"15\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"20.5\" cy=\"10\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M20.5 8.5 L20.5 11.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  emergency: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"11\" cy=\"11\" r=\"8\" fill=\"white\"/>\n    <path d=\"M11 6 L11 12 M11 14 L11 16\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"15\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M20 13 L20 17\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  accident: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 5 L8 8 L8 11 L11 14 L14 11 L14 8 Z\" fill=\"white\"/>\n    <path d=\"M11 8 L11 11.5 M11 12.5 L11 13.5\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19.5 9 L19.5 13\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>",
+  // ==================== REGISTRATION ====================
+  registration: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"4\" width=\"12\" height=\"14\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"10\" cy=\"8.5\" r=\"1.8\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"12\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"14\" width=\"5\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <path d=\"M14 16 L15.5 17.5 L18 15\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <circle cx=\"19.5\" cy=\"9\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 9 L19.5 10.5 L21 8\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  identifier: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"3\" y=\"8\" width=\"14\" height=\"7\" rx=\"0.8\" fill=\"white\"/>\n    <rect x=\"5\" y=\"10\" width=\"2.5\" height=\"3.5\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"9\" y=\"10.5\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"9\" y=\"12.5\" width=\"4\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"12\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 12 L20 13.5 L21.5 11\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  // ==================== OTHER ====================
+  assistance: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"11\" cy=\"11\" r=\"8\" fill=\"white\"/>\n    <path d=\"M11 7.5 Q13 7.5 13 9.5 Q13 10.5 11 11.5 L11 13\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\" fill=\"none\" opacity=\"0.3\"/>\n    <circle cx=\"11\" cy=\"15\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"15\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 15 L20 16.5 L21.5 14\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  support: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 4 Q7 6.5 7 11 Q7 15.5 11 18 Q15 15.5 15 11 Q15 6.5 11 4\" fill=\"white\"/>\n    <circle cx=\"11\" cy=\"11\" r=\"2.5\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19.5\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 13 L19.5 14.5 L21 12\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  guide: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"9\" cy=\"7.5\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M5 14.5 Q9 12 13 14.5 L13 18 L5 18 Z\" fill=\"white\"/>\n    <path d=\"M15 7.5 L19 7.5 M17 5.5 L17 9.5\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n    <circle cx=\"19.5\" cy=\"14\" r=\"2\" fill=\"white\"/>\n  </svg>",
+  meeting: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"8\" cy=\"7.5\" r=\"1.8\" fill=\"white\"/>\n    <circle cx=\"14\" cy=\"7.5\" r=\"1.8\" fill=\"white\"/>\n    <path d=\"M4.5 14 Q8 11.5 11.5 14\" fill=\"white\"/>\n    <path d=\"M10.5 14 Q14 11.5 17.5 14\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 11 L20 12.5 L21.5 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  subscription: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"7\" width=\"12\" height=\"9\" rx=\"0.8\" fill=\"white\"/>\n    <path d=\"M8 11 L10 13 L14 9\" stroke=\"white\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n    <rect x=\"7\" y=\"4\" width=\"1.5\" height=\"3\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"12.5\" y=\"4\" width=\"1.5\" height=\"3\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"19.5\" cy=\"11.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 11.5 L19.5 13 L21 10.5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  cancellation: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"11\" cy=\"11\" r=\"8\" fill=\"white\"/>\n    <path d=\"M7 7 L15 15 M15 7 L7 15\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"15\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 13.5 L21.5 16.5 M21.5 13.5 L18.5 16.5\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\"/>\n  </svg>",
+  forwarding: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"3\" y=\"7\" width=\"9\" height=\"9\" rx=\"0.5\" fill=\"white\"/>\n    <path d=\"M12 7 L18 11.5 L12 16\" stroke=\"white\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <circle cx=\"20.5\" cy=\"11.5\" r=\"2\" fill=\"white\"/>\n    <path d=\"M19 11.5 L20.5 13 L22 10.5\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  diplomatic: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"8\" cy=\"8\" r=\"5.5\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M3 8 L13 8 M8 2.5 Q5.5 8 8 13.5 M8 2.5 Q10.5 8 8 13.5\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n    <circle cx=\"17\" cy=\"15\" r=\"5.5\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <path d=\"M12 15 L22 15 M17 9.5 Q14.5 15 17 20.5 M17 9.5 Q19.5 15 17 20.5\" stroke=\"white\" stroke-width=\"0.8\" opacity=\"0.3\"/>\n  </svg>",
+  apostille: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"5\" y=\"4\" width=\"10\" height=\"14\" rx=\"0.5\" fill=\"white\"/>\n    <circle cx=\"10\" cy=\"10\" r=\"2.5\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <path d=\"M8 15 Q10 13 12 15\" stroke=\"white\" stroke-width=\"1\" fill=\"none\"/>\n    <rect x=\"7\" y=\"16.5\" width=\"6\" height=\"0.4\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"18.5\" cy=\"12\" r=\"2.5\" fill=\"white\"/>\n    <path d=\"M17 12 L18.5 13.5 L20 11\" stroke=\"white\" stroke-width=\"0.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  museum: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L4 6.5 L4 7.5 L18 7.5 L18 6.5 Z\" fill=\"white\"/>\n    <rect x=\"6\" y=\"8.5\" width=\"2\" height=\"8\" fill=\"white\"/>\n    <rect x=\"10\" y=\"8.5\" width=\"2\" height=\"8\" fill=\"white\"/>\n    <rect x=\"14\" y=\"8.5\" width=\"2\" height=\"8\" fill=\"white\"/>\n    <rect x=\"4\" y=\"16.5\" width=\"14\" height=\"1.5\" fill=\"white\"/>\n    <circle cx=\"20\" cy=\"11\" r=\"2\" fill=\"white\"/>\n  </svg>",
+  cinema: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <rect x=\"4\" y=\"6\" width=\"12\" height=\"12\" rx=\"0.5\" fill=\"white\"/>\n    <rect x=\"6\" y=\"8\" width=\"8\" height=\"6\" rx=\"0.3\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"7\" cy=\"16\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"11\" cy=\"16\" r=\"0.8\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"19\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M17.5 11 L19 12.5 L20.5 10\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  theater: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"7\" cy=\"9\" r=\"3\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M6 8 Q7 7 8 8\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <path d=\"M7 11 Q7 12 7 12\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n    <circle cx=\"15\" cy=\"9\" r=\"3\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M14 10 Q15 11 16 10\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <path d=\"M15 7 Q15 6 15 6\" stroke=\"white\" stroke-width=\"1\" stroke-linecap=\"round\" opacity=\"0.3\"/>\n  </svg>",
+  vip: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"11\" cy=\"9\" r=\"3\" fill=\"white\"/>\n    <path d=\"M6 16 Q11 13 16 16 L16 19 L6 19 Z\" fill=\"white\"/>\n    <path d=\"M8 5 L11 9 L14 5\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <circle cx=\"19.5\" cy=\"13\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <circle cx=\"19.5\" cy=\"13\" r=\"1\" fill=\"white\"/>\n  </svg>",
+  limousine: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M3 11 L5 9 L16 9 L18 11 L18 14 L3 14 Z\" fill=\"white\"/>\n    <rect x=\"6\" y=\"10\" width=\"2\" height=\"2\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"10\" y=\"10\" width=\"2\" height=\"2\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <rect x=\"14\" y=\"10\" width=\"2\" height=\"2\" rx=\"0.2\" fill=\"white\" opacity=\"0.3\"/>\n    <circle cx=\"5\" cy=\"15\" r=\"1\" fill=\"white\"/>\n    <circle cx=\"16\" cy=\"15\" r=\"1\" fill=\"white\"/>\n    <circle cx=\"20.5\" cy=\"11.5\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <circle cx=\"20.5\" cy=\"11.5\" r=\"1\" fill=\"white\"/>\n  </svg>",
+  security: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <path d=\"M11 3 L5 5.5 L5 11 Q5 15 11 18 Q17 15 17 11 L17 5.5 Z\" fill=\"white\"/>\n    <circle cx=\"11\" cy=\"11\" r=\"2.5\" stroke=\"white\" stroke-width=\"1\" fill=\"none\" opacity=\"0.3\"/>\n    <circle cx=\"20\" cy=\"14\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18.5 14 L20 15.5 L21.5 13\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  surveillance: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"10\" cy=\"11\" r=\"4.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <circle cx=\"10\" cy=\"11\" r=\"2\" fill=\"white\"/>\n    <path d=\"M13 14 L16 17\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n    <circle cx=\"19.5\" cy=\"10\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M18 10 L19.5 11.5 L21 9\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </svg>",
+  alarm: "<svg viewBox=\"0 0 24 24\" fill=\"none\">\n    <circle cx=\"11\" cy=\"11\" r=\"7\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M11 7 L11 11 L14 13\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <circle cx=\"19.5\" cy=\"15\" r=\"2.5\" stroke=\"white\" stroke-width=\"1.2\" fill=\"none\"/>\n    <path d=\"M19.5 13 L19.5 17\" stroke=\"white\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  </svg>"
 };
 
-// [Les fonctions utilitaires et keywordToIcon restent identiques]
-var keywordToIcon = {
+// ==================== MAPPING MOTS-CLÉS ====================
+
+var keywordToIcon = (_keywordToIcon = {
+  // Administrative
   'passport': 'passport',
   'passeport': 'passport',
+  'passaporte': 'passport',
   'visa': 'visa',
+  'residence': 'visa',
+  'permit': 'visa',
+  'immigration': 'visa',
   'document': 'document',
+  'paper': 'document',
+  'file': 'file',
+  'papers': 'document',
   'certificate': 'certificate',
+  'certificat': 'certificate',
+  'birth': 'certificate',
+  'marriage': 'certificate',
+  'divorce': 'certificate',
+  'embassy': 'embassy',
+  'consulate': 'embassy',
+  'ambassade': 'embassy',
+  'consulat': 'embassy',
+  'consular': 'embassy',
   'stamp': 'stamp',
-  'folder': 'folder'
-  // ... [même liste que précédemment]
-};
+  'tampon': 'stamp',
+  'seal': 'stamp',
+  'lost': 'alert',
+  'stolen': 'alert',
+  'theft': 'alert',
+  'civil': 'certificate',
+  'status': 'document',
+  'official': 'document',
+  'registration': 'registration',
+  'register': 'registration',
+  'enroll': 'registration',
+  'identifier': 'identifier',
+  'identifiers': 'identifier',
+  'identifiant': 'identifier',
+  'expatriation': 'passport',
+  'expat': 'passport',
+  'diplomatic': 'diplomatic',
+  'diplomatie': 'diplomatic',
+  'diplomacy': 'diplomatic',
+  'apostille': 'apostille',
+  'legalization': 'apostille',
+  // Banking
+  'bank': 'bank',
+  'banking': 'bank',
+  'banque': 'bank',
+  'account': 'bank',
+  'money': 'money',
+  'argent': 'money',
+  'transfer': 'money',
+  'currency': 'money',
+  'exchange': 'money',
+  'card': 'card',
+  'carte': 'card',
+  'credit': 'card',
+  'debit': 'card',
+  'tax': 'tax',
+  'taxation': 'tax',
+  'impot': 'tax',
+  'fiscal': 'tax',
+  'return': 'tax',
+  'insurance': 'insurance',
+  'assurance': 'insurance',
+  'investment': 'investment',
+  'investissement': 'investment',
+  'invest': 'investment',
+  'pension': 'pension',
+  'retraite': 'pension',
+  'retirement': 'pension',
+  'loan': 'loan',
+  'pret': 'loan'
+}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, "credit", 'loan'), 'mortgage', 'loan'), 'box', 'box'), 'boite', 'box'), 'packaging', 'box'), 'boxes', 'box'), 'truck', 'truck'), 'camion', 'truck'), 'moving', 'truck'), 'demenagement', 'truck'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'move', 'truck'), 'storage', 'storage'), 'entreposage', 'storage'), 'warehouse', 'storage'), 'warehousing', 'storage'), 'package', 'package'), 'colis', 'package'), 'parcel', 'package'), 'parcels', 'package'), 'customs', 'customs'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'douane', 'customs'), 'clearance', 'customs'), 'duty', 'customs'), 'logistics', 'truck'), 'logistique', 'truck'), 'delivery', 'delivery'), 'livraison', 'delivery'), 'international', 'international_moving'), 'overseas', 'international_moving'), 'packing', 'packing'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'emballage', 'packing'), 'car', 'car'), 'voiture', 'car'), 'vehicle', 'car'), 'auto', 'car'), 'license', 'license'), 'permis', 'license'), 'driving', 'license'), 'driver', 'license'), 'scooter', 'scooter'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'motorcycle', 'scooter'), 'moto', 'scooter'), 'ticket', 'ticket'), 'billet', 'ticket'), 'fine', 'ticket'), 'violation', 'ticket'), 'transport', 'transport'), 'mobility', 'transport'), 'accident', 'accident'), 'accidente', 'accident'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'impound', 'car'), 'immobilization', 'car'), 'metro', 'metro'), 'subway', 'metro'), 'underground', 'metro'), 'bus', 'bus'), 'autobus', 'bus'), 'ferry', 'ferry'), 'boat', 'ferry'), 'bateau', 'ferry'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'taxi', 'taxi'), 'health', 'health'), 'sante', 'health'), 'medical', 'health'), 'medicine', 'medicine'), 'medication', 'medicine'), 'medicament', 'medicine'), 'pharmacy', 'medicine'), 'hospital', 'hospital'), 'hopital', 'hospital'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'clinic', 'hospital'), 'emergency', 'hospital'), 'wellbeing', 'wellbeing'), 'wellness', 'wellbeing'), 'coaching', 'wellbeing'), 'fitness', 'wellbeing'), 'consultation', 'health'), 'doctor', 'health'), 'treatment', 'medicine'), 'traitement', 'medicine'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'dentist', 'dentist'), 'dentiste', 'dentist'), 'dental', 'dentist'), 'optician', 'optician'), 'opticien', 'optician'), 'glasses', 'optician'), 'physiotherapy', 'physiotherapy'), 'physio', 'physiotherapy'), 'kine', 'physiotherapy'), 'spa', 'spa'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'thermes', 'spa'), 'massage', 'massage'), 'masseur', 'massage'), 'child', 'child'), 'enfant', 'child'), 'childcare', 'child'), 'kid', 'child'), 'children', 'child'), 'school', 'school'), 'ecole', 'school'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'education', 'school'), 'schooling', 'school'), 'book', 'book'), 'livre', 'book'), 'study', 'book'), 'language', 'language'), 'langue', 'language'), 'cours', 'language'), 'courses', 'language'), 'teacher', 'teacher'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'professeur', 'teacher'), 'tutor', 'teacher'), 'lesson', 'teacher'), 'elderly', 'child'), 'senior', 'child'), 'care', 'child'), 'student', 'school'), 'etudiant', 'school'), 'exam', 'certificate'), 'diploma', 'certificate'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'certification', 'certificate'), 'university', 'university'), 'universite', 'university'), 'college', 'university'), 'training', 'training_center'), 'formation', 'training_center'), 'wedding', 'wedding'), 'mariage', 'wedding'), 'birthday', 'birthday'), 'anniversaire', 'birthday'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'briefcase', 'briefcase'), 'work', 'briefcase'), 'job', 'briefcase'), 'travail', 'briefcase'), 'cv', 'cv'), 'resume', 'cv'), 'curriculum', 'cv'), 'company', 'company'), 'entreprise', 'company'), 'business', 'company'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'interview', 'interview'), 'entretien', 'interview'), 'freelance', 'freelance'), 'freelancing', 'freelance'), 'self-employment', 'freelance'), 'employment', 'briefcase'), 'emploi', 'briefcase'), 'recruit', 'interview'), 'payroll', 'money'), 'incorporation', 'company'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'creation', 'company'), 'compliance', 'document'), 'legal', 'lawyer'), 'legislation', 'document'), 'trademark', 'stamp'), 'patent', 'certificate'), 'architect', 'architect'), 'architecte', 'architect'), 'engineer', 'engineer'), 'ingenieur', 'engineer'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'accountant', 'accountant'), 'comptable', 'accountant'), 'consultant', 'consultant'), 'conseil', 'consultant'), 'home', 'home'), 'maison', 'home'), 'housing', 'home'), 'logement', 'home'), 'key', 'key'), 'cle', 'key'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'clef', 'key'), 'cleaning', 'cleaning'), 'menage', 'cleaning'), 'housekeeping', 'cleaning'), 'repair', 'repair'), 'reparation', 'repair'), 'maintenance', 'repair'), 'renovation', 'renovation'), 'renovations', 'renovation'), 'works', 'renovation'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'inspection', 'inspection'), 'inventory', 'inspection'), 'lease', 'contract'), 'bail', 'contract'), 'rental', 'home'), 'purchase', 'home'), 'sale', 'home'), 'buy', 'home'), 'sell', 'home'), "mortgage", 'bank'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'hypotheque', 'bank'), 'handover', 'key'), 'check-in', 'key'), 'check-out', 'key'), 'ironing', 'cleaning'), 'repassage', 'cleaning'), 'window', 'cleaning'), 'fenetre', 'cleaning'), 'gardening', 'gardening'), 'jardinage', 'gardening'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'plumbing', 'plumbing'), 'plomberie', 'plumbing'), 'painting', 'painting'), 'peinture', 'painting'), 'carpentry', 'carpentry'), 'menuiserie', 'carpentry'), 'security', 'security'), 'securite', 'security'), 'surveillance', 'surveillance'), 'camera', 'surveillance'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'alarm', 'alarm'), 'alarme', 'alarm'), 'phone', 'phone'), 'telephone', 'phone'), 'mobile', 'phone'), 'wifi', 'wifi'), 'internet', 'wifi'), 'network', 'wifi'), 'mail', 'mail'), 'email', 'mail'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'courrier', 'mail'), 'letter', 'mail'), 'translation', 'translation'), 'traduction', 'translation'), 'translate', 'translation'), 'interpreter', 'interpreter'), 'interprete', 'interpreter'), 'interpreting', 'interpreter'), 'pet', 'pet'), 'animal', 'pet'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'dog', 'pet'), 'cat', 'pet'), 'veterinarian', 'veterinary'), 'veterinary', 'veterinary'), 'vet', 'veterinary'), 'vaccination', 'medicine'), 'vaccines', 'medicine'), 'calendar', 'calendar'), 'calendrier', 'calendar'), 'agenda', 'calendar'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'appointment', 'calendar'), 'shopping', 'shopping'), "courses", 'shopping'), 'groceries', 'shopping'), 'food', 'food'), 'meal', 'food'), 'repas', 'food'), 'nourriture', 'food'), 'concierge', 'concierge'), 'conciergerie', 'concierge'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'sitting', 'concierge'), "surveillance", 'inspection'), 'errands', 'delivery'), 'pickup', 'delivery'), 'computer', 'computer'), 'ordinateur', 'computer'), 'laptop', 'computer'), 'settings', 'settings'), 'parametres', 'settings'), 'configuration', 'settings'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'software', 'software'), 'logiciel', 'software'), 'application', 'software'), 'backup', 'backup'), 'sauvegarde', 'backup'), 'antivirus', 'settings'), "security", 'insurance'), 'troubleshoot', 'repair'), 'install', 'settings'), 'lawyer', 'lawyer'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'avocat', 'lawyer'), 'notary', 'notary'), 'notaire', 'notary'), 'contract', 'contract'), 'contrat', 'contract'), 'complaint', 'complaint'), 'plainte', 'complaint'), 'dispute', 'dispute'), 'litige', 'dispute'), 'hearing', 'hearing'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'audience', 'hearing'), 'rights', 'document'), 'obligations', 'document'), 'appeal', 'document'), 'recours', 'document'), 'scam', 'alert'), 'arnaque', 'alert'), 'plane', 'plane'), 'avion', 'plane'), 'flight', 'plane'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'hotel', 'hotel'), 'accommodation', 'hotel'), 'suitcase', 'suitcase'), 'valise', 'suitcase'), 'luggage', 'suitcase'), 'train', 'train'), 'booking', 'calendar'), 'reservation', 'calendar'), 'garden', 'garden'), 'jardin', 'garden'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'outdoor', 'outdoor'), 'mowing', 'garden'), 'weeding', 'garden'), 'hedges', 'garden'), 'pool', 'pool'), 'piscine', 'pool'), 'electricity', 'electricity'), 'electric', 'electricity'), 'energy', 'electricity'), 'water', 'water'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'eau', 'water'), 'gas', 'gas'), 'gaz', 'gas'), 'folder', 'folder'), 'dossier', 'folder'), 'alert', 'alert'), 'urgence', 'emergency'), 'urgent', 'emergency'), 'incident', 'alert'), 'incidents', 'alert'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'museum', 'museum'), 'musee', 'museum'), 'cinema', 'cinema'), 'movie', 'cinema'), 'film', 'cinema'), 'theater', 'theater'), 'theatre', 'theater'), 'vip', 'vip'), 'premium', 'vip'), 'luxury', 'vip'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'limousine', 'limousine'), 'limo', 'limousine'), 'assistance', 'assistance'), 'aide', 'assistance'), 'help', 'assistance'), 'support', 'support'), 'soutien', 'support'), 'guide', 'guide'), 'accompany', 'guide'), 'assist', 'assistance'), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_keywordToIcon, 'meeting', 'meeting'), 'reunion', 'meeting'), 'subscription', 'subscription'), 'abonnement', 'subscription'), 'subscribe', 'subscription'), 'cancellation', 'cancellation'), 'cancel', 'cancellation'), 'terminate', 'cancellation'), 'forwarding', 'forwarding'), 'redirection', 'forwarding'));
+
+// ==================== SYSTÈME DE CACHE ET TRACKING ====================
+
+// Cache global pour garantir la stabilité
+var iconCache = new Map();
+
+// Tracking des icônes utilisées par famille (par catégorie parente)
+var familyIconUsage = new Map();
+
+// ==================== FONCTIONS UTILITAIRES ====================
+
 function generateStableHash(str) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
@@ -14635,82 +15060,150 @@ function generateStableHash(str) {
 function normalizeString(str) {
   return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
-function detectKeywords(categoryName) {
+function getAvailableIcons() {
+  var usedIcons = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var allIcons = Object.keys(iconLibrary);
+  return allIcons.filter(function (icon) {
+    return !usedIcons.includes(icon);
+  });
+}
+
+// ==================== SYSTÈME DE SCORING ====================
+
+function findBestMatchingIcon(categoryName) {
+  var excludedIcons = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
   var normalized = normalizeString(categoryName);
   var words = normalized.split(/[\s\-_&,/()]+/);
-  var matches = [];
-  var _iterator = _createForOfIteratorHelper(words),
-    _step;
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var word = _step.value;
-      if (keywordToIcon[word]) {
-        matches.push({
-          keyword: word,
-          icon: keywordToIcon[word],
-          weight: 10
+  var iconScores = new Map();
+  var availableIcons = Object.keys(iconLibrary).filter(function (icon) {
+    return !excludedIcons.includes(icon);
+  });
+  availableIcons.forEach(function (iconName) {
+    var score = 0;
+
+    // 1. Correspondance exacte de mot (score max: 100)
+    words.forEach(function (word) {
+      if (keywordToIcon[word] === iconName) {
+        score += 100;
+      }
+    });
+
+    // 2. Correspondance partielle dans le nom de catégorie (score: 50)
+    Object.entries(keywordToIcon).forEach(function (_ref) {
+      var _ref2 = _slicedToArray(_ref, 2),
+        keyword = _ref2[0],
+        icon = _ref2[1];
+      if (icon === iconName) {
+        if (normalized.includes(keyword)) {
+          score += 50;
+        }
+        // 3. Correspondance partielle des mots (score: 20)
+        words.forEach(function (word) {
+          if (word.includes(keyword) || keyword.includes(word)) {
+            score += 20;
+          }
         });
       }
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-  var _loop = function _loop() {
-    var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
-      keyword = _Object$entries$_i[0],
-      iconName = _Object$entries$_i[1];
-    if (normalized.includes(keyword) && !matches.find(function (m) {
-      return m.keyword === keyword;
-    })) {
-      matches.push({
-        keyword: keyword,
-        icon: iconName,
-        weight: 5
-      });
-    }
-  };
-  for (var _i = 0, _Object$entries = Object.entries(keywordToIcon); _i < _Object$entries.length; _i++) {
-    _loop();
-  }
-  return matches;
-}
-function getCategoryIcon(categoryName) {
-  var categoryId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var keywordMatches = detectKeywords(categoryName);
-  if (keywordMatches.length > 0) {
-    keywordMatches.sort(function (a, b) {
-      return b.weight - a.weight;
     });
-    if (iconLibrary[keywordMatches[0].icon]) {
-      return iconLibrary[keywordMatches[0].icon];
+    if (score > 0) {
+      iconScores.set(iconName, score);
+    }
+  });
+  if (iconScores.size > 0) {
+    var sortedIcons = _toConsumableArray(iconScores.entries()).sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    return sortedIcons[0][0];
+  }
+  return null;
+}
+
+// ==================== FONCTION PRINCIPALE ====================
+
+/**
+ * Obtient une icône stable et unique pour une catégorie
+ * @param {string} categoryName - Nom de la catégorie
+ * @param {number|string} categoryId - ID unique de la catégorie
+ * @param {string} parentId - ID de la catégorie parente (pour tracking de famille)
+ * @returns {string} SVG de l'icône
+ */
+function getCategoryIcon(categoryName, categoryId) {
+  var parentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'root';
+  // Créer une clé stable unique
+  var stableKey = "".concat(parentId, "/").concat(categoryId);
+
+  // 1. Vérifier le cache (garantit la stabilité)
+  if (iconCache.has(stableKey)) {
+    return iconCache.get(stableKey);
+  }
+
+  // 2. Obtenir les icônes déjà utilisées dans cette famille
+  if (!familyIconUsage.has(parentId)) {
+    familyIconUsage.set(parentId, new Set());
+  }
+  var usedInFamily = Array.from(familyIconUsage.get(parentId));
+
+  // 3. Chercher la meilleure correspondance sémantique
+  var selectedIconName = findBestMatchingIcon(categoryName, usedInFamily);
+
+  // 4. Si pas de match, utiliser un hash stable sur les icônes disponibles
+  if (!selectedIconName) {
+    var availableIcons = getAvailableIcons(usedInFamily);
+    if (availableIcons.length === 0) {
+      // Si toutes les icônes sont utilisées, réinitialiser pour cette famille
+      familyIconUsage.get(parentId).clear();
+      selectedIconName = 'folder'; // Icône par défaut
+    } else {
+      var hashSource = "".concat(categoryName, "_").concat(categoryId);
+      var hash = generateStableHash(hashSource);
+      selectedIconName = availableIcons[hash % availableIcons.length];
     }
   }
-  var hashSource = categoryId !== null ? String(categoryId) : categoryName;
-  var hash = generateStableHash(hashSource);
-  var iconNames = Object.keys(iconLibrary);
-  return iconLibrary[iconNames[hash % iconNames.length]];
+
+  // 5. Enregistrer l'icône utilisée
+  familyIconUsage.get(parentId).add(selectedIconName);
+  var iconSVG = iconLibrary[selectedIconName] || iconLibrary['folder'];
+  iconCache.set(stableKey, iconSVG);
+  return iconSVG;
 }
-function getCategoryIconName(categoryName) {
-  var categoryId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var keywordMatches = detectKeywords(categoryName);
-  if (keywordMatches.length > 0) {
-    keywordMatches.sort(function (a, b) {
-      return b.weight - a.weight;
-    });
-    return keywordMatches[0].icon;
+
+/**
+ * Réinitialise le cache (utile pour tests ou développement)
+ */
+function clearIconCache() {
+  iconCache.clear();
+  familyIconUsage.clear();
+}
+
+/**
+ * Pour la compatibilité avec l'ancien code
+ */
+function getCategoryIconName(categoryName, categoryId) {
+  var parentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'root';
+  var stableKey = "".concat(parentId, "/").concat(categoryId);
+  if (iconCache.has(stableKey)) {
+    // Trouver le nom de l'icône depuis le SVG
+    var svg = iconCache.get(stableKey);
+    for (var _i = 0, _Object$entries = Object.entries(iconLibrary); _i < _Object$entries.length; _i++) {
+      var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+        name = _Object$entries$_i[0],
+        svgContent = _Object$entries$_i[1];
+      if (svgContent === svg) {
+        return name;
+      }
+    }
   }
-  var hashSource = categoryId !== null ? String(categoryId) : categoryName;
-  var hash = generateStableHash(hashSource);
-  var iconNames = Object.keys(iconLibrary);
-  return iconNames[hash % iconNames.length];
+
+  // Si pas en cache, calculer
+  getCategoryIcon(categoryName, categoryId, parentId);
+  return getCategoryIconName(categoryName, categoryId, parentId);
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   iconLibrary: iconLibrary,
   keywordToIcon: keywordToIcon,
   getCategoryIcon: getCategoryIcon,
-  getCategoryIconName: getCategoryIconName
+  getCategoryIconName: getCategoryIconName,
+  clearIconCache: clearIconCache
 });
 
 /***/ })

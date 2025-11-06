@@ -30,7 +30,7 @@
     new google.translate.TranslateElement(
       {
         pageLanguage: 'en',
-        includedLanguages: 'en,fr,es,de,it,pt,ar,zh-CN,ja,ko,hi,ru,tr,nl,pl,sv,no,da,fi,el,cs,hu,ro,uk,vi,th,id,ms,tl,bn,ta,te,mr,gu,kn,ml,pa,ur,fa,he,sw,am,my,km,lo,si,ne,dz,bo,ug,ky,kk,uz,tk,az,ka,hy,be,mk,sr,bs,hr,sl,sk,bg,lt,lv,et,mt,ga,cy,eu,ca,gl,is,fo,sq,ht',
+        includedLanguages: 'en,fr,de,ru,zh-CN,es,pt,ar,hi',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
       },

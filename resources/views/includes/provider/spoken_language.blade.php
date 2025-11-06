@@ -6,7 +6,7 @@
 🎨 11 langues avec drapeaux
 💎 Validation et états interactifs
 ⚡ Responsive 2 cols mobile / 3 cols / 4 cols desktop
-🔧 Gestion correcte des boutons (activation/désactivation)
+🔧 Intégré avec wizard-steps.js
 ✅ Persistance des sélections au retour en arrière
 ============================================
 -->
@@ -84,7 +84,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="English"
-        data-language="English"
         role="checkbox"
         aria-checked="false"
         aria-label="Select English">
@@ -104,7 +103,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="French"
-        data-language="French"
         role="checkbox"
         aria-checked="false"
         aria-label="Select French">
@@ -124,7 +122,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="Spanish"
-        data-language="Spanish"
         role="checkbox"
         aria-checked="false"
         aria-label="Select Spanish">
@@ -144,7 +141,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="Portuguese"
-        data-language="Portuguese"
         role="checkbox"
         aria-checked="false"
         aria-label="Select Portuguese">
@@ -164,7 +160,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="German"
-        data-language="German"
         role="checkbox"
         aria-checked="false"
         aria-label="Select German">
@@ -184,7 +179,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="Italian"
-        data-language="Italian"
         role="checkbox"
         aria-checked="false"
         aria-label="Select Italian">
@@ -204,7 +198,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="Arabic"
-        data-language="Arabic"
         role="checkbox"
         aria-checked="false"
         aria-label="Select Arabic">
@@ -224,7 +217,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="Russian"
-        data-language="Russian"
         role="checkbox"
         aria-checked="false"
         aria-label="Select Russian">
@@ -244,7 +236,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="Chinese"
-        data-language="Chinese"
         role="checkbox"
         aria-checked="false"
         aria-label="Select Chinese">
@@ -264,7 +255,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="Japanese"
-        data-language="Japanese"
         role="checkbox"
         aria-checked="false"
         aria-label="Select Japanese">
@@ -284,7 +274,6 @@
         type="button"
         class="lang-btn language-card"
         data-lang="Hindi"
-        data-language="Hindi"
         role="checkbox"
         aria-checked="false"
         aria-label="Select Hindi">
@@ -507,7 +496,7 @@
 }
 
 /* ============================================
-   ♿ ACCESSIBILITY (identique Step 2)
+   ♿ ACCESSIBILITY
    ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
@@ -536,8 +525,8 @@
 <script>
 /* ============================================
    🎯 STEP 3 - CORRECTED VERSION
-   ✅ Gestion correcte des boutons (activation/désactivation)
-   ✅ Persistance des sélections au retour en arrière
+   ✅ Intégré avec wizard-steps.js
+   ✅ Persistance des sélections
    ============================================ */
 
 // État global
@@ -551,27 +540,10 @@ function getCachedElementsStep3() {
     cachedElementsStep3 = {
       cards: document.querySelectorAll('#step3 .lang-btn'),
       errorAlert: document.getElementById('step3LanguageError'),
-      selectedCount: document.getElementById('step3SelectedCount'),
-      hiddenInput: document.getElementById('spokenLanguages')
+      selectedCount: document.getElementById('step3SelectedCount')
     };
   }
   return cachedElementsStep3;
-}
-
-// Fonction pour mettre à jour l'état des boutons
-function updateStep3Buttons() {
-  const mobileNextBtn = document.getElementById('mobileNextBtn');
-  const desktopNextBtn = document.getElementById('desktopNextBtn');
-  
-  if (window.spokenLanguages && window.spokenLanguages.length > 0) {
-    // Si au moins une langue est sélectionnée, activer les boutons
-    if (mobileNextBtn) mobileNextBtn.disabled = false;
-    if (desktopNextBtn) desktopNextBtn.disabled = false;
-  } else {
-    // Sinon, désactiver les boutons
-    if (mobileNextBtn) mobileNextBtn.disabled = true;
-    if (desktopNextBtn) desktopNextBtn.disabled = true;
-  }
 }
 
 // Fonction de sélection de langue (accessible depuis le header)
@@ -579,7 +551,7 @@ window.selectSpokenLanguage = function(card) {
   if (!card) return;
   
   const elements = getCachedElementsStep3();
-  const language = card.getAttribute('data-lang') || card.getAttribute('data-language');
+  const language = card.getAttribute('data-lang');
   
   // Toggle sélection (multi-sélection)
   const index = window.spokenLanguages.indexOf(language);
@@ -596,21 +568,16 @@ window.selectSpokenLanguage = function(card) {
     card.setAttribute('aria-checked', 'true');
   }
   
-  // Mettre à jour l'input hidden (compatibilité ancien système)
-  if (elements.hiddenInput) {
-    elements.hiddenInput.value = JSON.stringify(window.spokenLanguages);
-  }
-  
   // Mettre à jour le compteur
   if (elements.selectedCount) {
     elements.selectedCount.textContent = window.spokenLanguages.length;
   }
   
-  // Sauvegarder dans localStorage (avec try-catch pour navigation privée)
+  // Sauvegarder dans localStorage
   try {
-    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-    expats.spoken_languages = window.spokenLanguages;
-    localStorage.setItem('expats', JSON.stringify(expats));
+    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    data.spoken_languages = window.spokenLanguages;
+    localStorage.setItem('provider-signup-data', JSON.stringify(data));
   } catch (e) {
     console.warn('localStorage not available:', e.message);
   }
@@ -620,8 +587,10 @@ window.selectSpokenLanguage = function(card) {
     elements.errorAlert.classList.add('hidden');
   }
   
-  // Mettre à jour l'état des boutons
-  updateStep3Buttons();
+  // ✅ Notifier wizard-steps.js
+  if (typeof window.updateNavigationButtons === 'function') {
+    window.updateNavigationButtons();
+  }
 };
 
 // Fonction de validation (accessible depuis le header)
@@ -674,8 +643,10 @@ document.addEventListener('DOMContentLoaded', function() {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
         if (!container.classList.contains('hidden')) {
-          // Le step est maintenant visible, mettre à jour les boutons
-          updateStep3Buttons();
+          // ✅ Notifier wizard-steps.js
+          if (typeof window.updateNavigationButtons === 'function') {
+            window.updateNavigationButtons();
+          }
         }
       }
     });
@@ -683,16 +654,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   observer.observe(container, { attributes: true });
   
-  // Restaurer la sélection depuis localStorage (avec try-catch)
+  // Restaurer la sélection depuis localStorage
   try {
-    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-    if (expats.spoken_languages && Array.isArray(expats.spoken_languages)) {
-      window.spokenLanguages = expats.spoken_languages;
+    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    if (data.spoken_languages && Array.isArray(data.spoken_languages)) {
+      window.spokenLanguages = data.spoken_languages;
       
       // Utiliser requestAnimationFrame pour éviter layout thrashing
       requestAnimationFrame(() => {
         window.spokenLanguages.forEach(lang => {
-          const savedCard = document.querySelector(`#step3 .lang-btn[data-lang="${lang}"], #step3 .lang-btn[data-language="${lang}"]`);
+          const savedCard = document.querySelector(`#step3 .lang-btn[data-lang="${lang}"]`);
           if (savedCard) {
             savedCard.classList.add('selected');
             savedCard.setAttribute('aria-checked', 'true');
@@ -703,26 +674,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (elements.selectedCount) {
           elements.selectedCount.textContent = window.spokenLanguages.length;
         }
-        if (elements.hiddenInput) {
-          elements.hiddenInput.value = JSON.stringify(window.spokenLanguages);
-        }
         
-        // Mettre à jour les boutons
-        updateStep3Buttons();
+        // ✅ Notifier wizard-steps.js
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
+        }
       });
-    } else {
-      // Si aucune sélection sauvegardée, désactiver les boutons
-      updateStep3Buttons();
     }
   } catch (e) {
     console.warn('Could not restore selection:', e.message);
-    // En cas d'erreur, désactiver les boutons par sécurité
-    updateStep3Buttons();
   }
 });
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>

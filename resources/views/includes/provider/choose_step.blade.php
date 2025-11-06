@@ -100,10 +100,10 @@
     <button 
       type="button"
       id="whiteCardBtn"
+      data-go-step="2"
       class="modern-card modern-card-providers w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 pointer-events-auto cursor-pointer"
       role="button"
-      aria-label="Become a service provider"
-      onclick="(function(){try{if(window.showStep){window.showStep(1);}else{var s1=document.getElementById('step1'),s2=document.getElementById('step2');if(s1&&s2){s1.classList.add('hidden');s2.classList.remove('hidden');}}if(typeof window.updateNavigationButtons==='function'){window.updateNavigationButtons();}if(typeof window.updateHeaderButtons==='function'){window.updateHeaderButtons();}}catch(e){console&&console.warn&&console.warn('whiteCardBtn fallback:',e);}})();">
+      aria-label="Become a service provider">
       
       <!-- Gradient border effect - Blue/Cyan theme -->
       <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 animate-gradient-slow"></div>
@@ -366,30 +366,3 @@
   contain: layout style paint;
 }
 </style>
-
-<script>
-// ============================================
-// 🛡️ SCRIPT DE SECOURS POUR whiteCardBtn
-// ============================================
-document.addEventListener('DOMContentLoaded', function(){
-  var btn = document.getElementById('whiteCardBtn');
-  if (!btn) return;
-  
-  // Éviter la double liaison
-  if (btn.__ulixaiBound) return;
-  btn.__ulixaiBound = true;
-  
-  // Attacher le listener de secours
-  btn.addEventListener('click', function(e) {
-    if (window.showStep) {
-      e.preventDefault();
-      window.showStep(1);
-    }
-  });
-});
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-</script>

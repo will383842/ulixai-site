@@ -1,6 +1,6 @@
 <!-- 
 ============================================
-🚀 STEP 4 - PROVIDER SERVICES
+🚀 STEP 4 - PROVIDER SERVICES (CORRECTED)
 ============================================
 ✨ Blue/Cyan/Teal Design System
 🎨 Dynamic services with emojis
@@ -8,7 +8,7 @@
 ⚡ Responsive: 2 cols mobile / 3 cols tablet / 4 cols desktop
 🔧 Modern system: window.validateStep4() and window.selectService()
 ✅ Consistent with Steps 2 & 3 (no internal buttons)
-🎯 Dynamic header button integration (Next ↔ Choose Specialties)
+🎯 Integrated with wizard-steps.js navigation system
 ============================================
 -->
 
@@ -331,15 +331,22 @@
 
 <script>
 /* ============================================
-   🎯 STEP 4 - OPTIMIZED VERSION WITH DYNAMIC BUTTON
+   🎯 STEP 4 - CORRECTED VERSION
    Performance: ⚡ Web Vitals Ready | CPU Optimized | Error Safe
    Consistent with Steps 2 & 3
+   Integrated with wizard-steps.js
    ============================================ */
 
-// Global state
-window.selectedServices = {};
-window.selectedSubcategories = {};
-window.specialtiesModalOpen = false;
+// ✅ Global state - Properly initialized
+if (!window.selectedServices) {
+  window.selectedServices = {};
+}
+if (!window.selectedSubcategories) {
+  window.selectedSubcategories = {};
+}
+if (typeof window.specialtiesModalOpen === 'undefined') {
+  window.specialtiesModalOpen = false;
+}
 
 // DOM elements cache
 let cachedElementsStep4 = null;
@@ -348,7 +355,7 @@ function getCachedElementsStep4() {
   if (!cachedElementsStep4) {
     cachedElementsStep4 = {
       servicesGrid: document.getElementById('servicesGrid'),
-      selectedCount: document.getElementById('selectedCount')
+      selectedCount: document.getElementById('step4SelectedCount')
     };
   }
   return cachedElementsStep4;
@@ -409,46 +416,9 @@ function getEmojiForCategory(categoryName) {
 }
 
 // ============================================
-// 🔥 DYNAMIC BUTTON CONTROL
+// 🔥 SERVICE SELECTION (NO BUTTON CONTROL)
 // ============================================
 
-function updateHeaderButtons() {
-  const serviceCount = Object.keys(window.selectedServices).length;
-  const hasSubcategories = window.selectedSubcategories && 
-                           Object.keys(window.selectedSubcategories).length > 0 &&
-                           Object.values(window.selectedSubcategories).some(arr => arr && arr.length > 0);
-  
-  // Get all Next buttons (mobile & desktop)
-  const nextButtons = [
-    document.getElementById('mobileNextBtn'),
-    document.getElementById('desktopNextBtn')
-  ];
-  
-  nextButtons.forEach(btn => {
-    if (!btn) return;
-    
-    const textSpan = btn.querySelector('span');
-    if (!textSpan) return;
-    
-    if (serviceCount === 0) {
-      // No services selected: disable button
-      btn.disabled = true;
-      textSpan.textContent = 'Continue';
-    } else if (!hasSubcategories) {
-      // Services selected but no subcategories: show "Choose Specialties"
-      btn.disabled = false;
-      textSpan.textContent = 'Choose Specialties';
-      btn.classList.add('btn-specialties'); // Add marker class
-    } else {
-      // Services + subcategories: show "Continue"
-      btn.disabled = false;
-      textSpan.textContent = 'Continue';
-      btn.classList.remove('btn-specialties'); // Remove marker class
-    }
-  });
-}
-
-// Service selection function (accessible from header)
 window.selectService = function(card) {
   if (!card) return;
   
@@ -482,57 +452,47 @@ window.selectService = function(card) {
   
   // Save to localStorage
   try {
-    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-    expats.provider_services = window.selectedServices;
-    expats.provider_subcategories = window.selectedSubcategories;
-    localStorage.setItem('expats', JSON.stringify(expats));
+    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    data.provider_services = window.selectedServices;
+    data.provider_subcategories = window.selectedSubcategories;
+    localStorage.setItem('provider-signup-data', JSON.stringify(data));
   } catch (e) {
     console.warn('localStorage not available:', e.message);
   }
   
-  // Hide error if visible
-  if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
-    elements.errorAlert.classList.add('hidden');
-  }
-  
-  // Update header buttons dynamically
-  updateHeaderButtons();
-  
-  // Activer le bouton Next si au moins un service est sélectionné
-  const serviceCount = Object.keys(window.selectedServices).length;
-  if (serviceCount > 0) {
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
-    if (mobileNextBtn) mobileNextBtn.disabled = false;
-    if (desktopNextBtn) desktopNextBtn.disabled = false;
+  // ✅ Notify wizard-steps.js to update buttons
+  if (typeof window.updateNavigationButtons === 'function') {
+    window.updateNavigationButtons();
   }
 };
 
 // ============================================
-// 🎯 VALIDATION FUNCTION
+// 🎯 VALIDATION FUNCTION (CORRECTED)
 // ============================================
 
 window.validateStep4 = function() {
   const serviceCount = Object.keys(window.selectedServices).length;
   
-  // No service selected → show fun message
+  // No service selected → show fun message and block
   if (serviceCount === 0) {
     showFunMessage('Pick at least one service! 🎯');
     return false;
   }
   
-  // Check if ALL services have been processed (have entry in selectedSubcategories, even if empty)
-  const allProcessed = Object.keys(window.selectedServices).every(serviceId => {
-    return window.selectedSubcategories.hasOwnProperty(serviceId);
+  // Vérifier si on a au moins une sous-catégorie pour au moins un service
+  const hasAnySubcategory = Object.keys(window.selectedServices).some(serviceId => {
+    const subcats = window.selectedSubcategories[serviceId];
+    return subcats && subcats.length > 0;
   });
   
-  // If not all processed → open modal
-  if (!allProcessed) {
+  if (!hasAnySubcategory) {
+    // Si aucune sous-catégorie n'est sélectionnée, ouvrir le modal
+    // MAIS retourner false pour bloquer la navigation
     showSpecialtiesModal();
-    return 'show_specialties';
+    return false;
   }
   
-  // All processed → proceed to next step
+  // Toutes les validations passent
   return true;
 };
 
@@ -602,12 +562,12 @@ async function loadServices() {
 // Restore selection from localStorage
 function restoreSelection() {
   try {
-    const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-    if (expats.provider_services && typeof expats.provider_services === 'object') {
-      window.selectedServices = expats.provider_services;
+    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    if (data.provider_services && typeof data.provider_services === 'object') {
+      window.selectedServices = data.provider_services;
     }
-    if (expats.provider_subcategories && typeof expats.provider_subcategories === 'object') {
-      window.selectedSubcategories = expats.provider_subcategories;
+    if (data.provider_subcategories && typeof data.provider_subcategories === 'object') {
+      window.selectedSubcategories = data.provider_subcategories;
     }
     
     // Visually restore selections
@@ -627,8 +587,10 @@ function restoreSelection() {
         elements.selectedCount.textContent = count;
       }
       
-      // Update header buttons
-      updateHeaderButtons();
+      // ✅ Notify wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     });
   } catch (e) {
     console.warn('Could not restore selection:', e.message);
@@ -640,10 +602,7 @@ async function showSpecialtiesModal() {
   const serviceIds = Object.keys(window.selectedServices);
   
   if (serviceIds.length === 0) {
-    const elements = getCachedElementsStep4();
-    if (elements.errorAlert) {
-      elements.errorAlert.classList.remove('hidden');
-    }
+    showFunMessage('Pick at least one service first! 🎯');
     return;
   }
   
@@ -759,6 +718,10 @@ function createSpecialtiesModal(servicesData) {
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
   
+  // ✅ Masquer les boutons de navigation pendant que le modal est ouvert
+  const navButtons = document.querySelectorAll('#mobileNavButtons, #desktopNavButtons');
+  navButtons.forEach(btn => btn.style.display = 'none');
+  
   // Animate appearance
   setTimeout(() => modal.style.opacity = '1', 10);
   
@@ -807,24 +770,30 @@ function createSpecialtiesModal(servicesData) {
     }
   });
   
-  // Close modal with X button
-  modal.querySelector('#closeSpecialtiesModal').onclick = () => {
+  // Fonction de fermeture du modal
+  function closeModal() {
     window.specialtiesModalOpen = false;
-    updateHeaderButtons();
     document.body.style.overflow = '';
     modal.style.opacity = '0';
+    
+    // ✅ Réafficher les boutons
+    navButtons.forEach(btn => btn.style.display = '');
+    
     setTimeout(() => modal.remove(), 200);
-  };
+  }
+  
+  // Close modal with X button
+  modal.querySelector('#closeSpecialtiesModal').onclick = closeModal;
   
   // Back to services button
   modal.querySelector('#backToServicesBtn').onclick = () => {
     window.selectedSubcategories = {};
-    window.specialtiesModalOpen = false;
-    updateHeaderButtons();
+    closeModal();
     
-    document.body.style.overflow = '';
-    modal.style.opacity = '0';
-    setTimeout(() => modal.remove(), 200);
+    // ✅ Notify wizard-steps.js
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
   };
   
   // Save and continue button
@@ -861,33 +830,24 @@ function createSpecialtiesModal(servicesData) {
     // Save to global state and localStorage
     window.selectedSubcategories = selectedSubcats;
     try {
-      const expats = JSON.parse(localStorage.getItem('expats') || '{}');
-      expats.provider_services = window.selectedServices;
-      expats.provider_subcategories = window.selectedSubcategories;
-      localStorage.setItem('expats', JSON.stringify(expats));
+      const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      data.provider_services = window.selectedServices;
+      data.provider_subcategories = window.selectedSubcategories;
+      localStorage.setItem('provider-signup-data', JSON.stringify(data));
     } catch (e) {
       console.warn('Could not save to localStorage:', e.message);
     }
     
-    window.specialtiesModalOpen = false;
+    closeModal();
     
-    // Close modal
-    document.body.style.overflow = '';
-    modal.style.opacity = '0';
-    setTimeout(() => {
-      modal.remove();
-      // Go to next step directly
+    // ✅ Go to next step via wizard-steps.js
+    if (typeof window.showStep === 'function') {
       window.showStep(4); // Step 5 (index 4)
-    }, 200);
+    }
   };
   
-  // Keep global functions for potential header button usage
-  window.specialtiesModalSave = () => modal.querySelector('#saveSpecialtiesBtn')?.click();
-  window.specialtiesModalBack = () => modal.querySelector('#backToServicesBtn')?.click();
-  
-  // Mark modal as open and update header buttons
+  // Mark modal as open
   window.specialtiesModalOpen = true;
-  updateHeaderButtons();
 }
 
 // Style for modal
@@ -949,9 +909,11 @@ document.addEventListener('DOMContentLoaded', function() {
           container.dataset.loaded = 'true';
         }
         
-        // Update buttons when step becomes visible
+        // ✅ Update buttons when step becomes visible
         if (!container.classList.contains('hidden')) {
-          updateHeaderButtons();
+          if (typeof window.updateNavigationButtons === 'function') {
+            window.updateNavigationButtons();
+          }
         }
       }
     });
@@ -978,9 +940,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>
