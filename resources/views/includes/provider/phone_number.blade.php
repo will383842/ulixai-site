@@ -9,6 +9,7 @@
 🔧 Optimisations CPU, RAM, GPU
 ✅ Persistance localStorage
 ⚡ Performance maximale
+✅ CONFORME AU GUIDE SYSTÈME WIZARD
 ============================================
 -->
 
@@ -372,12 +373,46 @@
     padding-left: 5rem !important;
   }
 }
+
+/* ============================================
+   ♿ ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  #step14 .phone-input {
+    border: 3px solid currentColor;
+  }
+  
+  #step14 .phone-input:focus {
+    border: 3px solid #1d4ed8;
+  }
+}
+
+/* ============================================
+   ⚡ PERFORMANCE
+   ============================================ */
+
+#step14 .input-container,
+#step14 .phone-input,
+#step14 .success-indicator {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
 </style>
 
 <script>
 /* ============================================
    🎯 STEP 14 - PHONE VALIDATION
-   ✅ Activation/désactivation des boutons
+   ✅ CONFORME AU GUIDE SYSTÈME WIZARD
    ✅ Validation téléphone (min 6 chiffres)
    ✅ Persistance localStorage
    ✅ intl-tel-input integration
@@ -398,12 +433,12 @@
     iti: null
   };
 
+  let cachedElements = null;
+
   // ============================================
   // 🗄️ CACHE DOM ELEMENTS
   // ============================================
   
-  let cachedElements = null;
-
   function getCachedElements() {
     if (!cachedElements) {
       cachedElements = {
@@ -418,13 +453,13 @@
   }
 
   // ============================================
-  // 💾 LOCAL STORAGE
+  // 💾 LOCAL STORAGE - provider-signup-data
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('expats') || '{}');
-    } catch {
+      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    } catch (e) {
       return {};
     }
   }
@@ -437,9 +472,9 @@
     
     state.saveTimeout = setTimeout(() => {
       try {
-        const expats = getLocalStorage();
-        expats.phone_number = state.phone;
-        localStorage.setItem('expats', JSON.stringify(expats));
+        const data = getLocalStorage();
+        data.phone_number = state.phone;
+        localStorage.setItem('provider-signup-data', JSON.stringify(data));
       } catch (e) {
         console.warn('localStorage error:', e);
       }
@@ -514,30 +549,23 @@
       if (elements.successAlert) elements.successAlert.classList.add('hidden');
     }
     
-    // Mettre à jour l'état des boutons
-    updateStep14Buttons();
-    
     return state.isValid;
   }
 
   // ============================================
-  // 🔘 BUTTON STATE MANAGEMENT
+  // 🌍 FONCTION DE VALIDATION GLOBALE
   // ============================================
   
-  function updateStep14Buttons() {
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
+  window.validateStep14 = function() {
+    const elements = getCachedElements();
     
-    if (state.isValid) {
-      // Si le téléphone est valide, activer les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = false;
-      if (desktopNextBtn) desktopNextBtn.disabled = false;
-    } else {
-      // Sinon, désactiver les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = true;
-      if (desktopNextBtn) desktopNextBtn.disabled = true;
+    if (!validatePhone()) {
+      showError();
+      return false;
     }
-  }
+    
+    return true;
+  };
 
   // ============================================
   // 🎨 UI UPDATES
@@ -586,22 +614,30 @@
     }
     
     state.validationTimeout = setTimeout(() => {
-      // Utiliser requestAnimationFrame pour smooth UI
       requestAnimationFrame(() => {
         validatePhone();
         if (state.isValid) {
           saveToLocalStorage();
+        }
+        
+        // ✅ Notifier wizard-steps.js
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
         }
       });
     }, 300);
   }
 
   function handleCountryChange() {
-    // Validation immédiate lors du changement de pays
     requestAnimationFrame(() => {
       validatePhone();
       if (state.isValid) {
         saveToLocalStorage();
+      }
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
       }
     });
   }
@@ -646,17 +682,22 @@
   
   function restoreState() {
     const elements = getCachedElements();
-    const expats = getLocalStorage();
+    const data = getLocalStorage();
     
     // Restaurer le téléphone depuis localStorage
-    if (elements.phoneInput && expats.phone_number) {
-      elements.phoneInput.value = expats.phone_number;
-      state.phone = expats.phone_number;
+    if (elements.phoneInput && data.phone_number) {
+      elements.phoneInput.value = data.phone_number;
+      state.phone = data.phone_number;
     }
     
     // Valider après restauration
     requestAnimationFrame(() => {
       validatePhone();
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     });
   }
 
@@ -678,9 +719,6 @@
       return;
     }
 
-    // Init event delegation
-    initEventDelegation();
-
     // Observer pour détecter quand le step devient visible
     const elements = getCachedElements();
     if (elements.step) {
@@ -698,6 +736,9 @@
       observer.observe(elements.step, { attributes: true });
     }
 
+    // Init event delegation
+    initEventDelegation();
+
     // Restaurer l'état initial
     restoreState();
   }
@@ -709,22 +750,4 @@
     init();
   }
 })();
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-</script>
-
-<script>
-  // Validation Step 14: phone format (simple)
-  window.validateStep14 = function() {
-    const el = document.getElementById('phone_number_input');
-    if (!el) return false;
-    const v = (el.value || '').trim();
-    return /^[+0-9][0-9\s\-()]{6,}$/.test(v);
-  };
-  document.getElementById('phone_number_input')?.addEventListener('input', () => {
-    if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
-  });
 </script>

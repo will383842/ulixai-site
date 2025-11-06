@@ -9,6 +9,7 @@
 🔧 Optimisations CPU, RAM, GPU
 ✅ Persistance localStorage
 ⚡ Performance maximale
+✅ CONFORME AU GUIDE SYSTÈME WIZARD
 ============================================
 -->
 
@@ -870,21 +871,19 @@
    ✅ Passive listeners
    ✅ RequestAnimationFrame
    ✅ Gestion mémoire caméras
-   ✅ Activation/désactivation des boutons
+   ✅ CONFORME AU GUIDE SYSTÈME WIZARD
    ============================================ */
 
 (function() {
-  "use strict";
-  console.log("🚀 Step 11 Script Loading...");
-  console.log("📍 Script location: Step 11 Identity Documents");
   'use strict';
   
   // État global
   const state = {
     uploadedDocs: [],
-    cameraStreams: new Map(),
-    cachedElements: null
+    cameraStreams: new Map()
   };
+
+  let cachedElements = null;
 
   // Configuration des types de documents
   const DOC_CONFIG = {
@@ -898,46 +897,73 @@
   // ============================================
   
   function getCachedElements() {
-    if (!state.cachedElements) {
-      state.cachedElements = {
+    if (!cachedElements) {
+      cachedElements = {
         step: document.getElementById('step11'),
         counter: document.getElementById('step11UploadedCount'),
         docCards: document.querySelectorAll('#step11 .doc-card')
       };
     }
-    return state.cachedElements;
+    return cachedElements;
   }
 
   // ============================================
-  // 🔘 FONCTION DE MISE À JOUR DES BOUTONS
+  // 💾 LOCALSTORAGE - provider-signup-data
   // ============================================
   
-  function updateStep11Buttons() {
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
-    
-    if (state.uploadedDocs && state.uploadedDocs.length > 0) {
-      // Si au moins un document est uploade, activer les boutons
-      if (mobileNextBtn) {
-        mobileNextBtn.disabled = false;
-        mobileNextBtn.classList.remove('btn-disabled');
+  function getLocalStorage() {
+    try {
+      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveToLocalStorage(type, side, dataUrl) {
+    try {
+      const data = getLocalStorage();
+      data.documents = data.documents || {};
+      
+      const config = DOC_CONFIG[type];
+      
+      if (config.twoSided) {
+        data.documents[type] = data.documents[type] || {};
+        data.documents[type][side] = dataUrl;
+        data.documents[type].uploaded_at = new Date().toISOString();
+      } else {
+        data.documents[type] = {
+          image: dataUrl,
+          uploaded_at: new Date().toISOString()
+        };
       }
-      if (desktopNextBtn) {
-        desktopNextBtn.disabled = false;
-        desktopNextBtn.classList.remove('btn-disabled');
+      
+      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      updateDocCard(type);
+    } catch (e) {
+      console.warn('localStorage error:', e);
+    }
+  }
+
+  function removeFromLocalStorage(type, side) {
+    try {
+      const data = getLocalStorage();
+      if (!data.documents?.[type]) return;
+      
+      const config = DOC_CONFIG[type];
+      
+      if (config.twoSided) {
+        delete data.documents[type][side];
+        if (!data.documents[type].front && !data.documents[type].back) {
+          delete data.documents[type];
+        }
+      } else {
+        delete data.documents[type];
       }
-      console.log('Boutons Next actives (' + state.uploadedDocs.length + ' document(s))');
-    } else {
-      // Sinon, desactiver les boutons
-      if (mobileNextBtn) {
-        mobileNextBtn.disabled = true;
-        mobileNextBtn.classList.add('btn-disabled');
-      }
-      if (desktopNextBtn) {
-        desktopNextBtn.disabled = true;
-        desktopNextBtn.classList.add('btn-disabled');
-      }
-      console.log('Boutons Next desactives (pas de document)');
+      
+      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      updateDocCard(type);
+    } catch (e) {
+      console.warn('localStorage error:', e);
     }
   }
 
@@ -950,15 +976,19 @@
     if (elements.counter) {
       elements.counter.textContent = state.uploadedDocs.length;
     }
-    updateStep11Buttons();
+    
+    // ✅ Notifier wizard-steps.js
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
   }
 
   function updateDocCard(type) {
     const card = document.querySelector(`#step11 .doc-card[data-doc-type="${type}"]`);
     if (!card) return;
 
-    const expats = getLocalStorage();
-    const doc = expats.documents?.[type];
+    const data = getLocalStorage();
+    const doc = data.documents?.[type];
     
     if (doc) {
       const config = DOC_CONFIG[type];
@@ -984,99 +1014,29 @@
   }
 
   // ============================================
-  // 💾 LOCALSTORAGE
-  // ============================================
-  
-  function getLocalStorage() {
-    try {
-      return JSON.parse(localStorage.getItem('expats') || '{}');
-    } catch {
-      return {};
-    }
-  }
-
-  function saveToLocalStorage(type, side, dataUrl) {
-    try {
-      const expats = getLocalStorage();
-      expats.documents = expats.documents || {};
-      
-      const config = DOC_CONFIG[type];
-      
-      if (config.twoSided) {
-        expats.documents[type] = expats.documents[type] || {};
-        expats.documents[type][side] = dataUrl;
-        expats.documents[type].uploaded_at = new Date().toISOString();
-      } else {
-        expats.documents[type] = {
-          image: dataUrl,
-          uploaded_at: new Date().toISOString()
-        };
-      }
-      
-      localStorage.setItem('expats', JSON.stringify(expats));
-      updateDocCard(type);
-    } catch (e) {
-      console.warn('localStorage error:', e);
-    }
-  }
-
-  function removeFromLocalStorage(type, side) {
-    try {
-      const expats = getLocalStorage();
-      if (!expats.documents?.[type]) return;
-      
-      const config = DOC_CONFIG[type];
-      
-      if (config.twoSided) {
-        delete expats.documents[type][side];
-        if (!expats.documents[type].front && !expats.documents[type].back) {
-          delete expats.documents[type];
-        }
-      } else {
-        delete expats.documents[type];
-      }
-      
-      localStorage.setItem('expats', JSON.stringify(expats));
-      updateDocCard(type);
-    } catch (e) {
-      console.warn('localStorage error:', e);
-    }
-  }
-
-  // ============================================
   // 🎥 CAMERA MANAGEMENT
   // ============================================
   
   async function openCamera(type, side) {
-    console.log(`📸 openCamera(${type}, ${side}) called`);
     const video = document.querySelector(`.camera-video[data-type="${type}"][data-side="${side}"]`);
     const captureBtn = document.querySelector(`.capture-btn[data-type="${type}"][data-side="${side}"]`);
     
-    if (!video || !captureBtn) {
-      console.error("❌ Video or Capture button not found");
-      return;
-    }
+    if (!video || !captureBtn) return;
     
     const key = `${type}-${side}`;
     
     // Fermer la caméra si déjà ouverte
     if (state.cameraStreams.has(key)) {
-      console.log("🔄 Camera already open, closing it");
       stopCamera(type, side);
       return;
     }
     
-    // Vérifier que navigator.mediaDevices existe
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      console.error("❌ navigator.mediaDevices NOT supported");
       alert("Your browser does not support camera access. Please use Chrome, Firefox, Safari, or Edge.");
       return;
     }
     
-    console.log("✅ navigator.mediaDevices is supported");
-    
     try {
-      console.log("🎥 Requesting camera access...");
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
           facingMode: "environment",
@@ -1085,17 +1045,13 @@
         }
       });
       
-      console.log("✅ Camera access GRANTED!");
-      
       video.srcObject = stream;
       video.classList.remove("hidden");
       captureBtn.classList.remove("hidden");
       
       state.cameraStreams.set(key, stream);
-      
-      console.log("📹 Camera opened successfully");
     } catch (err) {
-      console.error("❌ Camera error:", err.name, err.message);
+      console.error("Camera error:", err);
       alert("Camera Error: " + err.name + " - " + err.message + "\n\nPlease check permissions.");
     }
   }
@@ -1127,7 +1083,6 @@
     
     if (!video || !previewBox) return;
     
-    // Utiliser requestAnimationFrame pour smooth rendering
     requestAnimationFrame(() => {
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
@@ -1138,18 +1093,13 @@
       
       const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
       
-      // Afficher l'image
       previewBox.innerHTML = `<img src="${dataUrl}" alt="${side} side" />`;
       previewBox.closest('.upload-zone').classList.add('has-file');
       
-      // Afficher le bouton retake
       const retakeBtn = document.querySelector(`.action-btn-retake[data-type="${type}"][data-side="${side}"]`);
       if (retakeBtn) retakeBtn.classList.remove('hidden');
       
-      // Sauvegarder
       saveToLocalStorage(type, side, dataUrl);
-      
-      // Fermer la caméra
       stopCamera(type, side);
     });
   }
@@ -1180,19 +1130,15 @@
           previewBox.innerHTML = `<img src="${dataUrl}" alt="${side} side" />`;
           previewBox.closest('.upload-zone').classList.add('has-file');
           
-          // Afficher le bouton retake
           const retakeBtn = document.querySelector(`.action-btn-retake[data-type="${type}"][data-side="${side}"]`);
           if (retakeBtn) retakeBtn.classList.remove('hidden');
           
-          // Sauvegarder
           saveToLocalStorage(type, side, dataUrl);
         }
       });
     };
     
     reader.readAsDataURL(file);
-    
-    // Fermer la caméra si ouverte
     stopCamera(type, side);
   }
 
@@ -1218,13 +1164,12 @@
         input.value = '';
       }
       
-      // Supprimer du localStorage
       removeFromLocalStorage(type, side);
     });
   }
 
   // ============================================
-  // 🎪 MODAL MANAGEMENT
+  // 🎭 MODAL MANAGEMENT
   // ============================================
   
   function openModal(type) {
@@ -1233,8 +1178,6 @@
       requestAnimationFrame(() => {
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-        
-        // Restaurer les documents s'ils existent
         restoreDocuments(type);
       });
     }
@@ -1247,7 +1190,6 @@
         modal.classList.add('hidden');
         document.body.style.overflow = '';
         
-        // Fermer toutes les caméras de ce modal
         const config = DOC_CONFIG[type];
         if (config.twoSided) {
           stopCamera(type, 'front');
@@ -1260,15 +1202,14 @@
   }
 
   function restoreDocuments(type) {
-    const expats = getLocalStorage();
-    const doc = expats.documents?.[type];
+    const data = getLocalStorage();
+    const doc = data.documents?.[type];
     if (!doc) return;
     
     const config = DOC_CONFIG[type];
     
     requestAnimationFrame(() => {
       if (config.twoSided) {
-        // Restore front
         if (doc.front) {
           const previewBoxFront = document.querySelector(`.preview-box[data-type="${type}"][data-side="front"]`);
           if (previewBoxFront) {
@@ -1280,7 +1221,6 @@
           }
         }
         
-        // Restore back
         if (doc.back) {
           const previewBoxBack = document.querySelector(`.preview-box[data-type="${type}"][data-side="back"]`);
           if (previewBoxBack) {
@@ -1292,7 +1232,6 @@
           }
         }
       } else {
-        // Single-sided document
         if (doc.image) {
           const previewBox = document.querySelector(`.preview-box[data-type="${type}"][data-side="front"]`);
           if (previewBox) {
@@ -1308,20 +1247,15 @@
   }
 
   // ============================================
-  // ✅ VALIDATION
+  // ✅ VALIDATION GLOBALE
   // ============================================
   
   window.validateStep11 = function() {
     if (!state.uploadedDocs || state.uploadedDocs.length === 0) {
-      console.log('Validation Step 11 echouee : pas de document');
-      
-      // Afficher un message d'erreur
       alert('Please upload at least one identity document to continue');
-      
       return false;
     }
     
-    console.log('Validation Step 11 reussie : ' + state.uploadedDocs.length + ' document(s)');
     return true;
   };
 
@@ -1330,7 +1264,6 @@
   // ============================================
   
   function initEventDelegation() {
-    // Main step11 container - doc cards
     const step = getCachedElements().step;
     if (step) {
       step.addEventListener('click', (e) => {
@@ -1342,9 +1275,7 @@
       }, { passive: true });
     }
 
-    // Modal events - using event delegation on document
     document.addEventListener('click', (e) => {
-      // Close modal
       const closeBtn = e.target.closest('.modal-close');
       if (closeBtn) {
         const modal = closeBtn.dataset.modal;
@@ -1352,7 +1283,6 @@
         return;
       }
 
-      // Save modal
       const saveBtn = e.target.closest('.save-btn');
       if (saveBtn) {
         const modal = saveBtn.dataset.modal;
@@ -1360,7 +1290,6 @@
         return;
       }
 
-      // Camera button
       const cameraBtn = e.target.closest('.action-btn-camera');
       if (cameraBtn) {
         const type = cameraBtn.dataset.type;
@@ -1369,7 +1298,6 @@
         return;
       }
 
-      // Capture button
       const captureBtn = e.target.closest('.capture-btn');
       if (captureBtn) {
         const type = captureBtn.dataset.type;
@@ -1378,7 +1306,6 @@
         return;
       }
 
-      // Retake button
       const retakeBtn = e.target.closest('.action-btn-retake');
       if (retakeBtn) {
         const type = retakeBtn.dataset.type;
@@ -1387,7 +1314,6 @@
         return;
       }
 
-      // Close modal on backdrop click
       const backdrop = e.target.closest('.modal-backdrop');
       if (backdrop && e.target === backdrop) {
         const modalId = backdrop.id;
@@ -1396,7 +1322,6 @@
       }
     });
 
-    // File input changes
     document.addEventListener('change', (e) => {
       const input = e.target.closest('.upload-input');
       if (input) {
@@ -1408,24 +1333,36 @@
   }
 
   // ============================================
+  // 🔄 RESTORE STATE
+  // ============================================
+  
+  function restoreState() {
+    const data = getLocalStorage();
+    state.uploadedDocs = [];
+
+    if (data.documents) {
+      Object.keys(data.documents).forEach(type => {
+        updateDocCard(type);
+      });
+    }
+
+    updateCounter();
+  }
+
+  // ============================================
   // 🎬 INITIALIZATION
   // ============================================
   
   function init() {
-    // Init event delegation
-    initEventDelegation();
-
-    // Observer pour détecter quand le step devient visible
     const elements = getCachedElements();
+    
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             if (!elements.step.classList.contains('hidden')) {
-              // Step est visible, restaurer l'état et mettre à jour les boutons
               restoreState();
             } else {
-              // Step est caché, fermer toutes les caméras
               state.cameraStreams.forEach((stream) => {
                 stream.getTracks().forEach(track => track.stop());
               });
@@ -1438,7 +1375,6 @@
       observer.observe(elements.step, { attributes: true });
     }
 
-    // Cleanup avant fermeture de la page
     window.addEventListener('beforeunload', () => {
       state.cameraStreams.forEach((stream) => {
         stream.getTracks().forEach(track => track.stop());
@@ -1446,33 +1382,14 @@
       state.cameraStreams.clear();
     });
 
-    // Restaurer l'état initial
+    initEventDelegation();
     restoreState();
   }
 
-  function restoreState() {
-    const expats = getLocalStorage();
-    state.uploadedDocs = [];
-
-    if (expats.documents) {
-      Object.keys(expats.documents).forEach(type => {
-        updateDocCard(type);
-      });
-    }
-
-    updateCounter();
-  }
-
-  // Start when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
 })();
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>

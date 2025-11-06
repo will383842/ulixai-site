@@ -1,6 +1,6 @@
 <!-- 
 ============================================
-🚀 STEP 8 - COMMUNICATION PREFERENCE (OPTIMIZED)
+🚀 STEP 8 - COMMUNICATION PREFERENCE (FULLY CORRECTED)
 ============================================
 ✨ Design System Blue/Cyan/Teal STRICT
 🎨 Toggle buttons Yes/No pour Online et In Person
@@ -9,6 +9,7 @@
 🔧 Optimisations CPU, RAM, GPU
 ✅ Persistance localStorage
 ⚡ Performance maximale
+✅ CORRECTIONS: Storage key + Fonction locale supprimée + Appels wizard-steps.js
 ============================================
 -->
 
@@ -292,7 +293,7 @@
 </style>
 
 <!-- ============================================
-     JAVASCRIPT OPTIMISÉ
+     JAVASCRIPT OPTIMISÉ ET CORRIGÉ
      ============================================ -->
 <script>
 (function() {
@@ -329,12 +330,12 @@
   }
 
   // ============================================
-  // 💾 LOCAL STORAGE
+  // 💾 LOCAL STORAGE (✅ CORRIGÉ)
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('expats') || '{}');
+      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
     } catch (e) {
       console.warn('localStorage read error:', e.message);
       return {};
@@ -346,36 +347,14 @@
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(() => {
       try {
-        const expats = getLocalStorage();
-        expats.communication_preference = state.communicationPreference;
-        localStorage.setItem('expats', JSON.stringify(expats));
+        const data = getLocalStorage();
+        data.communication_preference = state.communicationPreference;
+        localStorage.setItem('provider-signup-data', JSON.stringify(data));
       } catch (e) {
         console.warn('localStorage error:', e);
       }
     }, 300);
   }
-
-  // ============================================
-  // 🔘 UPDATE BUTTONS
-  // ============================================
-  
-  function updateStep8Buttons() {
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
-    
-    if (state.isValid) {
-      // Au moins un "Yes" sélectionné → activer les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = false;
-      if (desktopNextBtn) desktopNextBtn.disabled = false;
-    } else {
-      // Aucun "Yes" → désactiver les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = true;
-      if (desktopNextBtn) desktopNextBtn.disabled = true;
-    }
-  }
-
-  // ✅ EXPOSER GLOBALEMENT pour wizard-steps.js
-  window.updateStep8Buttons = updateStep8Buttons;
 
   // ============================================
   // ✅ VALIDATION
@@ -386,8 +365,10 @@
     state.isValid = state.communicationPreference.online === 'Yes' || 
                     state.communicationPreference.inperson === 'Yes';
     
-    // Mise à jour des boutons
-    updateStep8Buttons();
+    // ✅ Notifier wizard-steps.js (au lieu de updateStep8Buttons)
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
     
     return state.isValid;
   }
@@ -496,11 +477,11 @@
   
   function restoreState() {
     const elements = getCachedElements();
-    const expats = getLocalStorage();
+    const data = getLocalStorage();
     
     // Restaurer la préférence depuis localStorage
-    if (expats.communication_preference) {
-      state.communicationPreference = expats.communication_preference;
+    if (data.communication_preference) {
+      state.communicationPreference = data.communication_preference;
       
       requestAnimationFrame(() => {
         // Restaurer les états des boutons
@@ -554,7 +535,11 @@
             if (!elements.step.classList.contains('hidden')) {
               // Step est visible, restaurer l'état
               restoreState();
-              updateStep8Buttons();
+              
+              // ✅ Notifier wizard-steps.js
+              if (typeof window.updateNavigationButtons === 'function') {
+                window.updateNavigationButtons();
+              }
             }
           }
         });
@@ -565,7 +550,6 @@
 
     // Restaurer l'état initial
     restoreState();
-    updateStep8Buttons();
   }
 
   // Start when DOM is ready

@@ -9,6 +9,7 @@
 🔧 Optimisations CPU, RAM, GPU
 ✅ Persistance localStorage
 ⚡ Performance maximale
+✅ CONFORME AU GUIDE SYSTÈME WIZARD
 ============================================
 -->
 
@@ -355,6 +356,7 @@
 <script>
 /* ============================================
    🎯 STEP 12 - NAME INPUT SCRIPT
+   ✅ CONFORME AU GUIDE SYSTÈME WIZARD
    ============================================ */
 
 (function() {
@@ -367,17 +369,18 @@
   const state = {
     firstName: '',
     lastName: '',
-    cachedElements: null,
     saveTimeout: null
   };
+
+  let cachedElements = null;
 
   // ============================================
   // 🎯 CACHE DOM
   // ============================================
   
   function getCachedElements() {
-    if (!state.cachedElements) {
-      state.cachedElements = {
+    if (!cachedElements) {
+      cachedElements = {
         step: document.getElementById('step12'),
         firstNameInput: document.getElementById('first_name_input'),
         lastNameInput: document.getElementById('last_name_input'),
@@ -385,38 +388,17 @@
         fieldsCounter: document.getElementById('step12FieldsCompleted')
       };
     }
-    return state.cachedElements;
+    return cachedElements;
   }
 
   // ============================================
-  // 🔘 FONCTION DE MISE À JOUR DES BOUTONS
-  // ============================================
-  
-  function updateStep12Buttons() {
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
-    
-    const isValid = state.firstName.length > 0 && state.lastName.length > 0;
-    
-    if (isValid) {
-      // Si les deux champs sont remplis, activer les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = false;
-      if (desktopNextBtn) desktopNextBtn.disabled = false;
-    } else {
-      // Sinon, désactiver les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = true;
-      if (desktopNextBtn) desktopNextBtn.disabled = true;
-    }
-  }
-
-  // ============================================
-  // 💾 LOCALSTORAGE
+  // 💾 LOCALSTORAGE - provider-signup-data
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('expats') || '{}');
-    } catch {
+      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    } catch (e) {
       return {};
     }
   }
@@ -429,10 +411,10 @@
     
     state.saveTimeout = setTimeout(() => {
       try {
-        const expats = getLocalStorage();
-        expats.firstName = state.firstName;
-        expats.lastName = state.lastName;
-        localStorage.setItem('expats', JSON.stringify(expats));
+        const data = getLocalStorage();
+        data.firstName = state.firstName;
+        data.lastName = state.lastName;
+        localStorage.setItem('provider-signup-data', JSON.stringify(data));
       } catch (e) {
         console.warn('localStorage error:', e);
       }
@@ -462,12 +444,13 @@
       elements.errorAlert.classList.add('hidden');
     }
     
-    // Mettre à jour l'état des boutons
-    updateStep12Buttons();
-    
     return isValid;
   }
 
+  // ============================================
+  // 🌍 FONCTION DE VALIDATION GLOBALE
+  // ============================================
+  
   window.validateStep12 = function() {
     const elements = getCachedElements();
     
@@ -531,6 +514,11 @@
     requestAnimationFrame(() => {
       validateFields();
       saveToLocalStorage();
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     });
   }
 
@@ -553,26 +541,31 @@
   
   function restoreState() {
     const elements = getCachedElements();
-    const expats = getLocalStorage();
+    const data = getLocalStorage();
     
     // Restaurer uniquement si les inputs ne sont pas disabled
     if (elements.firstNameInput && !elements.firstNameInput.disabled) {
-      if (expats.firstName) {
-        elements.firstNameInput.value = expats.firstName;
-        state.firstName = expats.firstName;
+      if (data.firstName) {
+        elements.firstNameInput.value = data.firstName;
+        state.firstName = data.firstName;
       }
     }
     
     if (elements.lastNameInput && !elements.lastNameInput.disabled) {
-      if (expats.lastName) {
-        elements.lastNameInput.value = expats.lastName;
-        state.lastName = expats.lastName;
+      if (data.lastName) {
+        elements.lastNameInput.value = data.lastName;
+        state.lastName = data.lastName;
       }
     }
     
     // Valider après restauration
     requestAnimationFrame(() => {
       validateFields();
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     });
   }
 
@@ -581,11 +574,9 @@
   // ============================================
   
   function init() {
-    // Init event delegation
-    initEventDelegation();
-
-    // Observer pour détecter quand le step devient visible
     const elements = getCachedElements();
+    
+    // Observer pour détecter quand le step devient visible
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -600,7 +591,10 @@
 
       observer.observe(elements.step, { attributes: true });
     }
-
+    
+    // Init event delegation
+    initEventDelegation();
+    
     // Restaurer l'état initial
     restoreState();
   }
@@ -612,9 +606,4 @@
     init();
   }
 })();
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>

@@ -10,6 +10,7 @@
 ✅ Fetch API pour vérification
 ⚡ Performance maximale
 🔑 Code de test: 111111 (pour développement)
+✅ CONFORME AU GUIDE SYSTÈME WIZARD
 ============================================
 -->
 
@@ -93,7 +94,8 @@
           inputmode="numeric"
           pattern="[0-9]{6}"
           autocomplete="one-time-code"
-        / name="otp">
+          name="otp"
+        />
       </div>
       <p class="input-hint">Enter the 6-digit code sent to your email (or 111111 for testing)</p>
     </div>
@@ -277,12 +279,45 @@
 #step15 .input-container.error-shake {
   animation: shake 0.5s ease-in-out;
 }
+
+/* ============================================
+   ♿ ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  #step15 .otp-input {
+    border: 3px solid currentColor;
+  }
+  
+  #step15 .otp-input:focus {
+    border: 3px solid #1d4ed8;
+  }
+}
+
+/* ============================================
+   ⚡ PERFORMANCE
+   ============================================ */
+
+#step15 .input-container,
+#step15 .otp-input {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
 </style>
 
 <script>
 /* ============================================
    🎯 STEP 15 - OTP VERIFICATION
-   ✅ Activation/désactivation des boutons
+   ✅ CONFORME AU GUIDE SYSTÈME WIZARD
    ✅ Validation OTP (6 chiffres ou code test 111111)
    ✅ Code de test pour développement: 111111
    ✅ Fetch API pour vérification réelle
@@ -301,16 +336,15 @@
     otp: '',
     isValid: false,
     isVerifying: false,
-    isVerified: false,
-    originalButtonText: ''
+    isVerified: false
   };
+
+  let cachedElements = null;
 
   // ============================================
   // 🗄️ CACHE DOM ELEMENTS
   // ============================================
   
-  let cachedElements = null;
-
   function getCachedElements() {
     if (!cachedElements) {
       cachedElements = {
@@ -327,13 +361,13 @@
   }
 
   // ============================================
-  // 💾 LOCAL STORAGE
+  // 💾 LOCAL STORAGE - provider-signup-data
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('expats') || '{}');
-    } catch {
+      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    } catch (e) {
       return {};
     }
   }
@@ -355,7 +389,7 @@
     
     state.otp = elements.otpInput.value.trim();
     
-    // Validation: 6 chiffres OU code de test (8 chiffres)
+    // Validation: 6 chiffres OU code de test
     const is6Digits = /^\d{6}$/.test(state.otp);
     const isTestCode = state.otp === TEST_CODE;
     state.isValid = is6Digits || isTestCode;
@@ -386,30 +420,23 @@
       }
     }
     
-    // Mettre à jour l'état des boutons
-    updateStep15Buttons();
-    
     return state.isValid;
   }
 
   // ============================================
-  // 🔘 BUTTON STATE MANAGEMENT
+  // 🌍 FONCTION DE VALIDATION GLOBALE
   // ============================================
   
-  function updateStep15Buttons() {
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
+  window.validateStep15 = function() {
+    const elements = getCachedElements();
     
-    if (state.isValid && !state.isVerifying) {
-      // Si le code est valide et qu'on n'est pas en train de vérifier, activer les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = false;
-      if (desktopNextBtn) desktopNextBtn.disabled = false;
-    } else {
-      // Sinon, désactiver les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = true;
-      if (desktopNextBtn) desktopNextBtn.disabled = true;
+    if (!validateOTP()) {
+      showError('Please enter a valid code (6 digits or test code 111111).');
+      return false;
     }
-  }
+    
+    return true;
+  };
 
   // ============================================
   // 🎨 UI UPDATES
@@ -478,7 +505,7 @@
   
   async function verifyOTP() {
     const elements = getCachedElements();
-    const expats = getLocalStorage();
+    const data = getLocalStorage();
     
     // Si c'est le code de test, valider directement
     if (state.otp === TEST_CODE) {
@@ -501,7 +528,7 @@
     }
     
     // Sinon, vérifier via API
-    if (!expats.email) {
+    if (!data.email) {
       showError('Email not found. Please go back and enter your email.');
       return;
     }
@@ -512,7 +539,11 @@
     }
     
     state.isVerifying = true;
-    updateStep15Buttons(); // Désactiver les boutons pendant la vérification
+    
+    // ✅ Notifier wizard-steps.js pendant la vérification
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
     
     try {
       const response = await fetch('/verify-email-otp', {
@@ -523,16 +554,16 @@
           'Accept': 'application/json'
         },
         body: JSON.stringify({ 
-          email: expats.email, 
+          email: data.email, 
           otp: state.otp,
           _token: elements.csrfToken.value
         }),
         credentials: 'same-origin'
       });
       
-      const data = await response.json();
+      const result = await response.json();
       
-      if (data.status === 'success') {
+      if (result.status === 'success') {
         state.isVerified = true;
         showSuccess();
         
@@ -549,7 +580,7 @@
         }, 1500);
       } else {
         state.isVerified = false;
-        showError(data.message || 'Invalid code. Please try again.');
+        showError(result.message || 'Invalid code. Please try again.');
       }
     } catch (error) {
       console.error('Verification error:', error);
@@ -557,7 +588,11 @@
       showError('Verification failed. Please check your connection and try again.');
     } finally {
       state.isVerifying = false;
-      updateStep15Buttons(); // Réactiver les boutons
+      
+      // ✅ Notifier wizard-steps.js après la vérification
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     }
   }
 
@@ -591,15 +626,17 @@
     // Valider en temps réel
     requestAnimationFrame(() => {
       validateOTP();
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     });
     
-    // Auto-verify si code complet (6 ou 8 chiffres)
-    if (value.length === 6 || value.length === 8) {
+    // Auto-verify si code complet (6 chiffres)
+    if (value.length === 6) {
       setTimeout(() => {
-        if (validateOTP()) {
-          // Le code est valide, on peut activer le bouton
-          // L'utilisateur devra cliquer sur le bouton pour vérifier
-        }
+        validateOTP();
       }, 300);
     }
   }
@@ -644,6 +681,11 @@
     
     // Valider l'état initial
     validateOTP();
+    
+    // ✅ Notifier wizard-steps.js
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
   }
 
   // ============================================
@@ -659,11 +701,9 @@
   // ============================================
   
   function init() {
-    // Init event delegation
-    initEventDelegation();
-
-    // Observer pour détecter quand le step devient visible
     const elements = getCachedElements();
+    
+    // Observer pour détecter quand le step devient visible
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -682,6 +722,9 @@
       observer.observe(elements.step, { attributes: true });
     }
 
+    // Init event delegation
+    initEventDelegation();
+
     // Restaurer l'état initial si visible
     if (elements.step && !elements.step.classList.contains('hidden')) {
       restoreState();
@@ -695,22 +738,4 @@
     init();
   }
 })();
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-</script>
-
-<script>
-  // Validation Step 15: OTP code present (6-8 digits)
-  window.validateStep15 = function() {
-    const el = document.getElementById('otp_input');
-    if (!el) return false;
-    const v = (el.value || '').trim();
-    return /^\d{6,8}$/.test(v);
-  };
-  document.getElementById('otp_input')?.addEventListener('input', () => {
-    if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
-  });
 </script>

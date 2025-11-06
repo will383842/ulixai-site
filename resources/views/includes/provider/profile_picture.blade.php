@@ -10,6 +10,7 @@
 ✅ Persistance localStorage
 ⚡ Performance maximale
 🔥 CAMERA FIXED - Avec debug logs
+✅ CONFORME AU GUIDE SYSTÈME WIZARD
 ============================================
 -->
 
@@ -232,6 +233,7 @@
 
 <!-- ============================================
      JAVASCRIPT OPTIMISÉ - CAMERA FIXED
+     ✅ CONFORME AU GUIDE SYSTÈME WIZARD
      ============================================ -->
 <script>
 (function() {
@@ -248,12 +250,12 @@
     cameraStream: null
   };
 
+  let cachedElements = null;
+
   // ============================================
   // 📦 DOM CACHE
   // ============================================
   
-  let cachedElements = null;
-
   function getCachedElements() {
     if (!cachedElements) {
       cachedElements = {
@@ -276,12 +278,12 @@
   }
 
   // ============================================
-  // 💾 LOCALSTORAGE
+  // 💾 LOCALSTORAGE - provider-signup-data
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('expats') || '{}');
+      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
     } catch (e) {
       console.warn('localStorage error:', e.message);
       return {};
@@ -290,14 +292,19 @@
 
   function savePhotoToLocalStorage(imageData) {
     try {
-      const expats = getLocalStorage();
-      expats.profile_photo = {
+      const data = getLocalStorage();
+      data.profile_photo = {
         image: imageData,
         timestamp: new Date().toISOString()
       };
-      localStorage.setItem('expats', JSON.stringify(expats));
+      localStorage.setItem('provider-signup-data', JSON.stringify(data));
       state.hasPhoto = true;
-      updateStep10Buttons();
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
+      
       console.log('✅ Photo saved to localStorage');
     } catch (e) {
       console.warn('localStorage save error:', e.message);
@@ -306,43 +313,19 @@
 
   function removePhotoFromLocalStorage() {
     try {
-      const expats = getLocalStorage();
-      delete expats.profile_photo;
-      localStorage.setItem('expats', JSON.stringify(expats));
+      const data = getLocalStorage();
+      delete data.profile_photo;
+      localStorage.setItem('provider-signup-data', JSON.stringify(data));
       state.hasPhoto = false;
-      updateStep10Buttons();
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
+      
       console.log('🗑️ Photo removed from localStorage');
     } catch (e) {
       console.warn('localStorage remove error:', e.message);
-    }
-  }
-
-  function updateStep10Buttons() {
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
-    
-    if (state.hasPhoto) {
-      // Si une photo est uploadée, activer les boutons
-      if (mobileNextBtn) {
-        mobileNextBtn.disabled = false;
-        mobileNextBtn.classList.remove('btn-disabled');
-      }
-      if (desktopNextBtn) {
-        desktopNextBtn.disabled = false;
-        desktopNextBtn.classList.remove('btn-disabled');
-      }
-      console.log('✅ Boutons Next activés (photo présente)');
-    } else {
-      // Sinon, désactiver les boutons
-      if (mobileNextBtn) {
-        mobileNextBtn.disabled = true;
-        mobileNextBtn.classList.add('btn-disabled');
-      }
-      if (desktopNextBtn) {
-        desktopNextBtn.disabled = true;
-        desktopNextBtn.classList.add('btn-disabled');
-      }
-      console.log('🔒 Boutons Next désactivés (pas de photo)');
     }
   }
 
@@ -560,9 +543,9 @@
     const elements = getCachedElements();
     
     try {
-      const expats = getLocalStorage();
-      if (expats.profile_photo && expats.profile_photo.image) {
-        const imageData = expats.profile_photo.image;
+      const data = getLocalStorage();
+      if (data.profile_photo && data.profile_photo.image) {
+        const imageData = data.profile_photo.image;
         
         if (imageData.startsWith('data:image')) {
           const img = new Image();
@@ -578,23 +561,35 @@
               elements.retakeBtn.classList.remove('hidden');
               elements.retakeBtn.classList.add('flex');
               state.hasPhoto = true;
-              updateStep10Buttons();
+              
+              // ✅ Notifier wizard-steps.js
+              if (typeof window.updateNavigationButtons === 'function') {
+                window.updateNavigationButtons();
+              }
+              
               console.log('✅ Photo restored from localStorage');
             });
           };
           img.src = imageData;
         }
       } else {
-        updateStep10Buttons();
+        // ✅ Notifier wizard-steps.js même si pas de photo
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
+        }
       }
     } catch (e) {
       console.warn('⚠️ Could not restore photo:', e);
-      updateStep10Buttons();
+      
+      // ✅ Notifier wizard-steps.js en cas d'erreur
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     }
   }
 
   // ============================================
-  // ✅ VALIDATION - STEP 10 OBLIGATOIRE
+  // 🌍 VALIDATION GLOBALE - STEP 10 OBLIGATOIRE
   // ============================================
   
   window.validateStep10 = function() {
@@ -606,7 +601,10 @@
       // Afficher une erreur
       if (elements.cameraError) {
         elements.cameraError.classList.remove('hidden');
-        elements.cameraError.querySelector('p').textContent = 'Please upload or take a profile picture to continue';
+        const errorText = elements.cameraError.querySelector('p.text-xs');
+        if (errorText) {
+          errorText.textContent = 'Please upload or take a profile picture to continue';
+        }
         
         // Scroll vers l'erreur
         requestAnimationFrame(() => {
@@ -731,9 +729,8 @@
   function init() {
     console.log('🎬 Initializing Step 10...');
     
-    initEventDelegation();
-
     const elements = getCachedElements();
+    
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -755,6 +752,7 @@
 
     window.addEventListener('beforeunload', cleanup);
 
+    initEventDelegation();
     restoreState();
     
     console.log('✅ Step 10 initialized successfully');
@@ -767,9 +765,4 @@
     init();
   }
 })();
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
 </script>

@@ -9,6 +9,7 @@
 🔧 Optimisations CPU, RAM, GPU
 ✅ Persistance localStorage
 ⚡ Performance maximale
+✅ CONFORME AU GUIDE SYSTÈME WIZARD
 ============================================
 -->
 
@@ -300,12 +301,46 @@
 #step13 .input-container.error-shake {
   animation: shake 0.5s ease-in-out;
 }
+
+/* ============================================
+   ♿ ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  #step13 .email-input {
+    border: 3px solid currentColor;
+  }
+  
+  #step13 .email-input:focus {
+    border: 3px solid #1d4ed8;
+  }
+}
+
+/* ============================================
+   ⚡ PERFORMANCE
+   ============================================ */
+
+#step13 .input-container,
+#step13 .email-input,
+#step13 .success-indicator {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
 </style>
 
 <script>
 /* ============================================
    🎯 STEP 13 - EMAIL VALIDATION
-   ✅ Activation/désactivation des boutons
+   ✅ CONFORME AU GUIDE SYSTÈME WIZARD
    ✅ Validation email avec regex
    ✅ Persistance localStorage
    ============================================ */
@@ -326,12 +361,12 @@
     validationTimeout: null
   };
 
+  let cachedElements = null;
+
   // ============================================
   // 🗄️ CACHE DOM ELEMENTS
   // ============================================
   
-  let cachedElements = null;
-
   function getCachedElements() {
     if (!cachedElements) {
       cachedElements = {
@@ -346,13 +381,13 @@
   }
 
   // ============================================
-  // 💾 LOCAL STORAGE
+  // 💾 LOCAL STORAGE - provider-signup-data
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('expats') || '{}');
-    } catch {
+      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    } catch (e) {
       return {};
     }
   }
@@ -365,9 +400,9 @@
     
     state.saveTimeout = setTimeout(() => {
       try {
-        const expats = getLocalStorage();
-        expats.email = state.email;
-        localStorage.setItem('expats', JSON.stringify(expats));
+        const data = getLocalStorage();
+        data.email = state.email;
+        localStorage.setItem('provider-signup-data', JSON.stringify(data));
       } catch (e) {
         console.warn('localStorage error:', e);
       }
@@ -428,30 +463,23 @@
       if (elements.successAlert) elements.successAlert.classList.add('hidden');
     }
     
-    // Mettre à jour l'état des boutons
-    updateStep13Buttons();
-    
     return state.isValid;
   }
 
   // ============================================
-  // 🔘 BUTTON STATE MANAGEMENT
+  // 🌍 FONCTION DE VALIDATION GLOBALE
   // ============================================
   
-  function updateStep13Buttons() {
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
+  window.validateStep13 = function() {
+    const elements = getCachedElements();
     
-    if (state.isValid) {
-      // Si l'email est valide, activer les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = false;
-      if (desktopNextBtn) desktopNextBtn.disabled = false;
-    } else {
-      // Sinon, désactiver les boutons
-      if (mobileNextBtn) mobileNextBtn.disabled = true;
-      if (desktopNextBtn) desktopNextBtn.disabled = true;
+    if (!updateValidationState()) {
+      showError();
+      return false;
     }
-  }
+    
+    return true;
+  };
 
   // ============================================
   // 🎨 UI UPDATES
@@ -500,11 +528,15 @@
     }
     
     state.validationTimeout = setTimeout(() => {
-      // Utiliser requestAnimationFrame pour smooth UI
       requestAnimationFrame(() => {
         updateValidationState();
         if (state.isValid) {
           saveToLocalStorage();
+        }
+        
+        // ✅ Notifier wizard-steps.js
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
         }
       });
     }, 300);
@@ -517,6 +549,11 @@
     // Validation immédiate au blur
     requestAnimationFrame(() => {
       updateValidationState();
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     });
   }
 
@@ -540,17 +577,22 @@
   
   function restoreState() {
     const elements = getCachedElements();
-    const expats = getLocalStorage();
+    const data = getLocalStorage();
     
     // Restaurer l'email depuis localStorage
-    if (elements.emailInput && expats.email) {
-      elements.emailInput.value = expats.email;
-      state.email = expats.email;
+    if (elements.emailInput && data.email) {
+      elements.emailInput.value = data.email;
+      state.email = data.email;
     }
     
     // Valider après restauration
     requestAnimationFrame(() => {
       updateValidationState();
+      
+      // ✅ Notifier wizard-steps.js
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     });
   }
 
@@ -559,11 +601,9 @@
   // ============================================
   
   function init() {
-    // Init event delegation
-    initEventDelegation();
-
-    // Observer pour détecter quand le step devient visible
     const elements = getCachedElements();
+    
+    // Observer pour détecter quand le step devient visible
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -579,6 +619,9 @@
       observer.observe(elements.step, { attributes: true });
     }
 
+    // Init event delegation
+    initEventDelegation();
+
     // Restaurer l'état initial
     restoreState();
   }
@@ -590,22 +633,4 @@
     init();
   }
 })();
-</script>
-<script>
-document.addEventListener('input',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('change', function(){ if (window.providerWizard) providerWizard.update(); }, true);
-document.addEventListener('click',  function(){ if (window.providerWizard) providerWizard.update(); }, true);
-</script>
-
-<script>
-  // Validation Step 13: email format
-  window.validateStep13 = function() {
-    const el = document.getElementById('email_input');
-    if (!el) return false;
-    const v = (el.value || '').trim();
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  };
-  document.getElementById('email_input')?.addEventListener('input', () => {
-    if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
-  });
 </script>
