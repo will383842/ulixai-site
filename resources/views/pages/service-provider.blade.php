@@ -1636,3 +1636,18 @@
   document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
+<!-- HUD Debug minimal -->
+<style>
+  #wizardDebugHUD{position:fixed;top:10px;right:10px;z-index:99999;background:rgba(0,0,0,.8);color:#fff;padding:10px 12px;border-radius:10px;font:12px/1.4 monospace;width:320px}
+  #wizardDebugHUD .row{display:flex;justify-content:space-between;gap:10px}
+  .ok{color:#86efac}.bad{color:#fca5a5}.muted{color:#cbd5e1}
+</style>
+<div id="wizardDebugHUD" hidden>
+  <div class="row"><span>Step</span><span id="hudStep">-</span></div>
+  <div class="row"><span>Total</span><span id="hudTotal">-</span></div>
+  <div class="row"><span>Next enabled</span><span id="hudNext" class="bad">false</span></div>
+  <div class="row"><span>Buttons found</span><span id="hudBtns" class="muted">0</span></div>
+  <div class="row"><span>Last event</span><span id="hudEvent" class="muted">-</span></div>
+  <div class="row"><span>Last validate</span><span id="hudValid" class="muted">-</span></div>
+</div>
+<script src="/js/debug/wizard-debug.js"></script>

@@ -1,4 +1,5 @@
 import { getCategoryColorByLevel, categoryLevels } from './categoryColors.js';
+import { getCategoryIcon } from './categoryIcons.js';
 
 const CONFIG = {
   GRID: {
@@ -50,8 +51,6 @@ const cache = {
   }
 };
 
-const imageCache = new Set();
-
 function debounce(func, wait) {
   let timeout;
   return (...args) => {
@@ -75,37 +74,16 @@ function createShineEffect() {
   return '<div class="shine-effect" aria-hidden="true"></div>';
 }
 
-function preloadImage(src) {
-  if (imageCache.has(src)) return Promise.resolve(src);
-  
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      imageCache.add(src);
-      resolve(src);
-    };
-    img.onerror = reject;
-    img.src = src;
-  });
-}
-
 function createIconHtml(item, iconColor) {
   const iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
   const escapedName = item.name.replace(/"/g, '&quot;');
   
-  if (item.icon_image) {
-    const imagePath = item.icon_image.startsWith('/') ? item.icon_image : '/' + item.icon_image;
-    preloadImage(imagePath).catch(() => {});
-    
-    return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; padding: ${CONFIG.ICONS.PADDING}; display: flex; align-items: center; justify-content: center; overflow: hidden;" role="img" aria-label="${escapedName}">` +
-           `<img src="${imagePath}" alt="${escapedName}" class="w-full h-full object-contain rounded-full" loading="lazy" decoding="async">` +
-           '</div>';
-  }
+  // ✅ TOUJOURS utiliser l'icône SVG automatique (ignorer item.icon_image)
+  const iconSVG = getCategoryIcon(item.name, item.id);
   
   return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; display: flex; align-items: center; justify-content: center;" role="img" aria-label="${escapedName}">` +
-         '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">' +
-         '<path d="M14,6V4H10V6H9A2,2 0 0,0 7,8V19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19V8A2,2 0 0,0 15,6H14M12,7A2,2 0 0,1 14,9A2,2 0 0,1 12,11A2,2 0 0,1 10,9A2,2 0 0,1 12,7Z"/>' +
-         '</svg></div>';
+         `<div class="w-8 h-8 text-white" style="width: 2rem; height: 2rem;">${iconSVG}</div>` +
+         '</div>';
 }
 
 function createCategoryCard(item, level, allIds, onClickHandler) {
