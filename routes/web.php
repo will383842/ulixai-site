@@ -199,10 +199,11 @@ Route::get('/become-service-provider', function () {
 })->name('become.service.provider');
 
 // Registration
-Route::post('/register', [RegisterController::class, 'register'])->name('user.register');
+Route::post('/send-email-otp', [RegisterController::class, 'sendEmailOtp'])->name('send-email-otp'); // ⬅️ AJOUTER CELLE-CI
 Route::post('/verify-email-otp', [RegisterController::class, 'verifyEmailOtp'])->name('user.verifyEmailOtp');
-Route::post('/signup/register', [RegisterController::class, 'signupRegister'])->name('user.signupRegister');
 Route::post('/resend-email-otp', [RegisterController::class, 'resendEmailOtp'])->name('user.resendEmailOtp');
+Route::post('/register', [RegisterController::class, 'register'])->name('user.register');
+Route::post('/signup/register', [RegisterController::class, 'signupRegister'])->name('user.signupRegister');
 
 // Legal pages
 Route::get('/legal-notice', function () {

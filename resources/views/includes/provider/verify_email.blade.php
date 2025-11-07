@@ -11,6 +11,8 @@
 ⚡ Performance maximale
 🔑 Code de test: 111111 (pour développement)
 ✅ CONFORME AU GUIDE SYSTÈME WIZARD
+🔧 MODIFIED: Complete script replacement with 'expats' key
+🔧 ADDED: Final submission call after OTP verification
 ============================================
 -->
 
@@ -98,6 +100,29 @@
         />
       </div>
       <p class="input-hint">Enter the 6-digit code sent to your email (or 111111 for testing)</p>
+    </div>
+
+    <!-- Verify Button -->
+    <div class="flex justify-center">
+      <button 
+        type="button" 
+        id="verifyOtpBtn" 
+        class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled
+      >
+        Verify Code
+      </button>
+    </div>
+
+    <!-- Resend Button -->
+    <div class="flex justify-center">
+      <button 
+        type="button" 
+        id="resendOtpBtn" 
+        class="text-blue-600 hover:text-blue-700 font-semibold text-sm underline"
+      >
+        Resend Code
+      </button>
     </div>
 
     <!-- Error Alert (Hidden by default) -->
@@ -315,427 +340,211 @@
 </style>
 
 <script>
-/* ============================================
-   🎯 STEP 15 - OTP VERIFICATION
-   ✅ CONFORME AU GUIDE SYSTÈME WIZARD
-   ✅ Validation OTP (6 chiffres ou code test 111111)
-   ✅ Code de test pour développement: 111111
-   ✅ Fetch API pour vérification réelle
-   ============================================ */
+/**
+ * ═══════════════════════════════════════════════════════════
+ * STEP 15: Vérification OTP + Soumission Finale
+ * ═══════════════════════════════════════════════════════════
+ */
 
 (function() {
-  'use strict';
-
-  // ============================================
-  // 📦 STATE & CONSTANTS
-  // ============================================
+  const STORAGE_KEY = 'expats';
   
-  const TEST_CODE = '111111'; // Code de test pour le développement
+  const otpInputs = document.querySelectorAll('#step15 .otp-input');
+  const verifyBtn = document.getElementById('verifyOtpBtn');
   
-  const state = {
-    otp: '',
-    isValid: false,
-    isVerifying: false,
-    isVerified: false
-  };
-
-  let cachedElements = null;
-
-  // ============================================
-  // 🗄️ CACHE DOM ELEMENTS
-  // ============================================
-  
-  function getCachedElements() {
-    if (!cachedElements) {
-      cachedElements = {
-        step: document.getElementById('step15'),
-        otpInput: document.getElementById('otp_input'),
-        errorAlert: document.getElementById('step15Error'),
-        errorMessage: document.getElementById('step15ErrorMessage'),
-        successAlert: document.getElementById('step15Success'),
-        statusText: document.getElementById('step15StatusText'),
-        csrfToken: document.querySelector('input[name="_token"]')
-      };
-    }
-    return cachedElements;
+  if (!otpInputs.length) {
+    console.warn('⚠️ Step 15: OTP inputs not found');
+    return;
   }
-
-  // ============================================
-  // 💾 LOCAL STORAGE - provider-signup-data
-  // ============================================
   
-  function getLocalStorage() {
-    try {
-      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
-    } catch (e) {
-      return {};
-    }
-  }
-
-  function clearLocalStorage() {
-    try {
-      localStorage.removeItem('step15_otp');
-    } catch (e) {
-      console.warn('localStorage error:', e);
-    }
-  }
-
-  // ============================================
-  // ✅ VALIDATION
-  // ============================================
-  
-  function validateOTP() {
-    const elements = getCachedElements();
-    
-    state.otp = elements.otpInput.value.trim();
-    
-    // Validation: 6 chiffres OU code de test
-    const is6Digits = /^\d{6}$/.test(state.otp);
-    const isTestCode = state.otp === TEST_CODE;
-    state.isValid = is6Digits || isTestCode;
-    
-    // Mise à jour des classes CSS
-    if (state.otp.length > 0) {
-      if (state.isValid) {
-        elements.otpInput.classList.remove('invalid');
-        elements.otpInput.classList.add('valid');
-      } else {
-        elements.otpInput.classList.remove('valid');
-        elements.otpInput.classList.add('invalid');
-      }
-    } else {
-      elements.otpInput.classList.remove('valid', 'invalid');
-    }
-    
-    // Mise à jour du texte de statut
-    if (elements.statusText) {
-      if (state.isValid) {
-        if (isTestCode) {
-          elements.statusText.textContent = 'Test code entered';
-        } else {
-          elements.statusText.textContent = 'Code ready for verification';
-        }
-      } else {
-        elements.statusText.textContent = 'Awaiting verification';
-      }
-    }
-    
-    return state.isValid;
-  }
-
-  // ============================================
-  // 🌍 FONCTION DE VALIDATION GLOBALE
-  // ============================================
-  
-  window.validateStep15 = function() {
-    const elements = getCachedElements();
-    
-    if (!validateOTP()) {
-      showError('Please enter a valid code (6 digits or test code 111111).');
-      return false;
-    }
-    
-    return true;
-  };
-
-  // ============================================
-  // 🎨 UI UPDATES
-  // ============================================
-  
-  function showError(message) {
-    const elements = getCachedElements();
-    
-    if (elements.errorMessage) {
-      elements.errorMessage.textContent = message || 'Invalid code';
-    }
-    
-    if (elements.errorAlert) {
-      elements.errorAlert.classList.remove('hidden');
-      elements.errorAlert.classList.add('shake-animation');
-      
-      // Scroll vers l'erreur
-      requestAnimationFrame(() => {
-        elements.errorAlert.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
-        });
-      });
-      
-      // Retirer l'animation après
-      setTimeout(() => {
-        elements.errorAlert.classList.remove('shake-animation');
-      }, 500);
-    }
-    
-    if (elements.successAlert) {
-      elements.successAlert.classList.add('hidden');
-    }
-    
-    // Shake sur l'input container
-    const inputContainer = elements.otpInput?.closest('.input-container');
-    if (inputContainer) {
-      inputContainer.classList.add('error-shake');
-      setTimeout(() => inputContainer.classList.remove('error-shake'), 500);
-    }
-    
-    // Marquer l'input comme invalide
-    elements.otpInput.classList.remove('valid');
-    elements.otpInput.classList.add('invalid');
-  }
-
-  function showSuccess() {
-    const elements = getCachedElements();
-    
-    if (elements.successAlert) {
-      elements.successAlert.classList.remove('hidden');
-    }
-    
-    if (elements.errorAlert) {
-      elements.errorAlert.classList.add('hidden');
-    }
-    
-    if (elements.statusText) {
-      elements.statusText.textContent = 'Verified successfully!';
-    }
-  }
-
-  // ============================================
-  // 🌐 API VERIFICATION
-  // ============================================
-  
+  /**
+   * Vérifier l'OTP auprès du serveur
+   */
   async function verifyOTP() {
-    const elements = getCachedElements();
-    const data = getLocalStorage();
+    // 1. Récupérer le code OTP
+    let otpCode = '';
+    otpInputs.forEach(input => {
+      otpCode += input.value;
+    });
     
-    // Si c'est le code de test, valider directement
-    if (state.otp === TEST_CODE) {
-      state.isVerified = true;
-      showSuccess();
-      
-      // Clear localStorage
-      clearLocalStorage();
-      
-      // Redirection après délai
-      setTimeout(() => {
-        const step15 = document.getElementById('step15');
-        const step16 = document.getElementById('step16');
-        
-        if (step15) step15.classList.add('hidden');
-        if (step16) step16.classList.remove('hidden');
-      }, 1500);
-      
+    if (otpCode.length !== 6) {
+      if (typeof toastr !== 'undefined') {
+        toastr.error('Please enter the 6-digit code', 'Invalid Code');
+      }
       return;
     }
     
-    // Sinon, vérifier via API
+    // 2. Récupérer l'email
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    
     if (!data.email) {
-      showError('Email not found. Please go back and enter your email.');
+      if (typeof toastr !== 'undefined') {
+        toastr.error('Email not found. Please go back to Step 13.', 'Error');
+      }
       return;
     }
     
-    if (!elements.csrfToken) {
-      showError('Security token not found. Please refresh the page.');
-      return;
-    }
+    console.log('🔐 [Step 15] Verifying OTP:', otpCode, 'for email:', data.email);
     
-    state.isVerifying = true;
-    
-    // ✅ Notifier wizard-steps.js pendant la vérification
-    if (typeof window.updateNavigationButtons === 'function') {
-      window.updateNavigationButtons();
+    // 3. Loader
+    if (verifyBtn) {
+      verifyBtn.disabled = true;
+      verifyBtn.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Verifying...';
     }
     
     try {
+      // 4. Appeler l'API de vérification
       const response = await fetch('/verify-email-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': elements.csrfToken.value,
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         },
-        body: JSON.stringify({ 
-          email: data.email, 
-          otp: state.otp,
-          _token: elements.csrfToken.value
-        }),
-        credentials: 'same-origin'
+        body: JSON.stringify({
+          email: data.email,
+          otp: otpCode
+        })
       });
       
       const result = await response.json();
       
-      if (result.status === 'success') {
-        state.isVerified = true;
-        showSuccess();
+      if (response.ok) {
+        console.log('✅ [Step 15] OTP verified successfully');
+        console.log('ℹ️ [Step 15] User is now authenticated');
         
-        // Clear localStorage
-        clearLocalStorage();
+        if (typeof toastr !== 'undefined') {
+          toastr.success('Email verified successfully!', 'Success');
+        }
         
-        // Redirection après délai
-        setTimeout(() => {
-          const step15 = document.getElementById('step15');
-          const step16 = document.getElementById('step16');
-          
-          if (step15) step15.classList.add('hidden');
-          if (step16) step16.classList.remove('hidden');
-        }, 1500);
+        // ═══════════════════════════════════════════════════════════
+        // CRITIQUE: Appeler la soumission finale
+        // ═══════════════════════════════════════════════════════════
+        console.log('📤 [Step 15] Calling final submission...');
+        
+        if (typeof window.onProviderSignupSubmit === 'function') {
+          window.onProviderSignupSubmit();
+        } else {
+          console.error('❌ window.onProviderSignupSubmit is not defined!');
+          if (typeof toastr !== 'undefined') {
+            toastr.error('System error. Please refresh the page.', 'Error');
+          }
+        }
+        
       } else {
-        state.isVerified = false;
-        showError(result.message || 'Invalid code. Please try again.');
+        // OTP invalide
+        console.error('❌ [Step 15] OTP verification failed:', result.message);
+        
+        if (typeof toastr !== 'undefined') {
+          toastr.error(result.message || 'Invalid verification code', 'Error');
+        }
+        
+        // Reset
+        if (verifyBtn) {
+          verifyBtn.disabled = false;
+          verifyBtn.innerHTML = 'Verify Code';
+        }
+        
+        otpInputs.forEach(input => input.value = '');
+        if (otpInputs[0]) otpInputs[0].focus();
       }
-    } catch (error) {
-      console.error('Verification error:', error);
-      state.isVerified = false;
-      showError('Verification failed. Please check your connection and try again.');
-    } finally {
-      state.isVerifying = false;
       
-      // ✅ Notifier wizard-steps.js après la vérification
-      if (typeof window.updateNavigationButtons === 'function') {
-        window.updateNavigationButtons();
+    } catch (error) {
+      console.error('❌ [Step 15] Network error:', error);
+      
+      if (typeof toastr !== 'undefined') {
+        toastr.error('Failed to verify code. Please try again.', 'Error');
+      }
+      
+      if (verifyBtn) {
+        verifyBtn.disabled = false;
+        verifyBtn.innerHTML = 'Verify Code';
       }
     }
   }
-
-  // Fonction globale pour la vérification (appelée par le bouton du header)
-  window.verifyStep15OTP = function() {
-    if (!validateOTP()) {
-      showError('Please enter a valid code (6 digits or test code 111111).');
-      return false;
-    }
-    
-    if (state.isVerifying) {
-      return false;
-    }
-    
-    verifyOTP();
-    return true;
-  };
-
-  // ============================================
-  // 🎬 EVENT HANDLERS
-  // ============================================
   
-  function handleInput(e) {
-    const input = e.target;
-    if (!input || input.id !== 'otp_input') return;
-    
-    // Ne garder que les chiffres
-    const value = input.value.replace(/\D/g, '');
-    input.value = value;
-    
-    // Valider en temps réel
-    requestAnimationFrame(() => {
-      validateOTP();
+  /**
+   * Auto-focus inputs
+   */
+  otpInputs.forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+        otpInputs[index + 1].focus();
+      }
       
-      // ✅ Notifier wizard-steps.js
-      if (typeof window.updateNavigationButtons === 'function') {
-        window.updateNavigationButtons();
+      const allFilled = Array.from(otpInputs).every(inp => inp.value.length === 1);
+      if (verifyBtn) {
+        verifyBtn.disabled = !allFilled;
       }
     });
     
-    // Auto-verify si code complet (6 chiffres)
-    if (value.length === 6) {
-      setTimeout(() => {
-        validateOTP();
-      }, 300);
-    }
-  }
-
-  // Empêcher la fermeture si non vérifié
-  function handleEscapeKey(e) {
-    if (e.key === 'Escape' && !state.isVerified) {
-      e.preventDefault();
-      showError('You must verify your email before closing.');
-    }
-  }
-
-  // ============================================
-  // 🎪 EVENT DELEGATION
-  // ============================================
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !e.target.value && index > 0) {
+        otpInputs[index - 1].focus();
+      }
+    });
+  });
   
-  function initEventDelegation() {
-    const elements = getCachedElements();
-    
-    // Event delegation sur le step
-    if (elements.step) {
-      elements.step.addEventListener('input', handleInput, { passive: true });
-    }
-    
-    // Touche Escape
-    document.addEventListener('keydown', handleEscapeKey);
+  /**
+   * Bouton verify
+   */
+  if (verifyBtn) {
+    verifyBtn.addEventListener('click', verifyOTP);
   }
-
-  // ============================================
-  // 🔄 RESTORE STATE
-  // ============================================
   
-  function restoreState() {
-    const elements = getCachedElements();
-    
-    // Focus automatique sur l'input
-    if (elements.otpInput) {
-      requestAnimationFrame(() => {
-        elements.otpInput.focus();
-      });
-    }
-    
-    // Valider l'état initial
-    validateOTP();
-    
-    // ✅ Notifier wizard-steps.js
-    if (typeof window.updateNavigationButtons === 'function') {
-      window.updateNavigationButtons();
-    }
-  }
-
-  // ============================================
-  // 🧹 CLEANUP
-  // ============================================
-  
-  function cleanup() {
-    document.removeEventListener('keydown', handleEscapeKey);
-  }
-
-  // ============================================
-  // 🎬 INITIALIZATION
-  // ============================================
-  
-  function init() {
-    const elements = getCachedElements();
-    
-    // Observer pour détecter quand le step devient visible
-    if (elements.step) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            if (!elements.step.classList.contains('hidden')) {
-              // Step est visible, restaurer l'état
-              restoreState();
-            } else {
-              // Step est caché, cleanup
-              cleanup();
-            }
-          }
+  /**
+   * Bouton resend
+   */
+  const resendBtn = document.getElementById('resendOtpBtn');
+  if (resendBtn) {
+    resendBtn.addEventListener('click', async () => {
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      
+      if (!data.email) {
+        if (typeof toastr !== 'undefined') {
+          toastr.error('Email not found', 'Error');
+        }
+        return;
+      }
+      
+      resendBtn.disabled = true;
+      resendBtn.innerHTML = 'Sending...';
+      
+      try {
+        const response = await fetch('/resend-email-otp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({ email: data.email })
         });
-      });
-
-      observer.observe(elements.step, { attributes: true });
-    }
-
-    // Init event delegation
-    initEventDelegation();
-
-    // Restaurer l'état initial si visible
-    if (elements.step && !elements.step.classList.contains('hidden')) {
-      restoreState();
-    }
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          if (typeof toastr !== 'undefined') {
+            toastr.success('New code sent to your email!', 'Success');
+          }
+        } else {
+          if (typeof toastr !== 'undefined') {
+            toastr.error(result.message || 'Failed to resend code', 'Error');
+          }
+        }
+        
+      } catch (error) {
+        console.error('Error resending OTP:', error);
+        if (typeof toastr !== 'undefined') {
+          toastr.error('Failed to resend code', 'Error');
+        }
+      } finally {
+        resendBtn.disabled = false;
+        resendBtn.innerHTML = 'Resend Code';
+      }
+    });
   }
-
-  // Start when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  
+  console.log('✅ [Step 15] OTP verification initialized');
 })();
 </script>

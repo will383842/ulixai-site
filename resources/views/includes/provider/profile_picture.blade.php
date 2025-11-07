@@ -11,6 +11,7 @@
 ⚡ Performance maximale
 🔥 CAMERA FIXED - Avec debug logs
 ✅ CONFORME AU GUIDE SYSTÈME WIZARD
+🔧 MODIFIED: localStorage key changed to 'expats'
 ============================================
 -->
 
@@ -53,7 +54,7 @@
           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
         </svg>
         <span class="text-xs font-bold text-blue-700">
-          Optional
+          Required
         </span>
       </div>
     </div>
@@ -145,22 +146,22 @@
     </div>
 
     <!-- Requirements Info -->
-    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-xl p-2">
-      <div class="flex items-start gap-2">
-        <div class="w-7 h-7 bg-amber-500 rounded-lg flex items-center justify-center shadow-md flex-shrink-0">
-          <span class="text-sm">✅</span>
-        </div>
-        <div class="flex-1">
-          <h3 class="text-amber-900 font-bold text-xs mb-1">Photo Requirements</h3>
-          <ul class="text-amber-800 text-xs space-y-0.5">
-            <li class="flex items-center"><span class="mr-1.5">✓</span> Clear face visible</li>
-            <li class="flex items-center"><span class="mr-1.5">✓</span> Good lighting</li>
-            <li class="flex items-center"><span class="mr-1.5">✓</span> Professional appearance</li>
-            <li class="flex items-center"><span class="mr-1.5">✓</span> No filters or edits</li>
-          </ul>
-        </div>
-      </div>
+    <div class="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-xl p-2">
+  <div class="flex items-start gap-2">
+    <div class="w-7 h-7 bg-red-500 rounded-lg flex items-center justify-center shadow-md flex-shrink-0">
+      <span class="text-sm">⚠️</span>
     </div>
+    <div class="flex-1">
+      <h3 class="text-red-900 font-bold text-xs mb-1">⚠️ Photo Required</h3>
+      <ul class="text-red-800 text-xs space-y-0.5">
+        <li class="flex items-center"><span class="mr-1.5">✓</span> Clear face visible</li>
+        <li class="flex items-center"><span class="mr-1.5">✓</span> Good lighting</li>
+        <li class="flex items-center"><span class="mr-1.5">✓</span> Professional appearance</li>
+        <li class="flex items-center"><span class="mr-1.5">✓</span> No filters or edits</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
   </div>
 </div>
@@ -234,6 +235,7 @@
 <!-- ============================================
      JAVASCRIPT OPTIMISÉ - CAMERA FIXED
      ✅ CONFORME AU GUIDE SYSTÈME WIZARD
+     🔧 MODIFIED: localStorage key 'expats'
      ============================================ -->
 <script>
 (function() {
@@ -244,6 +246,8 @@
   // ============================================
   // 🎯 STATE MANAGEMENT
   // ============================================
+  
+  const STORAGE_KEY = 'expats';
   
   const state = {
     hasPhoto: false,
@@ -278,12 +282,12 @@
   }
 
   // ============================================
-  // 💾 LOCALSTORAGE - provider-signup-data
+  // 💾 LOCALSTORAGE - expats
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     } catch (e) {
       console.warn('localStorage error:', e.message);
       return {};
@@ -297,7 +301,7 @@
         image: imageData,
         timestamp: new Date().toISOString()
       };
-      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       state.hasPhoto = true;
       
       // ✅ Notifier wizard-steps.js
@@ -315,7 +319,7 @@
     try {
       const data = getLocalStorage();
       delete data.profile_photo;
-      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       state.hasPhoto = false;
       
       // ✅ Notifier wizard-steps.js

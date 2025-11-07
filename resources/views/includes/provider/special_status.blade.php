@@ -2,23 +2,23 @@
 ============================================
 🚀 STEP 7 - SPECIAL STATUS (CORRECTED)
 ============================================
-✨ Design System Blue/Cyan/Teal STRICT
-🎨 Multi-sélection de statuses spéciaux
-⚡ Structure header fixe + contenu scrollable
-🔧 Intégré avec wizard-steps.js
-✅ Persistance localStorage
-⚡ Performance maximale
+✨ Blue/Cyan/Teal Design System STRICT
+🎨 Multi-selection of special statuses
+⚡ Fixed header structure + scrollable content
+🔧 Integrated with wizard-steps.js
+✅ localStorage persistence
+⚡ Maximum performance
 ============================================
 -->
 
 <div id="step7" class="hidden flex flex-col h-full" role="region" aria-label="Select your special status">
   
   <!-- ============================================
-       TITRE FIXE (STICKY)
+       FIXED HEADER (STICKY)
        ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -59,7 +59,7 @@
   </div>
 
   <!-- ============================================
-       CONTENU SCROLLABLE
+       SCROLLABLE CONTENT
        ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
@@ -114,14 +114,14 @@
 </div>
 
 <!-- ============================================
-     STYLES OPTIMISÉS
+     OPTIMIZED STYLES
      ============================================ -->
 <style>
 /* ============================================
    🎨 BASE STYLES
    ============================================ */
 
-/* Animations des blobs - optimisé GPU */
+/* Blob animations - GPU optimized */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -141,7 +141,7 @@
   animation-delay: 4s;
 }
 
-/* Float animation pour les icônes sélectionnées */
+/* Float animation for selected icons */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
@@ -223,7 +223,7 @@
   color: white;
 }
 
-/* Status name et subtitle */
+/* Status name and subtitle */
 #step7 .status-name {
   font-feature-settings: 'kern' 1, 'liga' 1;
   -webkit-font-smoothing: antialiased;
@@ -268,7 +268,7 @@
 }
 
 /* ============================================
-   ⚡ OPTIMISATIONS PERFORMANCE
+   ⚡ PERFORMANCE OPTIMIZATIONS
    ============================================ */
 
 #step7 .status-card,
@@ -285,7 +285,7 @@
 </style>
 
 <!-- ============================================
-     JAVASCRIPT OPTIMISÉ ET CORRIGÉ
+     OPTIMIZED AND CORRECTED JAVASCRIPT
      ============================================ -->
 <script>
 (function() {
@@ -322,7 +322,7 @@
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      return JSON.parse(localStorage.getItem('expats') || '{}');
     } catch (e) {
       console.warn('localStorage read error:', e.message);
       return {};
@@ -333,7 +333,7 @@
     try {
       const data = getLocalStorage();
       data.special_statuses = state.selectedStatuses;
-      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      localStorage.setItem('expats', JSON.stringify(data));
     } catch (e) {
       console.warn('localStorage write error:', e.message);
     }
@@ -349,14 +349,14 @@
     const card = Array.from(elements.cards).find(c => c.getAttribute('data-status') === status);
     
     if (index > -1) {
-      // Désélectionner
+      // Deselect
       state.selectedStatuses.splice(index, 1);
       if (card) {
         card.classList.remove('selected');
         card.setAttribute('aria-checked', 'false');
       }
     } else {
-      // Sélectionner
+      // Select
       state.selectedStatuses.push(status);
       if (card) {
         card.classList.add('selected');
@@ -364,17 +364,17 @@
       }
     }
     
-    // Mettre à jour le compteur
+    // Update counter
     requestAnimationFrame(() => {
       if (elements.selectedCount) {
         elements.selectedCount.textContent = state.selectedStatuses.length;
       }
     });
     
-    // Sauvegarder
+    // Save
     saveToLocalStorage();
     
-    // ✅ Notifier wizard-steps.js (au lieu de updateStep7Buttons)
+    // ✅ Notify wizard-steps.js (instead of updateStep7Buttons)
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
@@ -410,7 +410,7 @@
   function initEventDelegation() {
     const elements = getCachedElements();
     
-    // Event delegation pour les cartes
+    // Event delegation for cards
     if (elements.step) {
       elements.step.addEventListener('click', handleCardClick, { passive: true });
       elements.step.addEventListener('keydown', handleKeyDown);
@@ -425,12 +425,12 @@
     const elements = getCachedElements();
     const data = getLocalStorage();
     
-    // Restaurer les statuses depuis localStorage
+    // Restore statuses from localStorage
     if (data.special_statuses && Array.isArray(data.special_statuses)) {
       state.selectedStatuses = data.special_statuses;
       
       requestAnimationFrame(() => {
-        // Restaurer les états des cartes
+        // Restore card states
         state.selectedStatuses.forEach(status => {
           const card = Array.from(elements.cards).find(c => c.getAttribute('data-status') === status);
           if (card) {
@@ -439,12 +439,12 @@
           }
         });
         
-        // Mettre à jour le compteur
+        // Update counter
         if (elements.selectedCount) {
           elements.selectedCount.textContent = state.selectedStatuses.length;
         }
         
-        // ✅ Notifier wizard-steps.js
+        // ✅ Notify wizard-steps.js
         if (typeof window.updateNavigationButtons === 'function') {
           window.updateNavigationButtons();
         }
@@ -453,15 +453,15 @@
   }
 
   // ============================================
-  // 🎬 VALIDATION (STEP OPTIONNEL)
+  // 🎬 VALIDATION (OPTIONAL STEP)
   // ============================================
   
-  // ✅ Step 7 est optionnel → toujours valide
+  // ✅ Step 7 is optional → always valid
   window.validateStep7 = function() {
     return true;
   };
 
-  // Exposer les fonctions globalement pour compatibilité
+  // Expose functions globally for compatibility
   window.toggleStatusSelection = toggleStatusSelection;
   window.selectedStatuses = state.selectedStatuses;
 
@@ -473,17 +473,17 @@
     // Init event delegation
     initEventDelegation();
 
-    // Observer pour détecter quand le step devient visible
+    // Observer to detect when step becomes visible
     const elements = getCachedElements();
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             if (!elements.step.classList.contains('hidden')) {
-              // Step est visible, restaurer l'état
+              // Step is visible, restore state
               restoreState();
               
-              // ✅ Notifier wizard-steps.js
+              // ✅ Notify wizard-steps.js
               if (typeof window.updateNavigationButtons === 'function') {
                 window.updateNavigationButtons();
               }
@@ -495,7 +495,7 @@
       observer.observe(elements.step, { attributes: true });
     }
 
-    // Restaurer l'état initial
+    // Restore initial state
     restoreState();
   }
 

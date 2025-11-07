@@ -1,26 +1,19 @@
 <!-- 
 ============================================
-🚀 STEP 9 - PROFILE DESCRIPTION (OPTIMIZED)
+🚀 STEP 9 - PROFILE DESCRIPTION (DEBUG VERSION)
 ============================================
-✨ Design System Blue/Cyan/Teal STRICT
-🎨 Textarea avec compteur et validation
-💎 Indicateurs visuels de progression
-⚡ Structure header fixe + contenu sans scroll
-🔧 Optimisations CPU, RAM, GPU
-✅ Persistance localStorage
-⚡ Performance maximale
-✅ CONFORME AU GUIDE SYSTÈME WIZARD
+✅ Console.log ajoutés pour diagnostic
+✅ Textarea avec styles inline forcés
+✅ Vérifications de chargement
 ============================================
 -->
 
-<div id="step9" class="hidden flex flex-col" role="region" aria-label="Tell us about yourself">
+<div id="step9" class="hidden flex flex-col h-full" role="region" aria-label="Tell us about yourself">
   
-  <!-- ============================================
-       TITRE FIXE (STICKY) - NON MODIFIÉ
-       ============================================ -->
-  <div class="bg-white pt-2 pb-2 border-b border-gray-100">
+  <!-- FIXED HEADER (STICKY) -->
+  <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -58,60 +51,62 @@
     </div>
   </div>
 
-  <!-- ============================================
-       CONTENU SANS SCROLL - RÉDUIT
-       ============================================ -->
-  <div class="pt-2 space-y-1.5">
+  <!-- SCROLLABLE CONTENT -->
+  <div class="flex-1 overflow-y-auto pt-3 space-y-3 sm:space-y-4">
 
-    <!-- Error Alert (Hidden by default) -->
-    <div id="step9Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-2 shake-animation" role="alert">
+    <!-- Error Alert - HIDDEN BY DEFAULT -->
+    <div id="step9Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
       <div class="flex items-start gap-2">
-        <svg class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-xs font-semibold text-red-800">Minimum 200 characters required</p>
-          <p class="text-xs text-red-600">Please write more about yourself</p>
+          <p class="text-sm font-semibold text-red-800">Minimum 200 characters required</p>
+          <p class="text-xs text-red-600 mt-0.5">Please write more about yourself</p>
         </div>
       </div>
     </div>
 
-    <!-- Warning Info Banner -->
-    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-xl p-1.5">
-      <div class="flex items-start gap-1.5">
-        <svg class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-        </svg>
-        <div>
-          <p class="text-xs font-bold text-amber-900">Minimum 200 characters required</p>
-          <p class="text-xs text-amber-700">This will appear on your profile!</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Textarea Container -->
-    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-2 border-2 border-blue-300">
-      <label class="block text-gray-900 font-bold text-xs mb-1 flex items-center gap-1.5">
-        <span class="text-base">📝</span>
+    <!-- ✅ TEXTAREA CONTAINER - AVEC STYLES INLINE FORCÉS -->
+    <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-4 border-2 border-blue-200 shadow-sm">
+      <label class="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
+        <span class="text-lg">📝</span>
         <span>Profile Description</span>
       </label>
       
+      <!-- ✅ TEXTAREA AVEC STYLES INLINE POUR FORCER LA VISIBILITÉ -->
       <textarea 
         id="step9Description" 
         name="profile_description"
         placeholder="Tell us about your experience, skills, and how you can help others succeed..."
-        class="w-full border-2 border-blue-200 rounded-lg px-3 py-2 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 resize-none bg-white text-xs sm:text-sm transition-all"
-        rows="4"
+        style="
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          width: 100%;
+          min-height: 150px;
+          height: 150px;
+          padding: 12px 16px;
+          border: 2px solid #93c5fd;
+          border-radius: 12px;
+          background: white;
+          font-size: 14px;
+          line-height: 1.6;
+          color: #1f2937;
+          resize: vertical;
+        "
+        class="w-full border-2 border-blue-200 rounded-xl px-4 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 resize-none bg-white text-sm transition-all"
+        rows="6"
         maxlength="500"
       ></textarea>
       
       <!-- Character Counter Info -->
-      <div class="flex flex-row justify-between items-center gap-2 mt-1">
-        <div class="flex items-center gap-1.5 text-xs text-gray-600">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex justify-between items-center mt-3">
+        <div class="flex items-center gap-2 text-xs text-gray-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
-          <span>Min: <strong class="text-gray-900">200</strong> • Max: 500</span>
+          <span>Min: <strong class="text-gray-900">200</strong> • Max: <strong class="text-gray-900">500</strong></span>
         </div>
         <div class="text-sm font-bold">
           <span id="step9Counter" class="text-gray-400">0</span>
@@ -120,22 +115,22 @@
       </div>
 
       <!-- Progress Bar -->
-      <div class="mt-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+      <div class="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
         <div id="step9ProgressBar" class="h-full bg-gray-400 transition-all duration-300" style="width: 0%"></div>
       </div>
 
       <!-- Indicators -->
-      <div class="mt-1 flex items-center justify-between text-xs font-bold">
-        <div class="flex items-center gap-1">
-          <div id="step9Indicator1" class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300"></div>
+      <div class="mt-3 flex items-center justify-between text-xs font-bold">
+        <div class="flex items-center gap-1.5">
+          <div id="step9Indicator1" class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300"></div>
           <span id="step9Indicator1Label" class="text-gray-500 transition-colors">Start</span>
         </div>
-        <div class="flex items-center gap-1">
-          <div id="step9Indicator2" class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300"></div>
+        <div class="flex items-center gap-1.5">
+          <div id="step9Indicator2" class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300"></div>
           <span id="step9Indicator2Label" class="text-gray-500 transition-colors">200</span>
         </div>
-        <div class="flex items-center gap-1">
-          <div id="step9Indicator3" class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300"></div>
+        <div class="flex items-center gap-1.5">
+          <div id="step9Indicator3" class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300"></div>
           <span id="step9Indicator3Label" class="text-gray-500 transition-colors">Full</span>
         </div>
       </div>
@@ -145,58 +140,29 @@
 
 </div>
 
-<!-- ============================================
-     STYLES OPTIMISÉS
-     ============================================ -->
+<!-- STYLES -->
 <style>
-/* ============================================
-   🎨 BASE STYLES
-   ============================================ */
-
-/* Animations des blobs - optimisé GPU */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
   66% { transform: translate(-20px, 20px) scale(0.9); }
 }
+.animate-blob { animation: blob 7s infinite; will-change: transform; }
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
 
-.animate-blob {
-  animation: blob 7s infinite;
-  will-change: transform;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-/* Shake animation pour les erreurs */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-8px); }
   75% { transform: translateX(8px); }
 }
+.shake-animation { animation: shake 0.5s ease-in-out; }
 
-.shake-animation {
-  animation: shake 0.5s ease-in-out;
-}
-
-/* Pulse animation pour le compteur */
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.1); }
 }
-
-.pulse-animation {
-  animation: pulse 1s ease-in-out infinite;
-}
-
-/* ============================================
-   📝 TEXTAREA
-   ============================================ */
+.pulse-animation { animation: pulse 1s ease-in-out infinite; }
 
 #step9 textarea {
   font-feature-settings: 'kern' 1;
@@ -209,14 +175,8 @@
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
-/* ============================================
-   ♿ ACCESSIBILITY
-   ============================================ */
-
 @media (prefers-reduced-motion: reduce) {
-  #step9 *,
-  #step9 *::before,
-  #step9 *::after {
+  #step9 *, #step9 *::before, #step9 *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -224,14 +184,8 @@
 }
 
 @media (prefers-contrast: high) {
-  #step9 textarea {
-    border: 3px solid currentColor;
-  }
+  #step9 textarea { border: 3px solid currentColor; }
 }
-
-/* ============================================
-   ⚡ PERFORMANCE
-   ============================================ */
 
 #step9 .animate-blob {
   transform: translateZ(0);
@@ -245,17 +199,15 @@
 }
 </style>
 
-<!-- ============================================
-     JAVASCRIPT OPTIMISÉ
-     ============================================ -->
+<!-- ✅ JAVASCRIPT AVEC DEBUG COMPLET -->
 <script>
+console.log('🚀 Step 9 Script Loading...');
+
 (function() {
   'use strict';
 
-  // ============================================
-  // 🎯 STATE MANAGEMENT
-  // ============================================
-  
+  console.log('⏳ Step 9 IIFE started');
+
   const state = {
     description: '',
     length: 0,
@@ -265,10 +217,6 @@
 
   let cachedElements = null;
 
-  // ============================================
-  // 💾 CACHE DOM
-  // ============================================
-  
   function getCachedElements() {
     if (!cachedElements) {
       cachedElements = {
@@ -285,17 +233,18 @@
         indicator3Label: document.getElementById('step9Indicator3Label'),
         errorAlert: document.getElementById('step9Error')
       };
+      console.log('📦 Step 9 elements cached:', {
+        step: !!cachedElements.step,
+        textarea: !!cachedElements.textarea,
+        counter: !!cachedElements.counter
+      });
     }
     return cachedElements;
   }
 
-  // ============================================
-  // 💾 LOCALSTORAGE - provider-signup-data
-  // ============================================
-  
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      return JSON.parse(localStorage.getItem('expats') || '{}');
     } catch (e) {
       console.warn('localStorage error:', e.message);
       return {};
@@ -306,20 +255,18 @@
     try {
       const data = getLocalStorage();
       data.profile_description = state.description;
-      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      localStorage.setItem('expats', JSON.stringify(data));
+      console.log('💾 Step 9 saved to localStorage:', state.description.substring(0, 50) + '...');
     } catch (e) {
       console.warn('localStorage save error:', e.message);
     }
   }
 
-  // ============================================
-  // ✅ VALIDATION
-  // ============================================
-  
   function validateDescription() {
     const elements = getCachedElements();
     
     if (!elements.textarea) {
+      console.warn('❌ Textarea not found!');
       state.isValid = false;
       return false;
     }
@@ -328,14 +275,13 @@
     state.length = state.description.length;
     state.isValid = state.length >= 200;
     
+    console.log('✅ Step 9 validated:', { length: state.length, isValid: state.isValid });
+    
     return state.isValid;
   }
 
-  // ============================================
-  // 🌍 FONCTION DE VALIDATION GLOBALE
-  // ============================================
-  
   window.validateStep9 = function() {
+    console.log('🔍 validateStep9 called');
     const isValid = validateDescription();
     if (!isValid) {
       showError();
@@ -343,29 +289,25 @@
     return isValid;
   };
 
-  // ============================================
-  // 🎨 UI UPDATE
-  // ============================================
-  
   function updateUI() {
     const elements = getCachedElements();
     
-    // Mettre à jour les compteurs
-    if (elements.counter) elements.counter.textContent = state.length;
-    if (elements.charCount) elements.charCount.textContent = state.length;
-    
-    // Progress bar
-    const progress = Math.min((state.length / 500) * 100, 100);
-    if (elements.progressBar) {
-      elements.progressBar.style.width = `${progress}%`;
+    if (elements.counter) {
+      elements.counter.textContent = state.length;
+    }
+    if (elements.charCount) {
+      elements.charCount.textContent = state.length;
     }
     
-    // Retirer pulse si existant
+    const progress = Math.min((state.length / 500) * 100, 100);
+    if (elements.progressBar) {
+      elements.progressBar.style.width = progress + '%';
+    }
+    
     if (elements.counter) {
       elements.counter.classList.remove('pulse-animation');
     }
     
-    // Couleurs dynamiques basées sur la longueur
     if (state.length < 200) {
       if (elements.counter) elements.counter.style.color = '#9ca3af';
       if (elements.progressBar) elements.progressBar.style.background = 'linear-gradient(to right, #9ca3af, #6b7280)';
@@ -383,7 +325,6 @@
       if (elements.progressBar) elements.progressBar.style.background = 'linear-gradient(to right, #ef4444, #f43f5e)';
     }
 
-    // Indicateur 1 (Start - 0+)
     if (state.length > 0) {
       if (elements.indicator1) {
         elements.indicator1.style.backgroundColor = '#2563eb';
@@ -404,7 +345,6 @@
       }
     }
 
-    // Indicateur 2 (200 chars)
     if (state.length >= 200) {
       if (elements.indicator2) {
         elements.indicator2.style.backgroundColor = '#10b981';
@@ -425,7 +365,6 @@
       }
     }
 
-    // Indicateur 3 (500 - Full)
     if (state.length >= 500) {
       if (elements.indicator3) {
         elements.indicator3.style.backgroundColor = '#ef4444';
@@ -446,7 +385,6 @@
       }
     }
 
-    // Cacher l'erreur si visible
     if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
       elements.errorAlert.classList.add('hidden');
     }
@@ -459,7 +397,6 @@
       elements.errorAlert.classList.remove('hidden');
       elements.errorAlert.classList.add('shake-animation');
       
-      // Scroll vers l'erreur
       requestAnimationFrame(() => {
         elements.errorAlert.scrollIntoView({ 
           behavior: 'smooth', 
@@ -467,22 +404,18 @@
         });
       });
       
-      // Retirer l'animation après
       setTimeout(() => {
         elements.errorAlert.classList.remove('shake-animation');
       }, 500);
     }
   }
 
-  // ============================================
-  // 🎬 EVENT HANDLERS
-  // ============================================
-  
   function handleInput(e) {
     const textarea = e.target;
     if (!textarea || textarea.id !== 'step9Description') return;
     
-    // Debouncing pour l'UI update
+    console.log('⌨️ Step 9 input detected');
+    
     if (state.updateTimeout) {
       clearTimeout(state.updateTimeout);
     }
@@ -493,7 +426,6 @@
         updateUI();
         saveToLocalStorage();
         
-        // ✅ Notifier wizard-steps.js
         if (typeof window.updateNavigationButtons === 'function') {
           window.updateNavigationButtons();
         }
@@ -501,79 +433,69 @@
     }, 100);
   }
 
-  // ============================================
-  // 🎪 EVENT DELEGATION
-  // ============================================
-  
   function initEventDelegation() {
     const elements = getCachedElements();
     
-    // Event delegation sur le step
     if (elements.step) {
       elements.step.addEventListener('input', handleInput, { passive: true });
+      console.log('✅ Step 9 input listener attached');
     }
   }
 
-  // ============================================
-  // 🔄 RESTORE STATE
-  // ============================================
-  
   function restoreState() {
+    console.log('🔄 Step 9 restoreState() called');
     const elements = getCachedElements();
     const data = getLocalStorage();
     
-    // Restaurer la description depuis localStorage
     if (elements.textarea && data.profile_description) {
       elements.textarea.value = data.profile_description;
       state.description = data.profile_description;
+      console.log('📥 Step 9 description restored from localStorage');
     }
     
-    // Valider et mettre à jour l'UI
     requestAnimationFrame(() => {
       validateDescription();
       updateUI();
       
-      // ✅ Notifier wizard-steps.js
       if (typeof window.updateNavigationButtons === 'function') {
         window.updateNavigationButtons();
       }
     });
   }
 
-  // ============================================
-  // 🎬 INITIALIZATION
-  // ============================================
-  
   function init() {
+    console.log('🎬 Initializing Step 9...');
     const elements = getCachedElements();
     
-    // Observer pour détecter quand le step devient visible
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             if (!elements.step.classList.contains('hidden')) {
-              // Step est visible, restaurer l'état
+              console.log('👁️ Step 9 became visible');
               restoreState();
+            } else {
+              console.log('🙈 Step 9 became hidden');
             }
           }
         });
       });
 
       observer.observe(elements.step, { attributes: true });
+      console.log('✅ Step 9 MutationObserver attached');
     }
 
-    // Init event delegation
     initEventDelegation();
-
-    // Restaurer l'état initial
     restoreState();
+    
+    console.log('✅ Step 9 initialized successfully');
   }
 
-  // Start when DOM is ready
   if (document.readyState === 'loading') {
+    console.log('⏳ Waiting for DOMContentLoaded...');
     document.addEventListener('DOMContentLoaded', init);
   } else {
+    console.log('✅ DOM already loaded, initializing immediately');
     init();
   }
 })();

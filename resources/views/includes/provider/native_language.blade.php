@@ -2,23 +2,23 @@
 ============================================
 🚀 STEP 2 - NATIVE LANGUAGE SELECTION (CORRECTED)
 ============================================
-✨ Design System Blue/Cyan/Teal STRICT
-🎨 13 langues avec drapeaux
-💎 Validation et états interactifs
+✨ Blue/Cyan/Teal Design System STRICT
+🎨 13 languages with flags
+💎 Validation and interactive states
 ⚡ Responsive 2 cols mobile / 3 cols desktop
-🔧 Gestion correcte des boutons (activation/désactivation)
-✅ Persistance des sélections au retour en arrière
+🔧 Proper button management (enable/disable)
+✅ Selection persistence on back navigation
 ============================================
 -->
 
 <div id="step2" class="hidden flex flex-col h-full" role="region" aria-label="Select your native language">
   
   <!-- ============================================
-       TITRE FIXE (STICKY)
+       FIXED HEADER (STICKY)
        ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -59,7 +59,7 @@
   </div>
 
   <!-- ============================================
-       CONTENU SCROLLABLE
+       SCROLLABLE CONTENT
        ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
@@ -497,7 +497,7 @@
    📱 RESPONSIVE
    ============================================ */
 
-/* Mobile - 2 colonnes */
+/* Mobile - 2 columns */
 @media (max-width: 639px) {
   #step2 .sticky {
     padding-top: 0.5rem;
@@ -528,7 +528,7 @@
   }
 }
 
-/* Tablette - 3 colonnes */
+/* Tablet - 3 columns */
 @media (min-width: 640px) and (max-width: 1023px) {
   #step2 .language-card {
     padding: 0.875rem 0.625rem;
@@ -540,7 +540,7 @@
   }
 }
 
-/* Desktop - 4 colonnes, adaptation au popup */
+/* Desktop - 4 columns, popup adaptation */
 @media (min-width: 1024px) {
   #step2 .language-card {
     padding: 1rem 0.75rem;
@@ -602,14 +602,14 @@
  * STEP 2 - Native Language (Hardened)
  * - capture-phase delegation (survives stopPropagation)
  * - toggles .selected + aria-checked
- * - stores in hidden #nativeLanguage + localStorage (provider-signup-data)
+ * - stores in hidden #nativeLanguage + localStorage (expats)
  * - exposes window.validateStep2()
  * - triggers window.updateNavigationButtons() after selection
  */
 (function(){
   var step2 = document.getElementById('step2');
   if (!step2) return;
-  var storageKey = 'provider-signup-data';
+  var storageKey = 'expats';
   var countEl = document.getElementById('step2SelectedCount');
 
   function setCount(n){ if (countEl) countEl.textContent = String(n); }
@@ -662,18 +662,18 @@
     setState(lang);
     setCount(1);
     
-    // ✅ NOTIFICATION + RECALCUL NAV (correction appliquée)
+    // ✅ NOTIFICATION + NAV RECALCULATION (applied correction)
     try { 
       document.dispatchEvent(new CustomEvent('pw:step2:changed')); 
     } catch(_) {}
     
-    // ✅ Mise à jour des boutons de navigation
+    // ✅ Update navigation buttons
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
   }
 
-  // Validator consulté par wizard-steps.js
+  // Validator consulted by wizard-steps.js
   window.validateStep2 = function(){
     if (window.selectedLanguage && String(window.selectedLanguage).trim()) return true;
     var hidden = document.getElementById('nativeLanguage') || step2.querySelector('input[name="native_language"]');
@@ -682,7 +682,7 @@
     return false;
   };
 
-  // Capture-phase click + keyboard (survit aux stopPropagation)
+  // Capture-phase click + keyboard (survives stopPropagation)
   document.addEventListener('click', function(e){
     var t = e.target;
     var card = t && t.closest ? t.closest('#step2 .language-card') : null;

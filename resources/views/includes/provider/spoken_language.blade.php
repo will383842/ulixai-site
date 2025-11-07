@@ -2,23 +2,23 @@
 ============================================
 🚀 STEP 3 - SPOKEN LANGUAGES (CORRECTED)
 ============================================
-✨ Design System Blue/Cyan/Teal STRICT
-🎨 11 langues avec drapeaux
-💎 Validation et états interactifs
+✨ Blue/Cyan/Teal Design System STRICT
+🎨 11 languages with flags
+💎 Validation and interactive states
 ⚡ Responsive 2 cols mobile / 3 cols / 4 cols desktop
-🔧 Intégré avec wizard-steps.js
-✅ Persistance des sélections au retour en arrière
+🔧 Integrated with wizard-steps.js
+✅ Selection persistence on back navigation
 ============================================
 -->
 
 <div id="step3" class="hidden flex flex-col h-full" role="region" aria-label="Select languages you speak">
   
   <!-- ============================================
-       TITRE FIXE (STICKY)
+       FIXED HEADER (STICKY)
        ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -59,7 +59,7 @@
   </div>
 
   <!-- ============================================
-       CONTENU SCROLLABLE
+       SCROLLABLE CONTENT
        ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
@@ -433,7 +433,7 @@
    📱 RESPONSIVE
    ============================================ */
 
-/* Mobile - 2 colonnes */
+/* Mobile - 2 columns */
 @media (max-width: 639px) {
   #step3 .sticky {
     padding-top: 0.5rem;
@@ -465,7 +465,7 @@
   }
 }
 
-/* Tablette - 3 colonnes */
+/* Tablet - 3 columns */
 @media (min-width: 640px) and (max-width: 1023px) {
   #step3 .lang-btn,
   #step3 .language-card {
@@ -478,7 +478,7 @@
   }
 }
 
-/* Desktop - 4 colonnes */
+/* Desktop - 4 columns */
 @media (min-width: 1024px) {
   #step3 .lang-btn,
   #step3 .language-card {
@@ -525,14 +525,14 @@
 <script>
 /* ============================================
    🎯 STEP 3 - CORRECTED VERSION
-   ✅ Intégré avec wizard-steps.js
-   ✅ Persistance des sélections
+   ✅ Integrated with wizard-steps.js
+   ✅ Selection persistence
    ============================================ */
 
-// État global
+// Global state
 window.spokenLanguages = [];
 
-// Cache des éléments DOM
+// DOM elements cache
 let cachedElementsStep3 = null;
 
 function getCachedElementsStep3() {
@@ -546,54 +546,54 @@ function getCachedElementsStep3() {
   return cachedElementsStep3;
 }
 
-// Fonction de sélection de langue (accessible depuis le header)
+// Language selection function (accessible from header)
 window.selectSpokenLanguage = function(card) {
   if (!card) return;
   
   const elements = getCachedElementsStep3();
   const language = card.getAttribute('data-lang');
   
-  // Toggle sélection (multi-sélection)
+  // Toggle selection (multi-selection)
   const index = window.spokenLanguages.indexOf(language);
   
   if (index > -1) {
-    // Désélectionner
+    // Deselect
     window.spokenLanguages.splice(index, 1);
     card.classList.remove('selected');
     card.setAttribute('aria-checked', 'false');
   } else {
-    // Sélectionner
+    // Select
     window.spokenLanguages.push(language);
     card.classList.add('selected');
     card.setAttribute('aria-checked', 'true');
   }
   
-  // Mettre à jour le compteur
+  // Update counter
   if (elements.selectedCount) {
     elements.selectedCount.textContent = window.spokenLanguages.length;
   }
   
-  // Sauvegarder dans localStorage
+  // Save to localStorage
   try {
-    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    const data = JSON.parse(localStorage.getItem('expats') || '{}');
     data.spoken_languages = window.spokenLanguages;
-    localStorage.setItem('provider-signup-data', JSON.stringify(data));
+    localStorage.setItem('expats', JSON.stringify(data));
   } catch (e) {
     console.warn('localStorage not available:', e.message);
   }
   
-  // Cacher l'erreur si visible
+  // Hide error if visible
   if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
     elements.errorAlert.classList.add('hidden');
   }
   
-  // ✅ Notifier wizard-steps.js
+  // ✅ Notify wizard-steps.js
   if (typeof window.updateNavigationButtons === 'function') {
     window.updateNavigationButtons();
   }
 };
 
-// Fonction de validation (accessible depuis le header)
+// Validation function (accessible from header)
 window.validateStep3 = function() {
   const elements = getCachedElementsStep3();
   
@@ -611,15 +611,15 @@ window.validateStep3 = function() {
   return true;
 };
 
-// Initialisation optimisée (event delegation + passive listeners)
+// Optimized initialization (event delegation + passive listeners)
 document.addEventListener('DOMContentLoaded', function() {
   const elements = getCachedElementsStep3();
   
-  // Event delegation pour meilleure performance
+  // Event delegation for better performance
   const container = document.querySelector('#step3');
   if (!container) return;
   
-  // Un seul listener au lieu de 11 (optimisation CPU)
+  // Single listener instead of 11 (CPU optimization)
   container.addEventListener('click', function(e) {
     const card = e.target.closest('.lang-btn');
     if (card) {
@@ -627,7 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, { passive: true });
   
-  // Support clavier avec event delegation
+  // Keyboard support with event delegation
   container.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') {
       const card = e.target.closest('.lang-btn');
@@ -638,12 +638,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Observer pour détecter quand le step devient visible
+  // Observer to detect when step becomes visible
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
         if (!container.classList.contains('hidden')) {
-          // ✅ Notifier wizard-steps.js
+          // ✅ Notify wizard-steps.js
           if (typeof window.updateNavigationButtons === 'function') {
             window.updateNavigationButtons();
           }
@@ -654,13 +654,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   observer.observe(container, { attributes: true });
   
-  // Restaurer la sélection depuis localStorage
+  // Restore selection from localStorage
   try {
-    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    const data = JSON.parse(localStorage.getItem('expats') || '{}');
     if (data.spoken_languages && Array.isArray(data.spoken_languages)) {
       window.spokenLanguages = data.spoken_languages;
       
-      // Utiliser requestAnimationFrame pour éviter layout thrashing
+      // Use requestAnimationFrame to avoid layout thrashing
       requestAnimationFrame(() => {
         window.spokenLanguages.forEach(lang => {
           const savedCard = document.querySelector(`#step3 .lang-btn[data-lang="${lang}"]`);
@@ -670,12 +670,12 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         });
         
-        // Mise à jour de l'UI
+        // UI update
         if (elements.selectedCount) {
           elements.selectedCount.textContent = window.spokenLanguages.length;
         }
         
-        // ✅ Notifier wizard-steps.js
+        // ✅ Notify wizard-steps.js
         if (typeof window.updateNavigationButtons === 'function') {
           window.updateNavigationButtons();
         }

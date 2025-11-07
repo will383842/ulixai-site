@@ -1,26 +1,26 @@
 <!-- 
 ============================================
-🚀 STEP 8 - COMMUNICATION PREFERENCE (FULLY CORRECTED)
+🚀 STEP 8 - COMMUNICATION PREFERENCE (BOUCLE INFINIE CORRIGÉE)
 ============================================
-✨ Design System Blue/Cyan/Teal STRICT
-🎨 Toggle buttons Yes/No pour Online et In Person
-💎 Validation au moins 1 "Yes" requis
-⚡ Structure header fixe + contenu scrollable
-🔧 Optimisations CPU, RAM, GPU
-✅ Persistance localStorage
-⚡ Performance maximale
-✅ CORRECTIONS: Storage key + Fonction locale supprimée + Appels wizard-steps.js
+✨ Blue/Cyan/Teal Design System STRICT
+🎨 Yes/No toggle buttons for Online and In Person
+💎 Validation requires at least 1 "Yes"
+⚡ Fixed header structure + scrollable content
+🔧 CPU, RAM, GPU optimizations
+✅ localStorage persistence
+⚡ Maximum performance
+✅ CORRECTION CRITIQUE: Suppression de l'appel récursif dans validatePreference()
 ============================================
 -->
 
 <div id="step8" class="hidden flex flex-col h-full" role="region" aria-label="Select communication preference">
   
   <!-- ============================================
-       TITRE FIXE (STICKY)
+       FIXED HEADER (STICKY)
        ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -59,7 +59,7 @@
   </div>
 
   <!-- ============================================
-       CONTENU SCROLLABLE
+       SCROLLABLE CONTENT
        ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
@@ -159,14 +159,14 @@
 </div>
 
 <!-- ============================================
-     STYLES OPTIMISÉS
+     OPTIMIZED STYLES
      ============================================ -->
 <style>
 /* ============================================
    🎨 BASE STYLES
    ============================================ */
 
-/* Animations des blobs - optimisé GPU */
+/* Blob animations - GPU optimized */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -186,7 +186,7 @@
   animation-delay: 4s;
 }
 
-/* Shake animation pour les erreurs */
+/* Shake animation for errors */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-8px); }
@@ -229,7 +229,7 @@
   transform: scale(0.98);
 }
 
-/* État actif YES */
+/* Active YES state */
 #step8 .toggle-btn.active-yes {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border-color: #059669;
@@ -242,7 +242,7 @@
   transform: translateY(-1px);
 }
 
-/* État actif NO */
+/* Active NO state */
 #step8 .toggle-btn.active-no {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   border-color: #dc2626;
@@ -281,7 +281,7 @@
 }
 
 /* ============================================
-   ⚡ OPTIMISATIONS PERFORMANCE
+   ⚡ PERFORMANCE OPTIMIZATIONS
    ============================================ */
 
 #step8 .toggle-btn,
@@ -293,7 +293,7 @@
 </style>
 
 <!-- ============================================
-     JAVASCRIPT OPTIMISÉ ET CORRIGÉ
+     OPTIMIZED AND CORRECTED JAVASCRIPT
      ============================================ -->
 <script>
 (function() {
@@ -330,12 +330,12 @@
   }
 
   // ============================================
-  // 💾 LOCAL STORAGE (✅ CORRIGÉ)
+  // 💾 LOCAL STORAGE
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      return JSON.parse(localStorage.getItem('expats') || '{}');
     } catch (e) {
       console.warn('localStorage read error:', e.message);
       return {};
@@ -343,13 +343,13 @@
   }
 
   function saveToLocalStorage() {
-    // Debounce pour optimisation
+    // Debounce for optimization
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(() => {
       try {
         const data = getLocalStorage();
         data.communication_preference = state.communicationPreference;
-        localStorage.setItem('provider-signup-data', JSON.stringify(data));
+        localStorage.setItem('expats', JSON.stringify(data));
       } catch (e) {
         console.warn('localStorage error:', e);
       }
@@ -361,14 +361,15 @@
   // ============================================
   
   function validatePreference() {
-    // Au moins un "Yes" requis
+    // At least one "Yes" required
     state.isValid = state.communicationPreference.online === 'Yes' || 
                     state.communicationPreference.inperson === 'Yes';
     
-    // ✅ Notifier wizard-steps.js (au lieu de updateStep8Buttons)
-    if (typeof window.updateNavigationButtons === 'function') {
-      window.updateNavigationButtons();
-    }
+    // ❌ CORRECTION CRITIQUE: Suppression de l'appel récursif
+    // Cette ligne causait la boucle infinie
+    // if (typeof window.updateNavigationButtons === 'function') {
+    //   window.updateNavigationButtons();
+    // }
     
     return state.isValid;
   }
@@ -381,14 +382,14 @@
     const elements = getCachedElements();
     
     requestAnimationFrame(() => {
-      // Retirer les classes actives des boutons de la même option
+      // Remove active classes from buttons of the same option
       elements.buttons.forEach(btn => {
         if (btn.getAttribute('data-option') === option) {
           btn.classList.remove('active-yes', 'active-no');
         }
       });
       
-      // Trouver le bouton cliqué et ajouter la classe active
+      // Find clicked button and add active class
       elements.buttons.forEach(btn => {
         if (btn.getAttribute('data-option') === option && 
             btn.getAttribute('data-value') === value) {
@@ -409,7 +410,7 @@
       elements.errorAlert.classList.remove('hidden');
       elements.errorAlert.classList.add('shake-animation');
       
-      // Scroll vers l'erreur
+      // Scroll to error
       requestAnimationFrame(() => {
         elements.errorAlert.scrollIntoView({ 
           behavior: 'smooth', 
@@ -417,7 +418,7 @@
         });
       });
       
-      // Retirer l'animation après
+      // Remove animation after
       setTimeout(() => {
         elements.errorAlert.classList.remove('shake-animation');
       }, 500);
@@ -433,24 +434,29 @@
     const value = button.getAttribute('data-value');
     const elements = getCachedElements();
     
-    // Mettre à jour l'état
+    // Update state
     if (value === 'yes') {
       state.communicationPreference[option] = 'Yes';
     } else {
       state.communicationPreference[option] = 'No';
     }
     
-    // Mettre à jour l'UI
+    // Update UI
     updateButtonStates(option, value);
     
-    // Cacher l'erreur si visible
+    // Hide error if visible
     if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
       elements.errorAlert.classList.add('hidden');
     }
     
-    // Valider et sauvegarder
+    // Validate and save
     validatePreference();
     saveToLocalStorage();
+    
+    // ✅ CORRECTION: Appel à updateNavigationButtons UNIQUEMENT ici (pas dans validatePreference)
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
   }
 
   // ============================================
@@ -460,7 +466,7 @@
   function initEventDelegation() {
     const elements = getCachedElements();
     
-    // Event delegation pour les boutons toggle
+    // Event delegation for toggle buttons
     if (elements.step) {
       elements.step.addEventListener('click', function(e) {
         const button = e.target.closest('.toggle-btn');
@@ -479,12 +485,12 @@
     const elements = getCachedElements();
     const data = getLocalStorage();
     
-    // Restaurer la préférence depuis localStorage
+    // Restore preference from localStorage
     if (data.communication_preference) {
       state.communicationPreference = data.communication_preference;
       
       requestAnimationFrame(() => {
-        // Restaurer les états des boutons
+        // Restore button states
         elements.buttons.forEach(button => {
           const option = button.getAttribute('data-option');
           const value = button.getAttribute('data-value');
@@ -497,11 +503,11 @@
           }
         });
         
-        // Valider
+        // Validate
         validatePreference();
       });
     } else {
-      // Pas de données sauvegardées, valider l'état initial
+      // No saved data, validate initial state
       validatePreference();
     }
   }
@@ -510,7 +516,7 @@
   // 🎬 INITIALIZATION
   // ============================================
   
-  // Fonction publique pour validation externe
+  // Public function for external validation
   window.validateStep8 = function() {
     const isValid = validatePreference();
     if (!isValid) {
@@ -519,24 +525,24 @@
     return isValid;
   };
 
-  // Exposer l'état globalement si nécessaire (pour compatibilité)
+  // Expose state globally if needed (for compatibility)
   window.communicationPreference = state.communicationPreference;
 
   function init() {
     // Init event delegation
     initEventDelegation();
 
-    // Observer pour détecter quand le step devient visible
+    // Observer to detect when step becomes visible
     const elements = getCachedElements();
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             if (!elements.step.classList.contains('hidden')) {
-              // Step est visible, restaurer l'état
+              // Step is visible, restore state
               restoreState();
               
-              // ✅ Notifier wizard-steps.js
+              // ✅ Notify wizard-steps.js
               if (typeof window.updateNavigationButtons === 'function') {
                 window.updateNavigationButtons();
               }
@@ -548,7 +554,7 @@
       observer.observe(elements.step, { attributes: true });
     }
 
-    // Restaurer l'état initial
+    // Restore initial state
     restoreState();
   }
 

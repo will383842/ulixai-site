@@ -10,6 +10,7 @@
 ✅ Persistance localStorage
 ⚡ Performance maximale
 ✅ CONFORME AU GUIDE SYSTÈME WIZARD
+🔧 MODIFIED: localStorage key changed to 'expats'
 ============================================
 -->
 
@@ -861,6 +862,7 @@
 
 <!-- ============================================
      JAVASCRIPT OPTIMISÉ
+     🔧 MODIFIED: localStorage key 'expats'
      ============================================ -->
 <script>
 /* ============================================
@@ -876,6 +878,8 @@
 
 (function() {
   'use strict';
+  
+  const STORAGE_KEY = 'expats';
   
   // État global
   const state = {
@@ -908,12 +912,12 @@
   }
 
   // ============================================
-  // 💾 LOCALSTORAGE - provider-signup-data
+  // 💾 LOCALSTORAGE - expats
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     } catch (e) {
       return {};
     }
@@ -937,7 +941,7 @@
         };
       }
       
-      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       updateDocCard(type);
     } catch (e) {
       console.warn('localStorage error:', e);
@@ -960,7 +964,7 @@
         delete data.documents[type];
       }
       
-      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       updateDocCard(type);
     } catch (e) {
       console.warn('localStorage error:', e);

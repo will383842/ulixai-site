@@ -5,6 +5,7 @@
 
 import { initializeWizard } from './modules/wizard-core.js';
 import { initializeWizardSteps } from './modules/wizard-steps.js';
+import { initializeWizardSubmission } from './modules/wizard-submission.js'; // ✅ AJOUTÉ
 import { initializeMobileMenu } from './modules/mobile-menu.js';
 import { initializeLanguageManager } from './modules/language-manager.js';
 import { initializeCategoryPopups } from './modules/category-popups.js';
@@ -29,6 +30,7 @@ function initializeAll() {
   console.log('📦 Available modules:', {
     wizard: typeof initializeWizard,
     steps: typeof initializeWizardSteps,
+    submission: typeof initializeWizardSubmission, // ✅ AJOUTÉ
     menu: typeof initializeMobileMenu,
     language: typeof initializeLanguageManager,
     popups: typeof initializeCategoryPopups,
@@ -41,10 +43,13 @@ function initializeAll() {
   // 2) Steps (wizard-steps) ensuite — isolé pour ne pas bloquer le reste en cas d'erreur
   const steps = safeInit('WizardSteps', initializeWizardSteps);
 
-  // 3) Autres features du header
+  // 3) Wizard Submission - Gestion de la soumission du formulaire
+  safeInit('WizardSubmission', initializeWizardSubmission); // ✅ AJOUTÉ
+
+  // 4) Autres features du header
   safeInit('MobileMenu', initializeMobileMenu);
   
-  // 4) Language Manager avec vérification
+  // 5) Language Manager avec vérification
   const langManager = safeInit('LanguageManager', () => {
     const manager = initializeLanguageManager();
     
@@ -71,7 +76,7 @@ function initializeAll() {
   safeInit('CategoryPopups', initializeCategoryPopups);
   safeInit('ScrollUtils', initializeScrollUtils);
 
-  // 5) Wrappers globaux attendus par le markup (onclick="showStep(1)" etc.)
+  // 6) Wrappers globaux attendus par le markup (onclick="showStep(1)" etc.)
   (function exposeWrappers() {
     try {
       if (!window.showStep) {
@@ -97,7 +102,7 @@ function initializeAll() {
     }
   })();
 
-  // 6) ✅ LISTENER OPTIMISÉ - Un seul event suffisant
+  // 7) ✅ LISTENER OPTIMISÉ - Un seul event suffisant
   document.addEventListener('change', () => {
     if (typeof window.updateNavigationButtons === 'function') {
       requestAnimationFrame(() => window.updateNavigationButtons());
@@ -117,7 +122,8 @@ function initializeAll() {
   console.log('🔍 Global objects:', {
     providerWizard: !!window.providerWizard,
     providerWizardSteps: !!window.providerWizardSteps,
-    providerLanguageManager: !!window.providerLanguageManager
+    providerLanguageManager: !!window.providerLanguageManager,
+    onProviderSignupSubmit: !!window.onProviderSignupSubmit // ✅ AJOUTÉ pour vérifier
   });
 }
 

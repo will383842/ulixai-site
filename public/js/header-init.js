@@ -1787,7 +1787,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 var WizardCore = /*#__PURE__*/function () {
   function WizardCore() {
     _classCallCheck(this, WizardCore);
-    this.storeKey = 'pw.state';
+    this.storeKey = 'expats'; // ✅ CORRIGÉ : Harmonisé avec wizard-steps.js
     this.steps = [];
     this.current = 0;
     this.state = this.loadState();
@@ -2023,22 +2023,27 @@ function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), 
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
- * Wizard Steps – CORRIGÉ
+ * Wizard Steps – CORRIGÉ AVEC DEBUG
  */
 
 var WizardSteps = /*#__PURE__*/function () {
   function WizardSteps() {
     _classCallCheck(this, WizardSteps);
     this.currentStep = 0;
-    this.totalSteps = 15;
+    this.totalSteps = 16; // ✅ CORRIGÉ : 16 steps au lieu de 15
+    this.storeKey = 'expats'; // ✅ AJOUTÉ : Harmonisation avec wizard-core.js
     this.formData = this.loadFormData();
+    console.log('🎬 WizardSteps constructor called - totalSteps:', this.totalSteps);
   }
   return _createClass(WizardSteps, [{
     key: "loadFormData",
     value: function loadFormData() {
       try {
-        return JSON.parse(localStorage.getItem('provider-signup-data')) || {};
+        var data = JSON.parse(localStorage.getItem('expats')) || {};
+        console.log('💾 Form data loaded from localStorage:', Object.keys(data));
+        return data;
       } catch (_unused) {
+        console.warn('⚠️ Failed to load form data from localStorage');
         return {};
       }
     }
@@ -2046,18 +2051,23 @@ var WizardSteps = /*#__PURE__*/function () {
     key: "saveFormData",
     value: function saveFormData() {
       try {
-        localStorage.setItem('provider-signup-data', JSON.stringify(this.formData));
-      } catch (_unused2) {}
+        localStorage.setItem('expats', JSON.stringify(this.formData));
+        console.log('💾 Form data saved to localStorage');
+      } catch (_unused2) {
+        console.warn('⚠️ Failed to save form data to localStorage');
+      }
     }
   }, {
     key: "init",
     value: function init() {
+      console.log('🎬 WizardSteps.init() called');
       this.initNavigationButtons();
       this.initDelegatedGoTo();
       this.initStepValidation();
       this.initProgressBar();
       this.showStep(0);
       window.wizardSteps = this;
+      console.log('✅ WizardSteps initialized');
     }
   }, {
     key: "initDelegatedGoTo",
@@ -2069,6 +2079,7 @@ var WizardSteps = /*#__PURE__*/function () {
         var to = parseInt(go.getAttribute('data-go-step'), 10);
         if (!Number.isFinite(to) || to < 1 || to > _this.totalSteps) return;
         e.preventDefault();
+        console.log('🎯 [data-go-step] clicked - going to step:', to);
         _this.showStep(to - 1);
       }, true);
     }
@@ -2079,6 +2090,7 @@ var WizardSteps = /*#__PURE__*/function () {
         var s = document.getElementById("step".concat(i));
         if (s && !s.classList.contains('hidden')) {
           this.currentStep = i - 1;
+          console.log('🔄 syncCurrentFromDOM - current step is:', i);
           return;
         }
       }
@@ -2090,12 +2102,18 @@ var WizardSteps = /*#__PURE__*/function () {
       document.querySelectorAll('#mobileNextBtn, #desktopNextBtn').forEach(function (btn) {
         return btn.addEventListener('click', function (e) {
           e.preventDefault();
-          if (_this2.validateCurrentStep()) _this2.nextStep();
+          console.log('➡️ Next button clicked from step', _this2.currentStep + 1);
+          if (_this2.validateCurrentStep()) {
+            _this2.nextStep();
+          } else {
+            console.warn('❌ Validation failed for step', _this2.currentStep + 1);
+          }
         });
       });
       document.querySelectorAll('#mobileBackBtn, #desktopBackBtn').forEach(function (btn) {
         return btn.addEventListener('click', function (e) {
           e.preventDefault();
+          console.log('⬅️ Back button clicked from step', _this2.currentStep + 1);
           _this2.previousStep();
         });
       });
@@ -2141,32 +2159,67 @@ var WizardSteps = /*#__PURE__*/function () {
       var pct = Math.round((this.currentStep + 1) / this.totalSteps * 100);
       if (p) p.textContent = String(pct);
       if (bar) bar.style.width = "".concat(pct, "%");
+      console.log('📊 Progress bar updated - step', this.currentStep + 1, 'of', this.totalSteps, "(".concat(pct, "%)"));
     }
   }, {
     key: "showStep",
     value: function showStep(i) {
-      if (i < 0 || i >= this.totalSteps) return;
+      console.log('🎬 showStep() called with index:', i, '→ Will show step', i + 1);
+      if (i < 0 || i >= this.totalSteps) {
+        console.warn('❌ Invalid step index:', i, "(totalSteps: ".concat(this.totalSteps, ")"));
+        return;
+      }
+
+      // Cache tous les steps
+      console.log('🙈 Hiding all steps...');
       for (var k = 1; k <= this.totalSteps; k++) {
         var s = document.getElementById("step".concat(k));
-        if (s) s.classList.add('hidden');
+        if (s) {
+          s.classList.add('hidden');
+          console.log("  \uD83D\uDE48 step".concat(k, " \u2192 hidden"));
+        } else {
+          console.warn("  \u274C step".concat(k, " element not found in DOM"));
+        }
       }
+
+      // Affiche le step demandé
       var cur = document.getElementById("step".concat(i + 1));
-      if (!cur) return;
+      if (!cur) {
+        console.error("\u274C Step element not found: step".concat(i + 1));
+        return;
+      }
       cur.classList.remove('hidden');
+      console.log("\uD83D\uDC41\uFE0F step".concat(i + 1, " \u2192 VISIBLE"));
       this.currentStep = i;
       this.updateProgressBar();
       this.updateNavigationButtons();
+      console.log('✅ showStep completed - current step is now:', this.currentStep + 1);
     }
   }, {
     key: "nextStep",
     value: function nextStep() {
+      console.log('➡️ nextStep() called from step', this.currentStep + 1);
       this.saveCurrentStepData();
-      if (this.currentStep < this.totalSteps - 1) this.showStep(this.currentStep + 1);else this.submitForm();
+      if (this.currentStep < this.totalSteps - 1) {
+        var nextStepIndex = this.currentStep + 1;
+        console.log('➡️ Moving to step', nextStepIndex + 1);
+        this.showStep(nextStepIndex);
+      } else {
+        console.log('📤 Last step reached, submitting form');
+        this.submitForm();
+      }
     }
   }, {
     key: "previousStep",
     value: function previousStep() {
-      if (this.currentStep > 0) this.showStep(this.currentStep - 1);
+      console.log('⬅️ previousStep() called from step', this.currentStep + 1);
+      if (this.currentStep > 0) {
+        var prevStepIndex = this.currentStep - 1;
+        console.log('⬅️ Moving to step', prevStepIndex + 1);
+        this.showStep(prevStepIndex);
+      } else {
+        console.warn('❌ Already at first step, cannot go back');
+      }
     }
   }, {
     key: "validateCurrentStep",
@@ -2174,31 +2227,55 @@ var WizardSteps = /*#__PURE__*/function () {
       this.syncCurrentFromDOM();
       var stepNum = this.currentStep + 1;
       var el = document.getElementById("step".concat(stepNum));
-      if (!el) return true;
+      console.log('🔍 validateCurrentStep() for step', stepNum);
+      if (!el) {
+        console.warn('❌ Step element not found for validation:', stepNum);
+        return true;
+      }
+
+      // ✅ VALIDATION STEP 1 : toujours valide (choix de profil)
+      if (stepNum === 1) {
+        console.log('✅ Step 1 - always valid (profile choice)');
+        return true;
+      }
 
       // ✅ APPELER LA VALIDATION CUSTOM EN PREMIER
       var custom = window["validateStep".concat(stepNum)];
       if (typeof custom === 'function') {
+        console.log("\uD83D\uDD0D Calling custom validation: validateStep".concat(stepNum, "()"));
         try {
-          return !!custom();
+          var result = !!custom();
+          console.log("".concat(result ? '✅' : '❌', " validateStep").concat(stepNum, "() returned:"), result);
+          return result;
         } catch (e) {
-          console.error("validateStep".concat(stepNum, " error:"), e);
+          console.error("\u274C validateStep".concat(stepNum, " error:"), e);
           return false;
         }
       }
 
       // Validation générique
+      console.log('🔍 No custom validation found, using generic validation');
       var req = el.querySelectorAll('[data-required]');
-      if (!req.length) return true;
+      if (!req.length) {
+        console.log('✅ No required fields found - step valid');
+        return true;
+      }
+      console.log('🔍 Checking', req.length, 'required fields...');
       var _iterator = _createForOfIteratorHelper(req),
         _step;
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var input = _step.value;
           if (['checkbox', 'radio'].includes(input.type)) {
-            if (!input.checked) return false;
+            if (!input.checked) {
+              console.warn('❌ Required checkbox/radio not checked:', input.name);
+              return false;
+            }
           } else {
-            if (String(input.value || '').trim() === '') return false;
+            if (String(input.value || '').trim() === '') {
+              console.warn('❌ Required field empty:', input.name);
+              return false;
+            }
           }
         }
       } catch (err) {
@@ -2206,32 +2283,41 @@ var WizardSteps = /*#__PURE__*/function () {
       } finally {
         _iterator.f();
       }
+      console.log('✅ All required fields valid');
       return true;
     }
   }, {
     key: "updateNavigationButtons",
     value: function updateNavigationButtons() {
-      var _this4 = this;
+      console.log('🔄 updateNavigationButtons() called');
       this.syncCurrentFromDOM();
       var mobileWrap = document.getElementById('mobileNavButtons');
       var desktopWrap = document.getElementById('desktopNavButtons');
       var backButtons = document.querySelectorAll('#mobileBackBtn, #desktopBackBtn');
       var nextButtons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
-      if (this.currentStep === 0) {
-        if (mobileWrap) mobileWrap.style.display = 'none';
-        if (desktopWrap) desktopWrap.style.display = 'none';
-        return;
-      }
+
+      // ✅ CORRIGÉ : Afficher les boutons dès le Step 1
       if (mobileWrap) mobileWrap.style.display = '';
       if (desktopWrap) desktopWrap.style.display = '';
+
+      // Back masqué uniquement au Step 1
+      var showBack = this.currentStep !== 0;
       backButtons.forEach(function (b) {
-        return b.style.display = _this4.currentStep === 0 ? 'none' : 'flex';
+        return b.style.display = showBack ? 'flex' : 'none';
       });
+      console.log("\uD83D\uDD18 Back button: ".concat(showBack ? 'visible' : 'hidden'));
+
+      // Texte du bouton Next/Submit
+      var isLastStep = this.currentStep === this.totalSteps - 1;
       nextButtons.forEach(function (btn) {
         var span = btn.querySelector('span');
-        if (span) span.textContent = _this4.currentStep === _this4.totalSteps - 1 ? 'Submit' : 'Continue';
+        if (span) span.textContent = isLastStep ? 'Submit' : 'Continue';
       });
+      console.log("\uD83D\uDD18 Next button text: ".concat(isLastStep ? 'Submit' : 'Continue'));
+
+      // ✅ CORRIGÉ : Validation normale sans blocage du Step 1
       var isValid = this.validateCurrentStep();
+      console.log("\uD83D\uDD18 Step ".concat(this.currentStep + 1, " validation result:"), isValid);
       nextButtons.forEach(function (btn) {
         btn.disabled = !isValid;
         btn.setAttribute('aria-disabled', String(!isValid));
@@ -2247,28 +2333,41 @@ var WizardSteps = /*#__PURE__*/function () {
         w.classList.toggle('pointer-events-none', !isValid);
         w.style.pointerEvents = isValid ? 'auto' : 'none';
       });
+      console.log('✅ Navigation buttons updated');
     }
   }, {
     key: "saveCurrentStepData",
     value: function saveCurrentStepData() {
-      var _this5 = this;
+      var _this4 = this;
       var el = document.getElementById("step".concat(this.currentStep + 1));
-      if (!el) return;
+      if (!el) {
+        console.warn('❌ Cannot save step data - element not found');
+        return;
+      }
+      console.log('💾 Saving data for step', this.currentStep + 1);
       el.querySelectorAll('input, select, textarea').forEach(function (input) {
         if (!input.name) return;
         if (input.type === 'checkbox') {
-          if (!_this5.formData[input.name]) _this5.formData[input.name] = [];
+          if (!_this4.formData[input.name]) _this4.formData[input.name] = [];
           if (input.checked) {
-            if (!_this5.formData[input.name].includes(input.value)) _this5.formData[input.name].push(input.value);
+            if (!_this4.formData[input.name].includes(input.value)) {
+              _this4.formData[input.name].push(input.value);
+              console.log("  \u2705 Checkbox \"".concat(input.name, "\": added \"").concat(input.value, "\""));
+            }
           } else {
-            _this5.formData[input.name] = (_this5.formData[input.name] || []).filter(function (v) {
+            _this4.formData[input.name] = (_this4.formData[input.name] || []).filter(function (v) {
               return v !== input.value;
             });
+            console.log("  \u274C Checkbox \"".concat(input.name, "\": removed \"").concat(input.value, "\""));
           }
         } else if (input.type === 'radio') {
-          if (input.checked) _this5.formData[input.name] = input.value;
+          if (input.checked) {
+            _this4.formData[input.name] = input.value;
+            console.log("  \uD83D\uDCFB Radio \"".concat(input.name, "\": \"").concat(input.value, "\""));
+          }
         } else {
-          _this5.formData[input.name] = input.value || '';
+          _this4.formData[input.name] = input.value || '';
+          console.log("  \uD83D\uDCDD Field \"".concat(input.name, "\": \"").concat(input.value, "\""));
         }
       });
       this.saveFormData();
@@ -2276,11 +2375,15 @@ var WizardSteps = /*#__PURE__*/function () {
   }, {
     key: "submitForm",
     value: function submitForm() {
+      console.log('📤 submitForm() called');
       if (typeof window.onProviderSignupSubmit === 'function') {
+        console.log('✅ Calling window.onProviderSignupSubmit()');
         try {
           window.onProviderSignupSubmit(this.formData);
           return;
-        } catch (_unused3) {}
+        } catch (e) {
+          console.error('❌ onProviderSignupSubmit failed:', e);
+        }
       }
       console.log('📤 Submitting form...', this.formData);
       alert('Form submission not implemented');
@@ -2288,16 +2391,230 @@ var WizardSteps = /*#__PURE__*/function () {
   }]);
 }();
 function initializeWizardSteps() {
+  console.log('🚀 initializeWizardSteps() called');
   var ws = new WizardSteps();
   ws.init();
   window.providerWizardSteps = ws;
-  if (!window.showStep) window.showStep = function (i) {
-    return ws.showStep(i);
-  };
-  if (!window.updateNavigationButtons) window.updateNavigationButtons = function () {
-    return ws.updateNavigationButtons();
-  };
+  if (!window.showStep) {
+    window.showStep = function (i) {
+      console.log('🌍 Global showStep() called with:', i);
+      ws.showStep(i);
+    };
+  }
+  if (!window.updateNavigationButtons) {
+    window.updateNavigationButtons = function () {
+      console.log('🌍 Global updateNavigationButtons() called');
+      ws.updateNavigationButtons();
+    };
+  }
+  console.log('✅ WizardSteps module ready');
   return ws;
+}
+
+/***/ }),
+
+/***/ "./resources/js/modules/wizard-submission.js":
+/*!***************************************************!*\
+  !*** ./resources/js/modules/wizard-submission.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WizardSubmission: () => (/* binding */ WizardSubmission),
+/* harmony export */   initializeWizardSubmission: () => (/* binding */ initializeWizardSubmission)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/**
+ * ═══════════════════════════════════════════════════════════
+ * WIZARD SUBMISSION - Soumission finale vers /register
+ * ═══════════════════════════════════════════════════════════
+ * Aligné avec RegisterController (ligne 20)
+ * Le user est déjà connecté à ce stade (Auth::login fait au step 15)
+ */
+
+var WizardSubmission = /*#__PURE__*/function () {
+  function WizardSubmission() {
+    var _document$querySelect;
+    _classCallCheck(this, WizardSubmission);
+    this.endpoint = '/register';
+    this.storageKey = 'expats';
+    this.csrfToken = ((_document$querySelect = document.querySelector('meta[name="csrf-token"]')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.content) || '';
+  }
+  return _createClass(WizardSubmission, [{
+    key: "submit",
+    value: function () {
+      var _submit = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+        var formData, response, errorData, data, _t, _t2;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.p = _context.n) {
+            case 0:
+              console.log('📤 [WizardSubmission] Starting provider signup submission...');
+
+              // 1. Récupérer les données
+              _context.p = 1;
+              formData = JSON.parse(localStorage.getItem(this.storageKey)) || {};
+              console.log('📦 [WizardSubmission] Data to send:', formData);
+              _context.n = 3;
+              break;
+            case 2:
+              _context.p = 2;
+              _t = _context.v;
+              console.error('❌ [WizardSubmission] Failed to parse expats data:', _t);
+              this.handleError(new Error('Invalid data format'));
+              return _context.a(2);
+            case 3:
+              if (formData.email) {
+                _context.n = 4;
+                break;
+              }
+              this.handleError(new Error('Email is required'));
+              return _context.a(2);
+            case 4:
+              // 3. Loader
+              this.showLoader();
+              _context.p = 5;
+              _context.n = 6;
+              return fetch(this.endpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  'X-CSRF-TOKEN': this.csrfToken
+                },
+                body: JSON.stringify(formData)
+              });
+            case 6:
+              response = _context.v;
+              console.log('📡 [WizardSubmission] Response status:', response.status);
+              if (response.ok) {
+                _context.n = 8;
+                break;
+              }
+              _context.n = 7;
+              return response.json()["catch"](function () {
+                return {};
+              });
+            case 7:
+              errorData = _context.v;
+              throw new Error(errorData.message || "Server error: ".concat(response.status));
+            case 8:
+              _context.n = 9;
+              return response.json();
+            case 9:
+              data = _context.v;
+              this.handleSuccess(data);
+              _context.n = 11;
+              break;
+            case 10:
+              _context.p = 10;
+              _t2 = _context.v;
+              console.error('❌ [WizardSubmission] Registration failed:', _t2);
+              this.handleError(_t2);
+            case 11:
+              _context.p = 11;
+              this.hideLoader();
+              return _context.f(11);
+            case 12:
+              return _context.a(2);
+          }
+        }, _callee, this, [[5, 10, 11, 12], [1, 2]]);
+      }));
+      function submit() {
+        return _submit.apply(this, arguments);
+      }
+      return submit;
+    }()
+  }, {
+    key: "handleSuccess",
+    value: function handleSuccess(data) {
+      console.log('✅ [WizardSubmission] Registration successful:', data);
+
+      // Vider localStorage
+      localStorage.removeItem(this.storageKey);
+      console.log('🗑️ [WizardSubmission] Cleared localStorage');
+
+      // Message de succès
+      if (typeof toastr !== 'undefined') {
+        toastr.success(data.message || 'Account created successfully!', 'Success');
+      }
+
+      // Afficher Step 16
+      this.showStep16();
+
+      // ⚠️ ADAPTÉ: Le controller ne retourne pas de champ 'redirect'
+      // On hardcode la redirection vers /dashboard
+      setTimeout(function () {
+        var redirectUrl = '/dashboard'; // Hardcodé
+        console.log('🔄 [WizardSubmission] Redirecting to:', redirectUrl);
+        window.location.href = redirectUrl;
+      }, 3000);
+    }
+  }, {
+    key: "handleError",
+    value: function handleError(error) {
+      console.error('❌ [WizardSubmission] Error:', error);
+      var message = error.message || 'Failed to create account. Please try again.';
+      if (typeof toastr !== 'undefined') {
+        toastr.error(message, 'Error');
+      } else {
+        alert("Error: ".concat(message));
+      }
+      if (navigator.vibrate) {
+        navigator.vibrate([100, 50, 100]);
+      }
+    }
+  }, {
+    key: "showStep16",
+    value: function showStep16() {
+      console.log('🎉 [WizardSubmission] Showing step 16');
+      for (var i = 1; i <= 16; i++) {
+        var step = document.getElementById("step".concat(i));
+        if (step) step.classList.add('hidden');
+      }
+      var step16 = document.getElementById('step16');
+      if (step16) step16.classList.remove('hidden');
+      var progressBar = document.getElementById('progress-bar');
+      if (progressBar) progressBar.style.width = '100%';
+    }
+  }, {
+    key: "showLoader",
+    value: function showLoader() {
+      var buttons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
+      buttons.forEach(function (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.innerHTML = "\n        <svg class=\"animate-spin h-5 w-5 text-white inline-block mr-2\" fill=\"none\" viewBox=\"0 0 24 24\">\n          <circle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"></circle>\n          <path class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path>\n        </svg>\n        <span>Creating Account...</span>\n      ";
+      });
+    }
+  }, {
+    key: "hideLoader",
+    value: function hideLoader() {
+      var buttons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
+      buttons.forEach(function (btn) {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        btn.innerHTML = "\n        <span>Continue</span>\n        <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\">\n          <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M9 5l7 7-7 7\"/>\n        </svg>\n      ";
+      });
+    }
+  }]);
+}();
+function initializeWizardSubmission() {
+  var submission = new WizardSubmission();
+  window.onProviderSignupSubmit = function () {
+    submission.submit();
+  };
+  console.log('✅ [WizardSubmission] Module initialized');
+  return submission;
 }
 
 /***/ })
@@ -2367,10 +2684,11 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/wizard-core.js */ "./resources/js/modules/wizard-core.js");
 /* harmony import */ var _modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/wizard-steps.js */ "./resources/js/modules/wizard-steps.js");
-/* harmony import */ var _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/mobile-menu.js */ "./resources/js/modules/mobile-menu.js");
-/* harmony import */ var _modules_language_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/language-manager.js */ "./resources/js/modules/language-manager.js");
-/* harmony import */ var _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/category-popups.js */ "./resources/js/modules/category-popups.js");
-/* harmony import */ var _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/scroll-utils.js */ "./resources/js/modules/scroll-utils.js");
+/* harmony import */ var _modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/wizard-submission.js */ "./resources/js/modules/wizard-submission.js");
+/* harmony import */ var _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/mobile-menu.js */ "./resources/js/modules/mobile-menu.js");
+/* harmony import */ var _modules_language_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/language-manager.js */ "./resources/js/modules/language-manager.js");
+/* harmony import */ var _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/category-popups.js */ "./resources/js/modules/category-popups.js");
+/* harmony import */ var _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/scroll-utils.js */ "./resources/js/modules/scroll-utils.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 /**
  * Header Initialization - Laravel Mix Compatible
@@ -2379,6 +2697,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 
 
 
+ // ✅ AJOUTÉ
 
 
 
@@ -2401,10 +2720,12 @@ function initializeAll() {
   console.log('📦 Available modules:', {
     wizard: _typeof(_modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard),
     steps: _typeof(_modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps),
-    menu: _typeof(_modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_2__.initializeMobileMenu),
-    language: _typeof(_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_3__.initializeLanguageManager),
-    popups: _typeof(_modules_category_popups_js__WEBPACK_IMPORTED_MODULE_4__.initializeCategoryPopups),
-    scroll: _typeof(_modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_5__.initializeScrollUtils)
+    submission: _typeof(_modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission),
+    // ✅ AJOUTÉ
+    menu: _typeof(_modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__.initializeMobileMenu),
+    language: _typeof(_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_4__.initializeLanguageManager),
+    popups: _typeof(_modules_category_popups_js__WEBPACK_IMPORTED_MODULE_5__.initializeCategoryPopups),
+    scroll: _typeof(_modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__.initializeScrollUtils)
   });
 
   // 1) Core (popups SignUp / croix / ESC / backdrop) d'abord
@@ -2413,12 +2734,15 @@ function initializeAll() {
   // 2) Steps (wizard-steps) ensuite — isolé pour ne pas bloquer le reste en cas d'erreur
   var steps = safeInit('WizardSteps', _modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps);
 
-  // 3) Autres features du header
-  safeInit('MobileMenu', _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_2__.initializeMobileMenu);
+  // 3) Wizard Submission - Gestion de la soumission du formulaire
+  safeInit('WizardSubmission', _modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission); // ✅ AJOUTÉ
 
-  // 4) Language Manager avec vérification
+  // 4) Autres features du header
+  safeInit('MobileMenu', _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__.initializeMobileMenu);
+
+  // 5) Language Manager avec vérification
   var langManager = safeInit('LanguageManager', function () {
-    var manager = (0,_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_3__.initializeLanguageManager)();
+    var manager = (0,_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_4__.initializeLanguageManager)();
 
     // Vérifier après 500ms si les éléments sont bien initialisés
     setTimeout(function () {
@@ -2436,10 +2760,10 @@ function initializeAll() {
     }, 500);
     return manager;
   });
-  safeInit('CategoryPopups', _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_4__.initializeCategoryPopups);
-  safeInit('ScrollUtils', _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_5__.initializeScrollUtils);
+  safeInit('CategoryPopups', _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_5__.initializeCategoryPopups);
+  safeInit('ScrollUtils', _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__.initializeScrollUtils);
 
-  // 5) Wrappers globaux attendus par le markup (onclick="showStep(1)" etc.)
+  // 6) Wrappers globaux attendus par le markup (onclick="showStep(1)" etc.)
   (function exposeWrappers() {
     try {
       if (!window.showStep) {
@@ -2465,28 +2789,31 @@ function initializeAll() {
     }
   })();
 
-  // 6) Synchroniser l'état des boutons (phase BUBBLE, sans double logique)
-  ['input', 'change', 'click'].forEach(function (evt) {
-    document.addEventListener(evt, function () {
-      try {
-        if (typeof window.updateNavigationButtons === 'function') {
-          window.updateNavigationButtons();
-        }
-      } catch (e) {}
-    }, false);
+  // 7) ✅ LISTENER OPTIMISÉ - Un seul event suffisant
+  document.addEventListener('change', function () {
+    if (typeof window.updateNavigationButtons === 'function') {
+      requestAnimationFrame(function () {
+        return window.updateNavigationButtons();
+      });
+    }
+  }, {
+    passive: true
   });
 
   // Signal spécifique Step 2 (si émis)
   document.addEventListener('pw:step2:changed', function () {
     try {
-      if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     } catch (e) {}
   });
   console.log('✅ All header modules initialized');
   console.log('🔍 Global objects:', {
     providerWizard: !!window.providerWizard,
     providerWizardSteps: !!window.providerWizardSteps,
-    providerLanguageManager: !!window.providerLanguageManager
+    providerLanguageManager: !!window.providerLanguageManager,
+    onProviderSignupSubmit: !!window.onProviderSignupSubmit // ✅ AJOUTÉ pour vérifier
   });
 }
 

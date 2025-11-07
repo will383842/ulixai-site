@@ -10,6 +10,7 @@
 ✅ Persistance localStorage
 ⚡ Performance maximale
 ✅ CONFORME AU GUIDE SYSTÈME WIZARD
+🔧 MODIFIED: localStorage key changed to 'expats'
 ============================================
 -->
 
@@ -416,6 +417,7 @@
    ✅ Validation téléphone (min 6 chiffres)
    ✅ Persistance localStorage
    ✅ intl-tel-input integration
+   🔧 MODIFIED: localStorage key 'expats'
    ============================================ */
 
 (function() {
@@ -424,6 +426,8 @@
   // ============================================
   // 📦 STATE & CONSTANTS
   // ============================================
+  
+  const STORAGE_KEY = 'expats';
   
   const state = {
     phone: '',
@@ -453,12 +457,12 @@
   }
 
   // ============================================
-  // 💾 LOCAL STORAGE - provider-signup-data
+  // 💾 LOCAL STORAGE - expats
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     } catch (e) {
       return {};
     }
@@ -474,7 +478,7 @@
       try {
         const data = getLocalStorage();
         data.phone_number = state.phone;
-        localStorage.setItem('provider-signup-data', JSON.stringify(data));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       } catch (e) {
         console.warn('localStorage error:', e);
       }

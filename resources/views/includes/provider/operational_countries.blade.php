@@ -2,24 +2,24 @@
 ============================================
 🚀 STEP 6 - WHERE DO YOU OPERATE (CORRECTED)
 ============================================
-✨ Design System Blue/Cyan/Teal STRICT
-🎨 Multi-sélection avec drapeaux de pays
-💎 Validation et états interactifs
+✨ Blue/Cyan/Teal Design System STRICT
+🎨 Multi-selection with country flags
+💎 Validation and interactive states
 ⚡ Responsive 2 cols mobile / 3 cols / 4 cols desktop
-🔧 Intégré avec wizard-steps.js
-✅ Persistance des sélections au retour en arrière
-🚀 OPTIMISATIONS MAXIMALES (CPU, GPU, Police, Taille, Rapidité)
+🔧 Integrated with wizard-steps.js
+✅ Selection persistence on back navigation
+🚀 MAXIMUM OPTIMIZATIONS (CPU, GPU, Font, Size, Speed)
 ============================================
 -->
 
 <div id="step6" class="hidden flex flex-col h-full" role="region" aria-label="Select countries where you operate">
   
   <!-- ============================================
-       TITRE FIXE (STICKY)
+       FIXED HEADER (STICKY)
        ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -60,7 +60,7 @@
   </div>
 
   <!-- ============================================
-       CONTENU SCROLLABLE
+       SCROLLABLE CONTENT
        ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
@@ -683,7 +683,7 @@
 
 /* ============================================
    📋 COUNTRY LIST CONTAINER
-   Optimisations: Grid responsive + Scrollbar custom
+   Optimizations: Responsive Grid + Custom Scrollbar
    ============================================ */
 .country-list-container {
   display: grid;
@@ -692,7 +692,7 @@
   max-height: 420px;
   overflow-y: auto;
   
-  /* Performance optimisations */
+  /* Performance optimizations */
   contain: layout style paint;
   will-change: scroll-position;
   
@@ -740,7 +740,7 @@
 
 /* ============================================
    🗺️ COUNTRY CARDS
-   Optimisations: GPU acceleration + containment
+   Optimizations: GPU acceleration + containment
    ============================================ */
 .country-card {
   position: relative;
@@ -755,7 +755,7 @@
   text-align: left;
   min-height: 3.5rem;
   
-  /* Transitions optimisées */
+  /* Optimized transitions */
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
   /* Performance - GPU acceleration */
@@ -796,7 +796,7 @@
 
 /* ============================================
    📝 COUNTRY NAME
-   Optimisations: Police + Rendu
+   Optimizations: Font + Rendering
    ============================================ */
 .country-card .country-name {
   flex: 1;
@@ -808,7 +808,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   
-  /* Optimisations typographie */
+  /* Typography optimizations */
   font-feature-settings: 'kern' 1, 'liga' 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -817,7 +817,7 @@
 
 /* ============================================
    ✅ CHECK INDICATOR
-   Optimisations: GPU + Transitions
+   Optimizations: GPU + Transitions
    ============================================ */
 .country-card .check-indicator {
   display: flex;
@@ -862,7 +862,7 @@
   border-color: #2563eb;
 }
 
-/* Animations réduites pour utilisateurs qui préfèrent */
+/* Reduced animations for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -873,7 +873,7 @@
   }
 }
 
-/* Contraste élevé */
+/* High contrast */
 @media (prefers-contrast: high) {
   .country-card {
     border: 3px solid currentColor;
@@ -885,10 +885,10 @@
 }
 
 /* ============================================
-   ⚡ OPTIMISATIONS PERFORMANCE SUPPLÉMENTAIRES
+   ⚡ ADDITIONAL PERFORMANCE OPTIMIZATIONS
    ============================================ */
 
-/* Optimisation GPU pour les éléments animés */
+/* GPU optimization for animated elements */
 #step6 .country-card,
 #step6 .check-indicator {
   transform: translateZ(0);
@@ -896,7 +896,7 @@
   perspective: 1000px;
 }
 
-/* Containment pour isoler les calculs de layout */
+/* Containment to isolate layout calculations */
 #step6 .country-card {
   contain: layout style paint;
 }
@@ -908,13 +908,13 @@
   }
 }
 
-/* Smooth scroll pour le container */
+/* Smooth scroll for container */
 .country-list-container {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Optimisation des ombres pour mobile */
+/* Shadow optimization for mobile */
 @media (max-width: 640px) {
   .country-card {
     box-shadow: none;
@@ -930,20 +930,20 @@
 <script>
 /* ============================================
    🎯 STEP 6 - CORRECTED VERSION
-   ✅ Intégré avec wizard-steps.js
-   ✅ Persistance des sélections
-   ⚡ Optimisations maximales
+   ✅ Integrated with wizard-steps.js
+   ✅ Selection persistence
+   ⚡ Maximum optimizations
    ============================================ */
 
-// État global
+// Global state
 window.selectedCountries = [];
 
-// Cache des éléments DOM (optimisation mémoire)
+// DOM elements cache (memory optimization)
 let cachedElementsStep6 = null;
 
 /**
- * Récupération des éléments DOM avec cache
- * Évite les multiples querySelector (optimisation CPU)
+ * Get DOM elements with cache
+ * Avoids multiple querySelector calls (CPU optimization)
  */
 function getCachedElementsStep6() {
   if (!cachedElementsStep6) {
@@ -958,8 +958,8 @@ function getCachedElementsStep6() {
 }
 
 /**
- * Toggle de sélection d'un pays (accessible globalement)
- * Multi-sélection avec mise à jour UI et persistance
+ * Toggle country selection (globally accessible)
+ * Multi-selection with UI update and persistence
  */
 window.toggleCountrySelection = function(country) {
   const elements = getCachedElementsStep6();
@@ -967,14 +967,14 @@ window.toggleCountrySelection = function(country) {
   const card = Array.from(elements.cards).find(c => c.getAttribute('data-country') === country);
   
   if (index > -1) {
-    // Désélectionner
+    // Deselect
     window.selectedCountries.splice(index, 1);
     if (card) {
       card.classList.remove('selected');
       card.setAttribute('aria-checked', 'false');
     }
   } else {
-    // Sélectionner
+    // Select
     window.selectedCountries.push(country);
     if (card) {
       card.classList.add('selected');
@@ -982,40 +982,40 @@ window.toggleCountrySelection = function(country) {
     }
   }
   
-  // Mise à jour du compteur
+  // Update counter
   if (elements.selectedCount) {
     elements.selectedCount.textContent = window.selectedCountries.length;
   }
   
-  // Cacher l'erreur si visible
+  // Hide error if visible
   if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
     elements.errorAlert.classList.add('hidden');
   }
   
-  // Sauvegarde localStorage
+  // Save to localStorage
   try {
-    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    const data = JSON.parse(localStorage.getItem('expats') || '{}');
     data.operational_countries = window.selectedCountries;
-    localStorage.setItem('provider-signup-data', JSON.stringify(data));
+    localStorage.setItem('expats', JSON.stringify(data));
   } catch (e) {
     console.warn('localStorage not available:', e.message);
   }
   
-  // ✅ Notifier wizard-steps.js
+  // ✅ Notify wizard-steps.js
   if (typeof window.updateNavigationButtons === 'function') {
     window.updateNavigationButtons();
   }
 };
 
 /**
- * Validation du step (accessible globalement)
- * Vérifie qu'au moins un pays est sélectionné
+ * Step validation (globally accessible)
+ * Checks that at least one country is selected
  */
 window.validateStep6 = function() {
   const elements = getCachedElementsStep6();
   
   if (!window.selectedCountries || window.selectedCountries.length === 0) {
-    // Afficher l'erreur avec animation shake
+    // Show error with shake animation
     if (elements.errorAlert) {
       elements.errorAlert.classList.remove('hidden');
       elements.errorAlert.classList.add('shake-animation');
@@ -1030,8 +1030,8 @@ window.validateStep6 = function() {
 };
 
 /**
- * Fonction de debounce pour optimiser la recherche
- * Évite les calculs inutiles pendant la frappe
+ * Debounce function to optimize search
+ * Avoids unnecessary calculations while typing
  */
 function debounce(func, wait) {
   let timeout;
@@ -1046,8 +1046,8 @@ function debounce(func, wait) {
 }
 
 /**
- * Initialisation au chargement du DOM
- * Utilise event delegation et passive listeners pour performance
+ * Initialization on DOM load
+ * Uses event delegation and passive listeners for performance
  */
 document.addEventListener('DOMContentLoaded', function() {
   const elements = getCachedElementsStep6();
@@ -1056,8 +1056,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!container) return;
   
   /* ==========================================
-     EVENT DELEGATION (optimisation CPU)
-     Un seul listener au lieu de 30+ listeners
+     EVENT DELEGATION (CPU optimization)
+     Single listener instead of 30+ listeners
      ========================================== */
   container.addEventListener('click', function(e) {
     const card = e.target.closest('.country-card');
@@ -1068,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, { passive: true });
   
   /* ==========================================
-     SUPPORT CLAVIER (Accessibilité)
+     KEYBOARD SUPPORT (Accessibility)
      ========================================== */
   container.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -1082,21 +1082,21 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   /* ==========================================
-     SEARCH INPUT (avec debounce)
-     Optimisation: 150ms de délai + RAF
+     SEARCH INPUT (with debounce)
+     Optimization: 150ms delay + RAF
      ========================================== */
   if (elements.searchInput) {
     const performSearch = debounce(function(searchValue) {
       const search = searchValue.toLowerCase();
       
-      // Utiliser requestAnimationFrame pour éviter layout thrashing
+      // Use requestAnimationFrame to avoid layout thrashing
       requestAnimationFrame(() => {
         elements.cards.forEach(card => {
           const country = card.getAttribute('data-country').toLowerCase();
           card.style.display = country.includes(search) ? '' : 'none';
         });
       });
-    }, 150); // Debounce de 150ms
+    }, 150); // 150ms debounce
     
     elements.searchInput.addEventListener('input', function() {
       performSearch(this.value);
@@ -1105,13 +1105,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   /* ==========================================
      MUTATION OBSERVER
-     Détecte quand le step devient visible
+     Detects when step becomes visible
      ========================================== */
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
         if (!container.classList.contains('hidden')) {
-          // ✅ Notifier wizard-steps.js
+          // ✅ Notify wizard-steps.js
           if (typeof window.updateNavigationButtons === 'function') {
             window.updateNavigationButtons();
           }
@@ -1126,16 +1126,16 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   /* ==========================================
-     RESTAURATION DEPUIS LOCALSTORAGE
-     Avec requestAnimationFrame pour éviter blocking
+     RESTORE FROM LOCALSTORAGE
+     With requestAnimationFrame to avoid blocking
      ========================================== */
   try {
-    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    const data = JSON.parse(localStorage.getItem('expats') || '{}');
     
     if (data.operational_countries && Array.isArray(data.operational_countries)) {
       window.selectedCountries = data.operational_countries;
       
-      // Utiliser RAF pour éviter layout thrashing
+      // Use RAF to avoid layout thrashing
       requestAnimationFrame(() => {
         window.selectedCountries.forEach(country => {
           const card = Array.from(elements.cards).find(c => 
@@ -1147,12 +1147,12 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         });
         
-        // Mise à jour du compteur
+        // Update counter
         if (elements.selectedCount) {
           elements.selectedCount.textContent = window.selectedCountries.length;
         }
         
-        // ✅ Notifier wizard-steps.js
+        // ✅ Notify wizard-steps.js
         if (typeof window.updateNavigationButtons === 'function') {
           window.updateNavigationButtons();
         }
@@ -1164,17 +1164,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* ==========================================
-   💡 OPTIMISATIONS NOTES:
+   💡 OPTIMIZATION NOTES:
    
-   1. Event Delegation: 1 listener au lieu de 30+
-   2. Passive Listeners: Améliore scroll performance
-   3. RAF (requestAnimationFrame): Évite layout thrashing
-   4. Debouncing: Optimise la recherche (150ms)
-   5. Cache DOM: Évite querySelectorAll répétés
-   6. CSS Containment: Isole les calculs de layout
+   1. Event Delegation: 1 listener instead of 30+
+   2. Passive Listeners: Improves scroll performance
+   3. RAF (requestAnimationFrame): Avoids layout thrashing
+   4. Debouncing: Optimizes search (150ms)
+   5. DOM Cache: Avoids repeated querySelectorAll
+   6. CSS Containment: Isolates layout calculations
    7. GPU Acceleration: translateZ(0) + backface-visibility
-   8. Will-change: Optimise les propriétés animées
-   9. MutationObserver: Détection efficace de visibilité
-   10. Intégration wizard-steps.js: Coordination parfaite
+   8. Will-change: Optimizes animated properties
+   9. MutationObserver: Efficient visibility detection
+   10. wizard-steps.js Integration: Perfect coordination
    ========================================== */
 </script>

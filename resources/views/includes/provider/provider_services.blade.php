@@ -452,10 +452,10 @@ window.selectService = function(card) {
   
   // Save to localStorage
   try {
-    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    const data = JSON.parse(localStorage.getItem('expats') || '{}');
     data.provider_services = window.selectedServices;
     data.provider_subcategories = window.selectedSubcategories;
-    localStorage.setItem('provider-signup-data', JSON.stringify(data));
+    localStorage.setItem('expats', JSON.stringify(data));
   } catch (e) {
     console.warn('localStorage not available:', e.message);
   }
@@ -479,20 +479,20 @@ window.validateStep4 = function() {
     return false;
   }
   
-  // Vérifier si on a au moins une sous-catégorie pour au moins un service
+  // Check if we have at least one subcategory for at least one service
   const hasAnySubcategory = Object.keys(window.selectedServices).some(serviceId => {
     const subcats = window.selectedSubcategories[serviceId];
     return subcats && subcats.length > 0;
   });
   
   if (!hasAnySubcategory) {
-    // Si aucune sous-catégorie n'est sélectionnée, ouvrir le modal
-    // MAIS retourner false pour bloquer la navigation
+    // If no subcategory is selected, open the modal
+    // BUT return false to block navigation
     showSpecialtiesModal();
     return false;
   }
   
-  // Toutes les validations passent
+  // All validations pass
   return true;
 };
 
@@ -562,7 +562,7 @@ async function loadServices() {
 // Restore selection from localStorage
 function restoreSelection() {
   try {
-    const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+    const data = JSON.parse(localStorage.getItem('expats') || '{}');
     if (data.provider_services && typeof data.provider_services === 'object') {
       window.selectedServices = data.provider_services;
     }
@@ -718,7 +718,7 @@ function createSpecialtiesModal(servicesData) {
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
   
-  // ✅ Masquer les boutons de navigation pendant que le modal est ouvert
+  // ✅ Hide navigation buttons while modal is open
   const navButtons = document.querySelectorAll('#mobileNavButtons, #desktopNavButtons');
   navButtons.forEach(btn => btn.style.display = 'none');
   
@@ -770,13 +770,13 @@ function createSpecialtiesModal(servicesData) {
     }
   });
   
-  // Fonction de fermeture du modal
+  // Modal close function
   function closeModal() {
     window.specialtiesModalOpen = false;
     document.body.style.overflow = '';
     modal.style.opacity = '0';
     
-    // ✅ Réafficher les boutons
+    // ✅ Show navigation buttons again
     navButtons.forEach(btn => btn.style.display = '');
     
     setTimeout(() => modal.remove(), 200);
@@ -830,10 +830,10 @@ function createSpecialtiesModal(servicesData) {
     // Save to global state and localStorage
     window.selectedSubcategories = selectedSubcats;
     try {
-      const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      const data = JSON.parse(localStorage.getItem('expats') || '{}');
       data.provider_services = window.selectedServices;
       data.provider_subcategories = window.selectedSubcategories;
-      localStorage.setItem('provider-signup-data', JSON.stringify(data));
+      localStorage.setItem('expats', JSON.stringify(data));
     } catch (e) {
       console.warn('Could not save to localStorage:', e.message);
     }

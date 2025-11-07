@@ -1,29 +1,45 @@
 /**
- * Wizard Steps – CORRIGÉ
+ * Wizard Steps – CORRIGÉ AVEC DEBUG
  */
 
 export class WizardSteps {
   constructor() {
     this.currentStep = 0;
     this.totalSteps = 16; // ✅ CORRIGÉ : 16 steps au lieu de 15
+    this.storeKey = 'expats'; // ✅ AJOUTÉ : Harmonisation avec wizard-core.js
     this.formData = this.loadFormData();
+    console.log('🎬 WizardSteps constructor called - totalSteps:', this.totalSteps);
   }
 
   loadFormData() {
-    try { return JSON.parse(localStorage.getItem('provider-signup-data')) || {}; }
-    catch { return {}; }
+    try { 
+      const data = JSON.parse(localStorage.getItem('expats')) || {};
+      console.log('💾 Form data loaded from localStorage:', Object.keys(data));
+      return data;
+    } catch { 
+      console.warn('⚠️ Failed to load form data from localStorage');
+      return {}; 
+    }
   }
+
   saveFormData() {
-    try { localStorage.setItem('provider-signup-data', JSON.stringify(this.formData)); } catch {}
+    try { 
+      localStorage.setItem('expats', JSON.stringify(this.formData));
+      console.log('💾 Form data saved to localStorage');
+    } catch {
+      console.warn('⚠️ Failed to save form data to localStorage');
+    }
   }
 
   init() {
+    console.log('🎬 WizardSteps.init() called');
     this.initNavigationButtons();
     this.initDelegatedGoTo();
     this.initStepValidation();
     this.initProgressBar();
     this.showStep(0);
     window.wizardSteps = this;
+    console.log('✅ WizardSteps initialized');
   }
 
   initDelegatedGoTo() {
@@ -33,6 +49,7 @@ export class WizardSteps {
       const to = parseInt(go.getAttribute('data-go-step'), 10);
       if (!Number.isFinite(to) || to < 1 || to > this.totalSteps) return;
       e.preventDefault();
+      console.log('🎯 [data-go-step] clicked - going to step:', to);
       this.showStep(to - 1);
     }, true);
   }
@@ -42,6 +59,7 @@ export class WizardSteps {
       const s = document.getElementById(`step${i}`);
       if (s && !s.classList.contains('hidden')) {
         this.currentStep = i - 1;
+        console.log('🔄 syncCurrentFromDOM - current step is:', i);
         return;
       }
     }
@@ -50,19 +68,26 @@ export class WizardSteps {
   initNavigationButtons() {
     document.querySelectorAll('#mobileNextBtn, #desktopNextBtn')
       .forEach(btn => btn.addEventListener('click', (e) => { 
-        e.preventDefault(); 
-        if (this.validateCurrentStep()) this.nextStep(); 
+        e.preventDefault();
+        console.log('➡️ Next button clicked from step', this.currentStep + 1);
+        if (this.validateCurrentStep()) {
+          this.nextStep();
+        } else {
+          console.warn('❌ Validation failed for step', this.currentStep + 1);
+        }
       }));
     document.querySelectorAll('#mobileBackBtn, #desktopBackBtn')
       .forEach(btn => btn.addEventListener('click', (e) => { 
-        e.preventDefault(); 
+        e.preventDefault();
+        console.log('⬅️ Back button clicked from step', this.currentStep + 1);
         this.previousStep(); 
       }));
   }
 
   initStepValidation() {
     for (let i = 1; i <= this.totalSteps; i++) {
-      const el = document.getElementById(`step${i}`); if (!el) continue;
+      const el = document.getElementById(`step${i}`); 
+      if (!el) continue;
       const h = () => this.updateNavigationButtons();
       el.querySelectorAll('input, select, textarea').forEach(n => {
         n.addEventListener('input', h);
@@ -76,7 +101,10 @@ export class WizardSteps {
     }, true);
   }
 
-  initProgressBar() { this.updateProgressBar(); }
+  initProgressBar() { 
+    this.updateProgressBar(); 
+  }
+
   updateProgressBar() {
     const n = document.getElementById('currentStepNum');
     const p = document.getElementById('progressPercentage');
@@ -85,63 +113,134 @@ export class WizardSteps {
     const pct = Math.round(((this.currentStep + 1) / this.totalSteps) * 100);
     if (p) p.textContent = String(pct);
     if (bar) bar.style.width = `${pct}%`;
+    console.log('📊 Progress bar updated - step', this.currentStep + 1, 'of', this.totalSteps, `(${pct}%)`);
   }
 
   showStep(i) {
-    if (i < 0 || i >= this.totalSteps) return;
-    for (let k = 1; k <= this.totalSteps; k++) {
-      const s = document.getElementById(`step${k}`); if (s) s.classList.add('hidden');
+    console.log('🎬 showStep() called with index:', i, '→ Will show step', i + 1);
+    
+    if (i < 0 || i >= this.totalSteps) {
+      console.warn('❌ Invalid step index:', i, `(totalSteps: ${this.totalSteps})`);
+      return;
     }
-    const cur = document.getElementById(`step${i + 1}`); if (!cur) return;
+    
+    // Cache tous les steps
+    console.log('🙈 Hiding all steps...');
+    for (let k = 1; k <= this.totalSteps; k++) {
+      const s = document.getElementById(`step${k}`);
+      if (s) {
+        s.classList.add('hidden');
+        console.log(`  🙈 step${k} → hidden`);
+      } else {
+        console.warn(`  ❌ step${k} element not found in DOM`);
+      }
+    }
+    
+    // Affiche le step demandé
+    const cur = document.getElementById(`step${i + 1}`);
+    if (!cur) {
+      console.error(`❌ Step element not found: step${i + 1}`);
+      return;
+    }
+    
     cur.classList.remove('hidden');
+    console.log(`👁️ step${i + 1} → VISIBLE`);
+    
     this.currentStep = i;
     this.updateProgressBar();
     this.updateNavigationButtons();
+    
+    console.log('✅ showStep completed - current step is now:', this.currentStep + 1);
   }
 
   nextStep() {
+    console.log('➡️ nextStep() called from step', this.currentStep + 1);
+    
     this.saveCurrentStepData();
-    if (this.currentStep < this.totalSteps - 1) this.showStep(this.currentStep + 1);
-    else this.submitForm();
+    
+    if (this.currentStep < this.totalSteps - 1) {
+      const nextStepIndex = this.currentStep + 1;
+      console.log('➡️ Moving to step', nextStepIndex + 1);
+      this.showStep(nextStepIndex);
+    } else {
+      console.log('📤 Last step reached, submitting form');
+      this.submitForm();
+    }
   }
-  previousStep() { if (this.currentStep > 0) this.showStep(this.currentStep - 1); }
+
+  previousStep() { 
+    console.log('⬅️ previousStep() called from step', this.currentStep + 1);
+    
+    if (this.currentStep > 0) {
+      const prevStepIndex = this.currentStep - 1;
+      console.log('⬅️ Moving to step', prevStepIndex + 1);
+      this.showStep(prevStepIndex);
+    } else {
+      console.warn('❌ Already at first step, cannot go back');
+    }
+  }
 
   validateCurrentStep() {
     this.syncCurrentFromDOM();
     const stepNum = this.currentStep + 1;
     const el = document.getElementById(`step${stepNum}`); 
-    if (!el) return true;
+    
+    console.log('🔍 validateCurrentStep() for step', stepNum);
+    
+    if (!el) {
+      console.warn('❌ Step element not found for validation:', stepNum);
+      return true;
+    }
 
     // ✅ VALIDATION STEP 1 : toujours valide (choix de profil)
     if (stepNum === 1) {
+      console.log('✅ Step 1 - always valid (profile choice)');
       return true;
     }
 
     // ✅ APPELER LA VALIDATION CUSTOM EN PREMIER
     const custom = window[`validateStep${stepNum}`];
     if (typeof custom === 'function') { 
+      console.log(`🔍 Calling custom validation: validateStep${stepNum}()`);
       try { 
-        return !!custom(); 
+        const result = !!custom();
+        console.log(`${result ? '✅' : '❌'} validateStep${stepNum}() returned:`, result);
+        return result;
       } catch (e) { 
-        console.error(`validateStep${stepNum} error:`, e);
+        console.error(`❌ validateStep${stepNum} error:`, e);
         return false; 
       } 
     }
 
     // Validation générique
+    console.log('🔍 No custom validation found, using generic validation');
     const req = el.querySelectorAll('[data-required]');
-    if (!req.length) return true;
+    if (!req.length) {
+      console.log('✅ No required fields found - step valid');
+      return true;
+    }
+    
+    console.log('🔍 Checking', req.length, 'required fields...');
     for (const input of req) {
       if (['checkbox','radio'].includes(input.type)) { 
-        if (!input.checked) return false; 
+        if (!input.checked) {
+          console.warn('❌ Required checkbox/radio not checked:', input.name);
+          return false;
+        }
       } else { 
-        if (String(input.value || '').trim() === '') return false; 
+        if (String(input.value || '').trim() === '') {
+          console.warn('❌ Required field empty:', input.name);
+          return false;
+        }
       }
     }
+    
+    console.log('✅ All required fields valid');
     return true;
   }
 
   updateNavigationButtons() {
+    console.log('🔄 updateNavigationButtons() called');
     this.syncCurrentFromDOM();
 
     const mobileWrap  = document.getElementById('mobileNavButtons');
@@ -154,15 +253,21 @@ export class WizardSteps {
     if (desktopWrap) desktopWrap.style.display = '';
 
     // Back masqué uniquement au Step 1
-    backButtons.forEach(b => b.style.display = (this.currentStep === 0 ? 'none' : 'flex'));
+    const showBack = this.currentStep !== 0;
+    backButtons.forEach(b => b.style.display = showBack ? 'flex' : 'none');
+    console.log(`🔘 Back button: ${showBack ? 'visible' : 'hidden'}`);
     
+    // Texte du bouton Next/Submit
+    const isLastStep = this.currentStep === this.totalSteps - 1;
     nextButtons.forEach(btn => {
       const span = btn.querySelector('span');
-      if (span) span.textContent = (this.currentStep === this.totalSteps - 1) ? 'Submit' : 'Continue';
+      if (span) span.textContent = isLastStep ? 'Submit' : 'Continue';
     });
+    console.log(`🔘 Next button text: ${isLastStep ? 'Submit' : 'Continue'}`);
 
     // ✅ CORRIGÉ : Validation normale sans blocage du Step 1
     const isValid = this.validateCurrentStep();
+    console.log(`🔘 Step ${this.currentStep + 1} validation result:`, isValid);
 
     nextButtons.forEach(btn => {
       btn.disabled = !isValid;
@@ -180,37 +285,85 @@ export class WizardSteps {
       w.classList.toggle('pointer-events-none', !isValid);
       w.style.pointerEvents = isValid ? 'auto' : 'none';
     });
+    
+    console.log('✅ Navigation buttons updated');
   }
 
   saveCurrentStepData() {
-    const el = document.getElementById(`step${this.currentStep + 1}`); if (!el) return;
+    const el = document.getElementById(`step${this.currentStep + 1}`); 
+    if (!el) {
+      console.warn('❌ Cannot save step data - element not found');
+      return;
+    }
+    
+    console.log('💾 Saving data for step', this.currentStep + 1);
+    
     el.querySelectorAll('input, select, textarea').forEach(input => {
       if (!input.name) return;
+      
       if (input.type === 'checkbox') {
         if (!this.formData[input.name]) this.formData[input.name] = [];
-        if (input.checked) { if (!this.formData[input.name].includes(input.value)) this.formData[input.name].push(input.value); }
-        else { this.formData[input.name] = (this.formData[input.name] || []).filter(v => v !== input.value); }
+        if (input.checked) { 
+          if (!this.formData[input.name].includes(input.value)) {
+            this.formData[input.name].push(input.value);
+            console.log(`  ✅ Checkbox "${input.name}": added "${input.value}"`);
+          }
+        } else { 
+          this.formData[input.name] = (this.formData[input.name] || []).filter(v => v !== input.value);
+          console.log(`  ❌ Checkbox "${input.name}": removed "${input.value}"`);
+        }
       } else if (input.type === 'radio') {
-        if (input.checked) this.formData[input.name] = input.value;
+        if (input.checked) {
+          this.formData[input.name] = input.value;
+          console.log(`  📻 Radio "${input.name}": "${input.value}"`);
+        }
       } else {
         this.formData[input.name] = input.value || '';
+        console.log(`  📝 Field "${input.name}": "${input.value}"`);
       }
     });
+    
     this.saveFormData();
   }
 
   submitForm() {
-    if (typeof window.onProviderSignupSubmit === 'function') { try { window.onProviderSignupSubmit(this.formData); return; } catch {} }
+    console.log('📤 submitForm() called');
+    
+    if (typeof window.onProviderSignupSubmit === 'function') { 
+      console.log('✅ Calling window.onProviderSignupSubmit()');
+      try { 
+        window.onProviderSignupSubmit(this.formData); 
+        return; 
+      } catch (e) {
+        console.error('❌ onProviderSignupSubmit failed:', e);
+      }
+    }
+    
     console.log('📤 Submitting form...', this.formData);
     alert('Form submission not implemented');
   }
 }
 
 export function initializeWizardSteps() {
+  console.log('🚀 initializeWizardSteps() called');
   const ws = new WizardSteps();
   ws.init();
   window.providerWizardSteps = ws;
-  if (!window.showStep) window.showStep = (i) => ws.showStep(i);
-  if (!window.updateNavigationButtons) window.updateNavigationButtons = () => ws.updateNavigationButtons();
+  
+  if (!window.showStep) {
+    window.showStep = (i) => {
+      console.log('🌍 Global showStep() called with:', i);
+      ws.showStep(i);
+    };
+  }
+  
+  if (!window.updateNavigationButtons) {
+    window.updateNavigationButtons = () => {
+      console.log('🌍 Global updateNavigationButtons() called');
+      ws.updateNavigationButtons();
+    };
+  }
+  
+  console.log('✅ WizardSteps module ready');
   return ws;
 }

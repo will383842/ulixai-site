@@ -1027,11 +1027,11 @@
             if (successEl) successEl.classList.add('hidden');
           }
           
-          // Sauvegarder dans localStorage
+          // ✅ CORRECTION: Utiliser 'expats' au lieu de 'provider-signup-data'
           try {
-            const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+            const data = JSON.parse(localStorage.getItem('expats') || '{}');
             data.location = value;
-            localStorage.setItem('provider-signup-data', JSON.stringify(data));
+            localStorage.setItem('expats', JSON.stringify(data));
           } catch(e) {}
           
           // Notifier wizard-steps pour débloquer le bouton
@@ -1040,9 +1040,9 @@
           }
         });
         
-        // Restaurer la valeur au chargement
+        // ✅ CORRECTION: Restaurer la valeur depuis 'expats'
         try {
-          const data = JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+          const data = JSON.parse(localStorage.getItem('expats') || '{}');
           if (data.location) {
             select.value = data.location;
             if (countEl) countEl.textContent = '1';

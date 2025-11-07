@@ -4,7 +4,7 @@
 
 export class WizardCore {
   constructor() {
-    this.storeKey = 'provider-signup-data'; // ✅ CORRIGÉ : Harmonisé avec wizard-steps.js
+    this.storeKey = 'expats'; // ✅ CORRIGÉ : Harmonisé avec wizard-steps.js
     this.steps = [];
     this.current = 0;
     this.state = this.loadState();

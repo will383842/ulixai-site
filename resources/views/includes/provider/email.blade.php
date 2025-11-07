@@ -10,6 +10,8 @@
 ✅ Persistance localStorage
 ⚡ Performance maximale
 ✅ CONFORME AU GUIDE SYSTÈME WIZARD
+🔧 MODIFIED: localStorage key changed to 'expats'
+🔧 ADDED: OTP sending on navigation to Step 14
 ============================================
 -->
 
@@ -343,6 +345,7 @@
    ✅ CONFORME AU GUIDE SYSTÈME WIZARD
    ✅ Validation email avec regex
    ✅ Persistance localStorage
+   🔧 MODIFIED: localStorage key 'expats'
    ============================================ */
 
 (function() {
@@ -352,6 +355,7 @@
   // 📦 STATE & CONSTANTS
   // ============================================
   
+  const STORAGE_KEY = 'expats';
   const EMAIL_REGEX = /^[a-zA-Z0-9](?:[a-zA-Z0-9._+-]{0,62}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
   
   const state = {
@@ -381,12 +385,12 @@
   }
 
   // ============================================
-  // 💾 LOCAL STORAGE - provider-signup-data
+  // 💾 LOCAL STORAGE - expats
   // ============================================
   
   function getLocalStorage() {
     try {
-      return JSON.parse(localStorage.getItem('provider-signup-data') || '{}');
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     } catch (e) {
       return {};
     }
@@ -402,7 +406,7 @@
       try {
         const data = getLocalStorage();
         data.email = state.email;
-        localStorage.setItem('provider-signup-data', JSON.stringify(data));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       } catch (e) {
         console.warn('localStorage error:', e);
       }
@@ -633,4 +637,57 @@
     init();
   }
 })();
+
+/**
+ * ═══════════════════════════════════════════════════════════
+ * ENVOI OTP au clic Next (Step 13 → Step 14)
+ * ═══════════════════════════════════════════════════════════
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  const originalNavigate = window.navigateToStep;
+  
+  window.navigateToStep = function(targetStep) {
+    const currentStep = window.currentStep || 
+                        parseInt(document.querySelector('[id^="step"]:not(.hidden)')?.id.replace('step', '')) || 
+                        0;
+    
+    // Si on quitte Step 13 vers Step 14
+    if (currentStep === 13 && targetStep === 14) {
+      const data = JSON.parse(localStorage.getItem('expats')) || {};
+      
+      if (data.email) {
+        console.log('📧 [Step 13] Sending OTP to:', data.email);
+        
+        // Appeler l'API
+        fetch('/send-email-otp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({ email: data.email })
+        })
+        .then(response => response.json())
+        .then(result => {
+          console.log('✅ [Step 13] OTP sent successfully');
+          if (typeof toastr !== 'undefined') {
+            toastr.success('Verification code sent to your email!', 'Check your inbox');
+          }
+        })
+        .catch(error => {
+          console.error('❌ [Step 13] Failed to send OTP:', error);
+          if (typeof toastr !== 'undefined') {
+            toastr.error('Failed to send verification code', 'Error');
+          }
+        });
+      }
+    }
+    
+    // Appeler navigation originale
+    if (originalNavigate) {
+      originalNavigate(targetStep);
+    }
+  };
+});
 </script>
