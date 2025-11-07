@@ -1,22 +1,18 @@
 <!-- 
 ============================================
 🚀 STEP 1 - VERSION COMPACTE 2025/2026
-============================================
-✨ Design System avec différenciation des profils
-📏 Optimisé pour popup sans scrolle
-🔗 Redirection vers ulixai.com/signup
+🔧 FIX: Bouton Next masqué immédiatement + Navigation directe
 ============================================
 -->
 
 <div id="step1" class="space-y-3 relative" role="region" aria-label="Choose your service">
   
-  <!-- Ambient Background Effects - réduits -->
   <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
     <div class="absolute top-0 -left-4 w-48 h-48 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-blob"></div>
     <div class="absolute -bottom-4 right-0 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-blob animation-delay-2000"></div>
   </div>
 
-  <!-- Card 1: Inscription Multi-Profils (Non-Providers) - Compact -->
+  <!-- Card 1: Inscription Multi-Profils (Non-Providers) -->
   <article class="group relative">
     <a 
       href="/signup"
@@ -24,18 +20,13 @@
       role="button"
       aria-label="Join UlixAI community - Create account">
       
-      <!-- Animated gradient background - Purple/Pink theme -->
       <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-fuchsia-500 to-pink-600 animate-gradient"></div>
       
-      <!-- Glossy overlay -->
       <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       
-      <!-- Content - Compact padding -->
       <div class="relative z-10 p-4">
-        <!-- Top section: Icon + Title compact -->
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-3 flex-1 min-w-0">
-            <!-- Icon compact -->
             <div class="flex-shrink-0">
               <div class="w-11 h-11 bg-gradient-to-br from-purple-500 via-fuchsia-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg ring-2 ring-white/30 transform group-hover:rotate-12 transition-transform duration-300">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -44,7 +35,6 @@
               </div>
             </div>
             
-            <!-- Title compact -->
             <div class="flex-1 min-w-0">
               <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
                 Join Us! 🌟
@@ -55,13 +45,11 @@
             </div>
           </div>
           
-          <!-- Badge -->
           <span class="flex-shrink-0 px-2.5 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-xs font-bold shadow-lg">
             ✨ FREE
           </span>
         </div>
         
-        <!-- Description compact -->
         <div class="mb-3">
           <p class="text-sm text-purple-50 leading-relaxed">
             <strong class="text-white">Requesters</strong>, 
@@ -74,14 +62,12 @@
           </p>
         </div>
         
-        <!-- Séparateur avec indication -->
         <div class="mb-3 pb-3 border-b border-white/20">
           <p class="text-xs text-purple-100 text-center italic">
             💼 Want to become a <strong>provider</strong>? Click on the blue block 💙
           </p>
         </div>
         
-        <!-- CTA Button compact -->
         <div class="cta-button cta-button-users">
           <span class="font-bold text-sm">CREATE MY ACCOUNT</span>
           <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
@@ -90,12 +76,11 @@
         </div>
       </div>
       
-      <!-- Shimmer effect -->
       <div class="shimmer"></div>
     </a>
   </article>
 
-  <!-- Card 2: Providers (Prestataires) - Compact -->
+  <!-- Card 2: Providers (Prestataires) -->
   <article class="group relative">
     <button 
       type="button"
@@ -105,19 +90,14 @@
       role="button"
       aria-label="Become a service provider">
       
-      <!-- Gradient border effect - Blue/Cyan theme -->
       <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 animate-gradient-slow"></div>
       <div class="absolute inset-[3px] bg-white rounded-[18px]"></div>
       
-      <!-- Glossy overlay -->
       <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[21px]"></div>
       
-      <!-- Content - Compact padding -->
       <div class="relative z-10 p-4">
-        <!-- Top section: Icon + Title compact -->
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-3 flex-1 min-w-0">
-            <!-- Icon compact -->
             <div class="flex-shrink-0">
               <div class="w-11 h-11 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg ring-2 ring-blue-200/50 transform group-hover:rotate-12 transition-transform duration-300">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -126,7 +106,6 @@
               </div>
             </div>
             
-            <!-- Title compact -->
             <div class="flex-1 min-w-0">
               <h2 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent tracking-tight">
                 Become a Provider! 💼
@@ -137,13 +116,11 @@
             </div>
           </div>
           
-          <!-- Badge -->
           <span class="flex-shrink-0 px-2.5 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full text-xs font-bold shadow-lg">
             💵 EARN
           </span>
         </div>
         
-        <!-- Description compact -->
         <div class="mb-3">
           <p class="text-sm text-gray-900 leading-relaxed">
             Transform your <strong class="text-blue-600">local expertise</strong> into income. 
@@ -151,7 +128,6 @@
           </p>
         </div>
         
-        <!-- CTA Button compact -->
         <div class="cta-button-providers">
           <span class="font-bold text-sm">BECOME A PROVIDER</span>
           <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
@@ -160,7 +136,6 @@
         </div>
       </div>
       
-      <!-- Shimmer effect -->
       <div class="shimmer shimmer-secondary"></div>
     </button>
   </article>
@@ -168,11 +143,6 @@
 </div>
 
 <style>
-/* ============================================
-   🎨 DESIGN SYSTEM - DIFFERENTIATION DES PROFILS
-   ============================================ */
-
-/* CARDS - Version compacte */
 .modern-card {
   position: relative;
   border-radius: 20px;
@@ -183,7 +153,6 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Card Users (Purple/Pink) */
 .modern-card-users {
   box-shadow: 0 15px 35px -10px rgba(168, 85, 247, 0.4);
   border: 2px solid #c084fc;
@@ -193,7 +162,6 @@
   box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.6);
 }
 
-/* Card Providers (Blue/Cyan) */
 .modern-card-providers {
   box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.3);
 }
@@ -202,7 +170,6 @@
   box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.5);
 }
 
-/* GRADIENTS - Specs exactes */
 @keyframes gradient {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -223,7 +190,6 @@
   animation: gradient-slow 15s ease infinite;
 }
 
-/* SHIMMER EFFECT */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
@@ -252,7 +218,6 @@
   );
 }
 
-/* CTA BUTTONS - Users (Purple theme) */
 .cta-button-users {
   display: flex;
   align-items: center;
@@ -272,7 +237,6 @@
   box-shadow: 0 15px 30px -8px rgba(168, 85, 247, 0.5);
 }
 
-/* CTA BUTTONS - Providers (Blue theme) */
 .cta-button-providers {
   display: flex;
   align-items: center;
@@ -291,10 +255,6 @@
   box-shadow: 0 15px 30px -8px rgba(59, 130, 246, 0.6);
 }
 
-/* ============================================
-   🎭 ANIMATIONS COMPACTES
-   ============================================ */
-
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(20px, -30px) scale(1.05); }
@@ -309,10 +269,6 @@
   animation-delay: 2s;
 }
 
-/* ============================================
-   📱 RESPONSIVE
-   ============================================ */
-
 @media (max-width: 640px) {
   .modern-card {
     padding: 0.75rem;
@@ -324,10 +280,6 @@
     padding: 0.625rem 1rem;
   }
 }
-
-/* ============================================
-   ♿ ACCESSIBILITY
-   ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -351,10 +303,6 @@
   }
 }
 
-/* ============================================
-   ⚡ PERFORMANCE
-   ============================================ */
-
 .modern-card,
 .shimmer {
   transform: translateZ(0);
@@ -366,3 +314,68 @@
   contain: layout style paint;
 }
 </style>
+
+<script>
+// 🔧 MASQUER LE BOUTON NEXT DANS STEP 1 + NAVIGATION DIRECTE
+(function() {
+  'use strict';
+
+  const step1Container = document.getElementById('step1');
+  
+  if (!step1Container) return;
+
+  // Fonction pour masquer/afficher les boutons de navigation
+  function toggleNavigationButtons(hide) {
+    const navButtons = document.querySelectorAll('#mobileNavButtons, #desktopNavButtons');
+    
+    navButtons.forEach(container => {
+      if (hide) {
+        container.style.display = 'none';
+      } else {
+        container.style.display = '';
+      }
+    });
+  }
+
+  // ✅ MASQUER IMMÉDIATEMENT au chargement si step1 est visible
+  if (!step1Container.classList.contains('hidden')) {
+    toggleNavigationButtons(true);
+  }
+
+  // Observer pour détecter quand step1 devient visible/invisible
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        const isHidden = step1Container.classList.contains('hidden');
+        toggleNavigationButtons(!isHidden);
+      }
+    });
+  });
+
+  // Démarrer l'observation
+  observer.observe(step1Container, { 
+    attributes: true,
+    attributeFilter: ['class']
+  });
+
+  // ✅ NAVIGATION DIRECTE pour le bouton "Become a Provider"
+  const providerBtn = document.getElementById('whiteCardBtn');
+  if (providerBtn) {
+    providerBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Naviguer directement vers Step 2
+      if (typeof window.showStep === 'function') {
+        window.showStep(1); // Step 2 (index 1)
+      } else if (typeof window.goToStep === 'function') {
+        window.goToStep(2);
+      } else {
+        // Fallback: dispatch event
+        const event = new CustomEvent('navigateToStep', { detail: { step: 2 } });
+        document.dispatchEvent(event);
+      }
+    });
+  }
+})();
+</script>

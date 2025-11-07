@@ -639,9 +639,6 @@
   .left-20 {
     left: calc(var(--spacing) * 20);
   }
-  .isolate {
-    isolation: isolate;
-  }
   .-z-10 {
     z-index: calc(10 * -1);
   }

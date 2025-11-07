@@ -1,34 +1,21 @@
 <!-- 
 ============================================
-🚀 STEP 6 - WHERE DO YOU OPERATE (CORRECTED)
-============================================
-✨ Blue/Cyan/Teal Design System STRICT
-🎨 Multi-selection with country flags
-💎 Validation and interactive states
-⚡ Responsive 2 cols mobile / 3 cols / 4 cols desktop
-🔧 Integrated with wizard-steps.js
-✅ Selection persistence on back navigation
-🚀 MAXIMUM OPTIMIZATIONS (CPU, GPU, Font, Size, Speed)
+🚀 STEP 6 - WHERE DO YOU OPERATE (FIXED)
+🔧 Fix: Suppression du cache pour permettre la sélection
 ============================================
 -->
 
 <div id="step6" class="hidden flex flex-col h-full" role="region" aria-label="Select countries where you operate">
   
-  <!-- ============================================
-       FIXED HEADER (STICKY)
-       ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Header Section -->
     <div class="text-center space-y-2 relative">
-      <!-- Icon Badge -->
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
           <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -37,7 +24,6 @@
         </div>
       </div>
       
-      <!-- Title & Subtitle -->
       <div>
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
           Where Do You Operate? 🌍
@@ -47,7 +33,6 @@
         </p>
       </div>
 
-      <!-- Counter Badge -->
       <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -59,12 +44,8 @@
     </div>
   </div>
 
-  <!-- ============================================
-       SCROLLABLE CONTENT
-       ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
-    <!-- Error Alert (Hidden by default) -->
     <div id="step6CountryError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -77,7 +58,6 @@
       </div>
     </div>
 
-    <!-- Search Bar -->
     <div class="relative">
       <input 
         type="text" 
@@ -93,16 +73,8 @@
       </div>
     </div>
 
-    <!-- Countries Grid -->
     <div id="step6CountryList" class="country-list-container" role="group" aria-label="Select operational countries">
-      <!-- Afghanistan -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Afghanistan"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Afghanistan">
+      <button type="button" class="country-card" data-country="Afghanistan" role="checkbox" aria-checked="false" aria-label="Select Afghanistan">
         <span class="country-name">Afghanistan</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -111,14 +83,7 @@
         </span>
       </button>
 
-      <!-- Albania -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Albania"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Albania">
+      <button type="button" class="country-card" data-country="Albania" role="checkbox" aria-checked="false" aria-label="Select Albania">
         <span class="country-name">Albania</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -127,14 +92,7 @@
         </span>
       </button>
 
-      <!-- Algeria -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Algeria"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Algeria">
+      <button type="button" class="country-card" data-country="Algeria" role="checkbox" aria-checked="false" aria-label="Select Algeria">
         <span class="country-name">Algeria</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -143,14 +101,7 @@
         </span>
       </button>
 
-      <!-- Andorra -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Andorra"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Andorra">
+      <button type="button" class="country-card" data-country="Andorra" role="checkbox" aria-checked="false" aria-label="Select Andorra">
         <span class="country-name">Andorra</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -159,14 +110,7 @@
         </span>
       </button>
 
-      <!-- Angola -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Angola"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Angola">
+      <button type="button" class="country-card" data-country="Angola" role="checkbox" aria-checked="false" aria-label="Select Angola">
         <span class="country-name">Angola</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -175,14 +119,7 @@
         </span>
       </button>
 
-      <!-- Argentina -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Argentina"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Argentina">
+      <button type="button" class="country-card" data-country="Argentina" role="checkbox" aria-checked="false" aria-label="Select Argentina">
         <span class="country-name">Argentina</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -191,14 +128,7 @@
         </span>
       </button>
 
-      <!-- Australia -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Australia"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Australia">
+      <button type="button" class="country-card" data-country="Australia" role="checkbox" aria-checked="false" aria-label="Select Australia">
         <span class="country-name">Australia</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -207,14 +137,7 @@
         </span>
       </button>
 
-      <!-- Austria -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Austria"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Austria">
+      <button type="button" class="country-card" data-country="Austria" role="checkbox" aria-checked="false" aria-label="Select Austria">
         <span class="country-name">Austria</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -223,14 +146,7 @@
         </span>
       </button>
 
-      <!-- Belgium -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Belgium"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Belgium">
+      <button type="button" class="country-card" data-country="Belgium" role="checkbox" aria-checked="false" aria-label="Select Belgium">
         <span class="country-name">Belgium</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -239,14 +155,7 @@
         </span>
       </button>
 
-      <!-- Brazil -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Brazil"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Brazil">
+      <button type="button" class="country-card" data-country="Brazil" role="checkbox" aria-checked="false" aria-label="Select Brazil">
         <span class="country-name">Brazil</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -255,14 +164,7 @@
         </span>
       </button>
 
-      <!-- Canada -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Canada"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Canada">
+      <button type="button" class="country-card" data-country="Canada" role="checkbox" aria-checked="false" aria-label="Select Canada">
         <span class="country-name">Canada</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -271,14 +173,7 @@
         </span>
       </button>
 
-      <!-- China -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="China"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select China">
+      <button type="button" class="country-card" data-country="China" role="checkbox" aria-checked="false" aria-label="Select China">
         <span class="country-name">China</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -287,14 +182,7 @@
         </span>
       </button>
 
-      <!-- Denmark -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Denmark"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Denmark">
+      <button type="button" class="country-card" data-country="Denmark" role="checkbox" aria-checked="false" aria-label="Select Denmark">
         <span class="country-name">Denmark</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -303,14 +191,7 @@
         </span>
       </button>
 
-      <!-- Finland -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Finland"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Finland">
+      <button type="button" class="country-card" data-country="Finland" role="checkbox" aria-checked="false" aria-label="Select Finland">
         <span class="country-name">Finland</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -319,14 +200,7 @@
         </span>
       </button>
 
-      <!-- France -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="France"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select France">
+      <button type="button" class="country-card" data-country="France" role="checkbox" aria-checked="false" aria-label="Select France">
         <span class="country-name">France</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -335,14 +209,7 @@
         </span>
       </button>
 
-      <!-- Germany -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Germany"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Germany">
+      <button type="button" class="country-card" data-country="Germany" role="checkbox" aria-checked="false" aria-label="Select Germany">
         <span class="country-name">Germany</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -351,14 +218,7 @@
         </span>
       </button>
 
-      <!-- Greece -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Greece"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Greece">
+      <button type="button" class="country-card" data-country="Greece" role="checkbox" aria-checked="false" aria-label="Select Greece">
         <span class="country-name">Greece</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -367,14 +227,7 @@
         </span>
       </button>
 
-      <!-- India -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="India"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select India">
+      <button type="button" class="country-card" data-country="India" role="checkbox" aria-checked="false" aria-label="Select India">
         <span class="country-name">India</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -383,14 +236,7 @@
         </span>
       </button>
 
-      <!-- Ireland -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Ireland"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Ireland">
+      <button type="button" class="country-card" data-country="Ireland" role="checkbox" aria-checked="false" aria-label="Select Ireland">
         <span class="country-name">Ireland</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -399,14 +245,7 @@
         </span>
       </button>
 
-      <!-- Italy -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Italy"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Italy">
+      <button type="button" class="country-card" data-country="Italy" role="checkbox" aria-checked="false" aria-label="Select Italy">
         <span class="country-name">Italy</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -415,14 +254,7 @@
         </span>
       </button>
 
-      <!-- Japan -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Japan"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Japan">
+      <button type="button" class="country-card" data-country="Japan" role="checkbox" aria-checked="false" aria-label="Select Japan">
         <span class="country-name">Japan</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -431,14 +263,7 @@
         </span>
       </button>
 
-      <!-- Mexico -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Mexico"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Mexico">
+      <button type="button" class="country-card" data-country="Mexico" role="checkbox" aria-checked="false" aria-label="Select Mexico">
         <span class="country-name">Mexico</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -447,14 +272,7 @@
         </span>
       </button>
 
-      <!-- Netherlands -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Netherlands"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Netherlands">
+      <button type="button" class="country-card" data-country="Netherlands" role="checkbox" aria-checked="false" aria-label="Select Netherlands">
         <span class="country-name">Netherlands</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -463,14 +281,7 @@
         </span>
       </button>
 
-      <!-- Norway -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Norway"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Norway">
+      <button type="button" class="country-card" data-country="Norway" role="checkbox" aria-checked="false" aria-label="Select Norway">
         <span class="country-name">Norway</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -479,14 +290,7 @@
         </span>
       </button>
 
-      <!-- Poland -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Poland"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Poland">
+      <button type="button" class="country-card" data-country="Poland" role="checkbox" aria-checked="false" aria-label="Select Poland">
         <span class="country-name">Poland</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -495,14 +299,7 @@
         </span>
       </button>
 
-      <!-- Portugal -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Portugal"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Portugal">
+      <button type="button" class="country-card" data-country="Portugal" role="checkbox" aria-checked="false" aria-label="Select Portugal">
         <span class="country-name">Portugal</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -511,14 +308,7 @@
         </span>
       </button>
 
-      <!-- Russia -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Russia"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Russia">
+      <button type="button" class="country-card" data-country="Russia" role="checkbox" aria-checked="false" aria-label="Select Russia">
         <span class="country-name">Russia</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -527,14 +317,7 @@
         </span>
       </button>
 
-      <!-- South Korea -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="South Korea"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select South Korea">
+      <button type="button" class="country-card" data-country="South Korea" role="checkbox" aria-checked="false" aria-label="Select South Korea">
         <span class="country-name">South Korea</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -543,14 +326,7 @@
         </span>
       </button>
 
-      <!-- Spain -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Spain"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Spain">
+      <button type="button" class="country-card" data-country="Spain" role="checkbox" aria-checked="false" aria-label="Select Spain">
         <span class="country-name">Spain</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -559,14 +335,7 @@
         </span>
       </button>
 
-      <!-- Sweden -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Sweden"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Sweden">
+      <button type="button" class="country-card" data-country="Sweden" role="checkbox" aria-checked="false" aria-label="Select Sweden">
         <span class="country-name">Sweden</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -575,14 +344,7 @@
         </span>
       </button>
 
-      <!-- Switzerland -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="Switzerland"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select Switzerland">
+      <button type="button" class="country-card" data-country="Switzerland" role="checkbox" aria-checked="false" aria-label="Select Switzerland">
         <span class="country-name">Switzerland</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -591,14 +353,7 @@
         </span>
       </button>
 
-      <!-- United Kingdom -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="United Kingdom"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select United Kingdom">
+      <button type="button" class="country-card" data-country="United Kingdom" role="checkbox" aria-checked="false" aria-label="Select United Kingdom">
         <span class="country-name">United Kingdom</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -607,14 +362,7 @@
         </span>
       </button>
 
-      <!-- United States -->
-      <button 
-        type="button"
-        class="country-card"
-        data-country="United States"
-        role="checkbox"
-        aria-checked="false"
-        aria-label="Select United States">
+      <button type="button" class="country-card" data-country="United States" role="checkbox" aria-checked="false" aria-label="Select United States">
         <span class="country-name">United States</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -629,9 +377,6 @@
 </div>
 
 <style>
-/* ============================================
-   🎨 ANIMATIONS
-   ============================================ */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   25% { transform: translate(20px, -50px) scale(1.1); }
@@ -661,9 +406,6 @@
   animation: shake 0.5s;
 }
 
-/* ============================================
-   🔍 SEARCH INPUT
-   ============================================ */
 #step6Search {
   transition: all 0.2s ease;
   font-feature-settings: 'kern' 1, 'liga' 1;
@@ -681,10 +423,6 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-/* ============================================
-   📋 COUNTRY LIST CONTAINER
-   Optimizations: Responsive Grid + Custom Scrollbar
-   ============================================ */
 .country-list-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -692,16 +430,13 @@
   max-height: 420px;
   overflow-y: auto;
   
-  /* Performance optimizations */
   contain: layout style paint;
   will-change: scroll-position;
   
-  /* Custom scrollbar */
   scrollbar-width: thin;
   scrollbar-color: #3b82f6 #f1f5f9;
 }
 
-/* Responsive breakpoints */
 @media (min-width: 640px) {
   .country-list-container {
     grid-template-columns: repeat(3, 1fr);
@@ -718,7 +453,6 @@
   }
 }
 
-/* Webkit scrollbar styling */
 .country-list-container::-webkit-scrollbar {
   width: 6px;
 }
@@ -738,10 +472,6 @@
   background: #2563eb;
 }
 
-/* ============================================
-   🗺️ COUNTRY CARDS
-   Optimizations: GPU acceleration + containment
-   ============================================ */
 .country-card {
   position: relative;
   display: flex;
@@ -755,18 +485,14 @@
   text-align: left;
   min-height: 3.5rem;
   
-  /* Optimized transitions */
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* Performance - GPU acceleration */
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
   
-  /* Performance - CSS containment */
   contain: layout style paint;
   
-  /* Touch improvements */
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
@@ -794,10 +520,6 @@
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
-/* ============================================
-   📝 COUNTRY NAME
-   Optimizations: Font + Rendering
-   ============================================ */
 .country-card .country-name {
   flex: 1;
   font-size: 0.875rem;
@@ -808,17 +530,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   
-  /* Typography optimizations */
   font-feature-settings: 'kern' 1, 'liga' 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* ============================================
-   ✅ CHECK INDICATOR
-   Optimizations: GPU + Transitions
-   ============================================ */
 .country-card .check-indicator {
   display: flex;
   align-items: center;
@@ -830,11 +547,9 @@
   background: rgba(59, 130, 246, 0.1);
   opacity: 0;
   
-  /* GPU acceleration */
   transform: scale(0.8) translateZ(0);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* Performance */
   backface-visibility: hidden;
   will-change: transform, opacity;
 }
@@ -853,16 +568,12 @@
   color: white;
 }
 
-/* ============================================
-   ♿ ACCESSIBILITY
-   ============================================ */
 .country-card:focus-visible {
   outline: 3px solid #3b82f6;
   outline-offset: 2px;
   border-color: #2563eb;
 }
 
-/* Reduced animations for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -873,7 +584,6 @@
   }
 }
 
-/* High contrast */
 @media (prefers-contrast: high) {
   .country-card {
     border: 3px solid currentColor;
@@ -884,11 +594,6 @@
   }
 }
 
-/* ============================================
-   ⚡ ADDITIONAL PERFORMANCE OPTIMIZATIONS
-   ============================================ */
-
-/* GPU optimization for animated elements */
 #step6 .country-card,
 #step6 .check-indicator {
   transform: translateZ(0);
@@ -896,25 +601,21 @@
   perspective: 1000px;
 }
 
-/* Containment to isolate layout calculations */
 #step6 .country-card {
   contain: layout style paint;
 }
 
-/* Font loading optimization */
 @supports (font-display: swap) {
   * {
     font-display: swap;
   }
 }
 
-/* Smooth scroll for container */
 .country-list-container {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Shadow optimization for mobile */
 @media (max-width: 640px) {
   .country-card {
     box-shadow: none;
@@ -928,53 +629,25 @@
 </style>
 
 <script>
-/* ============================================
-   🎯 STEP 6 - CORRECTED VERSION
-   ✅ Integrated with wizard-steps.js
-   ✅ Selection persistence
-   ⚡ Maximum optimizations
-   ============================================ */
-
-// Global state
 window.selectedCountries = [];
 
-// DOM elements cache (memory optimization)
-let cachedElementsStep6 = null;
-
-/**
- * Get DOM elements with cache
- * Avoids multiple querySelector calls (CPU optimization)
- */
-function getCachedElementsStep6() {
-  if (!cachedElementsStep6) {
-    cachedElementsStep6 = {
-      cards: document.querySelectorAll('#step6 .country-card'),
-      errorAlert: document.getElementById('step6CountryError'),
-      selectedCount: document.getElementById('step6SelectedCount'),
-      searchInput: document.getElementById('step6Search')
-    };
-  }
-  return cachedElementsStep6;
-}
-
-/**
- * Toggle country selection (globally accessible)
- * Multi-selection with UI update and persistence
- */
 window.toggleCountrySelection = function(country) {
-  const elements = getCachedElementsStep6();
+  const container = document.querySelector('#step6');
+  if (!container) return;
+  
+  const errorAlert = document.getElementById('step6CountryError');
+  const selectedCount = document.getElementById('step6SelectedCount');
+  const card = container.querySelector(`.country-card[data-country="${country}"]`);
+  
   const index = window.selectedCountries.indexOf(country);
-  const card = Array.from(elements.cards).find(c => c.getAttribute('data-country') === country);
   
   if (index > -1) {
-    // Deselect
     window.selectedCountries.splice(index, 1);
     if (card) {
       card.classList.remove('selected');
       card.setAttribute('aria-checked', 'false');
     }
   } else {
-    // Select
     window.selectedCountries.push(country);
     if (card) {
       card.classList.add('selected');
@@ -982,17 +655,14 @@ window.toggleCountrySelection = function(country) {
     }
   }
   
-  // Update counter
-  if (elements.selectedCount) {
-    elements.selectedCount.textContent = window.selectedCountries.length;
+  if (selectedCount) {
+    selectedCount.textContent = window.selectedCountries.length;
   }
   
-  // Hide error if visible
-  if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
-    elements.errorAlert.classList.add('hidden');
+  if (errorAlert && !errorAlert.classList.contains('hidden')) {
+    errorAlert.classList.add('hidden');
   }
   
-  // Save to localStorage
   try {
     const data = JSON.parse(localStorage.getItem('expats') || '{}');
     data.operational_countries = window.selectedCountries;
@@ -1001,26 +671,20 @@ window.toggleCountrySelection = function(country) {
     console.warn('localStorage not available:', e.message);
   }
   
-  // ✅ Notify wizard-steps.js
   if (typeof window.updateNavigationButtons === 'function') {
     window.updateNavigationButtons();
   }
 };
 
-/**
- * Step validation (globally accessible)
- * Checks that at least one country is selected
- */
 window.validateStep6 = function() {
-  const elements = getCachedElementsStep6();
+  const errorAlert = document.getElementById('step6CountryError');
   
   if (!window.selectedCountries || window.selectedCountries.length === 0) {
-    // Show error with shake animation
-    if (elements.errorAlert) {
-      elements.errorAlert.classList.remove('hidden');
-      elements.errorAlert.classList.add('shake-animation');
+    if (errorAlert) {
+      errorAlert.classList.remove('hidden');
+      errorAlert.classList.add('shake-animation');
       setTimeout(() => {
-        elements.errorAlert.classList.remove('shake-animation');
+        errorAlert.classList.remove('shake-animation');
       }, 500);
     }
     return false;
@@ -1029,10 +693,6 @@ window.validateStep6 = function() {
   return true;
 };
 
-/**
- * Debounce function to optimize search
- * Avoids unnecessary calculations while typing
- */
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -1045,73 +705,57 @@ function debounce(func, wait) {
   };
 }
 
-/**
- * Initialization on DOM load
- * Uses event delegation and passive listeners for performance
- */
 document.addEventListener('DOMContentLoaded', function() {
-  const elements = getCachedElementsStep6();
   const container = document.querySelector('#step6');
   
   if (!container) return;
   
-  /* ==========================================
-     EVENT DELEGATION (CPU optimization)
-     Single listener instead of 30+ listeners
-     ========================================== */
   container.addEventListener('click', function(e) {
     const card = e.target.closest('.country-card');
     if (card) {
       const country = card.getAttribute('data-country');
-      window.toggleCountrySelection(country);
+      if (country) {
+        window.toggleCountrySelection(country);
+      }
     }
   }, { passive: true });
   
-  /* ==========================================
-     KEYBOARD SUPPORT (Accessibility)
-     ========================================== */
   container.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') {
       const card = e.target.closest('.country-card');
       if (card) {
         e.preventDefault();
         const country = card.getAttribute('data-country');
-        window.toggleCountrySelection(country);
+        if (country) {
+          window.toggleCountrySelection(country);
+        }
       }
     }
   });
   
-  /* ==========================================
-     SEARCH INPUT (with debounce)
-     Optimization: 150ms delay + RAF
-     ========================================== */
-  if (elements.searchInput) {
+  const searchInput = document.getElementById('step6Search');
+  if (searchInput) {
     const performSearch = debounce(function(searchValue) {
       const search = searchValue.toLowerCase();
+      const cards = container.querySelectorAll('.country-card');
       
-      // Use requestAnimationFrame to avoid layout thrashing
       requestAnimationFrame(() => {
-        elements.cards.forEach(card => {
-          const country = card.getAttribute('data-country').toLowerCase();
+        cards.forEach(card => {
+          const country = (card.getAttribute('data-country') || '').toLowerCase();
           card.style.display = country.includes(search) ? '' : 'none';
         });
       });
-    }, 150); // 150ms debounce
+    }, 150);
     
-    elements.searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function() {
       performSearch(this.value);
     }, { passive: true });
   }
   
-  /* ==========================================
-     MUTATION OBSERVER
-     Detects when step becomes visible
-     ========================================== */
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
         if (!container.classList.contains('hidden')) {
-          // ✅ Notify wizard-steps.js
           if (typeof window.updateNavigationButtons === 'function') {
             window.updateNavigationButtons();
           }
@@ -1125,34 +769,27 @@ document.addEventListener('DOMContentLoaded', function() {
     attributeFilter: ['class']
   });
   
-  /* ==========================================
-     RESTORE FROM LOCALSTORAGE
-     With requestAnimationFrame to avoid blocking
-     ========================================== */
   try {
     const data = JSON.parse(localStorage.getItem('expats') || '{}');
     
     if (data.operational_countries && Array.isArray(data.operational_countries)) {
       window.selectedCountries = data.operational_countries;
       
-      // Use RAF to avoid layout thrashing
       requestAnimationFrame(() => {
+        const selectedCount = document.getElementById('step6SelectedCount');
+        
         window.selectedCountries.forEach(country => {
-          const card = Array.from(elements.cards).find(c => 
-            c.getAttribute('data-country') === country
-          );
+          const card = container.querySelector(`.country-card[data-country="${country}"]`);
           if (card) {
             card.classList.add('selected');
             card.setAttribute('aria-checked', 'true');
           }
         });
         
-        // Update counter
-        if (elements.selectedCount) {
-          elements.selectedCount.textContent = window.selectedCountries.length;
+        if (selectedCount) {
+          selectedCount.textContent = window.selectedCountries.length;
         }
         
-        // ✅ Notify wizard-steps.js
         if (typeof window.updateNavigationButtons === 'function') {
           window.updateNavigationButtons();
         }
@@ -1162,19 +799,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.warn('Could not restore selection:', e.message);
   }
 });
-
-/* ==========================================
-   💡 OPTIMIZATION NOTES:
-   
-   1. Event Delegation: 1 listener instead of 30+
-   2. Passive Listeners: Improves scroll performance
-   3. RAF (requestAnimationFrame): Avoids layout thrashing
-   4. Debouncing: Optimizes search (150ms)
-   5. DOM Cache: Avoids repeated querySelectorAll
-   6. CSS Containment: Isolates layout calculations
-   7. GPU Acceleration: translateZ(0) + backface-visibility
-   8. Will-change: Optimizes animated properties
-   9. MutationObserver: Efficient visibility detection
-   10. wizard-steps.js Integration: Perfect coordination
-   ========================================== */
 </script>

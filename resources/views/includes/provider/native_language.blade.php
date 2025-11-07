@@ -1,33 +1,21 @@
 <!-- 
 ============================================
 🚀 STEP 2 - NATIVE LANGUAGE SELECTION (CORRECTED)
-============================================
-✨ Blue/Cyan/Teal Design System STRICT
-🎨 13 languages with flags
-💎 Validation and interactive states
-⚡ Responsive 2 cols mobile / 3 cols desktop
-🔧 Proper button management (enable/disable)
-✅ Selection persistence on back navigation
+🔧 Performance: Drapeaux locaux au lieu de CDN
 ============================================
 -->
 
 <div id="step2" class="hidden flex flex-col h-full" role="region" aria-label="Select your native language">
   
-  <!-- ============================================
-       FIXED HEADER (STICKY)
-       ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Header Section -->
     <div class="text-center space-y-2 relative">
-      <!-- Icon Badge -->
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
           <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -36,7 +24,6 @@
         </div>
       </div>
       
-      <!-- Title & Subtitle -->
       <div>
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
           What's Your Native Language? 🌍
@@ -46,7 +33,6 @@
         </p>
       </div>
 
-      <!-- Counter Badge -->
       <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -58,12 +44,8 @@
     </div>
   </div>
 
-  <!-- ============================================
-       SCROLLABLE CONTENT
-       ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
-    <!-- Error Alert (Hidden by default) -->
     <div id="step2LanguageError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -76,7 +58,6 @@
       </div>
     </div>
 
-    <!-- Languages Grid -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-3.5" role="radiogroup" aria-label="Select your native language">
       
       <!-- English -->
@@ -88,7 +69,7 @@
         aria-checked="false"
         aria-label="Select English">
         <div class="flag-container">
-          <img src="https://flagcdn.com/us.svg" alt="English flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/us.svg') }}" alt="English flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">English</span>
         <span class="check-indicator">
@@ -107,7 +88,7 @@
         aria-checked="false"
         aria-label="Select Spanish">
         <div class="flag-container">
-          <img src="https://flagcdn.com/es.svg" alt="Spanish flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/es.svg') }}" alt="Spanish flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Spanish</span>
         <span class="check-indicator">
@@ -126,7 +107,7 @@
         aria-checked="false"
         aria-label="Select French">
         <div class="flag-container">
-          <img src="https://flagcdn.com/fr.svg" alt="French flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/fr.svg') }}" alt="French flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">French</span>
         <span class="check-indicator">
@@ -145,7 +126,7 @@
         aria-checked="false"
         aria-label="Select German">
         <div class="flag-container">
-          <img src="https://flagcdn.com/de.svg" alt="German flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/de.svg') }}" alt="German flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">German</span>
         <span class="check-indicator">
@@ -164,7 +145,7 @@
         aria-checked="false"
         aria-label="Select Italian">
         <div class="flag-container">
-          <img src="https://flagcdn.com/it.svg" alt="Italian flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/it.svg') }}" alt="Italian flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Italian</span>
         <span class="check-indicator">
@@ -183,7 +164,7 @@
         aria-checked="false"
         aria-label="Select Portuguese">
         <div class="flag-container">
-          <img src="https://flagcdn.com/pt.svg" alt="Portuguese flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/pt.svg') }}" alt="Portuguese flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Portuguese</span>
         <span class="check-indicator">
@@ -202,7 +183,7 @@
         aria-checked="false"
         aria-label="Select Russian">
         <div class="flag-container">
-          <img src="https://flagcdn.com/ru.svg" alt="Russian flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/ru.svg') }}" alt="Russian flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Russian</span>
         <span class="check-indicator">
@@ -221,7 +202,7 @@
         aria-checked="false"
         aria-label="Select Chinese">
         <div class="flag-container">
-          <img src="https://flagcdn.com/cn.svg" alt="Chinese flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/cn.svg') }}" alt="Chinese flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Chinese</span>
         <span class="check-indicator">
@@ -240,7 +221,7 @@
         aria-checked="false"
         aria-label="Select Japanese">
         <div class="flag-container">
-          <img src="https://flagcdn.com/jp.svg" alt="Japanese flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/jp.svg') }}" alt="Japanese flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Japanese</span>
         <span class="check-indicator">
@@ -259,7 +240,7 @@
         aria-checked="false"
         aria-label="Select Arabic">
         <div class="flag-container">
-          <img src="https://flagcdn.com/sa.svg" alt="Arabic flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/sa.svg') }}" alt="Arabic flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Arabic</span>
         <span class="check-indicator">
@@ -278,7 +259,7 @@
         aria-checked="false"
         aria-label="Select Hindi">
         <div class="flag-container">
-          <img src="https://flagcdn.com/in.svg" alt="Hindi flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/in.svg') }}" alt="Hindi flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Hindi</span>
         <span class="check-indicator">
@@ -297,7 +278,7 @@
         aria-checked="false"
         aria-label="Select Korean">
         <div class="flag-container">
-          <img src="https://flagcdn.com/kr.svg" alt="Korean flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/kr.svg') }}" alt="Korean flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Korean</span>
         <span class="check-indicator">
@@ -316,7 +297,7 @@
         aria-checked="false"
         aria-label="Select Dutch">
         <div class="flag-container">
-          <img src="https://flagcdn.com/nl.svg" alt="Dutch flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/nl.svg') }}" alt="Dutch flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Dutch</span>
         <span class="check-indicator">
@@ -331,24 +312,17 @@
 </div>
 
 <style>
-/* ============================================
-   🎨 STEP 2 - MODERN DESIGN SYSTEM
-   ============================================ */
-
-/* Container */
 #step2 {
   position: relative;
   min-height: 100%;
 }
 
-/* Sticky Header */
 #step2 .sticky {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* Ambient Background Animation */
 @keyframes blob {
   0%, 100% {
     transform: translate(0, 0) scale(1);
@@ -373,7 +347,6 @@
   animation-delay: 4s;
 }
 
-/* Language Card Base */
 #step2 .language-card {
   position: relative;
   display: flex;
@@ -402,7 +375,6 @@
   transform: translateY(-2px) scale(1);
 }
 
-/* Selected State */
 #step2 .language-card.selected {
   background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
   border-color: #1d4ed8;
@@ -416,14 +388,13 @@
   box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.6);
 }
 
-/* Flag Container */
 #step2 .flag-container {
   width: 3rem;
   height: 2.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
@@ -442,9 +413,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 0.375rem;
 }
 
-/* Language Name */
 #step2 .language-name {
   font-size: 0.875rem;
   font-weight: 600;
@@ -458,7 +429,6 @@
   color: white;
 }
 
-/* Check Indicator */
 #step2 .check-indicator {
   position: absolute;
   top: 0.5rem;
@@ -482,7 +452,6 @@
   transform: scale(1);
 }
 
-/* Error Alert */
 .shake-animation {
   animation: shake 0.4s;
 }
@@ -493,11 +462,6 @@
   20%, 40%, 60%, 80% { transform: translateX(8px); }
 }
 
-/* ============================================
-   📱 RESPONSIVE
-   ============================================ */
-
-/* Mobile - 2 columns */
 @media (max-width: 639px) {
   #step2 .sticky {
     padding-top: 0.5rem;
@@ -528,7 +492,6 @@
   }
 }
 
-/* Tablet - 3 columns */
 @media (min-width: 640px) and (max-width: 1023px) {
   #step2 .language-card {
     padding: 0.875rem 0.625rem;
@@ -540,7 +503,6 @@
   }
 }
 
-/* Desktop - 4 columns, popup adaptation */
 @media (min-width: 1024px) {
   #step2 .language-card {
     padding: 1rem 0.75rem;
@@ -555,10 +517,6 @@
     font-size: 0.9375rem;
   }
 }
-
-/* ============================================
-   ♿ ACCESSIBILITY
-   ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -580,10 +538,6 @@
   }
 }
 
-/* ============================================
-   ⚡ PERFORMANCE
-   ============================================ */
-
 #step2 .language-card,
 #step2 .check-indicator,
 #step2 .flag-container {
@@ -598,14 +552,6 @@
 </style>
 
 <script>
-/**
- * STEP 2 - Native Language (Hardened)
- * - capture-phase delegation (survives stopPropagation)
- * - toggles .selected + aria-checked
- * - stores in hidden #nativeLanguage + localStorage (expats)
- * - exposes window.validateStep2()
- * - triggers window.updateNavigationButtons() after selection
- */
 (function(){
   var step2 = document.getElementById('step2');
   if (!step2) return;
@@ -645,35 +591,29 @@
   function select(card){
     var lang = langFromCard(card);
     if (!lang) return;
-    // reset
     cards().forEach(function(c){ 
       c.classList.remove('selected'); 
       c.setAttribute('aria-checked','false'); 
       c.removeAttribute('data-selected');
     });
-    // mark
     card.classList.add('selected');
     card.setAttribute('aria-checked','true');
     card.setAttribute('data-selected','true');
-    // hidden + state
     var hidden = ensureHidden();
     hidden.value = lang;
     window.selectedLanguage = lang;
     setState(lang);
     setCount(1);
     
-    // ✅ NOTIFICATION + NAV RECALCULATION (applied correction)
     try { 
       document.dispatchEvent(new CustomEvent('pw:step2:changed')); 
     } catch(_) {}
     
-    // ✅ Update navigation buttons
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
   }
 
-  // Validator consulted by wizard-steps.js
   window.validateStep2 = function(){
     if (window.selectedLanguage && String(window.selectedLanguage).trim()) return true;
     var hidden = document.getElementById('nativeLanguage') || step2.querySelector('input[name="native_language"]');
@@ -682,12 +622,12 @@
     return false;
   };
 
-  // Capture-phase click + keyboard (survives stopPropagation)
   document.addEventListener('click', function(e){
     var t = e.target;
     var card = t && t.closest ? t.closest('#step2 .language-card') : null;
     if (card) { e.preventDefault(); select(card); }
   }, true);
+  
   document.addEventListener('keydown', function(e){
     if (e.key === 'Enter' || e.key === ' ') {
       var t = e.target;
@@ -696,7 +636,6 @@
     }
   }, true);
 
-  // Restore previous selection
   document.addEventListener('DOMContentLoaded', function(){
     try {
       var raw = localStorage.getItem(storageKey) || '{}';

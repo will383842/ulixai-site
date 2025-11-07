@@ -1,34 +1,25 @@
 <!-- 
 ============================================
-🚀 STEP 4 - PROVIDER SERVICES (CORRECTED)
-============================================
-✨ Blue/Cyan/Teal Design System
-🎨 Dynamic services with emojis
-💎 Interactive validation and states
-⚡ Responsive: 2 cols mobile / 3 cols tablet / 4 cols desktop
-🔧 Modern system: window.validateStep4() and window.selectService()
-✅ Consistent with Steps 2 & 3 (no internal buttons)
-🎯 Integrated with wizard-steps.js navigation system
+🚀 STEP 4 - PROVIDER SERVICES (FIXED)
+🔧 SOLUTION SIMPLE:
+- ✅ Click "Next" → Ouvre le modal si nécessaire
+- ✅ Click "Save Specialties" → Sauvegarde + Navigation directe vers Step 5
+- ✅ Réinitialisation systématique quand on arrive sur Step 4
+- ✅ Pas de flag compliqué, juste comme l'ancien code qui fonctionnait
 ============================================
 -->
 
 <div id="step4" class="hidden flex flex-col h-full" role="region" aria-label="Select your services">
   
-  <!-- ============================================
-       STICKY HEADER
-       ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Header Section -->
     <div class="text-center space-y-2 relative">
-      <!-- Icon Badge -->
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
           <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -37,7 +28,6 @@
         </div>
       </div>
       
-      <!-- Title & Subtitle -->
       <div>
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
           What Services Do You Provide? 🛠️
@@ -47,7 +37,6 @@
         </p>
       </div>
 
-      <!-- Counter Badge -->
       <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -59,38 +48,46 @@
     </div>
   </div>
 
-  <!-- ============================================
-       SCROLLABLE CONTENT
-       ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
-    <!-- Services Grid -->
+    <div id="step4ServiceError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-red-800">Please select at least one service</p>
+          <p class="text-xs text-red-600 mt-0.5">You must choose the services you provide</p>
+        </div>
+      </div>
+    </div>
+
     <div id="servicesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-3.5" role="group" aria-label="Select services you provide">
-      <!-- Services will be loaded dynamically -->
+      <div class="col-span-full text-center py-8 text-gray-400">
+        <div class="flex flex-col items-center gap-2">
+          <svg class="w-12 h-12 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p class="text-sm font-medium">Loading services...</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <style>
-/* ============================================
-   🎨 STEP 4 - MODERN DESIGN SYSTEM
-   Consistent with Steps 2 & 3
-   ============================================ */
-
-/* Container */
 #step4 {
   position: relative;
   min-height: 100%;
 }
 
-/* Sticky Header */
 #step4 .sticky {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* Ambient Background Animation */
 @keyframes blob {
   0%, 100% {
     transform: translate(0, 0) scale(1);
@@ -115,7 +112,6 @@
   animation-delay: 4s;
 }
 
-/* Service Card Styling */
 .service-card {
   position: relative;
   display: flex;
@@ -144,7 +140,6 @@
   transform: translateY(-2px) scale(1);
 }
 
-/* Selected State */
 .service-card.selected {
   background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
   border-color: #1d4ed8;
@@ -158,7 +153,6 @@
   box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.6);
 }
 
-/* Service Icon */
 .service-icon {
   width: 2.5rem;
   height: 2.5rem;
@@ -177,7 +171,6 @@
   transform: scale(1.2);
 }
 
-/* Service Name */
 .service-name {
   font-size: 0.875rem;
   font-weight: 600;
@@ -191,7 +184,6 @@
   color: white;
 }
 
-/* Check Indicator */
 .check-indicator {
   position: absolute;
   top: 0.5rem;
@@ -215,7 +207,6 @@
   transform: scale(1);
 }
 
-/* Error Alert */
 .shake-animation {
   animation: shake 0.4s;
 }
@@ -226,11 +217,6 @@
   20%, 40%, 60%, 80% { transform: translateX(8px); }
 }
 
-/* ============================================
-   📱 RESPONSIVE
-   ============================================ */
-
-/* Mobile - 2 columns */
 @media (max-width: 639px) {
   #step4 .sticky {
     padding-top: 0.5rem;
@@ -262,7 +248,6 @@
   }
 }
 
-/* Tablet - 3 columns */
 @media (min-width: 640px) and (max-width: 1023px) {
   .service-card {
     padding: 0.875rem 0.625rem;
@@ -274,7 +259,6 @@
   }
 }
 
-/* Desktop - 4 columns */
 @media (min-width: 1024px) {
   .service-card {
     padding: 1rem 0.75rem;
@@ -290,10 +274,6 @@
     font-size: 0.9375rem;
   }
 }
-
-/* ============================================
-   ♿ ACCESSIBILITY
-   ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -315,7 +295,6 @@
   }
 }
 
-/* Performance */
 .service-card,
 .check-indicator,
 .service-icon {
@@ -327,17 +306,52 @@
 .service-card {
   contain: layout style paint;
 }
+
+.service-section {
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 1rem;
+  transition: all 0.3s;
+}
+
+.service-section.complete {
+  border-color: #22c55e;
+  background: rgba(240, 253, 244, 0.3);
+}
+
+.service-section.incomplete {
+  border-color: #fb923c;
+  background: rgba(255, 247, 237, 0.3);
+}
+
+.subcat-chip {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  border: 2px solid #bfdbfe;
+  background: white;
+  color: #1e3a8a;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.subcat-chip:hover {
+  border-color: #60a5fa;
+  background: #eff6ff;
+}
+
+.subcat-chip.selected {
+  background: linear-gradient(to right, #2563eb, #0891b2);
+  color: white;
+  border-color: #1d4ed8;
+}
 </style>
 
 <script>
-/* ============================================
-   🎯 STEP 4 - CORRECTED VERSION
-   Performance: ⚡ Web Vitals Ready | CPU Optimized | Error Safe
-   Consistent with Steps 2 & 3
-   Integrated with wizard-steps.js
-   ============================================ */
-
-// ✅ Global state - Properly initialized
+// ============================================
+// GLOBAL STATE
+// ============================================
 if (!window.selectedServices) {
   window.selectedServices = {};
 }
@@ -348,20 +362,17 @@ if (typeof window.specialtiesModalOpen === 'undefined') {
   window.specialtiesModalOpen = false;
 }
 
-// DOM elements cache
-let cachedElementsStep4 = null;
+// Pas de flag compliqué nécessaire
 
-function getCachedElementsStep4() {
-  if (!cachedElementsStep4) {
-    cachedElementsStep4 = {
-      servicesGrid: document.getElementById('servicesGrid'),
-      selectedCount: document.getElementById('step4SelectedCount')
-    };
-  }
-  return cachedElementsStep4;
-}
+// Cache API
+const API_CACHE = {
+  categories: null,
+  subcategories: {}
+};
 
-// Emoji mapping for categories
+// ============================================
+// EMOJI MAPPING
+// ============================================
 const EMOJI_MAP = {
   'Home Services': '🏡',
   'Childcare': '👶',
@@ -395,7 +406,6 @@ const EMOJI_MAP = {
   'Moving': '📦'
 };
 
-// Emoji pool for categories without defined emoji
 const EMOJI_POOL = [
   '🎨', '🎭', '🎪', '🎬', '🎤', '🎧', '🎮', '🎯', '🎲', '🎰',
   '🌟', '⭐', '✨', '💫', '🌈', '🦋', '🌺', '🌸', '🌻', '🌼',
@@ -416,119 +426,176 @@ function getEmojiForCategory(categoryName) {
 }
 
 // ============================================
-// 🔥 SERVICE SELECTION (NO BUTTON CONTROL)
+// UTILITY FUNCTIONS
 // ============================================
 
-window.selectService = function(card) {
-  if (!card) return;
-  
-  const elements = getCachedElementsStep4();
-  const serviceId = card.getAttribute('data-service-id');
-  const serviceName = card.getAttribute('data-service-name');
-  
-  // Toggle selection
-  if (window.selectedServices[serviceId]) {
-    // Deselect
-    delete window.selectedServices[serviceId];
-    card.classList.remove('selected');
-    card.setAttribute('aria-checked', 'false');
-    
-    // Also remove subcategories for this service
-    if (window.selectedSubcategories[serviceId]) {
-      delete window.selectedSubcategories[serviceId];
-    }
-  } else {
-    // Select
-    window.selectedServices[serviceId] = serviceName;
-    card.classList.add('selected');
-    card.setAttribute('aria-checked', 'true');
-  }
-  
-  // Update counter
-  const count = Object.keys(window.selectedServices).length;
-  if (elements.selectedCount) {
-    elements.selectedCount.textContent = count;
-  }
-  
-  // Save to localStorage
-  try {
-    const data = JSON.parse(localStorage.getItem('expats') || '{}');
-    data.provider_services = window.selectedServices;
-    data.provider_subcategories = window.selectedSubcategories;
-    localStorage.setItem('expats', JSON.stringify(data));
-  } catch (e) {
-    console.warn('localStorage not available:', e.message);
-  }
-  
-  // ✅ Notify wizard-steps.js to update buttons
-  if (typeof window.updateNavigationButtons === 'function') {
-    window.updateNavigationButtons();
-  }
-};
+function normalizeId(id) {
+  return String(id);
+}
 
-// ============================================
-// 🎯 VALIDATION FUNCTION (CORRECTED)
-// ============================================
-
-window.validateStep4 = function() {
-  const serviceCount = Object.keys(window.selectedServices).length;
-  
-  // No service selected → show fun message and block
-  if (serviceCount === 0) {
-    showFunMessage('Pick at least one service! 🎯');
-    return false;
-  }
-  
-  // Check if we have at least one subcategory for at least one service
-  const hasAnySubcategory = Object.keys(window.selectedServices).some(serviceId => {
-    const subcats = window.selectedSubcategories[serviceId];
-    return subcats && subcats.length > 0;
-  });
-  
-  if (!hasAnySubcategory) {
-    // If no subcategory is selected, open the modal
-    // BUT return false to block navigation
-    showSpecialtiesModal();
-    return false;
-  }
-  
-  // All validations pass
-  return true;
-};
-
-// Fun centered message (3s auto-hide)
 function showFunMessage(text) {
   const existing = document.getElementById('funMessage');
   if (existing) existing.remove();
   
   const msg = document.createElement('div');
   msg.id = 'funMessage';
-  msg.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm sm:text-base animate-bounce';
+  msg.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[60] bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm sm:text-base animate-bounce';
   msg.textContent = text;
   document.body.appendChild(msg);
   
   setTimeout(() => msg.remove(), 3000);
 }
 
-// Load categories from API
-async function loadServices() {
-  const elements = getCachedElementsStep4();
+function updateCount() {
+  const selectedCount = document.getElementById('step4SelectedCount');
+  if (selectedCount) {
+    selectedCount.textContent = Object.keys(window.selectedServices).length;
+  }
+}
+
+function hideError() {
+  const errorAlert = document.getElementById('step4ServiceError');
+  if (errorAlert && !errorAlert.classList.contains('hidden')) {
+    errorAlert.classList.add('hidden');
+  }
+}
+
+function showError() {
+  const errorAlert = document.getElementById('step4ServiceError');
+  if (errorAlert) {
+    errorAlert.classList.remove('hidden');
+    errorAlert.classList.add('shake-animation');
+    setTimeout(() => {
+      errorAlert.classList.remove('shake-animation');
+    }, 500);
+  }
+}
+
+// ============================================
+// SERVICE SELECTION
+// ============================================
+window.selectService = function(card) {
+  if (!card) return;
   
-  if (!elements.servicesGrid) return;
+  const serviceId = normalizeId(card.getAttribute('data-service-id'));
+  const serviceName = card.getAttribute('data-service-name');
+  
+  if (!serviceId || !serviceName) return;
+  
+  if (window.selectedServices[serviceId]) {
+    delete window.selectedServices[serviceId];
+    card.classList.remove('selected');
+    card.setAttribute('aria-checked', 'false');
+    
+    if (window.selectedSubcategories[serviceId]) {
+      delete window.selectedSubcategories[serviceId];
+    }
+  } else {
+    window.selectedServices[serviceId] = serviceName;
+    card.classList.add('selected');
+    card.setAttribute('aria-checked', 'true');
+  }
+  
+  updateCount();
+  hideError();
+  saveToLocalStorage();
+  
+  if (typeof window.updateNavigationButtons === 'function') {
+    window.updateNavigationButtons();
+  }
+};
+
+// ============================================
+// VALIDATION - LOGIQUE SIMPLE
+// ============================================
+window.validateStep4 = function() {
+  const serviceIds = Object.keys(window.selectedServices);
+  
+  // 1. Vérifier qu'au moins un service est sélectionné
+  if (serviceIds.length === 0) {
+    showError();
+    return false;
+  }
+  
+  // 2. Vérifier si on a déjà des sous-catégories pour tous les services
+  const hasSubcatsForAll = serviceIds.every(serviceId => {
+    return window.selectedSubcategories[serviceId] !== undefined;
+  });
+  
+  // Si on n'a pas de sous-catégories pour tous → ouvrir le modal
+  if (!hasSubcatsForAll) {
+    showSpecialtiesModal();
+    return false;
+  }
+  
+  // 3. Tout est OK, on peut passer au step suivant
+  return true;
+};
+
+// ============================================
+// API CALLS WITH CACHE
+// ============================================
+async function loadCategories() {
+  if (API_CACHE.categories) {
+    return API_CACHE.categories;
+  }
+  
+  const response = await fetch('/api/categories');
+  const data = await response.json();
+  API_CACHE.categories = data.categories || [];
+  return API_CACHE.categories;
+}
+
+async function loadSubcategories(serviceId) {
+  const normalizedId = normalizeId(serviceId);
+  
+  if (API_CACHE.subcategories[normalizedId]) {
+    return API_CACHE.subcategories[normalizedId];
+  }
+  
+  const response = await fetch(`/api/categories/${normalizedId}/subcategories`);
+  const data = await response.json();
+  const result = {
+    serviceId: normalizedId,
+    serviceName: data?.category?.name || window.selectedServices[normalizedId] || 'Service',
+    subcategories: (data?.subcategories || []).map(sub => ({
+      ...sub,
+      id: normalizeId(sub.id)
+    }))
+  };
+  
+  API_CACHE.subcategories[normalizedId] = result;
+  return result;
+}
+
+// ============================================
+// LOAD SERVICES
+// ============================================
+async function loadServices() {
+  const servicesGrid = document.getElementById('servicesGrid');
+  
+  if (!servicesGrid) return;
   
   try {
-    const response = await fetch('/api/categories');
-    const data = await response.json();
-    const categories = data.categories || [];
+    const categories = await loadCategories();
     
-    // Create service cards
+    if (categories.length === 0) {
+      servicesGrid.innerHTML = `
+        <div class="col-span-full text-center py-8 text-gray-500">
+          <p class="text-sm font-medium">No services available</p>
+        </div>
+      `;
+      return;
+    }
+    
     const cardsHTML = categories.map(category => {
+      const categoryId = normalizeId(category.id);
       const emoji = getEmojiForCategory(category.name);
       return `
         <button 
           type="button"
           class="service-card"
-          data-service-id="${category.id}"
+          data-service-id="${categoryId}"
           data-service-name="${category.name}"
           role="checkbox"
           aria-checked="false"
@@ -544,60 +611,52 @@ async function loadServices() {
       `;
     }).join('');
     
-    elements.servicesGrid.innerHTML = cardsHTML;
+    servicesGrid.innerHTML = cardsHTML;
     
-    // Restore selection from localStorage
-    restoreSelection();
+    // Restaurer les sélections si elles existent
+    Object.keys(window.selectedServices).forEach(serviceId => {
+      const card = servicesGrid.querySelector(`.service-card[data-service-id="${serviceId}"]`);
+      if (card) {
+        card.classList.add('selected');
+        card.setAttribute('aria-checked', 'true');
+      }
+    });
+    
+    updateCount();
     
   } catch (error) {
     console.error('Error loading services:', error);
-    elements.servicesGrid.innerHTML = `
-      <div class="col-span-full text-center py-8 text-gray-500">
-        <p>Unable to load services. Please try again later.</p>
+    servicesGrid.innerHTML = `
+      <div class="col-span-full text-center py-8 text-red-500">
+        <div class="flex flex-col items-center gap-2">
+          <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="font-semibold">Unable to load services</p>
+          <p class="text-sm text-gray-500">Please refresh the page</p>
+        </div>
       </div>
     `;
   }
 }
 
-// Restore selection from localStorage
-function restoreSelection() {
+// ============================================
+// SAVE TO LOCALSTORAGE
+// ============================================
+function saveToLocalStorage() {
   try {
     const data = JSON.parse(localStorage.getItem('expats') || '{}');
-    if (data.provider_services && typeof data.provider_services === 'object') {
-      window.selectedServices = data.provider_services;
-    }
-    if (data.provider_subcategories && typeof data.provider_subcategories === 'object') {
-      window.selectedSubcategories = data.provider_subcategories;
-    }
-    
-    // Visually restore selections
-    requestAnimationFrame(() => {
-      Object.keys(window.selectedServices).forEach(serviceId => {
-        const card = document.querySelector(`.service-card[data-service-id="${serviceId}"]`);
-        if (card) {
-          card.classList.add('selected');
-          card.setAttribute('aria-checked', 'true');
-        }
-      });
-      
-      // Update UI
-      const elements = getCachedElementsStep4();
-      const count = Object.keys(window.selectedServices).length;
-      if (elements.selectedCount) {
-        elements.selectedCount.textContent = count;
-      }
-      
-      // ✅ Notify wizard-steps.js
-      if (typeof window.updateNavigationButtons === 'function') {
-        window.updateNavigationButtons();
-      }
-    });
+    data.provider_services = window.selectedServices;
+    data.provider_subcategories = window.selectedSubcategories;
+    localStorage.setItem('expats', JSON.stringify(data));
   } catch (e) {
-    console.warn('Could not restore selection:', e.message);
+    console.warn('localStorage not available:', e.message);
   }
 }
 
-// Show subcategories modal
+// ============================================
+// SPECIALTIES MODAL
+// ============================================
 async function showSpecialtiesModal() {
   const serviceIds = Object.keys(window.selectedServices);
   
@@ -606,22 +665,16 @@ async function showSpecialtiesModal() {
     return;
   }
   
+  if (window.specialtiesModalOpen) {
+    return;
+  }
+  
   try {
-    // Load subcategories for each selected service
-    const results = await Promise.all(
-      serviceIds.map(serviceId =>
-        fetch(`/api/categories/${serviceId}/subcategories`)
-          .then(res => res.json())
-          .then(data => ({
-            serviceId,
-            serviceName: data?.category?.name || window.selectedServices[serviceId] || 'Service',
-            subcategories: data?.subcategories || []
-          }))
-      )
+    const servicesData = await Promise.all(
+      serviceIds.map(serviceId => loadSubcategories(serviceId))
     );
     
-    // Create modal
-    createSpecialtiesModal(results);
+    createSpecialtiesModal(servicesData);
     
   } catch (error) {
     console.error('Error loading subcategories:', error);
@@ -629,23 +682,22 @@ async function showSpecialtiesModal() {
   }
 }
 
-// Create subcategories modal
 function createSpecialtiesModal(servicesData) {
-  // Selected subcategories state
-  const selectedSubcats = JSON.parse(JSON.stringify(window.selectedSubcategories || {}));
+  const workingSubcats = {};
   
-  // Initialize empty arrays for all services (including those without subcats)
   servicesData.forEach(service => {
-    if (!selectedSubcats[service.serviceId]) {
-      selectedSubcats[service.serviceId] = [];
+    const serviceId = normalizeId(service.serviceId);
+    
+    if (window.selectedSubcategories[serviceId] && Array.isArray(window.selectedSubcategories[serviceId])) {
+      workingSubcats[serviceId] = [...window.selectedSubcategories[serviceId]].map(id => normalizeId(id));
+    } else {
+      workingSubcats[serviceId] = [];
     }
   });
   
-  // Create modal HTML
   const modalHTML = `
     <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm" style="opacity: 0; transition: opacity 0.2s;">
       <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
-        <!-- Header -->
         <div class="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 text-white p-6">
           <div class="flex items-center justify-between mb-2">
             <h3 class="text-2xl font-black">Choose Your Specialties 🎯</h3>
@@ -658,15 +710,15 @@ function createSpecialtiesModal(servicesData) {
           <p class="text-blue-100 text-sm">Select at least one specialty for each service</p>
         </div>
         
-        <!-- Content -->
         <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)] space-y-6">
           ${servicesData.map(service => {
+            const serviceId = normalizeId(service.serviceId);
             const serviceEmoji = getEmojiForCategory(service.serviceName);
-            const serviceSubcats = selectedSubcats[service.serviceId] || [];
+            const serviceSubcats = workingSubcats[serviceId] || [];
             const hasSelection = serviceSubcats.length > 0;
             
             return `
-              <div class="service-section ${hasSelection ? 'complete' : ''}" data-service-id="${service.serviceId}">
+              <div class="service-section ${hasSelection ? 'complete' : ''}" data-service-id="${serviceId}">
                 <div class="flex items-center justify-between mb-3">
                   <div class="flex items-center gap-2">
                     <span class="text-2xl">${serviceEmoji}</span>
@@ -676,34 +728,38 @@ function createSpecialtiesModal(servicesData) {
                     <span class="count">${serviceSubcats.length}</span> selected
                   </span>
                 </div>
-                <div class="flex flex-wrap gap-2">
-                  ${service.subcategories.map(subcat => {
-                    const isSelected = serviceSubcats.includes(subcat.id);
-                    return `
-                      <button 
-                        type="button"
-                        class="subcat-chip ${isSelected ? 'selected' : ''}"
-                        data-service-id="${service.serviceId}"
-                        data-subcat-id="${subcat.id}"
-                        data-subcat-name="${subcat.name}">
-                        ${subcat.name}
-                      </button>
-                    `;
-                  }).join('')}
-                </div>
+                ${service.subcategories.length > 0 ? `
+                  <div class="flex flex-wrap gap-2">
+                    ${service.subcategories.map(subcat => {
+                      const subcatId = normalizeId(subcat.id);
+                      const isSelected = serviceSubcats.includes(subcatId);
+                      return `
+                        <button 
+                          type="button"
+                          class="subcat-chip ${isSelected ? 'selected' : ''}"
+                          data-service-id="${serviceId}"
+                          data-subcat-id="${subcatId}"
+                          data-subcat-name="${subcat.name}">
+                          ${subcat.name}
+                        </button>
+                      `;
+                    }).join('')}
+                  </div>
+                ` : `
+                  <p class="text-sm text-gray-500 italic">No specialties available for this service</p>
+                `}
               </div>
             `;
           }).join('')}
         </div>
         
-        <!-- Footer with Buttons -->
         <div class="sticky bottom-0 border-t border-gray-200 p-6 bg-white">
           <div class="flex gap-3">
             <button type="button" id="backToServicesBtn" class="flex-1 py-3 px-6 bg-white text-gray-700 border-2 border-gray-300 font-semibold rounded-xl hover:bg-gray-50 transition-all">
               <span>Back to Services</span>
             </button>
             <button type="button" id="saveSpecialtiesBtn" class="flex-1 py-3 px-6 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
-              <span>Save & Continue</span>
+              <span>Save Specialties</span>
             </button>
           </div>
         </div>
@@ -711,57 +767,50 @@ function createSpecialtiesModal(servicesData) {
     </div>
   `;
   
-  // Add modal to DOM
   const modalContainer = document.createElement('div');
   modalContainer.innerHTML = modalHTML;
   const modal = modalContainer.firstElementChild;
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
   
-  // ✅ Hide navigation buttons while modal is open
   const navButtons = document.querySelectorAll('#mobileNavButtons, #desktopNavButtons');
   navButtons.forEach(btn => btn.style.display = 'none');
   
-  // Animate appearance
   setTimeout(() => modal.style.opacity = '1', 10);
   
-  // Event listeners for subcategories
   modal.addEventListener('click', (e) => {
     const chip = e.target.closest('.subcat-chip');
     if (!chip) return;
     
-    const serviceId = chip.getAttribute('data-service-id');
-    const subcatId = chip.getAttribute('data-subcat-id');
+    const serviceId = normalizeId(chip.getAttribute('data-service-id'));
+    const subcatId = normalizeId(chip.getAttribute('data-subcat-id'));
     
-    // Initialize array if needed
-    if (!selectedSubcats[serviceId]) {
-      selectedSubcats[serviceId] = [];
+    if (!workingSubcats[serviceId]) {
+      workingSubcats[serviceId] = [];
     }
     
-    // Toggle selection
-    const index = selectedSubcats[serviceId].indexOf(subcatId);
+    const index = workingSubcats[serviceId].indexOf(subcatId);
     if (index > -1) {
-      selectedSubcats[serviceId].splice(index, 1);
+      workingSubcats[serviceId].splice(index, 1);
       chip.classList.remove('selected');
     } else {
-      selectedSubcats[serviceId].push(subcatId);
+      workingSubcats[serviceId].push(subcatId);
       chip.classList.add('selected');
     }
     
-    // Update counter
     const serviceSection = modal.querySelector(`.service-section[data-service-id="${serviceId}"]`);
     const counter = serviceSection?.querySelector('.subcat-counter .count');
     if (counter) {
-      counter.textContent = selectedSubcats[serviceId].length;
+      counter.textContent = workingSubcats[serviceId].length;
     }
     
-    // Update counter badge
     const badge = serviceSection?.querySelector('.subcat-counter');
     if (badge) {
-      if (selectedSubcats[serviceId].length > 0) {
+      if (workingSubcats[serviceId].length > 0) {
         badge.classList.remove('bg-gray-100', 'text-gray-600');
         badge.classList.add('bg-green-100', 'text-green-700');
         serviceSection.classList.add('complete');
+        serviceSection.classList.remove('incomplete');
       } else {
         badge.classList.remove('bg-green-100', 'text-green-700');
         badge.classList.add('bg-gray-100', 'text-gray-600');
@@ -770,48 +819,34 @@ function createSpecialtiesModal(servicesData) {
     }
   });
   
-  // Modal close function
   function closeModal() {
     window.specialtiesModalOpen = false;
     document.body.style.overflow = '';
     modal.style.opacity = '0';
     
-    // ✅ Show navigation buttons again
     navButtons.forEach(btn => btn.style.display = '');
     
     setTimeout(() => modal.remove(), 200);
   }
   
-  // Close modal with X button
   modal.querySelector('#closeSpecialtiesModal').onclick = closeModal;
   
-  // Back to services button
   modal.querySelector('#backToServicesBtn').onclick = () => {
-    window.selectedSubcategories = {};
     closeModal();
-    
-    // ✅ Notify wizard-steps.js
-    if (typeof window.updateNavigationButtons === 'function') {
-      window.updateNavigationButtons();
-    }
   };
   
-  // Save and continue button
   modal.querySelector('#saveSpecialtiesBtn').onclick = () => {
-    // Get all service IDs and their available subcategories
-    const serviceIds = Object.keys(window.selectedServices);
     const servicesWithSubcats = servicesData.filter(s => s.subcategories && s.subcategories.length > 0);
-    const servicesWithSubcatsIds = servicesWithSubcats.map(s => s.serviceId);
+    const servicesWithSubcatsIds = servicesWithSubcats.map(s => normalizeId(s.serviceId));
     
-    // Only check services that actually have subcategories available
-    const incompleteServices = servicesWithSubcatsIds.filter(id => 
-      !selectedSubcats[id] || selectedSubcats[id].length === 0
-    );
+    const incompleteServices = servicesWithSubcatsIds.filter(id => {
+      const subcats = workingSubcats[id];
+      return !subcats || subcats.length === 0;
+    });
     
     if (incompleteServices.length > 0) {
       showFunMessage('Pick specialties for all services! 🎯');
       
-      // Highlight incomplete sections
       incompleteServices.forEach(id => {
         const section = modal.querySelector(`.service-section[data-service-id="${id}"]`);
         if (section) {
@@ -819,7 +854,6 @@ function createSpecialtiesModal(servicesData) {
           section.classList.add('shake-animation');
           setTimeout(() => {
             section.classList.remove('shake-animation');
-            section.classList.remove('incomplete');
           }, 500);
         }
       });
@@ -827,90 +861,64 @@ function createSpecialtiesModal(servicesData) {
       return;
     }
     
-    // Save to global state and localStorage
-    window.selectedSubcategories = selectedSubcats;
-    try {
-      const data = JSON.parse(localStorage.getItem('expats') || '{}');
-      data.provider_services = window.selectedServices;
-      data.provider_subcategories = window.selectedSubcategories;
-      localStorage.setItem('expats', JSON.stringify(data));
-    } catch (e) {
-      console.warn('Could not save to localStorage:', e.message);
-    }
-    
+    // ✅ Sauvegarder les sous-catégories
+    window.selectedSubcategories = JSON.parse(JSON.stringify(workingSubcats));
+    saveToLocalStorage();
     closeModal();
     
-    // ✅ Go to next step via wizard-steps.js
-    if (typeof window.showStep === 'function') {
-      window.showStep(4); // Step 5 (index 4)
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
     }
+    
+    // ✅ Navigation directe vers Step 5 (comme l'ancien code)
+    setTimeout(() => {
+      if (typeof window.showStep === 'function') {
+        window.showStep(4); // Step 5 (index 4)
+      } else if (typeof window.goToNextStep === 'function') {
+        window.goToNextStep();
+      } else {
+        // Fallback: trigger event
+        const event = new CustomEvent('step4Complete', { detail: { nextStep: 5 } });
+        document.dispatchEvent(event);
+      }
+    }, 200);
   };
   
-  // Mark modal as open
   window.specialtiesModalOpen = true;
 }
 
-// Style for modal
-const modalStyle = document.createElement('style');
-modalStyle.textContent = `
-  .service-section {
-    padding: 1rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 1rem;
-    transition: all 0.3s;
-  }
-  
-  .service-section.complete {
-    border-color: #22c55e;
-    background: rgba(240, 253, 244, 0.3);
-  }
-  
-  .service-section.incomplete {
-    border-color: #fb923c;
-    background: rgba(255, 247, 237, 0.3);
-  }
-  
-  .subcat-chip {
-    padding: 0.5rem 1rem;
-    border-radius: 0.75rem;
-    border: 2px solid #bfdbfe;
-    background: white;
-    color: #1e3a8a;
-    font-weight: 600;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  
-  .subcat-chip:hover {
-    border-color: #60a5fa;
-    background: #eff6ff;
-  }
-  
-  .subcat-chip.selected {
-    background: linear-gradient(to right, #2563eb, #0891b2);
-    color: white;
-    border-color: #1d4ed8;
-  }
-`;
-document.head.appendChild(modalStyle);
-
-// Optimized initialization (event delegation + passive listeners)
+// ============================================
+// INITIALIZATION
+// ============================================
 document.addEventListener('DOMContentLoaded', function() {
   const container = document.querySelector('#step4');
   if (!container) return;
   
-  // Load services on first display
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        if (!container.classList.contains('hidden') && !container.dataset.loaded) {
+        const isHidden = container.classList.contains('hidden');
+        
+        if (!isHidden && !container.dataset.loaded) {
           loadServices();
           container.dataset.loaded = 'true';
         }
         
-        // ✅ Update buttons when step becomes visible
-        if (!container.classList.contains('hidden')) {
+        // ✅ RÉINITIALISER quand Step 4 devient visible
+        if (!isHidden) {
+          window.selectedServices = {};
+          window.selectedSubcategories = {};
+          
+          // Désélectionner visuellement toutes les cartes
+          const allCards = container.querySelectorAll('.service-card.selected');
+          allCards.forEach(card => {
+            card.classList.remove('selected');
+            card.setAttribute('aria-checked', 'false');
+          });
+          
+          // Mettre à jour le compteur
+          updateCount();
+          
           if (typeof window.updateNavigationButtons === 'function') {
             window.updateNavigationButtons();
           }
@@ -921,7 +929,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   observer.observe(container, { attributes: true });
   
-  // Event delegation for service cards
   container.addEventListener('click', function(e) {
     const card = e.target.closest('.service-card');
     if (card) {
@@ -929,7 +936,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, { passive: true });
   
-  // Keyboard support
   container.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') {
       const card = e.target.closest('.service-card');
