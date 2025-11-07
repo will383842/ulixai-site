@@ -1,12 +1,13 @@
 <!-- 
 ============================================
-🚀 STEP 7 - SPECIAL STATUS (CORRECTED)
+🚀 STEP 7 - SPECIAL STATUS (SIMPLE ORDERED EMOJIS)
 ============================================
 ✨ Blue/Cyan/Teal Design System STRICT
 🎨 Multi-selection of special statuses
 ⚡ Fixed header structure + scrollable content
 🔧 Integrated with wizard-steps.js
 ✅ localStorage persistence
+🎯 Emojis appliqués par ordre (super simple!)
 ⚡ Maximum performance
 ============================================
 -->
@@ -64,20 +65,20 @@
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
     <!-- Info Banner -->
-    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-2xl p-3 sm:p-4">
+    <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-300 rounded-2xl p-3 sm:p-4">
       <div class="flex items-start gap-2">
-        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-xs font-bold text-blue-900">Stand out from the crowd</p>
-          <p class="text-xs text-blue-700 mt-0.5">Choose statuses that apply to you to attract more opportunities</p>
+          <p class="text-xs font-bold text-purple-900">Démarquez-vous de la foule</p>
+          <p class="text-xs text-purple-700 mt-0.5">Choisissez les statuts qui vous correspondent pour attirer davantage d'opportunités</p>
         </div>
       </div>
     </div>
 
     <!-- Status Cards Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3" role="group" aria-label="Select special statuses">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5" role="group" aria-label="Select special statuses">
       
       @php
         $statuses = \App\Models\SpecialStatus::pluck('stitle')->toArray();
@@ -90,20 +91,10 @@
         role="checkbox"
         aria-checked="false"
         aria-label="Select {{ $label }}">
-        <div class="flex items-center gap-3 flex-1">
-          <div class="status-icon w-12 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl flex items-center justify-center flex-shrink-0">
-            <span class="text-2xl">⭐</span>
-          </div>
-          <div class="text-left flex-1">
-            <div class="status-name text-sm font-bold text-gray-900">{{ $label }}</div>
-            <div class="status-subtitle text-xs text-gray-600 mt-0.5">Special recognition</div>
-          </div>
+        <div class="status-icon-container">
+          <span class="status-icon">⭐</span>
         </div>
-        <span class="status-check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
+        <span class="status-name">{{ $label }}</span>
       </button>
       @endforeach
 
@@ -141,100 +132,75 @@
   animation-delay: 4s;
 }
 
-/* Float animation for selected icons */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
 /* ============================================
-   ⭐ STATUS CARDS
+   ⭐ STATUS CARDS - DESIGN HORIZONTAL
    ============================================ */
 
 #step7 .status-card {
   position: relative;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  background: white;
-  border: 2px solid #3b82f6;
-  border-radius: 0.875rem;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
+  min-height: auto;
+  height: 3.5rem;
   text-align: left;
-  contain: layout style paint;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  content-visibility: auto;
-  contain-intrinsic-size: 0 80px;
 }
 
 #step7 .status-card:hover {
-  border-color: #2563eb;
-  background: #eff6ff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
+  border-color: #60a5fa;
+  background: #f8fafc;
 }
 
 #step7 .status-card.selected {
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-  border-color: #0ea5e9;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-#step7 .status-card.selected .status-name,
-#step7 .status-card.selected .status-subtitle {
-  color: white;
+#step7 .status-card.selected:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: #1d4ed8;
 }
 
-#step7 .status-card.selected .status-icon {
-  background: rgba(255, 255, 255, 0.2);
-  animation: float 2s ease-in-out infinite;
-}
-
-/* Status check indicator */
-#step7 .status-check-indicator {
+#step7 .status-icon-container {
+  width: 2.25rem;
+  height: 2.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  background: rgba(59, 130, 246, 0.1);
-  opacity: 0;
-  transform: scale(0.8) translateZ(0);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  backface-visibility: hidden;
-  will-change: transform, opacity;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
 }
 
-#step7 .status-card.selected .status-check-indicator {
-  opacity: 1;
-  transform: scale(1) translateZ(0);
+#step7 .status-card.selected .status-icon-container {
   background: rgba(255, 255, 255, 0.2);
 }
 
-#step7 .status-check-indicator svg {
-  color: #2563eb;
+#step7 .status-icon {
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
-#step7 .status-card.selected .status-check-indicator svg {
-  color: white;
-}
-
-/* Status name and subtitle */
 #step7 .status-name {
-  font-feature-settings: 'kern' 1, 'liga' 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  flex: 1;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1f2937;
+  transition: color 0.2s;
 }
 
-#step7 .status-subtitle {
-  font-feature-settings: 'kern' 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+#step7 .status-card.selected .status-name {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 /* ============================================
@@ -268,16 +234,49 @@
 }
 
 /* ============================================
-   ⚡ PERFORMANCE OPTIMIZATIONS
+   📱 RESPONSIVE
    ============================================ */
 
-#step7 .status-card,
-#step7 .status-check-indicator,
-#step7 .status-icon {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
+@media (max-width: 639px) {
+  #step7 .status-card {
+    padding: 0.5rem 0.75rem;
+    height: 3rem;
+    gap: 0.625rem;
+  }
+  
+  #step7 .status-icon-container {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  #step7 .status-icon {
+    font-size: 1.125rem;
+  }
+  
+  #step7 .status-name {
+    font-size: 0.875rem;
+  }
 }
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  #step7 .status-card {
+    padding: 0.625rem 0.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  #step7 .status-card {
+    padding: 0.75rem 1rem;
+  }
+  
+  #step7 .status-name {
+    font-size: 0.9375rem;
+  }
+}
+
+/* ============================================
+   ⚡ PERFORMANCE OPTIMIZATIONS
+   ============================================ */
 
 #step7 .status-card {
   contain: layout style paint;
@@ -285,11 +284,43 @@
 </style>
 
 <!-- ============================================
-     OPTIMIZED AND CORRECTED JAVASCRIPT
+     JAVASCRIPT - SIMPLE ORDERED EMOJI ARRAY
      ============================================ -->
 <script>
 (function() {
   'use strict';
+
+  // ============================================
+  // 🎯 ORDERED EMOJI ARRAY
+  // ============================================
+  // Changez simplement les emojis dans l'ordre de vos statuts!
+  // L'index 0 correspond au 1er statut, l'index 1 au 2ème, etc.
+  
+  const ORDERED_EMOJIS = [
+    '🌍',  // 0 - Expatriés pendant 2 à 5 ans
+    '✈️',  // 1 - Expatriés pendant 6 à 10 ans
+    '🏠',  // 2 - Expatriés depuis plus de 10 ans
+    '⚖️',  // 3 - conseils juridiques
+    '🛡️',  // 4 - Assureur
+    '🏢',  // 5 - Agent immobilier
+    '📝',  // 6 - Traducteur
+    '🗺️',  // 7 - Guide
+    '📚',  // 8 - professeur de langue
+    // Ajoutez plus d'emojis si vous avez plus de statuts...
+    '💼',  // 9
+    '👨‍⚕️',  // 10
+    '🔧',  // 11
+    '🎨',  // 12
+    '💻',  // 13
+    '🚗',  // 14
+    '🏋️',  // 15
+    '🎓',  // 16
+    '💡',  // 17
+    '📊',  // 18
+    '🎯',  // 19
+  ];
+
+  const DEFAULT_EMOJI = '⭐';
 
   // ============================================
   // 🔧 STATE MANAGEMENT
@@ -314,6 +345,24 @@
       };
     }
     return cachedElements;
+  }
+
+  // ============================================
+  // 🎨 APPLY EMOJIS BY ORDER/INDEX
+  // ============================================
+  
+  function applyEmojisToCards() {
+    const elements = getCachedElements();
+    
+    elements.cards.forEach((card, index) => {
+      const iconElement = card.querySelector('.status-icon');
+      
+      if (iconElement) {
+        // Utiliser l'emoji à l'index correspondant, ou le défaut
+        const emoji = ORDERED_EMOJIS[index] || DEFAULT_EMOJI;
+        iconElement.textContent = emoji;
+      }
+    });
   }
 
   // ============================================
@@ -374,7 +423,7 @@
     // Save
     saveToLocalStorage();
     
-    // ✅ Notify wizard-steps.js (instead of updateStep7Buttons)
+    // ✅ Notify wizard-steps.js
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
@@ -470,6 +519,9 @@
   // ============================================
   
   function init() {
+    // ✨ Apply emojis based on order/index
+    applyEmojisToCards();
+    
     // Init event delegation
     initEventDelegation();
 

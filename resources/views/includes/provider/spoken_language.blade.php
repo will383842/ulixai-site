@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-3.5" role="group" aria-label="Select languages you speak">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5" role="group" aria-label="Select languages you speak">
       
       <!-- English -->
       <button type="button" class="lang-btn language-card" data-lang="English" role="checkbox" aria-checked="false" aria-label="Select English">
@@ -66,11 +66,6 @@
           <img src="{{ asset('images/flags/us.svg') }}" alt="English flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">English</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Spanish -->
@@ -79,11 +74,6 @@
           <img src="{{ asset('images/flags/es.svg') }}" alt="Spanish flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Spanish</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- French -->
@@ -92,11 +82,6 @@
           <img src="{{ asset('images/flags/fr.svg') }}" alt="French flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">French</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- German -->
@@ -105,11 +90,6 @@
           <img src="{{ asset('images/flags/de.svg') }}" alt="German flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">German</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Italian -->
@@ -118,11 +98,6 @@
           <img src="{{ asset('images/flags/it.svg') }}" alt="Italian flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Italian</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Portuguese -->
@@ -131,11 +106,6 @@
           <img src="{{ asset('images/flags/pt.svg') }}" alt="Portuguese flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Portuguese</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Russian -->
@@ -144,11 +114,6 @@
           <img src="{{ asset('images/flags/ru.svg') }}" alt="Russian flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Russian</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Chinese -->
@@ -157,11 +122,6 @@
           <img src="{{ asset('images/flags/cn.svg') }}" alt="Chinese flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Chinese</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Japanese -->
@@ -170,11 +130,6 @@
           <img src="{{ asset('images/flags/jp.svg') }}" alt="Japanese flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Japanese</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Arabic -->
@@ -183,11 +138,6 @@
           <img src="{{ asset('images/flags/sa.svg') }}" alt="Arabic flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Arabic</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Hindi -->
@@ -196,11 +146,6 @@
           <img src="{{ asset('images/flags/in.svg') }}" alt="Hindi flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Hindi</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Korean -->
@@ -209,11 +154,6 @@
           <img src="{{ asset('images/flags/kr.svg') }}" alt="Korean flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Korean</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
 
       <!-- Dutch -->
@@ -222,11 +162,6 @@
           <img src="{{ asset('images/flags/nl.svg') }}" alt="Dutch flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Dutch</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
       </button>
       
     </div>
@@ -269,118 +204,81 @@
   animation-delay: 4s;
 }
 
+/* ===== DESIGN HORIZONTAL MINIMALISTE SANS VIBRATIONS ===== */
+
 #step3 .lang-btn,
 #step3 .language-card {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 0.625rem;
-  padding: 0.875rem 0.625rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border: 2px solid #e2e8f0;
-  border-radius: 1rem;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  min-height: 100px;
+  transition: all 0.2s ease;
+  min-height: auto;
+  height: 3.5rem;
 }
 
 #step3 .lang-btn:hover,
 #step3 .language-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3);
   border-color: #60a5fa;
-  background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
-}
-
-#step3 .lang-btn:active,
-#step3 .language-card:active {
-  transform: translateY(-2px) scale(1);
+  background: #f8fafc;
 }
 
 #step3 .lang-btn.selected,
 #step3 .language-card.selected {
-  background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
-  border-color: #1d4ed8;
-  color: white;
-  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.5);
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 #step3 .lang-btn.selected:hover,
 #step3 .language-card.selected:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.6);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: #1d4ed8;
 }
 
 #step3 .flag-container {
-  width: 3rem;
-  height: 2.25rem;
+  width: 2.25rem;
+  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
+  border-radius: 0.375rem;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-#step3 .lang-btn:hover .flag-container,
-#step3 .language-card:hover .flag-container {
-  transform: scale(1.1) rotate(5deg);
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: border-color 0.2s ease;
 }
 
 #step3 .lang-btn.selected .flag-container,
 #step3 .language-card.selected .flag-container {
-  transform: scale(1.15);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 #step3 .flag-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0.375rem;
 }
 
 #step3 .language-name {
-  font-size: 0.875rem;
+  flex: 1;
+  font-size: 0.9375rem;
   font-weight: 600;
-  text-align: center;
-  line-height: 1.3;
-  color: #1e293b;
+  text-align: left;
+  color: #1f2937;
   transition: color 0.2s;
 }
 
 #step3 .lang-btn.selected .language-name,
 #step3 .language-card.selected .language-name {
-  color: white;
-}
-
-#step3 .check-indicator {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 1.375rem;
-  height: 1.375rem;
-  background: #22c55e;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  opacity: 0;
-  transform: scale(0);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
-}
-
-#step3 .lang-btn.selected .check-indicator,
-#step3 .language-card.selected .check-indicator {
-  opacity: 1;
-  transform: scale(1);
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .shake-animation {
@@ -410,41 +308,32 @@
   
   #step3 .lang-btn,
   #step3 .language-card {
-    padding: 0.75rem 0.5rem;
-    min-height: 90px;
+    padding: 0.5rem 0.75rem;
+    height: 3rem;
+    gap: 0.625rem;
   }
   
   #step3 .flag-container {
-    width: 2.75rem;
-    height: 2rem;
+    width: 2rem;
+    height: 1.375rem;
   }
   
   #step3 .language-name {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
   }
 }
 
 @media (min-width: 640px) and (max-width: 1023px) {
   #step3 .lang-btn,
   #step3 .language-card {
-    padding: 0.875rem 0.625rem;
-  }
-  
-  #step3 .flag-container {
-    width: 3.25rem;
-    height: 2.375rem;
+    padding: 0.625rem 0.875rem;
   }
 }
 
 @media (min-width: 1024px) {
   #step3 .lang-btn,
   #step3 .language-card {
-    padding: 1rem 0.75rem;
-  }
-  
-  #step3 .flag-container {
-    width: 3.5rem;
-    height: 2.5rem;
+    padding: 0.75rem 1rem;
   }
   
   #step3 .language-name {
@@ -472,15 +361,6 @@
   #step3 .language-card.selected {
     border: 3px solid #1d4ed8;
   }
-}
-
-#step3 .lang-btn,
-#step3 .language-card,
-#step3 .check-indicator,
-#step3 .flag-container {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
 }
 
 #step3 .lang-btn,

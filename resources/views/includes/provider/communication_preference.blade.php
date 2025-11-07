@@ -1,6 +1,6 @@
 <!-- 
 ============================================
-🚀 STEP 8 - COMMUNICATION PREFERENCE (BOUCLE INFINIE CORRIGÉE)
+🚀 STEP 8 - COMMUNICATION PREFERENCE - SIMPLIFIED
 ============================================
 ✨ Blue/Cyan/Teal Design System STRICT
 🎨 Yes/No toggle buttons for Online and In Person
@@ -9,7 +9,7 @@
 🔧 CPU, RAM, GPU optimizations
 ✅ localStorage persistence
 ⚡ Maximum performance
-✅ CORRECTION CRITIQUE: Suppression de l'appel récursif dans validatePreference()
+🔧 FIXED: Silent validation only, no error messages
 ============================================
 -->
 
@@ -63,26 +63,13 @@
        ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
-    <!-- Error Alert (Hidden by default) -->
-    <div id="step8Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
-      <div class="flex items-start gap-2">
-        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-        </svg>
-        <div>
-          <p class="text-sm font-semibold text-red-800">Please select at least one "Yes"</p>
-          <p class="text-xs text-red-600 mt-0.5">You must choose at least one communication method</p>
-        </div>
-      </div>
-    </div>
-
     <!-- Info Banner -->
     <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-300 rounded-2xl p-3 sm:p-4">
       <div class="flex items-start gap-2">
         <span class="text-xl flex-shrink-0">💡</span>
         <div>
-          <p class="text-xs font-bold text-yellow-900">You can choose both options</p>
-          <p class="text-xs text-yellow-700 mt-0.5">Select what works best for you</p>
+          <p class="text-xs font-bold text-yellow-900">Vous pouvez choisir les deux options</p>
+          <p class="text-xs text-yellow-700 mt-0.5">Choisissez ce qui vous convient le mieux</p>
         </div>
       </div>
     </div>
@@ -98,8 +85,8 @@
               <span class="text-2xl">💻</span>
             </div>
             <div class="flex-1">
-              <h3 class="text-gray-900 font-bold text-base sm:text-lg">Online</h3>
-              <p class="text-gray-600 text-xs sm:text-sm">Video calls & remote sessions</p>
+              <h3 class="text-gray-900 font-bold text-base sm:text-lg">En ligne</h3>
+              <p class="text-gray-600 text-xs sm:text-sm">Vous aidez les expats, voyageurs et vacanciers à distance</p>
             </div>
           </div>
           <div class="flex gap-2 w-full sm:w-auto">
@@ -129,8 +116,8 @@
               <span class="text-2xl">🤝</span>
             </div>
             <div class="flex-1">
-              <h3 class="text-gray-900 font-bold text-base sm:text-lg">In Person</h3>
-              <p class="text-gray-600 text-xs sm:text-sm">Face-to-face meetings</p>
+              <h3 class="text-gray-900 font-bold text-base sm:text-lg">En personne</h3>
+              <p class="text-gray-600 text-xs sm:text-sm">Vous aidez les expats, voyageurs et vacanciers en les accompagnant</p>
             </div>
           </div>
           <div class="flex gap-2 w-full sm:w-auto">
@@ -184,17 +171,6 @@
 
 .animation-delay-4000 {
   animation-delay: 4s;
-}
-
-/* Shake animation for errors */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-8px); }
-  75% { transform: translateX(8px); }
-}
-
-.shake-animation {
-  animation: shake 0.5s ease-in-out;
 }
 
 /* ============================================
@@ -293,7 +269,7 @@
 </style>
 
 <!-- ============================================
-     OPTIMIZED AND CORRECTED JAVASCRIPT
+     OPTIMIZED JAVASCRIPT - SIMPLIFIED VERSION
      ============================================ -->
 <script>
 (function() {
@@ -322,8 +298,7 @@
     if (!cachedElements) {
       cachedElements = {
         step: document.getElementById('step8'),
-        buttons: document.querySelectorAll('#step8 .toggle-btn'),
-        errorAlert: document.getElementById('step8Error')
+        buttons: document.querySelectorAll('#step8 .toggle-btn')
       };
     }
     return cachedElements;
@@ -357,24 +332,6 @@
   }
 
   // ============================================
-  // ✅ VALIDATION
-  // ============================================
-  
-  function validatePreference() {
-    // At least one "Yes" required
-    state.isValid = state.communicationPreference.online === 'Yes' || 
-                    state.communicationPreference.inperson === 'Yes';
-    
-    // ❌ CORRECTION CRITIQUE: Suppression de l'appel récursif
-    // Cette ligne causait la boucle infinie
-    // if (typeof window.updateNavigationButtons === 'function') {
-    //   window.updateNavigationButtons();
-    // }
-    
-    return state.isValid;
-  }
-
-  // ============================================
   // 🎨 UI UPDATES
   // ============================================
   
@@ -403,28 +360,6 @@
     });
   }
 
-  function showError() {
-    const elements = getCachedElements();
-    
-    if (elements.errorAlert) {
-      elements.errorAlert.classList.remove('hidden');
-      elements.errorAlert.classList.add('shake-animation');
-      
-      // Scroll to error
-      requestAnimationFrame(() => {
-        elements.errorAlert.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
-        });
-      });
-      
-      // Remove animation after
-      setTimeout(() => {
-        elements.errorAlert.classList.remove('shake-animation');
-      }, 500);
-    }
-  }
-
   // ============================================
   // 🎬 EVENT HANDLERS
   // ============================================
@@ -432,7 +367,6 @@
   function handleToggleClick(button) {
     const option = button.getAttribute('data-option');
     const value = button.getAttribute('data-value');
-    const elements = getCachedElements();
     
     // Update state
     if (value === 'yes') {
@@ -444,16 +378,14 @@
     // Update UI
     updateButtonStates(option, value);
     
-    // Hide error if visible
-    if (elements.errorAlert && !elements.errorAlert.classList.contains('hidden')) {
-      elements.errorAlert.classList.add('hidden');
-    }
+    // Validate
+    state.isValid = state.communicationPreference.online === 'Yes' || 
+                    state.communicationPreference.inperson === 'Yes';
     
-    // Validate and save
-    validatePreference();
+    // Save
     saveToLocalStorage();
     
-    // ✅ CORRECTION: Appel à updateNavigationButtons UNIQUEMENT ici (pas dans validatePreference)
+    // Notify navigation
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
@@ -504,30 +436,31 @@
         });
         
         // Validate
-        validatePreference();
+        state.isValid = state.communicationPreference.online === 'Yes' || 
+                        state.communicationPreference.inperson === 'Yes';
       });
     } else {
-      // No saved data, validate initial state
-      validatePreference();
+      // No saved data
+      state.isValid = false;
     }
   }
 
   // ============================================
-  // 🎬 INITIALIZATION
+  // ✅ VALIDATION - SIMPLIFIED
   // ============================================
   
-  // Public function for external validation
   window.validateStep8 = function() {
-    const isValid = validatePreference();
-    if (!isValid) {
-      showError();
-    }
-    return isValid;
+    return state.communicationPreference.online === 'Yes' || 
+           state.communicationPreference.inperson === 'Yes';
   };
 
   // Expose state globally if needed (for compatibility)
   window.communicationPreference = state.communicationPreference;
 
+  // ============================================
+  // 🎬 INITIALIZATION
+  // ============================================
+  
   function init() {
     // Init event delegation
     initEventDelegation();
@@ -542,7 +475,7 @@
               // Step is visible, restore state
               restoreState();
               
-              // ✅ Notify wizard-steps.js
+              // Notify wizard-steps.js
               if (typeof window.updateNavigationButtons === 'function') {
                 window.updateNavigationButtons();
               }

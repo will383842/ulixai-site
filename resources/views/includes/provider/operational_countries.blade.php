@@ -28,7 +28,7 @@
           Where Do You Operate? 🌍
         </h2>
         <p class="text-sm sm:text-base font-semibold text-gray-600">
-          Select all countries where you provide services
+          Select all countries where you provide services <span class="text-red-500">*</span>
         </p>
       </div>
 
@@ -74,10 +74,10 @@
 
     <div id="step6CountryList" class="country-list-container" role="group" aria-label="Select operational countries">
       @foreach($countries as $country)
-      <button type="button" class="country-card" data-country="{{ $country->country }}" role="checkbox" aria-checked="false" aria-label="Select {{ $country->country }}">
+      <button type="button" class="country-card" data-country="{{ $country->country }}" role="checkbox" aria-checked="false" aria-label="Select {{ $country->country }}" tabindex="0">
         <span class="country-name">{{ $country->country }}</span>
         <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
           </svg>
         </span>
@@ -132,28 +132,32 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
+/* MOBILE FIRST: Design épuré sans bordure */
 .country-list-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   max-height: 420px;
   overflow-y: auto;
   contain: layout style paint;
   scrollbar-width: thin;
   scrollbar-color: #3b82f6 #f1f5f9;
+  background: white;
 }
 
+/* DESKTOP: Grid avec cards encadrées */
 @media (min-width: 640px) {
   .country-list-container {
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0.75rem;
     max-height: 460px;
+    background: transparent;
   }
 }
 
 @media (min-width: 1024px) {
   .country-list-container {
-    grid-template-columns: repeat(4, 1fr);
     gap: 0.875rem;
     max-height: 480px;
   }
@@ -178,91 +182,221 @@
   background: #2563eb;
 }
 
+/* MOBILE: Style liste épuré sans bordure - DISPOSITION CENTRÉE UNIQUE */
 .country-card {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.875rem 1rem;
+  justify-content: center;
+  padding: 1.25rem 0.75rem;
   background: white;
-  border: 2px solid #3b82f6;
-  border-radius: 0.75rem;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
   cursor: pointer;
-  text-align: left;
-  min-height: 3.5rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  min-height: 4rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateZ(0);
   backface-visibility: hidden;
-  contain: layout style paint;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
   user-select: none;
+  /* S'assurer que les boutons sont cliquables */
+  pointer-events: auto !important;
+  touch-action: manipulation;
 }
 
-.country-card:hover {
-  border-color: #2563eb;
-  background: #eff6ff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+.country-card * {
+  pointer-events: none;
+}
+
+.country-card::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: auto;
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0 3px 3px;
+}
+
+@media (min-width: 640px) {
+  .country-card::before {
+    display: none;
+  }
 }
 
 .country-card:active {
-  transform: translateY(0) scale(0.98);
+  background: #f8fafc;
+  transform: scale(0.98);
 }
 
 .country-card.selected {
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-  border-color: #2563eb;
-  color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
+  border-bottom-color: rgba(59, 130, 246, 0.1);
 }
 
-.country-card.selected:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+.country-card.selected::before {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* DESKTOP: Style card avec bordure */
+@media (min-width: 640px) {
+  .country-card {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    background: white;
+    border: 2px solid #3b82f6;
+    border-radius: 0.75rem;
+    min-height: 3.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    text-align: left;
+  }
+  
+  .country-card .country-name {
+    text-align: left;
+    order: 0;
+  }
+  
+  .country-card .check-indicator {
+    order: 0;
+    margin-bottom: 0;
+    margin-left: 0.5rem;
+  }
+  
+  .country-card::before {
+    display: none;
+  }
+
+  .country-card:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+
+  .country-card:active {
+    transform: translateY(0) scale(0.98);
+    background: #eff6ff;
+  }
+
+  .country-card.selected {
+    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+    border-color: #2563eb;
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  .country-card.selected:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  }
+  
+  .country-card.selected .country-name {
+    font-weight: 600;
+  }
 }
 
 .country-card .country-name {
   flex: 1;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  color: inherit;
+  color: #1e293b;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color 0.2s;
+  width: 100%;
+  text-align: center;
+  order: 2;
+}
+
+.country-card.selected .country-name {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* DESKTOP: Texte blanc pour selected */
+@media (min-width: 640px) {
+  .country-card.selected .country-name {
+    color: white;
+  }
 }
 
 .country-card .check-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-left: 0.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-left: 0;
+  margin-bottom: 0.375rem;
   border-radius: 50%;
-  background: rgba(59, 130, 246, 0.1);
-  opacity: 0;
-  transform: scale(0.8);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+  flex-shrink: 0;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  order: 1;
+}
+
+/* MOBILE: Icône visible avec cercle coloré quand sélectionné */
+.country-card .check-indicator svg {
+  color: transparent;
+  transform: scale(0);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .country-card.selected .check-indicator {
-  opacity: 1;
-  transform: scale(1);
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.country-card .check-indicator svg {
-  color: #2563eb;
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
 }
 
 .country-card.selected .check-indicator svg {
   color: white;
+  transform: scale(1);
+}
+
+/* DESKTOP: Style différent */
+@media (min-width: 640px) {
+  .country-card .check-indicator {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: 0.5rem;
+    background: rgba(59, 130, 246, 0.1);
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  
+  .country-card .check-indicator svg {
+    color: #2563eb;
+    transform: scale(0.8);
+  }
+
+  .country-card.selected .check-indicator {
+    opacity: 1;
+    transform: scale(1);
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .country-card.selected .check-indicator svg {
+    color: white;
+    transform: scale(1);
+  }
 }
 
 .country-card:focus-visible {
   outline: 3px solid #3b82f6;
   outline-offset: 2px;
-  border-color: #2563eb;
+}
+
+@media (min-width: 640px) {
+  .country-card:focus-visible {
+    border-color: #2563eb;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -273,14 +407,16 @@
   }
 }
 
-@media (max-width: 640px) {
-  .country-card {
-    box-shadow: none;
+/* Optimisation pour éviter les dépassements */
+@media (max-width: 639px) {
+  .country-list-container {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
   }
   
-  .country-card:hover,
-  .country-card.selected {
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+  .country-card {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 </style>
@@ -289,50 +425,76 @@
 (function() {
   'use strict';
   
-  window.selectedCountries = window.selectedCountries || [];
+  // Initialiser la variable globale
+  if (!window.selectedCountries) {
+    window.selectedCountries = [];
+  }
 
+  // Fonction pour toggle la sélection
   window.toggleCountrySelection = function(country) {
+    console.log('Step 6: toggleCountrySelection called with:', country);
+    
     const container = document.querySelector('#step6');
-    if (!container) return;
+    if (!container) {
+      console.warn('Step 6: Container not found');
+      return;
+    }
     
     const errorAlert = document.getElementById('step6CountryError');
     const selectedCount = document.getElementById('step6SelectedCount');
-    const card = container.querySelector(`.country-card[data-country="${country}"]`);
+    const card = container.querySelector(`.country-card[data-country="${CSS.escape(country)}"]`);
     
-    if (!card) return;
+    if (!card) {
+      console.warn('Step 6: Card not found for country:', country);
+      return;
+    }
     
     const index = window.selectedCountries.indexOf(country);
     
     if (index > -1) {
+      // Désélectionner
       window.selectedCountries.splice(index, 1);
       card.classList.remove('selected');
       card.setAttribute('aria-checked', 'false');
+      console.log('Step 6: Deselected', country);
     } else {
+      // Sélectionner
       window.selectedCountries.push(country);
       card.classList.add('selected');
       card.setAttribute('aria-checked', 'true');
+      console.log('Step 6: Selected', country);
     }
     
+    // Mettre à jour le compteur
     if (selectedCount) {
       selectedCount.textContent = window.selectedCountries.length;
     }
     
-    if (errorAlert && !errorAlert.classList.contains('hidden')) {
+    // Masquer l'erreur si au moins un pays est sélectionné
+    if (errorAlert && window.selectedCountries.length > 0) {
       errorAlert.classList.add('hidden');
     }
     
+    // Sauvegarder dans localStorage
     try {
       const data = JSON.parse(localStorage.getItem('expats') || '{}');
       data.operational_countries = window.selectedCountries;
       localStorage.setItem('expats', JSON.stringify(data));
-    } catch (e) {}
+      console.log('Step 6: Saved to localStorage:', window.selectedCountries);
+    } catch (e) {
+      console.error('Step 6: Error saving to localStorage:', e);
+    }
     
+    // Notifier le wizard
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
   };
 
+  // Fonction de validation
   window.validateStep6 = function() {
+    console.log('Step 6: Validating... Selected countries:', window.selectedCountries);
+    
     const errorAlert = document.getElementById('step6CountryError');
     
     if (!window.selectedCountries || window.selectedCountries.length === 0) {
@@ -344,9 +506,14 @@
       return false;
     }
     
+    if (errorAlert) {
+      errorAlert.classList.add('hidden');
+    }
+    
     return true;
   };
 
+  // Fonction debounce pour la recherche
   function debounce(func, wait) {
     let timeout;
     return function(...args) {
@@ -355,12 +522,14 @@
     };
   }
 
+  // Restaurer depuis localStorage
   function restoreFromStorage() {
     try {
       const data = JSON.parse(localStorage.getItem('expats') || '{}');
       
       if (data.operational_countries && Array.isArray(data.operational_countries)) {
         window.selectedCountries = data.operational_countries;
+        console.log('Step 6: Restored from localStorage:', window.selectedCountries);
         
         requestAnimationFrame(() => {
           const container = document.querySelector('#step6');
@@ -369,7 +538,7 @@
           const selectedCount = document.getElementById('step6SelectedCount');
           
           window.selectedCountries.forEach(country => {
-            const card = container.querySelector(`.country-card[data-country="${country}"]`);
+            const card = container.querySelector(`.country-card[data-country="${CSS.escape(country)}"]`);
             if (card) {
               card.classList.add('selected');
               card.setAttribute('aria-checked', 'true');
@@ -385,32 +554,51 @@
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error('Step 6: Error restoring from localStorage:', e);
+    }
   }
 
+  // Initialisation
   function init() {
+    console.log('Step 6: Initializing...');
+    
     const container = document.querySelector('#step6');
-    if (!container) return;
+    if (!container) {
+      console.warn('Step 6: Container not found');
+      return;
+    }
 
+    // Event delegation pour les clics - SANS passive pour permettre preventDefault
     container.addEventListener('click', function(e) {
       const card = e.target.closest('.country-card');
       if (card) {
+        e.preventDefault();
+        e.stopPropagation();
         const country = card.getAttribute('data-country');
-        if (country) window.toggleCountrySelection(country);
+        if (country) {
+          console.log('Step 6: Card clicked:', country);
+          window.toggleCountrySelection(country);
+        }
       }
-    }, { passive: true });
+    });
 
+    // Support clavier
     container.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         const card = e.target.closest('.country-card');
         if (card) {
           e.preventDefault();
           const country = card.getAttribute('data-country');
-          if (country) window.toggleCountrySelection(country);
+          if (country) {
+            console.log('Step 6: Keyboard selection:', country);
+            window.toggleCountrySelection(country);
+          }
         }
       }
     });
 
+    // Recherche de pays
     const searchInput = document.getElementById('step6Search');
     if (searchInput) {
       const performSearch = debounce(function(searchValue) {
@@ -427,13 +615,15 @@
       
       searchInput.addEventListener('input', function() {
         performSearch(this.value);
-      }, { passive: true });
+      });
     }
 
+    // Observer pour restaurer quand le step devient visible
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
           if (!container.classList.contains('hidden')) {
+            console.log('Step 6: Now visible, restoring...');
             if (searchInput) searchInput.value = '';
             const cards = container.querySelectorAll('.country-card');
             cards.forEach(card => card.style.display = '');
@@ -448,9 +638,13 @@
       attributeFilter: ['class']
     });
 
+    // Restauration initiale
     restoreFromStorage();
+    
+    console.log('Step 6: Initialization complete');
   }
 
+  // Lancer l'initialisation
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

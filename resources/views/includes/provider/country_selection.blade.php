@@ -17,9 +17,9 @@
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Header Content -->
-    <div class="text-center space-y-2 relative">
-      <div class="flex justify-center">
+    <!-- Header Content - DISPOSITION UNIQUE MOBILE -->
+    <div class="text-center sm:text-center space-y-2 relative mobile-step5-header">
+      <div class="flex justify-center sm:justify-center mobile-step5-icon">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
           <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -27,7 +27,7 @@
         </div>
       </div>
       
-      <div>
+      <div class="mobile-step5-title">
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
           Where Do You Live? 🌍
         </h2>
@@ -107,6 +107,82 @@
 
   </div>
 </div>
+
+<style>
+/* ============================================
+   DISPOSITION UNIQUE MOBILE POUR STEP 5
+   ============================================ */
+
+/* MOBILE: Layout horizontal avec icône à gauche */
+@media (max-width: 639px) {
+  .mobile-step5-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left !important;
+    gap: 0.75rem;
+  }
+  
+  .mobile-step5-icon {
+    order: 1;
+    flex-shrink: 0;
+    justify-content: flex-start !important;
+  }
+  
+  .mobile-step5-title {
+    order: 2;
+    flex: 1;
+    text-align: left;
+  }
+  
+  .mobile-step5-title h2 {
+    text-align: left;
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+  
+  .mobile-step5-title p {
+    text-align: left;
+    font-size: 0.8125rem;
+  }
+  
+  .mobile-step5-header .inline-flex {
+    order: 3;
+    margin-left: auto;
+    margin-top: 0.25rem;
+  }
+}
+
+/* Animations pour les blobs */
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, -50px) scale(1.1); }
+  50% { transform: translate(-20px, 20px) scale(0.9); }
+  75% { transform: translate(50px, 50px) scale(1.05); }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake-animation {
+  animation: shake 0.5s;
+}
+</style>
 
 <script>
 (function() {

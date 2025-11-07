@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════
  * Wizard Core - Navigation stricte + Support affiliation
- * Version: 2.1 - CORRIGÉ: Liens normaux ne déclenchent plus le popup
+ * Version: 2.2 - CORRIGÉ: Popup ne s'ouvre QUE pour les boutons signup
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -87,42 +87,33 @@ export class WizardCore {
 
   initCloseButtons() {
     const popup = document.getElementById('signupPopup');
+    if (!popup) {
+      console.log('ℹ️ Signup popup not found - user might be logged in');
+      return;
+    }
 
     // ═══════════════════════════════════════════════════════════
-    // 🔧 DÉLÉGATION D'ÉVÉNEMENTS - ORDRE DE PRIORITÉ CORRIGÉ
+    // 🔧 DÉLÉGATION D'ÉVÉNEMENTS STRICTE - VERSION CORRIGÉE
     // ═══════════════════════════════════════════════════════════
+    
+    /**
+     * Stratégie CORRIGÉE :
+     * 1. On n'intercepte QUE les clics sur les éléments qui concernent le wizard
+     * 2. On laisse TOUS les autres clics se propager normalement
+     * 3. On utilise une liste blanche d'IDs/sélecteurs au lieu d'une liste noire
+     */
+    
     document.addEventListener('click', (e) => {
-      const clickedElement = e.target;
-      if (!clickedElement || !clickedElement.closest) return;
+      const target = e.target;
+      if (!target || !target.closest) return;
 
       // ═══════════════════════════════════════════════════════════
-      // 🎯 PRIORITÉ 0 (LA PLUS HAUTE) : Liens de navigation normaux
+      // 🎯 PRIORITÉ 1 : Boutons d'ouverture du popup signup
       // ═══════════════════════════════════════════════════════════
-      const parentLink = clickedElement.closest('a[href]');
+      const signupBtn = target.closest('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
       
-      if (parentLink) {
-        const href = parentLink.getAttribute('href');
-        const isNormalLink = href && 
-                            !href.startsWith('#') && 
-                            !href.startsWith('javascript:') &&
-                            !href.toLowerCase().includes('signup'); // Bloquer uniquement /signup
-        
-        if (isNormalLink) {
-          // ✅ Laisser le navigateur gérer la navigation normalement
-          console.log('🔗 Lien de navigation détecté:', href);
-          return; // Ne rien faire, laisser passer
-        }
-      }
-
-      // ═══════════════════════════════════════════════════════════
-      // 🎯 PRIORITÉ 1 : Ouvrir le popup signup
-      // ═══════════════════════════════════════════════════════════
-      const openSignup = clickedElement.closest(
-        '#signupBtn, #mobileSignupBtn, [data-action="open-signup"]'
-      );
-      
-      if (openSignup) {
-        console.log('📝 Bouton Sign Up cliqué');
+      if (signupBtn) {
+        console.log('📝 [Wizard] Sign Up button clicked');
         e.preventDefault();
         e.stopPropagation();
         this.openPopup();
@@ -130,33 +121,14 @@ export class WizardCore {
       }
 
       // ═══════════════════════════════════════════════════════════
-      // 🎯 PRIORITÉ 2 : Ouvrir le popup help
+      // 🎯 PRIORITÉ 2 : Boutons de fermeture du popup
       // ═══════════════════════════════════════════════════════════
-      const openHelp = clickedElement.closest(
-        '#requestHelpBtn, #helpBtn, #mobileSearchButton, [data-open="help"]'
-      );
-      
-      if (openHelp) {
-        console.log('❓ Bouton Help cliqué');
-        e.preventDefault();
-        e.stopPropagation();
-        if (typeof window.openHelpPopup === 'function') {
-          window.openHelpPopup();
-        } else {
-          console.warn('⚠️ openHelpPopup() non disponible');
-        }
-        return;
-      }
-
-      // ═══════════════════════════════════════════════════════════
-      // 🎯 PRIORITÉ 3 : Fermer le popup
-      // ═══════════════════════════════════════════════════════════
-      const closeBtn = clickedElement.closest(
+      const closeBtn = target.closest(
         '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]'
       );
       
       if (closeBtn) {
-        console.log('❌ Bouton Close cliqué');
+        console.log('❌ [Wizard] Close button clicked');
         e.preventDefault();
         e.stopPropagation();
         this.closePopup();
@@ -164,12 +136,17 @@ export class WizardCore {
       }
 
       // ═══════════════════════════════════════════════════════════
-      // 🎯 PRIORITÉ 4 : Clic sur le backdrop (fond noir)
+      // 🎯 PRIORITÉ 3 : Clic sur le backdrop (fond noir)
       // ═══════════════════════════════════════════════════════════
-      if (popup && e.target === popup) {
-        console.log('🖱️ Clic sur backdrop');
+      if (popup && e.target === popup && !popup.classList.contains('hidden')) {
+        console.log('🖱️ [Wizard] Backdrop clicked');
         this.closePopup();
+        return;
       }
+
+      // ⚠️ Important : On ne fait RIEN d'autre ici
+      // Tous les autres clics (liens normaux, boutons help, etc.) 
+      // sont gérés par leurs propres gestionnaires d'événements
 
     }, false); // Mode bubble
 
@@ -178,7 +155,7 @@ export class WizardCore {
     // ═══════════════════════════════════════════════════════════
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
-        console.log('⌨️ ESC pressed');
+        console.log('⌨️ [Wizard] ESC pressed');
         this.closePopup();
       }
     });
@@ -189,7 +166,7 @@ export class WizardCore {
     window.openSignupPopup  = () => this.openPopup();
     window.closeSignupPopup = () => this.closePopup();
 
-    console.log('✅ Popup controls initialized (affiliation-ready)');
+    console.log('✅ Popup controls initialized');
   }
 
   closePopup() {
@@ -249,7 +226,7 @@ export function initializeWizard() {
   const wizard = new WizardCore();
   wizard.init();
 
-  // API publique pour compatibilité + affiliation
+  // API publique pour compatibilité
   window.providerWizard = {
     update: () => wizard.updateUI(),
     close: () => wizard.closePopup(),

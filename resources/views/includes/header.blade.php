@@ -633,7 +633,11 @@
 
       <!-- Desktop Buttons -->
       <div class="hidden lg:flex items-center space-x-3 group">
-        <button onclick="openHelpPopup()" class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover-glow transform hover:scale-105 shadow-lg" aria-label="Request Help">
+        {{-- ✅ CORRIGÉ: Plus d'attribut onclick --}}
+        <button 
+          id="helpBtn"
+          class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover-glow transform hover:scale-105 shadow-lg" 
+          aria-label="Request Help">
           <span class="flex items-center space-x-2">
             <i class="fas fa-lock text-white-600 text-xl" aria-hidden="true"></i>
             <span>Request Help</span>
@@ -713,9 +717,10 @@
             <span class="font-medium text-blue-600">Log in</span>
           </a>
 
+          {{-- ✅ CORRIGÉ: Plus d'attribut onclick, juste l'ID --}}
           <button 
             id="signupBtn"
-            onclick="window.providerWizard?.open()"
+            type="button"
             class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2">
             <i class="fas fa-user-plus mr-2 text-lg" aria-hidden="true"></i>
             <span>Sign Up</span>
@@ -842,7 +847,7 @@
      🚀 POPUP SIGNUP - CHARGÉ UNIQUEMENT SI NON CONNECTÉ
      ============================================ -->
 @if(!Auth::check())
-<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden sm:flex items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
+<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
   <!-- CONTAINER RESPONSIVE -->
   <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col">
     <!-- HEADER STICKY -->
@@ -861,6 +866,7 @@
 
       <!-- Close Button -->
       <button id="closePopup" 
+              type="button"
               class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all active:scale-95 text-gray-500 hover:text-gray-800 shrink-0 absolute top-2 right-2" 
               aria-label="Close signup form">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -893,13 +899,13 @@
 
     <!-- NAVIGATION BUTTONS -->
     <div id="mobileNavButtons" class="sm:hidden">
-      <button id="mobileBackBtn" class="btn-back" style="display:none;" aria-label="Go back">
+      <button id="mobileBackBtn" type="button" class="btn-back" style="display:none;" aria-label="Go back">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
         <span>Back</span>
       </button>
-      <button id="mobileNextBtn" class="btn-next" aria-label="Continue to next step">
+      <button id="mobileNextBtn" type="button" class="btn-next" aria-label="Continue to next step">
         <span>Continue</span>
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -908,13 +914,13 @@
     </div>
 
     <div id="desktopNavButtons" class="hidden sm:flex px-8 pb-6">
-      <button id="desktopBackBtn" class="btn-back" style="display:none;" aria-label="Go back">
+      <button id="desktopBackBtn" type="button" class="btn-back" style="display:none;" aria-label="Go back">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
         <span>Back</span>
       </button>
-      <button id="desktopNextBtn" class="btn-next" aria-label="Continue to next step">
+      <button id="desktopNextBtn" type="button" class="btn-next" aria-label="Continue to next step">
         <span>Continue</span>
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -933,7 +939,12 @@
       </a>
 
       <nav class="flex items-center gap-2" aria-label="Main navigation">
-        <button id="mobileSearchButton" onclick="openHelpPopup()" class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg" aria-label="Request help">
+        {{-- ✅ CORRIGÉ: Plus d'attribut onclick --}}
+        <button 
+          id="mobileSearchButton"
+          type="button"
+          class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg" 
+          aria-label="Request help">
           <span class="flex items-center gap-2">
             <i class="fas fa-hand-paper text-white text-base" aria-hidden="true"></i>
             <span class="hidden xs:inline">Request Help</span>
@@ -952,7 +963,7 @@
           </span>
         </a>
 
-        <button id="menu-toggle-top" class="p-2.5 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+        <button id="menu-toggle-top" type="button" class="p-2.5 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
           <div class="w-6 h-6 flex flex-col justify-center items-center gap-1.5">
             <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
             <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
@@ -966,7 +977,7 @@
  <!-- 🎨 Mobile Menu -->
 <nav id="mobile-menu" class="lg:hidden fixed top-[64px] left-0 w-full bg-white z-40 shadow-md hidden px-6 py-4 space-y-4" role="navigation" aria-label="Mobile menu" aria-hidden="true">
   <div class="flex justify-end mb-2">
-    <button id="mobileMenuCloseBtn" class="p-3 rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-110" aria-label="Close menu">
+    <button id="mobileMenuCloseBtn" type="button" class="p-3 rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-110" aria-label="Close menu">
       <svg class="w-7 h-7 text-gray-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
@@ -1082,11 +1093,11 @@
         </a>
       </li>
 
-      {{-- Sign up - OUVRE LE POPUP --}}
+      {{-- ✅ CORRIGÉ: Plus d'attribut onclick, juste l'ID --}}
       <li role="none">
         <button 
            id="mobileSignupBtn"
-           onclick="window.providerWizard?.open()"
+           type="button"
            class="w-full text-left block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
           <i class="fas fa-user-plus text-blue-600" aria-hidden="true"></i>
@@ -1258,11 +1269,47 @@
 })();
 </script>
 
+{{-- ═══════════════════════════════════════════════════════════
+     🔧 INIT HELP BUTTON - Delegated event to avoid conflicts
+     ═══════════════════════════════════════════════════════════ --}}
+<script>
+(function() {
+  'use strict';
+  
+  /**
+   * Initialisation des boutons Help avec délégation d'événements
+   * pour éviter les conflits avec wizard-core.js
+   */
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔧 [Header] Initializing help buttons...');
+    
+    // Gestion des boutons Help (desktop et mobile)
+    document.addEventListener('click', function(e) {
+      const helpBtn = e.target.closest('#helpBtn, #mobileSearchButton, #requestHelpBtn');
+      
+      if (helpBtn) {
+        console.log('❓ [Header] Help button clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (typeof window.openHelpPopup === 'function') {
+          window.openHelpPopup();
+        } else {
+          console.warn('⚠️ openHelpPopup() not available yet');
+        }
+      }
+    });
+    
+    console.log('✅ [Header] Help buttons initialized');
+  });
+})();
+</script>
+
 <!-- ═══════════════════════════════════════════════════════════
      🚀 JAVASCRIPT MODULES - REFACTORISÉ
      ═══════════════════════════════════════════════════════════ -->
       <script src="{{ mix('js/app.js') }}"></script>
       <script src="{{ mix('js/header-init.js') }}"></script>
 
-</body>
+    </body>
 </html>

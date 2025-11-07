@@ -1,5 +1,6 @@
 /**
- * Wizard Steps – CORRIGÉ : Boutons masqués au Step 1
+ * Wizard Steps – VERSION FINALE SANS ALERTS
+ * Comportement : Validation silencieuse uniquement, pas de popups
  */
 
 export class WizardSteps {
@@ -70,11 +71,7 @@ export class WizardSteps {
       .forEach(btn => btn.addEventListener('click', (e) => { 
         e.preventDefault();
         console.log('➡️ Next button clicked from step', this.currentStep + 1);
-        if (this.validateCurrentStep()) {
-          this.nextStep();
-        } else {
-          console.warn('❌ Validation failed for step', this.currentStep + 1);
-        }
+        this.nextStep();
       }));
     document.querySelectorAll('#mobileBackBtn, #desktopBackBtn')
       .forEach(btn => btn.addEventListener('click', (e) => { 
@@ -124,7 +121,6 @@ export class WizardSteps {
       return;
     }
     
-    // Cache tous les steps
     console.log('🙈 Hiding all steps...');
     for (let k = 1; k <= this.totalSteps; k++) {
       const s = document.getElementById(`step${k}`);
@@ -136,7 +132,6 @@ export class WizardSteps {
       }
     }
     
-    // Affiche le step demandé
     const cur = document.getElementById(`step${i + 1}`);
     if (!cur) {
       console.error(`❌ Step element not found: step${i + 1}`);
@@ -156,6 +151,9 @@ export class WizardSteps {
   nextStep() {
     console.log('➡️ nextStep() called from step', this.currentStep + 1);
     
+    // ✅ SIMPLIFICATION : Pas de validation ici, on fait confiance au bouton disabled
+    // Si le bouton est cliquable, c'est que la validation est passée
+    
     this.saveCurrentStepData();
     
     if (this.currentStep < this.totalSteps - 1) {
@@ -171,7 +169,6 @@ export class WizardSteps {
   previousStep() { 
     console.log('⬅️ previousStep() called from step', this.currentStep + 1);
     
-    // ✅ Permettre de revenir au Step 1 depuis le Step 2
     if (this.currentStep > 0) {
       const prevStepIndex = this.currentStep - 1;
       console.log('⬅️ Moving to step', prevStepIndex + 1);
@@ -193,16 +190,16 @@ export class WizardSteps {
       return true;
     }
 
-    // ✅ VALIDATION STEP 1 : toujours valide (choix de profil via boutons)
+    // ✅ VALIDATION STEP 1 : toujours valide
     if (stepNum === 1) {
       console.log('✅ Step 1 - always valid (profile choice via buttons)');
       return true;
     }
 
-    // ✅ APPELER LA VALIDATION CUSTOM EN PREMIER
+    // ✅ APPELER LA VALIDATION CUSTOM - VALIDATION SILENCIEUSE
     const custom = window[`validateStep${stepNum}`];
     if (typeof custom === 'function') { 
-      console.log(`🔍 Calling custom validation: validateStep${stepNum}()`);
+      console.log(`🔍 Calling custom validation: validateStep${stepNum}() - silent`);
       try { 
         const result = !!custom();
         console.log(`${result ? '✅' : '❌'} validateStep${stepNum}() returned:`, result);
@@ -249,12 +246,12 @@ export class WizardSteps {
     const backButtons = document.querySelectorAll('#mobileBackBtn, #desktopBackBtn');
     const nextButtons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
 
-    // ✅ CORRECTION : Au Step 1, masquer TOUS les boutons de navigation
+    // ✅ Au Step 1, masquer TOUS les boutons de navigation
     if (this.currentStep === 0) {
       if (mobileWrap)  mobileWrap.style.display  = 'none';
       if (desktopWrap) desktopWrap.style.display = 'none';
-      console.log('🚫 Step 1 - Navigation buttons HIDDEN (use profile choice buttons instead)');
-      return; // ← Important : sortir de la fonction
+      console.log('🚫 Step 1 - Navigation buttons HIDDEN');
+      return;
     }
 
     // À partir du Step 2 : afficher les wrappers de navigation
@@ -262,7 +259,7 @@ export class WizardSteps {
     if (desktopWrap) desktopWrap.style.display = '';
     console.log('✅ Step 2+ - Navigation buttons VISIBLE');
 
-    // ✅ Back TOUJOURS visible (sans condition)
+    // ✅ Back TOUJOURS visible
     backButtons.forEach(b => b.style.display = 'flex');
     console.log('🔘 Back button: ALWAYS visible');
     

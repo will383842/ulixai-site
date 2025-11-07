@@ -1,6 +1,6 @@
 <!-- 
 ============================================
-🚀 STEP 11 - IDENTITY DOCUMENTS (OPTIMIZED)
+🚀 STEP 11 - IDENTITY DOCUMENTS (OPTIMIZED & FIXED)
 ============================================
 ✨ Design System Blue/Cyan/Teal STRICT
 🎨 3 types de documents avec icônes
@@ -9,19 +9,18 @@
 🔧 Optimisations CPU, RAM, GPU
 ✅ Persistance localStorage
 ⚡ Performance maximale
-✅ CONFORME AU GUIDE SYSTÈME WIZARD
-🔧 MODIFIED: localStorage key changed to 'expats'
+🔧 FIXED: Validation doesn't show alert on page load
 ============================================
 -->
 
 <div id="step11" class="hidden flex flex-col h-full" role="region" aria-label="Upload identity documents">
   
   <!-- ============================================
-       TITRE FIXE (STICKY)
+       FIXED HEADER (STICKY)
        ============================================ -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -60,11 +59,11 @@
   </div>
 
   <!-- ============================================
-       CONTENU SCROLLABLE
+       SCROLLABLE CONTENT
        ============================================ -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
-    <!-- Info Badge -->
+    <!-- Info Banner -->
     <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-2xl p-3 sm:p-4">
       <div class="flex items-start gap-3">
         <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -162,7 +161,7 @@
 </div>
 
 <!-- ============================================
-     MODALS POUR CHAQUE TYPE DE DOCUMENT
+     MODALS FOR EACH DOCUMENT TYPE
      ============================================ -->
 
 <!-- Modal European ID (2 sides) -->
@@ -346,14 +345,14 @@
 </div>
 
 <!-- ============================================
-     STYLES OPTIMISÉS
+     OPTIMIZED STYLES
      ============================================ -->
 <style>
 /* ============================================
    🎨 BASE STYLES
    ============================================ */
 
-/* Animations des blobs - optimisé GPU */
+/* Blob animations - GPU optimized */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -827,23 +826,17 @@
   contain: layout style paint;
 }
 
-/* Optimisation des images */
 #step11 img,
 #step11 video {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
 }
 
-/* GPU acceleration for animations */
 .animate-blob,
 #step11 .arrow-icon,
 #step11 .doc-card::before {
   will-change: transform;
 }
-
-/* ============================================
-   📱 RESPONSIVE IMPROVEMENTS
-   ============================================ */
 
 @media (max-width: 639px) {
   .modal-content {
@@ -861,27 +854,14 @@
 </style>
 
 <!-- ============================================
-     JAVASCRIPT OPTIMISÉ
-     🔧 MODIFIED: localStorage key 'expats'
+     OPTIMIZED JAVASCRIPT - FIXED VERSION
      ============================================ -->
 <script>
-/* ============================================
-   🎯 STEP 11 - OPTIMIZED VERSION
-   ✅ Event delegation pour performance
-   ✅ Cache DOM
-   ✅ Debouncing/Throttling
-   ✅ Passive listeners
-   ✅ RequestAnimationFrame
-   ✅ Gestion mémoire caméras
-   ✅ CONFORME AU GUIDE SYSTÈME WIZARD
-   ============================================ */
-
 (function() {
   'use strict';
   
   const STORAGE_KEY = 'expats';
   
-  // État global
   const state = {
     uploadedDocs: [],
     cameraStreams: new Map()
@@ -889,17 +869,12 @@
 
   let cachedElements = null;
 
-  // Configuration des types de documents
   const DOC_CONFIG = {
     european_id: { twoSided: true, label: 'European Identity Card' },
     passport: { twoSided: false, label: 'Passport' },
     license: { twoSided: true, label: "Driver's License" }
   };
 
-  // ============================================
-  // 🎯 CACHE DOM
-  // ============================================
-  
   function getCachedElements() {
     if (!cachedElements) {
       cachedElements = {
@@ -911,10 +886,6 @@
     return cachedElements;
   }
 
-  // ============================================
-  // 💾 LOCALSTORAGE - expats
-  // ============================================
-  
   function getLocalStorage() {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
@@ -971,17 +942,12 @@
     }
   }
 
-  // ============================================
-  // 📊 UPDATE UI
-  // ============================================
-  
   function updateCounter() {
     const elements = getCachedElements();
     if (elements.counter) {
       elements.counter.textContent = state.uploadedDocs.length;
     }
     
-    // ✅ Notifier wizard-steps.js
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
@@ -1017,10 +983,6 @@
     updateCounter();
   }
 
-  // ============================================
-  // 🎥 CAMERA MANAGEMENT
-  // ============================================
-  
   async function openCamera(type, side) {
     const video = document.querySelector(`.camera-video[data-type="${type}"][data-side="${side}"]`);
     const captureBtn = document.querySelector(`.capture-btn[data-type="${type}"][data-side="${side}"]`);
@@ -1029,7 +991,6 @@
     
     const key = `${type}-${side}`;
     
-    // Fermer la caméra si déjà ouverte
     if (state.cameraStreams.has(key)) {
       stopCamera(type, side);
       return;
@@ -1056,7 +1017,7 @@
       state.cameraStreams.set(key, stream);
     } catch (err) {
       console.error("Camera error:", err);
-      alert("Camera Error: " + err.name + " - " + err.message + "\n\nPlease check permissions.");
+      alert("Camera Error: " + err.name + " - " + err.message + "\n\nPlease check permissions or try uploading a photo instead.");
     }
   }
 
@@ -1108,10 +1069,6 @@
     });
   }
 
-  // ============================================
-  // 📁 FILE UPLOAD
-  // ============================================
-  
   function handleFileUpload(input, type, side) {
     const file = input.files[0];
     if (!file || !file.type.startsWith('image/')) {
@@ -1172,10 +1129,6 @@
     });
   }
 
-  // ============================================
-  // 🎭 MODAL MANAGEMENT
-  // ============================================
-  
   function openModal(type) {
     const modal = document.getElementById(`modal-${type}`);
     if (modal) {
@@ -1251,22 +1204,20 @@
   }
 
   // ============================================
-  // ✅ VALIDATION GLOBALE
+  // ✅ VALIDATION GLOBALE - FIXED
+  // showAlert parameter: true = show alert, false = silent validation
   // ============================================
   
-  window.validateStep11 = function() {
-    if (!state.uploadedDocs || state.uploadedDocs.length === 0) {
-      alert('Please upload at least one identity document to continue');
-      return false;
+  window.validateStep11 = function(showAlert = false) {
+    const hasDocuments = state.uploadedDocs && state.uploadedDocs.length > 0;
+    
+    if (!hasDocuments && showAlert) {
+      alert('⚠️ Identity Document Required\n\nPlease upload at least one identity document to continue.\n\nYou can choose:\n• European Identity Card\n• Passport\n• Driver\'s License');
     }
     
-    return true;
+    return hasDocuments;
   };
 
-  // ============================================
-  // 🎪 EVENT DELEGATION
-  // ============================================
-  
   function initEventDelegation() {
     const step = getCachedElements().step;
     if (step) {
@@ -1336,10 +1287,6 @@
     });
   }
 
-  // ============================================
-  // 🔄 RESTORE STATE
-  // ============================================
-  
   function restoreState() {
     const data = getLocalStorage();
     state.uploadedDocs = [];
@@ -1353,10 +1300,6 @@
     updateCounter();
   }
 
-  // ============================================
-  // 🎬 INITIALIZATION
-  // ============================================
-  
   function init() {
     const elements = getCachedElements();
     

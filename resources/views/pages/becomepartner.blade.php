@@ -579,7 +579,6 @@
 <body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
 
 @include('includes.header')
-@include('pages.popup')
 
 <!-- HERO SECTION -->
 <section class="relative py-12 px-4 text-center overflow-hidden" role="banner">
