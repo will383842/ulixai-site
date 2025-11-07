@@ -53,8 +53,7 @@
     });
 
     gtag('config', 'G-418ZTJHNX6');
-    
- </script>
+  </script>
   <!-- End Google Analytics -->
 
   <!-- ═══════════════════════════════════════════════════════════
@@ -75,12 +74,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
-  <!-- Google Translate Widget -->
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
   <!-- Tailwind CSS CDN (Development Only) -->
   <script src="https://cdn.tailwindcss.com"></script>
-
 
   <!-- ═══════════════════════════════════════════════════════════
        ⚙️ TAILWIND CONFIGURATION
@@ -561,34 +556,6 @@
 
   <style>[x-cloak]{display:none !important}</style>
   <script src="https://unpkg.com/alpinejs@3.x.x" defer></script>
-  <script>
-    // Re-apply fixes because Google can re-inject on language change
-    (function fixGoogleTranslateGap() {
-      function zap() {
-        const banner = document.querySelector('iframe.goog-te-banner-frame');
-        if (banner && banner.parentNode) banner.parentNode.removeChild(banner);
-
-        const wrapper = document.querySelector('body > .skiptranslate');
-        if (wrapper) {
-          wrapper.style.display = 'none';
-          wrapper.style.height = '0px';
-          wrapper.style.overflow = 'hidden';
-        }
-        document.documentElement.style.marginTop = '0px';
-        document.body.style.top = '0px';
-        document.body.style.position = 'static';
-      }
-
-      zap();
-      let n = 0;
-      const id = setInterval(() => {
-        zap();
-        if (++n > 20) clearInterval(id); // ~4s total
-      }, 200);
-
-      window.addEventListener('resize', zap);
-    })();
-  </script>
 
   <style>
   html { scroll-behavior: auto !important; }
@@ -631,7 +598,6 @@
 @endphp
 
 <body class="min-h-screen bg-white">
-
 
 <!-- 🚀 Bouton Flèche Retour en Haut -->
 <button id="scrollToTopBtn" aria-label="Retour en haut">
@@ -735,9 +701,6 @@
           </ul>
         </div>
 
-        <!-- Hidden Google Translate widget (single instance) -->
-        <div id="google_translate_element" class="hidden"></div>
-
         <!-- Auth Buttons / User menu -->
         <div class="flex items-center space-x-3">
         @php 
@@ -750,7 +713,6 @@
             <span class="font-medium text-blue-600">Log in</span>
           </a>
 
-          <!-- ✅ CORRECTION: Ajout de l'ID signupBtn pour l'affiliation -->
           <button 
             id="signupBtn"
             onclick="window.providerWizard?.open()"
@@ -880,7 +842,7 @@
      🚀 POPUP SIGNUP - CHARGÉ UNIQUEMENT SI NON CONNECTÉ
      ============================================ -->
 @if(!Auth::check())
-<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden sm:flex items-center justify-center p-0 sm:p-4 md:p-6" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
+<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden sm:flex items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
   <!-- CONTAINER RESPONSIVE -->
   <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col">
     <!-- HEADER STICKY -->
@@ -1120,7 +1082,7 @@
         </a>
       </li>
 
-      {{-- Sign up - OUVRE LE POPUP - ✅ CORRECTION: Ajout de l'ID mobileSignupBtn --}}
+      {{-- Sign up - OUVRE LE POPUP --}}
       <li role="none">
         <button 
            id="mobileSignupBtn"
@@ -1228,6 +1190,73 @@
 @endif
 
 @include('includes.cookie-banner')
+
+<!-- ═══════════════════════════════════════════════════════════
+     🌐 GOOGLE TRANSLATE - INIT SIMPLE (UI gérée par language-manager.js)
+     ═══════════════════════════════════════════════════════════ -->
+
+<!-- Hidden Google Translate widget (une seule instance globale) -->
+<div id="google_translate_element" class="hidden"></div>
+
+<!-- Init Google Translate -->
+<script>
+(function() {
+  'use strict';
+  
+  /**
+   * Initialisation Google Translate (appelée automatiquement par leur script)
+   */
+  window.googleTranslateElementInit = function() {
+    console.log('🌐 [GoogleTranslate] Initializing...');
+    
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,fr,de',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+    
+    // Signaler que Google Translate est prêt
+    window.googleTranslateReady = true;
+    window.dispatchEvent(new Event('googleTranslateReady'));
+    
+    console.log('✅ [GoogleTranslate] Ready');
+  };
+  
+  /**
+   * Charger le script Google Translate (une seule fois)
+   */
+  if (!document.getElementById('google-translate-script')) {
+    const script = document.createElement('script');
+    script.id = 'google-translate-script';
+    script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    script.async = true;
+    script.onerror = () => console.error('❌ Failed to load Google Translate');
+    document.body.appendChild(script);
+  }
+  
+  /**
+   * Appliquer la langue sauvegardée au chargement de la page
+   */
+  function applyStoredLanguage() {
+    const savedLang = localStorage.getItem('ulixai_lang') || 'en';
+    
+    if (savedLang !== 'en') {
+      // Appliquer le hash immédiatement
+      window.location.hash = `googtrans(en|${savedLang})`;
+      console.log('🌐 [GoogleTranslate] Applied stored language:', savedLang);
+    }
+  }
+  
+  // Appliquer au chargement
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyStoredLanguage, { once: true });
+  } else {
+    applyStoredLanguage();
+  }
+  
+})();
+</script>
 
 <!-- ═══════════════════════════════════════════════════════════
      🚀 JAVASCRIPT MODULES - REFACTORISÉ

@@ -1781,8 +1781,10 @@ function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), 
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
- * Wizard Core - CORRIGÉ : Navigation stricte + Support affiliation
- * Version: 2.0
+ * ═══════════════════════════════════════════════════════════
+ * Wizard Core - Navigation stricte + Support affiliation
+ * Version: 2.1 - CORRIGÉ: Liens normaux ne déclenchent plus le popup
+ * ═══════════════════════════════════════════════════════════
  */
 
 var WizardCore = /*#__PURE__*/function () {
@@ -1848,7 +1850,7 @@ var WizardCore = /*#__PURE__*/function () {
       var step = this.steps[i];
       if (!step) return true;
 
-      // ✅ APPELER LA VALIDATION CUSTOM EN PREMIER
+      // Appeler la validation custom en premier
       var customValidate = window["validateStep".concat(stepNum)];
       if (typeof customValidate === 'function') {
         try {
@@ -1881,24 +1883,32 @@ var WizardCore = /*#__PURE__*/function () {
       var _this = this;
       var popup = document.getElementById('signupPopup');
 
-      // ✅ DÉLÉGATION D'ÉVÉNEMENTS - Mode Bubble (pas Capture)
+      // ═══════════════════════════════════════════════════════════
+      // 🔧 DÉLÉGATION D'ÉVÉNEMENTS - ORDRE DE PRIORITÉ CORRIGÉ
+      // ═══════════════════════════════════════════════════════════
       document.addEventListener('click', function (e) {
-        var t = e.target;
-        if (!t || !t.closest) return;
+        var clickedElement = e.target;
+        if (!clickedElement || !clickedElement.closest) return;
 
-        // ✅ PRIORITÉ 1 : Ne JAMAIS intercepter les liens <a> avec href
-        var link = t.closest('a[href]');
-        if (link) {
-          var href = link.getAttribute('href');
-          // Laisser passer tous les liens normaux (login, become-provider, etc.)
-          if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
-            console.log('🔗 Lien détecté, laisser passer:', href);
-            return; // Ne rien faire, naviguer normalement
+        // ═══════════════════════════════════════════════════════════
+        // 🎯 PRIORITÉ 0 (LA PLUS HAUTE) : Liens de navigation normaux
+        // ═══════════════════════════════════════════════════════════
+        var parentLink = clickedElement.closest('a[href]');
+        if (parentLink) {
+          var href = parentLink.getAttribute('href');
+          var isNormalLink = href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.toLowerCase().includes('signup'); // Bloquer uniquement /signup
+
+          if (isNormalLink) {
+            // ✅ Laisser le navigateur gérer la navigation normalement
+            console.log('🔗 Lien de navigation détecté:', href);
+            return; // Ne rien faire, laisser passer
           }
         }
 
-        // ✅ PRIORITÉ 2 : Ouvrir le popup signup (pour l'affiliation)
-        var openSignup = t.closest('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
+        // ═══════════════════════════════════════════════════════════
+        // 🎯 PRIORITÉ 1 : Ouvrir le popup signup
+        // ═══════════════════════════════════════════════════════════
+        var openSignup = clickedElement.closest('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
         if (openSignup) {
           console.log('📝 Bouton Sign Up cliqué');
           e.preventDefault();
@@ -1907,8 +1917,10 @@ var WizardCore = /*#__PURE__*/function () {
           return;
         }
 
-        // ✅ PRIORITÉ 3 : Ouvrir le popup help
-        var openHelp = t.closest('#requestHelpBtn, #helpBtn, #mobileSearchButton, [data-open="help"]');
+        // ═══════════════════════════════════════════════════════════
+        // 🎯 PRIORITÉ 2 : Ouvrir le popup help
+        // ═══════════════════════════════════════════════════════════
+        var openHelp = clickedElement.closest('#requestHelpBtn, #helpBtn, #mobileSearchButton, [data-open="help"]');
         if (openHelp) {
           console.log('❓ Bouton Help cliqué');
           e.preventDefault();
@@ -1921,8 +1933,10 @@ var WizardCore = /*#__PURE__*/function () {
           return;
         }
 
-        // ✅ PRIORITÉ 4 : Fermer le popup
-        var closeBtn = t.closest('#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]');
+        // ═══════════════════════════════════════════════════════════
+        // 🎯 PRIORITÉ 3 : Fermer le popup
+        // ═══════════════════════════════════════════════════════════
+        var closeBtn = clickedElement.closest('#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]');
         if (closeBtn) {
           console.log('❌ Bouton Close cliqué');
           e.preventDefault();
@@ -1931,14 +1945,18 @@ var WizardCore = /*#__PURE__*/function () {
           return;
         }
 
-        // ✅ PRIORITÉ 5 : Clic sur le backdrop (fond noir)
+        // ═══════════════════════════════════════════════════════════
+        // 🎯 PRIORITÉ 4 : Clic sur le backdrop (fond noir)
+        // ═══════════════════════════════════════════════════════════
         if (popup && e.target === popup) {
           console.log('🖱️ Clic sur backdrop');
           _this.closePopup();
         }
-      }, false); // ✅ FALSE = mode bubble (événements montent du bas vers le haut)
+      }, false); // Mode bubble
 
-      // ✅ ESC key pour fermer
+      // ═══════════════════════════════════════════════════════════
+      // ⌨️ ESC key pour fermer
+      // ═══════════════════════════════════════════════════════════
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
           console.log('⌨️ ESC pressed');
@@ -1946,7 +1964,9 @@ var WizardCore = /*#__PURE__*/function () {
         }
       });
 
-      // ✅ Fonctions globales pour compatibilité
+      // ═══════════════════════════════════════════════════════════
+      // 🌍 Fonctions globales pour compatibilité
+      // ═══════════════════════════════════════════════════════════
       window.openSignupPopup = function () {
         return _this.openPopup();
       };
@@ -1983,9 +2003,8 @@ var WizardCore = /*#__PURE__*/function () {
       // Afficher le popup
       popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
       popup.removeAttribute('aria-hidden');
+      popup.style.display = 'flex'; // Important pour le centrage
 
-      // ✅ IMPORTANT : Utiliser flex pour le centrage (pas block)
-      popup.style.display = 'flex';
       console.log('✅ Popup opened');
       this.resetToFirstStep();
     }
@@ -2005,6 +2024,10 @@ var WizardCore = /*#__PURE__*/function () {
     }
   }]);
 }();
+
+// ═══════════════════════════════════════════════════════════
+// 🚀 EXPORT ET INITIALISATION
+// ═══════════════════════════════════════════════════════════
 function initializeWizard() {
   if (window.providerWizard) {
     console.log('⚠️ Wizard already initialized');
@@ -2013,7 +2036,7 @@ function initializeWizard() {
   var wizard = new WizardCore();
   wizard.init();
 
-  // ✅ API publique pour compatibilité + affiliation
+  // API publique pour compatibilité + affiliation
   window.providerWizard = {
     update: function update() {
       return wizard.updateUI();

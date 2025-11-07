@@ -1,6 +1,8 @@
 /**
- * Wizard Core - CORRIGÉ : Navigation stricte + Support affiliation
- * Version: 2.0
+ * ═══════════════════════════════════════════════════════════
+ * Wizard Core - Navigation stricte + Support affiliation
+ * Version: 2.1 - CORRIGÉ: Liens normaux ne déclenchent plus le popup
+ * ═══════════════════════════════════════════════════════════
  */
 
 export class WizardCore {
@@ -56,7 +58,7 @@ export class WizardCore {
     const step = this.steps[i];
     if (!step) return true;
     
-    // ✅ APPELER LA VALIDATION CUSTOM EN PREMIER
+    // Appeler la validation custom en premier
     const customValidate = window[`validateStep${stepNum}`];
     if (typeof customValidate === 'function') {
       try {
@@ -86,24 +88,39 @@ export class WizardCore {
   initCloseButtons() {
     const popup = document.getElementById('signupPopup');
 
-    // ✅ DÉLÉGATION D'ÉVÉNEMENTS - Mode Bubble (pas Capture)
+    // ═══════════════════════════════════════════════════════════
+    // 🔧 DÉLÉGATION D'ÉVÉNEMENTS - ORDRE DE PRIORITÉ CORRIGÉ
+    // ═══════════════════════════════════════════════════════════
     document.addEventListener('click', (e) => {
-      const t = e.target;
-      if (!t || !t.closest) return;
+      const clickedElement = e.target;
+      if (!clickedElement || !clickedElement.closest) return;
 
-      // ✅ PRIORITÉ 1 : Ne JAMAIS intercepter les liens <a> avec href
-      const link = t.closest('a[href]');
-      if (link) {
-        const href = link.getAttribute('href');
-        // Laisser passer tous les liens normaux (login, become-provider, etc.)
-        if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
-          console.log('🔗 Lien détecté, laisser passer:', href);
-          return; // Ne rien faire, naviguer normalement
+      // ═══════════════════════════════════════════════════════════
+      // 🎯 PRIORITÉ 0 (LA PLUS HAUTE) : Liens de navigation normaux
+      // ═══════════════════════════════════════════════════════════
+      const parentLink = clickedElement.closest('a[href]');
+      
+      if (parentLink) {
+        const href = parentLink.getAttribute('href');
+        const isNormalLink = href && 
+                            !href.startsWith('#') && 
+                            !href.startsWith('javascript:') &&
+                            !href.toLowerCase().includes('signup'); // Bloquer uniquement /signup
+        
+        if (isNormalLink) {
+          // ✅ Laisser le navigateur gérer la navigation normalement
+          console.log('🔗 Lien de navigation détecté:', href);
+          return; // Ne rien faire, laisser passer
         }
       }
 
-      // ✅ PRIORITÉ 2 : Ouvrir le popup signup (pour l'affiliation)
-      const openSignup = t.closest('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
+      // ═══════════════════════════════════════════════════════════
+      // 🎯 PRIORITÉ 1 : Ouvrir le popup signup
+      // ═══════════════════════════════════════════════════════════
+      const openSignup = clickedElement.closest(
+        '#signupBtn, #mobileSignupBtn, [data-action="open-signup"]'
+      );
+      
       if (openSignup) {
         console.log('📝 Bouton Sign Up cliqué');
         e.preventDefault();
@@ -112,10 +129,13 @@ export class WizardCore {
         return;
       }
 
-      // ✅ PRIORITÉ 3 : Ouvrir le popup help
-      const openHelp = t.closest(
+      // ═══════════════════════════════════════════════════════════
+      // 🎯 PRIORITÉ 2 : Ouvrir le popup help
+      // ═══════════════════════════════════════════════════════════
+      const openHelp = clickedElement.closest(
         '#requestHelpBtn, #helpBtn, #mobileSearchButton, [data-open="help"]'
       );
+      
       if (openHelp) {
         console.log('❓ Bouton Help cliqué');
         e.preventDefault();
@@ -128,10 +148,13 @@ export class WizardCore {
         return;
       }
 
-      // ✅ PRIORITÉ 4 : Fermer le popup
-      const closeBtn = t.closest(
+      // ═══════════════════════════════════════════════════════════
+      // 🎯 PRIORITÉ 3 : Fermer le popup
+      // ═══════════════════════════════════════════════════════════
+      const closeBtn = clickedElement.closest(
         '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]'
       );
+      
       if (closeBtn) {
         console.log('❌ Bouton Close cliqué');
         e.preventDefault();
@@ -140,14 +163,19 @@ export class WizardCore {
         return;
       }
 
-      // ✅ PRIORITÉ 5 : Clic sur le backdrop (fond noir)
+      // ═══════════════════════════════════════════════════════════
+      // 🎯 PRIORITÉ 4 : Clic sur le backdrop (fond noir)
+      // ═══════════════════════════════════════════════════════════
       if (popup && e.target === popup) {
         console.log('🖱️ Clic sur backdrop');
         this.closePopup();
       }
-    }, false); // ✅ FALSE = mode bubble (événements montent du bas vers le haut)
 
-    // ✅ ESC key pour fermer
+    }, false); // Mode bubble
+
+    // ═══════════════════════════════════════════════════════════
+    // ⌨️ ESC key pour fermer
+    // ═══════════════════════════════════════════════════════════
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
         console.log('⌨️ ESC pressed');
@@ -155,7 +183,9 @@ export class WizardCore {
       }
     });
 
-    // ✅ Fonctions globales pour compatibilité
+    // ═══════════════════════════════════════════════════════════
+    // 🌍 Fonctions globales pour compatibilité
+    // ═══════════════════════════════════════════════════════════
     window.openSignupPopup  = () => this.openPopup();
     window.closeSignupPopup = () => this.closePopup();
 
@@ -188,9 +218,7 @@ export class WizardCore {
     // Afficher le popup
     popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.removeAttribute('aria-hidden');
-    
-    // ✅ IMPORTANT : Utiliser flex pour le centrage (pas block)
-    popup.style.display = 'flex';
+    popup.style.display = 'flex'; // Important pour le centrage
 
     console.log('✅ Popup opened');
     this.resetToFirstStep();
@@ -209,6 +237,9 @@ export class WizardCore {
   }
 }
 
+// ═══════════════════════════════════════════════════════════
+// 🚀 EXPORT ET INITIALISATION
+// ═══════════════════════════════════════════════════════════
 export function initializeWizard() {
   if (window.providerWizard) {
     console.log('⚠️ Wizard already initialized');
@@ -218,7 +249,7 @@ export function initializeWizard() {
   const wizard = new WizardCore();
   wizard.init();
 
-  // ✅ API publique pour compatibilité + affiliation
+  // API publique pour compatibilité + affiliation
   window.providerWizard = {
     update: () => wizard.updateUI(),
     close: () => wizard.closePopup(),

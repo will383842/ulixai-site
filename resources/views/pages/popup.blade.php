@@ -18,13 +18,25 @@ $popupConfig = [
 ];
 @endphp
 
+{{-- ═══════════════════════════════════════════════════════════
+     ✅ Fonctions de navigation back - Nécessaires pour les boutons "Back"
+     Note: Les autres fonctions (openHelpPopup, handleCategoryClick, etc.) 
+     sont gérées par category-popups.js
+     ═══════════════════════════════════════════════════════════ --}}
+
 <script>
 (function() {
   'use strict';
   
+  /**
+   * Retour aux catégories principales depuis les sous-catégories
+   */
   window.goBackToMainCategories = function() {
+    console.log('🔙 Going back to main categories');
+    
     const subPopup = document.getElementById('expatriesPopup');
     const mainPopup = document.getElementById('searchPopup');
+    
     if (subPopup) {
       subPopup.classList.add('hidden');
       subPopup.setAttribute('aria-hidden', 'true');
@@ -35,9 +47,15 @@ $popupConfig = [
     }
   };
 
+  /**
+   * Retour aux sous-catégories depuis les catégories enfants
+   */
   window.goBackToSubcategories = function() {
+    console.log('🔙 Going back to subcategories');
+    
     const childPopup = document.getElementById('vacanciersAutresBesoinsPopup');
     const subPopup = document.getElementById('expatriesPopup');
+    
     if (childPopup) {
       childPopup.classList.add('hidden');
       childPopup.setAttribute('aria-hidden', 'true');
@@ -48,26 +66,43 @@ $popupConfig = [
     }
   };
 
+  /**
+   * Alias pour compatibilité
+   */
   window.goBackToVacanciersSubcategories = window.goBackToSubcategories;
 
+  /**
+   * Fermer tous les popups de catégories
+   */
   window.closeAllPopups = function() {
-    ['searchPopup', 'expatriesPopup', 'vacanciersAutresBesoinsPopup', 'vacanciersPopup'].forEach(id => {
+    console.log('❌ Closing all category popups');
+    
+    ['searchPopup', 'expatriesPopup', 'vacanciersAutresBesoinsPopup'].forEach(id => {
       const popup = document.getElementById(id);
       if (popup) {
         popup.classList.add('hidden');
         popup.setAttribute('aria-hidden', 'true');
       }
     });
+    
+    // Clear localStorage
     localStorage.removeItem('create-request');
   };
 
+  /**
+   * Fermer uniquement le popup principal
+   */
   window.closeSearchPopup = function() {
+    console.log('❌ Closing search popup');
+    
     const popup = document.getElementById('searchPopup');
     if (popup) {
       popup.classList.add('hidden');
       popup.setAttribute('aria-hidden', 'true');
     }
   };
+
+  console.log('✅ Popup navigation functions loaded');
 })();
 </script>
 
