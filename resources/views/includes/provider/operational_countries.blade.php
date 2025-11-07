@@ -1,7 +1,6 @@
 <!-- 
 ============================================
-🚀 STEP 6 - WHERE DO YOU OPERATE (FIXED)
-🔧 Fix: Suppression du cache pour permettre la sélection
+🚀 STEP 6 - WHERE DO YOU OPERATE
 ============================================
 -->
 
@@ -74,303 +73,16 @@
     </div>
 
     <div id="step6CountryList" class="country-list-container" role="group" aria-label="Select operational countries">
-      <button type="button" class="country-card" data-country="Afghanistan" role="checkbox" aria-checked="false" aria-label="Select Afghanistan">
-        <span class="country-name">Afghanistan</span>
+      @foreach($countries as $country)
+      <button type="button" class="country-card" data-country="{{ $country->country }}" role="checkbox" aria-checked="false" aria-label="Select {{ $country->country }}">
+        <span class="country-name">{{ $country->country }}</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
           </svg>
         </span>
       </button>
-
-      <button type="button" class="country-card" data-country="Albania" role="checkbox" aria-checked="false" aria-label="Select Albania">
-        <span class="country-name">Albania</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Algeria" role="checkbox" aria-checked="false" aria-label="Select Algeria">
-        <span class="country-name">Algeria</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Andorra" role="checkbox" aria-checked="false" aria-label="Select Andorra">
-        <span class="country-name">Andorra</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Angola" role="checkbox" aria-checked="false" aria-label="Select Angola">
-        <span class="country-name">Angola</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Argentina" role="checkbox" aria-checked="false" aria-label="Select Argentina">
-        <span class="country-name">Argentina</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Australia" role="checkbox" aria-checked="false" aria-label="Select Australia">
-        <span class="country-name">Australia</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Austria" role="checkbox" aria-checked="false" aria-label="Select Austria">
-        <span class="country-name">Austria</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Belgium" role="checkbox" aria-checked="false" aria-label="Select Belgium">
-        <span class="country-name">Belgium</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Brazil" role="checkbox" aria-checked="false" aria-label="Select Brazil">
-        <span class="country-name">Brazil</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Canada" role="checkbox" aria-checked="false" aria-label="Select Canada">
-        <span class="country-name">Canada</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="China" role="checkbox" aria-checked="false" aria-label="Select China">
-        <span class="country-name">China</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Denmark" role="checkbox" aria-checked="false" aria-label="Select Denmark">
-        <span class="country-name">Denmark</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Finland" role="checkbox" aria-checked="false" aria-label="Select Finland">
-        <span class="country-name">Finland</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="France" role="checkbox" aria-checked="false" aria-label="Select France">
-        <span class="country-name">France</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Germany" role="checkbox" aria-checked="false" aria-label="Select Germany">
-        <span class="country-name">Germany</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Greece" role="checkbox" aria-checked="false" aria-label="Select Greece">
-        <span class="country-name">Greece</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="India" role="checkbox" aria-checked="false" aria-label="Select India">
-        <span class="country-name">India</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Ireland" role="checkbox" aria-checked="false" aria-label="Select Ireland">
-        <span class="country-name">Ireland</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Italy" role="checkbox" aria-checked="false" aria-label="Select Italy">
-        <span class="country-name">Italy</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Japan" role="checkbox" aria-checked="false" aria-label="Select Japan">
-        <span class="country-name">Japan</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Mexico" role="checkbox" aria-checked="false" aria-label="Select Mexico">
-        <span class="country-name">Mexico</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Netherlands" role="checkbox" aria-checked="false" aria-label="Select Netherlands">
-        <span class="country-name">Netherlands</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Norway" role="checkbox" aria-checked="false" aria-label="Select Norway">
-        <span class="country-name">Norway</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Poland" role="checkbox" aria-checked="false" aria-label="Select Poland">
-        <span class="country-name">Poland</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Portugal" role="checkbox" aria-checked="false" aria-label="Select Portugal">
-        <span class="country-name">Portugal</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Russia" role="checkbox" aria-checked="false" aria-label="Select Russia">
-        <span class="country-name">Russia</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="South Korea" role="checkbox" aria-checked="false" aria-label="Select South Korea">
-        <span class="country-name">South Korea</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Spain" role="checkbox" aria-checked="false" aria-label="Select Spain">
-        <span class="country-name">Spain</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Sweden" role="checkbox" aria-checked="false" aria-label="Select Sweden">
-        <span class="country-name">Sweden</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="Switzerland" role="checkbox" aria-checked="false" aria-label="Select Switzerland">
-        <span class="country-name">Switzerland</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="United Kingdom" role="checkbox" aria-checked="false" aria-label="Select United Kingdom">
-        <span class="country-name">United Kingdom</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
-      <button type="button" class="country-card" data-country="United States" role="checkbox" aria-checked="false" aria-label="Select United States">
-        <span class="country-name">United States</span>
-        <span class="check-indicator">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </span>
-      </button>
-
+      @endforeach
     </div>
 
   </div>
@@ -408,9 +120,6 @@
 
 #step6Search {
   transition: all 0.2s ease;
-  font-feature-settings: 'kern' 1, 'liga' 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 #step6Search:hover {
@@ -429,10 +138,7 @@
   gap: 0.625rem;
   max-height: 420px;
   overflow-y: auto;
-  
   contain: layout style paint;
-  will-change: scroll-position;
-  
   scrollbar-width: thin;
   scrollbar-color: #3b82f6 #f1f5f9;
 }
@@ -484,15 +190,10 @@
   cursor: pointer;
   text-align: left;
   min-height: 3.5rem;
-  
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  
   transform: translateZ(0);
   backface-visibility: hidden;
-  perspective: 1000px;
-  
   contain: layout style paint;
-  
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
@@ -500,12 +201,12 @@
 .country-card:hover {
   border-color: #2563eb;
   background: #eff6ff;
-  transform: translateY(-2px) translateZ(0);
+  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
 .country-card:active {
-  transform: translateY(0) scale(0.98) translateZ(0);
+  transform: translateY(0) scale(0.98);
 }
 
 .country-card.selected {
@@ -525,15 +226,9 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: inherit;
-  text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  
-  font-feature-settings: 'kern' 1, 'liga' 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
 .country-card .check-indicator {
@@ -546,17 +241,13 @@
   border-radius: 50%;
   background: rgba(59, 130, 246, 0.1);
   opacity: 0;
-  
-  transform: scale(0.8) translateZ(0);
+  transform: scale(0.8);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  backface-visibility: hidden;
-  will-change: transform, opacity;
 }
 
 .country-card.selected .check-indicator {
   opacity: 1;
-  transform: scale(1) translateZ(0);
+  transform: scale(1);
   background: rgba(255, 255, 255, 0.2);
 }
 
@@ -575,45 +266,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-@media (prefers-contrast: high) {
-  .country-card {
-    border: 3px solid currentColor;
-  }
-  
-  .country-card.selected {
-    border: 3px solid #1d4ed8;
-  }
-}
-
-#step6 .country-card,
-#step6 .check-indicator {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-#step6 .country-card {
-  contain: layout style paint;
-}
-
-@supports (font-display: swap) {
-  * {
-    font-display: swap;
-  }
-}
-
-.country-list-container {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 640px) {
@@ -629,174 +286,175 @@
 </style>
 
 <script>
-window.selectedCountries = [];
+(function() {
+  'use strict';
+  
+  window.selectedCountries = window.selectedCountries || [];
 
-window.toggleCountrySelection = function(country) {
-  const container = document.querySelector('#step6');
-  if (!container) return;
-  
-  const errorAlert = document.getElementById('step6CountryError');
-  const selectedCount = document.getElementById('step6SelectedCount');
-  const card = container.querySelector(`.country-card[data-country="${country}"]`);
-  
-  const index = window.selectedCountries.indexOf(country);
-  
-  if (index > -1) {
-    window.selectedCountries.splice(index, 1);
-    if (card) {
+  window.toggleCountrySelection = function(country) {
+    const container = document.querySelector('#step6');
+    if (!container) return;
+    
+    const errorAlert = document.getElementById('step6CountryError');
+    const selectedCount = document.getElementById('step6SelectedCount');
+    const card = container.querySelector(`.country-card[data-country="${country}"]`);
+    
+    if (!card) return;
+    
+    const index = window.selectedCountries.indexOf(country);
+    
+    if (index > -1) {
+      window.selectedCountries.splice(index, 1);
       card.classList.remove('selected');
       card.setAttribute('aria-checked', 'false');
-    }
-  } else {
-    window.selectedCountries.push(country);
-    if (card) {
+    } else {
+      window.selectedCountries.push(country);
       card.classList.add('selected');
       card.setAttribute('aria-checked', 'true');
     }
-  }
-  
-  if (selectedCount) {
-    selectedCount.textContent = window.selectedCountries.length;
-  }
-  
-  if (errorAlert && !errorAlert.classList.contains('hidden')) {
-    errorAlert.classList.add('hidden');
-  }
-  
-  try {
-    const data = JSON.parse(localStorage.getItem('expats') || '{}');
-    data.operational_countries = window.selectedCountries;
-    localStorage.setItem('expats', JSON.stringify(data));
-  } catch (e) {
-    console.warn('localStorage not available:', e.message);
-  }
-  
-  if (typeof window.updateNavigationButtons === 'function') {
-    window.updateNavigationButtons();
-  }
-};
-
-window.validateStep6 = function() {
-  const errorAlert = document.getElementById('step6CountryError');
-  
-  if (!window.selectedCountries || window.selectedCountries.length === 0) {
-    if (errorAlert) {
-      errorAlert.classList.remove('hidden');
-      errorAlert.classList.add('shake-animation');
-      setTimeout(() => {
-        errorAlert.classList.remove('shake-animation');
-      }, 500);
-    }
-    return false;
-  }
-  
-  return true;
-};
-
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  const container = document.querySelector('#step6');
-  
-  if (!container) return;
-  
-  container.addEventListener('click', function(e) {
-    const card = e.target.closest('.country-card');
-    if (card) {
-      const country = card.getAttribute('data-country');
-      if (country) {
-        window.toggleCountrySelection(country);
-      }
-    }
-  }, { passive: true });
-  
-  container.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      const card = e.target.closest('.country-card');
-      if (card) {
-        e.preventDefault();
-        const country = card.getAttribute('data-country');
-        if (country) {
-          window.toggleCountrySelection(country);
-        }
-      }
-    }
-  });
-  
-  const searchInput = document.getElementById('step6Search');
-  if (searchInput) {
-    const performSearch = debounce(function(searchValue) {
-      const search = searchValue.toLowerCase();
-      const cards = container.querySelectorAll('.country-card');
-      
-      requestAnimationFrame(() => {
-        cards.forEach(card => {
-          const country = (card.getAttribute('data-country') || '').toLowerCase();
-          card.style.display = country.includes(search) ? '' : 'none';
-        });
-      });
-    }, 150);
     
-    searchInput.addEventListener('input', function() {
-      performSearch(this.value);
-    }, { passive: true });
+    if (selectedCount) {
+      selectedCount.textContent = window.selectedCountries.length;
+    }
+    
+    if (errorAlert && !errorAlert.classList.contains('hidden')) {
+      errorAlert.classList.add('hidden');
+    }
+    
+    try {
+      const data = JSON.parse(localStorage.getItem('expats') || '{}');
+      data.operational_countries = window.selectedCountries;
+      localStorage.setItem('expats', JSON.stringify(data));
+    } catch (e) {}
+    
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
+  };
+
+  window.validateStep6 = function() {
+    const errorAlert = document.getElementById('step6CountryError');
+    
+    if (!window.selectedCountries || window.selectedCountries.length === 0) {
+      if (errorAlert) {
+        errorAlert.classList.remove('hidden');
+        errorAlert.classList.add('shake-animation');
+        setTimeout(() => errorAlert.classList.remove('shake-animation'), 500);
+      }
+      return false;
+    }
+    
+    return true;
+  };
+
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
   }
-  
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        if (!container.classList.contains('hidden')) {
+
+  function restoreFromStorage() {
+    try {
+      const data = JSON.parse(localStorage.getItem('expats') || '{}');
+      
+      if (data.operational_countries && Array.isArray(data.operational_countries)) {
+        window.selectedCountries = data.operational_countries;
+        
+        requestAnimationFrame(() => {
+          const container = document.querySelector('#step6');
+          if (!container) return;
+          
+          const selectedCount = document.getElementById('step6SelectedCount');
+          
+          window.selectedCountries.forEach(country => {
+            const card = container.querySelector(`.country-card[data-country="${country}"]`);
+            if (card) {
+              card.classList.add('selected');
+              card.setAttribute('aria-checked', 'true');
+            }
+          });
+          
+          if (selectedCount) {
+            selectedCount.textContent = window.selectedCountries.length;
+          }
+          
           if (typeof window.updateNavigationButtons === 'function') {
             window.updateNavigationButtons();
           }
+        });
+      }
+    } catch (e) {}
+  }
+
+  function init() {
+    const container = document.querySelector('#step6');
+    if (!container) return;
+
+    container.addEventListener('click', function(e) {
+      const card = e.target.closest('.country-card');
+      if (card) {
+        const country = card.getAttribute('data-country');
+        if (country) window.toggleCountrySelection(country);
+      }
+    }, { passive: true });
+
+    container.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const card = e.target.closest('.country-card');
+        if (card) {
+          e.preventDefault();
+          const country = card.getAttribute('data-country');
+          if (country) window.toggleCountrySelection(country);
         }
       }
     });
-  });
-  
-  observer.observe(container, { 
-    attributes: true,
-    attributeFilter: ['class']
-  });
-  
-  try {
-    const data = JSON.parse(localStorage.getItem('expats') || '{}');
-    
-    if (data.operational_countries && Array.isArray(data.operational_countries)) {
-      window.selectedCountries = data.operational_countries;
-      
-      requestAnimationFrame(() => {
-        const selectedCount = document.getElementById('step6SelectedCount');
+
+    const searchInput = document.getElementById('step6Search');
+    if (searchInput) {
+      const performSearch = debounce(function(searchValue) {
+        const search = searchValue.toLowerCase();
+        const cards = container.querySelectorAll('.country-card');
         
-        window.selectedCountries.forEach(country => {
-          const card = container.querySelector(`.country-card[data-country="${country}"]`);
-          if (card) {
-            card.classList.add('selected');
-            card.setAttribute('aria-checked', 'true');
-          }
+        requestAnimationFrame(() => {
+          cards.forEach(card => {
+            const country = (card.getAttribute('data-country') || '').toLowerCase();
+            card.style.display = country.includes(search) ? '' : 'none';
+          });
         });
-        
-        if (selectedCount) {
-          selectedCount.textContent = window.selectedCountries.length;
-        }
-        
-        if (typeof window.updateNavigationButtons === 'function') {
-          window.updateNavigationButtons();
+      }, 150);
+      
+      searchInput.addEventListener('input', function() {
+        performSearch(this.value);
+      }, { passive: true });
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          if (!container.classList.contains('hidden')) {
+            if (searchInput) searchInput.value = '';
+            const cards = container.querySelectorAll('.country-card');
+            cards.forEach(card => card.style.display = '');
+            restoreFromStorage();
+          }
         }
       });
-    }
-  } catch (e) {
-    console.warn('Could not restore selection:', e.message);
+    });
+
+    observer.observe(container, { 
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    restoreFromStorage();
   }
-});
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 </script>

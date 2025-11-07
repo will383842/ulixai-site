@@ -1,11 +1,12 @@
 /**
  * Header Initialization - Laravel Mix Compatible
  * Point d'entrée principal pour tous les modules header
+ * Version optimisée avec protection popup
  */
 
 import { initializeWizard } from './modules/wizard-core.js';
 import { initializeWizardSteps } from './modules/wizard-steps.js';
-import { initializeWizardSubmission } from './modules/wizard-submission.js'; // ✅ AJOUTÉ
+import { initializeWizardSubmission } from './modules/wizard-submission.js';
 import { initializeMobileMenu } from './modules/mobile-menu.js';
 import { initializeLanguageManager } from './modules/language-manager.js';
 import { initializeCategoryPopups } from './modules/category-popups.js';
@@ -30,26 +31,44 @@ function initializeAll() {
   console.log('📦 Available modules:', {
     wizard: typeof initializeWizard,
     steps: typeof initializeWizardSteps,
-    submission: typeof initializeWizardSubmission, // ✅ AJOUTÉ
+    submission: typeof initializeWizardSubmission,
     menu: typeof initializeMobileMenu,
     language: typeof initializeLanguageManager,
     popups: typeof initializeCategoryPopups,
     scroll: typeof initializeScrollUtils
   });
 
-  // 1) Core (popups SignUp / croix / ESC / backdrop) d'abord
-  const wizard = safeInit('Wizard', initializeWizard);
+  // ✅ VÉRIFICATION: Le popup existe-t-il dans le DOM ?
+  const popupExists = !!document.getElementById('signupPopup');
+  console.log(`📊 Signup popup ${popupExists ? '✅ FOUND' : '⚠️ NOT FOUND'} in DOM`);
 
-  // 2) Steps (wizard-steps) ensuite — isolé pour ne pas bloquer le reste en cas d'erreur
-  const steps = safeInit('WizardSteps', initializeWizardSteps);
+  // 1) Core (popups SignUp / croix / ESC / backdrop) - Seulement si popup existe
+  let wizard = null;
+  if (popupExists) {
+    wizard = safeInit('Wizard', initializeWizard);
+  } else {
+    console.log('ℹ️ Skipping Wizard initialization (user is logged in)');
+  }
 
-  // 3) Wizard Submission - Gestion de la soumission du formulaire
-  safeInit('WizardSubmission', initializeWizardSubmission); // ✅ AJOUTÉ
+  // 2) Steps (wizard-steps) - Seulement si popup existe
+  let steps = null;
+  if (popupExists) {
+    steps = safeInit('WizardSteps', initializeWizardSteps);
+  } else {
+    console.log('ℹ️ Skipping WizardSteps initialization (user is logged in)');
+  }
 
-  // 4) Autres features du header
+  // 3) Wizard Submission - Seulement si popup existe
+  if (popupExists) {
+    safeInit('WizardSubmission', initializeWizardSubmission);
+  } else {
+    console.log('ℹ️ Skipping WizardSubmission initialization (user is logged in)');
+  }
+
+  // 4) Mobile Menu - TOUJOURS INITIALISER (indépendant du popup)
   safeInit('MobileMenu', initializeMobileMenu);
   
-  // 5) Language Manager avec vérification
+  // 5) Language Manager - TOUJOURS INITIALISER
   const langManager = safeInit('LanguageManager', () => {
     const manager = initializeLanguageManager();
     
@@ -73,57 +92,76 @@ function initializeAll() {
     return manager;
   });
   
+  // 6) Category Popups - TOUJOURS INITIALISER
   safeInit('CategoryPopups', initializeCategoryPopups);
+  
+  // 7) Scroll Utils - TOUJOURS INITIALISER
   safeInit('ScrollUtils', initializeScrollUtils);
 
-  // 6) Wrappers globaux attendus par le markup (onclick="showStep(1)" etc.)
-  (function exposeWrappers() {
-    try {
-      if (!window.showStep) {
-        window.showStep = function (i) {
-          if (window.providerWizardSteps && typeof window.providerWizardSteps.showStep === 'function') {
-            window.providerWizardSteps.showStep(i);
-          } else if (steps && typeof steps.showStep === 'function') {
-            steps.showStep(i);
-          }
-        };
+  // 8) Wrappers globaux - Seulement si popup existe
+  if (popupExists) {
+    (function exposeWrappers() {
+      try {
+        if (!window.showStep) {
+          window.showStep = function (i) {
+            if (window.providerWizardSteps && typeof window.providerWizardSteps.showStep === 'function') {
+              window.providerWizardSteps.showStep(i);
+            } else if (steps && typeof steps.showStep === 'function') {
+              steps.showStep(i);
+            }
+          };
+        }
+        if (!window.updateNavigationButtons) {
+          window.updateNavigationButtons = function () {
+            if (window.providerWizardSteps && typeof window.providerWizardSteps.updateNavigationButtons === 'function') {
+              window.providerWizardSteps.updateNavigationButtons();
+            } else if (steps && typeof steps.updateNavigationButtons === 'function') {
+              steps.updateNavigationButtons();
+            }
+          };
+        }
+        console.log('✅ Global wrappers exposed');
+      } catch (e) {
+        console.warn('⚠️ Wrapper exposure failed', e);
       }
-      if (!window.updateNavigationButtons) {
-        window.updateNavigationButtons = function () {
-          if (window.providerWizardSteps && typeof window.providerWizardSteps.updateNavigationButtons === 'function') {
-            window.providerWizardSteps.updateNavigationButtons();
-          } else if (steps && typeof steps.updateNavigationButtons === 'function') {
-            steps.updateNavigationButtons();
-          }
-        };
-      }
-    } catch (e) {
-      console.warn('⚠️ Wrapper exposure failed', e);
-    }
-  })();
+    })();
 
-  // 7) ✅ LISTENER OPTIMISÉ - Un seul event suffisant
-  document.addEventListener('change', () => {
-    if (typeof window.updateNavigationButtons === 'function') {
-      requestAnimationFrame(() => window.updateNavigationButtons());
-    }
-  }, { passive: true });
-
-  // Signal spécifique Step 2 (si émis)
-  document.addEventListener('pw:step2:changed', () => {
-    try { 
+    // 9) Event listeners pour le wizard - Seulement si popup existe
+    document.addEventListener('change', () => {
       if (typeof window.updateNavigationButtons === 'function') {
-        window.updateNavigationButtons(); 
+        requestAnimationFrame(() => window.updateNavigationButtons());
       }
-    } catch(e) {}
-  });
+    }, { passive: true });
+
+    // Signal spécifique Step 2
+    document.addEventListener('pw:step2:changed', () => {
+      try { 
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons(); 
+        }
+      } catch(e) {
+        console.warn('⚠️ Step2 event handler failed', e);
+      }
+    });
+  } else {
+    console.log('ℹ️ Skipping wizard event listeners (user is logged in)');
+  }
 
   console.log('✅ All header modules initialized');
   console.log('🔍 Global objects:', {
     providerWizard: !!window.providerWizard,
     providerWizardSteps: !!window.providerWizardSteps,
     providerLanguageManager: !!window.providerLanguageManager,
-    onProviderSignupSubmit: !!window.onProviderSignupSubmit // ✅ AJOUTÉ pour vérifier
+    onProviderSignupSubmit: !!window.onProviderSignupSubmit
+  });
+
+  // ✅ RÉSUMÉ DE L'INITIALISATION
+  console.log('📋 Initialization Summary:', {
+    popupInDOM: popupExists,
+    wizardInitialized: !!wizard,
+    stepsInitialized: !!steps,
+    mobileMenuInitialized: true,
+    languageManagerInitialized: !!langManager
   });
 }
 

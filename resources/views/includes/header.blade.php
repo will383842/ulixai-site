@@ -747,12 +747,13 @@
         @if(!$isActive)
           <a href="/login" class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 group">
             <i class="fas fa-user mr-2 text-lg text-blue-600" aria-hidden="true"></i>
-            <span class="font-medium text-blue-600"> Log in</span>
+            <span class="font-medium text-blue-600">Log in</span>
           </a>
 
+          <!-- ✅ CORRECTION: Ajout de l'ID signupBtn pour l'affiliation -->
           <button 
-            id="signupBtn" 
-            data-open="signup"
+            id="signupBtn"
+            onclick="window.providerWizard?.open()"
             class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2">
             <i class="fas fa-user-plus mr-2 text-lg" aria-hidden="true"></i>
             <span>Sign Up</span>
@@ -876,8 +877,9 @@
 </nav>
 
 <!-- ============================================
-     🚀 POPUP MODERNISÉ 2025/2026 - CENTRÉ SUR DESKTOP UNIQUEMENT
+     🚀 POPUP SIGNUP - CHARGÉ UNIQUEMENT SI NON CONNECTÉ
      ============================================ -->
+@if(!Auth::check())
 <div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden sm:flex items-center justify-center p-0 sm:p-4 md:p-6" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
   <!-- CONTAINER RESPONSIVE -->
   <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col">
@@ -959,11 +961,12 @@
     </div>
   </div>
 </div>
+@endif
 
   <!-- 🎨 Mobile Header - HTML5 Semantic -->
   <header class="lg:hidden fixed top-0 left-0 w-full bg-white z-[60] shadow-md" role="banner">
     <div class="flex items-center justify-between px-4 py-2">
-      <a href="/index.php" aria-label="ULIXAI Home">
+      <a href="/" aria-label="ULIXAI Home">
         <img src="/images/headerlogos.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" width="40" height="40" />
       </a>
 
@@ -1117,11 +1120,11 @@
         </a>
       </li>
 
-      {{-- Sign up - OUVRE LE POPUP --}}
+      {{-- Sign up - OUVRE LE POPUP - ✅ CORRECTION: Ajout de l'ID mobileSignupBtn --}}
       <li role="none">
         <button 
            id="mobileSignupBtn"
-           data-open="signup" 
+           onclick="window.providerWizard?.open()"
            class="w-full text-left block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
            role="menuitem">
           <i class="fas fa-user-plus text-blue-600" aria-hidden="true"></i>

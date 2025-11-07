@@ -575,7 +575,6 @@
 <body class="bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
 
 @include('includes.header')
-@include('pages.popup')
 
 <!-- 🌟 Hero Section - Clean & Mobile Optimized -->
 <section class="gradient-hero relative overflow-hidden">
@@ -644,9 +643,9 @@
         
         <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4 max-w-3xl mx-auto">
-            <a href="javascript:void(0)" onclick="openSignupPopup()" class="cta-button w-full sm:w-auto bg-white text-blue-600 text-base sm:text-lg lg:text-xl font-black px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 rounded-full shadow-2xl hover:shadow-white/50 transition-all transform hover:scale-105">
+            <button onclick="window.providerWizard?.open()" class="cta-button w-full sm:w-auto bg-white text-blue-600 text-base sm:text-lg lg:text-xl font-black px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 rounded-full shadow-2xl hover:shadow-white/50 transition-all transform hover:scale-105">
                 <span>🚀 FREE Registration</span>
-            </a>
+            </button>
             <a href="#how-it-works" class="w-full sm:w-auto bg-transparent border-2 border-white text-white text-base sm:text-lg font-bold px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:bg-white/10 transition-all">
                 <span>📖 How It Works</span>
             </a>
@@ -760,7 +759,7 @@
                 </div>
                 <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-3" itemprop="name">Secure Payments</h3>
                 <p class="text-gray-600 leading-relaxed" itemprop="description">
-                    Money is <strong>held securely</strong> from the start. Mission complete = payment guaranteed! 💰 We take just a small commission. Simple L'argent est <strong>bloqué en sécurité</strong> dès le début. Mission terminée = paiement garanti ! 💰 On prend juste une petite com'. Simple et sans risque. risk-free.
+                    Money is <strong>held securely</strong> from the start. Mission complete = payment guaranteed! 💰 We take just a small commission. Simple and risk-free.
                 </p>
             </article>
             
@@ -946,7 +945,7 @@
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-800">Advanced statistics</p>
-                                <p class="text-sm text-gray-600">Analytics Analytics & reporting 📈 reporting 📈</p>
+                                <p class="text-sm text-gray-600">Analytics & reporting 📈</p>
                             </div>
                         </div>
                         
@@ -999,9 +998,9 @@
         </div>
         
         <div class="text-center mt-12">
-            <a href="javascript:void(0)" onclick="openSignupPopup()" class="cta-button inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white text-lg sm:text-xl font-bold px-10 sm:px-14 py-5 sm:py-6 rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all transform hover:scale-105">
+            <button onclick="window.providerWizard?.open()" class="cta-button inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white text-lg sm:text-xl font-bold px-10 sm:px-14 py-5 sm:py-6 rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all transform hover:scale-105">
                 <span>🎉 FREE Registration</span>
-            </a>
+            </button>
             <p class="mt-4 text-gray-600 font-semibold">
                 ✅ No registration fees • ✅ Commission only on your earnings
             </p>
@@ -1247,7 +1246,7 @@
                 </div>
                 <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
                     <div class="px-6 pb-6 text-gray-600 leading-relaxed" itemprop="text">
-                        <strong>It depends on your country and its legislation.</strong> Each country has its own rules regarding freelance work and professional activities. Certains pays autorisent le travail freelance sans structure juridique, d'autres exigent une inscription. We recommend checking the local regulations in your country of residence. On Ulixai.com, we accept both <strong>individuals and registered professionals</strong>.
+                        <strong>It depends on your country and its legislation.</strong> Each country has its own rules regarding freelance work and professional activities. Some countries allow freelance work without legal structure, others require registration. We recommend checking the local regulations in your country of residence. On Ulixai.com, we accept both <strong>individuals and registered professionals</strong>.
                     </div>
                 </div>
             </div>
@@ -1309,7 +1308,7 @@
 <!-- 🚀 Final CTA -->
 <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-600 text-white relative overflow-hidden">
     <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid2)"/></svg>');"></div>
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\"><defs><pattern id=\"grid2\" width=\"40\" height=\"40\" patternUnits=\"userSpaceOnUse\"><path d=\"M 40 0 L 0 0 0 40\" fill=\"none\" stroke=\"white\" stroke-width=\"1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23grid2)\"/></svg>');"></div>
     </div>
     
     <div class="max-w-4xl mx-auto text-center relative z-10">
@@ -1324,9 +1323,9 @@
         </p>
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <a href="javascript:void(0)" onclick="openSignupPopup()" class="cta-button w-full sm:w-auto bg-white text-blue-600 text-lg sm:text-xl font-bold px-10 sm:px-14 py-5 sm:py-6 rounded-full shadow-2xl hover:shadow-white/50 transition-all transform hover:scale-105">
+            <button onclick="window.providerWizard?.open()" class="cta-button w-full sm:w-auto bg-white text-blue-600 text-lg sm:text-xl font-bold px-10 sm:px-14 py-5 sm:py-6 rounded-full shadow-2xl hover:shadow-white/50 transition-all transform hover:scale-105">
                 <span>✨ FREE Registration</span>
-            </a>
+            </button>
             <a href="/paymentsvalidate" class="cta-button w-full sm:w-auto bg-transparent border-2 border-white text-white text-lg sm:text-xl font-bold px-10 sm:px-14 py-5 sm:py-6 rounded-full hover:bg-white/10 transition-all">
                 <span>🔍 Browse Missions</span>
             </a>
@@ -1357,297 +1356,86 @@
 
 @include('includes.footer')
 
+{{-- ═══════════════════════════════════════════════════════════
+     🚀 JAVASCRIPT - PAGE SPÉCIFIQUE UNIQUEMENT
+     ═══════════════════════════════════════════════════════════ --}}
+
 <script>
-    function openSignupPopup() {
-        document.getElementById('signupPopup').classList.remove('hidden');
-    }
+// ✅ FAQ Toggle Function (spécifique à cette page)
+function toggleFaq(element) {
+    const faqItem = element.closest('.faq-item');
+    const allFaqItems = document.querySelectorAll('.faq-item');
     
-    function closeSignupPopup() {
-        document.getElementById('signupPopup').classList.add('hidden');
-    }
-    
-    function toggleFaq(element) {
-        const faqItem = element.closest('.faq-item');
-        const allFaqItems = document.querySelectorAll('.faq-item');
-        
-        allFaqItems.forEach(item => {
-            if (item !== faqItem) {
-                item.classList.remove('active');
-            }
-        });
-        
-        faqItem.classList.toggle('active');
-    }
-    
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-    
-    // Add intersection observer for scroll animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    document.querySelectorAll('.premium-card, .testimonial-card, .faq-item').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'all 0.6s ease';
-        observer.observe(el);
-    });
-    
-    // Track user engagement for SEO
-    let engagementScore = 0;
-    document.addEventListener('scroll', () => {
-        const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-        if (scrollPercent > engagementScore) {
-            engagementScore = scrollPercent;
+    allFaqItems.forEach(item => {
+        if (item !== faqItem) {
+            item.classList.remove('active');
         }
     });
     
-    // Track FAQ interactions
-    document.querySelectorAll('.faq-question').forEach(question => {
-        question.addEventListener('click', () => {
-            // Track FAQ engagement for analytics
-            if (window.gtag) {
-                gtag('event', 'faq_interaction', {
-                    'event_category': 'engagement',
-                    'event_label': question.textContent.trim()
-                });
-            }
-        });
+    faqItem.classList.toggle('active');
+}
+
+// ✅ Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
+});
+
+// ✅ Intersection observer for scroll animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.premium-card, .testimonial-card, .faq-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'all 0.6s ease';
+    observer.observe(el);
+});
+
+// ✅ Track user engagement for SEO
+let engagementScore = 0;
+document.addEventListener('scroll', () => {
+    const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    if (scrollPercent > engagementScore) {
+        engagementScore = scrollPercent;
+    }
+});
+
+// ✅ Track FAQ interactions
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        // Track FAQ engagement for analytics
+        if (window.gtag) {
+            gtag('event', 'faq_interaction', {
+                'event_category': 'engagement',
+                'event_label': question.textContent.trim()
+            });
+        }
+    });
+});
+
+// ✅ Log que les modules sont chargés
+console.log('✅ Page-specific JS loaded (become-service-provider)');
 </script>
 
+{{-- ❌ PAS DE openSignupPopup() ni closeSignupPopup() ici --}}
+{{-- ✅ Ces fonctions sont gérées par wizard-core.js --}}
 
-
-<!-- === PROVIDER SIGNUP POPUP (Appended by fix) === -->
-<div id="signupPopup" class="fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/50" aria-hidden="true" onclick="closeSignupPopup()"></div>
-  <div class="relative mx-auto w-full max-w-3xl bg-white rounded-2xl shadow-xl h-[90vh] overflow-hidden">
-    <div class="flex items-center justify-between p-4 border-b">
-      <div class="text-sm text-gray-700">
-        Step <span id="currentStepNum">1</span>/15 — <span id="progressPercentage">0</span>%
-      </div>
-      <button id="closePopup" type="button" class="p-2 rounded hover:bg-gray-100" aria-label="Close" onclick="closeSignupPopup()">✕</button>
-    </div>
-
-    <div id="wizardStepsContainer" class="p-4 h-[calc(90vh-120px)] overflow-y-auto space-y-6">
-      <section class="wizard-step" data-step="1">
-        @include('includes.provider.choose_step')
-      </section>
-      <section class="wizard-step" data-step="2">
-        @include('includes.provider.native_language')
-      </section>
-      <section class="wizard-step" data-step="3">
-        @include('includes.provider.spoken_language')
-      </section>
-      <section class="wizard-step" data-step="4">
-        @include('includes.provider.first_last_name')
-      </section>
-      <section class="wizard-step" data-step="5">
-        @include('includes.provider.phone_number')
-      </section>
-      <section class="wizard-step" data-step="6">
-        @include('includes.provider.email')
-      </section>
-      <section class="wizard-step" data-step="7">
-        @include('includes.provider.profile_picture')
-      </section>
-      <section class="wizard-step" data-step="8">
-        @include('includes.provider.profile_description')
-      </section>
-      <section class="wizard-step" data-step="9">
-        @include('includes.provider.provider_services')
-      </section>
-      <section class="wizard-step" data-step="10">
-        @include('includes.provider.operational_countries')
-      </section>
-      <section class="wizard-step" data-step="11">
-        @include('includes.provider.special_status')
-      </section>
-      <section class="wizard-step" data-step="12">
-        @include('includes.provider.identity_documents')
-      </section>
-      <section class="wizard-step" data-step="13">
-        @include('includes.provider.communication_preference')
-      </section>
-      <section class="wizard-step" data-step="14">
-        <div class="text-gray-700">Please review your details and proceed.</div>
-      </section>
-      <section class="wizard-step" data-step="15">
-        @include('includes.provider.verify_email')
-      </section>
-    </div>
-
-    <div id="desktopNavWrapper" class="hidden md:flex items-center justify-between p-4 border-t">
-      <button id="desktopBackBtn" type="button" class="px-4 py-2 rounded-lg border">Back</button>
-      <button id="desktopNextBtn" type="button" class="px-4 py-2 rounded-lg bg-blue-600 text-white" disabled aria-disabled="true">Next</button>
-    </div>
-
-    <div id="mobileNavWrapper" class="md:hidden p-3 border-t">
-      <div class="h-1 w-full bg-gray-200 rounded">
-        <div id="mobileProgressBar" class="h-1 w-0 bg-blue-600 rounded"></div>
-      </div>
-      <div class="mt-3 flex justify-between">
-        <button id="mobileBackBtn" type="button" class="px-4 py-2 rounded-lg border">Back</button>
-        <button id="mobileNextBtn" type="button" class="px-4 py-2 rounded-lg bg-blue-600 text-white" disabled aria-disabled="true">Next</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  function openSignupPopup(){ document.getElementById('signupPopup').classList.remove('hidden'); }
-  function closeSignupPopup(){ document.getElementById('signupPopup').classList.add('hidden'); }
-</script>
-
-<script>
-// Minimal inline wizard (fallback if modules not bundled)
-(function () {
-  if (window.UlixaiWizard) return; // use existing one if present
-
-  function qs(sel) { return document.querySelector(sel); }
-  function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
-
-  const state = {
-    current: 1, total: 1, steps: [],
-    els: {
-      mobileNext: null, desktopNext: null,
-      mobileBack: null, desktopBack: null,
-      mobileProgress: null, currentNum: null, percentTxt: null
-    }
-  };
-
-  function setNextEnabled(enabled) {
-    ['#mobileNextBtn', '#desktopNextBtn'].forEach(sel => {
-      const btn = qs(sel);
-      if (!btn) return;
-      if (enabled) { btn.removeAttribute('disabled'); btn.setAttribute('aria-disabled','false'); }
-      else { btn.setAttribute('disabled','true'); btn.setAttribute('aria-disabled','true'); }
-    });
-  }
-
-  function updateProgressUI() {
-    const percent = Math.round((state.current - 1) * 100 / (state.total - 1 || 1));
-    if (state.els.currentNum) state.els.currentNum.textContent = String(state.current);
-    if (state.els.percentTxt) state.els.percentTxt.textContent = String(percent);
-    if (state.els.mobileProgress) state.els.mobileProgress.style.width = percent + '%';
-  }
-
-  function showStep(n) {
-    state.current = Math.max(1, Math.min(n, state.total));
-    state.steps.forEach((el, i) => el.style.display = (i+1) === state.current ? '' : 'none');
-    updateProgressUI();
-    document.dispatchEvent(new CustomEvent('wizard:stepenter', { detail: { index: state.current } }));
-  }
-
-  function validateCurrentStep() {
-    const current = state.steps[state.current - 1];
-    if (!current) { setNextEnabled(true); return; }
-    const inputs = Array.from(current.querySelectorAll('input, select, textarea'));
-    if (inputs.length === 0) { setNextEnabled(true); return; }
-
-    const byName = {};
-    inputs.forEach(el => {
-      if (el.type === 'radio' || el.type === 'checkbox') {
-        const key = (el.name || el.id || 'anon') + '::' + el.type;
-        (byName[key] = byName[key] || []).push(el);
-      }
-    });
-
-    function filled(el) {
-      if (el.disabled) return true;
-      if ((el.offsetParent === null)) return true;
-      if (el.type === 'radio' || el.type === 'checkbox') {
-        const key = (el.name || el.id || 'anon') + '::' + el.type;
-        const group = byName[key] || [el];
-        const required = group.some(g => g.required || g.hasAttribute('data-required'));
-        if (!required) return true;
-        return group.some(g => g.checked && g.offsetParent !== null);
-      }
-      if (el.required || el.hasAttribute('data-required')) {
-        if (el.type === 'file') return el.files && el.files.length > 0;
-        if (el.type === 'email') return el.value && el.validity && el.validity.valid;
-        return (el.value || '').trim().length > 0;
-      }
-      return true;
-    }
-
-    // OTP special case 6 digits
-    const otp = current.querySelector('#otp_input, input[name="otp"]');
-    if (otp) {
-      const ok = /^\d{6}$/.test((otp.value || '').trim());
-      setNextEnabled(ok);
-      return;
-    }
-
-    setNextEnabled(inputs.every(filled));
-  }
-
-  function bind() {
-    state.els.mobileNext = qs('#mobileNextBtn');
-    state.els.desktopNext = qs('#desktopNextBtn');
-    state.els.mobileBack = qs('#mobileBackBtn');
-    state.els.desktopBack = qs('#desktopBackBtn');
-    state.els.mobileProgress = qs('#mobileProgressBar');
-    state.els.currentNum = qs('#currentStepNum');
-    state.els.percentTxt = qs('#progressPercentage');
-
-    if (state.els.mobileNext) state.els.mobileNext.addEventListener('click', () => showStep(state.current + 1));
-    if (state.els.desktopNext) state.els.desktopNext.addEventListener('click', () => showStep(state.current + 1));
-    if (state.els.mobileBack) state.els.mobileBack.addEventListener('click', () => showStep(state.current - 1));
-    if (state.els.desktopBack) state.els.desktopBack.addEventListener('click', () => showStep(state.current - 1));
-
-    document.addEventListener('input', e => {
-      if (e.target && (e.target.matches('input, select, textarea'))) validateCurrentStep();
-    }, true);
-    document.addEventListener('change', e => {
-      if (e.target && (e.target.matches('input, select, textarea'))) validateCurrentStep();
-    }, true);
-    document.addEventListener('wizard:stepenter', validateCurrentStep, true);
-  }
-
-  function init() {
-    state.steps = qsa('.wizard-step');
-    state.total = state.steps.length || 1;
-    bind();
-    setNextEnabled(false);
-    showStep(1);
-  }
-
-  window.UlixaiWizard = { initialize: init, setNextEnabled: setNextEnabled, goToStep: showStep };
-  document.addEventListener('DOMContentLoaded', init);
-})();
-</script>
-<!-- HUD Debug minimal -->
-<style>
-  #wizardDebugHUD{position:fixed;top:10px;right:10px;z-index:99999;background:rgba(0,0,0,.8);color:#fff;padding:10px 12px;border-radius:10px;font:12px/1.4 monospace;width:320px}
-  #wizardDebugHUD .row{display:flex;justify-content:space-between;gap:10px}
-  .ok{color:#86efac}.bad{color:#fca5a5}.muted{color:#cbd5e1}
-</style>
-<div id="wizardDebugHUD" hidden>
-  <div class="row"><span>Step</span><span id="hudStep">-</span></div>
-  <div class="row"><span>Total</span><span id="hudTotal">-</span></div>
-  <div class="row"><span>Next enabled</span><span id="hudNext" class="bad">false</span></div>
-  <div class="row"><span>Buttons found</span><span id="hudBtns" class="muted">0</span></div>
-  <div class="row"><span>Last event</span><span id="hudEvent" class="muted">-</span></div>
-  <div class="row"><span>Last validate</span><span id="hudValid" class="muted">-</span></div>
-</div>
-<script src="/js/debug/wizard-debug.js"></script>
+</body>
+</html>

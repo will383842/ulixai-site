@@ -1,7 +1,6 @@
 <!-- 
 ============================================
 🚀 STEP 1 - VERSION COMPACTE 2025/2026
-🔧 FIX: Bouton Next masqué immédiatement + Navigation directe
 ============================================
 -->
 
@@ -12,7 +11,7 @@
     <div class="absolute -bottom-4 right-0 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-blob animation-delay-2000"></div>
   </div>
 
-  <!-- Card 1: Inscription Multi-Profils (Non-Providers) -->
+  <!-- Card 1: Inscription Multi-Profils -->
   <article class="group relative">
     <a 
       href="/signup"
@@ -21,7 +20,6 @@
       aria-label="Join UlixAI community - Create account">
       
       <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-fuchsia-500 to-pink-600 animate-gradient"></div>
-      
       <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       
       <div class="relative z-10 p-4">
@@ -80,19 +78,18 @@
     </a>
   </article>
 
-  <!-- Card 2: Providers (Prestataires) -->
+  <!-- Card 2: Providers -->
   <article class="group relative">
     <button 
       type="button"
       id="whiteCardBtn"
       data-go-step="2"
-      class="modern-card modern-card-providers w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 pointer-events-auto cursor-pointer"
+      class="modern-card modern-card-providers w-full text-left overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
       role="button"
       aria-label="Become a service provider">
       
       <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 animate-gradient-slow"></div>
       <div class="absolute inset-[3px] bg-white rounded-[18px]"></div>
-      
       <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[21px]"></div>
       
       <div class="relative z-10 p-4">
@@ -282,29 +279,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-@media (prefers-contrast: high) {
-  .modern-card {
-    border: 3px solid currentColor;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .modern-card-providers .absolute.inset-\[3px\] {
-    background: #1a1a1a;
-  }
-}
-
-.modern-card,
-.shimmer {
+.modern-card, .shimmer {
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
@@ -316,66 +298,60 @@
 </style>
 
 <script>
-// 🔧 MASQUER LE BOUTON NEXT DANS STEP 1 + NAVIGATION DIRECTE
 (function() {
   'use strict';
-
-  const step1Container = document.getElementById('step1');
   
-  if (!step1Container) return;
-
-  // Fonction pour masquer/afficher les boutons de navigation
-  function toggleNavigationButtons(hide) {
-    const navButtons = document.querySelectorAll('#mobileNavButtons, #desktopNavButtons');
-    
-    navButtons.forEach(container => {
-      if (hide) {
-        container.style.display = 'none';
-      } else {
-        container.style.display = '';
-      }
-    });
-  }
-
-  // ✅ MASQUER IMMÉDIATEMENT au chargement si step1 est visible
-  if (!step1Container.classList.contains('hidden')) {
-    toggleNavigationButtons(true);
-  }
-
-  // Observer pour détecter quand step1 devient visible/invisible
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        const isHidden = step1Container.classList.contains('hidden');
-        toggleNavigationButtons(!isHidden);
-      }
-    });
-  });
-
-  // Démarrer l'observation
-  observer.observe(step1Container, { 
-    attributes: true,
-    attributeFilter: ['class']
-  });
-
-  // ✅ NAVIGATION DIRECTE pour le bouton "Become a Provider"
-  const providerBtn = document.getElementById('whiteCardBtn');
-  if (providerBtn) {
-    providerBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
+  function waitForWizard() {
+    return new Promise((resolve) => {
+      const checkInterval = setInterval(() => {
+        if (typeof window.updateNavigationButtons === 'function') {
+          clearInterval(checkInterval);
+          resolve();
+        }
+      }, 50);
       
-      // Naviguer directement vers Step 2
-      if (typeof window.showStep === 'function') {
-        window.showStep(1); // Step 2 (index 1)
-      } else if (typeof window.goToStep === 'function') {
-        window.goToStep(2);
-      } else {
-        // Fallback: dispatch event
-        const event = new CustomEvent('navigateToStep', { detail: { step: 2 } });
-        document.dispatchEvent(event);
-      }
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        resolve();
+      }, 5000);
     });
+  }
+  
+  async function init() {
+    await waitForWizard();
+    
+    const originalUpdateNav = window.updateNavigationButtons;
+    
+    window.updateNavigationButtons = function() {
+      const step1 = document.getElementById('step1');
+      
+      if (step1 && !step1.classList.contains('hidden')) {
+        const navButtons = document.querySelectorAll('#mobileNavButtons, #desktopNavButtons');
+        navButtons.forEach(btn => btn.style.display = 'none');
+        return;
+      }
+      
+      originalUpdateNav();
+    };
+    
+    // Navigation directe pour le bouton provider
+    const providerBtn = document.getElementById('whiteCardBtn');
+    if (providerBtn) {
+      providerBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (typeof window.showStep === 'function') {
+          window.showStep(1);
+        }
+      });
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 })();
 </script>

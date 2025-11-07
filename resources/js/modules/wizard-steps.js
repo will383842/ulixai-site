@@ -1,12 +1,12 @@
 /**
- * Wizard Steps – CORRIGÉ AVEC DEBUG
+ * Wizard Steps – CORRIGÉ : Boutons masqués au Step 1
  */
 
 export class WizardSteps {
   constructor() {
     this.currentStep = 0;
-    this.totalSteps = 16; // ✅ CORRIGÉ : 16 steps au lieu de 15
-    this.storeKey = 'expats'; // ✅ AJOUTÉ : Harmonisation avec wizard-core.js
+    this.totalSteps = 16;
+    this.storeKey = 'expats';
     this.formData = this.loadFormData();
     console.log('🎬 WizardSteps constructor called - totalSteps:', this.totalSteps);
   }
@@ -171,12 +171,13 @@ export class WizardSteps {
   previousStep() { 
     console.log('⬅️ previousStep() called from step', this.currentStep + 1);
     
+    // ✅ Permettre de revenir au Step 1 depuis le Step 2
     if (this.currentStep > 0) {
       const prevStepIndex = this.currentStep - 1;
       console.log('⬅️ Moving to step', prevStepIndex + 1);
       this.showStep(prevStepIndex);
     } else {
-      console.warn('❌ Already at first step, cannot go back');
+      console.warn('⚠️ Already at Step 1 - cannot go back further');
     }
   }
 
@@ -192,9 +193,9 @@ export class WizardSteps {
       return true;
     }
 
-    // ✅ VALIDATION STEP 1 : toujours valide (choix de profil)
+    // ✅ VALIDATION STEP 1 : toujours valide (choix de profil via boutons)
     if (stepNum === 1) {
-      console.log('✅ Step 1 - always valid (profile choice)');
+      console.log('✅ Step 1 - always valid (profile choice via buttons)');
       return true;
     }
 
@@ -248,14 +249,22 @@ export class WizardSteps {
     const backButtons = document.querySelectorAll('#mobileBackBtn, #desktopBackBtn');
     const nextButtons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
 
-    // ✅ CORRIGÉ : Afficher les boutons dès le Step 1
+    // ✅ CORRECTION : Au Step 1, masquer TOUS les boutons de navigation
+    if (this.currentStep === 0) {
+      if (mobileWrap)  mobileWrap.style.display  = 'none';
+      if (desktopWrap) desktopWrap.style.display = 'none';
+      console.log('🚫 Step 1 - Navigation buttons HIDDEN (use profile choice buttons instead)');
+      return; // ← Important : sortir de la fonction
+    }
+
+    // À partir du Step 2 : afficher les wrappers de navigation
     if (mobileWrap)  mobileWrap.style.display  = '';
     if (desktopWrap) desktopWrap.style.display = '';
+    console.log('✅ Step 2+ - Navigation buttons VISIBLE');
 
-    // Back masqué uniquement au Step 1
-    const showBack = this.currentStep !== 0;
-    backButtons.forEach(b => b.style.display = showBack ? 'flex' : 'none');
-    console.log(`🔘 Back button: ${showBack ? 'visible' : 'hidden'}`);
+    // ✅ Back TOUJOURS visible (sans condition)
+    backButtons.forEach(b => b.style.display = 'flex');
+    console.log('🔘 Back button: ALWAYS visible');
     
     // Texte du bouton Next/Submit
     const isLastStep = this.currentStep === this.totalSteps - 1;
@@ -265,7 +274,7 @@ export class WizardSteps {
     });
     console.log(`🔘 Next button text: ${isLastStep ? 'Submit' : 'Continue'}`);
 
-    // ✅ CORRIGÉ : Validation normale sans blocage du Step 1
+    // Validation
     const isValid = this.validateCurrentStep();
     console.log(`🔘 Step ${this.currentStep + 1} validation result:`, isValid);
 

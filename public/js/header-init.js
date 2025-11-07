@@ -1781,13 +1781,14 @@ function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), 
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
- * Wizard Core - CORRIGÉ
+ * Wizard Core - CORRIGÉ : Navigation stricte + Support affiliation
+ * Version: 2.0
  */
 
 var WizardCore = /*#__PURE__*/function () {
   function WizardCore() {
     _classCallCheck(this, WizardCore);
-    this.storeKey = 'expats'; // ✅ CORRIGÉ : Harmonisé avec wizard-steps.js
+    this.storeKey = 'expats';
     this.steps = [];
     this.current = 0;
     this.state = this.loadState();
@@ -1879,61 +1880,80 @@ var WizardCore = /*#__PURE__*/function () {
     value: function initCloseButtons() {
       var _this = this;
       var popup = document.getElementById('signupPopup');
+
+      // ✅ DÉLÉGATION D'ÉVÉNEMENTS - Mode Bubble (pas Capture)
       document.addEventListener('click', function (e) {
         var t = e.target;
         if (!t || !t.closest) return;
-        var openSignup = t.closest('#signupBtn, [data-open="signup"], .js-open-signup, [data-action="open-signup"], a[href="#signupPopup"], [data-target="#signupPopup"], [aria-controls="signupPopup"]');
+
+        // ✅ PRIORITÉ 1 : Ne JAMAIS intercepter les liens <a> avec href
+        var link = t.closest('a[href]');
+        if (link) {
+          var href = link.getAttribute('href');
+          // Laisser passer tous les liens normaux (login, become-provider, etc.)
+          if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+            console.log('🔗 Lien détecté, laisser passer:', href);
+            return; // Ne rien faire, naviguer normalement
+          }
+        }
+
+        // ✅ PRIORITÉ 2 : Ouvrir le popup signup (pour l'affiliation)
+        var openSignup = t.closest('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
         if (openSignup) {
+          console.log('📝 Bouton Sign Up cliqué');
           e.preventDefault();
+          e.stopPropagation();
           _this.openPopup();
           return;
         }
-        var openHelp = t.closest('#requestHelpBtn, #helpBtn, [data-open="help"], .js-open-help, [data-action="open-help"], a[href="#helpPopup"], [data-target="#helpPopup"]');
+
+        // ✅ PRIORITÉ 3 : Ouvrir le popup help
+        var openHelp = t.closest('#requestHelpBtn, #helpBtn, #mobileSearchButton, [data-open="help"]');
         if (openHelp) {
+          console.log('❓ Bouton Help cliqué');
           e.preventDefault();
+          e.stopPropagation();
           if (typeof window.openHelpPopup === 'function') {
             window.openHelpPopup();
           } else {
-            console.warn('openHelpPopup() non disponible');
+            console.warn('⚠️ openHelpPopup() non disponible');
           }
           return;
         }
-        var closeBtn = t.closest('#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"], .modal-close, [aria-label="Close"]');
+
+        // ✅ PRIORITÉ 4 : Fermer le popup
+        var closeBtn = t.closest('#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]');
         if (closeBtn) {
+          console.log('❌ Bouton Close cliqué');
           e.preventDefault();
+          e.stopPropagation();
           _this.closePopup();
           return;
         }
+
+        // ✅ PRIORITÉ 5 : Clic sur le backdrop (fond noir)
         if (popup && e.target === popup) {
+          console.log('🖱️ Clic sur backdrop');
           _this.closePopup();
         }
-      }, true);
-      var directOpen = document.getElementById('signupBtn');
-      if (directOpen) {
-        directOpen.addEventListener('click', function (e) {
-          e.preventDefault();
-          _this.openPopup();
-        });
-      }
-      var directClose = document.getElementById('closePopup');
-      if (directClose) {
-        directClose.addEventListener('click', function (e) {
-          e.preventDefault();
-          _this.closePopup();
-        });
-      }
+      }, false); // ✅ FALSE = mode bubble (événements montent du bas vers le haut)
+
+      // ✅ ESC key pour fermer
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
+          console.log('⌨️ ESC pressed');
           _this.closePopup();
         }
       });
+
+      // ✅ Fonctions globales pour compatibilité
       window.openSignupPopup = function () {
         return _this.openPopup();
       };
       window.closeSignupPopup = function () {
         return _this.closePopup();
       };
-      console.log('✅ Popup controls initialized');
+      console.log('✅ Popup controls initialized (affiliation-ready)');
     }
   }, {
     key: "closePopup",
@@ -1943,6 +1963,8 @@ var WizardCore = /*#__PURE__*/function () {
         console.warn('⚠️ Popup not found');
         return;
       }
+
+      // Masquer le popup
       popup.classList.add('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
       popup.setAttribute('aria-hidden', 'true');
       popup.style.display = 'none';
@@ -1957,9 +1979,13 @@ var WizardCore = /*#__PURE__*/function () {
         console.warn('⚠️ Popup not found');
         return;
       }
+
+      // Afficher le popup
       popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
       popup.removeAttribute('aria-hidden');
-      popup.style.display = 'block';
+
+      // ✅ IMPORTANT : Utiliser flex pour le centrage (pas block)
+      popup.style.display = 'flex';
       console.log('✅ Popup opened');
       this.resetToFirstStep();
     }
@@ -1986,6 +2012,8 @@ function initializeWizard() {
   }
   var wizard = new WizardCore();
   wizard.init();
+
+  // ✅ API publique pour compatibilité + affiliation
   window.providerWizard = {
     update: function update() {
       return wizard.updateUI();
@@ -1995,8 +2023,10 @@ function initializeWizard() {
     },
     open: function open() {
       return wizard.openPopup();
-    }
+    },
+    wizard: wizard // Exposer l'instance pour debug
   };
+  console.log('✅ Wizard API exposed globally');
   return window.providerWizard;
 }
 
@@ -2023,15 +2053,15 @@ function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), 
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
- * Wizard Steps – CORRIGÉ AVEC DEBUG
+ * Wizard Steps – CORRIGÉ : Boutons masqués au Step 1
  */
 
 var WizardSteps = /*#__PURE__*/function () {
   function WizardSteps() {
     _classCallCheck(this, WizardSteps);
     this.currentStep = 0;
-    this.totalSteps = 16; // ✅ CORRIGÉ : 16 steps au lieu de 15
-    this.storeKey = 'expats'; // ✅ AJOUTÉ : Harmonisation avec wizard-core.js
+    this.totalSteps = 16;
+    this.storeKey = 'expats';
     this.formData = this.loadFormData();
     console.log('🎬 WizardSteps constructor called - totalSteps:', this.totalSteps);
   }
@@ -2213,12 +2243,14 @@ var WizardSteps = /*#__PURE__*/function () {
     key: "previousStep",
     value: function previousStep() {
       console.log('⬅️ previousStep() called from step', this.currentStep + 1);
+
+      // ✅ Permettre de revenir au Step 1 depuis le Step 2
       if (this.currentStep > 0) {
         var prevStepIndex = this.currentStep - 1;
         console.log('⬅️ Moving to step', prevStepIndex + 1);
         this.showStep(prevStepIndex);
       } else {
-        console.warn('❌ Already at first step, cannot go back');
+        console.warn('⚠️ Already at Step 1 - cannot go back further');
       }
     }
   }, {
@@ -2233,9 +2265,9 @@ var WizardSteps = /*#__PURE__*/function () {
         return true;
       }
 
-      // ✅ VALIDATION STEP 1 : toujours valide (choix de profil)
+      // ✅ VALIDATION STEP 1 : toujours valide (choix de profil via boutons)
       if (stepNum === 1) {
-        console.log('✅ Step 1 - always valid (profile choice)');
+        console.log('✅ Step 1 - always valid (profile choice via buttons)');
         return true;
       }
 
@@ -2296,16 +2328,24 @@ var WizardSteps = /*#__PURE__*/function () {
       var backButtons = document.querySelectorAll('#mobileBackBtn, #desktopBackBtn');
       var nextButtons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
 
-      // ✅ CORRIGÉ : Afficher les boutons dès le Step 1
+      // ✅ CORRECTION : Au Step 1, masquer TOUS les boutons de navigation
+      if (this.currentStep === 0) {
+        if (mobileWrap) mobileWrap.style.display = 'none';
+        if (desktopWrap) desktopWrap.style.display = 'none';
+        console.log('🚫 Step 1 - Navigation buttons HIDDEN (use profile choice buttons instead)');
+        return; // ← Important : sortir de la fonction
+      }
+
+      // À partir du Step 2 : afficher les wrappers de navigation
       if (mobileWrap) mobileWrap.style.display = '';
       if (desktopWrap) desktopWrap.style.display = '';
+      console.log('✅ Step 2+ - Navigation buttons VISIBLE');
 
-      // Back masqué uniquement au Step 1
-      var showBack = this.currentStep !== 0;
+      // ✅ Back TOUJOURS visible (sans condition)
       backButtons.forEach(function (b) {
-        return b.style.display = showBack ? 'flex' : 'none';
+        return b.style.display = 'flex';
       });
-      console.log("\uD83D\uDD18 Back button: ".concat(showBack ? 'visible' : 'hidden'));
+      console.log('🔘 Back button: ALWAYS visible');
 
       // Texte du bouton Next/Submit
       var isLastStep = this.currentStep === this.totalSteps - 1;
@@ -2315,7 +2355,7 @@ var WizardSteps = /*#__PURE__*/function () {
       });
       console.log("\uD83D\uDD18 Next button text: ".concat(isLastStep ? 'Submit' : 'Continue'));
 
-      // ✅ CORRIGÉ : Validation normale sans blocage du Step 1
+      // Validation
       var isValid = this.validateCurrentStep();
       console.log("\uD83D\uDD18 Step ".concat(this.currentStep + 1, " validation result:"), isValid);
       nextButtons.forEach(function (btn) {
@@ -2693,11 +2733,12 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 /**
  * Header Initialization - Laravel Mix Compatible
  * Point d'entrée principal pour tous les modules header
+ * Version optimisée avec protection popup
  */
 
 
 
- // ✅ AJOUTÉ
+
 
 
 
@@ -2721,26 +2762,43 @@ function initializeAll() {
     wizard: _typeof(_modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard),
     steps: _typeof(_modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps),
     submission: _typeof(_modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission),
-    // ✅ AJOUTÉ
     menu: _typeof(_modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__.initializeMobileMenu),
     language: _typeof(_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_4__.initializeLanguageManager),
     popups: _typeof(_modules_category_popups_js__WEBPACK_IMPORTED_MODULE_5__.initializeCategoryPopups),
     scroll: _typeof(_modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__.initializeScrollUtils)
   });
 
-  // 1) Core (popups SignUp / croix / ESC / backdrop) d'abord
-  var wizard = safeInit('Wizard', _modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard);
+  // ✅ VÉRIFICATION: Le popup existe-t-il dans le DOM ?
+  var popupExists = !!document.getElementById('signupPopup');
+  console.log("\uD83D\uDCCA Signup popup ".concat(popupExists ? '✅ FOUND' : '⚠️ NOT FOUND', " in DOM"));
 
-  // 2) Steps (wizard-steps) ensuite — isolé pour ne pas bloquer le reste en cas d'erreur
-  var steps = safeInit('WizardSteps', _modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps);
+  // 1) Core (popups SignUp / croix / ESC / backdrop) - Seulement si popup existe
+  var wizard = null;
+  if (popupExists) {
+    wizard = safeInit('Wizard', _modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard);
+  } else {
+    console.log('ℹ️ Skipping Wizard initialization (user is logged in)');
+  }
 
-  // 3) Wizard Submission - Gestion de la soumission du formulaire
-  safeInit('WizardSubmission', _modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission); // ✅ AJOUTÉ
+  // 2) Steps (wizard-steps) - Seulement si popup existe
+  var steps = null;
+  if (popupExists) {
+    steps = safeInit('WizardSteps', _modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps);
+  } else {
+    console.log('ℹ️ Skipping WizardSteps initialization (user is logged in)');
+  }
 
-  // 4) Autres features du header
+  // 3) Wizard Submission - Seulement si popup existe
+  if (popupExists) {
+    safeInit('WizardSubmission', _modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission);
+  } else {
+    console.log('ℹ️ Skipping WizardSubmission initialization (user is logged in)');
+  }
+
+  // 4) Mobile Menu - TOUJOURS INITIALISER (indépendant du popup)
   safeInit('MobileMenu', _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__.initializeMobileMenu);
 
-  // 5) Language Manager avec vérification
+  // 5) Language Manager - TOUJOURS INITIALISER
   var langManager = safeInit('LanguageManager', function () {
     var manager = (0,_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_4__.initializeLanguageManager)();
 
@@ -2760,60 +2818,80 @@ function initializeAll() {
     }, 500);
     return manager;
   });
+
+  // 6) Category Popups - TOUJOURS INITIALISER
   safeInit('CategoryPopups', _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_5__.initializeCategoryPopups);
+
+  // 7) Scroll Utils - TOUJOURS INITIALISER
   safeInit('ScrollUtils', _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__.initializeScrollUtils);
 
-  // 6) Wrappers globaux attendus par le markup (onclick="showStep(1)" etc.)
-  (function exposeWrappers() {
-    try {
-      if (!window.showStep) {
-        window.showStep = function (i) {
-          if (window.providerWizardSteps && typeof window.providerWizardSteps.showStep === 'function') {
-            window.providerWizardSteps.showStep(i);
-          } else if (steps && typeof steps.showStep === 'function') {
-            steps.showStep(i);
-          }
-        };
+  // 8) Wrappers globaux - Seulement si popup existe
+  if (popupExists) {
+    (function exposeWrappers() {
+      try {
+        if (!window.showStep) {
+          window.showStep = function (i) {
+            if (window.providerWizardSteps && typeof window.providerWizardSteps.showStep === 'function') {
+              window.providerWizardSteps.showStep(i);
+            } else if (steps && typeof steps.showStep === 'function') {
+              steps.showStep(i);
+            }
+          };
+        }
+        if (!window.updateNavigationButtons) {
+          window.updateNavigationButtons = function () {
+            if (window.providerWizardSteps && typeof window.providerWizardSteps.updateNavigationButtons === 'function') {
+              window.providerWizardSteps.updateNavigationButtons();
+            } else if (steps && typeof steps.updateNavigationButtons === 'function') {
+              steps.updateNavigationButtons();
+            }
+          };
+        }
+        console.log('✅ Global wrappers exposed');
+      } catch (e) {
+        console.warn('⚠️ Wrapper exposure failed', e);
       }
-      if (!window.updateNavigationButtons) {
-        window.updateNavigationButtons = function () {
-          if (window.providerWizardSteps && typeof window.providerWizardSteps.updateNavigationButtons === 'function') {
-            window.providerWizardSteps.updateNavigationButtons();
-          } else if (steps && typeof steps.updateNavigationButtons === 'function') {
-            steps.updateNavigationButtons();
-          }
-        };
-      }
-    } catch (e) {
-      console.warn('⚠️ Wrapper exposure failed', e);
-    }
-  })();
+    })();
 
-  // 7) ✅ LISTENER OPTIMISÉ - Un seul event suffisant
-  document.addEventListener('change', function () {
-    if (typeof window.updateNavigationButtons === 'function') {
-      requestAnimationFrame(function () {
-        return window.updateNavigationButtons();
-      });
-    }
-  }, {
-    passive: true
-  });
-
-  // Signal spécifique Step 2 (si émis)
-  document.addEventListener('pw:step2:changed', function () {
-    try {
+    // 9) Event listeners pour le wizard - Seulement si popup existe
+    document.addEventListener('change', function () {
       if (typeof window.updateNavigationButtons === 'function') {
-        window.updateNavigationButtons();
+        requestAnimationFrame(function () {
+          return window.updateNavigationButtons();
+        });
       }
-    } catch (e) {}
-  });
+    }, {
+      passive: true
+    });
+
+    // Signal spécifique Step 2
+    document.addEventListener('pw:step2:changed', function () {
+      try {
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
+        }
+      } catch (e) {
+        console.warn('⚠️ Step2 event handler failed', e);
+      }
+    });
+  } else {
+    console.log('ℹ️ Skipping wizard event listeners (user is logged in)');
+  }
   console.log('✅ All header modules initialized');
   console.log('🔍 Global objects:', {
     providerWizard: !!window.providerWizard,
     providerWizardSteps: !!window.providerWizardSteps,
     providerLanguageManager: !!window.providerLanguageManager,
-    onProviderSignupSubmit: !!window.onProviderSignupSubmit // ✅ AJOUTÉ pour vérifier
+    onProviderSignupSubmit: !!window.onProviderSignupSubmit
+  });
+
+  // ✅ RÉSUMÉ DE L'INITIALISATION
+  console.log('📋 Initialization Summary:', {
+    popupInDOM: popupExists,
+    wizardInitialized: !!wizard,
+    stepsInitialized: !!steps,
+    mobileMenuInitialized: true,
+    languageManagerInitialized: !!langManager
   });
 }
 

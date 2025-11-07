@@ -1,10 +1,11 @@
 /**
- * Wizard Core - CORRIGÉ
+ * Wizard Core - CORRIGÉ : Navigation stricte + Support affiliation
+ * Version: 2.0
  */
 
 export class WizardCore {
   constructor() {
-    this.storeKey = 'expats'; // ✅ CORRIGÉ : Harmonisé avec wizard-steps.js
+    this.storeKey = 'expats';
     this.steps = [];
     this.current = 0;
     this.state = this.loadState();
@@ -85,65 +86,80 @@ export class WizardCore {
   initCloseButtons() {
     const popup = document.getElementById('signupPopup');
 
+    // ✅ DÉLÉGATION D'ÉVÉNEMENTS - Mode Bubble (pas Capture)
     document.addEventListener('click', (e) => {
       const t = e.target;
       if (!t || !t.closest) return;
 
-      const openSignup = t.closest(
-        '#signupBtn, [data-open="signup"], .js-open-signup, [data-action="open-signup"], a[href="#signupPopup"], [data-target="#signupPopup"], [aria-controls="signupPopup"]'
-      );
+      // ✅ PRIORITÉ 1 : Ne JAMAIS intercepter les liens <a> avec href
+      const link = t.closest('a[href]');
+      if (link) {
+        const href = link.getAttribute('href');
+        // Laisser passer tous les liens normaux (login, become-provider, etc.)
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+          console.log('🔗 Lien détecté, laisser passer:', href);
+          return; // Ne rien faire, naviguer normalement
+        }
+      }
+
+      // ✅ PRIORITÉ 2 : Ouvrir le popup signup (pour l'affiliation)
+      const openSignup = t.closest('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
       if (openSignup) {
+        console.log('📝 Bouton Sign Up cliqué');
         e.preventDefault();
+        e.stopPropagation();
         this.openPopup();
         return;
       }
 
+      // ✅ PRIORITÉ 3 : Ouvrir le popup help
       const openHelp = t.closest(
-        '#requestHelpBtn, #helpBtn, [data-open="help"], .js-open-help, [data-action="open-help"], a[href="#helpPopup"], [data-target="#helpPopup"]'
+        '#requestHelpBtn, #helpBtn, #mobileSearchButton, [data-open="help"]'
       );
       if (openHelp) {
+        console.log('❓ Bouton Help cliqué');
         e.preventDefault();
+        e.stopPropagation();
         if (typeof window.openHelpPopup === 'function') {
           window.openHelpPopup();
         } else {
-          console.warn('openHelpPopup() non disponible');
+          console.warn('⚠️ openHelpPopup() non disponible');
         }
         return;
       }
 
+      // ✅ PRIORITÉ 4 : Fermer le popup
       const closeBtn = t.closest(
-        '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"], .modal-close, [aria-label="Close"]'
+        '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]'
       );
       if (closeBtn) {
+        console.log('❌ Bouton Close cliqué');
         e.preventDefault();
+        e.stopPropagation();
         this.closePopup();
         return;
       }
 
+      // ✅ PRIORITÉ 5 : Clic sur le backdrop (fond noir)
       if (popup && e.target === popup) {
+        console.log('🖱️ Clic sur backdrop');
         this.closePopup();
       }
-    }, true);
+    }, false); // ✅ FALSE = mode bubble (événements montent du bas vers le haut)
 
-    const directOpen = document.getElementById('signupBtn');
-    if (directOpen) {
-      directOpen.addEventListener('click', (e) => { e.preventDefault(); this.openPopup(); });
-    }
-    const directClose = document.getElementById('closePopup');
-    if (directClose) {
-      directClose.addEventListener('click', (e) => { e.preventDefault(); this.closePopup(); });
-    }
-
+    // ✅ ESC key pour fermer
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
+        console.log('⌨️ ESC pressed');
         this.closePopup();
       }
     });
 
+    // ✅ Fonctions globales pour compatibilité
     window.openSignupPopup  = () => this.openPopup();
     window.closeSignupPopup = () => this.closePopup();
 
-    console.log('✅ Popup controls initialized');
+    console.log('✅ Popup controls initialized (affiliation-ready)');
   }
 
   closePopup() {
@@ -152,6 +168,8 @@ export class WizardCore {
       console.warn('⚠️ Popup not found');
       return;
     }
+    
+    // Masquer le popup
     popup.classList.add('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.setAttribute('aria-hidden', 'true');
     popup.style.display = 'none';
@@ -166,9 +184,13 @@ export class WizardCore {
       console.warn('⚠️ Popup not found');
       return;
     }
+    
+    // Afficher le popup
     popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.removeAttribute('aria-hidden');
-    popup.style.display = 'block';
+    
+    // ✅ IMPORTANT : Utiliser flex pour le centrage (pas block)
+    popup.style.display = 'flex';
 
     console.log('✅ Popup opened');
     this.resetToFirstStep();
@@ -177,6 +199,7 @@ export class WizardCore {
   resetToFirstStep() {
     const allSteps = document.querySelectorAll('[id^="step"]');
     allSteps.forEach(step => step.classList.add('hidden'));
+    
     const step1 = document.getElementById('step1');
     if (step1) {
       step1.classList.remove('hidden');
@@ -195,11 +218,14 @@ export function initializeWizard() {
   const wizard = new WizardCore();
   wizard.init();
 
+  // ✅ API publique pour compatibilité + affiliation
   window.providerWizard = {
     update: () => wizard.updateUI(),
     close: () => wizard.closePopup(),
     open: () => wizard.openPopup(),
+    wizard: wizard // Exposer l'instance pour debug
   };
 
+  console.log('✅ Wizard API exposed globally');
   return window.providerWizard;
 }
