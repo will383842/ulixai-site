@@ -24,9 +24,9 @@
     .container{max-width:1280px;margin:0 auto;padding:0 20px}@media(min-width:640px){.container{padding:0 24px}}
     
     /* PAGE LOADER */
-    .page-loader{position:fixed;inset:0;background:linear-gradient(135deg,#eff6ff,#ecfeff,#f0fdfa);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .3s}
+    
     .page-loader.hidden{opacity:0;pointer-events:none}
-    .loader-emoji{font-size:3rem;animation:pulse 1.5s ease-in-out infinite}
+    
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
     
     /* HERO SECTION */
@@ -121,10 +121,7 @@
 <body>
 
 <!-- PAGE LOADER -->
-<div class="page-loader" id="pageLoader">
-    <div style="text-align: center;">
-        <div class="loader-emoji">🚀</div>
-        <p style="margin-top: 1rem; color: #06b6d4; font-weight: 600; font-size: 14px;">Loading...</p>
+<p style="margin-top: 1rem; color: #06b6d4; font-weight: 600; font-size: 14px;">Loading...</p>
     </div>
 </div>
 

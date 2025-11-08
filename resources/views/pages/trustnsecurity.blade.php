@@ -199,7 +199,7 @@
     <style>
     *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}:root{--primary:#2563EB;--primary-light:#60A5FA;--primary-dark:#1E40AF;--accent:#A855F7;--success:#10b981;--text:#0F172A;--text-light:#64748B;--bg:#fff;--border:#E2E8F0;--bg-light:#F8FAFC}body{font-family:Poppins,-apple-system,sans-serif;color:var(--text);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;font-size:14px}.container{max-width:1280px;margin:0 auto;padding:0 20px}@media(min-width:640px){.container{padding:0 24px}}
     
-    .page-loader{position:fixed;inset:0;background:linear-gradient(135deg,#eff6ff,#ecfeff,#f0fdfa);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .3s;opacity:0;pointer-events:none}.loader-emoji{font-size:3rem;animation:pulse 1.5s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
     
     .hero{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:center;padding:120px 0 80px;background:radial-gradient(circle at 20% 30%,rgba(37,99,235,.08) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(168,85,247,.08) 0%,transparent 50%),linear-gradient(180deg,#fff 0%,#F8FAFC 100%);overflow:hidden}
     .hero::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,.15) 0%,transparent 70%);border-radius:50%;top:-250px;right:-150px;filter:blur(60px);animation:float 25s ease-in-out infinite;pointer-events:none;will-change:transform}
@@ -271,10 +271,7 @@
 </head>
 <body>
 
-<div class="page-loader" id="pageLoader">
-    <div style="text-align:center">
-        <div class="loader-emoji" role="img" aria-label="Loading security page">🔒</div>
-        <p style="margin-top:1rem;color:#06b6d4;font-weight:600;font-size:14px">Loading...</p>
+<p style="margin-top:1rem;color:#06b6d4;font-weight:600;font-size:14px">Loading...</p>
     </div>
 </div>
 

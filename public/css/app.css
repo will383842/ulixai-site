@@ -670,9 +670,6 @@
   .z-\[9999\] {
     z-index: 9999;
   }
-  .z-\[99999\] {
-    z-index: 99999;
-  }
   .col-12 {
     grid-column: 12;
   }
@@ -2270,6 +2267,9 @@
       background-color: color-mix(in oklab, var(--color-cyan-400) 30%, transparent);
     }
   }
+  .bg-emerald-50 {
+    background-color: var(--color-emerald-50);
+  }
   .bg-emerald-100 {
     background-color: var(--color-emerald-100);
   }
@@ -3500,6 +3500,9 @@
   .pt-20 {
     padding-top: calc(var(--spacing) * 20);
   }
+  .pt-25 {
+    padding-top: calc(var(--spacing) * 25);
+  }
   .pr-0 {
     padding-right: calc(var(--spacing) * 0);
   }
@@ -3796,6 +3799,9 @@
   }
   .text-cyan-900 {
     color: var(--color-cyan-900);
+  }
+  .text-emerald-600 {
+    color: var(--color-emerald-600);
   }
   .text-emerald-700 {
     color: var(--color-emerald-700);
@@ -5359,6 +5365,13 @@
     &:hover {
       @media (hover: hover) {
         color: var(--color-blue-900);
+      }
+    }
+  }
+  .hover\:text-emerald-600 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-emerald-600);
       }
     }
   }

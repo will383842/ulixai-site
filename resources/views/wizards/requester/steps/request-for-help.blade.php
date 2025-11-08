@@ -645,11 +645,7 @@
     }
     </script>
 
-    <div id="pageLoader" class="fixed inset-0 z-[99999] bg-white flex items-center justify-center">
-      <div class="text-center">
-        <div class="relative">
-          <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
-          <div class="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-blue-300 mx-auto opacity-20"></div>
+    <div class="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-blue-300 mx-auto opacity-20"></div>
         </div>
         <h2 class="text-gray-800 font-bold text-lg mb-1">Loading your form...</h2>
         <p class="text-gray-500 text-sm">Just a moment ✨</p>

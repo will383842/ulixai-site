@@ -10,12 +10,12 @@
         body{margin:0;padding:0;background:linear-gradient(135deg,#eff6ff 0%,#ecfeff 50%,#f0fdfa 100%);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;opacity:0;animation:fadeInBody 0.3s ease-in forwards}
         @keyframes fadeInBody{to{opacity:1}}
         .main-reset{min-height:100vh;display:flex;align-items:center;justify-content:center}
-        .page-loader{position:fixed;inset:0;background:linear-gradient(135deg,#eff6ff,#ecfeff,#f0fdfa);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s}
+        
         .page-loader.hidden{opacity:0;pointer-events:none}
-        .loader-content{text-align:center}
-        .loader-emoji{font-size:3rem;animation:bounceLoader 0.6s ease-in-out infinite}
-        @keyframes bounceLoader{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        .loader-text{margin-top:1rem;color:#06b6d4;font-weight:600;font-size:14px}
+        
+        
+        50%{transform:translateY(-10px)}}
+        
     </style>
     
     <!-- SEO Meta Tags -->
@@ -119,10 +119,7 @@
 <body>
 
 <!-- Page Loader -->
-<div class="page-loader" id="pageLoader">
-    <div class="loader-content">
-        <div class="loader-emoji">🔐</div>
-        <p class="loader-text">Setting up password reset...</p>
+<p class="loader-text">Setting up password reset...</p>
     </div>
 </div>
 
@@ -1075,48 +1072,11 @@ body{
   
   // Hide page loader when everything is loaded
   window.addEventListener('load', function() {
-    const loader = document.getElementById('pageLoader');
-    if (loader) {
-      loader.classList.add('hidden');
-      setTimeout(function() {
-        loader.remove();
-      }, 300);
-    }
-  });
+    
   
   // Fallback - hide loader after 2 seconds max
   setTimeout(function() {
-    const loader = document.getElementById('pageLoader');
-    if (loader) {
-      loader.classList.add('hidden');
-      setTimeout(function() {
-        loader.remove();
-      }, 300);
-    }
-  }, 2000);
-  
-  const form=document.getElementById('resetPasswordForm');
-  const btn=document.getElementById('resetBtnSubmit');
-  const passwordInput=document.getElementById('password');
-  const confirmInput=document.getElementById('password_confirmation');
-  
-  // Password toggle
-  document.addEventListener('click',function(e){
-    const toggle=e.target.closest('.toggle-password');
-    if(!toggle)return;
     
-    const targetId=toggle.dataset.target;
-    const input=document.getElementById(targetId);
-    const icon=toggle.querySelector('.eye-icon');
-    
-    if(input.type==='password'){
-      input.type='text';
-      icon.textContent='🙈';
-    }else{
-      input.type='password';
-      icon.textContent='👁️';
-    }
-  });
   
   // Real-time validation
   passwordInput.addEventListener('input',function(){

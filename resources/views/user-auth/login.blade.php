@@ -10,12 +10,12 @@
         body{margin:0;padding:0;background:linear-gradient(135deg,#eff6ff 0%,#ecfeff 50%,#f0fdfa 100%);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;opacity:0;animation:fadeInBody 0.3s ease-in forwards}
         @keyframes fadeInBody{to{opacity:1}}
         .main-login{min-height:100vh;display:flex;align-items:center;justify-content:center}
-        .page-loader{position:fixed;inset:0;background:linear-gradient(135deg,#eff6ff,#ecfeff,#f0fdfa);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s}
+        
         .page-loader.hidden{opacity:0;pointer-events:none}
-        .loader-content{text-align:center}
-        .loader-emoji{font-size:3rem;animation:bounceLoader 0.6s ease-in-out infinite}
-        @keyframes bounceLoader{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        .loader-text{margin-top:1rem;color:#06b6d4;font-weight:600;font-size:14px}
+        
+        
+        50%{transform:translateY(-10px)}}
+        
     </style>
     
     <!-- SEO Meta Tags -->
@@ -97,10 +97,7 @@
 <body>
 
 <!-- Page Loader -->
-<div class="page-loader" id="pageLoader">
-    <div class="loader-content">
-        <div class="loader-emoji">👋</div>
-        <p class="loader-text">Welcome back to Ulixai...</p>
+<p class="loader-text">Welcome back to Ulixai...</p>
     </div>
 </div>
 
@@ -1221,66 +1218,11 @@ body{
   
   // Hide page loader when everything is loaded
   window.addEventListener('load', function() {
-    const loader = document.getElementById('pageLoader');
-    if (loader) {
-      loader.classList.add('hidden');
-      setTimeout(function() {
-        loader.remove();
-      }, 300);
-    }
-  });
+    
   
   // Fallback - hide loader after 2 seconds max
   setTimeout(function() {
-    const loader = document.getElementById('pageLoader');
-    if (loader) {
-      loader.classList.add('hidden');
-      setTimeout(function() {
-        loader.remove();
-      }, 300);
-    }
-  }, 2000);
-  
-  const form=document.getElementById('loginForm');
-  const emailInput=document.getElementById('email');
-  const passwordInput=document.getElementById('password');
-  const rememberCheckbox=document.getElementById('remember-me');
-  const btn=document.getElementById('loginBtnSubmit');
-  const funToast=document.getElementById('funToast');
-  
-  // LocalStorage keys
-  const EMAIL_KEY='ulixai_login_email';
-  const PASSWORD_KEY='ulixai_login_password';
-  const REMEMBER_KEY='ulixai_remember_me';
-  
-  // Load saved credentials on page load
-  function loadSavedCredentials(){
-    const savedEmail=localStorage.getItem(EMAIL_KEY);
-    const savedPassword=localStorage.getItem(PASSWORD_KEY);
-    const isRemembered=localStorage.getItem(REMEMBER_KEY)==='true';
     
-    if(savedEmail){
-      emailInput.value=savedEmail;
-    }
-    
-    if(savedPassword && isRemembered){
-      passwordInput.value=savedPassword;
-      rememberCheckbox.checked=true;
-    }
-  }
-  
-  // Save credentials when form is submitted
-  form.addEventListener('submit',function(e){
-    if(rememberCheckbox.checked){
-      localStorage.setItem(EMAIL_KEY,emailInput.value);
-      localStorage.setItem(PASSWORD_KEY,passwordInput.value);
-      localStorage.setItem(REMEMBER_KEY,'true');
-    } else {
-      // Clear saved credentials if checkbox is not checked
-      localStorage.removeItem(PASSWORD_KEY);
-      localStorage.setItem(REMEMBER_KEY,'false');
-    }
-  });
   
   // Password toggle
   document.addEventListener('click',function(e){

@@ -40,6 +40,13 @@
           <span id="step6SelectedCount">0</span> country(ies) selected
         </span>
       </div>
+
+      <!-- AFFICHAGE DES PAYS SÉLECTIONNÉS -->
+      <div id="step6SelectedList" class="hidden mt-2 px-2 sm:px-3">
+        <div class="flex flex-wrap gap-1.5 justify-center items-center max-h-20 overflow-y-auto">
+          <!-- Les badges seront insérés ici dynamiquement -->
+        </div>
+      </div>
     </div>
   </div>
 
@@ -122,6 +129,11 @@
   20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+  50% { box-shadow: 0 0 20px 4px rgba(59, 130, 246, 0.6); }
+}
+
 .animate-blob {
   animation: blob 7s infinite;
 }
@@ -152,7 +164,34 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-/* MOBILE FIRST: Design épuré sans bordure */
+/* BADGES DES PAYS SÉLECTIONNÉS */
+.selected-country-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  color: white;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* MOBILE FIRST: Design épuré sans bordure - ALIGNEMENT À GAUCHE */
 .country-list-container {
   display: flex;
   flex-direction: column;
@@ -165,12 +204,12 @@
   background: white;
 }
 
-/* DESKTOP: Grid avec cards encadrées - LARGEUR ADAPTÉE */
+/* DESKTOP: Grid avec cards encadrées - 4 COLONNES PLUS ÉTROITES */
 @media (min-width: 640px) {
   .country-list-container {
     display: grid;
-    grid-template-columns: repeat(3, minmax(200px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 0.625rem;
     max-height: 460px;
     background: transparent;
     width: 100%;
@@ -179,8 +218,8 @@
 
 @media (min-width: 1024px) {
   .country-list-container {
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
-    gap: 0.875rem;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: 0.75rem;
     max-height: 480px;
   }
 }
@@ -204,20 +243,21 @@
   background: #2563eb;
 }
 
-/* MOBILE: Style liste épuré sans bordure - DISPOSITION CENTRÉE UNIQUE */
+/* MOBILE: Style liste épuré sans bordure - ALIGNEMENT À GAUCHE */
 .country-card {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  padding: 1.25rem 0.75rem;
+  justify-content: flex-start;
+  padding: 1rem 0.75rem;
   background: white;
   border: none;
   border-bottom: 1px solid #f1f5f9;
   cursor: pointer;
-  text-align: center;
-  min-height: 4rem;
+  text-align: left;
+  min-height: 3.5rem;
+  gap: 0.75rem;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateZ(0);
   backface-visibility: hidden;
@@ -232,19 +272,19 @@
   pointer-events: none;
 }
 
+/* MOBILE: Barre latérale gauche pour la sélection */
 .country-card::before {
   content: '';
   position: absolute;
-  left: 50%;
+  left: 0;
   top: 0;
-  bottom: auto;
-  width: 60%;
-  height: 3px;
-  background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
-  transform: translateX(-50%) scaleX(0);
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #3b82f6 0%, #06b6d4 100%);
+  transform: scaleY(0);
   transform-origin: center;
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 0 0 3px 3px;
+  border-radius: 0 4px 4px 0;
 }
 
 @media (min-width: 640px) {
@@ -258,28 +298,30 @@
   transform: scale(0.98);
 }
 
+/* MOBILE: Sélection TRÈS visible avec fond bleu */
 .country-card.selected {
-  background: linear-gradient(180deg, rgba(59, 130, 246, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
-  border-bottom-color: rgba(59, 130, 246, 0.1);
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(6, 182, 212, 0.08) 100%);
+  border-bottom-color: rgba(59, 130, 246, 0.2);
 }
 
 .country-card.selected::before {
-  transform: translateX(-50%) scaleX(1);
+  transform: scaleY(1);
 }
 
-/* DESKTOP: Style card avec bordure - MEILLEURE GESTION DU TEXTE */
+/* DESKTOP: Style card avec bordure - DESIGN COMPACT */
 @media (min-width: 640px) {
   .country-card {
     flex-direction: row;
     justify-content: space-between;
-    padding: 0.875rem 1rem;
+    padding: 0.625rem 0.75rem;
     background: white;
-    border: 2px solid #3b82f6;
-    border-radius: 0.75rem;
-    min-height: 3.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 2.5px solid #e2e8f0;
+    border-radius: 0.625rem;
+    min-height: 3rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     text-align: left;
     min-width: 0;
+    gap: 0.375rem;
   }
   
   .country-card .country-name {
@@ -290,7 +332,7 @@
   .country-card .check-indicator {
     order: 0;
     margin-bottom: 0;
-    margin-left: 0.5rem;
+    margin-left: 0;
   }
   
   .country-card::before {
@@ -298,116 +340,129 @@
   }
 
   .country-card:hover {
-    border-color: #2563eb;
-    background: #eff6ff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    border-color: #60a5fa;
+    background: #f0f9ff;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(59, 130, 246, 0.12);
   }
 
   .country-card:active {
     transform: translateY(0) scale(0.98);
-    background: #eff6ff;
+    background: #f0f9ff;
   }
 
+  /* DESKTOP: Sélection ULTRA visible avec animation */
   .country-card.selected {
-    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
     border-color: #2563eb;
+    border-width: 3px;
     color: white;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    transform: translateY(-2px) scale(1.02);
+    animation: pulse-glow 2s infinite;
   }
 
   .country-card.selected:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(135deg, #2563eb 0%, #0e7490 100%);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.5);
+    transform: translateY(-3px) scale(1.03);
   }
   
   .country-card.selected .country-name {
-    font-weight: 600;
+    font-weight: 700;
   }
 }
 
 .country-card .country-name {
   flex: 1;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #1e293b;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: color 0.2s;
-  width: 100%;
-  text-align: center;
+  text-align: left;
   order: 2;
   min-width: 0;
 }
 
+/* MOBILE: Texte plus visible en sélection */
 .country-card.selected .country-name {
-  color: #0f172a;
+  color: #1e40af;
   font-weight: 700;
 }
 
-/* DESKTOP: Texte blanc pour selected + meilleure gestion */
+/* DESKTOP: Texte blanc pour selected */
 @media (min-width: 640px) {
   .country-card .country-name {
     max-width: 100%;
+    font-size: 0.8125rem;
   }
   
   .country-card.selected .country-name {
     color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 }
 
+/* MOBILE: Icône visible à gauche */
 .country-card .check-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
-  margin-left: 0;
-  margin-bottom: 0.375rem;
+  margin: 0;
   border-radius: 50%;
-  background: transparent;
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
   flex-shrink: 0;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   order: 1;
 }
 
-/* MOBILE: Icône visible avec cercle coloré quand sélectionné */
 .country-card .check-indicator svg {
   color: transparent;
   transform: scale(0);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* MOBILE: Icône très visible quand sélectionné */
 .country-card.selected .check-indicator {
   background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  border-color: #2563eb;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+  transform: scale(1.1);
 }
 
 .country-card.selected .check-indicator svg {
   color: white;
-  transform: scale(1);
+  transform: scale(1.1);
 }
 
-/* DESKTOP: Style différent */
+/* DESKTOP: Style différent et compact */
 @media (min-width: 640px) {
   .country-card .check-indicator {
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-left: 0.5rem;
-    background: rgba(59, 130, 246, 0.1);
-    opacity: 0;
-    transform: scale(0.8);
+    width: 1.125rem;
+    height: 1.125rem;
+    background: rgba(59, 130, 246, 0.08);
+    border: 1.5px solid rgba(59, 130, 246, 0.2);
+    opacity: 0.7;
+    transform: scale(0.9);
   }
   
   .country-card .check-indicator svg {
     color: #2563eb;
-    transform: scale(0.8);
+    transform: scale(0.7);
   }
 
   .country-card.selected .check-indicator {
     opacity: 1;
     transform: scale(1);
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   }
 
   .country-card.selected .check-indicator svg {
@@ -458,6 +513,35 @@
     window.selectedCountries = [];
   }
 
+  // Fonction pour mettre à jour l'affichage des pays sélectionnés
+  function updateSelectedCountriesList() {
+    const listContainer = document.getElementById('step6SelectedList');
+    if (!listContainer) return;
+    
+    const wrapper = listContainer.querySelector('div');
+    if (!wrapper) return;
+    
+    if (window.selectedCountries.length === 0) {
+      listContainer.classList.add('hidden');
+      wrapper.innerHTML = '';
+      return;
+    }
+    
+    listContainer.classList.remove('hidden');
+    wrapper.innerHTML = window.selectedCountries
+      .slice() // Copie pour ne pas modifier l'original
+      .sort() // Tri alphabétique
+      .map(country => `
+        <span class="selected-country-badge">
+          <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+          ${country}
+        </span>
+      `)
+      .join('');
+  }
+
   // Fonction pour toggle la sélection
   window.toggleCountrySelection = function(country) {
     console.log('Step 6: toggleCountrySelection called with:', country);
@@ -497,6 +581,9 @@
     if (selectedCount) {
       selectedCount.textContent = window.selectedCountries.length;
     }
+    
+    // Mettre à jour la liste des pays sélectionnés
+    updateSelectedCountriesList();
     
     // Masquer l'erreur si au moins un pays est sélectionné
     if (errorAlert && window.selectedCountries.length > 0) {
@@ -576,6 +663,9 @@
           if (selectedCount) {
             selectedCount.textContent = window.selectedCountries.length;
           }
+          
+          // Mettre à jour la liste des pays sélectionnés
+          updateSelectedCountriesList();
           
           if (typeof window.updateNavigationButtons === 'function') {
             window.updateNavigationButtons();

@@ -9,10 +9,10 @@
     <style>
         body{margin:0;padding:0;background:#FFFFFF;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;opacity:0;animation:fadeInBody 0.3s ease-in forwards}
         @keyframes fadeInBody{to{opacity:1}}
-        .page-loader{position:fixed;inset:0;background:linear-gradient(135deg,#eff6ff,#ecfeff,#f0fdfa);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s}
+        
         .page-loader.hidden{opacity:0;pointer-events:none}
-        .loader-emoji{font-size:3rem;animation:bounceLoader 0.6s ease-in-out infinite}
-        @keyframes bounceLoader{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        
+        50%{transform:translateY(-10px)}}
     </style>
     
     <title>About Ulixai - Expats Helping Expats | Our Story & Mission</title>
@@ -264,10 +264,7 @@
 <body>
 
 <!-- Page Loader -->
-<div class="page-loader" id="pageLoader">
-    <div style="text-align: center;">
-        <div class="loader-emoji">🤝</div>
-        <p style="margin-top: 1rem; color: #06b6d4; font-weight: 600; font-size: 14px;">Loading Ulixai...</p>
+<p style="margin-top: 1rem; color: #06b6d4; font-weight: 600; font-size: 14px;">Loading Ulixai...</p>
     </div>
 </div>
 
@@ -493,12 +490,7 @@
 (function(){
   'use strict';
   window.addEventListener('load', function() {
-    const loader = document.getElementById('pageLoader');
-    if (loader) {
-      loader.classList.add('hidden');
-      setTimeout(() => loader.remove(), 300);
-    }
-  });
+    
   setTimeout(() => {
     const loader = document.getElementById('pageLoader');
     if (loader) {
