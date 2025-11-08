@@ -463,136 +463,140 @@
     }
   </style>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       🎨 WIZARD NAVIGATION BUTTONS STYLES
+       ═══════════════════════════════════════════════════════════ -->
+  @include('wizards.navigation-buttons-styles')
+
+  <!-- ═══════════════════════════════════════════════════════════
+       🎨 ADDITIONAL UI STYLES
+       ═══════════════════════════════════════════════════════════ -->
+  <style>
+  [x-cloak] { display: none !important; }
   
-  <style>
-  /* ============================================
-     🎯 MOBILE-FIRST POPUP 2025/2026
-     ============================================ */
-
-  /* Smooth scrolling */
-  #popupContentArea { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
-
-  /* Custom scrollbar for desktop */
-  @media (min-width: 640px) {
-    #popupContentArea::-webkit-scrollbar { width: 8px; }
-    #popupContentArea::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-    #popupContentArea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    #popupContentArea::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-  }
-
-  /* Backdrop blur effect for mobile header */
-  @supports (backdrop-filter: blur(12px)) {
-    @media (max-width: 639px) {
-      .backdrop-blur-sm { backdrop-filter: blur(12px); }
-    }
-  }
-
-  /* Animation shake for validation errors */
-  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-  .shake { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
-
-  /* ============================================
-     🎨 NAVIGATION BUTTONS 2025 - ENHANCED
-     ============================================ */
-
-  /* Mobile: Fixed Bottom Navigation */
-  @media (max-width: 639px) {
-    #mobileNavButtons {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0.95) 100%);
-      padding: 12px; display: flex; gap: 12px; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-      z-index: 60; backdrop-filter: blur(8px);
-    }
-    #mobileNavButtons button { flex: 1; height: 48px; border-radius: 12px; font-weight: 600; font-size: 15px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 8px; }
-    #mobileNavButtons .btn-back { background: white; color: #64748b; border: 2px solid #e2e8f0; flex: 0.8; }
-    #mobileNavButtons .btn-back:active { background: #f8fafc; transform: scale(0.98); }
-    #mobileNavButtons .btn-next { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
-    #mobileNavButtons .btn-next:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); }
-    #mobileNavButtons .btn-next:disabled { background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%); box-shadow: none; opacity: 0.6; }
-  }
-
-  /* Desktop: In-Flow Navigation */
-  @media (min-width: 640px) {
-    #desktopNavButtons {
-      position: sticky; bottom: 0; display: flex; justify-content: space-between; align-items: center; gap: 16px;
-      margin-top: 16px; padding: 12px 0; background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0.95) 100%);
-      backdrop-filter: blur(8px); border-top: 1px solid #e5e7eb; z-index: 60;
-    }
-    #desktopNavButtons button { padding: 12px 32px; border-radius: 12px; font-weight: 600; font-size: 15px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: inline-flex; align-items: center; gap: 8px; }
-    #desktopNavButtons .btn-back { background: white; color: #64748b; border: 2px solid #e2e8f0; }
-    #desktopNavButtons .btn-back:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); }
-    #desktopNavButtons .btn-back:active { transform: translateY(0); }
-    #desktopNavButtons .btn-next { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
-    #desktopNavButtons .btn-next:hover { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4); }
-    #desktopNavButtons .btn-next:active { transform: translateY(0); }
-    #desktopNavButtons .btn-next:disabled { background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%); box-shadow: none; opacity: 0.6; cursor: not-allowed; transform: none; }
-    #desktopNavButtons .btn-next:disabled:hover { transform: none; }
-  }
-
-  .btn-back svg, .btn-next svg { transition: transform 0.3s ease; }
-  .btn-back:hover svg { transform: translateX(-4px); }
-  .btn-next:hover svg { transform: translateX(4px); }
-
-  /* ============================================
-     🎯 AJOUTS: CROIX VISIBLE & BOUTONS GRISÉS
-     ============================================ */
-  .close-popup {
-    position: absolute; top: 1.5rem; right: 1.5rem; width: 2.5rem; height: 2.5rem;
-    background-color: rgba(239, 68, 68, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s ease; z-index: 10; border: 2px solid #ef4444;
-  }
-  .close-popup:hover { background-color: #ef4444; transform: scale(1.1); }
-  .close-popup svg { width: 1.25rem; height: 1.25rem; color: #ef4444; stroke-width: 3; transition: color 0.2s ease; }
-  .close-popup:hover svg { color: white; }
-
-  .btn-disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; background-color: #e5e7eb !important; color: #9ca3af !important; }
-  .btn-enabled { opacity: 1; cursor: pointer; transition: all 0.2s ease; }
-
-  @media (max-width: 768px) {
-    .close-popup { top: 1rem; right: 1rem; width: 2rem; height: 2rem; }
-    .close-popup svg { width: 1rem; height: 1rem; }
-  }
-  </style>
-
-  <style>[x-cloak]{display:none !important}</style>
-  <script src="https://unpkg.com/alpinejs@3.x.x" defer></script>
-
-  <style>
   html { scroll-behavior: auto !important; }
-  .breadcrumb-container { background: transparent; border-bottom: 1px solid rgba(226, 232, 240, 0.6); padding: 12px 0; }
-  .breadcrumb { display: flex; align-items: center; gap: 8px; max-width: 1280px; margin: 0 auto; padding: 0 20px; font-size: 14px; }
-  .breadcrumb-item { display: flex; align-items: center; gap: 6px; }
-  .breadcrumb-item svg { width: 15px; height: 15px; }
-  .breadcrumb-item a { color: #64748b; text-decoration: none; padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; font-weight: 500; transition: all 0.25s ease; background: transparent; }
-  .breadcrumb-item a:hover { background: rgba(59, 130, 246, 0.08); color: #3b82f6; transform: translateX(2px); }
-  .breadcrumb-item.active { color: #1e293b; font-weight: 600; padding: 6px 12px; background: rgba(226, 232, 240, 0.4); border-radius: 20px; }
-  .breadcrumb-separator { color: #cbd5e1; margin: 0 4px; font-size: 14px; }
-  #scrollToTopBtn {
-    position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #3b82f6; color: white;
-    border: none; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 9999; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  
+  .breadcrumb-container { 
+    background: transparent; 
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6); 
+    padding: 12px 0; 
   }
-  #scrollToTopBtn:hover { background: #2563eb; }
-  #scrollToTopBtn.show { display: flex; }
+  
+  .breadcrumb { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    max-width: 1280px; 
+    margin: 0 auto; 
+    padding: 0 20px; 
+    font-size: 14px; 
+  }
+  
+  .breadcrumb-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+  }
+  
+  .breadcrumb-item svg { 
+    width: 15px; 
+    height: 15px; 
+  }
+  
+  .breadcrumb-item a { 
+    color: #64748b; 
+    text-decoration: none; 
+    padding: 6px 12px; 
+    border-radius: 20px; 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+    font-weight: 500; 
+    transition: all 0.25s ease; 
+    background: transparent; 
+  }
+  
+  .breadcrumb-item a:hover { 
+    background: rgba(59, 130, 246, 0.08); 
+    color: #3b82f6; 
+    transform: translateX(2px); 
+  }
+  
+  .breadcrumb-item.active { 
+    color: #1e293b; 
+    font-weight: 600; 
+    padding: 6px 12px; 
+    background: rgba(226, 232, 240, 0.4); 
+    border-radius: 20px; 
+  }
+  
+  .breadcrumb-separator { 
+    color: #cbd5e1; 
+    margin: 0 4px; 
+    font-size: 14px; 
+  }
+  
+  #scrollToTopBtn {
+    position: fixed; 
+    bottom: 30px; 
+    right: 30px; 
+    width: 50px; 
+    height: 50px; 
+    background: #3b82f6; 
+    color: white;
+    border: none; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 9999; 
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  #scrollToTopBtn:hover { 
+    background: #2563eb; 
+  }
+  
+  #scrollToTopBtn.show { 
+    display: flex; 
+  }
 
   @media (max-width: 768px) {
-    #scrollToTopBtn { display: none !important; }
-    .breadcrumb-container { padding: 12px 0; }
-    .breadcrumb { padding: 0 16px; font-size: 13px; gap: 6px; }
-    .breadcrumb-item svg { width: 14px; height: 14px; }
-    .breadcrumb-item a { padding: 5px 10px; }
-    .breadcrumb-item.active { padding: 5px 12px; }
+    #scrollToTopBtn { 
+      display: none !important; 
+    }
+    .breadcrumb-container { 
+      padding: 12px 0; 
+    }
+    .breadcrumb { 
+      padding: 0 16px; 
+      font-size: 13px; 
+      gap: 6px; 
+    }
+    .breadcrumb-item svg { 
+      width: 14px; 
+      height: 14px; 
+    }
+    .breadcrumb-item a { 
+      padding: 5px 10px; 
+    }
+    .breadcrumb-item.active { 
+      padding: 5px 12px; 
+    }
   }
   </style>
 
+  <!-- Alpine.js for reactive components -->
+  <script src="https://unpkg.com/alpinejs@3.x.x" defer></script>
 </head>
 
 @php
-    // récupération sûre de la configuration du site (évite erreur si pas d'enregistrement)
-    $settings = \App\Models\SiteSetting::first();
-    $legal = $settings ? ($settings->legal_info ?? []) : [];
-@endphp
-
-@php 
+  // Récupération sûre de la configuration du site
+  $settings = \App\Models\SiteSetting::first();
+  $legal = $settings ? ($settings->legal_info ?? []) : [];
+  
+  // Récupérer les pays pour les wizards
   use App\Models\Country;
   $countries = Country::where('status', 1)->get();
 @endphp
@@ -606,15 +610,17 @@
   </svg>
 </button>
 
-<!-- //For showing toast messages across platform -->
+<!-- Toast Messages -->
 @if (session('success'))
-    <script>toastr.success('{{ session('success') }}', 'Success');</script>
+  <script>toastr.success('{{ session('success') }}', 'Success');</script>
 @endif
 @if (session('error'))
-    <script>toastr.error('{{ session('error') }}', 'Error');</script>
+  <script>toastr.error('{{ session('error') }}', 'Error');</script>
 @endif
 
-<!-- Navbar (desktop) -->
+<!-- ═══════════════════════════════════════════════════════════
+     🖥️ DESKTOP NAVBAR
+     ═══════════════════════════════════════════════════════════ -->
 <nav class="top-0 z-40 lg:z-50 border-b border-white/20 shadow-xl">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-20 items-center">
@@ -633,7 +639,6 @@
 
       <!-- Desktop Buttons -->
       <div class="hidden lg:flex items-center space-x-3 group">
-        {{-- ✅ CORRIGÉ: Plus d'attribut onclick --}}
         <button 
           id="helpBtn"
           class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover-glow transform hover:scale-105 shadow-lg" 
@@ -668,7 +673,7 @@
 
       <!-- Desktop Right Side -->
       <div class="hidden lg:flex items-center space-x-6">
-        <!-- Language Selector with Google Translate -->
+        <!-- Language Selector -->
         <div class="relative group inline-block">
           <button id="langBtn" type="button"
             class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white shadow hover:bg-gray-50 transition"
@@ -717,7 +722,6 @@
             <span class="font-medium text-blue-600">Log in</span>
           </a>
 
-          {{-- ✅ CORRIGÉ: Plus d'attribut onclick, juste l'ID --}}
           <button 
             id="signupBtn"
             type="button"
@@ -837,144 +841,59 @@
             </div>
           </div>
         @endif
-        </div> <!-- /auth buttons -->
+        </div>
       </div>
     </div>
   </div>
 </nav>
 
-<!-- ============================================
-     🚀 POPUP SIGNUP - CHARGÉ UNIQUEMENT SI NON CONNECTÉ
-     ============================================ -->
-@if(!Auth::check())
-<div id="signupPopup" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="signup-popup-title">
-  <!-- CONTAINER RESPONSIVE -->
-  <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col">
-    <!-- HEADER STICKY -->
-    <div class="sticky sm:relative top-0 z-20 bg-white/95 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none border-b-0 px-4 sm:px-8 py-0 flex items-center justify-between gap-4 h-0 overflow-hidden sm:h-auto sm:overflow-visible">
-      <div class="flex-1">
-        <div class="sm:hidden">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-medium text-gray-500">Step <span id="currentStepNum">1</span> of 16</span>
-            <span class="text-xs font-semibold text-blue-600"><span id="progressPercentage">6</span>%</span>
-          </div>
-          <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100">
-            <div id="mobileProgressBar" class="h-full bg-gradient-to-r from-blue-600 to-blue-500 transition-all duration-300 ease-out" style="width: 6.25%"></div>
-          </div>
-        </div>
-      </div>
+<!-- ═══════════════════════════════════════════════════════════
+     📱 MOBILE HEADER
+     ═══════════════════════════════════════════════════════════ -->
+<header class="lg:hidden fixed top-0 left-0 w-full bg-white z-[60] shadow-md" role="banner">
+  <div class="flex items-center justify-between px-4 py-2">
+    <a href="/" aria-label="ULIXAI Home">
+      <img src="/images/headerlogos.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" width="40" height="40" />
+    </a>
 
-      <!-- Close Button -->
-      <button id="closePopup" 
-              type="button"
-              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all active:scale-95 text-gray-500 hover:text-gray-800 shrink-0 absolute top-2 right-2" 
-              aria-label="Close signup form">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
+    <nav class="flex items-center gap-2" aria-label="Main navigation">
+      <button 
+        id="mobileSearchButton"
+        type="button"
+        class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg" 
+        aria-label="Request help">
+        <span class="flex items-center gap-2">
+          <i class="fas fa-hand-paper text-white text-base" aria-hidden="true"></i>
+          <span class="hidden xs:inline">Request Help</span>
+          <span class="xs:hidden">Help</span>
+        </span>
       </button>
-    </div>
 
-    <!-- CONTENT -->
-    <div class="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-8 pt-0 pb-20 sm:pb-4" id="popupContentArea">
-      <!-- Steps includes -->
-      @include('wizards.provider.steps.choose_step')
-      @include('wizards.provider.steps.native_language')
-      @include('wizards.provider.steps.spoken_language')
-      @include('wizards.provider.steps.provider_services')
-      @include('wizards.provider.steps.country_selection')
-      @include('wizards.provider.steps.operational_countries', ['countries' => $countries])
-      @include('wizards.provider.steps.special_status')
-      @include('wizards.provider.steps.communication_preference')
-      @include('wizards.provider.steps.profile_description')
-      @include('wizards.provider.steps.profile_picture')
-      @include('wizards.provider.steps.identity_documents')
-      @include('wizards.provider.steps.first_last_name')
-      @include('wizards.provider.steps.email')
-      @include('wizards.provider.steps.verify_email')
-      @include('wizards.provider.steps.phone_number')
-      @include('wizards.provider.steps.success_confirmation')
-      
-    </div>
-
-    <!-- NAVIGATION BUTTONS -->
-    <div id="mobileNavButtons" class="sm:hidden">
-      <button id="mobileBackBtn" type="button" class="btn-back" style="display:none;" aria-label="Go back">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-        </svg>
-        <span>Back</span>
-      </button>
-      <button id="mobileNextBtn" type="button" class="btn-next" aria-label="Continue to next step">
-        <span>Continue</span>
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-        </svg>
-      </button>
-    </div>
-
-    <div id="desktopNavButtons" class="hidden sm:flex px-8 pb-6">
-      <button id="desktopBackBtn" type="button" class="btn-back" style="display:none;" aria-label="Go back">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-        </svg>
-        <span>Back</span>
-      </button>
-      <button id="desktopNextBtn" type="button" class="btn-next" aria-label="Continue to next step">
-        <span>Continue</span>
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-</div>
-@endif
-
-  <!-- 🎨 Mobile Header - HTML5 Semantic -->
-  <header class="lg:hidden fixed top-0 left-0 w-full bg-white z-[60] shadow-md" role="banner">
-    <div class="flex items-center justify-between px-4 py-2">
-      <a href="/" aria-label="ULIXAI Home">
-        <img src="/images/headerlogos.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" width="40" height="40" />
+      <a href="https://sos-expat.com/" 
+         target="_blank"
+         rel="noopener noreferrer"
+         class="nav-button bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg"
+         aria-label="Emergency SOS">
+        <span class="flex items-center gap-1.5">
+          <i class="fas fa-phone-alt text-white text-base" aria-hidden="true"></i>
+          <span>S.O.S</span>
+        </span>
       </a>
 
-      <nav class="flex items-center gap-2" aria-label="Main navigation">
-        {{-- ✅ CORRIGÉ: Plus d'attribut onclick --}}
-        <button 
-          id="mobileSearchButton"
-          type="button"
-          class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg" 
-          aria-label="Request help">
-          <span class="flex items-center gap-2">
-            <i class="fas fa-hand-paper text-white text-base" aria-hidden="true"></i>
-            <span class="hidden xs:inline">Request Help</span>
-            <span class="xs:hidden">Help</span>
-          </span>
-        </button>
+      <button id="menu-toggle-top" type="button" class="p-2.5 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+        <div class="w-6 h-6 flex flex-col justify-center items-center gap-1.5">
+          <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
+          <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
+          <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
+        </div>
+      </button>
+    </nav>
+  </div>
+</header>
 
-        <a href="https://sos-expat.com/" 
-           target="_blank"
-           rel="noopener noreferrer"
-           class="nav-button bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg"
-           aria-label="Emergency SOS">
-          <span class="flex items-center gap-1.5">
-            <i class="fas fa-phone-alt text-white text-base" aria-hidden="true"></i>
-            <span>S.O.S</span>
-          </span>
-        </a>
-
-        <button id="menu-toggle-top" type="button" class="p-2.5 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
-          <div class="w-6 h-6 flex flex-col justify-center items-center gap-1.5">
-            <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
-            <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
-            <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
-          </div>
-        </button>
-      </nav>
-    </div>
-  </header>
-
- <!-- 🎨 Mobile Menu -->
+<!-- ═══════════════════════════════════════════════════════════
+     📱 MOBILE MENU
+     ═══════════════════════════════════════════════════════════ -->
 <nav id="mobile-menu" class="lg:hidden fixed top-[64px] left-0 w-full bg-white z-40 shadow-md hidden px-6 py-4 space-y-4" role="navigation" aria-label="Mobile menu" aria-hidden="true">
   <div class="flex justify-end mb-2">
     <button id="mobileMenuCloseBtn" type="button" class="p-3 rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-110" aria-label="Close menu">
@@ -986,11 +905,7 @@
 
   <ul class="space-y-2" role="menu">
     @if(Auth::check())
-      {{-- ============================================
-           UTILISATEUR CONNECTÉ
-           ============================================ --}}
-      
-      {{-- Profil utilisateur --}}
+      <!-- Profil utilisateur -->
       <li role="none" class="border-b border-gray-200 pb-3 mb-3">
         <div class="flex items-center gap-3 px-4 py-2">
           @php
@@ -1023,7 +938,7 @@
         </div>
       </li>
 
-      {{-- Dashboard --}}
+      <!-- Dashboard -->
       <li role="none">
         <a href="{{ Route::has('dashboard') ? route('dashboard') : '/dashboard' }}" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
@@ -1033,7 +948,7 @@
         </a>
       </li>
 
-      {{-- Become a provider (seulement si pas déjà provider) --}}
+      <!-- Become a provider (si pas déjà provider) -->
       @if(Auth::user()->user_role != 'service_provider')
         <li role="none">
           <a href="/become-service-provider" 
@@ -1045,7 +960,7 @@
         </li>
       @endif
 
-      {{-- Affiliate Program --}}
+      <!-- Affiliate Program -->
       <li role="none">
         <a href="/affiliate" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
@@ -1055,7 +970,7 @@
         </a>
       </li>
 
-      {{-- Logout --}}
+      <!-- Logout -->
       <li role="none" class="border-t border-gray-200 pt-2 mt-2">
         <form method="POST" action="{{ route('logout') }}" class="w-full">
           @csrf
@@ -1069,11 +984,7 @@
       </li>
 
     @else
-      {{-- ============================================
-           UTILISATEUR NON CONNECTÉ
-           ============================================ --}}
-      
-      {{-- Become a provider --}}
+      <!-- Become a provider -->
       <li role="none">
         <a href="/become-service-provider" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
@@ -1083,7 +994,7 @@
         </a>
       </li>
 
-      {{-- Login --}}
+      <!-- Login -->
       <li role="none">
         <a href="/login" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
@@ -1093,7 +1004,7 @@
         </a>
       </li>
 
-      {{-- ✅ CORRIGÉ: Plus d'attribut onclick, juste l'ID --}}
+      <!-- Sign up -->
       <li role="none">
         <button 
            id="mobileSignupBtn"
@@ -1105,7 +1016,7 @@
         </button>
       </li>
 
-      {{-- Affiliate Program --}}
+      <!-- Affiliate Program -->
       <li role="none">
         <a href="/affiliate" 
            class="block text-gray-800 text-base font-semibold py-3 px-4 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-3" 
@@ -1117,7 +1028,7 @@
     @endif
   </ul>
 
-  {{-- Sélecteur de langue --}}
+  <!-- Sélecteur de langue -->
   <div class="relative w-full sm:w-56">
     <input id="langOpen" type="checkbox" class="peer sr-only" />
     <label for="langOpen"
@@ -1147,15 +1058,25 @@
     </ul>
   </div>
 
-  {{-- Bouton S.O.S --}}
+  <!-- Bouton S.O.S -->
   <a href="https://sos-expat.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
     <i class="fas fa-phone-alt mr-1" aria-hidden="true"></i> S.O.S
   </a>
 </nav>
 
-@include('pages.popup')
+<!-- ═══════════════════════════════════════════════════════════
+     🎯 WIZARDS POPUPS
+     ═══════════════════════════════════════════════════════════ -->
 
-<!-- 🍞 Fil d'Ariane -->
+{{-- Provider Signup Popup - Multi-step registration (16 steps) --}}
+@include('wizards.provider.signup-popup')
+
+{{-- Requester Help Popup - Category selection (3 levels) --}}
+@include('wizards.requester.steps.popup_request_help')
+
+<!-- ═══════════════════════════════════════════════════════════
+     🍞 BREADCRUMB NAVIGATION
+     ═══════════════════════════════════════════════════════════ -->
 @php
   $currentPath = request()->path();
   $isHome = $currentPath === '/' || $currentPath === '';
@@ -1200,13 +1121,14 @@
 </div>
 @endif
 
+<!-- Cookie Banner -->
 @include('includes.cookie-banner')
 
 <!-- ═══════════════════════════════════════════════════════════
-     🌐 GOOGLE TRANSLATE - INIT SIMPLE (UI gérée par language-manager.js)
+     🌐 GOOGLE TRANSLATE INITIALIZATION
      ═══════════════════════════════════════════════════════════ -->
 
-<!-- Hidden Google Translate widget (une seule instance globale) -->
+<!-- Hidden Google Translate widget -->
 <div id="google_translate_element" class="hidden"></div>
 
 <!-- Init Google Translate -->
@@ -1253,7 +1175,6 @@
     const savedLang = localStorage.getItem('ulixai_lang') || 'en';
     
     if (savedLang !== 'en') {
-      // Appliquer le hash immédiatement
       window.location.hash = `googtrans(en|${savedLang})`;
       console.log('🌐 [GoogleTranslate] Applied stored language:', savedLang);
     }
@@ -1269,16 +1190,15 @@
 })();
 </script>
 
-{{-- ═══════════════════════════════════════════════════════════
-     🔧 INIT HELP BUTTON - Delegated event to avoid conflicts
-     ═══════════════════════════════════════════════════════════ --}}
+<!-- ═══════════════════════════════════════════════════════════
+     🔧 HELP BUTTON INITIALIZATION
+     ═══════════════════════════════════════════════════════════ -->
 <script>
 (function() {
   'use strict';
   
   /**
    * Initialisation des boutons Help avec délégation d'événements
-   * pour éviter les conflits avec wizard-core.js
    */
   document.addEventListener('DOMContentLoaded', function() {
     console.log('🔧 [Header] Initializing help buttons...');
@@ -1306,10 +1226,10 @@
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════
-     🚀 JAVASCRIPT MODULES - REFACTORISÉ
+     🚀 JAVASCRIPT MODULES
      ═══════════════════════════════════════════════════════════ -->
-      <script src="{{ mix('js/app.js') }}"></script>
-      <script src="{{ mix('js/header-init.js') }}"></script>
+<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ mix('js/header-init.js') }}"></script>
 
-    </body>
+</body>
 </html>
