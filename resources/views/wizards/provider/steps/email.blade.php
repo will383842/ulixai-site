@@ -1,28 +1,16 @@
 <!-- 
 ============================================
-🚀 STEP 13 - EMAIL INPUT (OPTIMIZED)
-============================================
-✨ Design System Blue/Cyan/Teal STRICT
-🎨 Email avec validation
-💎 Indicateurs visuels de succès
-⚡ Structure header fixe + contenu scrollable
-🔧 Optimisations CPU, RAM, GPU
-✅ Persistance localStorage
-⚡ Performance maximale
-✅ CONFORME AU GUIDE SYSTÈME WIZARD
-🔧 MODIFIED: localStorage key changed to 'expats'
-🔧 ADDED: OTP sending on navigation to Step 14
+🚀 STEP 13 - EMAIL INPUT - VERSION PROPRE
+✅ Le JS ne touche JAMAIS au style
 ============================================
 -->
 
 <div id="step13" class="hidden flex flex-col h-full" role="region" aria-label="Enter your email">
   
-  <!-- ============================================
-       TITRE FIXE (STICKY)
-       ============================================ -->
+  <!-- TITRE FIXE (STICKY) -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -31,14 +19,12 @@
 
     <!-- Header Section -->
     <div class="text-center space-y-2 relative">
-      <!-- Icon Badge -->
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
           <span class="text-lg sm:text-xl">📧</span>
         </div>
       </div>
       
-      <!-- Title & Subtitle -->
       <div>
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
           What's Your Email? 📬
@@ -48,7 +34,6 @@
         </p>
       </div>
 
-      <!-- Status Badge -->
       <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -60,9 +45,7 @@
     </div>
   </div>
 
-  <!-- ============================================
-       CONTENU SCROLLABLE
-       ============================================ -->
+  <!-- CONTENU SCROLLABLE -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
     <!-- Info Banner -->
@@ -102,7 +85,7 @@
       <p class="input-hint">We'll never share your email with anyone else</p>
     </div>
 
-    <!-- Error Alert (Hidden by default) -->
+    <!-- Error Alert -->
     <div id="step13Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -115,7 +98,7 @@
       </div>
     </div>
 
-    <!-- Success Alert (Hidden by default) -->
+    <!-- Success Alert -->
     <div id="step13Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3" role="status">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
@@ -130,15 +113,8 @@
   </div>
 </div>
 
-<!-- ============================================
-     STYLES OPTIMISÉS
-     ============================================ -->
 <style>
-/* ============================================
-   🎨 BASE STYLES
-   ============================================ */
-
-/* Animations des blobs - optimisé GPU */
+/* Blob animations */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -158,7 +134,7 @@
   animation-delay: 4s;
 }
 
-/* Shake animation pour les erreurs */
+/* Shake animation */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-8px); }
@@ -169,10 +145,7 @@
   animation: shake 0.5s ease-in-out;
 }
 
-/* ============================================
-   📝 INPUT STYLES
-   ============================================ */
-
+/* Input Styles */
 #step13 .input-container {
   width: 100%;
   transition: transform 0.3s ease;
@@ -299,62 +272,25 @@
   }
 }
 
-/* Error shake animation */
+/* Error shake */
 #step13 .input-container.error-shake {
   animation: shake 0.5s ease-in-out;
 }
 
-/* ============================================
-   ♿ ACCESSIBILITY
-   ============================================ */
-
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
-}
-
-@media (prefers-contrast: high) {
-  #step13 .email-input {
-    border: 3px solid currentColor;
-  }
-  
-  #step13 .email-input:focus {
-    border: 3px solid #1d4ed8;
-  }
-}
-
-/* ============================================
-   ⚡ PERFORMANCE
-   ============================================ */
-
-#step13 .input-container,
-#step13 .email-input,
-#step13 .success-indicator {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
 }
 </style>
 
 <script>
-/* ============================================
-   🎯 STEP 13 - EMAIL VALIDATION
-   ✅ CONFORME AU GUIDE SYSTÈME WIZARD
-   ✅ Validation email avec regex
-   ✅ Persistance localStorage
-   🔧 MODIFIED: localStorage key 'expats'
-   ============================================ */
-
 (function() {
   'use strict';
 
-  // ============================================
-  // 📦 STATE & CONSTANTS
-  // ============================================
-  
   const STORAGE_KEY = 'expats';
   const EMAIL_REGEX = /^[a-zA-Z0-9](?:[a-zA-Z0-9._+-]{0,62}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
   
@@ -367,10 +303,6 @@
 
   let cachedElements = null;
 
-  // ============================================
-  // 🗄️ CACHE DOM ELEMENTS
-  // ============================================
-  
   function getCachedElements() {
     if (!cachedElements) {
       cachedElements = {
@@ -384,10 +316,6 @@
     return cachedElements;
   }
 
-  // ============================================
-  // 💾 LOCAL STORAGE - expats
-  // ============================================
-  
   function getLocalStorage() {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
@@ -397,7 +325,6 @@
   }
 
   function saveToLocalStorage() {
-    // Debouncing - sauvegarder après 500ms d'inactivité
     if (state.saveTimeout) {
       clearTimeout(state.saveTimeout);
     }
@@ -413,21 +340,15 @@
     }, 500);
   }
 
-  // ============================================
-  // ✅ VALIDATION
-  // ============================================
-  
   function validateEmail(email) {
     if (!email || email.length === 0) {
       return false;
     }
     
-    // Validation basique de la longueur
     if (email.length < 5 || email.length > 100) {
       return false;
     }
     
-    // Validation regex
     return EMAIL_REGEX.test(email);
   }
 
@@ -437,7 +358,6 @@
     state.email = elements.emailInput.value.trim();
     state.isValid = validateEmail(state.email);
     
-    // Mise à jour des classes CSS
     if (state.email.length > 0) {
       if (state.isValid) {
         elements.emailInput.classList.remove('invalid');
@@ -450,7 +370,6 @@
       elements.emailInput.classList.remove('valid', 'invalid');
     }
     
-    // Mise à jour du texte de statut
     if (elements.statusText) {
       if (state.isValid) {
         elements.statusText.textContent = 'Valid email provided';
@@ -459,7 +378,6 @@
       }
     }
     
-    // Gestion des alertes
     if (state.isValid) {
       if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
       if (elements.successAlert) elements.successAlert.classList.remove('hidden');
@@ -470,10 +388,7 @@
     return state.isValid;
   }
 
-  // ============================================
-  // 🌍 FONCTION DE VALIDATION GLOBALE
-  // ============================================
-  
+  // ✅ Validation globale
   window.validateStep13 = function() {
     const elements = getCachedElements();
     
@@ -485,10 +400,6 @@
     return true;
   };
 
-  // ============================================
-  // 🎨 UI UPDATES
-  // ============================================
-  
   function showError() {
     const elements = getCachedElements();
     
@@ -496,7 +407,6 @@
       elements.errorAlert.classList.remove('hidden');
       elements.errorAlert.classList.add('shake-animation');
       
-      // Scroll vers l'erreur
       requestAnimationFrame(() => {
         elements.errorAlert.scrollIntoView({ 
           behavior: 'smooth', 
@@ -504,13 +414,11 @@
         });
       });
       
-      // Retirer l'animation après
       setTimeout(() => {
         elements.errorAlert.classList.remove('shake-animation');
       }, 500);
     }
     
-    // Shake sur l'input
     const inputContainer = elements.emailInput?.closest('.input-container');
     if (inputContainer) {
       inputContainer.classList.add('error-shake');
@@ -518,15 +426,10 @@
     }
   }
 
-  // ============================================
-  // 🎬 EVENT HANDLERS
-  // ============================================
-  
   function handleInput(e) {
     const input = e.target;
     if (!input || input.id !== 'email_input') return;
     
-    // Debouncing pour la validation
     if (state.validationTimeout) {
       clearTimeout(state.validationTimeout);
     }
@@ -538,7 +441,6 @@
           saveToLocalStorage();
         }
         
-        // ✅ Notifier wizard-steps.js
         if (typeof window.updateNavigationButtons === 'function') {
           window.updateNavigationButtons();
         }
@@ -550,70 +452,50 @@
     const input = e.target;
     if (!input || input.id !== 'email_input') return;
     
-    // Validation immédiate au blur
     requestAnimationFrame(() => {
       updateValidationState();
       
-      // ✅ Notifier wizard-steps.js
       if (typeof window.updateNavigationButtons === 'function') {
         window.updateNavigationButtons();
       }
     });
   }
 
-  // ============================================
-  // 🎪 EVENT DELEGATION
-  // ============================================
-  
   function initEventDelegation() {
     const elements = getCachedElements();
     
-    // Event delegation sur le step
     if (elements.step) {
       elements.step.addEventListener('input', handleInput, { passive: true });
       elements.step.addEventListener('blur', handleBlur, { capture: true, passive: true });
     }
   }
 
-  // ============================================
-  // 🔄 RESTORE STATE
-  // ============================================
-  
   function restoreState() {
     const elements = getCachedElements();
     const data = getLocalStorage();
     
-    // Restaurer l'email depuis localStorage
     if (elements.emailInput && data.email) {
       elements.emailInput.value = data.email;
       state.email = data.email;
     }
     
-    // Valider après restauration
     requestAnimationFrame(() => {
       updateValidationState();
       
-      // ✅ Notifier wizard-steps.js
       if (typeof window.updateNavigationButtons === 'function') {
         window.updateNavigationButtons();
       }
     });
   }
 
-  // ============================================
-  // 🎬 INITIALIZATION
-  // ============================================
-  
   function init() {
     const elements = getCachedElements();
     
-    // Observer pour détecter quand le step devient visible
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             if (!elements.step.classList.contains('hidden')) {
-              // Step est visible, restaurer l'état et valider
               restoreState();
             }
           }
@@ -623,71 +505,14 @@
       observer.observe(elements.step, { attributes: true });
     }
 
-    // Init event delegation
     initEventDelegation();
-
-    // Restaurer l'état initial
     restoreState();
   }
 
-  // Start when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
 })();
-
-/**
- * ═══════════════════════════════════════════════════════════
- * ENVOI OTP au clic Next (Step 13 → Step 14)
- * ═══════════════════════════════════════════════════════════
- */
-document.addEventListener('DOMContentLoaded', () => {
-  const originalNavigate = window.navigateToStep;
-  
-  window.navigateToStep = function(targetStep) {
-    const currentStep = window.currentStep || 
-                        parseInt(document.querySelector('[id^="step"]:not(.hidden)')?.id.replace('step', '')) || 
-                        0;
-    
-    // Si on quitte Step 13 vers Step 14
-    if (currentStep === 13 && targetStep === 14) {
-      const data = JSON.parse(localStorage.getItem('expats')) || {};
-      
-      if (data.email) {
-        console.log('📧 [Step 13] Sending OTP to:', data.email);
-        
-        // Appeler l'API
-        fetch('/send-email-otp', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-          },
-          body: JSON.stringify({ email: data.email })
-        })
-        .then(response => response.json())
-        .then(result => {
-          console.log('✅ [Step 13] OTP sent successfully');
-          if (typeof toastr !== 'undefined') {
-            toastr.success('Verification code sent to your email!', 'Check your inbox');
-          }
-        })
-        .catch(error => {
-          console.error('❌ [Step 13] Failed to send OTP:', error);
-          if (typeof toastr !== 'undefined') {
-            toastr.error('Failed to send verification code', 'Error');
-          }
-        });
-      }
-    }
-    
-    // Appeler navigation originale
-    if (originalNavigate) {
-      originalNavigate(targetStep);
-    }
-  };
-});
 </script>

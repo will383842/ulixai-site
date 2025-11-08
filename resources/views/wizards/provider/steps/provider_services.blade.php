@@ -1,13 +1,10 @@
 <!-- 
 ============================================
-🚀 STEP 4 - VERSION FINALE ULTRA-ROBUSTE
+🚀 STEP 4 - VERSION FINALE AVEC BOUTONS DÉDIÉS
 ============================================
-CORRECTIONS:
-✅ Sous-catégories encadrées PAR SERVICE (meilleur UX)
-✅ Tailles de police NORMALES (non réduites)
-✅ FIX DÉFINITIF du double-clic
-✅ État ultra-sécurisé
-✅ Logs détaillés
+✅ Utilise les boutons mobileSpecialtiesBtn / desktopSpecialtiesBtn
+✅ Cache Continue, affiche Specialties
+✅ Grisé par défaut, actif après sélection
 ============================================
 -->
 
@@ -74,17 +71,6 @@ CORRECTIONS:
           <p class="text-sm font-medium">Loading services...</p>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div id="chooseSubcatButtonContainer" class="hidden sticky bottom-0 z-20 bg-white border-t border-gray-200 p-4 shadow-lg">
-    <div class="flex sm:justify-end">
-      <button 
-        type="button" 
-        id="chooseSubcatBtn"
-        class="w-full sm:w-auto py-3 px-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
-        Choose Your Specialties →
-      </button>
     </div>
   </div>
 </div>
@@ -250,7 +236,7 @@ CORRECTIONS:
 }
 
 /* ====================================
-   MODAL - SOUS-CATÉGORIES ENCADRÉES PAR SERVICE
+   MODAL - SOUS-CATÉGORIES
    ==================================== */
 
 .service-section {
@@ -349,21 +335,18 @@ CORRECTIONS:
 </style>
 
 <script>
-console.log('🔵 STEP 4 - VERSION FINALE ULTRA-ROBUSTE CHARGÉE');
+console.log('🔵 STEP 4 - VERSION AVEC BOUTONS DÉDIÉS');
 
 // ============================================
-// ÉTAT GLOBAL ULTRA-SÉCURISÉ
+// ÉTAT GLOBAL
 // ============================================
 
-// ✅ INITIALISATION UNIQUE ET SÉCURISÉE
 if (typeof window.selectedServices === 'undefined') {
   window.selectedServices = {};
-  console.log('🔧 selectedServices initialisé');
 }
 
 if (typeof window.selectedSubcategories === 'undefined') {
   window.selectedSubcategories = {};
-  console.log('🔧 selectedSubcategories initialisé');
 }
 
 if (typeof window.specialtiesModalOpen === 'undefined') {
@@ -425,71 +408,6 @@ function showFunMessage(text) {
   setTimeout(() => msg.remove(), 3000);
 }
 
-function updateNavigationButtonsForStep4() {
-  // Trouver tous les boutons de navigation
-  const continueButtons = document.querySelectorAll('[id*="continue"], [id*="Continue"], button[onclick*="showStep(4)"], button[onclick*="goToNextStep"]');
-  const backButtons = document.querySelectorAll('[id*="back"], [id*="Back"], button[onclick*="showStep(2)"], button[onclick*="goToPreviousStep"]');
-  
-  console.log('🔧 Mise à jour boutons navigation Step 4');
-  
-  // ✅ CACHER ET VERROUILLER complètement Continue
-  continueButtons.forEach(btn => {
-    btn.style.display = 'none';
-    btn.style.visibility = 'hidden';
-    btn.disabled = true;
-    console.log('❌ Continue caché et désactivé');
-  });
-  
-  // ✅ ACTIVER et AFFICHER Back
-  backButtons.forEach(btn => {
-    btn.style.display = '';
-    btn.style.visibility = 'visible';
-    btn.disabled = false;
-    btn.style.opacity = '1';
-    btn.style.pointerEvents = 'auto';
-    console.log('✅ Back activé');
-  });
-}
-
-function updateCount() {
-  const selectedCount = document.getElementById('step4SelectedCount');
-  if (selectedCount) {
-    selectedCount.textContent = Object.keys(window.selectedServices).length;
-  }
-  updateChooseSubcatButton();
-}
-
-function updateChooseSubcatButton() {
-  const buttonContainer = document.getElementById('chooseSubcatButtonContainer');
-  if (!buttonContainer) return;
-  
-  const hasServices = Object.keys(window.selectedServices).length > 0;
-  
-  if (hasServices) {
-    buttonContainer.classList.remove('hidden');
-    
-    const currentServiceIds = Object.keys(window.selectedServices);
-    const hasExistingSubcats = currentServiceIds.some(serviceId => {
-      return window.selectedSubcategories[serviceId]?.length > 0;
-    });
-    
-    const chooseBtn = document.getElementById('chooseSubcatBtn');
-    if (chooseBtn) {
-      if (hasExistingSubcats) {
-        chooseBtn.innerHTML = 'Modify Your Specialties →';
-        chooseBtn.classList.add('ring-2', 'ring-green-400');
-        chooseBtn.className = 'w-full sm:w-auto py-3 px-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 ring-2 ring-green-400';
-      } else {
-        chooseBtn.innerHTML = 'Choose Your Specialties →';
-        chooseBtn.classList.remove('ring-2', 'ring-green-400');
-        chooseBtn.className = 'w-full sm:w-auto py-3 px-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200';
-      }
-    }
-  } else {
-    buttonContainer.classList.add('hidden');
-  }
-}
-
 function hideError() {
   const errorAlert = document.getElementById('step4ServiceError');
   if (errorAlert) errorAlert.classList.add('hidden');
@@ -501,6 +419,98 @@ function showError() {
     errorAlert.classList.remove('hidden');
     errorAlert.classList.add('shake-animation');
     setTimeout(() => errorAlert.classList.remove('shake-animation'), 500);
+  }
+}
+
+// ============================================
+// GESTION DES BOUTONS DE NAVIGATION
+// ============================================
+
+function switchToSpecialtiesButtons() {
+  console.log('🔄 Basculement vers boutons Specialties');
+  
+  // Cacher les boutons Continue
+  const mobileNext = document.getElementById('mobileNextBtn');
+  const desktopNext = document.getElementById('desktopNextBtn');
+  
+  if (mobileNext) mobileNext.style.display = 'none';
+  if (desktopNext) desktopNext.style.display = 'none';
+  
+  // Afficher les boutons Specialties
+  const mobileSpecialties = document.getElementById('mobileSpecialtiesBtn');
+  const desktopSpecialties = document.getElementById('desktopSpecialtiesBtn');
+  
+  if (mobileSpecialties) {
+    mobileSpecialties.style.display = '';
+    mobileSpecialties.disabled = true; // Grisé par défaut
+    
+    // Attacher le handler
+    mobileSpecialties.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('📱 Mobile Specialties cliqué');
+      if (typeof window.showSpecialtiesModal === 'function') {
+        window.showSpecialtiesModal();
+      }
+    };
+  }
+  
+  if (desktopSpecialties) {
+    desktopSpecialties.style.display = '';
+    desktopSpecialties.disabled = true; // Grisé par défaut
+    
+    // Attacher le handler
+    desktopSpecialties.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('🖥️ Desktop Specialties cliqué');
+      if (typeof window.showSpecialtiesModal === 'function') {
+        window.showSpecialtiesModal();
+      }
+    };
+  }
+  
+  console.log('✅ Boutons Specialties activés');
+}
+
+function switchBackToContinueButtons() {
+  console.log('🔄 Retour aux boutons Continue');
+  
+  // Afficher les boutons Continue
+  const mobileNext = document.getElementById('mobileNextBtn');
+  const desktopNext = document.getElementById('desktopNextBtn');
+  
+  if (mobileNext) mobileNext.style.display = '';
+  if (desktopNext) desktopNext.style.display = '';
+  
+  // Cacher les boutons Specialties
+  const mobileSpecialties = document.getElementById('mobileSpecialtiesBtn');
+  const desktopSpecialties = document.getElementById('desktopSpecialtiesBtn');
+  
+  if (mobileSpecialties) mobileSpecialties.style.display = 'none';
+  if (desktopSpecialties) desktopSpecialties.style.display = 'none';
+  
+  console.log('✅ Boutons Continue restaurés');
+}
+
+function updateCount() {
+  const selectedCount = document.getElementById('step4SelectedCount');
+  if (selectedCount) {
+    selectedCount.textContent = Object.keys(window.selectedServices).length;
+  }
+  
+  // Activer/désactiver les boutons Specialties selon la sélection
+  const mobileSpecialties = document.getElementById('mobileSpecialtiesBtn');
+  const desktopSpecialties = document.getElementById('desktopSpecialtiesBtn');
+  const hasServices = Object.keys(window.selectedServices).length > 0;
+  
+  if (mobileSpecialties) {
+    mobileSpecialties.disabled = !hasServices;
+    console.log(`📱 Specialties: ${hasServices ? 'actif' : 'grisé'}`);
+  }
+  if (desktopSpecialties) {
+    desktopSpecialties.disabled = !hasServices;
+    console.log(`🖥️ Specialties: ${hasServices ? 'actif' : 'grisé'}`);
   }
 }
 
@@ -533,10 +543,6 @@ window.selectService = function(card) {
   updateCount();
   hideError();
   saveToLocalStorage();
-  
-  if (typeof window.updateNavigationButtons === 'function') {
-    window.updateNavigationButtons();
-  }
 };
 
 // ============================================
@@ -560,11 +566,6 @@ window.resetStep4Subcategories = function() {
   }
   
   updateCount();
-  updateChooseSubcatButton();
-  
-  if (typeof window.updateNavigationButtons === 'function') {
-    window.updateNavigationButtons();
-  }
 };
 
 // ============================================
@@ -674,7 +675,6 @@ async function loadServices() {
     
     servicesGrid.innerHTML = cardsHTML;
     updateCount();
-    updateChooseSubcatButton();
     
   } catch (error) {
     console.error('Error loading services:', error);
@@ -708,6 +708,7 @@ window.showSpecialtiesModal = async function() {
   const serviceIds = Object.keys(window.selectedServices);
   
   if (serviceIds.length === 0) {
+    showError();
     return;
   }
   
@@ -715,11 +716,6 @@ window.showSpecialtiesModal = async function() {
     console.log('⚠️ Modal déjà ouvert');
     return;
   }
-  
-  console.log('📊 État actuel:', {
-    services: window.selectedServices,
-    subcategories: window.selectedSubcategories
-  });
   
   try {
     const servicesData = await Promise.all(
@@ -734,20 +730,16 @@ window.showSpecialtiesModal = async function() {
 };
 
 function createSpecialtiesModal(servicesData) {
-  console.log('🔨 Création modal avec', servicesData.length, 'services');
+  console.log('🔨 Création modal');
   
-  // ✅ COPIE SÉCURISÉE de l'état actuel
   const workingSubcats = JSON.parse(JSON.stringify(window.selectedSubcategories || {}));
   
-  // Initialiser les services sans sous-catégories
   servicesData.forEach(service => {
     const serviceId = normalizeId(service.serviceId);
     if (!workingSubcats[serviceId]) {
       workingSubcats[serviceId] = [];
     }
   });
-  
-  console.log('📋 workingSubcats initial:', workingSubcats);
   
   const serviceIcons = {};
   servicesData.forEach(service => {
@@ -840,20 +832,14 @@ function createSpecialtiesModal(servicesData) {
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
   
-  const navButtons = document.querySelectorAll('#mobileNavButtons, #desktopNavButtons');
-  navButtons.forEach(btn => btn.style.display = 'none');
-  
   setTimeout(() => modal.style.opacity = '1', 10);
   
-  // ✅ GESTION DES CLICS SUR LES CHIPS
   modal.addEventListener('click', (e) => {
     const chip = e.target.closest('.subcat-chip');
     if (!chip) return;
     
     const serviceId = normalizeId(chip.getAttribute('data-service-id'));
     const subcatId = normalizeId(chip.getAttribute('data-subcat-id'));
-    
-    console.log('🔘 Chip cliqué:', { serviceId, subcatId });
     
     if (!workingSubcats[serviceId]) {
       workingSubcats[serviceId] = [];
@@ -864,14 +850,11 @@ function createSpecialtiesModal(servicesData) {
     if (index > -1) {
       workingSubcats[serviceId].splice(index, 1);
       chip.classList.remove('selected');
-      console.log('❌ Désélectionné');
     } else {
       workingSubcats[serviceId].push(subcatId);
       chip.classList.add('selected');
-      console.log('✅ Sélectionné');
     }
     
-    // Mise à jour UI
     const serviceSection = modal.querySelector(`.service-section[data-service-id="${serviceId}"]`);
     const counter = serviceSection?.querySelector('.subcat-counter .count');
     if (counter) {
@@ -897,24 +880,13 @@ function createSpecialtiesModal(servicesData) {
     window.specialtiesModalOpen = false;
     document.body.style.overflow = '';
     modal.style.opacity = '0';
-    
-    // ✅ Quand le modal se ferme, réafficher SEULEMENT Back
-    navButtons.forEach(btn => btn.style.display = '');
-    
-    // ✅ Mais TOUJOURS cacher Continue
-    setTimeout(() => {
-      updateNavigationButtonsForStep4();
-    }, 100);
-    
     setTimeout(() => modal.remove(), 200);
   }
   
   modal.querySelector('#closeSpecialtiesModal').onclick = closeModal;
   
   modal.querySelector('#backToServicesBtn').onclick = () => {
-    console.log('🔙 Back vers Step 3');
     closeModal();
-    
     setTimeout(() => {
       if (typeof window.showStep === 'function') {
         window.showStep(2);
@@ -924,11 +896,7 @@ function createSpecialtiesModal(servicesData) {
     }, 200);
   };
   
-  // ✅ BOUTON NEXT - SAUVEGARDE ET NAVIGATION
   modal.querySelector('#saveSpecialtiesBtn').onclick = () => {
-    console.log('🔵 NEXT CLIQUÉ');
-    console.log('📊 État avant validation:', workingSubcats);
-    
     const servicesWithSubcats = servicesData.filter(s => s.subcategories?.length > 0);
     const servicesWithSubcatsIds = servicesWithSubcats.map(s => normalizeId(s.serviceId));
     
@@ -937,7 +905,6 @@ function createSpecialtiesModal(servicesData) {
     });
     
     if (incompleteServices.length > 0) {
-      console.log('❌ Validation échouée:', incompleteServices);
       showFunMessage('Pick at least one specialty for each service! 🎯');
       
       incompleteServices.forEach(id => {
@@ -952,34 +919,16 @@ function createSpecialtiesModal(servicesData) {
       return;
     }
     
-    console.log('✅ Validation OK');
-    
-    // ✅ SAUVEGARDE CRITIQUE
     window.selectedSubcategories = JSON.parse(JSON.stringify(workingSubcats));
-    console.log('💾 Sauvegarde window.selectedSubcategories:', window.selectedSubcategories);
-    
     saveToLocalStorage();
     
-    // ✅ NAVIGATION VERS STEP 5 - IMMÉDIATE
-    console.log('🚀 Navigation vers Step 5');
-    
     if (typeof window.showStep === 'function') {
-      console.log('→ Appel window.showStep(4)');
       window.showStep(4);
     } else if (typeof window.goToNextStep === 'function') {
-      console.log('→ Appel window.goToNextStep()');
       window.goToNextStep();
     }
     
-    // ✅ Fermer le modal APRÈS la navigation (150ms pour éviter de voir Step 4)
-    setTimeout(() => {
-      closeModal();
-      
-      console.log('📊 État final:', {
-        services: window.selectedServices,
-        subcategories: window.selectedSubcategories
-      });
-    }, 150);
+    setTimeout(() => closeModal(), 150);
   };
   
   window.specialtiesModalOpen = true;
@@ -995,33 +944,22 @@ document.addEventListener('DOMContentLoaded', function() {
   
   console.log('📋 Step 4 chargé');
   
-  const chooseBtn = document.getElementById('chooseSubcatBtn');
-  if (chooseBtn) {
-    chooseBtn.onclick = () => {
-      if (typeof window.showSpecialtiesModal === 'function') {
-        window.showSpecialtiesModal();
-      }
-    };
-  }
-  
-  document.addEventListener('step4BackNavigation', () => {
-    console.log('🔙 Navigation arrière détectée');
-    window.resetStep4Subcategories();
-  });
-  
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
         const isHidden = container.classList.contains('hidden');
-        if (!isHidden && !container.dataset.loaded) {
-          loadServices();
-          container.dataset.loaded = 'true';
-          
-          // ✅ Gérer les boutons de navigation
-          updateNavigationButtonsForStep4();
-        } else if (!isHidden) {
-          // ✅ Réappliquer à chaque fois que Step 4 devient visible
-          updateNavigationButtonsForStep4();
+        
+        if (!isHidden) {
+          // Step 4 devient visible
+          if (!container.dataset.loaded) {
+            loadServices();
+            container.dataset.loaded = 'true';
+          }
+          // Basculer vers boutons Specialties
+          setTimeout(() => switchToSpecialtiesButtons(), 50);
+        } else {
+          // Step 4 devient caché - restaurer boutons Continue
+          switchBackToContinueButtons();
         }
       }
     });

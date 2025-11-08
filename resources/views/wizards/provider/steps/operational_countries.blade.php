@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
+  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4 px-1">
 
     <div id="step6CountryError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
       <div class="flex items-start gap-2">
@@ -96,24 +96,10 @@
 </div>
 
 <style>
-/* Ajout pour forcer une largeur minimale adaptée au contenu */
 #step6 {
-  min-width: 100%;
   width: 100%;
-}
-
-@media (min-width: 640px) {
-  #step6 {
-    min-width: 700px;
-    max-width: 100%;
-  }
-}
-
-@media (min-width: 1024px) {
-  #step6 {
-    min-width: 900px;
-    max-width: 1200px;
-  }
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 @keyframes blob {
@@ -202,23 +188,24 @@
   scrollbar-width: thin;
   scrollbar-color: #3b82f6 #f1f5f9;
   background: white;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* DESKTOP: Grid avec cards encadrées - 4 COLONNES PLUS ÉTROITES */
 @media (min-width: 640px) {
   .country-list-container {
     display: grid;
-    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 0.625rem;
     max-height: 460px;
     background: transparent;
-    width: 100%;
   }
 }
 
 @media (min-width: 1024px) {
   .country-list-container {
-    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 0.75rem;
     max-height: 480px;
   }
@@ -266,6 +253,7 @@
   pointer-events: auto !important;
   touch-action: manipulation;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .country-card * {
@@ -487,19 +475,6 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-}
-
-/* Optimisation pour éviter les dépassements */
-@media (max-width: 639px) {
-  .country-list-container {
-    margin-left: -0.25rem;
-    margin-right: -0.25rem;
-  }
-  
-  .country-card {
-    padding-left: 1rem;
-    padding-right: 1rem;
   }
 }
 </style>

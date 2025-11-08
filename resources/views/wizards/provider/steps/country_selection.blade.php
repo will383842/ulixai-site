@@ -1,7 +1,7 @@
 <!-- 
 ============================================
-🚀 STEP 5 - COUNTRY SELECTION
-🌍 Fichier: resources/views/includes/provider/country_selection.blade.php
+🚀 STEP 5 - COUNTRY SELECTION - VERSION PROPRE
+✅ Le JS ne touche JAMAIS au style
 ============================================
 -->
 
@@ -17,7 +17,7 @@
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Header Content - DISPOSITION UNIQUE MOBILE -->
+    <!-- Header Content -->
     <div class="text-center sm:text-center space-y-2 relative mobile-step5-header">
       <div class="flex justify-center sm:justify-center mobile-step5-icon">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
@@ -89,7 +89,6 @@
           name="location" 
           class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all appearance-none cursor-pointer text-sm font-medium hover:border-blue-400"
           aria-required="true"
-          style="pointer-events: auto !important; touch-action: manipulation; z-index: 1; position: relative;"
         >
           <option value="" disabled selected>Choose your country...</option>
           @foreach($countries as $country)
@@ -109,24 +108,20 @@
 </div>
 
 <style>
-/* ============================================
-   DISPOSITION UNIQUE MOBILE POUR STEP 5
-   ============================================ */
-
-/* MOBILE: Layout horizontal avec icône à gauche */
+/* Mobile layout unique pour Step 5 */
 @media (max-width: 639px) {
   .mobile-step5-header {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    text-align: left !important;
+    text-align: left;
     gap: 0.75rem;
   }
   
   .mobile-step5-icon {
     order: 1;
     flex-shrink: 0;
-    justify-content: flex-start !important;
+    justify-content: flex-start;
   }
   
   .mobile-step5-title {
@@ -153,7 +148,7 @@
   }
 }
 
-/* Animations pour les blobs */
+/* Animations */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   25% { transform: translate(20px, -50px) scale(1.1); }
@@ -198,17 +193,14 @@
     return;
   }
 
-  // ✅ Gérer le changement de sélection
   select.addEventListener('change', function() {
     const value = this.value;
     console.log('Step 5: Country selected:', value);
     
-    // Mettre à jour le compteur
     if (countEl) {
       countEl.textContent = value ? '1' : '0';
     }
     
-    // Afficher/masquer les messages
     if (value) {
       if (errorEl) errorEl.classList.add('hidden');
       if (successEl) successEl.classList.remove('hidden');
@@ -217,7 +209,6 @@
       if (successEl) successEl.classList.add('hidden');
     }
     
-    // Sauvegarder dans localStorage 'expats'
     try {
       const data = JSON.parse(localStorage.getItem('expats') || '{}');
       data.location = value;
@@ -227,13 +218,11 @@
       console.error('Step 5: Error saving to localStorage:', e);
     }
     
-    // Notifier le wizard pour mettre à jour les boutons
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
   });
 
-  // ✅ Restaurer la sélection depuis localStorage
   function restoreSelection() {
     try {
       const data = JSON.parse(localStorage.getItem('expats') || '{}');
@@ -249,10 +238,8 @@
     }
   }
 
-  // ✅ Initialisation
   restoreSelection();
 
-  // ✅ Observer pour réinitialiser quand on arrive sur Step 5
   const step5Container = document.getElementById('step5');
   if (step5Container) {
     const observer = new MutationObserver((mutations) => {
@@ -262,7 +249,6 @@
             console.log('Step 5: Now visible, restoring selection');
             restoreSelection();
             
-            // Mettre à jour les boutons
             if (typeof window.updateNavigationButtons === 'function') {
               window.updateNavigationButtons();
             }
@@ -275,9 +261,7 @@
   }
 })();
 
-// ============================================
-// VALIDATION FUNCTION
-// ============================================
+// ✅ Validation globale
 window.validateStep5 = function() {
   console.log('Step 5: Validating...');
   
@@ -304,10 +288,5 @@ window.validateStep5 = function() {
   }
   
   return isValid;
-};
-
-// ✅ Permettre le retour en arrière sans validation
-window.canGoBackFromStep5 = function() {
-  return true;
 };
 </script>

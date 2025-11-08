@@ -1,7 +1,8 @@
 /**
  * ═══════════════════════════════════════════════════════════
- * Wizard Core - Navigation stricte + Support affiliation
- * Version: 2.2 - CORRIGÉ: Popup ne s'ouvre QUE pour les boutons signup
+ * Wizard Core - VERSION PROPRE
+ * ✅ Le JavaScript ne touche JAMAIS au style
+ * ✅ Gère uniquement btn.disabled = true/false
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -45,11 +46,10 @@ export class WizardCore {
   setBtnEnabled(selector, enabled) {
     const nodes = document.querySelectorAll(selector);
     nodes.forEach(el => {
-      try { el.disabled = !enabled; } catch (_) {}
-      el.classList.toggle('opacity-50', !enabled);
-      el.classList.toggle('cursor-not-allowed', !enabled);
-      el.style.pointerEvents = enabled ? 'auto' : 'none';
-      el.style.opacity = enabled ? '1' : '0.5';
+      try { 
+        el.disabled = !enabled; 
+      } catch (_) {}
+      // ✅ Le CSS gère TOUT le reste via :disabled
     });
   }
 
@@ -93,15 +93,8 @@ export class WizardCore {
     }
 
     // ═══════════════════════════════════════════════════════════
-    // 🔧 DÉLÉGATION D'ÉVÉNEMENTS STRICTE - VERSION CORRIGÉE
+    // 🔧 DÉLÉGATION D'ÉVÉNEMENTS STRICTE
     // ═══════════════════════════════════════════════════════════
-    
-    /**
-     * Stratégie CORRIGÉE :
-     * 1. On n'intercepte QUE les clics sur les éléments qui concernent le wizard
-     * 2. On laisse TOUS les autres clics se propager normalement
-     * 3. On utilise une liste blanche d'IDs/sélecteurs au lieu d'une liste noire
-     */
     
     document.addEventListener('click', (e) => {
       const target = e.target;
@@ -144,11 +137,7 @@ export class WizardCore {
         return;
       }
 
-      // ⚠️ Important : On ne fait RIEN d'autre ici
-      // Tous les autres clics (liens normaux, boutons help, etc.) 
-      // sont gérés par leurs propres gestionnaires d'événements
-
-    }, false); // Mode bubble
+    }, false);
 
     // ═══════════════════════════════════════════════════════════
     // ⌨️ ESC key pour fermer
@@ -176,7 +165,6 @@ export class WizardCore {
       return;
     }
     
-    // Masquer le popup
     popup.classList.add('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.setAttribute('aria-hidden', 'true');
     popup.style.display = 'none';
@@ -192,10 +180,9 @@ export class WizardCore {
       return;
     }
     
-    // Afficher le popup
     popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.removeAttribute('aria-hidden');
-    popup.style.display = 'flex'; // Important pour le centrage
+    popup.style.display = 'flex';
 
     console.log('✅ Popup opened');
     this.resetToFirstStep();
@@ -231,7 +218,7 @@ export function initializeWizard() {
     update: () => wizard.updateUI(),
     close: () => wizard.closePopup(),
     open: () => wizard.openPopup(),
-    wizard: wizard // Exposer l'instance pour debug
+    wizard: wizard
   };
 
   console.log('✅ Wizard API exposed globally');

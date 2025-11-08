@@ -1,6 +1,8 @@
 /**
- * Wizard Steps – VERSION FINALE SANS ALERTS
- * Comportement : Validation silencieuse uniquement, pas de popups
+ * Wizard Steps – VERSION PROPRE
+ * ✅ Le JavaScript ne touche JAMAIS au style
+ * ✅ Gère uniquement btn.disabled = true/false
+ * ✅ Tout le style visuel → navigation-buttons-styles.blade.php
  */
 
 export class WizardSteps {
@@ -151,9 +153,6 @@ export class WizardSteps {
   nextStep() {
     console.log('➡️ nextStep() called from step', this.currentStep + 1);
     
-    // ✅ SIMPLIFICATION : Pas de validation ici, on fait confiance au bouton disabled
-    // Si le bouton est cliquable, c'est que la validation est passée
-    
     this.saveCurrentStepData();
     
     if (this.currentStep < this.totalSteps - 1) {
@@ -275,21 +274,10 @@ export class WizardSteps {
     const isValid = this.validateCurrentStep();
     console.log(`🔘 Step ${this.currentStep + 1} validation result:`, isValid);
 
+    // ✅ UNIQUEMENT btn.disabled - Le CSS gère TOUT le reste
     nextButtons.forEach(btn => {
       btn.disabled = !isValid;
       btn.setAttribute('aria-disabled', String(!isValid));
-      btn.classList.toggle('opacity-50', !isValid);
-      btn.classList.toggle('cursor-not-allowed', !isValid);
-      btn.classList.toggle('pointer-events-none', !isValid);
-      btn.style.pointerEvents = isValid ? 'auto' : 'none';
-      btn.style.opacity = isValid ? '1' : '0.5';
-    });
-
-    [mobileWrap, desktopWrap].forEach(w => {
-      if (!w) return;
-      w.classList.toggle('opacity-50', !isValid);
-      w.classList.toggle('pointer-events-none', !isValid);
-      w.style.pointerEvents = isValid ? 'auto' : 'none';
     });
     
     console.log('✅ Navigation buttons updated');
