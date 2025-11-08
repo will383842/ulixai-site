@@ -3,7 +3,7 @@ import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 
 // Import des popups de catégories
-import { initializeCategoryPopups } from './modules/category-popups.js';
+import { initializeCategoryPopups } from './modules/ui/category/category-popups.js';
 
 // Initialise quand le DOM est prêt
 document.addEventListener('DOMContentLoaded', () => {

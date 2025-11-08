@@ -878,22 +878,22 @@
     <!-- CONTENT -->
     <div class="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-8 pt-0 pb-20 sm:pb-4" id="popupContentArea">
       <!-- Steps includes -->
-      @include('includes.provider.choose_step')
-      @include('includes.provider.native_language')
-      @include('includes.provider.spoken_language')
-      @include('includes.provider.provider_services')
-      @include('includes.provider.country_selection')
-      @include('includes.provider.operational_countries', ['countries' => $countries])
-      @include('includes.provider.special_status')
-      @include('includes.provider.communication_preference')
-      @include('includes.provider.profile_description')
-      @include('includes.provider.profile_picture')
-      @include('includes.provider.identity_documents')
-      @include('includes.provider.first_last_name')
-      @include('includes.provider.email')
-      @include('includes.provider.verify_email')
-      @include('includes.provider.phone_number')
-      @include('includes.provider.success_confirmation')
+      @include('wizards.provider.steps.choose_step')
+      @include('wizards.provider.steps.native_language')
+      @include('wizards.provider.steps.spoken_language')
+      @include('wizards.provider.steps.provider_services')
+      @include('wizards.provider.steps.country_selection')
+      @include('wizards.provider.steps.operational_countries', ['countries' => $countries])
+      @include('wizards.provider.steps.special_status')
+      @include('wizards.provider.steps.communication_preference')
+      @include('wizards.provider.steps.profile_description')
+      @include('wizards.provider.steps.profile_picture')
+      @include('wizards.provider.steps.identity_documents')
+      @include('wizards.provider.steps.first_last_name')
+      @include('wizards.provider.steps.email')
+      @include('wizards.provider.steps.verify_email')
+      @include('wizards.provider.steps.phone_number')
+      @include('wizards.provider.steps.success_confirmation')
       
     </div>
 

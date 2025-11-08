@@ -2,18 +2,18 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./resources/js/modules/category-popups.js":
-/*!*************************************************!*\
-  !*** ./resources/js/modules/category-popups.js ***!
-  \*************************************************/
+/***/ "./resources/js/modules/ui/category/category-popups.js":
+/*!*************************************************************!*\
+  !*** ./resources/js/modules/ui/category/category-popups.js ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   initializeCategoryPopups: () => (/* binding */ initializeCategoryPopups)
 /* harmony export */ });
-/* harmony import */ var _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./categoryColors.js */ "./resources/js/modules/categoryColors.js");
-/* harmony import */ var _categoryIcons_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./categoryIcons.js */ "./resources/js/modules/categoryIcons.js");
+/* harmony import */ var _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./categoryColors.js */ "./resources/js/modules/ui/category/categoryColors.js");
+/* harmony import */ var _categoryIcons_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./categoryIcons.js */ "./resources/js/modules/ui/category/categoryIcons.js");
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -292,10 +292,10 @@ function initializeCategoryPopups() {
 
 /***/ }),
 
-/***/ "./resources/js/modules/categoryColors.js":
-/*!************************************************!*\
-  !*** ./resources/js/modules/categoryColors.js ***!
-  \************************************************/
+/***/ "./resources/js/modules/ui/category/categoryColors.js":
+/*!************************************************************!*\
+  !*** ./resources/js/modules/ui/category/categoryColors.js ***!
+  \************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -746,10 +746,10 @@ function testColorSystem() {
 
 /***/ }),
 
-/***/ "./resources/js/modules/categoryIcons.js":
-/*!***********************************************!*\
-  !*** ./resources/js/modules/categoryIcons.js ***!
-  \***********************************************/
+/***/ "./resources/js/modules/ui/category/categoryIcons.js":
+/*!***********************************************************!*\
+  !*** ./resources/js/modules/ui/category/categoryIcons.js ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1181,10 +1181,10 @@ function getCategoryIconName(categoryName, categoryId) {
 
 /***/ }),
 
-/***/ "./resources/js/modules/language-manager.js":
-/*!**************************************************!*\
-  !*** ./resources/js/modules/language-manager.js ***!
-  \**************************************************/
+/***/ "./resources/js/modules/ui/language-manager.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/modules/ui/language-manager.js ***!
+  \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1458,10 +1458,10 @@ function initializeLanguageManager() {
 
 /***/ }),
 
-/***/ "./resources/js/modules/mobile-menu.js":
-/*!*********************************************!*\
-  !*** ./resources/js/modules/mobile-menu.js ***!
-  \*********************************************/
+/***/ "./resources/js/modules/ui/mobile-menu.js":
+/*!************************************************!*\
+  !*** ./resources/js/modules/ui/mobile-menu.js ***!
+  \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1640,10 +1640,10 @@ function initializeMobileMenu() {
 
 /***/ }),
 
-/***/ "./resources/js/modules/scroll-utils.js":
-/*!**********************************************!*\
-  !*** ./resources/js/modules/scroll-utils.js ***!
-  \**********************************************/
+/***/ "./resources/js/modules/ui/scroll-utils.js":
+/*!*************************************************!*\
+  !*** ./resources/js/modules/ui/scroll-utils.js ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1763,10 +1763,10 @@ function initializeScrollUtils() {
 
 /***/ }),
 
-/***/ "./resources/js/modules/wizard-core.js":
-/*!*********************************************!*\
-  !*** ./resources/js/modules/wizard-core.js ***!
-  \*********************************************/
+/***/ "./resources/js/modules/wizard/wizard_provider/wizard-core.js":
+/*!********************************************************************!*\
+  !*** ./resources/js/modules/wizard/wizard_provider/wizard-core.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -2041,10 +2041,10 @@ function initializeWizard() {
 
 /***/ }),
 
-/***/ "./resources/js/modules/wizard-steps.js":
-/*!**********************************************!*\
-  !*** ./resources/js/modules/wizard-steps.js ***!
-  \**********************************************/
+/***/ "./resources/js/modules/wizard/wizard_provider/wizard-steps.js":
+/*!*********************************************************************!*\
+  !*** ./resources/js/modules/wizard/wizard_provider/wizard-steps.js ***!
+  \*********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -2457,10 +2457,10 @@ function initializeWizardSteps() {
 
 /***/ }),
 
-/***/ "./resources/js/modules/wizard-submission.js":
-/*!***************************************************!*\
-  !*** ./resources/js/modules/wizard-submission.js ***!
-  \***************************************************/
+/***/ "./resources/js/modules/wizard/wizard_provider/wizard-submission.js":
+/*!**************************************************************************!*\
+  !*** ./resources/js/modules/wizard/wizard_provider/wizard-submission.js ***!
+  \**************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -2726,13 +2726,13 @@ var __webpack_exports__ = {};
   !*** ./resources/js/header-init.js ***!
   \*************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/wizard-core.js */ "./resources/js/modules/wizard-core.js");
-/* harmony import */ var _modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/wizard-steps.js */ "./resources/js/modules/wizard-steps.js");
-/* harmony import */ var _modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/wizard-submission.js */ "./resources/js/modules/wizard-submission.js");
-/* harmony import */ var _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/mobile-menu.js */ "./resources/js/modules/mobile-menu.js");
-/* harmony import */ var _modules_language_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/language-manager.js */ "./resources/js/modules/language-manager.js");
-/* harmony import */ var _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/category-popups.js */ "./resources/js/modules/category-popups.js");
-/* harmony import */ var _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/scroll-utils.js */ "./resources/js/modules/scroll-utils.js");
+/* harmony import */ var _modules_wizard_wizard_provider_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/wizard/wizard_provider/wizard-core.js */ "./resources/js/modules/wizard/wizard_provider/wizard-core.js");
+/* harmony import */ var _modules_wizard_wizard_provider_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/wizard/wizard_provider/wizard-steps.js */ "./resources/js/modules/wizard/wizard_provider/wizard-steps.js");
+/* harmony import */ var _modules_wizard_wizard_provider_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/wizard/wizard_provider/wizard-submission.js */ "./resources/js/modules/wizard/wizard_provider/wizard-submission.js");
+/* harmony import */ var _modules_ui_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/ui/mobile-menu.js */ "./resources/js/modules/ui/mobile-menu.js");
+/* harmony import */ var _modules_ui_language_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/ui/language-manager.js */ "./resources/js/modules/ui/language-manager.js");
+/* harmony import */ var _modules_ui_category_category_popups_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/ui/category/category-popups.js */ "./resources/js/modules/ui/category/category-popups.js");
+/* harmony import */ var _modules_ui_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/ui/scroll-utils.js */ "./resources/js/modules/ui/scroll-utils.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 /**
  * Header Initialization - Laravel Mix Compatible
@@ -2763,13 +2763,13 @@ function safeInit(name, fn) {
 function initializeAll() {
   console.log('🚀 Initializing header modules...');
   console.log('📦 Available modules:', {
-    wizard: _typeof(_modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard),
-    steps: _typeof(_modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps),
-    submission: _typeof(_modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission),
-    menu: _typeof(_modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__.initializeMobileMenu),
-    language: _typeof(_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_4__.initializeLanguageManager),
-    popups: _typeof(_modules_category_popups_js__WEBPACK_IMPORTED_MODULE_5__.initializeCategoryPopups),
-    scroll: _typeof(_modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__.initializeScrollUtils)
+    wizard: _typeof(_modules_wizard_wizard_provider_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard),
+    steps: _typeof(_modules_wizard_wizard_provider_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps),
+    submission: _typeof(_modules_wizard_wizard_provider_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission),
+    menu: _typeof(_modules_ui_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__.initializeMobileMenu),
+    language: _typeof(_modules_ui_language_manager_js__WEBPACK_IMPORTED_MODULE_4__.initializeLanguageManager),
+    popups: _typeof(_modules_ui_category_category_popups_js__WEBPACK_IMPORTED_MODULE_5__.initializeCategoryPopups),
+    scroll: _typeof(_modules_ui_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__.initializeScrollUtils)
   });
 
   // ✅ VÉRIFICATION: Le popup existe-t-il dans le DOM ?
@@ -2779,7 +2779,7 @@ function initializeAll() {
   // 1) Core (popups SignUp / croix / ESC / backdrop) - Seulement si popup existe
   var wizard = null;
   if (popupExists) {
-    wizard = safeInit('Wizard', _modules_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard);
+    wizard = safeInit('Wizard', _modules_wizard_wizard_provider_wizard_core_js__WEBPACK_IMPORTED_MODULE_0__.initializeWizard);
   } else {
     console.log('ℹ️ Skipping Wizard initialization (user is logged in)');
   }
@@ -2787,24 +2787,24 @@ function initializeAll() {
   // 2) Steps (wizard-steps) - Seulement si popup existe
   var steps = null;
   if (popupExists) {
-    steps = safeInit('WizardSteps', _modules_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps);
+    steps = safeInit('WizardSteps', _modules_wizard_wizard_provider_wizard_steps_js__WEBPACK_IMPORTED_MODULE_1__.initializeWizardSteps);
   } else {
     console.log('ℹ️ Skipping WizardSteps initialization (user is logged in)');
   }
 
   // 3) Wizard Submission - Seulement si popup existe
   if (popupExists) {
-    safeInit('WizardSubmission', _modules_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission);
+    safeInit('WizardSubmission', _modules_wizard_wizard_provider_wizard_submission_js__WEBPACK_IMPORTED_MODULE_2__.initializeWizardSubmission);
   } else {
     console.log('ℹ️ Skipping WizardSubmission initialization (user is logged in)');
   }
 
   // 4) Mobile Menu - TOUJOURS INITIALISER (indépendant du popup)
-  safeInit('MobileMenu', _modules_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__.initializeMobileMenu);
+  safeInit('MobileMenu', _modules_ui_mobile_menu_js__WEBPACK_IMPORTED_MODULE_3__.initializeMobileMenu);
 
   // 5) Language Manager - TOUJOURS INITIALISER
   var langManager = safeInit('LanguageManager', function () {
-    var manager = (0,_modules_language_manager_js__WEBPACK_IMPORTED_MODULE_4__.initializeLanguageManager)();
+    var manager = (0,_modules_ui_language_manager_js__WEBPACK_IMPORTED_MODULE_4__.initializeLanguageManager)();
 
     // Vérifier après 500ms si les éléments sont bien initialisés
     setTimeout(function () {
@@ -2824,10 +2824,10 @@ function initializeAll() {
   });
 
   // 6) Category Popups - TOUJOURS INITIALISER
-  safeInit('CategoryPopups', _modules_category_popups_js__WEBPACK_IMPORTED_MODULE_5__.initializeCategoryPopups);
+  safeInit('CategoryPopups', _modules_ui_category_category_popups_js__WEBPACK_IMPORTED_MODULE_5__.initializeCategoryPopups);
 
   // 7) Scroll Utils - TOUJOURS INITIALISER
-  safeInit('ScrollUtils', _modules_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__.initializeScrollUtils);
+  safeInit('ScrollUtils', _modules_ui_scroll_utils_js__WEBPACK_IMPORTED_MODULE_6__.initializeScrollUtils);
 
   // 8) Wrappers globaux - Seulement si popup existe
   if (popupExists) {

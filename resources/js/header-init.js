@@ -4,13 +4,13 @@
  * Version optimisée avec protection popup
  */
 
-import { initializeWizard } from './modules/wizard-core.js';
-import { initializeWizardSteps } from './modules/wizard-steps.js';
-import { initializeWizardSubmission } from './modules/wizard-submission.js';
-import { initializeMobileMenu } from './modules/mobile-menu.js';
-import { initializeLanguageManager } from './modules/language-manager.js';
-import { initializeCategoryPopups } from './modules/category-popups.js';
-import { initializeScrollUtils } from './modules/scroll-utils.js';
+import { initializeWizard } from './modules/wizard/wizard_provider/wizard-core.js';
+import { initializeWizardSteps } from './modules/wizard/wizard_provider/wizard-steps.js';
+import { initializeWizardSubmission } from './modules/wizard/wizard_provider/wizard-submission.js';
+import { initializeMobileMenu } from './modules/ui/mobile-menu.js';
+import { initializeLanguageManager } from './modules/ui/language-manager.js';
+import { initializeCategoryPopups } from './modules/ui/category/category-popups.js';
+import { initializeScrollUtils } from './modules/ui/scroll-utils.js';
 
 
 /** Exécute une init en isolant les erreurs pour ne pas bloquer les autres modules */
