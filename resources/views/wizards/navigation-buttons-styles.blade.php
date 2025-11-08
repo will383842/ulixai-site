@@ -7,6 +7,9 @@
   
   These styles are included in the header for optimal performance
   (loaded once for all wizards)
+  
+  @version 2.1.0
+  @updated 2025-01-08 - Nouvelle charte graphique ULIXAI
 --}}
 
 <style>
@@ -59,9 +62,9 @@
       left: 0; 
       right: 0;
       background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0.95) 100%);
-      padding: 12px; 
+      padding: 12px 20px 12px 12px; /* ✨ Padding-right augmenté à 20px pour éviter que le bouton touche le bord */
       display: flex; 
-      gap: 12px; 
+      gap: 16px; /* ✨ GAP AUGMENTÉ (12px → 16px) pour éviter que les boutons se touchent */
       box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
       z-index: 60; 
       backdrop-filter: blur(8px);
@@ -70,7 +73,7 @@
     #mobileNavButtons button { 
       flex: 1; 
       height: 48px; 
-      border-radius: 16px; /* ✨ PLUS ARRONDI (12px → 16px) */
+      border-radius: 24px; /* ✨ PLUS ARRONDI (16px → 24px) */
       font-weight: 600; 
       font-size: 15px; 
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -80,11 +83,12 @@
       gap: 8px; 
     }
     
+    /* ✨ BOUTON BACK - TEXTE EN BLEU */
     #mobileNavButtons .btn-back { 
       background: white; 
-      color: #3b82f6; /* ✨ TEXTE EN BLEU (#64748b → #3b82f6) */
+      color: #1E40AF; /* ✨ BLEU ROI CHIC */
       border: 2px solid #e2e8f0; 
-      flex: 0.8; 
+      flex: 0.65; /* ✨ Réduit pour laisser plus d'espace */
     }
     
     #mobileNavButtons .btn-back:active { 
@@ -92,22 +96,26 @@
       transform: scale(0.98); 
     }
     
+    /* ✨ BOUTON NEXT - BLEU MARINE PROFOND ET CHIC */
     #mobileNavButtons .btn-next { 
-      background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%); /* ✨ PLUS FONCÉ (bleu plus sombre) */
+      background: #1E3A8A; /* ✨ BLEU MARINE - profond et chic */
       color: white; 
       border: none; 
-      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.4); /* ✨ Ombre ajustée */
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.45); 
+      flex: 0.85; /* ✨ Réduit (0.9 → 0.85) pour ne pas toucher le bord */
     }
     
     #mobileNavButtons .btn-next:active { 
       transform: scale(0.98); 
-      box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3); 
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.35); 
     }
     
+    /* ✨ ÉTAT DISABLED - GRIS PLUS VISIBLE */
     #mobileNavButtons .btn-next:disabled { 
-      background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%); /* ✨ GRIS QUAND INACTIF */
+      background: #B8B8B8; /* ✨ GRIS PLUS CONTRASTÉ (au lieu du gradient gris clair) */
+      color: #6B7280; /* ✨ Texte gris foncé pour meilleure lisibilité */
       box-shadow: none; 
-      opacity: 0.6; 
+      opacity: 1; /* ✨ Pas d'opacité réduite pour garder la visibilité */
       cursor: not-allowed;
     }
   }
@@ -135,7 +143,7 @@
     
     #desktopNavButtons button { 
       padding: 12px 32px; 
-      border-radius: 16px; /* ✨ PLUS ARRONDI (12px → 16px) */
+      border-radius: 24px; /* ✨ PLUS ARRONDI (16px → 24px) */
       font-weight: 600; 
       font-size: 15px; 
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -144,50 +152,55 @@
       gap: 8px; 
     }
     
+    /* ✨ BOUTON BACK - TEXTE EN BLEU */
     #desktopNavButtons .btn-back { 
       background: white; 
-      color: #3b82f6; /* ✨ TEXTE EN BLEU (#64748b → #3b82f6) */
+      color: #1E40AF; /* ✨ BLEU ROI CHIC */
       border: 2px solid #e2e8f0; 
     }
     
     #desktopNavButtons .btn-back:hover { 
-      background: #eff6ff; /* ✨ Fond bleu clair au hover */
-      border-color: #3b82f6; /* ✨ Bordure bleue au hover */
+      background: #EFF6FF; /* ✨ Fond bleu très clair au hover */
+      border-color: #1E40AF; /* ✨ Bordure bleu CHIC */
       transform: translateY(-2px); 
-      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15); /* ✨ Ombre bleue */
+      box-shadow: 0 4px 8px rgba(30, 64, 175, 0.15); 
     }
     
     #desktopNavButtons .btn-back:active { 
       transform: translateY(0); 
     }
     
+    /* ✨ BOUTON NEXT - BLEU MARINE PROFOND ET CHIC */
     #desktopNavButtons .btn-next { 
-      background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%); /* ✨ PLUS FONCÉ (bleu plus sombre) */
+      background: #1E3A8A; /* ✨ BLEU MARINE - profond et chic */
       color: white; 
       border: none; 
-      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.4); /* ✨ Ombre ajustée */
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.45); 
     }
     
     #desktopNavButtons .btn-next:hover { 
-      background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%); /* ✨ Encore plus foncé au hover */
+      background: #1E40AF; /* ✨ Version plus lumineuse au hover (Bleu Roi) */
       transform: translateY(-2px); 
-      box-shadow: 0 6px 16px rgba(29, 78, 216, 0.5); 
+      box-shadow: 0 6px 16px rgba(30, 58, 138, 0.55); 
     }
     
     #desktopNavButtons .btn-next:active { 
       transform: translateY(0); 
     }
     
+    /* ✨ ÉTAT DISABLED - GRIS PLUS VISIBLE */
     #desktopNavButtons .btn-next:disabled { 
-      background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%); /* ✨ GRIS QUAND INACTIF */
+      background: #B8B8B8; /* ✨ GRIS PLUS CONTRASTÉ */
+      color: #6B7280; /* ✨ Texte gris foncé */
       box-shadow: none; 
-      opacity: 0.6; 
+      opacity: 1; /* ✨ Pas d'opacité réduite */
       cursor: not-allowed; 
       transform: none; 
     }
     
     #desktopNavButtons .btn-next:disabled:hover { 
       transform: none; 
+      background: #B8B8B8; /* ✨ Pas de changement au hover */
     }
   }
 

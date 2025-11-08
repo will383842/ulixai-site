@@ -308,7 +308,7 @@
 @include('includes.footer')
 
 <!-- POPUP -->
-@include('pages.popup')
+@include('wizards.requester.steps.popup_request_help')
 
 <script>
 // ⚡ ULTRA-PERFORMANT LOADER

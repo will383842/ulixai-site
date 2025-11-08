@@ -141,7 +141,7 @@
 
 <body>
   @include('includes.header')
-  @include('pages.popup')
+  @include('wizards.requester.steps.popup_request_help')
 
   <!-- Hero Section -->
   <section class="hero">

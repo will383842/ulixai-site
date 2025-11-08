@@ -2050,7 +2050,7 @@
 </head>
 <body>
   @include('includes.header')
-  @include('pages.popup')
+  @include('wizards.requester.steps.popup_request_help')
   <button id="floatingShareBtn" onclick="openSharePanel()" class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold px-5 py-3.5 sm:px-6 sm:py-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-2.5 sm:gap-3 group animate-pulse hover:animate-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share affiliate link and earn 75% commission">
       <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />

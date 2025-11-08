@@ -1352,7 +1352,7 @@
 <body>
 
 @include('includes.header')
-@include('pages.popup')
+@include('wizards.requester.steps.popup_request_help')
 
 <button id="floatingShareBtn" onclick="openSharePanel()" 
     aria-label="Share customer reviews">

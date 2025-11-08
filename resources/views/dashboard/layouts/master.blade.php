@@ -68,7 +68,7 @@
         </script>
 
         @include('includes.header')
-        @include('pages.popup')
+        @include('wizards.requester.steps.popup_request_help')
         @if(session('is_impersonating'))
             <div class="bg-yellow-100 text-gray-800 p-4 flex justify-between items-center">
                 <div>

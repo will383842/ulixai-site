@@ -675,7 +675,7 @@
 </head>
 <body>
     @include('includes.header')
-    @include('pages.popup')
+    @include('wizards.requester.steps.popup_request_help')
 
     <!-- Floating Share Button -->
     <button id="floatingShareBtn" onclick="openSharePanel()" aria-label="Partager cette page et gagner une commission">
@@ -2187,7 +2187,7 @@
 <body class="bg-white overflow-x-hidden">
   
   @include('includes.header')
-  @include('pages.popup')
+  @include('wizards.requester.steps.popup_request_help')
 
   <!-- HERO SECTION - MODERN GRADIENT -->
   <section class="relative pt-20 pb-32 px-4 overflow-hidden" style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);">

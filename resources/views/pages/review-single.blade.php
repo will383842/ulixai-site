@@ -1257,7 +1257,7 @@
 <body>
 
 @include('includes.header')
-@include('pages.popup')
+@include('wizards.requester.steps.popup_request_help')
 
 <!-- FLOATING SHARE BUTTON - Premium design avec animation retardée -->
 <button id="floatingShareBtn" onclick="openSharePanel()" class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold px-5 py-3.5 sm:px-6 sm:py-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-2.5 sm:gap-3 group animate-pulse hover:animate-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" aria-label="Share this review and spread the word">

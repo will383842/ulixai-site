@@ -771,7 +771,7 @@
 <body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
 
   @include('includes.header')
-  @include('pages.popup')
+  @include('wizards.requester.steps.popup_request_help')
 
   <!-- Hero Section - Semantic HTML -->
   <section class="relative py-8 md:py-12 px-4 text-center overflow-hidden" role="banner" aria-labelledby="press-hero-title">

@@ -10,7 +10,7 @@
 <body class="bg-gray-100">
 
  @include('includes.header')
-     @include('pages.popup')
+     @include('wizards.requester.steps.popup_request_help')
 
 <!-- Hero Section -->
 <section class="bg-gradient-to-b from-blue-500 to-blue-300 text-center py-24 px-4">

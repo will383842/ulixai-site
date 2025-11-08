@@ -313,7 +313,7 @@ img{max-width:100%;height:auto;display:block}
 <body>
 
 @include('includes.header')
-@include('pages.popup')
+@include('wizards.requester.steps.popup_request_help')
 
 <!-- ============================================
      🎯 BUG REPORT - MOBILE-FIRST PERFECTION

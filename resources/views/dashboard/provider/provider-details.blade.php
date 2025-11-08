@@ -789,7 +789,7 @@
     @endif
 
     @include('includes.header')
-    @include('pages.popup')
+    @include('wizards.requester.steps.popup_request_help')
 
     @php
         $reviews = \App\Models\ProviderReview::where('provider_id', $provider->id ?? 0)->with('user')->latest()->get();

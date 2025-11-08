@@ -1,4 +1,4 @@
-{{-- SEO Meta Tags Ultra-Optimisés --}} {{-- Theme & Mobile --}} {{-- Open Graph Tags --}} {{-- Twitter Card --}} {{-- Preconnect for Performance --}} {{-- Favicon --}} {{-- Schema.org JSON-LD --}} {{-- Tailwind CSS - CDN for development only --}} {{-- TODO: Replace with compiled CSS in production --}} {{-- Install: npm install -D tailwindcss && npx tailwindcss init --}} @include('includes.header') @include('pages.popup')
+{{-- SEO Meta Tags Ultra-Optimisés --}} {{-- Theme & Mobile --}} {{-- Open Graph Tags --}} {{-- Twitter Card --}} {{-- Preconnect for Performance --}} {{-- Favicon --}} {{-- Schema.org JSON-LD --}} {{-- Tailwind CSS - CDN for development only --}} {{-- TODO: Replace with compiled CSS in production --}} {{-- Install: npm install -D tailwindcss && npx tailwindcss init --}} @include('includes.header') @include('wizards.requester.steps.popup_request_help')
 👋 Welcome to Partnership Opportunities
 Hello and welcome!
 Thank you for your interest ✨

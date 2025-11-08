@@ -31,7 +31,7 @@
 </head>
 <body class="bg-white  text-gray-800">
  @include('includes.header')
-     @include('pages.popup')
+     @include('wizards.requester.steps.popup_request_help')
 
 <!-- 🔴 HERO -->
 <section class="bg-gradient-to-br from-red-700 to-red-600 text-white py-24 px-4 text-center">

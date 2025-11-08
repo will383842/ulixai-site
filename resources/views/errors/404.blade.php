@@ -341,7 +341,7 @@
 <body>
 
 @include('includes.header')
-@include('pages.popup')
+@include('wizards.requester.steps.popup_request_help')
 
 <div class="page-404-wrapper">
     <div class="gradient-bg">

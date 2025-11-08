@@ -7,8 +7,78 @@
 
 export class LanguageManager {
   constructor() {
+    // Configuration stricte des langues
+    this.languages = {
+      'en': {
+        code: 'en',
+        label: 'English',
+        flag: 'images/flags/us.svg',
+        country: 'United States'
+      },
+      'fr': {
+        code: 'fr',
+        label: 'Français',
+        flag: 'images/flags/fr.svg',
+        country: 'France'
+      },
+      'de': {
+        code: 'de',
+        label: 'Deutsch',
+        flag: 'images/flags/de.svg',
+        country: 'Deutschland'
+      },
+      'ru': {
+        code: 'ru',
+        label: 'Русский',
+        flag: 'images/flags/ru.svg',
+        country: 'Россия'
+      },
+      'zh-CN': {
+        code: 'zh-CN',
+        label: '中文',
+        flag: 'images/flags/cn.svg',
+        country: '中国'
+      },
+      'es': {
+        code: 'es',
+        label: 'Español',
+        flag: 'images/flags/es.svg',
+        country: 'España'
+      },
+      'pt': {
+        code: 'pt',
+        label: 'Português',
+        flag: 'images/flags/pt.svg',
+        country: 'Portugal'
+      },
+      'ar': {
+        code: 'ar',
+        label: 'العربية',
+        flag: 'images/flags/sa.svg',
+        country: 'السعودية'
+      },
+      'hi': {
+        code: 'hi',
+        label: 'हिन्दी',
+        flag: 'images/flags/in.svg',
+        country: 'भारत'
+      }
+    };
+
+    // Récupérer la langue stockée (SEULE SOURCE DE VÉRITÉ)
     this.selectedLang = localStorage.getItem('ulixai_lang') || 'en';
-    this.selectedFlag = localStorage.getItem('ulixai_flag') || 'https://flagcdn.com/24x18/us.png';
+    
+    // TOUJOURS recalculer le drapeau et le label depuis la langue
+    const langConfig = this.languages[this.selectedLang];
+    if (langConfig) {
+      this.selectedFlag = langConfig.flag;
+      this.selectedLabel = langConfig.label;
+    } else {
+      // Fallback si langue invalide
+      this.selectedLang = 'en';
+      this.selectedFlag = this.languages['en'].flag;
+      this.selectedLabel = this.languages['en'].label;
+    }
   }
 
   /**
@@ -74,17 +144,15 @@ export class LanguageManager {
       const li = e.target.closest('li[data-lang]');
       if (!li) return;
 
-      const lang = li.getAttribute('data-lang');
-      const flag = li.getAttribute('data-flag');
+      const langCode = li.getAttribute('data-lang');
 
-      if (lang && flag) {
-        console.log('🌐 [LangManager] Desktop language selected:', lang);
+      if (langCode && this.languages[langCode]) {
+        console.log('🌐 [LangManager] Desktop language selected:', langCode);
         
-        // Update flag
-        langFlag.src = flag;
+        const langConfig = this.languages[langCode];
         
-        // Save to localStorage
-        localStorage.setItem('selectedFlag', flag);
+        // Update flag immédiatement
+        langFlag.src = langConfig.flag;
         
         // Close menu
         langMenu.classList.add('hidden');
@@ -95,7 +163,7 @@ export class LanguageManager {
         }
         
         // Apply language
-        this.setLanguage(lang, flag);
+        this.setLanguage(langCode);
       }
     });
 
@@ -112,10 +180,12 @@ export class LanguageManager {
     });
 
     // Restore saved flag
-    const savedFlag = localStorage.getItem('selectedFlag');
-    if (savedFlag) {
-      langFlag.src = savedFlag;
-    }
+    langFlag.src = this.selectedFlag;
+    
+    console.log('🔍 [LangManager] Desktop restored:', {
+      lang: this.selectedLang,
+      flag: this.selectedFlag
+    });
   }
 
   /**
@@ -142,18 +212,6 @@ export class LanguageManager {
     }
 
     console.log('✅ [LangManager] Mobile selector found');
-
-    const langNames = {
-      en: 'English',
-      fr: 'Français',
-      de: 'Deutsch',
-      ru: 'Русский',
-      'zh-CN': '中文',
-      es: 'Español',
-      pt: 'Português',
-      ar: 'العربية',
-      hi: 'हिन्दी'
-    };
 
     // Open modal
     const openModal = () => {
@@ -219,87 +277,99 @@ export class LanguageManager {
       option.addEventListener('click', (e) => {
         e.stopPropagation();
         
-        const code = option.getAttribute('data-lang');
-        const flagUrl = option.getAttribute('data-flag');
-        const labelText = option.getAttribute('data-label');
+        const langCode = option.getAttribute('data-lang');
 
-        console.log('🌐 [LangManager] Mobile language selected:', code);
+        if (langCode && this.languages[langCode]) {
+          console.log('🌐 [LangManager] Mobile language selected:', langCode);
 
-        // Update UI
-        if (flag) flag.src = flagUrl;
-        if (label) label.textContent = labelText;
+          const langConfig = this.languages[langCode];
 
-        // Save preferences
-        localStorage.setItem('selectedLabel', labelText);
-        localStorage.setItem('selectedFlag', flagUrl);
+          // Update UI immédiatement
+          if (flag) flag.src = langConfig.flag;
+          if (label) label.textContent = langConfig.label;
 
-        // Visual feedback
-        langOptions.forEach(opt => {
-          opt.classList.remove('bg-blue-100', 'border-blue-300');
-        });
-        option.classList.add('bg-blue-100', 'border-blue-300');
+          // Visual feedback
+          langOptions.forEach(opt => {
+            opt.classList.remove('bg-blue-100', 'border-blue-300');
+          });
+          option.classList.add('bg-blue-100', 'border-blue-300');
 
-        // Close modal after short delay
-        setTimeout(() => {
-          closeModal();
-          // Apply language
-          this.setLanguage(code, flagUrl);
-        }, 300);
+          // Close modal after short delay
+          setTimeout(() => {
+            closeModal();
+            // Apply language
+            this.setLanguage(langCode);
+          }, 300);
+        }
       });
     });
 
-    // Restore saved language
-    const savedLabel = localStorage.getItem('selectedLabel');
-    const savedFlag = localStorage.getItem('selectedFlag');
+    // Restore saved language (DEPUIS LA CONFIG)
+    flag.src = this.selectedFlag;
+    label.textContent = this.selectedLabel;
     
-    if (savedLabel && label) {
-      label.textContent = savedLabel;
-    } else {
-      label.textContent = langNames[this.selectedLang] || 'English';
-    }
-    
-    if (savedFlag && flag) {
-      flag.src = savedFlag;
-    }
-    
-    console.log('✅ [LangManager] Mobile UI restored');
+    console.log('🔍 [LangManager] Mobile restored:', {
+      lang: this.selectedLang,
+      flag: this.selectedFlag,
+      label: this.selectedLabel
+    });
   }
 
   /**
    * Set language and reload page
    */
-  setLanguage(lang, flag) {
-    console.log('🔄 [LangManager] Changing language to:', lang);
+  setLanguage(langCode) {
+    console.log('🔄 [LangManager] Changing language to:', langCode);
 
-    // Update storage
-    localStorage.setItem('ulixai_lang', lang);
-    localStorage.setItem('ulixai_flag', flag);
+    // Validation
+    if (!this.languages[langCode]) {
+      console.error('❌ [LangManager] Invalid language code:', langCode);
+      return;
+    }
+
+    const langConfig = this.languages[langCode];
+
+    // Update storage (SEULEMENT le code langue)
+    localStorage.setItem('ulixai_lang', langCode);
+
+    // SUPPRIMER les anciennes clés pour éviter les conflits
+    localStorage.removeItem('selectedFlag');
+    localStorage.removeItem('selectedLabel');
+    localStorage.removeItem('ulixai_flag');
 
     // Set cookies for Google Translate
-    this.setCookiesForLanguage(lang);
+    this.setCookiesForLanguage(langCode);
+
+    // Set hash for immediate translation
+    window.location.hash = langCode === 'en' ? '' : `#googtrans(en|${langCode})`;
 
     // Reload page to apply translation
     console.log('🔄 [LangManager] Reloading page...');
+    console.log('🔍 [LangManager] New config:', {
+      code: langCode,
+      label: langConfig.label,
+      flag: langConfig.flag
+    });
     
     setTimeout(() => {
       window.location.reload();
-    }, 100);
+    }, 200);
   }
 
   /**
    * Set cookies for Google Translate
    */
-  setCookiesForLanguage(lang) {
+  setCookiesForLanguage(langCode) {
     const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
     
-    if (lang === 'en') {
+    if (langCode === 'en') {
       // Clear cookies for English
       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       document.cookie = 'googtransopt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       console.log('🗑️ [LangManager] Cookies cleared for English');
     } else {
       // Set cookies for other languages
-      const val = `/en/${lang}`;
+      const val = `/en/${langCode}`;
       document.cookie = `googtrans=${val}; expires=${expires}; path=/`;
       document.cookie = `googtransopt=${val}; expires=${expires}; path=/`;
       console.log('✅ [LangManager] Cookies set:', val);

@@ -85,7 +85,7 @@
 </head>
 <body class="min-h-screen bg-white">
   @include('includes.header')
-  @include('pages.popup')
+  @include('wizards.requester.steps.popup_request_help')
    @php
       use App\Models\Country; 
       $countries = Country::where('status', 1)->pluck('country');

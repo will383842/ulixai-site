@@ -279,7 +279,7 @@
 </div>
 
 @include('includes.header')
-@include('pages.popup')
+@include('wizards.requester.steps.popup_request_help')
 
 <!-- HERO -->
 <section class="hero" role="main" aria-labelledby="hero-title">
