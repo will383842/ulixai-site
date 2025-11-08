@@ -89,6 +89,26 @@
 </div>
 
 <style>
+/* Ajout pour forcer une largeur minimale adaptée au contenu */
+#step6 {
+  min-width: 100%;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  #step6 {
+    min-width: 700px;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  #step6 {
+    min-width: 900px;
+    max-width: 1200px;
+  }
+}
+
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   25% { transform: translate(20px, -50px) scale(1.1); }
@@ -145,19 +165,21 @@
   background: white;
 }
 
-/* DESKTOP: Grid avec cards encadrées */
+/* DESKTOP: Grid avec cards encadrées - LARGEUR ADAPTÉE */
 @media (min-width: 640px) {
   .country-list-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
     gap: 0.75rem;
     max-height: 460px;
     background: transparent;
+    width: 100%;
   }
 }
 
 @media (min-width: 1024px) {
   .country-list-container {
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
     gap: 0.875rem;
     max-height: 480px;
   }
@@ -201,9 +223,9 @@
   backface-visibility: hidden;
   -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
   user-select: none;
-  /* S'assurer que les boutons sont cliquables */
   pointer-events: auto !important;
   touch-action: manipulation;
+  width: 100%;
 }
 
 .country-card * {
@@ -245,7 +267,7 @@
   transform: translateX(-50%) scaleX(1);
 }
 
-/* DESKTOP: Style card avec bordure */
+/* DESKTOP: Style card avec bordure - MEILLEURE GESTION DU TEXTE */
 @media (min-width: 640px) {
   .country-card {
     flex-direction: row;
@@ -257,6 +279,7 @@
     min-height: 3.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     text-align: left;
+    min-width: 0;
   }
   
   .country-card .country-name {
@@ -315,6 +338,7 @@
   width: 100%;
   text-align: center;
   order: 2;
+  min-width: 0;
 }
 
 .country-card.selected .country-name {
@@ -322,8 +346,12 @@
   font-weight: 700;
 }
 
-/* DESKTOP: Texte blanc pour selected */
+/* DESKTOP: Texte blanc pour selected + meilleure gestion */
 @media (min-width: 640px) {
+  .country-card .country-name {
+    max-width: 100%;
+  }
+  
   .country-card.selected .country-name {
     color: white;
   }

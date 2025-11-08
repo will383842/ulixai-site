@@ -2062,7 +2062,8 @@ function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), 
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
- * Wizard Steps – CORRIGÉ : Boutons masqués au Step 1
+ * Wizard Steps – VERSION FINALE SANS ALERTS
+ * Comportement : Validation silencieuse uniquement, pas de popups
  */
 
 var WizardSteps = /*#__PURE__*/function () {
@@ -2142,11 +2143,7 @@ var WizardSteps = /*#__PURE__*/function () {
         return btn.addEventListener('click', function (e) {
           e.preventDefault();
           console.log('➡️ Next button clicked from step', _this2.currentStep + 1);
-          if (_this2.validateCurrentStep()) {
-            _this2.nextStep();
-          } else {
-            console.warn('❌ Validation failed for step', _this2.currentStep + 1);
-          }
+          _this2.nextStep();
         });
       });
       document.querySelectorAll('#mobileBackBtn, #desktopBackBtn').forEach(function (btn) {
@@ -2208,8 +2205,6 @@ var WizardSteps = /*#__PURE__*/function () {
         console.warn('❌ Invalid step index:', i, "(totalSteps: ".concat(this.totalSteps, ")"));
         return;
       }
-
-      // Cache tous les steps
       console.log('🙈 Hiding all steps...');
       for (var k = 1; k <= this.totalSteps; k++) {
         var s = document.getElementById("step".concat(k));
@@ -2220,8 +2215,6 @@ var WizardSteps = /*#__PURE__*/function () {
           console.warn("  \u274C step".concat(k, " element not found in DOM"));
         }
       }
-
-      // Affiche le step demandé
       var cur = document.getElementById("step".concat(i + 1));
       if (!cur) {
         console.error("\u274C Step element not found: step".concat(i + 1));
@@ -2238,6 +2231,10 @@ var WizardSteps = /*#__PURE__*/function () {
     key: "nextStep",
     value: function nextStep() {
       console.log('➡️ nextStep() called from step', this.currentStep + 1);
+
+      // ✅ SIMPLIFICATION : Pas de validation ici, on fait confiance au bouton disabled
+      // Si le bouton est cliquable, c'est que la validation est passée
+
       this.saveCurrentStepData();
       if (this.currentStep < this.totalSteps - 1) {
         var nextStepIndex = this.currentStep + 1;
@@ -2252,8 +2249,6 @@ var WizardSteps = /*#__PURE__*/function () {
     key: "previousStep",
     value: function previousStep() {
       console.log('⬅️ previousStep() called from step', this.currentStep + 1);
-
-      // ✅ Permettre de revenir au Step 1 depuis le Step 2
       if (this.currentStep > 0) {
         var prevStepIndex = this.currentStep - 1;
         console.log('⬅️ Moving to step', prevStepIndex + 1);
@@ -2274,16 +2269,16 @@ var WizardSteps = /*#__PURE__*/function () {
         return true;
       }
 
-      // ✅ VALIDATION STEP 1 : toujours valide (choix de profil via boutons)
+      // ✅ VALIDATION STEP 1 : toujours valide
       if (stepNum === 1) {
         console.log('✅ Step 1 - always valid (profile choice via buttons)');
         return true;
       }
 
-      // ✅ APPELER LA VALIDATION CUSTOM EN PREMIER
+      // ✅ APPELER LA VALIDATION CUSTOM - VALIDATION SILENCIEUSE
       var custom = window["validateStep".concat(stepNum)];
       if (typeof custom === 'function') {
-        console.log("\uD83D\uDD0D Calling custom validation: validateStep".concat(stepNum, "()"));
+        console.log("\uD83D\uDD0D Calling custom validation: validateStep".concat(stepNum, "() - silent"));
         try {
           var result = !!custom();
           console.log("".concat(result ? '✅' : '❌', " validateStep").concat(stepNum, "() returned:"), result);
@@ -2337,12 +2332,12 @@ var WizardSteps = /*#__PURE__*/function () {
       var backButtons = document.querySelectorAll('#mobileBackBtn, #desktopBackBtn');
       var nextButtons = document.querySelectorAll('#mobileNextBtn, #desktopNextBtn');
 
-      // ✅ CORRECTION : Au Step 1, masquer TOUS les boutons de navigation
+      // ✅ Au Step 1, masquer TOUS les boutons de navigation
       if (this.currentStep === 0) {
         if (mobileWrap) mobileWrap.style.display = 'none';
         if (desktopWrap) desktopWrap.style.display = 'none';
-        console.log('🚫 Step 1 - Navigation buttons HIDDEN (use profile choice buttons instead)');
-        return; // ← Important : sortir de la fonction
+        console.log('🚫 Step 1 - Navigation buttons HIDDEN');
+        return;
       }
 
       // À partir du Step 2 : afficher les wrappers de navigation
@@ -2350,7 +2345,7 @@ var WizardSteps = /*#__PURE__*/function () {
       if (desktopWrap) desktopWrap.style.display = '';
       console.log('✅ Step 2+ - Navigation buttons VISIBLE');
 
-      // ✅ Back TOUJOURS visible (sans condition)
+      // ✅ Back TOUJOURS visible
       backButtons.forEach(function (b) {
         return b.style.display = 'flex';
       });
