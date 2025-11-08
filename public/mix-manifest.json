@@ -1,6 +1,19 @@
 {
     "/js/app.js": "/js/app.js",
-    "/js/header-init.js": "/js/header-init.js",
     "/js/request-form.js": "/js/request-form.js",
-    "/css/app.css": "/css/app.css"
+    "/css/app.css": "/css/app.css",
+    "/js/modules/google-translate/index.js": "/js/modules/google-translate/index.js",
+    "/js/modules/google-translate/init.js": "/js/modules/google-translate/init.js",
+    "/js/modules/google-translate/language-manager.js": "/js/modules/google-translate/language-manager.js",
+    "/js/modules/google-translate/styles.js": "/js/modules/google-translate/styles.js",
+    "/js/modules/ui/category/category-popups.js": "/js/modules/ui/category/category-popups.js",
+    "/js/modules/ui/category/categoryColors.js": "/js/modules/ui/category/categoryColors.js",
+    "/js/modules/ui/category/categoryIcons.js": "/js/modules/ui/category/categoryIcons.js",
+    "/js/modules/ui/mobile-menu.js": "/js/modules/ui/mobile-menu.js",
+    "/js/modules/ui/scroll-utils.js": "/js/modules/ui/scroll-utils.js",
+    "/js/modules/wizard/wizard_provider/wizard-core.js": "/js/modules/wizard/wizard_provider/wizard-core.js",
+    "/js/modules/wizard/wizard_provider/wizard-steps.js": "/js/modules/wizard/wizard_provider/wizard-steps.js",
+    "/js/modules/wizard/wizard_provider/wizard-submission.js": "/js/modules/wizard/wizard_provider/wizard-submission.js",
+    "/js/modules/wizard/wizard_request_help/request-form.js": "/js/modules/wizard/wizard_request_help/request-form.js",
+    "/js/header-init.js": "/js/header-init.js"
 }

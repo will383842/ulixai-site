@@ -123,63 +123,23 @@
        ═══════════════════════════════════════════════════════════ -->
   <style>
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       🌐 GOOGLE TRANSLATE - HIDE UI ELEMENTS
+       📱 MOBILE MENU - MODERN UX 2025/2026 - Bottom Sheet
        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     
-    /* Hide top banner frame */
-    iframe.goog-te-banner-frame,
-    .goog-te-banner-frame {
-      display: none !important;
-    }
-
-    /* Hide skiptranslate wrapper */
-    body > .skiptranslate {
-      display: none !important;
-      height: 0 !important;
-      overflow: hidden !important;
-    }
-
-    /* Reset Google's margin adjustments */
-    html {
-      margin-top: 0 !important;
-    }
-
-    body {
-      top: 0 !important;
-      position: static !important;
-    }
-
-    /* Hide inline toolbar and popup */
-    .goog-te-gadget,
-    #goog-gt-tt,
-    .goog-te-balloon-frame {
-      height: 0 !important;
-      overflow: hidden !important;
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-    }
-
-    /* Hide all Google Translate UI elements */
-    .VIpgJd-ZVi9od-ORHb,
-    .VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
-    .VIpgJd-ZVi9od-ORHb-OEVmcd,
-    .VIpgJd-ZVi9od-ORHb-hFsbo,
-    .VIpgJd-ZVi9od-l4eHX-hSRGPd {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-    }
-
-    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       📱 MOBILE MENU - MODERN UX 2025/2026
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-    
-    /* GPU Acceleration for performance */
+    /* Mobile menu bottom sheet animation */
     #mobile-menu {
-      will-change: transform, opacity;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
       transform: translateZ(0);
       backface-visibility: hidden;
+      contain: layout style paint;
+    }
+    
+    /* Overlay animation */
+    #mobile-menu-overlay {
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
 
     /* Smooth transitions for links */
@@ -214,6 +174,58 @@
 
     #languageMenu li:hover {
       background-color: rgba(59, 130, 246, 0.08);
+    }
+
+    /* Mobile language menu scrollbar */
+    #languageMenu,
+    #mobileLangMenu,
+    #mobileLangSheet > div {
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f3f4f6;
+    }
+
+    #languageMenu::-webkit-scrollbar,
+    #mobileLangMenu::-webkit-scrollbar,
+    #mobileLangSheet > div::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #languageMenu::-webkit-scrollbar-track,
+    #mobileLangMenu::-webkit-scrollbar-track,
+    #mobileLangSheet > div::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 10px;
+    }
+
+    #languageMenu::-webkit-scrollbar-thumb,
+    #mobileLangMenu::-webkit-scrollbar-thumb,
+    #mobileLangSheet > div::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    #languageMenu::-webkit-scrollbar-thumb:hover,
+    #mobileLangMenu::-webkit-scrollbar-thumb:hover,
+    #mobileLangSheet > div::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    
+    /* Bottom sheet animations */
+    #mobileLangSheet {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    #mobileLangOverlay {
+      transition: opacity 0.3s ease;
+    }
+    
+    /* Lang option hover effect */
+    .lang-option {
+      transition: all 0.2s ease;
+    }
+    
+    .lang-option:active {
+      transform: scale(0.98);
     }
 
     /* Hamburger menu animation */
@@ -461,6 +473,37 @@
       outline: 2px solid #3b82f6;
       outline-offset: 2px;
     }
+    
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       🌐 GOOGLE TRANSLATE CUSTOMIZATION
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    
+    /* Hide Google Translate banner */
+    .goog-te-banner-frame,
+    .goog-te-balloon-frame,
+    div#goog-gt-,
+    .goog-te-gadget {
+      display: none !important;
+    }
+    
+    /* Remove Google Translate top frame */
+    body {
+      top: 0 !important;
+    }
+    
+    /* Hide the translate element completely */
+    #google_translate_element {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      position: absolute !important;
+      pointer-events: none !important;
+    }
+    
+    /* Remove Google Translate attribution */
+    .skiptranslate {
+      display: none !important;
+    }
   </style>
 
   <!-- ═══════════════════════════════════════════════════════════
@@ -603,6 +646,9 @@
 
 <body class="min-h-screen bg-white">
 
+<!-- Hidden Google Translate widget (required by API) -->
+<div id="google_translate_element" class="hidden"></div>
+
 <!-- 🚀 Bouton Flèche Retour en Haut -->
 <button id="scrollToTopBtn" aria-label="Retour en haut">
   <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
@@ -681,7 +727,7 @@
             aria-haspopup="menu"
             aria-expanded="false">
             <div class="w-6 h-6 rounded-full overflow-hidden border border-gray-300">
-              <img id="langFlag" src="https://flagcdn.com/24x18/us.png" alt="EN" class="w-full h-full object-cover" width="24" height="18">
+              <img id="langFlag" src="{{ asset('images/flags/us.svg') }}" alt="EN" class="w-full h-full object-cover" width="24" height="18">
             </div>
             <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -692,20 +738,67 @@
           <ul id="langMenu"
               class="absolute right-0 hidden bg-white shadow-lg border border-gray-200 rounded-lg mt-2 w-40 z-20"
               role="menu">
-            <li data-lang="en" data-flag="https://flagcdn.com/24x18/us.png"
+            <!-- Anglais -->
+            <li data-lang="en" data-flag="{{ asset('images/flags/us.svg') }}"
                 class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                 role="menuitem">
-              <img src="https://flagcdn.com/20x15/us.png" alt="" class="w-5 h-4 mr-2" width="20" height="15"> English
+              <img src="{{ asset('images/flags/us.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> English
             </li>
-            <li data-lang="fr" data-flag="https://flagcdn.com/24x18/fr.png"
+            
+            <!-- Français -->
+            <li data-lang="fr" data-flag="{{ asset('images/flags/fr.svg') }}"
                 class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                 role="menuitem">
-              <img src="https://flagcdn.com/20x15/fr.png" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Français
+              <img src="{{ asset('images/flags/fr.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Français
             </li>
-            <li data-lang="de" data-flag="https://flagcdn.com/24x18/de.png"
+            
+            <!-- Allemand -->
+            <li data-lang="de" data-flag="{{ asset('images/flags/de.svg') }}"
                 class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                 role="menuitem">
-              <img src="https://flagcdn.com/20x15/de.png" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Deutsch
+              <img src="{{ asset('images/flags/de.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Deutsch
+            </li>
+            
+            <!-- Russe -->
+            <li data-lang="ru" data-flag="{{ asset('images/flags/ru.svg') }}"
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="{{ asset('images/flags/ru.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Русский
+            </li>
+            
+            <!-- Chinois -->
+            <li data-lang="zh-CN" data-flag="{{ asset('images/flags/cn.svg') }}"
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="{{ asset('images/flags/cn.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> 中文
+            </li>
+            
+            <!-- Espagnol -->
+            <li data-lang="es" data-flag="{{ asset('images/flags/es.svg') }}"
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="{{ asset('images/flags/es.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Español
+            </li>
+            
+            <!-- Portugais -->
+            <li data-lang="pt" data-flag="{{ asset('images/flags/pt.svg') }}"
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="{{ asset('images/flags/pt.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> Português
+            </li>
+            
+            <!-- Arabe -->
+            <li data-lang="ar" data-flag="{{ asset('images/flags/sa.svg') }}"
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="{{ asset('images/flags/sa.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> العربية
+            </li>
+            
+            <!-- Hindi -->
+            <li data-lang="hi" data-flag="{{ asset('images/flags/in.svg') }}"
+                class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                role="menuitem">
+              <img src="{{ asset('images/flags/in.svg') }}" alt="" class="w-5 h-4 mr-2" width="20" height="15"> हिन्दी
             </li>
           </ul>
         </div>
@@ -892,17 +985,21 @@
 </header>
 
 <!-- ═══════════════════════════════════════════════════════════
-     📱 MOBILE MENU
+     📱 MOBILE MENU OVERLAY (Backdrop blur)
      ═══════════════════════════════════════════════════════════ -->
-<nav id="mobile-menu" class="lg:hidden fixed top-[64px] left-0 w-full bg-white z-40 shadow-md hidden px-6 py-4 space-y-4" role="navigation" aria-label="Mobile menu" aria-hidden="true">
-  <div class="flex justify-end mb-2">
-    <button id="mobileMenuCloseBtn" type="button" class="p-3 rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-110" aria-label="Close menu">
-      <svg class="w-7 h-7 text-gray-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
+<div id="mobile-menu-overlay" class="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-30 hidden opacity-0 transition-opacity duration-300" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     📱 MOBILE MENU - Bottom Sheet
+     ═══════════════════════════════════════════════════════════ -->
+<nav id="mobile-menu" class="lg:hidden fixed bottom-0 left-0 right-0 bg-white z-40 shadow-2xl rounded-t-3xl transform translate-y-full transition-transform duration-400 ease-out max-h-[85vh] overflow-y-auto" role="navigation" aria-label="Mobile menu" aria-hidden="true">
+  
+  <!-- Handle (barre de drag visuelle) -->
+  <div class="flex justify-center pt-3 pb-2 sticky top-0 bg-white z-10">
+    <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
   </div>
 
+  <div class="px-6 pb-6 space-y-4">
   <ul class="space-y-2" role="menu">
     @if(Auth::check())
       <!-- Profil utilisateur -->
@@ -1028,41 +1125,459 @@
     @endif
   </ul>
 
-  <!-- Sélecteur de langue -->
-  <div class="relative w-full sm:w-56">
-    <input id="langOpen" type="checkbox" class="peer sr-only" />
-    <label for="langOpen"
-          class="flex justify-between items-center w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-800 bg-white cursor-pointer select-none">
-      <span id="languageLabel">Language</span>
-      <img id="languageFlag" src="https://flagcdn.com/24x18/us.png" alt="" class="ml-2 w-5 h-4 object-cover" width="20" height="16" />
-    </label>
+  <!-- Sélecteur de langue - Bouton moderne -->
+  <button 
+    id="mobileLangBtn" 
+    type="button"
+    class="flex items-center justify-between w-full bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl px-5 py-3.5 hover:from-blue-100 hover:to-indigo-100 transition-all duration-300 shadow-sm hover:shadow-md group"
+    aria-label="Select language">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center border border-blue-100">
+        <img id="mobileLangFlag" src="{{ asset('images/flags/us.svg') }}" alt="" class="w-6 h-5 object-cover rounded" width="24" height="20" />
+      </div>
+      <div class="text-left">
+        <div class="text-xs text-gray-500 font-medium">Language</div>
+        <div id="mobileLangLabel" class="text-sm font-bold text-gray-800">English</div>
+      </div>
+    </div>
+    <svg class="w-5 h-5 text-blue-600 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+    </svg>
+  </button>
 
-    <ul id="languageMenu"
-        class="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-50 hidden peer-checked:block"
-        role="menu">
-      <li data-lang="fr" data-flag="https://flagcdn.com/24x18/fr.png"
-          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2"
-          role="menuitem">
-        <img src="https://flagcdn.com/24x18/fr.png" alt="" class="w-5 h-4" width="20" height="16" /> Français
-      </li>
-      <li data-lang="en" data-flag="https://flagcdn.com/24x18/us.png"
-          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2"
-          role="menuitem">
-        <img src="https://flagcdn.com/24x18/us.png" alt="" class="w-5 h-4" width="20" height="16" /> English
-      </li>
-      <li data-lang="de" data-flag="https://flagcdn.com/24x18/de.png"
-          class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2"
-          role="menuitem">
-        <img src="https://flagcdn.com/24x18/de.png" alt="" class="w-5 h-4" width="20" height="16" /> Deutsch
-      </li>
-    </ul>
+  <!-- Bottom Sheet Modal - Moderne 2025 -->
+  <div id="mobileLangModal" class="fixed inset-0 z-[200] hidden">
+    <!-- Overlay avec blur -->
+    <div id="mobileLangOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+    
+    <!-- Bottom Sheet -->
+    <div id="mobileLangSheet" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-400 ease-out max-h-[85vh] overflow-hidden">
+      
+      <!-- Handle (barre de drag visuelle) -->
+      <div class="flex justify-center pt-3 pb-2">
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+      </div>
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div>
+          <h3 class="text-lg font-bold text-gray-900">Choose Language</h3>
+          <p class="text-xs text-gray-500 mt-0.5">Select your preferred language</p>
+        </div>
+        <button id="mobileLangCloseBtn" type="button" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Liste des langues - Scrollable -->
+      <div class="overflow-y-auto px-4 py-3" style="max-height: calc(85vh - 120px);">
+        <div class="space-y-2">
+          
+          <!-- Français -->
+          <button data-lang="fr" data-flag="{{ asset('images/flags/fr.svg') }}" data-label="Français"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/fr.svg') }}" alt="FR" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">Français</div>
+              <div class="text-xs text-gray-500">France</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+          <!-- Anglais -->
+          <button data-lang="en" data-flag="{{ asset('images/flags/us.svg') }}" data-label="English"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/us.svg') }}" alt="EN" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">English</div>
+              <div class="text-xs text-gray-500">United States</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+          <!-- Allemand -->
+          <button data-lang="de" data-flag="{{ asset('images/flags/de.svg') }}" data-label="Deutsch"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/de.svg') }}" alt="DE" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">Deutsch</div>
+              <div class="text-xs text-gray-500">Deutschland</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+          <!-- Russe -->
+          <button data-lang="ru" data-flag="{{ asset('images/flags/ru.svg') }}" data-label="Русский"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/ru.svg') }}" alt="RU" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">Русский</div>
+              <div class="text-xs text-gray-500">Россия</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+          <!-- Chinois -->
+          <button data-lang="zh-CN" data-flag="{{ asset('images/flags/cn.svg') }}" data-label="中文"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/cn.svg') }}" alt="CN" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">中文</div>
+              <div class="text-xs text-gray-500">中国</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+          <!-- Espagnol -->
+          <button data-lang="es" data-flag="{{ asset('images/flags/es.svg') }}" data-label="Español"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/es.svg') }}" alt="ES" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">Español</div>
+              <div class="text-xs text-gray-500">España</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+          <!-- Portugais -->
+          <button data-lang="pt" data-flag="{{ asset('images/flags/pt.svg') }}" data-label="Português"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/pt.svg') }}" alt="PT" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">Português</div>
+              <div class="text-xs text-gray-500">Portugal</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+          <!-- Arabe -->
+          <button data-lang="ar" data-flag="{{ asset('images/flags/sa.svg') }}" data-label="العربية"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/sa.svg') }}" alt="AR" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">العربية</div>
+              <div class="text-xs text-gray-500">السعودية</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+          <!-- Hindi -->
+          <button data-lang="hi" data-flag="{{ asset('images/flags/in.svg') }}" data-label="हिन्दी"
+                  class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
+              <img src="{{ asset('images/flags/in.svg') }}" alt="HI" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-gray-900 text-base">हिन्दी</div>
+              <div class="text-xs text-gray-500">भारत</div>
+            </div>
+            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+            </svg>
+          </button>
+          
+        </div>
+      </div>
+      
+    </div>
   </div>
 
   <!-- Bouton S.O.S -->
-  <a href="https://sos-expat.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center bg-red-600 text-white font-semibold py-2 rounded-full shadow hover:bg-red-700 transition">
+  <a href="https://sos-expat.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center bg-red-600 text-white font-semibold py-3 rounded-full shadow hover:bg-red-700 transition">
     <i class="fas fa-phone-alt mr-1" aria-hidden="true"></i> S.O.S
   </a>
+  
+  </div><!-- Fin du container px-6 pb-6 -->
 </nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     🎯 MOBILE MENU OVERLAY SCRIPT
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const overlay = document.getElementById('mobile-menu-overlay');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuToggle = document.getElementById('menu-toggle-top');
+    
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 📱 MOBILE MENU BOTTOM SHEET
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    
+    function openMobileMenu() {
+      if (!mobileMenu || !overlay) return;
+      
+      // Afficher l'overlay
+      overlay.classList.remove('hidden');
+      setTimeout(() => overlay.classList.add('opacity-100'), 10);
+      
+      // Slide-up le menu
+      mobileMenu.classList.remove('translate-y-full');
+      mobileMenu.classList.add('translate-y-0');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      
+      // Bloquer le scroll
+      document.body.style.overflow = 'hidden';
+      
+      // Transformer hamburger en X
+      if (menuToggle) {
+        menuToggle.classList.add('menu-active');
+        menuToggle.setAttribute('aria-expanded', 'true');
+      }
+      
+      console.log('✅ Mobile menu opened (slide-up)');
+    }
+    
+    function closeMobileMenu() {
+      if (!mobileMenu || !overlay) return;
+      
+      // Masquer l'overlay
+      overlay.classList.remove('opacity-100');
+      setTimeout(() => overlay.classList.add('hidden'), 300);
+      
+      // Slide-down le menu
+      mobileMenu.classList.remove('translate-y-0');
+      mobileMenu.classList.add('translate-y-full');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      
+      // Rétablir le scroll
+      document.body.style.overflow = '';
+      
+      // Transformer X en hamburger
+      if (menuToggle) {
+        menuToggle.classList.remove('menu-active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
+      
+      console.log('✅ Mobile menu closed (slide-down)');
+    }
+    
+    // Toggle du menu au clic sur le hamburger
+    if (menuToggle) {
+      menuToggle.addEventListener('click', function() {
+        const isOpen = mobileMenu.classList.contains('translate-y-0');
+        
+        if (isOpen) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      });
+    }
+    
+    // Fermer au clic sur l'overlay
+    if (overlay) {
+      overlay.addEventListener('click', closeMobileMenu);
+    }
+    
+    // Fermer avec la touche Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const isOpen = mobileMenu.classList.contains('translate-y-0');
+        if (isOpen) {
+          closeMobileMenu();
+        }
+        
+        // Fermer aussi le bottom sheet de langue s'il est ouvert
+        const mobileLangModal = document.getElementById('mobileLangModal');
+        if (mobileLangModal && !mobileLangModal.classList.contains('hidden')) {
+          const closeLangBtn = document.getElementById('mobileLangCloseBtn');
+          if (closeLangBtn) closeLangBtn.click();
+        }
+      }
+    });
+    
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🌐 MOBILE LANGUAGE BOTTOM SHEET
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const mobileLangBtn = document.getElementById('mobileLangBtn');
+    const mobileLangModal = document.getElementById('mobileLangModal');
+    const mobileLangSheet = document.getElementById('mobileLangSheet');
+    const mobileLangOverlay = document.getElementById('mobileLangOverlay');
+    const mobileLangCloseBtn = document.getElementById('mobileLangCloseBtn');
+    const mobileLangLabel = document.getElementById('mobileLangLabel');
+    const mobileLangFlag = document.getElementById('mobileLangFlag');
+    
+    // Fonction pour ouvrir le bottom sheet
+    function openLangModal() {
+      if (!mobileLangModal || !mobileLangSheet || !mobileLangOverlay) return;
+      
+      mobileLangModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      // Animation d'ouverture
+      setTimeout(() => {
+        mobileLangOverlay.classList.remove('opacity-0');
+        mobileLangOverlay.classList.add('opacity-100');
+        mobileLangSheet.classList.remove('translate-y-full');
+        mobileLangSheet.classList.add('translate-y-0');
+      }, 10);
+    }
+    
+    // Fonction pour fermer le bottom sheet
+    function closeLangModal() {
+      if (!mobileLangModal || !mobileLangSheet || !mobileLangOverlay) return;
+      
+      mobileLangOverlay.classList.remove('opacity-100');
+      mobileLangOverlay.classList.add('opacity-0');
+      mobileLangSheet.classList.remove('translate-y-0');
+      mobileLangSheet.classList.add('translate-y-full');
+      
+      setTimeout(() => {
+        mobileLangModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 400);
+    }
+    
+    // Ouvrir le modal au clic sur le bouton
+    if (mobileLangBtn) {
+      mobileLangBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openLangModal();
+      });
+    }
+    
+    // Fermer le modal
+    if (mobileLangCloseBtn) {
+      mobileLangCloseBtn.addEventListener('click', closeLangModal);
+    }
+    
+    if (mobileLangOverlay) {
+      mobileLangOverlay.addEventListener('click', closeLangModal);
+    }
+    
+    // Sélection d'une langue
+    const langOptions = document.querySelectorAll('.lang-option');
+    langOptions.forEach(function(option) {
+      option.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const lang = this.getAttribute('data-lang');
+        const flag = this.getAttribute('data-flag');
+        const label = this.getAttribute('data-label');
+        
+        // Mettre à jour l'affichage du bouton
+        if (mobileLangLabel) mobileLangLabel.textContent = label;
+        if (mobileLangFlag) mobileLangFlag.src = flag;
+        
+        // Feedback visuel
+        langOptions.forEach(opt => opt.classList.remove('bg-blue-100', 'border-blue-300'));
+        this.classList.add('bg-blue-100', 'border-blue-300');
+        
+        // Fermer le modal après un court délai
+        setTimeout(() => {
+          closeLangModal();
+        }, 300);
+        
+        // Déclencher la traduction
+        console.log('🌐 Language selected:', lang);
+        const event = new CustomEvent('languageChanged', { detail: { lang: lang, flag: flag } });
+        document.dispatchEvent(event);
+      });
+    });
+    
+    console.log('✅ Mobile menu overlay & language bottom sheet initialized');
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     🖥️ DESKTOP LANGUAGE SELECTOR SCRIPT
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const langBtn = document.getElementById('langBtn');
+    const langMenu = document.getElementById('langMenu');
+    const langFlag = document.getElementById('langFlag');
+    
+    if (!langBtn || !langMenu) return;
+    
+    // Toggle dropdown
+    langBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isHidden = langMenu.classList.contains('hidden');
+      
+      if (isHidden) {
+        langMenu.classList.remove('hidden');
+        langBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        langMenu.classList.add('hidden');
+        langBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    
+    // Sélection d'une langue
+    const langItems = langMenu.querySelectorAll('li[data-lang]');
+    langItems.forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const lang = this.getAttribute('data-lang');
+        const flag = this.getAttribute('data-flag');
+        
+        // Mettre à jour le drapeau
+        if (langFlag) langFlag.src = flag;
+        
+        // Fermer le menu
+        langMenu.classList.add('hidden');
+        langBtn.setAttribute('aria-expanded', 'false');
+        
+        // Déclencher la traduction
+        console.log('🌐 Desktop language selected:', lang);
+        const event = new CustomEvent('languageChanged', { detail: { lang: lang, flag: flag } });
+        document.dispatchEvent(event);
+      });
+    });
+    
+    // Fermer en cliquant ailleurs
+    document.addEventListener('click', function(e) {
+      if (!langBtn.contains(e.target) && !langMenu.contains(e.target)) {
+        langMenu.classList.add('hidden');
+        langBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    
+    console.log('✅ Desktop language selector initialized');
+  });
+})();
+</script>
 
 <!-- ═══════════════════════════════════════════════════════════
      🎯 WIZARDS POPUPS
@@ -1127,68 +1642,44 @@
 <!-- ═══════════════════════════════════════════════════════════
      🌐 GOOGLE TRANSLATE INITIALIZATION
      ═══════════════════════════════════════════════════════════ -->
+<script type="text/javascript">
+// Google Translate API Initialization
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,fr,de,ru,zh-CN,es,pt,ar,hi',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+  
+  console.log('✅ Google Translate initialized');
+}
 
-<!-- Hidden Google Translate widget -->
-<div id="google_translate_element" class="hidden"></div>
-
-<!-- Init Google Translate -->
-<script>
-(function() {
-  'use strict';
+// Fonction pour changer la langue
+function changeLanguage(langCode) {
+  console.log('🌐 Changing language to:', langCode);
   
-  /**
-   * Initialisation Google Translate (appelée automatiquement par leur script)
-   */
-  window.googleTranslateElementInit = function() {
-    console.log('🌐 [GoogleTranslate] Initializing...');
-    
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'en,fr,de',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-      autoDisplay: false
-    }, 'google_translate_element');
-    
-    // Signaler que Google Translate est prêt
-    window.googleTranslateReady = true;
-    window.dispatchEvent(new Event('googleTranslateReady'));
-    
-    console.log('✅ [GoogleTranslate] Ready');
-  };
-  
-  /**
-   * Charger le script Google Translate (une seule fois)
-   */
-  if (!document.getElementById('google-translate-script')) {
-    const script = document.createElement('script');
-    script.id = 'google-translate-script';
-    script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    script.async = true;
-    script.onerror = () => console.error('❌ Failed to load Google Translate');
-    document.body.appendChild(script);
-  }
-  
-  /**
-   * Appliquer la langue sauvegardée au chargement de la page
-   */
-  function applyStoredLanguage() {
-    const savedLang = localStorage.getItem('ulixai_lang') || 'en';
-    
-    if (savedLang !== 'en') {
-      window.location.hash = `googtrans(en|${savedLang})`;
-      console.log('🌐 [GoogleTranslate] Applied stored language:', savedLang);
-    }
-  }
-  
-  // Appliquer au chargement
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyStoredLanguage, { once: true });
+  const selectField = document.querySelector('select.goog-te-combo');
+  if (selectField) {
+    selectField.value = langCode;
+    selectField.dispatchEvent(new Event('change'));
+    console.log('✅ Language changed to:', langCode);
   } else {
-    applyStoredLanguage();
+    console.warn('⚠️ Google Translate not ready yet, retrying...');
+    setTimeout(() => changeLanguage(langCode), 500);
   }
-  
-})();
+}
+
+// Écouter les événements de changement de langue (desktop et mobile)
+document.addEventListener('languageChanged', function(e) {
+  const lang = e.detail.lang;
+  console.log('🌐 languageChanged event received:', lang);
+  changeLanguage(lang);
+});
 </script>
+
+<!-- Google Translate Script -->
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <!-- ═══════════════════════════════════════════════════════════
      🔧 HELP BUTTON INITIALIZATION
@@ -1229,7 +1720,16 @@
      🚀 JAVASCRIPT MODULES
      ═══════════════════════════════════════════════════════════ -->
 <script src="{{ mix('js/app.js') }}"></script>
-<script src="{{ mix('js/header-init.js') }}"></script>
+
+<!-- ⚠️ IMPORTANT : Si header-init.js contient du code pour le menu hamburger ou la traduction,
+     il peut y avoir des conflits avec le code ci-dessus. Dans ce cas :
+     1. Soit commenter les sections concernées dans header-init.js
+     2. Soit supprimer complètement la ligne suivante si tout fonctionne sans
+     Le code complet du menu hamburger et de la traduction est maintenant dans ce fichier (header.blade.php)
+-->
+<!-- ✅ Chargez header-init.js comme module ES6 natif -->
+<script type="module" src="{{ asset('js/header-init.js') }}"></script>
+<!-- ⚠️ Notez : asset() au lieu de mix() car on ne le compile plus -->
 
 </body>
 </html>

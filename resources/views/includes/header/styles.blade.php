@@ -1,0 +1,511 @@
+<style>
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📱 MOBILE MENU - MODERN UX 2025/2026 - Bottom Sheet
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Mobile menu bottom sheet animation */
+#mobile-menu {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+/* Overlay animation */
+#mobile-menu-overlay {
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Smooth transitions for links */
+#mobile-menu a {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#mobile-menu a:hover {
+  transform: translateX(4px);
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* Navigation buttons with effects */
+.nav-button {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button:active {
+  transform: translateY(0);
+}
+
+/* Language selector modern styles */
+#languageMenu li {
+  transition: background-color 0.2s ease;
+}
+
+#languageMenu li:hover {
+  background-color: rgba(59, 130, 246, 0.08);
+}
+
+/* Mobile language menu scrollbar */
+#languageMenu,
+#mobileLangMenu,
+#mobileLangSheet > div {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f3f4f6;
+}
+
+#languageMenu::-webkit-scrollbar,
+#mobileLangMenu::-webkit-scrollbar,
+#mobileLangSheet > div::-webkit-scrollbar {
+  width: 6px;
+}
+
+#languageMenu::-webkit-scrollbar-track,
+#mobileLangMenu::-webkit-scrollbar-track,
+#mobileLangSheet > div::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+#languageMenu::-webkit-scrollbar-thumb,
+#mobileLangMenu::-webkit-scrollbar-thumb,
+#mobileLangSheet > div::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+#languageMenu::-webkit-scrollbar-thumb:hover,
+#mobileLangMenu::-webkit-scrollbar-thumb:hover,
+#mobileLangSheet > div::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Bottom sheet animations */
+#mobileLangSheet {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#mobileLangOverlay {
+  transition: opacity 0.3s ease;
+}
+
+/* Lang option hover effect */
+.lang-option {
+  transition: all 0.2s ease;
+}
+
+.lang-option:active {
+  transform: scale(0.98);
+}
+
+/* Hamburger menu animation */
+#menu-toggle-top,
+#menu-toggle {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#menu-toggle-top:active,
+#menu-toggle:active {
+  transform: scale(0.95);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🍔 HAMBURGER → X ANIMATION (ULTRA VISIBLE)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.hamburger-line {
+  transform-origin: center;
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+}
+
+/* Active state - Transform to X */
+#menu-toggle-top.menu-active .hamburger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+  background-color: #1f2937;
+}
+
+#menu-toggle-top.menu-active .hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+#menu-toggle-top.menu-active .hamburger-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+  background-color: #1f2937;
+}
+
+/* Hover effects */
+#menu-toggle-top:hover .hamburger-line {
+  background-color: #2563eb;
+}
+
+#menu-toggle-top.menu-active:hover .hamburger-line {
+  background-color: #dc2626;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ⚡ PERFORMANCE OPTIMIZATIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Dynamic will-change managed by JS */
+#mobile-menu.menu-animating {
+  will-change: transform, opacity;
+}
+
+/* Containment for isolation */
+#mobile-menu {
+  contain: layout style paint;
+}
+
+/* Content visibility for lazy rendering */
+#mobile-menu:not(.menu-open) {
+  content-visibility: hidden;
+}
+
+/* Reduce repaints */
+.nav-button,
+#mobile-menu a,
+#languageMenu li {
+  contain: layout style;
+}
+
+/* Optimized GPU layers */
+.hamburger-line {
+  will-change: transform, opacity;
+}
+
+#mobileMenuCloseBtn svg {
+  will-change: transform;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📞 INTERNATIONAL TELEPHONE INPUT - CUSTOM STYLES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.iti {
+  width: 100%;
+  position: relative;
+}
+
+.iti__flag-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.iti__selected-flag {
+  padding: 0 6px 0 8px;
+  background: transparent;
+  border-radius: 3px 0 0 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.iti__selected-flag:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.iti__arrow {
+  margin-left: 6px;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 4px solid #666;
+  transition: border-top-color 0.2s;
+}
+
+.iti__selected-flag:hover .iti__arrow {
+  border-top-color: #333;
+}
+
+.iti__country-list {
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  width: 320px;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+}
+
+.iti__country {
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+  margin: 2px 4px;
+}
+
+.iti__country:hover {
+  background-color: #f3f4f6;
+}
+
+.iti__country.iti__highlight {
+  background-color: #eff6ff;
+}
+
+.iti__flag {
+  margin-right: 8px;
+  width: 20px;
+  height: 15px;
+  background-size: cover;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.iti__country-name {
+  flex: 1;
+  font-size: 14px;
+  color: #374151;
+}
+
+.iti__dial-code {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.iti input[type="tel"] {
+  padding-left: 80px !important;
+  border-radius: 9999px !important;
+  border: 1px solid #d1d5db !important;
+  transition: all 0.2s ease;
+}
+
+.iti input[type="tel"]:focus {
+  outline: none !important;
+  ring: 2px !important;
+  ring-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
+
+.iti input[type="tel"].border-red-500 {
+  border-color: #ef4444 !important;
+}
+
+.iti input[type="tel"].border-green-500 {
+  border-color: #10b981 !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📱 RESPONSIVE DESIGN
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Mobile: Touch-friendly targets */
+@media (max-width: 768px) {
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .iti__country-list {
+    width: 280px;
+  }
+
+  .iti input[type="tel"] {
+    padding-left: 70px !important;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ♿ ACCESSIBILITY
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🌐 GOOGLE TRANSLATE CUSTOMIZATION
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Hide Google Translate banner */
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+div#goog-gt-,
+.goog-te-gadget {
+  display: none !important;
+}
+
+/* Remove Google Translate top frame */
+body {
+  top: 0 !important;
+}
+
+/* Hide the translate element completely */
+#google_translate_element {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  pointer-events: none !important;
+}
+
+/* Remove Google Translate attribution */
+.skiptranslate {
+  display: none !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🎨 BREADCRUMB & UI STYLES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+[x-cloak] { 
+  display: none !important; 
+}
+
+html { 
+  scroll-behavior: auto !important; 
+}
+
+.breadcrumb-container { 
+  background: transparent; 
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6); 
+  padding: 12px 0; 
+}
+
+.breadcrumb { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  max-width: 1280px; 
+  margin: 0 auto; 
+  padding: 0 20px; 
+  font-size: 14px; 
+}
+
+.breadcrumb-item { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+}
+
+.breadcrumb-item svg { 
+  width: 15px; 
+  height: 15px; 
+}
+
+.breadcrumb-item a { 
+  color: #64748b; 
+  text-decoration: none; 
+  padding: 6px 12px; 
+  border-radius: 20px; 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  font-weight: 500; 
+  transition: all 0.25s ease; 
+  background: transparent; 
+}
+
+.breadcrumb-item a:hover { 
+  background: rgba(59, 130, 246, 0.08); 
+  color: #3b82f6; 
+  transform: translateX(2px); 
+}
+
+.breadcrumb-item.active { 
+  color: #1e293b; 
+  font-weight: 600; 
+  padding: 6px 12px; 
+  background: rgba(226, 232, 240, 0.4); 
+  border-radius: 20px; 
+}
+
+.breadcrumb-separator { 
+  color: #cbd5e1; 
+  margin: 0 4px; 
+  font-size: 14px; 
+}
+
+#scrollToTopBtn {
+  position: fixed; 
+  bottom: 30px; 
+  right: 30px; 
+  width: 50px; 
+  height: 50px; 
+  background: #3b82f6; 
+  color: white;
+  border: none; 
+  border-radius: 50%; 
+  cursor: pointer; 
+  display: none; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 9999; 
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+#scrollToTopBtn:hover { 
+  background: #2563eb; 
+}
+
+#scrollToTopBtn.show { 
+  display: flex; 
+}
+
+@media (max-width: 768px) {
+  #scrollToTopBtn { 
+    display: none !important; 
+  }
+  
+  .breadcrumb-container { 
+    padding: 12px 0; 
+  }
+  
+  .breadcrumb { 
+    padding: 0 16px; 
+    font-size: 13px; 
+    gap: 6px; 
+  }
+  
+  .breadcrumb-item svg { 
+    width: 14px; 
+    height: 14px; 
+  }
+  
+  .breadcrumb-item a { 
+    padding: 5px 10px; 
+  }
+  
+  .breadcrumb-item.active { 
+    padding: 5px 12px; 
+  }
+}
+</style>

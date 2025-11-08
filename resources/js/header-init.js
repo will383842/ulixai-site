@@ -1,175 +1,229 @@
 /**
- * Header Initialization - Laravel Mix Compatible
- * Point d'entrée principal pour tous les modules header
- * Version optimisée avec protection popup
+ * Header Initialization - Professional Modular Architecture
+ * Each feature is a self-contained module with a single entry point
+ * 
+ * @version 2.0.0
+ * @author ULIXAI Team
  */
 
+// ═══════════════════════════════════════════════════════════
+// IMPORTS - Feature Modules
+// ═══════════════════════════════════════════════════════════
+
+// Google Translate Module (complete package)
+import { initializeGoogleTranslateModule } from './modules/google-translate/index.js';
+
+// Wizard Modules (Provider signup flow)
 import { initializeWizard } from './modules/wizard/wizard_provider/wizard-core.js';
 import { initializeWizardSteps } from './modules/wizard/wizard_provider/wizard-steps.js';
 import { initializeWizardSubmission } from './modules/wizard/wizard_provider/wizard-submission.js';
+
+// UI Modules
 import { initializeMobileMenu } from './modules/ui/mobile-menu.js';
-import { initializeLanguageManager } from './modules/ui/language-manager.js';
 import { initializeCategoryPopups } from './modules/ui/category/category-popups.js';
 import { initializeScrollUtils } from './modules/ui/scroll-utils.js';
 
+// ═══════════════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════
 
-/** Exécute une init en isolant les erreurs pour ne pas bloquer les autres modules */
-function safeInit(name, fn) {
+/**
+ * Safe initialization wrapper
+ * Isolates errors to prevent one module from breaking others
+ * 
+ * @param {string} name - Module name for logging
+ * @param {Function} fn - Initialization function
+ * @returns {*} Result of initialization or null on error
+ */
+async function safeInit(name, fn) {
   try {
-    console.log(`🔄 Initializing ${name}...`);
-    const result = fn();
-    console.log(`✅ ${name} initialized successfully`);
+    console.log(`🔄 [Header] Initializing ${name}...`);
+    const result = await fn();
+    console.log(`✅ [Header] ${name} initialized successfully`);
     return result;
   } catch (e) {
-    console.error(`❌ ${name} failed:`, e);
+    console.error(`❌ [Header] ${name} failed:`, e);
     return null;
   }
 }
 
-function initializeAll() {
-  console.log('🚀 Initializing header modules...');
-  console.log('📦 Available modules:', {
+// ═══════════════════════════════════════════════════════════
+// MAIN INITIALIZATION
+// ═══════════════════════════════════════════════════════════
+
+/**
+ * Initialize all header modules in the correct order
+ * Handles conditional loading based on user state
+ */
+async function initializeAll() {
+  console.log('🚀 [Header] Starting initialization...');
+  console.log('📦 [Header] Available modules:', {
+    googleTranslate: typeof initializeGoogleTranslateModule,
     wizard: typeof initializeWizard,
     steps: typeof initializeWizardSteps,
     submission: typeof initializeWizardSubmission,
     menu: typeof initializeMobileMenu,
-    language: typeof initializeLanguageManager,
     popups: typeof initializeCategoryPopups,
     scroll: typeof initializeScrollUtils
   });
 
-  // ✅ VÉRIFICATION: Le popup existe-t-il dans le DOM ?
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // CHECK: Is signup popup present? (indicates logged out user)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   const popupExists = !!document.getElementById('signupPopup');
-  console.log(`📊 Signup popup ${popupExists ? '✅ FOUND' : '⚠️ NOT FOUND'} in DOM`);
+  console.log(`📊 [Header] Signup popup ${popupExists ? '✅ FOUND' : '⚠️ NOT FOUND'} in DOM`);
 
-  // 1) Core (popups SignUp / croix / ESC / backdrop) - Seulement si popup existe
-  let wizard = null;
-  if (popupExists) {
-    wizard = safeInit('Wizard', initializeWizard);
-  } else {
-    console.log('ℹ️ Skipping Wizard initialization (user is logged in)');
-  }
-
-  // 2) Steps (wizard-steps) - Seulement si popup existe
-  let steps = null;
-  if (popupExists) {
-    steps = safeInit('WizardSteps', initializeWizardSteps);
-  } else {
-    console.log('ℹ️ Skipping WizardSteps initialization (user is logged in)');
-  }
-
-  // 3) Wizard Submission - Seulement si popup existe
-  if (popupExists) {
-    safeInit('WizardSubmission', initializeWizardSubmission);
-  } else {
-    console.log('ℹ️ Skipping WizardSubmission initialization (user is logged in)');
-  }
-
-  // 4) Mobile Menu - TOUJOURS INITIALISER (indépendant du popup)
-  safeInit('MobileMenu', initializeMobileMenu);
-  
-  // 5) Language Manager - TOUJOURS INITIALISER
-  const langManager = safeInit('LanguageManager', () => {
-    const manager = initializeLanguageManager();
-    
-    // Vérifier après 500ms si les éléments sont bien initialisés
-    setTimeout(() => {
-      const langBtn = document.getElementById('langBtn');
-      console.log('🔍 Language button check:', {
-        exists: !!langBtn,
-        manager: !!window.providerLanguageManager
-      });
-      
-      if (!langBtn) {
-        console.error('❌ Language button not found in DOM!');
-      }
-      
-      if (!window.providerLanguageManager) {
-        console.error('❌ Language manager not exposed globally!');
-      }
-    }, 500);
-    
-    return manager;
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 1. GOOGLE TRANSLATE MODULE (always initialize first)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  await safeInit('GoogleTranslateModule', async () => {
+    return await initializeGoogleTranslateModule();
   });
-  
-  // 6) Category Popups - TOUJOURS INITIALISER
-  safeInit('CategoryPopups', initializeCategoryPopups);
-  
-  // 7) Scroll Utils - TOUJOURS INITIALISER
-  safeInit('ScrollUtils', initializeScrollUtils);
 
-  // 8) Wrappers globaux - Seulement si popup existe
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 2. WIZARD MODULES (conditional - only if popup exists)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  let wizard = null;
+  let steps = null;
+
   if (popupExists) {
-    (function exposeWrappers() {
-      try {
-        if (!window.showStep) {
-          window.showStep = function (i) {
-            if (window.providerWizardSteps && typeof window.providerWizardSteps.showStep === 'function') {
-              window.providerWizardSteps.showStep(i);
-            } else if (steps && typeof steps.showStep === 'function') {
-              steps.showStep(i);
-            }
-          };
-        }
-        if (!window.updateNavigationButtons) {
-          window.updateNavigationButtons = function () {
-            if (window.providerWizardSteps && typeof window.providerWizardSteps.updateNavigationButtons === 'function') {
-              window.providerWizardSteps.updateNavigationButtons();
-            } else if (steps && typeof steps.updateNavigationButtons === 'function') {
-              steps.updateNavigationButtons();
-            }
-          };
-        }
-        console.log('✅ Global wrappers exposed');
-      } catch (e) {
-        console.warn('⚠️ Wrapper exposure failed', e);
-      }
-    })();
-
-    // 9) Event listeners pour le wizard - Seulement si popup existe
-    document.addEventListener('change', () => {
-      if (typeof window.updateNavigationButtons === 'function') {
-        requestAnimationFrame(() => window.updateNavigationButtons());
-      }
-    }, { passive: true });
-
-    // Signal spécifique Step 2
-    document.addEventListener('pw:step2:changed', () => {
-      try { 
-        if (typeof window.updateNavigationButtons === 'function') {
-          window.updateNavigationButtons(); 
-        }
-      } catch(e) {
-        console.warn('⚠️ Step2 event handler failed', e);
-      }
-    });
+    console.log('👤 [Header] User not logged in - initializing wizard...');
+    
+    // Core wizard (popup open/close, backdrop, ESC key)
+    wizard = await safeInit('Wizard', async () => initializeWizard());
+    
+    // Wizard steps (navigation, validation)
+    steps = await safeInit('WizardSteps', async () => initializeWizardSteps());
+    
+    // Wizard submission (form processing)
+    await safeInit('WizardSubmission', async () => initializeWizardSubmission());
   } else {
-    console.log('ℹ️ Skipping wizard event listeners (user is logged in)');
+    console.log('ℹ️ [Header] User logged in - skipping wizard initialization');
   }
 
-  console.log('✅ All header modules initialized');
-  console.log('🔍 Global objects:', {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 3. UI MODULES (always initialize)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  // Mobile hamburger menu
+  await safeInit('MobileMenu', async () => initializeMobileMenu());
+  
+  // Category selection popups (help request flow)
+  await safeInit('CategoryPopups', async () => initializeCategoryPopups());
+  
+  // Scroll utilities (back to top button, etc.)
+  await safeInit('ScrollUtils', async () => initializeScrollUtils());
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 4. WIZARD GLOBAL WRAPPERS (conditional)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  if (popupExists) {
+    exposeWizardWrappers(steps);
+    setupWizardEventListeners();
+  } else {
+    console.log('ℹ️ [Header] Skipping wizard wrappers (user logged in)');
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // INITIALIZATION COMPLETE
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  console.log('✅ [Header] All modules initialized');
+  console.log('🔍 [Header] Global objects:', {
     providerWizard: !!window.providerWizard,
     providerWizardSteps: !!window.providerWizardSteps,
     providerLanguageManager: !!window.providerLanguageManager,
+    ulixaiGoogleTranslate: !!window.ulixaiGoogleTranslate,
     onProviderSignupSubmit: !!window.onProviderSignupSubmit
   });
 
-  // ✅ RÉSUMÉ DE L'INITIALISATION
-  console.log('📋 Initialization Summary:', {
+  console.log('📋 [Header] Initialization Summary:', {
     popupInDOM: popupExists,
     wizardInitialized: !!wizard,
     stepsInitialized: !!steps,
     mobileMenuInitialized: true,
-    languageManagerInitialized: !!langManager
+    googleTranslateInitialized: !!window.ulixaiGoogleTranslate
   });
 }
 
-// Lancer l'init quand le DOM est prêt
+// ═══════════════════════════════════════════════════════════
+// WIZARD HELPER FUNCTIONS
+// ═══════════════════════════════════════════════════════════
+
+/**
+ * Expose wizard functions globally for legacy compatibility
+ * Some inline scripts may still reference these functions
+ * 
+ * @param {Object} steps - WizardSteps instance
+ */
+function exposeWizardWrappers(steps) {
+  try {
+    // Global showStep function
+    if (!window.showStep) {
+      window.showStep = function(i) {
+        if (window.providerWizardSteps && typeof window.providerWizardSteps.showStep === 'function') {
+          window.providerWizardSteps.showStep(i);
+        } else if (steps && typeof steps.showStep === 'function') {
+          steps.showStep(i);
+        } else {
+          console.warn('⚠️ [Header] showStep called but no implementation available');
+        }
+      };
+    }
+
+    // Global updateNavigationButtons function
+    if (!window.updateNavigationButtons) {
+      window.updateNavigationButtons = function() {
+        if (window.providerWizardSteps && typeof window.providerWizardSteps.updateNavigationButtons === 'function') {
+          window.providerWizardSteps.updateNavigationButtons();
+        } else if (steps && typeof steps.updateNavigationButtons === 'function') {
+          steps.updateNavigationButtons();
+        } else {
+          console.warn('⚠️ [Header] updateNavigationButtons called but no implementation available');
+        }
+      };
+    }
+
+    console.log('✅ [Header] Wizard global wrappers exposed');
+  } catch (e) {
+    console.warn('⚠️ [Header] Failed to expose wizard wrappers:', e);
+  }
+}
+
+/**
+ * Setup event listeners for wizard functionality
+ * Handles form changes and custom wizard events
+ */
+function setupWizardEventListeners() {
+  // Update navigation buttons on any form change
+  document.addEventListener('change', () => {
+    if (typeof window.updateNavigationButtons === 'function') {
+      // Use requestAnimationFrame for better performance
+      requestAnimationFrame(() => window.updateNavigationButtons());
+    }
+  }, { passive: true });
+
+  // Handle Step 2 specific change events
+  document.addEventListener('pw:step2:changed', () => {
+    try {
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
+    } catch (e) {
+      console.warn('⚠️ [Header] Step2 event handler failed:', e);
+    }
+  });
+
+  console.log('✅ [Header] Wizard event listeners setup');
+}
+
+// ═══════════════════════════════════════════════════════════
+// BOOTSTRAP - Initialize when DOM is ready
+// ═══════════════════════════════════════════════════════════
+
 if (document.readyState === 'loading') {
-  console.log('⏳ DOM is loading, waiting for DOMContentLoaded...');
+  console.log('⏳ [Header] DOM is loading, waiting for DOMContentLoaded...');
   document.addEventListener('DOMContentLoaded', initializeAll, { once: true });
 } else {
-  console.log('✅ DOM already loaded, initializing now');
+  console.log('✅ [Header] DOM already loaded, initializing now');
   initializeAll();
 }

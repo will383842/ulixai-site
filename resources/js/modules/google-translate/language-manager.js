@@ -1,34 +1,28 @@
 /**
- * Language Manager - Professional Architecture
- * Manages UI interactions only, Google Translate init handled in header
+ * Language Manager
+ * Handles language selector UI and user interactions
+ * 
+ * @module google-translate/language-manager
  */
 
 export class LanguageManager {
   constructor() {
     this.selectedLang = localStorage.getItem('ulixai_lang') || 'en';
     this.selectedFlag = localStorage.getItem('ulixai_flag') || 'https://flagcdn.com/24x18/us.png';
-    this.googleTranslateReady = false;
-    this.initPromise = null;
   }
 
   /**
    * Initialize language manager
-   * Waits for DOM and Google Translate to be ready
    */
   async init() {
-    console.log('🌐 [LangManager] Initializing...');
+    console.log('🌐 [LangManager] Initializing UI...');
 
-    // Wait for DOM
     await this.waitForDOM();
 
-    // Wait for Google Translate
-    await this.waitForGoogleTranslate();
-
-    // Initialize UI
     this.initDesktopLanguageSelector();
     this.initMobileLanguageSelector();
 
-    console.log('✅ [LangManager] Initialized');
+    console.log('✅ [LangManager] UI initialized');
   }
 
   /**
@@ -41,31 +35,6 @@ export class LanguageManager {
       } else {
         resolve();
       }
-    });
-  }
-
-  /**
-   * Wait for Google Translate to be ready
-   */
-  waitForGoogleTranslate(timeout = 10000) {
-    return new Promise((resolve) => {
-      if (window.googleTranslateReady) {
-        console.log('✅ [LangManager] Google Translate already ready');
-        resolve();
-        return;
-      }
-
-      const timeoutId = setTimeout(() => {
-        console.warn('⚠️ [LangManager] Google Translate timeout');
-        resolve(); // Continue anyway
-      }, timeout);
-
-      window.addEventListener('googleTranslateReady', () => {
-        clearTimeout(timeoutId);
-        this.googleTranslateReady = true;
-        console.log('✅ [LangManager] Google Translate ready event received');
-        resolve();
-      }, { once: true });
     });
   }
 
@@ -143,7 +112,13 @@ export class LanguageManager {
     const langNames = {
       en: 'English',
       fr: 'Français',
-      de: 'Deutsch'
+      de: 'Deutsch',
+      ru: 'Русский',
+      'zh-CN': '中文',
+      es: 'Español',
+      pt: 'Português',
+      ar: 'العربية',
+      hi: 'हिन्दी'
     };
 
     // Handle language selection
@@ -217,7 +192,7 @@ export class LanguageManager {
 }
 
 /**
- * Initialize and expose globally
+ * Initialize language manager (convenience function)
  */
 export function initializeLanguageManager() {
   console.log('🚀 [LangManager] Starting initialization...');
@@ -226,7 +201,7 @@ export function initializeLanguageManager() {
   languageManager.init();
 
   // Expose globally for debugging
-  window.ulixaiLanguageManager = languageManager;
+  window.providerLanguageManager = languageManager;
 
   return languageManager;
 }
