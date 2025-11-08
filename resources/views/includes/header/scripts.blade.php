@@ -3,13 +3,14 @@
   🔧 SCRIPTS COMPONENT
   ═══════════════════════════════════════════════════════════
   
-  Contient tous les scripts JavaScript :
+  Contient :
   - Toast messages (success/error)
   - Bouton Scroll To Top
-  - Google Translate initialization
-  - Language selector handlers
   - Help button handlers
   - Laravel Mix/Vite assets
+  
+  Google Translate est géré par le module ES6 dans:
+  resources/js/modules/google-translate/
   
   @version 2.0.0
 --}}
@@ -30,119 +31,26 @@
 @endif
 
 {{-- Hidden Google Translate widget (required by API) --}}
-<div id="google_translate_element" class="hidden"></div>
+<div id="google_translate_element" style="display:none;"></div>
 
 {{-- ═══════════════════════════════════════════════════════════
-     🌐 GOOGLE TRANSLATE INITIALIZATION
-     ═══════════════════════════════════════════════════════════ --}}
-<script type="text/javascript">
-// Google Translate API Initialization
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'en',
-    includedLanguages: 'en,fr,de,ru,zh-CN,es,pt,ar,hi',
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-    autoDisplay: false
-  }, 'google_translate_element');
-  
-  console.log('✅ Google Translate initialized');
-}
-
-// Fonction pour changer la langue
-function changeLanguage(langCode) {
-  console.log('🌐 Changing language to:', langCode);
-  
-  const selectField = document.querySelector('select.goog-te-combo');
-  if (selectField) {
-    selectField.value = langCode;
-    selectField.dispatchEvent(new Event('change'));
-    console.log('✅ Language changed to:', langCode);
-  } else {
-    console.warn('⚠️ Google Translate not ready yet, retrying...');
-    setTimeout(() => changeLanguage(langCode), 500);
-  }
-}
-
-// Écouter les événements de changement de langue (desktop et mobile)
-document.addEventListener('languageChanged', function(e) {
-  const lang = e.detail.lang;
-  console.log('🌐 languageChanged event received:', lang);
-  changeLanguage(lang);
-});
-</script>
-
-{{-- Google Translate Script --}}
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+     🌐 GOOGLE TRANSLATE - GÉRÉ PAR MODULE ES6
+     ═══════════════════════════════════════════════════════════
+     
+     Tous les sélecteurs de langue et la logique Google Translate
+     sont gérés dans le module ES6 :
+     
+     resources/js/modules/google-translate/
+     ├── index.js (point d'entrée)
+     ├── init.js (chargement API)
+     ├── language-manager.js (sélecteurs UI)
+     └── styles.js (CSS)
+     
+     Chargé via header-init.js
+--}}
 
 {{-- ═══════════════════════════════════════════════════════════
-     🖥️ DESKTOP LANGUAGE SELECTOR SCRIPT
-     ═══════════════════════════════════════════════════════════ --}}
-<script>
-(function() {
-  'use strict';
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    const langBtn = document.getElementById('langBtn');
-    const langMenu = document.getElementById('langMenu');
-    const langFlag = document.getElementById('langFlag');
-    const langChevron = document.getElementById('langChevron');
-    
-    if (!langBtn || !langMenu) return;
-    
-    // Toggle dropdown
-    langBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const isHidden = langMenu.classList.contains('hidden');
-      
-      if (isHidden) {
-        langMenu.classList.remove('hidden');
-        langBtn.setAttribute('aria-expanded', 'true');
-        if (langChevron) langChevron.style.transform = 'rotate(180deg)';
-      } else {
-        langMenu.classList.add('hidden');
-        langBtn.setAttribute('aria-expanded', 'false');
-        if (langChevron) langChevron.style.transform = 'rotate(0deg)';
-      }
-    });
-    
-    // Sélection d'une langue
-    const langItems = langMenu.querySelectorAll('li[data-lang]');
-    langItems.forEach(function(item) {
-      item.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const lang = this.getAttribute('data-lang');
-        const flag = this.getAttribute('data-flag');
-        
-        // Mettre à jour le drapeau
-        if (langFlag) langFlag.src = flag;
-        
-        // Fermer le menu
-        langMenu.classList.add('hidden');
-        langBtn.setAttribute('aria-expanded', 'false');
-        
-        // Déclencher la traduction
-        console.log('🌐 Desktop language selected:', lang);
-        const event = new CustomEvent('languageChanged', { detail: { lang: lang, flag: flag } });
-        document.dispatchEvent(event);
-      });
-    });
-    
-    // Fermer en cliquant ailleurs
-    document.addEventListener('click', function(e) {
-      if (!langBtn.contains(e.target) && !langMenu.contains(e.target)) {
-        langMenu.classList.add('hidden');
-        langBtn.setAttribute('aria-expanded', 'false');
-        if (langChevron) langChevron.style.transform = 'rotate(0deg)';
-      }
-    });
-    
-    console.log('✅ Desktop language selector initialized');
-  });
-})();
-</script>
-
-{{-- ═══════════════════════════════════════════════════════════
-     📱 MOBILE MENU OVERLAY & LANGUAGE BOTTOM SHEET SCRIPT
+     📱 MOBILE MENU OVERLAY & SLIDE-DOWN SCRIPT
      ═══════════════════════════════════════════════════════════ --}}
 <script>
 (function() {
@@ -154,7 +62,7 @@ document.addEventListener('languageChanged', function(e) {
     const menuToggle = document.getElementById('menu-toggle-top');
     
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // 📱 MOBILE MENU BOTTOM SHEET
+    // 📱 MOBILE MENU - DESCEND DU HAUT
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     
     function openMobileMenu() {
@@ -164,8 +72,8 @@ document.addEventListener('languageChanged', function(e) {
       overlay.classList.remove('hidden');
       setTimeout(() => overlay.classList.add('opacity-100'), 10);
       
-      // Slide-up le menu
-      mobileMenu.classList.remove('translate-y-full');
+      // Descendre le menu (enlever -translate-y-full)
+      mobileMenu.classList.remove('-translate-y-full');
       mobileMenu.classList.add('translate-y-0');
       mobileMenu.setAttribute('aria-hidden', 'false');
       
@@ -178,7 +86,7 @@ document.addEventListener('languageChanged', function(e) {
         menuToggle.setAttribute('aria-expanded', 'true');
       }
       
-      console.log('✅ Mobile menu opened (slide-up)');
+      console.log('✅ Mobile menu opened (slide-down)');
     }
     
     function closeMobileMenu() {
@@ -188,9 +96,9 @@ document.addEventListener('languageChanged', function(e) {
       overlay.classList.remove('opacity-100');
       setTimeout(() => overlay.classList.add('hidden'), 300);
       
-      // Slide-down le menu
+      // Remonter le menu (ajouter -translate-y-full)
       mobileMenu.classList.remove('translate-y-0');
-      mobileMenu.classList.add('translate-y-full');
+      mobileMenu.classList.add('-translate-y-full');
       mobileMenu.setAttribute('aria-hidden', 'true');
       
       // Rétablir le scroll
@@ -202,7 +110,7 @@ document.addEventListener('languageChanged', function(e) {
         menuToggle.setAttribute('aria-expanded', 'false');
       }
       
-      console.log('✅ Mobile menu closed (slide-down)');
+      console.log('✅ Mobile menu closed (slide-up)');
     }
     
     // Toggle du menu au clic sur le hamburger
@@ -240,95 +148,7 @@ document.addEventListener('languageChanged', function(e) {
       }
     });
     
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // 🌐 MOBILE LANGUAGE BOTTOM SHEET
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    const mobileLangBtn = document.getElementById('mobileLangBtn');
-    const mobileLangModal = document.getElementById('mobileLangModal');
-    const mobileLangSheet = document.getElementById('mobileLangSheet');
-    const mobileLangOverlay = document.getElementById('mobileLangOverlay');
-    const mobileLangCloseBtn = document.getElementById('mobileLangCloseBtn');
-    const mobileLangLabel = document.getElementById('mobileLangLabel');
-    const mobileLangFlag = document.getElementById('mobileLangFlag');
-    
-    // Fonction pour ouvrir le bottom sheet
-    function openLangModal() {
-      if (!mobileLangModal || !mobileLangSheet || !mobileLangOverlay) return;
-      
-      mobileLangModal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      
-      // Animation d'ouverture
-      setTimeout(() => {
-        mobileLangOverlay.classList.remove('opacity-0');
-        mobileLangOverlay.classList.add('opacity-100');
-        mobileLangSheet.classList.remove('translate-y-full');
-        mobileLangSheet.classList.add('translate-y-0');
-      }, 10);
-    }
-    
-    // Fonction pour fermer le bottom sheet
-    function closeLangModal() {
-      if (!mobileLangModal || !mobileLangSheet || !mobileLangOverlay) return;
-      
-      mobileLangOverlay.classList.remove('opacity-100');
-      mobileLangOverlay.classList.add('opacity-0');
-      mobileLangSheet.classList.remove('translate-y-0');
-      mobileLangSheet.classList.add('translate-y-full');
-      
-      setTimeout(() => {
-        mobileLangModal.classList.add('hidden');
-        document.body.style.overflow = '';
-      }, 400);
-    }
-    
-    // Ouvrir le modal au clic sur le bouton
-    if (mobileLangBtn) {
-      mobileLangBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        openLangModal();
-      });
-    }
-    
-    // Fermer le modal
-    if (mobileLangCloseBtn) {
-      mobileLangCloseBtn.addEventListener('click', closeLangModal);
-    }
-    
-    if (mobileLangOverlay) {
-      mobileLangOverlay.addEventListener('click', closeLangModal);
-    }
-    
-    // Sélection d'une langue
-    const langOptions = document.querySelectorAll('.lang-option');
-    langOptions.forEach(function(option) {
-      option.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const lang = this.getAttribute('data-lang');
-        const flag = this.getAttribute('data-flag');
-        const label = this.getAttribute('data-label');
-        
-        // Mettre à jour l'affichage du bouton
-        if (mobileLangLabel) mobileLangLabel.textContent = label;
-        if (mobileLangFlag) mobileLangFlag.src = flag;
-        
-        // Feedback visuel
-        langOptions.forEach(opt => opt.classList.remove('bg-blue-100', 'border-blue-300'));
-        this.classList.add('bg-blue-100', 'border-blue-300');
-        
-        // Fermer le modal après un court délai
-        setTimeout(() => {
-          closeLangModal();
-        }, 300);
-        
-        // Déclencher la traduction
-        console.log('🌐 Language selected:', lang);
-        const event = new CustomEvent('languageChanged', { detail: { lang: lang, flag: flag } });
-        document.dispatchEvent(event);
-      });
-    });
-    
-    console.log('✅ Mobile menu overlay & language bottom sheet initialized');
+    console.log('✅ Mobile menu script initialized');
   });
 })();
 </script>
@@ -340,13 +160,9 @@ document.addEventListener('languageChanged', function(e) {
 (function() {
   'use strict';
   
-  /**
-   * Initialisation des boutons Help avec délégation d'événements
-   */
   document.addEventListener('DOMContentLoaded', function() {
     console.log('🔧 [Header] Initializing help buttons...');
     
-    // Gestion des boutons Help (desktop et mobile)
     document.addEventListener('click', function(e) {
       const helpBtn = e.target.closest('#helpBtn, #mobileSearchButton, #requestHelpBtn');
       
@@ -372,6 +188,4 @@ document.addEventListener('languageChanged', function(e) {
      🚀 JAVASCRIPT MODULES
      ═══════════════════════════════════════════════════════════ --}}
 <script src="{{ mix('js/app.js') }}"></script>
-
-{{-- ✅ Chargez header-init.js comme module ES6 natif --}}
 <script type="module" src="{{ asset('js/header-init.js') }}"></script>

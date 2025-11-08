@@ -132,6 +132,37 @@
   </script>
 
   {{-- ═══════════════════════════════════════════════════════════
+       🌐 GOOGLE TRANSLATE - PROTECTION CONTRE BOUCLES INFINIES
+       ═══════════════════════════════════════════════════════════ --}}
+  <style>
+    /* Empêcher Google Translate de traduire ces éléments */
+    .notranslate,
+    script,
+    style,
+    code,
+    pre,
+    [data-lang],
+    [data-flag],
+    #google_translate_element,
+    #langBtn,
+    #langMenu,
+    #langFlag,
+    #mobileLangBtn,
+    #mobileLangModal,
+    #mobileLangSheet,
+    #mobileLangFlag,
+    #mobileLangLabel,
+    .lang-option {
+      translate: no !important;
+    }
+    
+    /* Attribut HTML5 pour désactiver la traduction */
+    [translate="no"] {
+      translate: no !important;
+    }
+  </style>
+
+  {{-- ═══════════════════════════════════════════════════════════
        🎨 GLOBAL STYLES
        ═══════════════════════════════════════════════════════════ --}}
   @include('includes.header.styles')
@@ -143,4 +174,4 @@
 
   {{-- Alpine.js for reactive components --}}
   <script src="https://unpkg.com/alpinejs@3.x.x" defer></script>
-</head
+</head>

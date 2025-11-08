@@ -4,8 +4,8 @@
   ═══════════════════════════════════════════════════════════
   
   Contient tous les styles CSS pour :
-  - Mobile menu (bottom sheet animations)
-  - Hamburger → X animation
+  - Mobile menu (slide-down from top)
+  - Hamburger → X animation MODERNE
   - Language selector (desktop & mobile)
   - Telephone input customization
   - Google Translate customization
@@ -19,10 +19,10 @@
 
 <style>
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   📱 MOBILE MENU - MODERN UX 2025/2026 - Bottom Sheet
+   📱 MOBILE MENU - DESCEND DU HAUT
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* Mobile menu bottom sheet animation */
+/* Mobile menu slide-down animation */
 #mobile-menu {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
@@ -31,11 +31,11 @@
   contain: layout style paint;
 }
 
-/* Overlay animation */
+/* Overlay animation avec flou renforcé */
 #mobile-menu-overlay {
   transition: opacity 0.3s ease;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Smooth transitions for links */
@@ -124,30 +124,20 @@
   transform: scale(0.98);
 }
 
-/* Hamburger menu animation */
-#menu-toggle-top,
-#menu-toggle {
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-#menu-toggle-top:active,
-#menu-toggle:active {
-  transform: scale(0.95);
-}
-
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🍔 HAMBURGER → X ANIMATION (ULTRA VISIBLE)
+   🍔 HAMBURGER → X ANIMATION MODERNE
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .hamburger-line {
   transform-origin: center;
-  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Active state - Transform to X */
+/* Active state - Transform moderne en X */
 #menu-toggle-top.menu-active .hamburger-line:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
-  background-color: #1f2937;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  width: 24px;
 }
 
 #menu-toggle-top.menu-active .hamburger-line:nth-child(2) {
@@ -157,16 +147,35 @@
 
 #menu-toggle-top.menu-active .hamburger-line:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
-  background-color: #1f2937;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  width: 24px;
 }
 
-/* Hover effects */
+/* Hover effects modernes */
+#menu-toggle-top {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#menu-toggle-top:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
 #menu-toggle-top:hover .hamburger-line {
-  background-color: #2563eb;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
-#menu-toggle-top.menu-active:hover .hamburger-line {
-  background-color: #dc2626;
+#menu-toggle-top.menu-active {
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: rotate(0deg);
+}
+
+#menu-toggle-top.menu-active:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  transform: scale(1.05);
+}
+
+#menu-toggle-top:active {
+  transform: scale(0.95);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -184,7 +193,7 @@
 }
 
 /* Content visibility for lazy rendering */
-#mobile-menu:not(.menu-open) {
+#mobile-menu:not(.translate-y-0) {
   content-visibility: hidden;
 }
 

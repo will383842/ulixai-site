@@ -5,10 +5,10 @@
   
   Contient :
   - Header mobile fixé en haut
-  - Boutons Help & S.O.S
+  - Boutons Help & S.O.S (centrés et plus gros)
   - Hamburger menu
   - Overlay (backdrop blur)
-  - Bottom sheet menu avec navigation
+  - Menu qui descend du haut
   - Language selector mobile (bottom sheet)
   
   @version 2.0.0
@@ -18,62 +18,64 @@
      📱 MOBILE HEADER
      ═══════════════════════════════════════════════════════════ --}}
 <header class="lg:hidden fixed top-0 left-0 w-full bg-white z-[60] shadow-md" role="banner">
-  <div class="flex items-center justify-between px-4 py-2">
-    <a href="/" aria-label="ULIXAI Home">
-      <img src="/images/headerlogos.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" width="40" height="40" />
-    </a>
+  <div class="grid grid-cols-[auto_1fr_auto] items-center px-3 py-3 gap-3">
+    
+    {{-- Logo à gauche --}}
+    <div class="flex items-center justify-start">
+      <a href="/" aria-label="ULIXAI Home">
+        <img src="/images/headerlogos.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" width="40" height="40" />
+      </a>
+    </div>
 
-    <nav class="flex items-center gap-2" aria-label="Main navigation">
+    {{-- Boutons au centre - Plus gros --}}
+    <nav class="flex items-center justify-center gap-2.5" aria-label="Main navigation">
       <button 
         id="mobileSearchButton"
         type="button"
-        class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg" 
+        class="nav-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg whitespace-nowrap" 
         aria-label="Request help">
         <span class="flex items-center gap-2">
-          <i class="fas fa-hand-paper text-white text-base" aria-hidden="true"></i>
-          <span class="hidden xs:inline">Request Help</span>
-          <span class="xs:hidden">Help</span>
+          <i class="fas fa-hand-paper text-base" aria-hidden="true"></i>
+          <span>Aide</span>
         </span>
       </button>
 
       <a href="https://sos-expat.com/" 
          target="_blank"
          rel="noopener noreferrer"
-         class="nav-button bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg"
+         class="nav-button bg-gradient-to-r from-red-500 to-red-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg whitespace-nowrap"
          aria-label="Emergency SOS">
-        <span class="flex items-center gap-1.5">
-          <i class="fas fa-phone-alt text-white text-base" aria-hidden="true"></i>
-          <span>S.O.S</span>
+        <span class="flex items-center gap-2">
+          <i class="fas fa-phone-alt text-base" aria-hidden="true"></i>
+          <span>SOS</span>
         </span>
       </a>
+    </nav>
 
-      <button id="menu-toggle-top" type="button" class="p-2.5 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+    {{-- Hamburger à droite --}}
+    <div class="flex items-center justify-end">
+      <button id="menu-toggle-top" type="button" class="p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
         <div class="w-6 h-6 flex flex-col justify-center items-center gap-1.5">
           <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
           <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
           <span class="hamburger-line block w-6 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
         </div>
       </button>
-    </nav>
+    </div>
   </div>
 </header>
 
 {{-- ═══════════════════════════════════════════════════════════
-     📱 MOBILE MENU OVERLAY (Backdrop blur)
+     📱 MOBILE MENU OVERLAY (Backdrop blur renforcé)
      ═══════════════════════════════════════════════════════════ --}}
-<div id="mobile-menu-overlay" class="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-30 hidden opacity-0 transition-opacity duration-300" aria-hidden="true"></div>
+<div id="mobile-menu-overlay" class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-md z-40 hidden opacity-0 transition-opacity duration-300" aria-hidden="true"></div>
 
 {{-- ═══════════════════════════════════════════════════════════
-     📱 MOBILE MENU - Bottom Sheet
+     📱 MOBILE MENU - Descend du haut
      ═══════════════════════════════════════════════════════════ --}}
-<nav id="mobile-menu" class="lg:hidden fixed bottom-0 left-0 right-0 bg-white z-40 shadow-2xl rounded-t-3xl transform translate-y-full transition-transform duration-400 ease-out max-h-[85vh] overflow-y-auto" role="navigation" aria-label="Mobile menu" aria-hidden="true">
+<nav id="mobile-menu" class="lg:hidden fixed top-[62px] left-0 right-0 bg-white z-50 shadow-2xl rounded-b-3xl transform -translate-y-full transition-transform duration-400 ease-out max-h-[calc(100vh-62px)] overflow-y-auto" role="navigation" aria-label="Mobile menu" aria-hidden="true">
   
-  {{-- Handle (barre de drag visuelle) --}}
-  <div class="flex justify-center pt-3 pb-2 sticky top-0 bg-white z-10">
-    <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
-  </div>
-
-  <div class="px-6 pb-6 space-y-4">
+  <div class="px-6 py-6 space-y-4">
   <ul class="space-y-2" role="menu">
     @if(Auth::check())
       {{-- Profil utilisateur --}}
@@ -207,5 +209,5 @@
     <i class="fas fa-phone-alt mr-1" aria-hidden="true"></i> S.O.S
   </a>
   
-  </div>{{-- Fin du container px-6 pb-6 --}}
+  </div>{{-- Fin du container px-6 py-6 --}}
 </nav>

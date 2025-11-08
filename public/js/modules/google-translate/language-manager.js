@@ -45,6 +45,7 @@ export class LanguageManager {
     const langBtn = document.getElementById('langBtn');
     const langMenu = document.getElementById('langMenu');
     const langFlag = document.getElementById('langFlag');
+    const langChevron = document.getElementById('langChevron');
 
     if (!langBtn || !langMenu || !langFlag) {
       console.warn('⚠️ [LangManager] Desktop elements not found');
@@ -61,6 +62,11 @@ export class LanguageManager {
       isOpen = !isOpen;
       langMenu.classList.toggle('hidden', !isOpen);
       langBtn.setAttribute('aria-expanded', isOpen);
+      
+      // Rotate chevron
+      if (langChevron) {
+        langChevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+      }
     });
 
     // Select language
@@ -72,11 +78,24 @@ export class LanguageManager {
       const flag = li.getAttribute('data-flag');
 
       if (lang && flag) {
-        console.log('🌐 [LangManager] Language selected:', lang);
+        console.log('🌐 [LangManager] Desktop language selected:', lang);
+        
+        // Update flag
         langFlag.src = flag;
-        this.setLanguage(lang, flag);
+        
+        // Save to localStorage
+        localStorage.setItem('selectedFlag', flag);
+        
+        // Close menu
         langMenu.classList.add('hidden');
         isOpen = false;
+        langBtn.setAttribute('aria-expanded', 'false');
+        if (langChevron) {
+          langChevron.style.transform = 'rotate(0deg)';
+        }
+        
+        // Apply language
+        this.setLanguage(lang, flag);
       }
     });
 
@@ -86,24 +105,39 @@ export class LanguageManager {
         langMenu.classList.add('hidden');
         isOpen = false;
         langBtn.setAttribute('aria-expanded', 'false');
+        if (langChevron) {
+          langChevron.style.transform = 'rotate(0deg)';
+        }
       }
     });
 
-    // Restore saved language
-    langFlag.src = this.selectedFlag;
+    // Restore saved flag
+    const savedFlag = localStorage.getItem('selectedFlag');
+    if (savedFlag) {
+      langFlag.src = savedFlag;
+    }
   }
 
   /**
    * Initialize mobile language selector
    */
   initMobileLanguageSelector() {
-    const checkbox = document.getElementById('langOpen');
-    const menu = document.getElementById('languageMenu');
-    const flag = document.getElementById('languageFlag');
-    const label = document.getElementById('languageLabel');
+    const modalBtn = document.getElementById('mobileLangBtn');
+    const modal = document.getElementById('mobileLangModal');
+    const sheet = document.getElementById('mobileLangSheet');
+    const overlay = document.getElementById('mobileLangOverlay');
+    const closeBtn = document.getElementById('mobileLangCloseBtn');
+    const flag = document.getElementById('mobileLangFlag');
+    const label = document.getElementById('mobileLangLabel');
 
-    if (!checkbox || !menu || !flag || !label) {
+    if (!modalBtn || !modal || !flag || !label) {
       console.warn('⚠️ [LangManager] Mobile elements not found');
+      console.log('🔍 [LangManager] Missing elements:', {
+        modalBtn: !!modalBtn,
+        modal: !!modal,
+        flag: !!flag,
+        label: !!label
+      });
       return;
     }
 
@@ -112,34 +146,123 @@ export class LanguageManager {
     const langNames = {
       en: 'English',
       fr: 'Français',
-      de: 'Deutsch'
+      de: 'Deutsch',
+      ru: 'Русский',
+      'zh-CN': '中文',
+      es: 'Español',
+      pt: 'Português',
+      ar: 'العربية',
+      hi: 'हिन्दी'
     };
 
-    // Handle language selection
-    menu.addEventListener('click', (e) => {
-      const li = e.target.closest('li[data-lang]');
-      if (!li) return;
+    // Open modal
+    const openModal = () => {
+      if (!modal || !sheet || !overlay) return;
+      
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        overlay.classList.add('opacity-100');
+        sheet.classList.remove('translate-y-full');
+        sheet.classList.add('translate-y-0');
+      }, 10);
+      
+      console.log('✅ [LangManager] Mobile modal opened');
+    };
 
-      const code = li.dataset.lang;
-      const flagUrl = li.dataset.flag;
-      const name = langNames[code] || code;
+    // Close modal
+    const closeModal = () => {
+      if (!modal || !sheet || !overlay) return;
+      
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      sheet.classList.remove('translate-y-0');
+      sheet.classList.add('translate-y-full');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 400);
+      
+      console.log('✅ [LangManager] Mobile modal closed');
+    };
 
-      console.log('🌐 [LangManager] Mobile language selected:', code);
+    // Button click to open
+    modalBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal();
+    });
 
-      // Update UI
-      flag.src = flagUrl;
-      label.textContent = name;
+    // Close button
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeModal);
+    }
 
-      // Save and apply
-      this.setLanguage(code, flagUrl);
+    // Overlay click to close
+    if (overlay) {
+      overlay.addEventListener('click', closeModal);
+    }
 
-      // Close menu
-      checkbox.checked = false;
+    // Language selection
+    const langOptions = document.querySelectorAll('.lang-option');
+    
+    if (langOptions.length === 0) {
+      console.warn('⚠️ [LangManager] No .lang-option elements found');
+      return;
+    }
+
+    console.log(`✅ [LangManager] Found ${langOptions.length} language options`);
+
+    langOptions.forEach((option) => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        const code = option.getAttribute('data-lang');
+        const flagUrl = option.getAttribute('data-flag');
+        const labelText = option.getAttribute('data-label');
+
+        console.log('🌐 [LangManager] Mobile language selected:', code);
+
+        // Update UI
+        if (flag) flag.src = flagUrl;
+        if (label) label.textContent = labelText;
+
+        // Save preferences
+        localStorage.setItem('selectedLabel', labelText);
+        localStorage.setItem('selectedFlag', flagUrl);
+
+        // Visual feedback
+        langOptions.forEach(opt => {
+          opt.classList.remove('bg-blue-100', 'border-blue-300');
+        });
+        option.classList.add('bg-blue-100', 'border-blue-300');
+
+        // Close modal after short delay
+        setTimeout(() => {
+          closeModal();
+          // Apply language
+          this.setLanguage(code, flagUrl);
+        }, 300);
+      });
     });
 
     // Restore saved language
-    flag.src = this.selectedFlag;
-    label.textContent = langNames[this.selectedLang] || 'Language';
+    const savedLabel = localStorage.getItem('selectedLabel');
+    const savedFlag = localStorage.getItem('selectedFlag');
+    
+    if (savedLabel && label) {
+      label.textContent = savedLabel;
+    } else {
+      label.textContent = langNames[this.selectedLang] || 'English';
+    }
+    
+    if (savedFlag && flag) {
+      flag.src = savedFlag;
+    }
+    
+    console.log('✅ [LangManager] Mobile UI restored');
   }
 
   /**
@@ -152,13 +275,12 @@ export class LanguageManager {
     localStorage.setItem('ulixai_lang', lang);
     localStorage.setItem('ulixai_flag', flag);
 
-    // Update cookies for Google Translate
+    // Set cookies for Google Translate
     this.setCookiesForLanguage(lang);
 
-    // Reload page to apply
+    // Reload page to apply translation
     console.log('🔄 [LangManager] Reloading page...');
     
-    // Small delay to ensure cookies are set
     setTimeout(() => {
       window.location.reload();
     }, 100);
@@ -174,14 +296,14 @@ export class LanguageManager {
       // Clear cookies for English
       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       document.cookie = 'googtransopt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      console.log('🗑️ [LangManager] Cookies cleared for English');
     } else {
       // Set cookies for other languages
-      const val = `/auto/${lang}`;
+      const val = `/en/${lang}`;
       document.cookie = `googtrans=${val}; expires=${expires}; path=/`;
       document.cookie = `googtransopt=${val}; expires=${expires}; path=/`;
+      console.log('✅ [LangManager] Cookies set:', val);
     }
-
-    console.log('✅ [LangManager] Cookies set for language:', lang);
   }
 }
 

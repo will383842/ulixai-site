@@ -41,7 +41,7 @@ export class GoogleTranslateInit {
 
       new google.translate.TranslateElement({
         pageLanguage: 'en',
-        includedLanguages: 'en,fr,de',
+        includedLanguages: 'en,fr,de,ru,zh-CN,es,pt,ar,hi',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
       }, 'google_translate_element');
