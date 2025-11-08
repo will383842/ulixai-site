@@ -1,3 +1,22 @@
+{{-- 
+  ═══════════════════════════════════════════════════════════
+  🎨 STYLES COMPONENT - Global CSS
+  ═══════════════════════════════════════════════════════════
+  
+  Contient tous les styles CSS pour :
+  - Mobile menu (bottom sheet animations)
+  - Hamburger → X animation
+  - Language selector (desktop & mobile)
+  - Telephone input customization
+  - Google Translate customization
+  - Breadcrumb styles
+  - Scroll to top button
+  - Accessibility & reduced motion
+  - Performance optimizations
+  
+  @version 2.0.0
+--}}
+
 <style>
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    📱 MOBILE MENU - MODERN UX 2025/2026 - Bottom Sheet
@@ -383,16 +402,12 @@ body {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🎨 BREADCRUMB & UI STYLES
+   🍞 BREADCRUMB & UI ELEMENTS
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-[x-cloak] { 
-  display: none !important; 
-}
+[x-cloak] { display: none !important; }
 
-html { 
-  scroll-behavior: auto !important; 
-}
+html { scroll-behavior: auto !important; }
 
 .breadcrumb-container { 
   background: transparent; 
@@ -454,6 +469,10 @@ html {
   font-size: 14px; 
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🚀 SCROLL TO TOP BUTTON
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 #scrollToTopBtn {
   position: fixed; 
   bottom: 30px; 
@@ -480,30 +499,29 @@ html {
   display: flex; 
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📱 MOBILE RESPONSIVE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 @media (max-width: 768px) {
   #scrollToTopBtn { 
     display: none !important; 
   }
-  
   .breadcrumb-container { 
     padding: 12px 0; 
   }
-  
   .breadcrumb { 
     padding: 0 16px; 
     font-size: 13px; 
     gap: 6px; 
   }
-  
   .breadcrumb-item svg { 
     width: 14px; 
     height: 14px; 
   }
-  
   .breadcrumb-item a { 
     padding: 5px 10px; 
   }
-  
   .breadcrumb-item.active { 
     padding: 5px 12px; 
   }

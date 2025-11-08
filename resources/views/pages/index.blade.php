@@ -561,7 +561,7 @@ body {
 <div class="fixed top-20 right-4 z-50">
   <div id="google_translate_element"></div>
 </div>
-  @include('pages.popup')
+
 
   <!-- HERO SECTION -->
   <section class="relative bg-blue-600 pt-20 pb-32 px-4 overflow-hidden" style="background-color: #3B82F6;">

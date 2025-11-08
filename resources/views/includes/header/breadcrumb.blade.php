@@ -1,3 +1,14 @@
+{{-- 
+  ═══════════════════════════════════════════════════════════
+  🍞 BREADCRUMB COMPONENT
+  ═══════════════════════════════════════════════════════════
+  
+  Affiche le fil d'Ariane (navigation hierarchique)
+  Masqué sur la home et le dashboard
+  
+  @version 2.0.0
+--}}
+
 @php
   $currentPath = request()->path();
   $isHome = $currentPath === '/' || $currentPath === '';
