@@ -114,6 +114,14 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        // ✨ AJOUT GOOGLE VISION
+        'google-vision' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/google-vision.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ],
     ],
 
 ];

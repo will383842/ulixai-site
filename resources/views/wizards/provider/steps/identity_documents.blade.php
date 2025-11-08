@@ -1,1574 +1,862 @@
-<!-- 
-============================================
-🚀 STEP 11 - IDENTITY DOCUMENTS (FIXED v2)
-============================================
-✨ Design System Blue/Cyan/Teal STRICT
-🎨 3 types de documents avec icônes
-💎 Upload photo/caméra optimisé
-⚡ Navigation dans modales : Back + Continue
-🔧 Validation : 1 document complet minimum
-✅ Continue direct vers step suivant
-============================================
--->
+<div id="step11" class="hidden">
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
 
-<div id="step11" class="hidden flex flex-col h-full" role="region" aria-label="Upload identity documents">
-  
-  <!-- ============================================
-       FIXED HEADER (STICKY)
-       ============================================ -->
-  <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
-    
-    <!-- Ambient Background Effects - 3 animated blobs -->
-    <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-      <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-      <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-      <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-    </div>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-    <!-- Header Section -->
-    <div class="text-center space-y-2 relative">
-      <!-- Icon Badge -->
-      <div class="flex justify-center">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
-          <span class="text-lg sm:text-xl">🆔</span>
-        </div>
-      </div>
-      
-      <!-- Title & Subtitle -->
-      <div>
-        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
-          Identity Documents 🪪
-        </h2>
-        <p class="text-sm sm:text-base font-semibold text-gray-600">
-          Upload at least one complete document to continue
-        </p>
-      </div>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
-      <!-- Counter Badge -->
-      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
-        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .pulse-animation {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .verification-processing {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+
+    .verification-verified {
+      border-color: #22c55e;
+      background-color: #f0fdf4;
+    }
+
+    .verification-rejected {
+      border-color: #ef4444;
+      background-color: #fef2f2;
+    }
+
+    .verification-error {
+      border-color: #f59e0b;
+      background-color: #fffbeb;
+    }
+
+    .doc-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .doc-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .doc-card.selected {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+
+    .modal-overlay {
+      backdrop-filter: blur(4px);
+    }
+
+    .preview-box {
+      min-height: 200px;
+      border: 3px dashed #d1d5db;
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: #f9fafb;
+    }
+
+    .preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .upload-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+  </style>
+
+  <div class="max-w-4xl mx-auto px-4">
+    <!-- Header -->
+    <div class="text-center mb-8 fade-in">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/>
         </svg>
-        <span class="text-xs font-bold text-blue-700">
-          <span id="step11UploadedCount">0</span> complete document(s)
-        </span>
       </div>
-    </div>
-  </div>
-
-  <!-- ============================================
-       SCROLLABLE CONTENT
-       ============================================ -->
-  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
-
-    <!-- Info Banner -->
-    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-2xl p-3 sm:p-4">
-      <div class="flex items-start gap-3">
-        <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0">
-          <span class="text-base">💡</span>
-        </div>
-        <div class="flex-1">
-          <p class="text-amber-900 font-bold text-sm sm:text-base">Complete at least one document</p>
-          <p class="text-amber-700 text-xs sm:text-sm font-medium mt-1">Upload all required photos for Passport (1 photo) or ID/License (2 photos)</p>
-        </div>
-      </div>
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Identity Verification</h2>
+      <p class="text-gray-600">Choose one type of ID and upload clear photos</p>
     </div>
 
-    <!-- Documents Cards -->
-    <div class="space-y-2.5 sm:space-y-3">
-      
+    <!-- Document Type Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <!-- Passport Card -->
+      <div class="doc-card bg-white rounded-xl p-6 border-2 border-gray-200 shadow-sm" onclick="openDocumentModal('passport')">
+        <div class="text-center">
+          <div class="w-16 h-16 mx-auto bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center mb-4">
+            <span class="text-3xl">🛂</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Passport</h3>
+          <p class="text-sm text-gray-600 mb-3">1 photo needed</p>
+          <div id="passportStatus" class="text-sm font-semibold text-gray-400">Not uploaded</div>
+        </div>
+      </div>
+
       <!-- European ID Card -->
-      <button 
-        type="button" 
-        class="doc-card group"
-        data-doc-type="european_id"
-        data-two-sided="true"
-        role="button"
-        aria-label="Upload European Identity Card">
-        <div class="flex items-center gap-3 flex-1">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <span class="text-xl sm:text-2xl">🪪</span>
+      <div class="doc-card bg-white rounded-xl p-6 border-2 border-gray-200 shadow-sm" onclick="openDocumentModal('european_id')">
+        <div class="text-center">
+          <div class="w-16 h-16 mx-auto bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center mb-4">
+            <span class="text-3xl">🪪</span>
           </div>
-          <span class="text-sm sm:text-base lg:text-lg font-bold text-white">European Identity Card</span>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">European ID</h3>
+          <p class="text-sm text-gray-600 mb-3">Front + Back</p>
+          <div id="european_idStatus" class="text-sm font-semibold text-gray-400">Not uploaded</div>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="upload-status hidden">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-            </svg>
-          </span>
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </button>
+      </div>
 
-      <!-- Passport -->
-      <button 
-        type="button" 
-        class="doc-card doc-card-cyan group"
-        data-doc-type="passport"
-        data-two-sided="false"
-        role="button"
-        aria-label="Upload Passport">
-        <div class="flex items-center gap-3 flex-1">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <span class="text-xl sm:text-2xl">🛂</span>
+      <!-- Driver's License Card -->
+      <div class="doc-card bg-white rounded-xl p-6 border-2 border-gray-200 shadow-sm" onclick="openDocumentModal('license')">
+        <div class="text-center">
+          <div class="w-16 h-16 mx-auto bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mb-4">
+            <span class="text-3xl">🚗</span>
           </div>
-          <span class="text-sm sm:text-base lg:text-lg font-bold text-white">Passport</span>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Driver's License</h3>
+          <p class="text-sm text-gray-600 mb-3">Front + Back</p>
+          <div id="licenseStatus" class="text-sm font-semibold text-gray-400">Not uploaded</div>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="upload-status hidden">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-            </svg>
-          </span>
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </button>
+      </div>
+    </div>
 
-      <!-- Driver's License -->
-      <button 
-        type="button" 
-        class="doc-card doc-card-teal group"
-        data-doc-type="license"
-        data-two-sided="true"
-        role="button"
-        aria-label="Upload Driver's License">
-        <div class="flex items-center gap-3 flex-1">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <span class="text-xl sm:text-2xl">🚗</span>
-          </div>
-          <span class="text-sm sm:text-base lg:text-lg font-bold text-white">Driver's License</span>
+    <!-- Info Box -->
+    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-3 border-blue-200 rounded-xl p-5 mb-8">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">ℹ️</span>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="upload-status hidden">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-            </svg>
-          </span>
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
+        <div>
+          <h3 class="text-blue-900 font-bold text-lg mb-2">Important Tips</h3>
+          <ul class="text-blue-800 text-sm space-y-1">
+            <li>✓ All text must be clearly readable</li>
+            <li>✓ Take photos in good lighting</li>
+            <li>✓ Avoid shadows, glare and blur</li>
+            <li>✓ Show the full document in frame</li>
+            <li>✓ Documents will be verified automatically</li>
+          </ul>
         </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-between mt-8">
+      <button onclick="prevStep()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">
+        ← Previous
+      </button>
+      <button id="continueBtn" onclick="nextStep()" disabled
+              class="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+        Continue →
       </button>
     </div>
   </div>
-</div>
 
-<!-- ============================================
-     MODALS FOR EACH DOCUMENT TYPE
-     ============================================ -->
-
-<!-- Modal European ID (2 sides) -->
-<div id="modal-european_id" class="modal-backdrop hidden">
-  <div class="modal-content">
-    <button type="button" class="modal-close" data-modal="european_id" aria-label="Close modal">×</button>
-    
-    <h3 class="modal-title">
-      🪪 European Identity Card
-    </h3>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
-      <!-- Front Side -->
-      <div class="upload-section">
-        <span class="upload-label">Front Side</span>
-        <div class="upload-container">
-          <div class="upload-zone" data-type="european_id" data-side="front">
-            <div class="preview-box" data-type="european_id" data-side="front">
-              <div class="text-4xl sm:text-5xl mb-2 sm:mb-3">📄</div>
-              <span class="upload-badge">No Photo</span>
+  <!-- Document Upload Modal -->
+  <div id="documentModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+    <div class="modal-overlay flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6 rounded-t-2xl z-10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span id="modalIcon" class="text-4xl">🛂</span>
+              <div>
+                <h3 id="modalTitle" class="text-xl font-bold">Upload Passport</h3>
+                <p id="modalSubtitle" class="text-sm text-blue-100">Front side only</p>
+              </div>
             </div>
-          </div>
-          <input type="file" accept="image/*" class="upload-input hidden" data-type="european_id" data-side="front" />
-          <div class="upload-actions">
-            <button type="button" class="action-btn action-btn-upload" data-type="european_id" data-side="front">
-              📤 Upload Photo
-            </button>
-            <button type="button" class="action-btn action-btn-camera" data-type="european_id" data-side="front">
-              📸 Take Photo
-            </button>
-            <button type="button" class="action-btn action-btn-retake hidden" data-type="european_id" data-side="front">
-              🔄 Retake
+            <button onclick="closeDocumentModal()" class="text-white hover:text-gray-200 transition">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
             </button>
           </div>
         </div>
-        <video class="camera-video hidden" data-type="european_id" data-side="front" autoplay playsinline></video>
-        <button type="button" class="capture-btn hidden" data-type="european_id" data-side="front">
-          📸 Capture Photo
-        </button>
-      </div>
 
-      <!-- Back Side -->
-      <div class="upload-section">
-        <span class="upload-label">Back Side</span>
-        <div class="upload-container">
-          <div class="upload-zone" data-type="european_id" data-side="back">
-            <div class="preview-box" data-type="european_id" data-side="back">
-              <div class="text-4xl sm:text-5xl mb-2 sm:mb-3">📄</div>
-              <span class="upload-badge">No Photo</span>
+        <!-- Modal Body -->
+        <div class="p-6 space-y-6">
+          <!-- Front Side -->
+          <div id="frontSection">
+            <h4 class="text-lg font-bold text-gray-900 mb-3">
+              <span id="frontLabel">Front Side</span>
+            </h4>
+            
+            <div id="frontPreview" class="preview-box mb-4">
+              <div class="text-center p-8">
+                <svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <p class="text-gray-500 font-semibold mb-4">No photo yet</p>
+              </div>
+
+              <!-- Verification Overlay -->
+              <div id="frontVerificationOverlay" class="upload-overlay hidden">
+                <div class="spinner mb-3"></div>
+                <p id="frontVerificationMessage" class="text-gray-700 font-semibold">Verifying...</p>
+              </div>
+            </div>
+
+            <!-- Front Status Badge -->
+            <div id="frontStatusBadge" class="hidden mb-4"></div>
+
+            <!-- Front Upload Buttons -->
+            <div id="frontUploadButtons" class="flex gap-3">
+              <input type="file" id="frontFileInput" accept="image/*" class="hidden" onchange="handleFrontUpload(event)">
+              <button onclick="document.getElementById('frontFileInput').click()" 
+                      class="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition font-semibold">
+                📁 Choose Photo
+              </button>
+              <button onclick="takeFrontPhoto()" 
+                      class="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 transition font-semibold">
+                📸 Take Photo
+              </button>
             </div>
           </div>
-          <input type="file" accept="image/*" class="upload-input hidden" data-type="european_id" data-side="back" />
-          <div class="upload-actions">
-            <button type="button" class="action-btn action-btn-upload" data-type="european_id" data-side="back">
-              📤 Upload Photo
+
+          <!-- Back Side (hidden for passport) -->
+          <div id="backSection" class="hidden">
+            <h4 class="text-lg font-bold text-gray-900 mb-3">Back Side</h4>
+            
+            <div id="backPreview" class="preview-box mb-4">
+              <div class="text-center p-8">
+                <svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <p class="text-gray-500 font-semibold mb-4">No photo yet</p>
+              </div>
+
+              <!-- Verification Overlay -->
+              <div id="backVerificationOverlay" class="upload-overlay hidden">
+                <div class="spinner mb-3"></div>
+                <p id="backVerificationMessage" class="text-gray-700 font-semibold">Verifying...</p>
+              </div>
+            </div>
+
+            <!-- Back Status Badge -->
+            <div id="backStatusBadge" class="hidden mb-4"></div>
+
+            <!-- Back Upload Buttons -->
+            <div id="backUploadButtons" class="flex gap-3">
+              <input type="file" id="backFileInput" accept="image/*" class="hidden" onchange="handleBackUpload(event)">
+              <button onclick="document.getElementById('backFileInput').click()" 
+                      class="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition font-semibold">
+                📁 Choose Photo
+              </button>
+              <button onclick="takeBackPhoto()" 
+                      class="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 transition font-semibold">
+                📸 Take Photo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="sticky bottom-0 bg-gray-50 p-6 rounded-b-2xl border-t">
+          <div class="flex gap-3">
+            <button onclick="closeDocumentModal()" 
+                    class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">
+              Cancel
             </button>
-            <button type="button" class="action-btn action-btn-camera" data-type="european_id" data-side="back">
-              📸 Take Photo
-            </button>
-            <button type="button" class="action-btn action-btn-retake hidden" data-type="european_id" data-side="back">
-              🔄 Retake
+            <button id="modalContinueBtn" onclick="closeDocumentModal()" disabled
+                    class="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+              ✓ Continue
             </button>
           </div>
         </div>
-        <video class="camera-video hidden" data-type="european_id" data-side="back" autoplay playsinline></video>
-        <button type="button" class="capture-btn hidden" data-type="european_id" data-side="back">
-          📸 Capture Photo
-        </button>
       </div>
-    </div>
-
-    <!-- Modal Navigation Buttons -->
-    <div class="modal-nav-buttons">
-      <button type="button" class="modal-back-btn" data-modal="european_id">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-        <span>Back</span>
-      </button>
-      <button type="button" class="modal-continue-btn" data-modal="european_id" disabled>
-        <span>Continue</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-      </button>
     </div>
   </div>
-</div>
 
-<!-- Modal Passport (1 side) -->
-<div id="modal-passport" class="modal-backdrop hidden">
-  <div class="modal-content">
-    <button type="button" class="modal-close" data-modal="passport" aria-label="Close modal">×</button>
-    
-    <h3 class="modal-title">
-      🛂 Passport
-    </h3>
-    
-    <div class="max-w-md mx-auto mb-6">
-      <div class="upload-section">
-        <span class="upload-label">Identity Page</span>
-        <div class="upload-container">
-          <div class="upload-zone" data-type="passport" data-side="front">
-            <div class="preview-box" data-type="passport" data-side="front">
-              <div class="text-4xl sm:text-5xl mb-2 sm:mb-3">📄</div>
-              <span class="upload-badge">No Photo</span>
-            </div>
-          </div>
-          <input type="file" accept="image/*" class="upload-input hidden" data-type="passport" data-side="front" />
-          <div class="upload-actions">
-            <button type="button" class="action-btn action-btn-upload" data-type="passport" data-side="front">
-              📤 Upload Photo
-            </button>
-            <button type="button" class="action-btn action-btn-camera" data-type="passport" data-side="front">
-              📸 Take Photo
-            </button>
-            <button type="button" class="action-btn action-btn-retake hidden" data-type="passport" data-side="front">
-              🔄 Retake
-            </button>
-          </div>
-        </div>
-        <video class="camera-video hidden" data-type="passport" data-side="front" autoplay playsinline></video>
-        <button type="button" class="capture-btn hidden" data-type="passport" data-side="front">
-          📸 Capture Photo
+  <!-- Camera Modal -->
+  <div id="cameraModal" class="hidden fixed inset-0 z-[60] bg-black bg-opacity-90 flex items-center justify-center">
+    <div class="bg-white rounded-xl p-6 max-w-2xl w-full mx-4">
+      <div class="text-center mb-4">
+        <h3 class="text-xl font-bold text-gray-900" id="cameraTitle">Take Photo</h3>
+      </div>
+      <video id="cameraStream" autoplay playsinline class="w-full rounded-lg mb-4"></video>
+      <div class="flex gap-3 justify-center">
+        <button onclick="captureDocument()"
+                class="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition font-semibold">
+          📸 Capture
+        </button>
+        <button onclick="closeCameraModal()"
+                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">
+          Cancel
         </button>
       </div>
-    </div>
-
-    <!-- Modal Navigation Buttons -->
-    <div class="modal-nav-buttons">
-      <button type="button" class="modal-back-btn" data-modal="passport">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-        <span>Back</span>
-      </button>
-      <button type="button" class="modal-continue-btn" data-modal="passport" disabled>
-        <span>Continue</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-      </button>
     </div>
   </div>
-</div>
 
-<!-- Modal Driver's License (2 sides) -->
-<div id="modal-license" class="modal-backdrop hidden">
-  <div class="modal-content">
-    <button type="button" class="modal-close" data-modal="license" aria-label="Close modal">×</button>
+  <script>
+    // ============================================
+    // Configuration API
+    // ============================================
+    const API_BASE_URL = '/api/provider/verification';
+    const API_TOKEN = '{{ auth()->user()->createToken("provider-verification")->plainTextToken ?? "" }}';
     
-    <h3 class="modal-title">
-      🚗 Driver's License
-    </h3>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
-      <!-- Front Side -->
-      <div class="upload-section">
-        <span class="upload-label">Front Side</span>
-        <div class="upload-container">
-          <div class="upload-zone" data-type="license" data-side="front">
-            <div class="preview-box" data-type="license" data-side="front">
-              <div class="text-4xl sm:text-5xl mb-2 sm:mb-3">📄</div>
-              <span class="upload-badge">No Photo</span>
-            </div>
-          </div>
-          <input type="file" accept="image/*" class="upload-input hidden" data-type="license" data-side="front" />
-          <div class="upload-actions">
-            <button type="button" class="action-btn action-btn-upload" data-type="license" data-side="front">
-              📤 Upload Photo
-            </button>
-            <button type="button" class="action-btn action-btn-camera" data-type="license" data-side="front">
-              📸 Take Photo
-            </button>
-            <button type="button" class="action-btn action-btn-retake hidden" data-type="license" data-side="front">
-              🔄 Retake
-            </button>
-          </div>
-        </div>
-        <video class="camera-video hidden" data-type="license" data-side="front" autoplay playsinline></video>
-        <button type="button" class="capture-btn hidden" data-type="license" data-side="front">
-          📸 Capture Photo
-        </button>
-      </div>
-
-      <!-- Back Side -->
-      <div class="upload-section">
-        <span class="upload-label">Back Side</span>
-        <div class="upload-container">
-          <div class="upload-zone" data-type="license" data-side="back">
-            <div class="preview-box" data-type="license" data-side="back">
-              <div class="text-4xl sm:text-5xl mb-2 sm:mb-3">📄</div>
-              <span class="upload-badge">No Photo</span>
-            </div>
-          </div>
-          <input type="file" accept="image/*" class="upload-input hidden" data-type="license" data-side="back" />
-          <div class="upload-actions">
-            <button type="button" class="action-btn action-btn-upload" data-type="license" data-side="back">
-              📤 Upload Photo
-            </button>
-            <button type="button" class="action-btn action-btn-camera" data-type="license" data-side="back">
-              📸 Take Photo
-            </button>
-            <button type="button" class="action-btn action-btn-retake hidden" data-type="license" data-side="back">
-              🔄 Retake
-            </button>
-          </div>
-        </div>
-        <video class="camera-video hidden" data-type="license" data-side="back" autoplay playsinline></video>
-        <button type="button" class="capture-btn hidden" data-type="license" data-side="back">
-          📸 Capture Photo
-        </button>
-      </div>
-    </div>
-
-    <!-- Modal Navigation Buttons -->
-    <div class="modal-nav-buttons">
-      <button type="button" class="modal-back-btn" data-modal="license">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-        <span>Back</span>
-      </button>
-      <button type="button" class="modal-continue-btn" data-modal="license" disabled>
-        <span>Continue</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================
-     OPTIMIZED STYLES
-     ============================================ -->
-<style>
-/* ============================================
-   🎨 BASE STYLES
-   ============================================ */
-
-/* Blob animations - GPU optimized */
-@keyframes blob {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
-}
-
-.animate-blob {
-  animation: blob 7s infinite;
-  will-change: transform;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-/* ============================================
-   📱 DOCUMENT CARDS
-   ============================================ */
-
-#step11 .doc-card {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.875rem 1rem;
-  border-radius: 1rem;
-  background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
-  color: white;
-  font-weight: 700;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  position: relative;
-  overflow: hidden;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-#step11 .doc-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
-  pointer-events: none;
-}
-
-#step11 .doc-card:hover::before {
-  left: 100%;
-}
-
-#step11 .doc-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 20px rgba(37, 99, 235, 0.3);
-}
-
-#step11 .doc-card:active {
-  transform: translateY(0);
-}
-
-#step11 .doc-card-cyan {
-  background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
-}
-
-#step11 .doc-card-cyan:hover {
-  box-shadow: 0 12px 20px rgba(8, 145, 178, 0.3);
-}
-
-#step11 .doc-card-teal {
-  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
-}
-
-#step11 .doc-card-teal:hover {
-  box-shadow: 0 12px 20px rgba(13, 148, 136, 0.3);
-}
-
-#step11 .arrow-icon {
-  transition: transform 0.3s ease;
-  flex-shrink: 0;
-}
-
-#step11 .doc-card:hover .arrow-icon {
-  transform: translateX(4px);
-}
-
-#step11 .upload-status {
-  display: none;
-  flex-shrink: 0;
-}
-
-#step11 .doc-card.uploaded .upload-status {
-  display: block;
-}
-
-/* ============================================
-   🎭 MODALS
-   ============================================ */
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  overflow-y: auto;
-}
-
-.modal-backdrop.hidden {
-  display: none;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 1.5rem;
-  padding: 1.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  width: 100%;
-  max-width: 56rem;
-  position: relative;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding-bottom: 5rem; /* Espace pour boutons fixes mobile */
-}
-
-@media (min-width: 640px) {
-  .modal-content {
-    padding: 2rem;
-    padding-bottom: 2rem; /* Pas besoin d'espace supplémentaire sur desktop */
-  }
-}
-
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  color: #9ca3af;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  line-height: 1;
-  cursor: pointer;
-  transition: color 0.2s;
-  z-index: 10;
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-close:hover {
-  color: #4b5563;
-}
-
-.modal-title {
-  font-size: 1.5rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-@media (min-width: 640px) {
-  .modal-title {
-    font-size: 1.875rem;
-    margin-bottom: 2rem;
-  }
-}
-
-/* ============================================
-   🎮 MODAL NAVIGATION BUTTONS - FIXED
-   ============================================ */
-
-/* Container navigation buttons */
-.modal-nav-buttons {
-  display: flex;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0.95) 100%);
-  backdrop-filter: blur(8px);
-  border-top: 1px solid #e5e7eb;
-}
-
-/* Mobile : Fixed bottom screen */
-@media (max-width: 639px) {
-  .modal-nav-buttons {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10000;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-  }
-}
-
-/* Desktop : Sticky bottom popup */
-@media (min-width: 640px) {
-  .modal-nav-buttons {
-    position: sticky;
-    bottom: 0;
-    margin-top: 1rem;
-  }
-}
-
-.modal-back-btn,
-.modal-continue-btn {
-  flex: 1;
-  padding: 0.625rem 1rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  font-size: 0.813rem;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-@media (min-width: 640px) {
-  .modal-back-btn,
-  .modal-continue-btn {
-    font-size: 0.875rem;
-    padding: 0.75rem 1.25rem;
-  }
-}
-
-/* Back button */
-.modal-back-btn {
-  background: white;
-  color: #1E40AF;
-  border: 2px solid #e2e8f0;
-  flex: 0.65;
-}
-
-.modal-back-btn:hover {
-  background: #EFF6FF;
-  border-color: #1E40AF;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(30, 64, 175, 0.15);
-}
-
-.modal-back-btn svg {
-  transition: transform 0.3s ease;
-}
-
-.modal-back-btn:hover svg {
-  transform: translateX(-4px);
-}
-
-/* Continue button - enabled */
-.modal-continue-btn:not(:disabled) {
-  background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.45);
-  flex: 1;
-}
-
-.modal-continue-btn:not(:disabled):hover {
-  background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(30, 58, 138, 0.55);
-}
-
-.modal-continue-btn svg {
-  transition: transform 0.3s ease;
-}
-
-.modal-continue-btn:not(:disabled):hover svg {
-  transform: translateX(4px);
-}
-
-/* Continue button - disabled */
-.modal-continue-btn:disabled {
-  background: #9CA3AF;
-  color: #374151;
-  border: 2px solid #D1D5DB;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  cursor: not-allowed;
-  flex: 1;
-}
-
-/* ============================================
-   📤 UPLOAD ZONES
-   ============================================ */
-
-.upload-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.upload-label {
-  font-weight: 700;
-  color: #374151;
-  font-size: 0.875rem;
-  text-align: center;
-}
-
-@media (min-width: 640px) {
-  .upload-label {
-    font-size: 1rem;
-  }
-}
-
-.upload-container {
-  width: 100%;
-}
-
-.upload-zone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 3px dashed #d1d5db;
-  border-radius: 1.5rem;
-  width: 100%;
-  height: 12rem;
-  background: #f9fafb;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-@media (min-width: 640px) {
-  .upload-zone {
-    height: 14rem;
-  }
-}
-
-.upload-zone.has-file {
-  border-color: #22c55e;
-  background: linear-gradient(to bottom right, #f0fdf4, #d1fae5);
-}
-
-.upload-input {
-  display: none;
-}
-
-.preview-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-}
-
-.upload-badge {
-  background: #dbeafe;
-  color: #1d4ed8;
-  border-radius: 9999px;
-  padding: 0.5rem 1.25rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-@media (min-width: 640px) {
-  .upload-badge {
-    font-size: 0.875rem;
-  }
-}
-
-.preview-box img,
-.preview-box video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-/* ============================================
-   🎬 CAMERA & ACTIONS
-   ============================================ */
-
-.upload-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-
-.action-btn {
-  flex: 1;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.625rem;
-  font-weight: 600;
-  font-size: 0.75rem;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-}
-
-@media (min-width: 640px) {
-  .action-btn {
-    font-size: 0.813rem;
-    padding: 0.563rem 0.875rem;
-  }
-}
-
-.action-btn-upload {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-}
-
-.action-btn-upload:hover {
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
-  transform: translateY(-1px);
-}
-
-.action-btn-camera {
-  background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
-  color: white;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-}
-
-.action-btn-camera:hover {
-  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
-  transform: translateY(-1px);
-}
-
-.action-btn-retake {
-  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-  color: white;
-  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
-}
-
-.action-btn-retake:hover {
-  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
-  transform: translateY(-1px);
-}
-
-.action-btn-retake.hidden {
-  display: none;
-}
-
-.camera-video {
-  width: 100%;
-  height: 14rem;
-  border-radius: 1rem;
-  margin-top: 0.75rem;
-  object-fit: cover;
-  border: 3px solid #22c55e;
-  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
-  animation: pulse-border 2s infinite;
-}
-
-@media (min-width: 640px) {
-  .camera-video {
-    height: 16rem;
-  }
-}
-
-.camera-video.hidden {
-  display: none;
-}
-
-@keyframes pulse-border {
-  0%, 100% { 
-    border-color: rgba(34, 197, 94, 0.5); 
-  }
-  50% { 
-    border-color: rgba(34, 197, 94, 1); 
-  }
-}
-
-.capture-btn {
-  width: 100%;
-  padding: 0.625rem;
-  border-radius: 0.625rem;
-  font-weight: 600;
-  font-size: 0.813rem;
-  margin-top: 0.75rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-}
-
-@media (min-width: 640px) {
-  .capture-btn {
-    font-size: 0.875rem;
-  }
-}
-
-.capture-btn:hover {
-  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
-  transform: translateY(-2px);
-}
-
-.capture-btn.hidden {
-  display: none;
-}
-
-/* ============================================
-   ♿ ACCESSIBILITY
-   ============================================ */
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-@media (prefers-contrast: high) {
-  #step11 .doc-card {
-    border: 3px solid currentColor;
-  }
-  
-  .upload-zone {
-    border-width: 4px;
-  }
-}
-
-/* ============================================
-   ⚡ PERFORMANCE OPTIMIZATIONS
-   ============================================ */
-
-#step11 .doc-card,
-.modal-backdrop,
-.upload-zone,
-.preview-box {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-#step11 .doc-card,
-.modal-content,
-.upload-zone {
-  contain: layout style paint;
-}
-
-#step11 img,
-#step11 video {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-.animate-blob,
-#step11 .arrow-icon,
-#step11 .doc-card::before {
-  will-change: transform;
-}
-
-@media (max-width: 639px) {
-  .modal-content {
-    max-height: 95vh;
-  }
-  
-  .upload-zone {
-    height: 10rem;
-  }
-  
-  .camera-video {
-    height: 12rem;
-  }
-}
-</style>
-
-<!-- ============================================
-     JAVASCRIPT - FIXED VERSION WITH MODAL NAVIGATION
-     ============================================ -->
-<script>
-(function() {
-  'use strict';
-  
-  const STORAGE_KEY = 'expats';
-  
-  const state = {
-    uploadedDocs: [],
-    cameraStreams: new Map()
-  };
-
-  let cachedElements = null;
-
-  const DOC_CONFIG = {
-    european_id: { twoSided: true, label: 'European Identity Card' },
-    passport: { twoSided: false, label: 'Passport' },
-    license: { twoSided: true, label: "Driver's License" }
-  };
-
-  function getCachedElements() {
-    if (!cachedElements) {
-      cachedElements = {
-        step: document.getElementById('step11'),
-        counter: document.getElementById('step11UploadedCount'),
-        docCards: document.querySelectorAll('#step11 .doc-card')
+    // State
+    const documentState = {
+      currentType: null, // 'passport', 'european_id', 'license'
+      currentSide: null, // 'front', 'back'
+      cameraStream: null,
+      documents: {
+        passport: { front: null, frontId: null, frontStatus: null },
+        european_id: { front: null, back: null, frontId: null, backId: null, frontStatus: null, backStatus: null },
+        license: { front: null, back: null, frontId: null, backId: null, frontStatus: null, backStatus: null }
+      },
+      pollingIntervals: {}
+    };
+
+    // Document type configurations
+    const DOC_CONFIG = {
+      passport: {
+        icon: '🛂',
+        title: 'Upload Passport',
+        subtitle: 'Front side only',
+        needsBack: false,
+        frontLabel: 'Passport Photo'
+      },
+      european_id: {
+        icon: '🪪',
+        title: 'Upload European ID',
+        subtitle: 'Front and back required',
+        needsBack: true,
+        frontLabel: 'Front Side'
+      },
+      license: {
+        icon: '🚗',
+        title: 'Upload Driver\'s License',
+        subtitle: 'Front and back required',
+        needsBack: true,
+        frontLabel: 'Front Side'
+      }
+    };
+
+    // ============================================
+    // Modal Management
+    // ============================================
+    function openDocumentModal(type) {
+      documentState.currentType = type;
+      const config = DOC_CONFIG[type];
+
+      // Update modal header
+      document.getElementById('modalIcon').textContent = config.icon;
+      document.getElementById('modalTitle').textContent = config.title;
+      document.getElementById('modalSubtitle').textContent = config.subtitle;
+      document.getElementById('frontLabel').textContent = config.frontLabel;
+
+      // Show/hide back section
+      const backSection = document.getElementById('backSection');
+      if (config.needsBack) {
+        backSection.classList.remove('hidden');
+      } else {
+        backSection.classList.add('hidden');
+      }
+
+      // Restore previous uploads if any
+      restoreDocumentPreviews(type);
+
+      // Show modal
+      document.getElementById('documentModal').classList.remove('hidden');
+      
+      // Update continue button state
+      updateModalContinueButton();
+    }
+
+    function closeDocumentModal() {
+      document.getElementById('documentModal').classList.add('hidden');
+      documentState.currentType = null;
+      
+      // Update main card statuses
+      updateCardStatuses();
+      
+      // Update main continue button
+      updateMainContinueButton();
+    }
+
+    // ============================================
+    // File Upload Handlers
+    // ============================================
+    function handleFrontUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        processImageFile(file, 'front');
+      }
+    }
+
+    function handleBackUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        processImageFile(file, 'back');
+      }
+    }
+
+    function processImageFile(file, side) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5 MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageData = e.target.result;
+        displayImage(imageData, side);
+        sendDocumentToBackend(imageData, side);
       };
+      reader.readAsDataURL(file);
     }
-    return cachedElements;
-  }
 
-  function getLocalStorage() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    } catch (e) {
-      return {};
+    // ============================================
+    // Camera Functions
+    // ============================================
+    async function takeFrontPhoto() {
+      documentState.currentSide = 'front';
+      await openCameraModal();
     }
-  }
 
-  function saveToLocalStorage(type, side, dataUrl) {
-    try {
-      const data = getLocalStorage();
-      data.documents = data.documents || {};
-      
-      const config = DOC_CONFIG[type];
-      
-      if (config.twoSided) {
-        data.documents[type] = data.documents[type] || {};
-        data.documents[type][side] = dataUrl;
-        data.documents[type].uploaded_at = new Date().toISOString();
-      } else {
-        data.documents[type] = {
-          image: dataUrl,
-          uploaded_at: new Date().toISOString()
-        };
+    async function takeBackPhoto() {
+      documentState.currentSide = 'back';
+      await openCameraModal();
+    }
+
+    async function openCameraModal() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+          audio: false
+        });
+
+        documentState.cameraStream = stream;
+        document.getElementById('cameraStream').srcObject = stream;
+        document.getElementById('cameraModal').classList.remove('hidden');
+      } catch (error) {
+        console.error('Camera error:', error);
+        alert('Unable to access camera. Please use the file upload option.');
       }
-      
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      updateDocCard(type);
-      updateModalContinueButton(type);
-    } catch (e) {
-      console.warn('localStorage error:', e);
     }
-  }
 
-  function removeFromLocalStorage(type, side) {
-    try {
-      const data = getLocalStorage();
-      if (!data.documents?.[type]) return;
-      
-      const config = DOC_CONFIG[type];
-      
-      if (config.twoSided) {
-        delete data.documents[type][side];
-        if (!data.documents[type].front && !data.documents[type].back) {
-          delete data.documents[type];
-        }
-      } else {
-        delete data.documents[type];
+    function closeCameraModal() {
+      if (documentState.cameraStream) {
+        documentState.cameraStream.getTracks().forEach(track => track.stop());
+        documentState.cameraStream = null;
       }
-      
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      updateDocCard(type);
-      updateModalContinueButton(type);
-    } catch (e) {
-      console.warn('localStorage error:', e);
+      document.getElementById('cameraStream').srcObject = null;
+      document.getElementById('cameraModal').classList.add('hidden');
     }
-  }
 
-  function isDocumentComplete(type) {
-    const data = getLocalStorage();
-    const doc = data.documents?.[type];
-    if (!doc) return false;
-    
-    const config = DOC_CONFIG[type];
-    return config.twoSided ? (doc.front && doc.back) : doc.image;
-  }
-
-  function updateCounter() {
-    const elements = getCachedElements();
-    if (elements.counter) {
-      elements.counter.textContent = state.uploadedDocs.length;
-    }
-    
-    if (typeof window.updateNavigationButtons === 'function') {
-      window.updateNavigationButtons();
-    }
-  }
-
-  function updateDocCard(type) {
-    const card = document.querySelector(`#step11 .doc-card[data-doc-type="${type}"]`);
-    if (!card) return;
-
-    const isComplete = isDocumentComplete(type);
-    
-    if (isComplete) {
-      card.classList.add('uploaded');
-      if (!state.uploadedDocs.includes(type)) {
-        state.uploadedDocs.push(type);
-      }
-    } else {
-      card.classList.remove('uploaded');
-      const index = state.uploadedDocs.indexOf(type);
-      if (index > -1) state.uploadedDocs.splice(index, 1);
-    }
-    
-    updateCounter();
-  }
-
-  function updateModalContinueButton(type) {
-    const modalContinueBtn = document.querySelector(`.modal-continue-btn[data-modal="${type}"]`);
-    if (!modalContinueBtn) return;
-    
-    const isComplete = isDocumentComplete(type);
-    modalContinueBtn.disabled = !isComplete;
-  }
-
-  async function openCamera(type, side) {
-    const video = document.querySelector(`.camera-video[data-type="${type}"][data-side="${side}"]`);
-    const captureBtn = document.querySelector(`.capture-btn[data-type="${type}"][data-side="${side}"]`);
-    const uploadBtn = document.querySelector(`.action-btn-upload[data-type="${type}"][data-side="${side}"]`);
-    const cameraBtn = document.querySelector(`.action-btn-camera[data-type="${type}"][data-side="${side}"]`);
-    
-    if (!video || !captureBtn) return;
-    
-    const key = `${type}-${side}`;
-    
-    if (state.cameraStreams.has(key)) {
-      stopCamera(type, side);
-      return;
-    }
-    
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert("Your browser does not support camera access. Please use Chrome, Firefox, Safari, or Edge.");
-      return;
-    }
-    
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: "environment",
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        }
-      });
-      
-      video.srcObject = stream;
-      video.classList.remove("hidden");
-      captureBtn.classList.remove("hidden");
-      
-      // Cacher les boutons Upload et Take Photo pendant la capture
-      if (uploadBtn) uploadBtn.classList.add('hidden');
-      if (cameraBtn) cameraBtn.classList.add('hidden');
-      
-      state.cameraStreams.set(key, stream);
-    } catch (err) {
-      console.error("Camera error:", err);
-      alert("Camera Error: " + err.name + " - " + err.message + "\n\nPlease check permissions or try uploading a photo instead.");
-    }
-  }
-
-  function stopCamera(type, side) {
-    const key = `${type}-${side}`;
-    const stream = state.cameraStreams.get(key);
-    
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      state.cameraStreams.delete(key);
-    }
-    
-    const video = document.querySelector(`.camera-video[data-type="${type}"][data-side="${side}"]`);
-    const captureBtn = document.querySelector(`.capture-btn[data-type="${type}"][data-side="${side}"]`);
-    const uploadBtn = document.querySelector(`.action-btn-upload[data-type="${type}"][data-side="${side}"]`);
-    const cameraBtn = document.querySelector(`.action-btn-camera[data-type="${type}"][data-side="${side}"]`);
-    
-    if (video) {
-      video.classList.add('hidden');
-      video.srcObject = null;
-    }
-    if (captureBtn) {
-      captureBtn.classList.add('hidden');
-    }
-    
-    // Restaurer les boutons Upload et Take Photo
-    if (uploadBtn) uploadBtn.classList.remove('hidden');
-    if (cameraBtn) cameraBtn.classList.remove('hidden');
-  }
-
-  function capturePhoto(type, side) {
-    const video = document.querySelector(`.camera-video[data-type="${type}"][data-side="${side}"]`);
-    const previewBox = document.querySelector(`.preview-box[data-type="${type}"][data-side="${side}"]`);
-    
-    if (!video || !previewBox) return;
-    
-    requestAnimationFrame(() => {
+    function captureDocument() {
+      const video = document.getElementById('cameraStream');
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       
-      const ctx = canvas.getContext('2d', { alpha: false });
+      const ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0);
       
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      const imageData = canvas.toDataURL('image/jpeg', 0.9);
       
-      previewBox.innerHTML = `<img src="${dataUrl}" alt="${side} side" />`;
-      previewBox.closest('.upload-zone').classList.add('has-file');
+      displayImage(imageData, documentState.currentSide);
+      sendDocumentToBackend(imageData, documentState.currentSide);
       
-      const retakeBtn = document.querySelector(`.action-btn-retake[data-type="${type}"][data-side="${side}"]`);
-      const uploadBtn = document.querySelector(`.action-btn-upload[data-type="${type}"][data-side="${side}"]`);
-      const cameraBtn = document.querySelector(`.action-btn-camera[data-type="${type}"][data-side="${side}"]`);
-      
-      // Montrer Retake, cacher Upload et Take Photo
-      if (retakeBtn) retakeBtn.classList.remove('hidden');
-      if (uploadBtn) uploadBtn.classList.add('hidden');
-      if (cameraBtn) cameraBtn.classList.add('hidden');
-      
-      saveToLocalStorage(type, side, dataUrl);
-      stopCamera(type, side);
-    });
-  }
-
-  function handleFileUpload(input, type, side) {
-    const file = input.files[0];
-    if (!file || !file.type.startsWith('image/')) {
-      alert('Please select a valid image file');
-      return;
+      closeCameraModal();
     }
-    
-    const reader = new FileReader();
-    
-    reader.onerror = function() {
-      alert('Error reading file');
-    };
-    
-    reader.onload = function(event) {
-      requestAnimationFrame(() => {
-        const dataUrl = event.target.result;
-        const previewBox = document.querySelector(`.preview-box[data-type="${type}"][data-side="${side}"]`);
-        
-        if (previewBox) {
-          previewBox.innerHTML = `<img src="${dataUrl}" alt="${side} side" />`;
-          previewBox.closest('.upload-zone').classList.add('has-file');
-          
-          const retakeBtn = document.querySelector(`.action-btn-retake[data-type="${type}"][data-side="${side}"]`);
-          const uploadBtn = document.querySelector(`.action-btn-upload[data-type="${type}"][data-side="${side}"]`);
-          const cameraBtn = document.querySelector(`.action-btn-camera[data-type="${type}"][data-side="${side}"]`);
-          
-          // Montrer Retake, cacher Upload et Take Photo
-          if (retakeBtn) retakeBtn.classList.remove('hidden');
-          if (uploadBtn) uploadBtn.classList.add('hidden');
-          if (cameraBtn) cameraBtn.classList.add('hidden');
-          
-          saveToLocalStorage(type, side, dataUrl);
-        }
-      });
-    };
-    
-    reader.readAsDataURL(file);
-    stopCamera(type, side);
-  }
 
-  function retakePhoto(type, side) {
-    const previewBox = document.querySelector(`.preview-box[data-type="${type}"][data-side="${side}"]`);
-    const retakeBtn = document.querySelector(`.action-btn-retake[data-type="${type}"][data-side="${side}"]`);
-    const input = document.querySelector(`.upload-input[data-type="${type}"][data-side="${side}"]`);
-    const uploadBtn = document.querySelector(`.action-btn-upload[data-type="${type}"][data-side="${side}"]`);
-    const cameraBtn = document.querySelector(`.action-btn-camera[data-type="${type}"][data-side="${side}"]`);
-    
-    requestAnimationFrame(() => {
-      if (previewBox) {
-        previewBox.innerHTML = `
-          <div class="text-4xl sm:text-5xl mb-2 sm:mb-3">📄</div>
-          <span class="upload-badge">No Photo</span>
-        `;
-        previewBox.closest('.upload-zone').classList.remove('has-file');
-      }
+    // ============================================
+    // Display Image
+    // ============================================
+    function displayImage(imageData, side) {
+      const previewId = side === 'front' ? 'frontPreview' : 'backPreview';
+      const preview = document.getElementById(previewId);
       
-      if (retakeBtn) {
-        retakeBtn.classList.add('hidden');
-      }
+      preview.innerHTML = `<img src="${imageData}" alt="${side} preview">`;
       
-      // Restaurer les boutons Upload et Take Photo
-      if (uploadBtn) uploadBtn.classList.remove('hidden');
-      if (cameraBtn) cameraBtn.classList.remove('hidden');
-      
-      if (input) {
-        input.value = '';
-      }
-      
-      removeFromLocalStorage(type, side);
-    });
-  }
-
-  function openModal(type) {
-    const modal = document.getElementById(`modal-${type}`);
-    if (modal) {
-      requestAnimationFrame(() => {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        restoreDocuments(type);
-        updateModalContinueButton(type);
-      });
+      // Store in state
+      const type = documentState.currentType;
+      documentState.documents[type][side] = imageData;
     }
-  }
 
-  function closeModal(type) {
-    const modal = document.getElementById(`modal-${type}`);
-    if (modal) {
-      requestAnimationFrame(() => {
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
-        
-        const config = DOC_CONFIG[type];
-        if (config.twoSided) {
-          stopCamera(type, 'front');
-          stopCamera(type, 'back');
+    // ============================================
+    // Send to Backend
+    // ============================================
+    async function sendDocumentToBackend(imageData, side) {
+      const type = documentState.currentType;
+      
+      // Show verification overlay
+      showVerificationOverlay(side, 'Uploading...');
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/documents`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_TOKEN}`,
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+          },
+          body: JSON.stringify({
+            document_type: type,
+            document_side: side,
+            image: imageData
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Store document ID
+          const idKey = side === 'front' ? 'frontId' : 'backId';
+          documentState.documents[type][idKey] = data.data.id;
+          
+          // Start polling
+          updateVerificationMessage(side, 'Verifying document...');
+          startDocumentPolling(data.data.id, type, side);
         } else {
-          stopCamera(type, 'front');
+          throw new Error(data.message || 'Upload failed');
         }
+
+      } catch (error) {
+        console.error('Upload error:', error);
+        hideVerificationOverlay(side);
+        showErrorBadge(side, 'Upload failed. Please try again.');
+      }
+    }
+
+    // ============================================
+    // Polling for Status
+    // ============================================
+    function startDocumentPolling(documentId, type, side) {
+      const key = `${type}_${side}`;
+      
+      // Clear existing interval
+      if (documentState.pollingIntervals[key]) {
+        clearInterval(documentState.pollingIntervals[key]);
+      }
+
+      documentState.pollingIntervals[key] = setInterval(async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/documents/${documentId}/status`, {
+            headers: {
+              'Authorization': `Bearer ${API_TOKEN}`,
+              'Accept': 'application/json'
+            }
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            handleDocumentStatus(data, type, side, documentId);
+          }
+
+        } catch (error) {
+          console.error('Polling error:', error);
+        }
+      }, 2000);
+    }
+
+    function stopDocumentPolling(type, side) {
+      const key = `${type}_${side}`;
+      if (documentState.pollingIntervals[key]) {
+        clearInterval(documentState.pollingIntervals[key]);
+        delete documentState.pollingIntervals[key];
+      }
+    }
+
+    // ============================================
+    // Handle Document Status
+    // ============================================
+    function handleDocumentStatus(data, type, side, documentId) {
+      const { status, message, confidence_score, rejection_reason } = data;
+      
+      // Store status
+      const statusKey = side === 'front' ? 'frontStatus' : 'backStatus';
+      documentState.documents[type][statusKey] = status;
+
+      switch (status) {
+        case 'verified':
+          stopDocumentPolling(type, side);
+          hideVerificationOverlay(side);
+          showSuccessBadge(side, message, confidence_score);
+          updateModalContinueButton();
+          break;
+
+        case 'rejected':
+          stopDocumentPolling(type, side);
+          hideVerificationOverlay(side);
+          showRejectionBadge(side, rejection_reason);
+          break;
+
+        case 'error':
+          stopDocumentPolling(type, side);
+          hideVerificationOverlay(side);
+          showErrorBadge(side, message);
+          break;
+
+        case 'processing':
+          updateVerificationMessage(side, '🔄 Analyzing document...');
+          break;
+
+        case 'pending':
+        default:
+          updateVerificationMessage(side, '⏳ Queued for verification...');
+          break;
+      }
+    }
+
+    // ============================================
+    // Verification Overlay
+    // ============================================
+    function showVerificationOverlay(side, message) {
+      const overlayId = side === 'front' ? 'frontVerificationOverlay' : 'backVerificationOverlay';
+      const messageId = side === 'front' ? 'frontVerificationMessage' : 'backVerificationMessage';
+      
+      document.getElementById(overlayId).classList.remove('hidden');
+      document.getElementById(messageId).textContent = message;
+    }
+
+    function hideVerificationOverlay(side) {
+      const overlayId = side === 'front' ? 'frontVerificationOverlay' : 'backVerificationOverlay';
+      document.getElementById(overlayId).classList.add('hidden');
+    }
+
+    function updateVerificationMessage(side, message) {
+      const messageId = side === 'front' ? 'frontVerificationMessage' : 'backVerificationMessage';
+      document.getElementById(messageId).textContent = message;
+    }
+
+    // ============================================
+    // Status Badges
+    // ============================================
+    function showSuccessBadge(side, message, score) {
+      const badgeId = side === 'front' ? 'frontStatusBadge' : 'backStatusBadge';
+      const badge = document.getElementById(badgeId);
+      
+      badge.className = 'bg-green-50 border-2 border-green-500 rounded-lg p-4 fade-in';
+      badge.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-green-900 font-bold">✅ Verified</p>
+            <p class="text-green-700 text-sm">${message || 'Document verified successfully'}</p>
+            ${score ? `<p class="text-green-600 text-xs mt-1">Confidence: ${score}/100</p>` : ''}
+          </div>
+        </div>
+      `;
+      badge.classList.remove('hidden');
+    }
+
+    function showRejectionBadge(side, reason) {
+      const badgeId = side === 'front' ? 'frontStatusBadge' : 'backStatusBadge';
+      const badge = document.getElementById(badgeId);
+      
+      badge.className = 'bg-red-50 border-2 border-red-500 rounded-lg p-4 fade-in';
+      badge.innerHTML = `
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-red-900 font-bold">❌ Not Accepted</p>
+            <p class="text-red-700 text-sm whitespace-pre-line">${reason || 'Please retake the photo'}</p>
+          </div>
+        </div>
+      `;
+      badge.classList.remove('hidden');
+    }
+
+    function showErrorBadge(side, message) {
+      const badgeId = side === 'front' ? 'frontStatusBadge' : 'backStatusBadge';
+      const badge = document.getElementById(badgeId);
+      
+      badge.className = 'bg-orange-50 border-2 border-orange-500 rounded-lg p-4 fade-in';
+      badge.innerHTML = `
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-orange-900 font-bold">⚠️ Error</p>
+            <p class="text-orange-700 text-sm">${message || 'Please try again'}</p>
+          </div>
+        </div>
+      `;
+      badge.classList.remove('hidden');
+    }
+
+    // ============================================
+    // Button State Management
+    // ============================================
+    function updateModalContinueButton() {
+      const btn = document.getElementById('modalContinueBtn');
+      const type = documentState.currentType;
+      const config = DOC_CONFIG[type];
+      const doc = documentState.documents[type];
+
+      let isComplete = false;
+
+      if (config.needsBack) {
+        // Needs front AND back verified
+        isComplete = doc.frontStatus === 'verified' && doc.backStatus === 'verified';
+      } else {
+        // Only needs front verified
+        isComplete = doc.frontStatus === 'verified';
+      }
+
+      btn.disabled = !isComplete;
+    }
+
+    function updateCardStatuses() {
+      // Update each card
+      Object.keys(DOC_CONFIG).forEach(type => {
+        updateCardStatus(type);
       });
     }
-  }
 
-  function continueFromModal(type) {
-    if (!isDocumentComplete(type)) {
-      alert('Please upload all required photos before continuing.');
-      return;
-    }
-    
-    closeModal(type);
-    
-    // Passer au step suivant
-    if (typeof window.nextStep === 'function') {
-      window.nextStep();
-    }
-  }
+    function updateCardStatus(type) {
+      const statusDiv = document.getElementById(`${type}Status`);
+      const doc = documentState.documents[type];
+      const config = DOC_CONFIG[type];
 
-  function restoreDocuments(type) {
-    const data = getLocalStorage();
-    const doc = data.documents?.[type];
-    if (!doc) return;
-    
-    const config = DOC_CONFIG[type];
-    
-    requestAnimationFrame(() => {
-      if (config.twoSided) {
-        if (doc.front) {
-          const previewBoxFront = document.querySelector(`.preview-box[data-type="${type}"][data-side="front"]`);
-          if (previewBoxFront) {
-            previewBoxFront.innerHTML = `<img src="${doc.front}" alt="Front side" />`;
-            previewBoxFront.closest('.upload-zone').classList.add('has-file');
-            
-            const retakeBtnFront = document.querySelector(`.action-btn-retake[data-type="${type}"][data-side="front"]`);
-            const uploadBtnFront = document.querySelector(`.action-btn-upload[data-type="${type}"][data-side="front"]`);
-            const cameraBtnFront = document.querySelector(`.action-btn-camera[data-type="${type}"][data-side="front"]`);
-            
-            if (retakeBtnFront) retakeBtnFront.classList.remove('hidden');
-            if (uploadBtnFront) uploadBtnFront.classList.add('hidden');
-            if (cameraBtnFront) cameraBtnFront.classList.add('hidden');
-          }
-        }
-        
-        if (doc.back) {
-          const previewBoxBack = document.querySelector(`.preview-box[data-type="${type}"][data-side="back"]`);
-          if (previewBoxBack) {
-            previewBoxBack.innerHTML = `<img src="${doc.back}" alt="Back side" />`;
-            previewBoxBack.closest('.upload-zone').classList.add('has-file');
-            
-            const retakeBtnBack = document.querySelector(`.action-btn-retake[data-type="${type}"][data-side="back"]`);
-            const uploadBtnBack = document.querySelector(`.action-btn-upload[data-type="${type}"][data-side="back"]`);
-            const cameraBtnBack = document.querySelector(`.action-btn-camera[data-type="${type}"][data-side="back"]`);
-            
-            if (retakeBtnBack) retakeBtnBack.classList.remove('hidden');
-            if (uploadBtnBack) uploadBtnBack.classList.add('hidden');
-            if (cameraBtnBack) cameraBtnBack.classList.add('hidden');
+      let status = 'Not uploaded';
+      let className = 'text-gray-400';
+
+      if (config.needsBack) {
+        if (doc.frontStatus === 'verified' && doc.backStatus === 'verified') {
+          status = '✅ Verified';
+          className = 'text-green-600';
+        } else if (doc.frontStatus || doc.backStatus) {
+          const parts = [];
+          if (doc.frontStatus === 'verified') parts.push('Front ✓');
+          if (doc.backStatus === 'verified') parts.push('Back ✓');
+          if (parts.length > 0) {
+            status = parts.join(', ');
+            className = 'text-blue-600';
+          } else {
+            status = 'In progress...';
+            className = 'text-blue-600';
           }
         }
       } else {
-        if (doc.image) {
-          const previewBox = document.querySelector(`.preview-box[data-type="${type}"][data-side="front"]`);
-          if (previewBox) {
-            previewBox.innerHTML = `<img src="${doc.image}" alt="Document" />`;
-            previewBox.closest('.upload-zone').classList.add('has-file');
-            
-            const retakeBtn = document.querySelector(`.action-btn-retake[data-type="${type}"][data-side="front"]`);
-            const uploadBtn = document.querySelector(`.action-btn-upload[data-type="${type}"][data-side="front"]`);
-            const cameraBtn = document.querySelector(`.action-btn-camera[data-type="${type}"][data-side="front"]`);
-            
-            if (retakeBtn) retakeBtn.classList.remove('hidden');
-            if (uploadBtn) uploadBtn.classList.add('hidden');
-            if (cameraBtn) cameraBtn.classList.add('hidden');
-          }
+        if (doc.frontStatus === 'verified') {
+          status = '✅ Verified';
+          className = 'text-green-600';
+        } else if (doc.frontStatus) {
+          status = 'In progress...';
+          className = 'text-blue-600';
         }
       }
-    });
-  }
 
-  // ============================================
-  // ✅ VALIDATION GLOBALE
-  // ============================================
-  
-  window.validateStep11 = function(showAlert = false) {
-    const hasCompleteDocument = state.uploadedDocs && state.uploadedDocs.length > 0;
-    
-    if (!hasCompleteDocument && showAlert) {
-      alert('⚠️ Complete Identity Document Required\n\nPlease complete at least one identity document:\n\n• Passport: 1 photo\n• European ID: 2 photos (front + back)\n• Driver\'s License: 2 photos (front + back)');
+      statusDiv.textContent = status;
+      statusDiv.className = `text-sm font-semibold ${className}`;
     }
-    
-    return hasCompleteDocument;
-  };
 
-  function initEventDelegation() {
-    const step = getCachedElements().step;
-    if (step) {
-      step.addEventListener('click', (e) => {
-        const docCard = e.target.closest('.doc-card');
-        if (docCard) {
-          const type = docCard.dataset.docType;
-          if (type) openModal(type);
+    function updateMainContinueButton() {
+      const btn = document.getElementById('continueBtn');
+      
+      // Check if at least one document type is fully verified
+      const hasVerifiedDoc = Object.keys(DOC_CONFIG).some(type => {
+        const doc = documentState.documents[type];
+        const config = DOC_CONFIG[type];
+        
+        if (config.needsBack) {
+          return doc.frontStatus === 'verified' && doc.backStatus === 'verified';
+        } else {
+          return doc.frontStatus === 'verified';
         }
-      }, { passive: true });
-    }
-
-    document.addEventListener('click', (e) => {
-      const closeBtn = e.target.closest('.modal-close');
-      if (closeBtn) {
-        const modal = closeBtn.dataset.modal;
-        if (modal) closeModal(modal);
-        return;
-      }
-
-      const backBtn = e.target.closest('.modal-back-btn');
-      if (backBtn) {
-        const modal = backBtn.dataset.modal;
-        if (modal) closeModal(modal);
-        return;
-      }
-
-      const continueBtn = e.target.closest('.modal-continue-btn');
-      if (continueBtn && !continueBtn.disabled) {
-        const modal = continueBtn.dataset.modal;
-        if (modal) continueFromModal(modal);
-        return;
-      }
-
-      const cameraBtn = e.target.closest('.action-btn-camera');
-      if (cameraBtn) {
-        const type = cameraBtn.dataset.type;
-        const side = cameraBtn.dataset.side;
-        if (type && side) openCamera(type, side);
-        return;
-      }
-
-      const uploadBtn = e.target.closest('.action-btn-upload');
-      if (uploadBtn) {
-        const type = uploadBtn.dataset.type;
-        const side = uploadBtn.dataset.side;
-        if (type && side) {
-          const input = document.querySelector(`.upload-input[data-type="${type}"][data-side="${side}"]`);
-          if (input) input.click();
-        }
-        return;
-      }
-
-      const captureBtn = e.target.closest('.capture-btn');
-      if (captureBtn) {
-        const type = captureBtn.dataset.type;
-        const side = captureBtn.dataset.side;
-        if (type && side) capturePhoto(type, side);
-        return;
-      }
-
-      const retakeBtn = e.target.closest('.action-btn-retake');
-      if (retakeBtn) {
-        const type = retakeBtn.dataset.type;
-        const side = retakeBtn.dataset.side;
-        if (type && side) retakePhoto(type, side);
-        return;
-      }
-
-      const backdrop = e.target.closest('.modal-backdrop');
-      if (backdrop && e.target === backdrop) {
-        const modalId = backdrop.id;
-        const type = modalId.replace('modal-', '');
-        if (type) closeModal(type);
-      }
-    });
-
-    document.addEventListener('change', (e) => {
-      const input = e.target.closest('.upload-input');
-      if (input) {
-        const type = input.dataset.type;
-        const side = input.dataset.side;
-        if (type && side) handleFileUpload(input, type, side);
-      }
-    });
-  }
-
-  function restoreState() {
-    const data = getLocalStorage();
-    state.uploadedDocs = [];
-
-    if (data.documents) {
-      Object.keys(data.documents).forEach(type => {
-        updateDocCard(type);
-      });
-    }
-
-    updateCounter();
-  }
-
-  function init() {
-    const elements = getCachedElements();
-    
-    // Cacher les boutons Continue du wizard sur Step 11
-    const mobileNextBtn = document.getElementById('mobileNextBtn');
-    const desktopNextBtn = document.getElementById('desktopNextBtn');
-    
-    if (elements.step) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            if (!elements.step.classList.contains('hidden')) {
-              // Step 11 visible : cacher Continue, garder Back
-              if (mobileNextBtn) mobileNextBtn.style.display = 'none';
-              if (desktopNextBtn) desktopNextBtn.style.display = 'none';
-              restoreState();
-            } else {
-              // Step 11 caché : restaurer Continue
-              if (mobileNextBtn) mobileNextBtn.style.display = '';
-              if (desktopNextBtn) desktopNextBtn.style.display = '';
-              state.cameraStreams.forEach((stream) => {
-                stream.getTracks().forEach(track => track.stop());
-              });
-              state.cameraStreams.clear();
-            }
-          }
-        });
       });
 
-      observer.observe(elements.step, { attributes: true });
+      btn.disabled = !hasVerifiedDoc;
     }
 
+    // ============================================
+    // Restore Previews
+    // ============================================
+    function restoreDocumentPreviews(type) {
+      const doc = documentState.documents[type];
+      
+      if (doc.front) {
+        displayImage(doc.front, 'front');
+        
+        if (doc.frontStatus === 'verified') {
+          showSuccessBadge('front', 'Document verified');
+        }
+      }
+
+      if (doc.back) {
+        displayImage(doc.back, 'back');
+        
+        if (doc.backStatus === 'verified') {
+          showSuccessBadge('back', 'Document verified');
+        }
+      }
+    }
+
+    // ============================================
+    // Cleanup
+    // ============================================
     window.addEventListener('beforeunload', () => {
-      state.cameraStreams.forEach((stream) => {
-        stream.getTracks().forEach(track => track.stop());
+      Object.keys(documentState.pollingIntervals).forEach(key => {
+        clearInterval(documentState.pollingIntervals[key]);
       });
-      state.cameraStreams.clear();
+      closeCameraModal();
     });
 
-    initEventDelegation();
-    restoreState();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-})();
-</script>
+    // Initialize on page load
+    updateCardStatuses();
+    updateMainContinueButton();
+  </script>
+</div>

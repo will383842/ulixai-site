@@ -1,0 +1,67 @@
+# ============================================
+# ⚠️  FICHIER À INSTALLER EN PRODUCTION ⚠️
+# ============================================
+# 
+# Ce fichier configure le Queue Worker pour traiter les vérifications
+# Google Vision en arrière-plan. SANS CE FICHIER, LES PHOTOS ET 
+# DOCUMENTS RESTERONT EN "PENDING" POUR TOUJOURS !
+#
+# ============================================
+# 📍 ÉTAPES D'INSTALLATION SUR LE SERVEUR :
+# ============================================
+#
+# 1️⃣ Copie ce fichier sur le serveur :
+#    sudo cp todo_when_production/ulixai-worker.conf.example /etc/supervisor/conf.d/ulixai-worker.conf
+#
+# 2️⃣ Modifie le fichier avec les VRAIS chemins :
+#    sudo nano /etc/supervisor/conf.d/ulixai-worker.conf
+#    
+#    Remplace :
+#    - VOTRE_USER_CPANEL    → ton vrai user cPanel (ex: ulixai)
+#    - /chemin/vers/ulixai  → chemin réel (ex: /home/ulixai/www/ulixai)
+#
+# 3️⃣ Active et démarre le worker :
+#    sudo supervisorctl reread
+#    sudo supervisorctl update
+#    sudo supervisorctl start ulixai-worker-group:*
+#
+# 4️⃣ Vérifie que ça tourne :
+#    sudo supervisorctl status
+#    
+#    Tu dois voir :
+#    ulixai-worker:ulixai-worker_00   RUNNING   pid 12345, uptime 0:00:05
+#    ulixai-worker:ulixai-worker_01   RUNNING   pid 12346, uptime 0:00:05
+#
+# 5️⃣ Voir les logs en temps réel :
+#    tail -f /chemin/vers/ulixai/storage/logs/worker.log
+#
+# ============================================
+# ❌ SI TU N'AS PAS ACCÈS SUDO (pas de root) :
+# ============================================
+#
+# Utilise un Cron Job à la place :
+# 
+# 1. Va dans cPanel → Cron Jobs
+# 2. Ajoute cette commande :
+#    * * * * * cd /home/VOTRE_USER_CPANEL/www/ulixai && php artisan queue:work --stop-when-empty
+# 3. Fréquence : Toutes les minutes
+#
+# ============================================
+
+[program:ulixai-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /chemin/vers/ulixai/artisan queue:work database --sleep=3 --tries=3 --max-time=3600 --timeout=60
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=VOTRE_USER_CPANEL
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/chemin/vers/ulixai/storage/logs/worker.log
+stopwaitsecs=3600
+startsecs=0
+
+[group:ulixai-worker-group]
+programs=ulixai-worker
+priority=999

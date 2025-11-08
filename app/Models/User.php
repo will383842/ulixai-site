@@ -55,6 +55,11 @@ class User extends Authenticatable
         'is_fake' => 'boolean',
         'last_login_at' => 'datetime',
         'bank_details_verified_at' => 'datetime',
+        // ✨ AJOUTS GOOGLE VISION
+        'profile_photo_verified' => 'boolean',
+        'profile_photo_verification_data' => 'array',
+        'identity_verified' => 'boolean',
+        'identity_verified_at' => 'datetime',
     ];
 
     // ===========================================
@@ -87,6 +92,15 @@ class User extends Authenticatable
     public function commissions(): HasMany
     {
         return $this->hasMany(AffiliateCommission::class, 'referrer_id');
+    }
+
+    // ✨ NOUVELLE RELATION GOOGLE VISION
+    /**
+     * Get the document verifications for the user.
+     */
+    public function providerDocumentVerifications(): HasMany
+    {
+        return $this->hasMany(\App\Models\ProviderDocumentVerification::class);
     }
     
     public function isSuspended(): bool
@@ -153,6 +167,49 @@ class User extends Authenticatable
                !is_null($this->bank_swift_bic);
     }
 
+    // ===========================================
+    // ✨ MÉTHODES GOOGLE VISION
+    // ===========================================
+
+    /**
+     * Check if user's identity is fully verified.
+     */
+    public function isIdentityVerified(): bool
+    {
+        return $this->identity_verified;
+    }
+
+    /**
+     * Check if user has a verified document of a specific type.
+     */
+    public function hasVerifiedDocument(string $type): bool
+    {
+        return $this->providerDocumentVerifications()
+            ->where('document_type', $type)
+            ->where('verification_status', 'verified')
+            ->exists();
+    }
+
+    /**
+     * Get all complete (verified) documents.
+     */
+    public function getCompleteDocuments()
+    {
+        return $this->providerDocumentVerifications()
+            ->where('verification_status', 'verified')
+            ->get();
+    }
+
+    /**
+     * Check if user can become a provider (has verified photo + at least one document).
+     */
+    public function canBecomeProvider(): bool
+    {
+        $hasVerifiedPhoto = $this->profile_photo_verified;
+        $hasVerifiedDocument = $this->providerDocumentVerifications()
+            ->where('verification_status', 'verified')
+            ->exists();
+        
+        return $hasVerifiedPhoto && $hasVerifiedDocument;
+    }
 }
-
-
