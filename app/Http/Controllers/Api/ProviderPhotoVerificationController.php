@@ -3,31 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\ProviderPhotoVerificationService;
+use App\Models\ProviderPhotoVerification;
 use App\Jobs\ProcessProviderPhotoVerification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProviderPhotoVerificationController extends Controller
 {
-    protected $verificationService;
-
-    public function __construct(ProviderPhotoVerificationService $verificationService)
-    {
-        $this->verificationService = $verificationService;
-    }
-
-    /**
-     * Upload and verify profile photo.
-     * 
-     * POST /api/provider/verification/photo
-     */
     public function upload(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required|string', // base64 image
+            'image' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -38,31 +27,38 @@ class ProviderPhotoVerificationController extends Controller
         }
 
         try {
-            $user = auth()->user();
+            $sessionId = session()->getId();
+            $userId = auth()->id();
 
-            // Store the image temporarily
-            $imagePath = $this->verificationService->storeProfilePhoto(
-                $request->image,
-                $user->id
-            );
+            $imagePath = $this->saveBase64Image($request->image, $userId ?? 0);
 
-            // Dispatch job for async processing
-            ProcessProviderPhotoVerification::dispatch($user, $imagePath);
+            $verification = ProviderPhotoVerification::create([
+                'session_id' => $sessionId,
+                'user_id' => $userId,
+                'image_path' => $imagePath,
+                'status' => 'pending',
+            ]);
+
+            ProcessProviderPhotoVerification::dispatch($verification);
 
             Log::channel('google-vision')->info('Profile photo verification initiated', [
-                'user_id' => $user->id
+                'verification_id' => $verification->id,
+                'session_id' => $sessionId,
+                'user_id' => $userId
             ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Photo uploaded successfully. Verification in progress...',
                 'data' => [
+                    'id' => $verification->id,
                     'status' => 'pending'
                 ]
             ], 201);
 
         } catch (\Exception $e) {
             Log::channel('google-vision')->error('Failed to upload profile photo', [
+                'session_id' => session()->getId(),
                 'user_id' => auth()->id(),
                 'error' => $e->getMessage()
             ]);
@@ -74,81 +70,75 @@ class ProviderPhotoVerificationController extends Controller
         }
     }
 
-    /**
-     * Get profile photo verification status (for polling).
-     * 
-     * GET /api/provider/verification/photo/status
-     */
     public function status(): JsonResponse
     {
-        $user = auth()->user();
+        $sessionId = session()->getId();
+        $userId = auth()->id();
 
-        // Refresh user data from database
-        $user->refresh();
+        $verification = ProviderPhotoVerification::where(function($query) use ($sessionId, $userId) {
+                $query->where('session_id', $sessionId);
+                if ($userId) {
+                    $query->orWhere('user_id', $userId);
+                }
+            })
+            ->latest()
+            ->first();
+
+        if (!$verification) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No photo uploaded yet'
+            ], 404);
+        }
 
         $response = [
             'success' => true,
-            'has_photo' => !is_null($user->profile_photo_path),
-            'verified' => $user->profile_photo_verified
+            'status' => $verification->status,
         ];
 
-        if (!$user->profile_photo_path) {
-            $response['status'] = 'none';
-            $response['message'] = 'No photo uploaded yet';
-            return response()->json($response);
-        }
+        switch ($verification->status) {
+            case 'verified':
+                $response['message'] = '✅ Photo verified successfully!';
+                $response['confidence_score'] = $verification->confidence_score;
+                break;
 
-        // Determine status
-        if ($user->profile_photo_verified) {
-            $response['status'] = 'approved';
-            $response['message'] = '✅ Photo approved!';
-            $response['score'] = $user->profile_photo_verification_data['score'] ?? null;
-        } elseif ($user->profile_photo_rejection_reason) {
-            $response['status'] = 'rejected';
-            $response['message'] = $user->profile_photo_rejection_reason;
-            $response['score'] = $user->profile_photo_verification_data['score'] ?? null;
-        } else {
-            // Check if verification data exists but not approved (pending)
-            if ($user->profile_photo_verification_data) {
-                $score = $user->profile_photo_verification_data['score'] ?? 0;
-                if ($score >= 60 && $score < 80) {
-                    $response['status'] = 'pending';
-                    $response['message'] = '✔️ Photo accepted for now. We may review it later.';
-                    $response['score'] = $score;
-                } else {
-                    // Still processing
-                    $response['status'] = 'processing';
-                    $response['message'] = '🔄 Analyzing your photo...';
-                }
-            } else {
-                // No verification data yet - still processing
-                $response['status'] = 'processing';
+            case 'rejected':
+                $response['message'] = '❌ Photo was rejected';
+                $response['rejection_reason'] = $verification->rejection_reason;
+                break;
+
+            case 'error':
+                $response['message'] = '⚠️ Verification error';
+                break;
+
+            case 'processing':
                 $response['message'] = '🔄 Analyzing your photo...';
-            }
-        }
+                break;
 
-        // Add verification details if available
-        if ($user->profile_photo_verification_data) {
-            $response['verification_data'] = [
-                'faces_detected' => $user->profile_photo_verification_data['faces_detected'] ?? null,
-                'face_centered' => $user->profile_photo_verification_data['face_centered'] ?? null,
-                'quality' => $user->profile_photo_verification_data['quality'] ?? null
-            ];
+            case 'pending':
+            default:
+                $response['message'] = '⏳ Queued for verification...';
+                break;
         }
 
         return response()->json($response);
     }
 
-    /**
-     * Get profile photo details.
-     * 
-     * GET /api/provider/verification/photo
-     */
     public function show(): JsonResponse
     {
-        $user = auth()->user();
+        $sessionId = session()->getId();
+        $userId = auth()->id();
 
-        if (!$user->profile_photo_path) {
+        $verification = ProviderPhotoVerification::where(function($query) use ($sessionId, $userId) {
+                $query->where('session_id', $sessionId);
+                if ($userId) {
+                    $query->orWhere('user_id', $userId);
+                }
+            })
+            ->latest()
+            ->first();
+
+        if (!$verification) {
             return response()->json([
                 'success' => false,
                 'message' => 'No profile photo uploaded'
@@ -158,50 +148,61 @@ class ProviderPhotoVerificationController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'photo_path' => $user->profile_photo_path,
-                'verified' => $user->profile_photo_verified,
-                'verification_data' => $user->profile_photo_verification_data,
-                'rejection_reason' => $user->profile_photo_rejection_reason
+                'id' => $verification->id,
+                'status' => $verification->status,
+                'confidence_score' => $verification->confidence_score,
+                'verified_at' => $verification->verified_at
             ]
         ]);
     }
 
-    /**
-     * Delete profile photo.
-     * 
-     * DELETE /api/provider/verification/photo
-     */
     public function destroy(): JsonResponse
     {
-        $user = auth()->user();
+        $sessionId = session()->getId();
+        $userId = auth()->id();
 
-        if (!$user->profile_photo_path) {
+        $verification = ProviderPhotoVerification::where(function($query) use ($sessionId, $userId) {
+                $query->where('session_id', $sessionId);
+                if ($userId) {
+                    $query->orWhere('user_id', $userId);
+                }
+            })
+            ->latest()
+            ->first();
+
+        if (!$verification) {
             return response()->json([
                 'success' => false,
                 'message' => 'No profile photo to delete'
             ], 404);
         }
 
-        // Delete physical file
-        if (\Storage::exists($user->profile_photo_path)) {
-            \Storage::delete($user->profile_photo_path);
+        if (Storage::exists($verification->image_path)) {
+            Storage::delete($verification->image_path);
         }
 
-        // Reset user photo fields
-        $user->update([
-            'profile_photo_path' => null,
-            'profile_photo_verified' => false,
-            'profile_photo_verification_data' => null,
-            'profile_photo_rejection_reason' => null
-        ]);
-
-        Log::channel('google-vision')->info('Profile photo deleted', [
-            'user_id' => $user->id
-        ]);
+        $verification->delete();
 
         return response()->json([
             'success' => true,
             'message' => 'Photo deleted successfully'
         ]);
+    }
+
+    private function saveBase64Image(string $base64Image, int $userId): string
+    {
+        $image = preg_replace('/^data:image\/\w+;base64,/', '', $base64Image);
+        $image = base64_decode($image);
+        
+        if (!$image) {
+            throw new \Exception('Invalid image data');
+        }
+
+        $filename = 'photo_' . $userId . '_' . uniqid() . '.jpg';
+        $path = 'verifications/photos/' . $filename;
+        
+        Storage::disk('public')->put($path, $image);
+        
+        return $path;
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::table('provider_photo_verifications', function (Blueprint $table) {
             $table->string('session_id')->nullable()->after('id');
@@ -19,7 +19,7 @@ return new class extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table('provider_photo_verifications', function (Blueprint $table) {
             $table->dropColumn('session_id');

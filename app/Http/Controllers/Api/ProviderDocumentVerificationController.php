@@ -20,17 +20,12 @@ class ProviderDocumentVerificationController extends Controller
         $this->verificationService = $verificationService;
     }
 
-    /**
-     * Store a new document verification request.
-     * 
-     * POST /api/provider/verification/documents
-     */
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'document_type' => 'required|in:passport,license,european_id',
             'document_side' => 'nullable|in:front,back',
-            'image' => 'required|string', // base64 image
+            'image' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -41,9 +36,9 @@ class ProviderDocumentVerificationController extends Controller
         }
 
         try {
-            $user = auth()->user();
+            $sessionId = session()->getId();
+            $userId = auth()->id();
             
-            // Validate document side requirement
             $documentType = $request->document_type;
             $documentSide = $request->document_side;
 
@@ -61,17 +56,16 @@ class ProviderDocumentVerificationController extends Controller
                 ], 422);
             }
 
-            // Store the image
             $imagePath = $this->verificationService->storeImage(
                 $request->image,
                 $documentType,
                 $documentSide,
-                $user->id
+                $userId ?? 0
             );
 
-            // Create verification record
             $verification = ProviderDocumentVerification::create([
-                'user_id' => $user->id,
+                'session_id' => $sessionId,
+                'user_id' => $userId,
                 'document_type' => $documentType,
                 'document_side' => $documentSide,
                 'image_path' => $imagePath,
@@ -79,12 +73,12 @@ class ProviderDocumentVerificationController extends Controller
                 'retry_count' => 0
             ]);
 
-            // Dispatch job for async processing
             ProcessProviderDocumentVerification::dispatch($verification);
 
             Log::channel('google-vision')->info('Document verification created', [
                 'verification_id' => $verification->id,
-                'user_id' => $user->id,
+                'session_id' => $sessionId,
+                'user_id' => $userId,
                 'document_type' => $documentType
             ]);
 
@@ -101,6 +95,7 @@ class ProviderDocumentVerificationController extends Controller
 
         } catch (\Exception $e) {
             Log::channel('google-vision')->error('Failed to create document verification', [
+                'session_id' => session()->getId(),
                 'user_id' => auth()->id(),
                 'error' => $e->getMessage()
             ]);
@@ -112,17 +107,18 @@ class ProviderDocumentVerificationController extends Controller
         }
     }
 
-    /**
-     * Get verification status (for polling).
-     * 
-     * GET /api/provider/verification/documents/{id}/status
-     */
     public function status(int $id): JsonResponse
     {
-        $user = auth()->user();
+        $sessionId = session()->getId();
+        $userId = auth()->id();
         
         $verification = ProviderDocumentVerification::where('id', $id)
-            ->where('user_id', $user->id)
+            ->where(function($query) use ($sessionId, $userId) {
+                $query->where('session_id', $sessionId);
+                if ($userId) {
+                    $query->orWhere('user_id', $userId);
+                }
+            })
             ->first();
 
         if (!$verification) {
@@ -139,15 +135,10 @@ class ProviderDocumentVerificationController extends Controller
             'document_side' => $verification->document_side
         ];
 
-        // Add additional data based on status
         switch ($verification->verification_status) {
             case 'verified':
                 $response['message'] = '✅ Document verified successfully!';
                 $response['confidence_score'] = $verification->confidence_score;
-                $response['detected_info'] = [
-                    'text_preview' => substr($verification->detected_text, 0, 100) . '...',
-                    'labels' => $verification->detected_labels
-                ];
                 break;
 
             case 'rejected':
@@ -160,10 +151,6 @@ class ProviderDocumentVerificationController extends Controller
                 $response['message'] = '⚠️ Verification error occurred';
                 if ($verification->needsRetry()) {
                     $response['message'] .= ' - Retrying automatically...';
-                    $response['retry_count'] = $verification->retry_count;
-                    $response['max_retries'] = config('google-vision.max_retries', 3);
-                } else {
-                    $response['rejection_reason'] = $verification->rejection_reason;
                 }
                 break;
 
@@ -180,17 +167,18 @@ class ProviderDocumentVerificationController extends Controller
         return response()->json($response);
     }
 
-    /**
-     * Get full document details.
-     * 
-     * GET /api/provider/verification/documents/{id}
-     */
     public function show(int $id): JsonResponse
     {
-        $user = auth()->user();
+        $sessionId = session()->getId();
+        $userId = auth()->id();
         
         $verification = ProviderDocumentVerification::where('id', $id)
-            ->where('user_id', $user->id)
+            ->where(function($query) use ($sessionId, $userId) {
+                $query->where('session_id', $sessionId);
+                if ($userId) {
+                    $query->orWhere('user_id', $userId);
+                }
+            })
             ->first();
 
         if (!$verification) {
@@ -208,27 +196,23 @@ class ProviderDocumentVerificationController extends Controller
                 'document_side' => $verification->document_side,
                 'verification_status' => $verification->verification_status,
                 'confidence_score' => $verification->confidence_score,
-                'detected_text' => $verification->detected_text,
-                'detected_labels' => $verification->detected_labels,
-                'rejection_reason' => $verification->rejection_reason,
-                'verified_at' => $verification->verified_at,
-                'created_at' => $verification->created_at,
-                'updated_at' => $verification->updated_at
+                'verified_at' => $verification->verified_at
             ]
         ]);
     }
 
-    /**
-     * Delete a document verification.
-     * 
-     * DELETE /api/provider/verification/documents/{id}
-     */
     public function destroy(int $id): JsonResponse
     {
-        $user = auth()->user();
+        $sessionId = session()->getId();
+        $userId = auth()->id();
         
         $verification = ProviderDocumentVerification::where('id', $id)
-            ->where('user_id', $user->id)
+            ->where(function($query) use ($sessionId, $userId) {
+                $query->where('session_id', $sessionId);
+                if ($userId) {
+                    $query->orWhere('user_id', $userId);
+                }
+            })
             ->first();
 
         if (!$verification) {
@@ -238,18 +222,11 @@ class ProviderDocumentVerificationController extends Controller
             ], 404);
         }
 
-        // Delete physical file
         if (\Storage::exists($verification->image_path)) {
             \Storage::delete($verification->image_path);
         }
 
-        // Delete record
         $verification->delete();
-
-        Log::channel('google-vision')->info('Document verification deleted', [
-            'verification_id' => $id,
-            'user_id' => $user->id
-        ]);
 
         return response()->json([
             'success' => true,
@@ -257,16 +234,17 @@ class ProviderDocumentVerificationController extends Controller
         ]);
     }
 
-    /**
-     * List all documents for the authenticated user.
-     * 
-     * GET /api/provider/verification/documents
-     */
     public function index(): JsonResponse
     {
-        $user = auth()->user();
+        $sessionId = session()->getId();
+        $userId = auth()->id();
         
-        $documents = ProviderDocumentVerification::where('user_id', $user->id)
+        $documents = ProviderDocumentVerification::where(function($query) use ($sessionId, $userId) {
+                $query->where('session_id', $sessionId);
+                if ($userId) {
+                    $query->orWhere('user_id', $userId);
+                }
+            })
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($doc) {
@@ -276,8 +254,7 @@ class ProviderDocumentVerificationController extends Controller
                     'document_side' => $doc->document_side,
                     'verification_status' => $doc->verification_status,
                     'confidence_score' => $doc->confidence_score,
-                    'verified_at' => $doc->verified_at,
-                    'created_at' => $doc->created_at
+                    'verified_at' => $doc->verified_at
                 ];
             });
 
