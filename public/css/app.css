@@ -1958,9 +1958,6 @@
   .border-amber-300 {
     border-color: var(--color-amber-300);
   }
-  .border-amber-400 {
-    border-color: var(--color-amber-400);
-  }
   .border-blue-100 {
     border-color: var(--color-blue-100);
   }
@@ -2624,10 +2621,6 @@
   }
   .from-amber-400 {
     --tw-gradient-from: var(--color-amber-400);
-    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
-  }
-  .from-amber-500 {
-    --tw-gradient-from: var(--color-amber-500);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
   .from-black\/20 {
@@ -4268,17 +4261,11 @@
   .ring-blue-100 {
     --tw-ring-color: var(--color-blue-100);
   }
-  .ring-blue-200 {
-    --tw-ring-color: var(--color-blue-200);
-  }
   .ring-blue-200\/50 {
     --tw-ring-color: color-mix(in srgb, oklch(88.2% 0.059 254.128) 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tw-ring-color: color-mix(in oklab, var(--color-blue-200) 50%, transparent);
     }
-  }
-  .ring-emerald-200 {
-    --tw-ring-color: var(--color-emerald-200);
   }
   .ring-emerald-600\/20 {
     --tw-ring-color: color-mix(in srgb, oklch(59.6% 0.145 163.225) 20%, transparent);
@@ -4298,17 +4285,11 @@
   .ring-green-100 {
     --tw-ring-color: var(--color-green-100);
   }
-  .ring-green-200 {
-    --tw-ring-color: var(--color-green-200);
-  }
   .ring-indigo-600\/20 {
     --tw-ring-color: color-mix(in srgb, oklch(51.1% 0.262 276.966) 20%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       --tw-ring-color: color-mix(in oklab, var(--color-indigo-600) 20%, transparent);
     }
-  }
-  .ring-orange-200 {
-    --tw-ring-color: var(--color-orange-200);
   }
   .ring-red-500 {
     --tw-ring-color: var(--color-red-500);
@@ -6258,19 +6239,9 @@
       height: calc(var(--spacing) * 20);
     }
   }
-  .sm\:h-44 {
-    @media (width >= 40rem) {
-      height: calc(var(--spacing) * 44);
-    }
-  }
   .sm\:h-48 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 48);
-    }
-  }
-  .sm\:h-64 {
-    @media (width >= 40rem) {
-      height: calc(var(--spacing) * 64);
     }
   }
   .sm\:h-auto {
@@ -6348,19 +6319,9 @@
       width: calc(var(--spacing) * 24);
     }
   }
-  .sm\:w-44 {
-    @media (width >= 40rem) {
-      width: calc(var(--spacing) * 44);
-    }
-  }
   .sm\:w-48 {
     @media (width >= 40rem) {
       width: calc(var(--spacing) * 48);
-    }
-  }
-  .sm\:w-64 {
-    @media (width >= 40rem) {
-      width: calc(var(--spacing) * 64);
     }
   }
   .sm\:w-96 {

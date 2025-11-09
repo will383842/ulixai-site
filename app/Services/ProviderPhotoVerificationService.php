@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\ProviderPhotoVerification;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class ProviderPhotoVerificationService
@@ -16,143 +15,132 @@ class ProviderPhotoVerificationService
         $this->googleVisionService = $googleVisionService;
     }
 
+    /**
+     * ✅ Verify a profile photo using Google Vision API
+     */
     public function verifyProfilePhoto(ProviderPhotoVerification $verification): void
     {
         try {
-            Log::channel('google-vision')->info('Starting profile photo verification', [
-                'verification_id' => $verification->id
-            ]);
-
+            // Update status to processing
             $verification->update(['status' => 'processing']);
 
-            $absolutePath = Storage::path($verification->image_path);
-
-            $googleResponse = $this->googleVisionService->analyzeProfilePhoto($absolutePath);
-
-            $analysis = $this->analyzeFaceDetection($googleResponse);
-
-            $status = $this->determineStatus($analysis['score']);
-            $message = $this->generateFeedbackMessage($status, $analysis['score']);
-
-            $updateData = [
-                'confidence_score' => $analysis['score'],
-                'google_vision_response' => $googleResponse
-            ];
-
-            if ($status === 'verified') {
-                $updateData['status'] = 'verified';
-                $updateData['verified_at'] = now();
-                $updateData['rejection_reason'] = null;
-            } else {
-                $updateData['status'] = 'rejected';
-                $updateData['rejection_reason'] = $message;
-            }
-
-            $verification->update($updateData);
-
-            Log::channel('google-vision')->info('Profile photo verification completed', [
+            Log::channel('google-vision')->info('Starting profile photo verification', [
                 'verification_id' => $verification->id,
-                'status' => $status,
-                'score' => $analysis['score']
+                'image_path' => $verification->image_path,
+                'file_exists' => file_exists($verification->image_path)
             ]);
 
-        } catch (Exception $e) {
-            Log::channel('google-vision')->error('Profile photo verification failed', [
+            // ✅ Analyze photo with Google Vision
+            $analysisResult = $this->googleVisionService->analyzeProfilePhoto($verification->image_path);
+
+            Log::channel('google-vision')->info('Google Vision analysis completed', [
                 'verification_id' => $verification->id,
-                'error' => $e->getMessage()
+                'face_count' => $analysisResult['face_count'],
+                'labels_count' => count($analysisResult['labels'])
+            ]);
+
+            // Validate the results
+            $validationResult = $this->validatePhotoAnalysis($analysisResult);
+
+            if ($validationResult['is_valid']) {
+                // ✅ Photo is valid
+                $verification->update([
+                    'status' => 'verified',
+                    'confidence_score' => $validationResult['confidence_score'],
+                    'google_vision_response' => json_encode($analysisResult),
+                    'verified_at' => now(),
+                ]);
+
+                Log::channel('google-vision')->info('Profile photo verified successfully', [
+                    'verification_id' => $verification->id,
+                    'confidence_score' => $validationResult['confidence_score']
+                ]);
+
+            } else {
+                // ❌ Photo rejected
+                $verification->update([
+                    'status' => 'rejected',
+                    'rejection_reason' => $validationResult['rejection_reason'],
+                    'google_vision_response' => json_encode($analysisResult),
+                ]);
+
+                Log::channel('google-vision')->warning('Profile photo rejected', [
+                    'verification_id' => $verification->id,
+                    'reason' => $validationResult['rejection_reason']
+                ]);
+            }
+
+        } catch (Exception $e) {
+            Log::channel('google-vision')->error('Error verifying profile photo', [
+                'verification_id' => $verification->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             $verification->update([
                 'status' => 'error',
-                'rejection_reason' => 'Verification error. Please try again.'
+                'rejection_reason' => '⚠️ An error occurred during verification. Please try again.'
             ]);
 
             throw $e;
         }
     }
 
-    protected function analyzeFaceDetection(array $googleResponse): array
+    /**
+     * ✅ Validate the Google Vision analysis results
+     */
+    protected function validatePhotoAnalysis(array $analysisResult): array
     {
-        $result = [
-            'face_count' => $googleResponse['face_count'] ?? 0,
-            'score' => 0,
-            'face_centered' => false,
-            'quality' => 'low'
+        $minConfidence = config('google-vision.confidence_threshold.face', 80);
+
+        // Check if at least one face is detected
+        if ($analysisResult['face_count'] === 0) {
+            return [
+                'is_valid' => false,
+                'rejection_reason' => '❌ No face detected in the photo. Please upload a clear photo of your face.',
+                'confidence_score' => 0
+            ];
+        }
+
+        // Check if multiple faces are detected
+        if ($analysisResult['face_count'] > 1) {
+            return [
+                'is_valid' => false,
+                'rejection_reason' => '❌ Multiple faces detected. Please upload a photo with only your face.',
+                'confidence_score' => 0
+            ];
+        }
+
+        // Get the confidence score of the detected face
+        $faceConfidence = $analysisResult['faces'][0]['confidence'] ?? 0;
+
+        // Check if confidence meets minimum threshold
+        if ($faceConfidence < $minConfidence) {
+            return [
+                'is_valid' => false,
+                'rejection_reason' => "❌ Photo quality is too low (confidence: {$faceConfidence}%). Please upload a clearer photo.",
+                'confidence_score' => round($faceConfidence)
+            ];
+        }
+
+        // Check labels for inappropriate content
+        $inappropriateLabels = ['nude', 'nudity', 'explicit', 'adult'];
+        foreach ($analysisResult['labels'] as $label) {
+            $description = strtolower($label['description']);
+            if (in_array($description, $inappropriateLabels)) {
+                return [
+                    'is_valid' => false,
+                    'rejection_reason' => '❌ Photo contains inappropriate content.',
+                    'confidence_score' => 0
+                ];
+            }
+        }
+
+        // ✅ All checks passed
+        return [
+            'is_valid' => true,
+            'rejection_reason' => null,
+            'confidence_score' => round($faceConfidence)
         ];
-
-        if ($result['face_count'] === 0) {
-            return $result;
-        }
-
-        if ($result['face_count'] > 1) {
-            $result['score'] = 40;
-            $result['quality'] = 'medium';
-            return $result;
-        }
-
-        $face = $googleResponse['faces'][0] ?? null;
-        if (!$face) {
-            $result['score'] = 30;
-            return $result;
-        }
-
-        $score = 50;
-
-        if (isset($face['confidence'])) {
-            if ($face['confidence'] >= 90) {
-                $score += 30;
-                $result['quality'] = 'high';
-            } elseif ($face['confidence'] >= 70) {
-                $score += 20;
-                $result['quality'] = 'medium';
-            } else {
-                $score += 10;
-                $result['quality'] = 'low';
-            }
-        }
-
-        if (isset($face['vertices'])) {
-            $vertices = $face['vertices'];
-            $faceWidth = abs($vertices[1]['x'] - $vertices[0]['x']);
-            $faceHeight = abs($vertices[2]['y'] - $vertices[0]['y']);
-            
-            if ($faceWidth > 100 && $faceHeight > 100) {
-                $result['face_centered'] = true;
-                $score += 20;
-            }
-        }
-
-        $result['score'] = min(100, $score);
-
-        return $result;
-    }
-
-    protected function determineStatus(int $score): string
-    {
-        return $score >= 60 ? 'verified' : 'rejected';
-    }
-
-    protected function generateFeedbackMessage(string $status, int $score): string
-    {
-        if ($status === 'verified') {
-            return "✅ Photo verified successfully! (Score: {$score})";
-        }
-
-        $message = "❌ Your photo was not accepted.\n\n";
-        
-        if ($score < 30) {
-            $message .= "We could not detect your face clearly.\n\n";
-        } else {
-            $message .= "Photo quality needs improvement.\n\n";
-        }
-        
-        $message .= "📸 Please retake with:\n";
-        $message .= "• Center your face in frame\n";
-        $message .= "• Use good lighting\n";
-        $message .= "• Face camera directly\n";
-        $message .= "• Remove sunglasses/masks\n";
-        $message .= "• Clear and sharp image";
-        
-        return $message;
     }
 }

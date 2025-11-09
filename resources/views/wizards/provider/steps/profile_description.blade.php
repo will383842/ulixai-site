@@ -17,37 +17,37 @@
   <!-- ============================================
        COMPACT HEADER (STICKY)
        ============================================ -->
-  <div class="sticky top-0 z-10 bg-white pt-1 pb-1 border-b border-gray-100">
+  <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
     <!-- Ambient Background Effects - 3 animated blobs -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-      <div class="absolute top-0 -left-4 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-      <div class="absolute top-0 -right-4 w-48 h-48 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-      <div class="absolute -bottom-8 left-20 w-48 h-48 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+      <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
     <!-- Header Section -->
-    <div class="text-center space-y-1 relative">
+    <div class="text-center space-y-2 relative">
       <!-- Icon Badge -->
       <div class="flex justify-center">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg ring-2 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
-          <span class="text-base sm:text-lg">✍️</span>
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
+          <span class="text-xl sm:text-2xl">✍️</span>
         </div>
       </div>
       
       <!-- Title & Subtitle -->
       <div>
-        <h2 class="text-base sm:text-lg lg:text-xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-0.5 tracking-tight">
+        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
           Your Professional Bio 🌟
         </h2>
-        <p class="text-xs sm:text-sm font-semibold text-gray-600">
+        <p class="text-sm sm:text-base font-semibold text-gray-600">
           Tell us about yourself and your expertise
         </p>
       </div>
 
       <!-- Status Badge -->
-      <div class="inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
-        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
         <span class="text-xs font-bold text-blue-700">
@@ -218,6 +218,26 @@
 #step9 #progressBar {
   transform-origin: left;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   🎨 RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 639px) {
+  #step9 .sticky {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  #step9 h2 {
+    font-size: 1.375rem;
+    line-height: 1.3;
+  }
+  
+  #step9 p {
+    font-size: 0.8125rem;
+  }
 }
 
 /* ============================================

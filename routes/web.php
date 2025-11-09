@@ -50,8 +50,12 @@ use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Controllers\RecruitApplicationController;
 use App\Http\Controllers\PressController;
 
-// ✅ Nouvel onglet Admin “Messages” (agrégateur)
+// ✅ Nouvel onglet Admin "Messages" (agrégateur)
 use App\Http\Controllers\Admin\MessagesController;
+
+// ✅ Google Vision API Controllers
+use App\Http\Controllers\Api\ProviderDocumentVerificationController;
+use App\Http\Controllers\Api\ProviderPhotoVerificationController;
 
 // ========================================
 // 🎯 ROUTES PRIORITAIRES - NE PAS DÉPLACER
@@ -102,7 +106,7 @@ Route::get('/press', function () {
     ]);
 })->name('press.page');
 
-// Helper sûr: filtre par langue seulement si colonne “language” existe
+// Helper sûr: filtre par langue seulement si colonne "language" existe
 $loadPressByLang = function (string $lang) {
     $q = \App\Models\Press::query();
     if (Schema::hasColumn('press', 'language')) {
@@ -509,6 +513,22 @@ Route::post('/conversations/{conversation}/report', [ConversationController::cla
 // ========================================
 Route::get('/customerreviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('review.show');
+
+// ========================================
+// 🔐 GOOGLE VISION API - VERIFICATION
+// ========================================
+Route::prefix('api/provider/verification')->group(function () {
+    Route::post('/photo', [ProviderPhotoVerificationController::class, 'upload']);
+    Route::get('/photo/status', [ProviderPhotoVerificationController::class, 'status']);
+    Route::get('/photo', [ProviderPhotoVerificationController::class, 'show']);
+    Route::delete('/photo', [ProviderPhotoVerificationController::class, 'destroy']);
+    
+    Route::post('/documents', [ProviderDocumentVerificationController::class, 'store']);
+    Route::get('/documents/{id}/status', [ProviderDocumentVerificationController::class, 'status']);
+    Route::get('/documents/{id}', [ProviderDocumentVerificationController::class, 'show']);
+    Route::delete('/documents/{id}', [ProviderDocumentVerificationController::class, 'destroy']);
+    Route::get('/documents', [ProviderDocumentVerificationController::class, 'index']);
+});
 
 // ========================================
 // ⚠️ CATCH-ALL (garder en dernier)

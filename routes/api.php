@@ -12,8 +12,6 @@ use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ServiceProviderController;
 use App\Http\Controllers\Admin\MissionAdminController;
 use App\Http\Controllers\BugReportController;
-use App\Http\Controllers\Api\ProviderDocumentVerificationController;
-use App\Http\Controllers\Api\ProviderPhotoVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,22 +64,3 @@ Route::patch('/admin/providers/{id}/edit-profile', [UserManagementController::cl
 Route::get('/admin/missions', [MissionAdminController::class, 'apiList']);
 Route::get('/admin/missions/{id}', [MissionAdminController::class, 'apiShow']);
 Route::post('/admin/transactions/{id}/refund', [TransactionController::class, 'refund'])->name('admin.transactions.refund');
-
-// ============================================
-// GOOGLE VISION - Provider Verification
-// ============================================
-Route::prefix('provider/verification')->group(function () {
-    
-    // Documents d'identité (passeport, permis, carte ID)
-    Route::post('/documents', [ProviderDocumentVerificationController::class, 'store']);
-    Route::get('/documents/{id}/status', [ProviderDocumentVerificationController::class, 'status']);
-    Route::get('/documents/{id}', [ProviderDocumentVerificationController::class, 'show']);
-    Route::delete('/documents/{id}', [ProviderDocumentVerificationController::class, 'destroy']);
-    Route::get('/documents', [ProviderDocumentVerificationController::class, 'index']);
-    
-    // Photo de profil
-    Route::post('/photo', [ProviderPhotoVerificationController::class, 'upload']);
-    Route::get('/photo/status', [ProviderPhotoVerificationController::class, 'status']);
-    Route::get('/photo', [ProviderPhotoVerificationController::class, 'show']);
-    Route::delete('/photo', [ProviderPhotoVerificationController::class, 'destroy']);
-});

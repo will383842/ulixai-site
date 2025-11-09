@@ -17,7 +17,7 @@ class ProcessProviderPhotoVerification implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 3;
-    public $timeout = 30;
+    public $timeout = 120;
     public $backoff = [5, 10, 20];
 
     protected $verification;
@@ -31,17 +31,24 @@ class ProcessProviderPhotoVerification implements ShouldQueue
     {
         Log::channel('google-vision')->info('Processing photo verification job', [
             'verification_id' => $this->verification->id,
-            'attempt' => $this->attempts()
+            'attempt' => $this->attempts(),
+            'image_path' => $this->verification->image_path
         ]);
 
         $service->verifyProfilePhoto($this->verification);
+
+        Log::channel('google-vision')->info('Photo verification job completed', [
+            'verification_id' => $this->verification->id,
+            'status' => $this->verification->fresh()->status
+        ]);
     }
 
     public function failed(Throwable $exception): void
     {
         Log::channel('google-vision')->error('Photo verification job failed after all retries', [
             'verification_id' => $this->verification->id,
-            'error' => $exception->getMessage()
+            'error' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString()
         ]);
 
         $this->verification->update([

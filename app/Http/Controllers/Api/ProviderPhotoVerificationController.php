@@ -44,7 +44,8 @@ class ProviderPhotoVerificationController extends Controller
             Log::channel('google-vision')->info('Profile photo verification initiated', [
                 'verification_id' => $verification->id,
                 'session_id' => $sessionId,
-                'user_id' => $userId
+                'user_id' => $userId,
+                'image_path' => $imagePath
             ]);
 
             return response()->json([
@@ -60,7 +61,8 @@ class ProviderPhotoVerificationController extends Controller
             Log::channel('google-vision')->error('Failed to upload profile photo', [
                 'session_id' => session()->getId(),
                 'user_id' => auth()->id(),
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             return response()->json([
@@ -177,8 +179,9 @@ class ProviderPhotoVerificationController extends Controller
             ], 404);
         }
 
-        if (Storage::exists($verification->image_path)) {
-            Storage::delete($verification->image_path);
+        // Delete physical file if it exists
+        if (file_exists($verification->image_path)) {
+            unlink($verification->image_path);
         }
 
         $verification->delete();
@@ -189,6 +192,9 @@ class ProviderPhotoVerificationController extends Controller
         ]);
     }
 
+    /**
+     * ✅ FIXED: Returns ABSOLUTE path instead of relative path
+     */
     private function saveBase64Image(string $base64Image, int $userId): string
     {
         $image = preg_replace('/^data:image\/\w+;base64,/', '', $base64Image);
@@ -199,10 +205,20 @@ class ProviderPhotoVerificationController extends Controller
         }
 
         $filename = 'photo_' . $userId . '_' . uniqid() . '.jpg';
-        $path = 'verifications/photos/' . $filename;
+        $directory = 'verifications/photos';
         
-        Storage::disk('public')->put($path, $image);
+        // Create directory if it doesn't exist
+        $fullDirectory = storage_path('app/' . $directory);
+        if (!file_exists($fullDirectory)) {
+            mkdir($fullDirectory, 0755, true);
+        }
         
-        return $path;
+        $relativePath = $directory . '/' . $filename;
+        
+        // Save to storage/app/verifications/photos/ (NOT public disk)
+        Storage::put($relativePath, $image);
+        
+        // ✅ Return ABSOLUTE path for Google Vision API
+        return storage_path('app/' . $relativePath);
     }
 }

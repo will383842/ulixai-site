@@ -9,7 +9,7 @@
         "doctrine/dbal": "^3.10",
         "fruitcake/laravel-cors": "^2.0.5",
         "google/apiclient": "^2",
-        "google/cloud-vision": "^2.1",
+        "google/cloud-vision": "1.9",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",

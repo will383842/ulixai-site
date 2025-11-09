@@ -1,130 +1,48 @@
-<div id="step11" class="hidden">
-  <style>
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #e5e7eb;
-      border-top-color: #3b82f6;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    .pulse-animation {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    .verification-processing {
-      border-color: #3b82f6;
-      background-color: #eff6ff;
-    }
-
-    .verification-verified {
-      border-color: #22c55e;
-      background-color: #f0fdf4;
-    }
-
-    .verification-rejected {
-      border-color: #ef4444;
-      background-color: #fef2f2;
-    }
-
-    .verification-error {
-      border-color: #f59e0b;
-      background-color: #fffbeb;
-    }
-
-    .doc-card {
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .doc-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-
-    .doc-card.selected {
-      border-color: #3b82f6;
-      background-color: #eff6ff;
-    }
-
-    .modal-overlay {
-      backdrop-filter: blur(4px);
-    }
-
-    .preview-box {
-      min-height: 200px;
-      border: 3px dashed #d1d5db;
-      border-radius: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      background: #f9fafb;
-    }
-
-    .preview-box img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .upload-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
-  </style>
-
-  <div class="max-w-4xl mx-auto px-4">
-    <!-- Header -->
-    <div class="text-center mb-8 fade-in">
-      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full mb-4">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/>
-        </svg>
-      </div>
-      <h2 class="text-3xl font-bold text-gray-900 mb-2">Identity Verification</h2>
-      <p class="text-gray-600">Choose one type of ID and upload clear photos</p>
+<div id="step11" class="hidden flex flex-col h-full" role="region" aria-label="Identity Verification">
+  
+  <!-- FIXED HEADER -->
+  <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
+    
+    <!-- Ambient Background Effects -->
+    <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+      <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+      <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
+    <!-- Header Section -->
+    <div class="text-center space-y-2 relative">
+      <div class="flex justify-center">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
+          <span class="text-xl sm:text-2xl">🪪</span>
+        </div>
+      </div>
+      
+      <div>
+        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
+          Identity Verification 🔐
+        </h2>
+        <p class="text-sm sm:text-base font-semibold text-gray-600">
+          Choose one type of ID and upload clear photos
+        </p>
+      </div>
+
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <span class="text-xs font-bold text-blue-700">
+          At least 1 document required
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCROLLABLE CONTENT -->
+  <div class="flex-1 overflow-y-auto pt-4 space-y-4 px-4">
+
     <!-- Document Type Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <!-- Passport Card -->
       <div class="doc-card bg-white rounded-xl p-6 border-2 border-gray-200 shadow-sm" onclick="openDocumentModal('passport')">
         <div class="text-center">
@@ -163,14 +81,14 @@
     </div>
 
     <!-- Info Box -->
-    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-3 border-blue-200 rounded-xl p-5 mb-8">
+    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-3 border-amber-300 rounded-xl p-5 sm:p-6 shadow-lg">
       <div class="flex items-start gap-3">
-        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">ℹ️</span>
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">
+          <span class="text-2xl">💡</span>
         </div>
         <div>
-          <h3 class="text-blue-900 font-bold text-lg mb-2">Important Tips</h3>
-          <ul class="text-blue-800 text-sm space-y-1">
+          <h3 class="text-amber-900 font-black text-lg sm:text-xl mb-2">Important Tips</h3>
+          <ul class="text-amber-800 font-semibold space-y-1.5 text-sm sm:text-base">
             <li>✓ All text must be clearly readable</li>
             <li>✓ Take photos in good lighting</li>
             <li>✓ Avoid shadows, glare and blur</li>
@@ -180,17 +98,16 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Navigation -->
-    <div class="flex justify-between mt-8">
-      <button onclick="prevStep()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">
-        ← Previous
-      </button>
-      <button id="continueBtn" onclick="nextStep()" disabled
-              class="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
-        Continue →
-      </button>
-    </div>
+  <!-- NAVIGATION -->
+  <div class="wizard-nav-container px-4">
+    <button id="backToStep10" type="button" class="nav-btn-back">
+      Back
+    </button>
+    <button id="continueBtn" type="button" class="nav-btn-next" disabled>
+      Next
+    </button>
   </div>
 
   <!-- Document Upload Modal -->
@@ -217,6 +134,33 @@
 
         <!-- Modal Body -->
         <div class="p-6 space-y-6">
+          
+          <!-- Error message inline (file type or size) -->
+          <div id="fileErrorMessage" class="hidden bg-red-50 border-2 border-red-500 rounded-lg p-3 fade-in">
+            <div class="flex items-start gap-2">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+              <div>
+                <p id="fileErrorTitle" class="text-sm font-bold text-red-800"></p>
+                <p id="fileErrorDetails" class="text-xs text-red-600 mt-1"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Camera error message inline -->
+          <div id="cameraErrorMessage" class="hidden bg-orange-50 border-2 border-orange-500 rounded-lg p-3 fade-in">
+            <div class="flex items-start gap-2">
+              <svg class="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              <div>
+                <p class="text-sm font-bold text-orange-800">Camera not accessible</p>
+                <p class="text-xs text-orange-600 mt-1">Please use the "Choose Photo" button to upload from your device instead.</p>
+              </div>
+            </div>
+          </div>
+
           <!-- Front Side -->
           <div id="frontSection">
             <h4 class="text-lg font-bold text-gray-900 mb-3">
@@ -329,10 +273,139 @@
     </div>
   </div>
 
-  <script>
-    // ============================================
-    // Configuration API
-    // ============================================
+</div>
+
+<!-- STYLES -->
+<style>
+/* Blob animations */
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+  will-change: transform;
+}
+
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.border-3 {
+  border-width: 3px;
+}
+
+.doc-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.doc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.doc-card.selected {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.modal-overlay {
+  backdrop-filter: blur(4px);
+}
+
+.preview-box {
+  min-height: 200px;
+  border: 3px dashed #d1d5db;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: #f9fafb;
+}
+
+.preview-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Responsive adjustments */
+@media (max-width: 639px) {
+  #step11 .sticky {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  #step11 h2 {
+    font-size: 1.375rem;
+    line-height: 1.3;
+  }
+  
+  #step11 p {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  #step11 .doc-card {
+    border: 3px solid currentColor;
+  }
+}
+</style>
+
+<!-- JAVASCRIPT -->
+<script>
+  (function() {
+    'use strict';
+
     const API_BASE_URL = '/api/provider/verification';
     
     @auth
@@ -343,10 +416,9 @@
       const IS_AUTHENTICATED = false;
     @endauth
     
-    // State
     const documentState = {
-      currentType: null, // 'passport', 'european_id', 'license'
-      currentSide: null, // 'front', 'back'
+      currentType: null,
+      currentSide: null,
       cameraStream: null,
       documents: {
         passport: { front: null, frontId: null, frontStatus: null },
@@ -356,7 +428,6 @@
       pollingIntervals: {}
     };
 
-    // Document type configurations
     const DOC_CONFIG = {
       passport: {
         icon: '🛂',
@@ -382,19 +453,56 @@
     };
 
     // ============================================
+    // Error Display - SILENT (NO ALERTS)
+    // ============================================
+    function showFileError(title, details) {
+      const errorDiv = document.getElementById('fileErrorMessage');
+      const errorTitle = document.getElementById('fileErrorTitle');
+      const errorDetails = document.getElementById('fileErrorDetails');
+      
+      if (errorDiv && errorTitle && errorDetails) {
+        errorTitle.textContent = title;
+        errorDetails.textContent = details;
+        errorDiv.classList.remove('hidden');
+        
+        setTimeout(() => {
+          errorDiv.classList.add('hidden');
+        }, 5000);
+      }
+    }
+
+    function showCameraError() {
+      const errorDiv = document.getElementById('cameraErrorMessage');
+      if (errorDiv) {
+        errorDiv.classList.remove('hidden');
+        setTimeout(() => {
+          errorDiv.classList.add('hidden');
+        }, 5000);
+      }
+    }
+
+    function hideAllErrors() {
+      const fileError = document.getElementById('fileErrorMessage');
+      const cameraError = document.getElementById('cameraErrorMessage');
+      
+      if (fileError) fileError.classList.add('hidden');
+      if (cameraError) cameraError.classList.add('hidden');
+    }
+
+    // ============================================
     // Modal Management
     // ============================================
-    function openDocumentModal(type) {
+    window.openDocumentModal = function(type) {
       documentState.currentType = type;
       const config = DOC_CONFIG[type];
 
-      // Update modal header
+      hideAllErrors();
+
       document.getElementById('modalIcon').textContent = config.icon;
       document.getElementById('modalTitle').textContent = config.title;
       document.getElementById('modalSubtitle').textContent = config.subtitle;
       document.getElementById('frontLabel').textContent = config.frontLabel;
 
-      // Show/hide back section
       const backSection = document.getElementById('backSection');
       if (config.needsBack) {
         backSection.classList.remove('hidden');
@@ -402,52 +510,42 @@
         backSection.classList.add('hidden');
       }
 
-      // Restore previous uploads if any
       restoreDocumentPreviews(type);
-
-      // Show modal
       document.getElementById('documentModal').classList.remove('hidden');
-      
-      // Update continue button state
       updateModalContinueButton();
-    }
+    };
 
-    function closeDocumentModal() {
+    window.closeDocumentModal = function() {
       document.getElementById('documentModal').classList.add('hidden');
       documentState.currentType = null;
-      
-      // Update main card statuses
+      hideAllErrors();
       updateCardStatuses();
-      
-      // Update main continue button
       updateMainContinueButton();
-    }
+    };
 
     // ============================================
-    // File Upload Handlers
+    // File Upload - SILENT VALIDATION
     // ============================================
-    function handleFrontUpload(event) {
+    window.handleFrontUpload = function(event) {
       const file = event.target.files[0];
-      if (file) {
-        processImageFile(file, 'front');
-      }
-    }
+      if (file) processImageFile(file, 'front');
+    };
 
-    function handleBackUpload(event) {
+    window.handleBackUpload = function(event) {
       const file = event.target.files[0];
-      if (file) {
-        processImageFile(file, 'back');
-      }
-    }
+      if (file) processImageFile(file, 'back');
+    };
 
     function processImageFile(file, side) {
+      hideAllErrors();
+
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        showFileError('Invalid file type', 'Please select an image file (JPG, PNG, etc.)');
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        alert('Image size must be less than 5 MB');
+        showFileError('File too large', 'Image size must be less than 5 MB. Please choose a smaller file.');
         return;
       }
 
@@ -461,19 +559,21 @@
     }
 
     // ============================================
-    // Camera Functions
+    // Camera - SILENT ERROR HANDLING
     // ============================================
-    async function takeFrontPhoto() {
+    window.takeFrontPhoto = async function() {
       documentState.currentSide = 'front';
       await openCameraModal();
-    }
+    };
 
-    async function takeBackPhoto() {
+    window.takeBackPhoto = async function() {
       documentState.currentSide = 'back';
       await openCameraModal();
-    }
+    };
 
     async function openCameraModal() {
+      hideAllErrors();
+
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' },
@@ -485,20 +585,20 @@
         document.getElementById('cameraModal').classList.remove('hidden');
       } catch (error) {
         console.error('Camera error:', error);
-        alert('Unable to access camera. Please use the file upload option.');
+        showCameraError();
       }
     }
 
-    function closeCameraModal() {
+    window.closeCameraModal = function() {
       if (documentState.cameraStream) {
         documentState.cameraStream.getTracks().forEach(track => track.stop());
         documentState.cameraStream = null;
       }
       document.getElementById('cameraStream').srcObject = null;
       document.getElementById('cameraModal').classList.add('hidden');
-    }
+    };
 
-    function captureDocument() {
+    window.captureDocument = function() {
       const video = document.getElementById('cameraStream');
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
@@ -513,29 +613,23 @@
       sendDocumentToBackend(imageData, documentState.currentSide);
       
       closeCameraModal();
-    }
+    };
 
-    // ============================================
-    // Display Image
-    // ============================================
     function displayImage(imageData, side) {
       const previewId = side === 'front' ? 'frontPreview' : 'backPreview';
       const preview = document.getElementById(previewId);
       
       preview.innerHTML = `<img src="${imageData}" alt="${side} preview">`;
       
-      // Store in state
       const type = documentState.currentType;
       documentState.documents[type][side] = imageData;
     }
 
     // ============================================
-    // Send to Backend - ADAPTÉ POUR AVEC/SANS AUTH
+    // Backend Communication
     // ============================================
     async function sendDocumentToBackend(imageData, side) {
       const type = documentState.currentType;
-      
-      // Show verification overlay
       showVerificationOverlay(side, 'Uploading...');
 
       try {
@@ -547,7 +641,6 @@
           'X-CSRF-TOKEN': csrfToken
         };
 
-        // Ajouter Authorization uniquement si authentifié
         if (IS_AUTHENTICATED && API_TOKEN) {
           headers['Authorization'] = `Bearer ${API_TOKEN}`;
         }
@@ -555,7 +648,7 @@
         const response = await fetch(`${API_BASE_URL}/documents`, {
           method: 'POST',
           headers: headers,
-          credentials: 'same-origin', // Important pour les cookies de session
+          credentials: 'same-origin',
           body: JSON.stringify({
             document_type: type,
             document_side: side,
@@ -566,11 +659,9 @@
         const data = await response.json();
 
         if (response.ok && data.success) {
-          // Store document ID
           const idKey = side === 'front' ? 'frontId' : 'backId';
           documentState.documents[type][idKey] = data.data.id;
           
-          // Start polling
           updateVerificationMessage(side, 'Verifying document...');
           startDocumentPolling(data.data.id, type, side);
         } else {
@@ -584,13 +675,9 @@
       }
     }
 
-    // ============================================
-    // Polling for Status - ADAPTÉ POUR AVEC/SANS AUTH
-    // ============================================
     function startDocumentPolling(documentId, type, side) {
       const key = `${type}_${side}`;
       
-      // Clear existing interval
       if (documentState.pollingIntervals[key]) {
         clearInterval(documentState.pollingIntervals[key]);
       }
@@ -604,7 +691,6 @@
             'X-CSRF-TOKEN': csrfToken
           };
 
-          // Ajouter Authorization uniquement si authentifié
           if (IS_AUTHENTICATED && API_TOKEN) {
             headers['Authorization'] = `Bearer ${API_TOKEN}`;
           }
@@ -635,13 +721,9 @@
       }
     }
 
-    // ============================================
-    // Handle Document Status
-    // ============================================
     function handleDocumentStatus(data, type, side, documentId) {
       const { status, message, confidence_score, rejection_reason } = data;
       
-      // Store status
       const statusKey = side === 'front' ? 'frontStatus' : 'backStatus';
       documentState.documents[type][statusKey] = status;
 
@@ -676,9 +758,6 @@
       }
     }
 
-    // ============================================
-    // Verification Overlay
-    // ============================================
     function showVerificationOverlay(side, message) {
       const overlayId = side === 'front' ? 'frontVerificationOverlay' : 'backVerificationOverlay';
       const messageId = side === 'front' ? 'frontVerificationMessage' : 'backVerificationMessage';
@@ -697,9 +776,6 @@
       document.getElementById(messageId).textContent = message;
     }
 
-    // ============================================
-    // Status Badges
-    // ============================================
     function showSuccessBadge(side, message, score) {
       const badgeId = side === 'front' ? 'frontStatusBadge' : 'backStatusBadge';
       const badge = document.getElementById(badgeId);
@@ -764,9 +840,6 @@
       badge.classList.remove('hidden');
     }
 
-    // ============================================
-    // Button State Management
-    // ============================================
     function updateModalContinueButton() {
       const btn = document.getElementById('modalContinueBtn');
       const type = documentState.currentType;
@@ -776,10 +849,8 @@
       let isComplete = false;
 
       if (config.needsBack) {
-        // Needs front AND back verified
         isComplete = doc.frontStatus === 'verified' && doc.backStatus === 'verified';
       } else {
-        // Only needs front verified
         isComplete = doc.frontStatus === 'verified';
       }
 
@@ -787,7 +858,6 @@
     }
 
     function updateCardStatuses() {
-      // Update each card
       Object.keys(DOC_CONFIG).forEach(type => {
         updateCardStatus(type);
       });
@@ -834,7 +904,6 @@
     function updateMainContinueButton() {
       const btn = document.getElementById('continueBtn');
       
-      // Check if at least one document type is fully verified
       const hasVerifiedDoc = Object.keys(DOC_CONFIG).some(type => {
         const doc = documentState.documents[type];
         const config = DOC_CONFIG[type];
@@ -849,15 +918,11 @@
       btn.disabled = !hasVerifiedDoc;
     }
 
-    // ============================================
-    // Restore Previews
-    // ============================================
     function restoreDocumentPreviews(type) {
       const doc = documentState.documents[type];
       
       if (doc.front) {
         displayImage(doc.front, 'front');
-        
         if (doc.frontStatus === 'verified') {
           showSuccessBadge('front', 'Document verified');
         }
@@ -865,7 +930,6 @@
 
       if (doc.back) {
         displayImage(doc.back, 'back');
-        
         if (doc.backStatus === 'verified') {
           showSuccessBadge('back', 'Document verified');
         }
@@ -873,8 +937,23 @@
     }
 
     // ============================================
-    // Cleanup
+    // Validation - NO ALERTS
     // ============================================
+    window.validateStep11 = function(showAlert) {
+      const hasVerifiedDoc = Object.keys(DOC_CONFIG).some(type => {
+        const doc = documentState.documents[type];
+        const config = DOC_CONFIG[type];
+        
+        if (config.needsBack) {
+          return doc.frontStatus === 'verified' && doc.backStatus === 'verified';
+        } else {
+          return doc.frontStatus === 'verified';
+        }
+      });
+
+      return hasVerifiedDoc;
+    };
+
     window.addEventListener('beforeunload', () => {
       Object.keys(documentState.pollingIntervals).forEach(key => {
         clearInterval(documentState.pollingIntervals[key]);
@@ -882,8 +961,7 @@
       closeCameraModal();
     });
 
-    // Initialize on page load
     updateCardStatuses();
     updateMainContinueButton();
-  </script>
-</div>
+  })();
+</script>

@@ -2,8 +2,8 @@
 ============================================
 🚀 STEP 13 - EMAIL WITH EXISTENCE CHECK
 ✅ Vérification email existant
-🎭 Message fun si email existe déjà
-🔗 Bouton login direct
+🚫 AUCUN alert/toastr - 100% silencieux
+🔒 Bouton bloqué si email existe
 ============================================
 -->
 
@@ -19,7 +19,7 @@
     <div class="text-center space-y-2 relative">
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
-          <span class="text-lg sm:text-xl">📧</span>
+          <span class="text-xl sm:text-2xl">📧</span>
         </div>
       </div>
       
@@ -43,17 +43,17 @@
     </div>
   </div>
 
-  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
+  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4 px-4">
 
     <!-- Info Banner -->
     <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-2xl p-3 sm:p-4">
       <div class="flex items-start gap-3">
-        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-          <span class="text-base">ℹ️</span>
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
+          <span class="text-lg sm:text-xl">ℹ️</span>
         </div>
         <div class="flex-1">
-          <p class="text-blue-900 font-bold text-sm sm:text-base">Required for communication</p>
-          <p class="text-blue-700 text-xs sm:text-sm font-medium mt-1">Enter a valid email address to receive updates and notifications</p>
+          <p class="text-blue-900 font-black text-sm sm:text-base">Required for communication</p>
+          <p class="text-blue-700 text-xs sm:text-sm font-semibold mt-1">Enter a valid email address to receive updates and notifications</p>
         </div>
       </div>
     </div>
@@ -89,7 +89,7 @@
       <p class="input-hint">We'll never share your email with anyone else</p>
     </div>
 
-    <!-- Error Alert -->
+    <!-- Error Alert - Format invalide -->
     <div id="step13Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -102,8 +102,8 @@
       </div>
     </div>
 
-    <!-- Email Exists Alert (FUN MESSAGE) -->
-    <div id="step13EmailExists" class="hidden bg-purple-50 border-l-4 border-purple-500 rounded-xl p-4 shake-animation" role="alert">
+    <!-- Email Exists Alert - SILENCIEUX (pas de toastr) -->
+    <div id="step13EmailExists" class="hidden bg-purple-50 border-l-4 border-purple-500 rounded-xl p-4 fade-in" role="alert">
       <div class="flex items-start gap-3">
         <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
           <span class="text-2xl">👋</span>
@@ -155,6 +155,16 @@
       </div>
     </div>
   </div>
+
+  <!-- NAVIGATION -->
+  <div class="wizard-nav-container px-4">
+    <button id="backToStep12" type="button" class="nav-btn-back">
+      Back
+    </button>
+    <button id="step13Continue" type="button" class="nav-btn-next" disabled>
+      Next
+    </button>
+  </div>
 </div>
 
 <style>
@@ -172,13 +182,24 @@
 .animation-delay-2000 { animation-delay: 2s; }
 .animation-delay-4000 { animation-delay: 4s; }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-8px); }
   75% { transform: translateX(8px); }
 }
 
-.shake-animation { animation: shake 0.5s ease-in-out; }
+.shake-animation { 
+  animation: shake 0.5s ease-in-out; 
+}
 
 #step13 .input-container {
   width: 100%;
@@ -250,6 +271,11 @@
   background-color: #eff6ff;
 }
 
+#step13 .email-input.exists {
+  border-color: #a855f7;
+  background-color: #faf5ff;
+}
+
 #step13 .success-indicator {
   position: absolute;
   right: 0.75rem;
@@ -301,10 +327,26 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms;
-    animation-iteration-count: 1;
-    transition-duration: 0.01ms;
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 639px) {
+  #step13 .sticky {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  #step13 h2 {
+    font-size: 1.375rem;
+    line-height: 1.3;
+  }
+  
+  #step13 p {
+    font-size: 0.8125rem;
   }
 }
 </style>
@@ -315,10 +357,13 @@
 
   const STORAGE_KEY = 'expats';
   const EMAIL_REGEX = /^[a-zA-Z0-9](?:[a-zA-Z0-9._+-]{0,62}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
+  const CHECK_DEBOUNCE = 800; // ms
   
   const state = {
     email: '',
     isValid: false,
+    emailExists: false,
+    isChecking: false,
     saveTimeout: null,
     validationTimeout: null,
     checkTimeout: null
@@ -335,7 +380,8 @@
         successAlert: document.getElementById('step13Success'),
         emailExistsAlert: document.getElementById('step13EmailExists'),
         statusText: document.getElementById('step13StatusText'),
-        checkingIndicator: document.getElementById('checkingIndicator')
+        checkingIndicator: document.getElementById('checkingIndicator'),
+        continueBtn: document.getElementById('step13Continue')
       };
     }
     return cachedElements;
@@ -372,11 +418,9 @@
   }
 
   /**
-   * Vérifier si l'email existe déjà
+   * Vérifier si l'email existe déjà - SILENCIEUX
    */
   async function checkEmailExists(email) {
-    const elements = getCachedElements();
-    
     try {
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
       
@@ -392,7 +436,7 @@
       
       if (!response.ok) {
         console.warn('Check email failed:', response.status);
-        return false; // En cas d'erreur, laisser passer
+        return false;
       }
       
       const data = await response.json();
@@ -400,14 +444,17 @@
       
     } catch (error) {
       console.error('Check email error:', error);
-      return false; // En cas d'erreur réseau, laisser passer
+      return false;
     }
   }
 
+  /**
+   * Afficher message email existe - SILENCIEUX (pas de toastr/alert)
+   */
   function showEmailExistsMessage() {
     const elements = getCachedElements();
     
-    // Cacher autres alertes
+    // Masquer autres alertes
     if (elements.successAlert) elements.successAlert.classList.add('hidden');
     if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
     
@@ -415,7 +462,6 @@
     if (elements.emailExistsAlert) {
       document.getElementById('existingEmail').textContent = state.email;
       elements.emailExistsAlert.classList.remove('hidden');
-      elements.emailExistsAlert.classList.add('shake-animation');
       
       requestAnimationFrame(() => {
         elements.emailExistsAlert.scrollIntoView({ 
@@ -423,91 +469,188 @@
           block: 'center' 
         });
       });
-      
-      setTimeout(() => {
-        elements.emailExistsAlert.classList.remove('shake-animation');
-      }, 500);
     }
     
-    // Vibration si disponible
+    // Input styling
+    if (elements.emailInput) {
+      elements.emailInput.classList.remove('valid', 'invalid', 'checking');
+      elements.emailInput.classList.add('exists');
+    }
+    
+    // Update status
+    if (elements.statusText) {
+      elements.statusText.textContent = 'Email already registered';
+    }
+    
+    // Vibration discrète si disponible
     if (navigator.vibrate) {
-      navigator.vibrate([100, 50, 100, 50, 100]);
+      navigator.vibrate([50, 30, 50]);
     }
     
-    if (typeof toastr !== 'undefined') {
-      toastr.warning('This email is already registered!', 'Account Exists');
-    }
+    // BLOQUER LE BOUTON
+    updateNavigationButton();
   }
 
+  /**
+   * Validation état local
+   */
   function updateValidationState() {
     const elements = getCachedElements();
     
     state.email = elements.emailInput.value.trim();
     state.isValid = validateEmail(state.email);
     
+    // Reset emailExists si on modifie l'email
+    if (elements.emailInput.dataset.lastChecked !== state.email) {
+      state.emailExists = false;
+      if (elements.emailExistsAlert) {
+        elements.emailExistsAlert.classList.add('hidden');
+      }
+    }
+    
     if (state.email.length > 0) {
-      if (state.isValid) {
-        elements.emailInput.classList.remove('invalid');
+      if (state.isValid && !state.emailExists) {
+        elements.emailInput.classList.remove('invalid', 'exists');
         elements.emailInput.classList.add('valid');
-      } else {
-        elements.emailInput.classList.remove('valid');
+      } else if (!state.isValid) {
+        elements.emailInput.classList.remove('valid', 'exists');
         elements.emailInput.classList.add('invalid');
       }
     } else {
-      elements.emailInput.classList.remove('valid', 'invalid');
+      elements.emailInput.classList.remove('valid', 'invalid', 'exists');
     }
     
     if (elements.statusText) {
-      if (state.isValid) {
+      if (state.isValid && !state.emailExists) {
         elements.statusText.textContent = 'Valid email provided';
+      } else if (state.emailExists) {
+        elements.statusText.textContent = 'Email already registered';
       } else {
         elements.statusText.textContent = 'Email not provided';
       }
     }
     
-    // Masquer email exists si on modifie
-    if (elements.emailExistsAlert) {
-      elements.emailExistsAlert.classList.add('hidden');
-    }
-    
-    if (state.isValid) {
+    if (state.isValid && !state.emailExists) {
       if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
       if (elements.successAlert) elements.successAlert.classList.remove('hidden');
     } else {
       if (elements.successAlert) elements.successAlert.classList.add('hidden');
     }
     
-    return state.isValid;
+    return state.isValid && !state.emailExists;
   }
 
   /**
-   * ✅ Validation globale avec vérification email existant
+   * Vérification avec debounce
    */
-  window.validateStep13 = async function() {
+  function scheduleEmailCheck() {
+    const elements = getCachedElements();
+    
+    if (state.checkTimeout) {
+      clearTimeout(state.checkTimeout);
+    }
+    
+    if (!state.isValid) return;
+    
+    state.checkTimeout = setTimeout(async () => {
+      // Afficher indicateur
+      state.isChecking = true;
+      if (elements.checkingIndicator) elements.checkingIndicator.classList.remove('hidden');
+      if (elements.emailInput) elements.emailInput.classList.add('checking');
+      
+      // Vérifier
+      const exists = await checkEmailExists(state.email);
+      
+      // Masquer indicateur
+      state.isChecking = false;
+      if (elements.checkingIndicator) elements.checkingIndicator.classList.add('hidden');
+      if (elements.emailInput) elements.emailInput.classList.remove('checking');
+      
+      // Marquer comme vérifié
+      elements.emailInput.dataset.lastChecked = state.email;
+      
+      // Mettre à jour état
+      state.emailExists = exists;
+      
+      if (exists) {
+        showEmailExistsMessage();
+      } else {
+        updateValidationState();
+      }
+      
+      updateNavigationButton();
+      
+    }, CHECK_DEBOUNCE);
+  }
+
+  /**
+   * Mettre à jour le bouton Continue
+   */
+  function updateNavigationButton() {
+    const elements = getCachedElements();
+    
+    // Le bouton est actif SEULEMENT si:
+    // 1. Email valide
+    // 2. Email n'existe PAS
+    // 3. Pas en cours de vérification
+    const canContinue = state.isValid && !state.emailExists && !state.isChecking;
+    
+    if (elements.continueBtn) {
+      elements.continueBtn.disabled = !canContinue;
+    }
+    
+    // Appeler la fonction globale si elle existe
+    if (typeof window.updateNavigationButtons === 'function') {
+      window.updateNavigationButtons();
+    }
+  }
+
+  /**
+   * ✅ Validation globale - BLOQUE si email existe
+   */
+  window.validateStep13 = async function(showAlert) {
     const elements = getCachedElements();
     
     console.log('🔍 [Step 13] validateStep13() called');
     
+    // Validation format
     if (!updateValidationState()) {
-      showError();
+      if (showAlert) {
+        showError();
+      }
       return false;
     }
     
-    // Afficher indicateur de vérification
-    if (elements.checkingIndicator) elements.checkingIndicator.classList.remove('hidden');
-    if (elements.emailInput) elements.emailInput.classList.add('checking');
-    
-    // Vérifier si email existe
-    const emailExists = await checkEmailExists(state.email);
-    
-    // Masquer indicateur
-    if (elements.checkingIndicator) elements.checkingIndicator.classList.add('hidden');
-    if (elements.emailInput) elements.emailInput.classList.remove('checking');
-    
-    if (emailExists) {
-      console.warn('⚠️ [Step 13] Email already exists');
-      showEmailExistsMessage();
+    // Si déjà vérifié et existe, bloquer
+    if (state.emailExists) {
+      console.warn('⚠️ [Step 13] Email already exists - BLOCKED');
       return false;
+    }
+    
+    // Si pas encore vérifié ou email modifié, vérifier maintenant
+    if (elements.emailInput.dataset.lastChecked !== state.email) {
+      // Afficher indicateur
+      state.isChecking = true;
+      if (elements.checkingIndicator) elements.checkingIndicator.classList.remove('hidden');
+      if (elements.emailInput) elements.emailInput.classList.add('checking');
+      
+      // Vérifier
+      const emailExists = await checkEmailExists(state.email);
+      
+      // Masquer indicateur
+      state.isChecking = false;
+      if (elements.checkingIndicator) elements.checkingIndicator.classList.add('hidden');
+      if (elements.emailInput) elements.emailInput.classList.remove('checking');
+      
+      // Marquer comme vérifié
+      elements.emailInput.dataset.lastChecked = state.email;
+      state.emailExists = emailExists;
+      
+      if (emailExists) {
+        console.warn('⚠️ [Step 13] Email exists - BLOCKED');
+        showEmailExistsMessage();
+        return false;
+      }
     }
     
     // Email valide et n'existe pas
@@ -553,12 +696,12 @@
     state.validationTimeout = setTimeout(() => {
       requestAnimationFrame(() => {
         updateValidationState();
+        
         if (state.isValid) {
           saveToLocalStorage();
-        }
-        
-        if (typeof window.updateNavigationButtons === 'function') {
-          window.updateNavigationButtons();
+          scheduleEmailCheck();
+        } else {
+          updateNavigationButton();
         }
       });
     }, 300);
@@ -571,14 +714,16 @@
     requestAnimationFrame(() => {
       updateValidationState();
       
-      if (typeof window.updateNavigationButtons === 'function') {
-        window.updateNavigationButtons();
+      if (state.isValid) {
+        scheduleEmailCheck();
+      } else {
+        updateNavigationButton();
       }
     });
   }
 
   /**
-   * Actions boutons
+   * Actions boutons - SILENCIEUX
    */
   window.goToLogin = function() {
     console.log('🔗 Redirecting to login...');
@@ -587,7 +732,7 @@
     const popup = document.getElementById('signupPopup');
     if (popup) popup.classList.add('hidden');
     
-    // Rediriger vers login
+    // Rediriger
     window.location.href = '/login';
   };
 
@@ -596,22 +741,32 @@
     
     const elements = getCachedElements();
     
-    // Vider l'input
+    // Vider
     if (elements.emailInput) {
       elements.emailInput.value = '';
+      elements.emailInput.dataset.lastChecked = '';
       elements.emailInput.focus();
     }
     
-    // Masquer l'alerte
+    // Masquer alertes
     if (elements.emailExistsAlert) {
       elements.emailExistsAlert.classList.add('hidden');
+    }
+    if (elements.errorAlert) {
+      elements.errorAlert.classList.add('hidden');
+    }
+    if (elements.successAlert) {
+      elements.successAlert.classList.add('hidden');
     }
     
     // Reset state
     state.email = '';
     state.isValid = false;
+    state.emailExists = false;
+    state.isChecking = false;
     
     updateValidationState();
+    updateNavigationButton();
   };
 
   function initEventDelegation() {
@@ -635,8 +790,10 @@
     requestAnimationFrame(() => {
       updateValidationState();
       
-      if (typeof window.updateNavigationButtons === 'function') {
-        window.updateNavigationButtons();
+      if (state.isValid) {
+        scheduleEmailCheck();
+      } else {
+        updateNavigationButton();
       }
     });
   }
@@ -661,7 +818,7 @@
     initEventDelegation();
     restoreState();
     
-    console.log('✅ [Step 13] Email validation with check initialized');
+    console.log('✅ [Step 13] Email validation initialized (SILENT MODE)');
   }
 
   if (document.readyState === 'loading') {

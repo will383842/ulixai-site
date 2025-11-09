@@ -1,30 +1,22 @@
 <!-- 
 ============================================
-🚀 STEP 15 - OTP VERIFICATION (OPTIMIZED)
+🚀 STEP 15 - OTP VERIFICATION
 ============================================
 ✨ Design System Blue/Cyan/Teal STRICT
-🎨 Code OTP 6 chiffres avec validation
-💎 Indicateurs visuels de succès/erreur
-⚡ Structure header fixe + contenu scrollable
-🔧 Optimisations CPU, RAM, GPU
-✅ Fetch API pour vérification
-✅ Persistance localStorage avec clé 'expats'
-⚡ Performance maximale
-🔑 Code de test: 111111 (pour développement)
-✅ CONFORME AU GUIDE SYSTÈME WIZARD
-🔧 Appel de la soumission finale après vérification OTP
+🔐 Code OTP 6 chiffres
+🚫 AUCUN toastr/alert - 100% silencieux
+✅ Messages inline uniquement
+⚡ Soumission finale après vérification
 ============================================
 -->
 
 @csrf
 <div id="step15" class="hidden flex flex-col h-full" role="region" aria-label="Verify your email">
   
-  <!-- ============================================
-       TITRE FIXE (STICKY)
-       ============================================ -->
+  <!-- FIXED HEADER -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects - 3 blobs animés -->
+    <!-- Ambient Background Effects -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -33,24 +25,21 @@
 
     <!-- Header Section -->
     <div class="text-center space-y-2 relative">
-      <!-- Icon Badge -->
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
-          <span class="text-lg sm:text-xl">📬</span>
+          <span class="text-xl sm:text-2xl">📬</span>
         </div>
       </div>
       
-      <!-- Title & Subtitle -->
       <div>
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
-          Check Your Email
+          Check Your Email 📧
         </h2>
         <p class="text-sm sm:text-base font-semibold text-gray-600">
-          Enter the verification code
+          Enter the verification code we sent you
         </p>
       </div>
 
-      <!-- Status Badge -->
       <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -62,37 +51,38 @@
     </div>
   </div>
 
-  <!-- ============================================
-       CONTENU SCROLLABLE
-       ============================================ -->
-  <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+  <!-- SCROLLABLE CONTENT -->
+  <div class="flex-1 overflow-y-auto px-4 pt-4 space-y-4">
 
     <!-- Info Banner -->
-    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-2xl p-3 sm:p-4">
+    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-3 border-amber-300 rounded-xl p-5 sm:p-6 shadow-lg">
       <div class="flex items-start gap-3">
-        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-          <span class="text-base">💡</span>
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">
+          <span class="text-2xl">💡</span>
         </div>
-        <div class="flex-1">
-          <p class="text-blue-900 font-bold text-sm sm:text-base">Check your inbox (and spam folder)</p>
-          <p class="text-blue-700 text-xs sm:text-sm font-medium mt-1">The code expires in 10 minutes • Test code: 111111</p>
+        <div>
+          <h3 class="text-amber-900 font-black text-lg sm:text-xl mb-2">Check your inbox</h3>
+          <p class="text-amber-800 font-semibold text-sm sm:text-base">Don't forget to check your spam folder!</p>
+          <p class="text-amber-700 font-medium text-xs sm:text-sm mt-1">The code expires in 10 minutes • Test code: <span class="font-mono bg-amber-200 px-2 py-0.5 rounded">111111</span></p>
         </div>
       </div>
     </div>
 
     <!-- OTP Input -->
     <div class="space-y-2">
-      <label for="otp_input" class="block text-sm font-semibold text-gray-700">
-        <span class="text-lg">🔐</span> Verification Code <span class="text-red-500">*</span>
+      <label for="otp_input" class="flex items-center gap-2 text-sm sm:text-base font-bold text-gray-700">
+        <span class="text-lg sm:text-xl">🔐</span>
+        <span>Verification Code</span>
+        <span class="text-red-500">*</span>
       </label>
       <div class="relative">
         <input 
           id="otp_input" 
           type="text" 
           placeholder="● ● ● ● ● ●" 
-          class="w-full px-4 py-4 bg-white border-2 border-gray-200 rounded-xl text-2xl text-center font-bold
+          class="w-full px-4 py-4 sm:py-5 bg-white border-2 border-gray-300 rounded-xl text-xl sm:text-2xl text-center font-bold
                  focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none
-                 transition-all duration-200 tracking-widest"
+                 transition-all duration-200 tracking-[0.5em]"
           maxlength="6"
           inputmode="numeric"
           pattern="[0-9]{6}"
@@ -100,7 +90,7 @@
           name="otp"
         />
       </div>
-      <p class="text-xs text-gray-500 text-center mt-1">Enter the 6-digit code sent to your email</p>
+      <p class="text-xs sm:text-sm text-gray-500 text-center font-medium">Enter the 6-digit code sent to your email</p>
     </div>
 
     <!-- Verify Button -->
@@ -108,10 +98,10 @@
       <button 
         type="button" 
         id="verifyOtpBtn" 
-        class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base shadow-xl hover:shadow-2xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         disabled
       >
-        Verify Code
+        🔓 Verify Code
       </button>
     </div>
 
@@ -120,45 +110,59 @@
       <button 
         type="button" 
         id="resendOtpBtn" 
-        class="text-blue-600 hover:text-blue-700 font-semibold text-sm underline transition-colors"
+        class="text-blue-600 hover:text-blue-700 font-bold text-sm sm:text-base underline transition-colors flex items-center gap-2"
       >
-        Resend Code
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        <span>Didn't receive the code? Resend</span>
       </button>
     </div>
 
-    <!-- Error Alert (Hidden by default) -->
-    <div id="step15Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
+    <!-- Error Alert - SILENCIEUX -->
+    <div id="step15Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 sm:p-4 fade-in" role="alert">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-sm font-semibold text-red-800" id="step15ErrorMessage">Invalid code</p>
-          <p class="text-xs text-red-600 mt-0.5">Please check your code and try again</p>
+          <p class="text-sm font-bold text-red-800" id="step15ErrorMessage">Invalid code</p>
+          <p class="text-xs text-red-600 mt-1">Please check your code and try again</p>
         </div>
       </div>
     </div>
 
-    <!-- Success Alert (Hidden by default) -->
-    <div id="step15Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3" role="status">
+    <!-- Resend Success - SILENCIEUX -->
+    <div id="step15ResendSuccess" class="hidden bg-blue-50 border-l-4 border-blue-500 rounded-xl p-3 sm:p-4 fade-in" role="status">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-sm font-bold text-blue-800">New code sent!</p>
+          <p class="text-xs text-blue-600 mt-1">Check your email inbox (and spam folder)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Alert -->
+    <div id="step15Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3 sm:p-4 fade-in" role="status">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-sm font-semibold text-green-800">Email verified successfully!</p>
-          <p class="text-xs text-green-600 mt-0.5">Creating your account...</p>
+          <p class="text-sm font-bold text-green-800">Email verified successfully! 🎉</p>
+          <p class="text-xs text-green-600 mt-1">Creating your account...</p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ============================================
-     STYLES OPTIMISÉS
-     ============================================ -->
+<!-- STYLES -->
 <style>
-/* Animations des blobs - optimisé GPU */
+/* Animations des blobs */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -170,23 +174,20 @@
   will-change: transform;
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
 
-/* Shake animation pour les erreurs */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-8px); }
-  75% { transform: translateX(8px); }
-}
-
-.shake-animation {
-  animation: shake 0.5s ease-in-out;
+.border-3 {
+  border-width: 3px;
 }
 
 /* Glow pulse animation pour le focus */
@@ -213,9 +214,25 @@
   background-color: #fef2f2;
 }
 
-/* Accessibility */
+/* Responsive adjustments */
+@media (max-width: 639px) {
+  #step15 .sticky {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  #step15 h2 {
+    font-size: 1.375rem;
+    line-height: 1.3;
+  }
+  
+  #step15 p {
+    font-size: 0.8125rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -227,6 +244,7 @@
 /**
  * ═══════════════════════════════════════════════════════════
  * STEP 15: Vérification OTP + Soumission Finale
+ * 🚫 AUCUN toastr/alert - 100% SILENCIEUX
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -240,6 +258,7 @@
   const resendBtn = document.getElementById('resendOtpBtn');
   const errorAlert = document.getElementById('step15Error');
   const successAlert = document.getElementById('step15Success');
+  const resendSuccessAlert = document.getElementById('step15ResendSuccess');
   const errorMessage = document.getElementById('step15ErrorMessage');
   const statusText = document.getElementById('step15StatusText');
   
@@ -281,7 +300,7 @@
   }
   
   /**
-   * Afficher une erreur
+   * Afficher une erreur - SILENCIEUX (pas de toastr)
    */
   function showError(message) {
     if (errorMessage) {
@@ -290,15 +309,21 @@
     
     if (errorAlert) {
       errorAlert.classList.remove('hidden');
-      errorAlert.classList.add('shake-animation');
       
-      setTimeout(() => {
-        errorAlert.classList.remove('shake-animation');
-      }, 500);
+      requestAnimationFrame(() => {
+        errorAlert.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      });
     }
     
     if (successAlert) {
       successAlert.classList.add('hidden');
+    }
+    
+    if (resendSuccessAlert) {
+      resendSuccessAlert.classList.add('hidden');
     }
     
     if (statusText) {
@@ -307,15 +332,26 @@
   }
   
   /**
-   * Afficher le succès
+   * Afficher le succès - SILENCIEUX (pas de toastr)
    */
   function showSuccess() {
     if (successAlert) {
       successAlert.classList.remove('hidden');
+      
+      requestAnimationFrame(() => {
+        successAlert.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      });
     }
     
     if (errorAlert) {
       errorAlert.classList.add('hidden');
+    }
+    
+    if (resendSuccessAlert) {
+      resendSuccessAlert.classList.add('hidden');
     }
     
     if (statusText) {
@@ -324,15 +360,37 @@
   }
   
   /**
-   * Vérifier l'OTP auprès du serveur
+   * Afficher succès resend - SILENCIEUX
+   */
+  function showResendSuccess() {
+    if (resendSuccessAlert) {
+      resendSuccessAlert.classList.remove('hidden');
+      
+      requestAnimationFrame(() => {
+        resendSuccessAlert.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      });
+      
+      // Auto-hide après 5 secondes
+      setTimeout(() => {
+        resendSuccessAlert.classList.add('hidden');
+      }, 5000);
+    }
+    
+    if (errorAlert) {
+      errorAlert.classList.add('hidden');
+    }
+  }
+  
+  /**
+   * Vérifier l'OTP auprès du serveur - SILENCIEUX
    */
   async function verifyOTP() {
     const otpCode = otpInput.value.trim();
     
     if (!validateOtpFormat(otpCode)) {
-      if (typeof toastr !== 'undefined') {
-        toastr.error('Please enter a valid 6-digit code', 'Invalid Code');
-      }
       showError('Please enter a valid 6-digit code');
       return;
     }
@@ -343,17 +401,12 @@
       data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
     } catch (e) {
       console.error('❌ [Step 15] Failed to read localStorage:', e);
-      if (typeof toastr !== 'undefined') {
-        toastr.error('System error. Please refresh the page.', 'Error');
-      }
+      showError('System error. Please refresh the page.');
       return;
     }
     
     if (!data.email) {
-      if (typeof toastr !== 'undefined') {
-        toastr.error('Email not found. Please go back to Step 13.', 'Error');
-      }
-      showError('Email not found');
+      showError('Email not found. Please go back to Step 13.');
       return;
     }
     
@@ -387,10 +440,6 @@
         
         showSuccess();
         
-        if (typeof toastr !== 'undefined') {
-          toastr.success('Email verified successfully!', 'Success');
-        }
-        
         // ═══════════════════════════════════════════════════════════
         // CRITIQUE: Appeler la soumission finale
         // ═══════════════════════════════════════════════════════════
@@ -402,11 +451,9 @@
             window.onProviderSignupSubmit();
           } else {
             console.error('❌ [Step 15] window.onProviderSignupSubmit is not defined!');
-            if (typeof toastr !== 'undefined') {
-              toastr.error('System error. Please refresh the page.', 'Error');
-            }
+            showError('System error. Please refresh the page.');
           }
-        }, 1500); // Délai de 1.5s pour montrer le message de succès
+        }, 1500);
         
       } else {
         // OTP invalide
@@ -414,14 +461,10 @@
         
         showError(result.message || 'Invalid verification code');
         
-        if (typeof toastr !== 'undefined') {
-          toastr.error(result.message || 'Invalid verification code', 'Error');
-        }
-        
         // Réactiver le bouton
         if (verifyBtn) {
           verifyBtn.disabled = false;
-          verifyBtn.innerHTML = 'Verify Code';
+          verifyBtn.innerHTML = '🔓 Verify Code';
         }
         
         // Effacer l'input
@@ -435,20 +478,16 @@
       
       showError('Network error. Please try again.');
       
-      if (typeof toastr !== 'undefined') {
-        toastr.error('Failed to verify code. Please try again.', 'Network Error');
-      }
-      
       // Réactiver le bouton
       if (verifyBtn) {
         verifyBtn.disabled = false;
-        verifyBtn.innerHTML = 'Verify Code';
+        verifyBtn.innerHTML = '🔓 Verify Code';
       }
     }
   }
   
   /**
-   * Renvoyer le code OTP
+   * Renvoyer le code OTP - SILENCIEUX
    */
   async function resendOTP() {
     let data;
@@ -456,16 +495,12 @@
       data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
     } catch (e) {
       console.error('❌ [Step 15] Failed to read localStorage:', e);
-      if (typeof toastr !== 'undefined') {
-        toastr.error('System error. Please refresh the page.', 'Error');
-      }
+      showError('System error. Please refresh the page.');
       return;
     }
     
     if (!data.email) {
-      if (typeof toastr !== 'undefined') {
-        toastr.error('Email not found', 'Error');
-      }
+      showError('Email not found. Please go back to Step 13.');
       return;
     }
     
@@ -473,7 +508,7 @@
     
     if (resendBtn) {
       resendBtn.disabled = true;
-      resendBtn.innerHTML = 'Sending...';
+      resendBtn.innerHTML = '<svg class="animate-spin h-4 w-4 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Sending...';
     }
     
     try {
@@ -492,27 +527,24 @@
       if (response.ok) {
         console.log('✅ [Step 15] OTP resent successfully');
         
-        if (typeof toastr !== 'undefined') {
-          toastr.success('New code sent to your email!', 'Success');
-        }
+        // SILENCIEUX - pas de toastr, juste message inline
+        showResendSuccess();
+        
       } else {
         console.error('❌ [Step 15] Failed to resend OTP:', result.message);
         
-        if (typeof toastr !== 'undefined') {
-          toastr.error(result.message || 'Failed to resend code', 'Error');
-        }
+        showError(result.message || 'Failed to resend code');
       }
       
     } catch (error) {
       console.error('❌ [Step 15] Network error:', error);
       
-      if (typeof toastr !== 'undefined') {
-        toastr.error('Failed to resend code', 'Network Error');
-      }
+      showError('Failed to resend code. Please try again.');
+      
     } finally {
       if (resendBtn) {
         resendBtn.disabled = false;
-        resendBtn.innerHTML = 'Resend Code';
+        resendBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span>Didn\'t receive the code? Resend</span>';
       }
     }
   }
@@ -527,7 +559,7 @@
     
     // Soumission avec Enter
     otpInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && !verifyBtn.disabled) {
+      if (e.key === 'Enter' && verifyBtn && !verifyBtn.disabled) {
         verifyOTP();
       }
     });
@@ -543,6 +575,6 @@
     resendBtn.addEventListener('click', resendOTP);
   }
   
-  console.log('✅ [Step 15] OTP verification initialized');
+  console.log('✅ [Step 15] OTP verification initialized (SILENT MODE)');
 })();
 </script>

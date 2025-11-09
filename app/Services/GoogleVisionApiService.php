@@ -4,8 +4,6 @@ namespace App\Services;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\Image;
-use Google\Cloud\Vision\V1\Feature;
-use Google\Cloud\Vision\V1\Feature\Type;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -32,9 +30,13 @@ class GoogleVisionApiService
 
         try {
             $this->client = new ImageAnnotatorClient();
+            Log::channel('google-vision')->info('Google Vision client initialized successfully', [
+                'credentials_path' => $credentialsPath
+            ]);
         } catch (Exception $e) {
             Log::channel('google-vision')->error('Failed to initialize Google Vision client', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'credentials_path' => $credentialsPath
             ]);
             throw $e;
         }
@@ -47,6 +49,10 @@ class GoogleVisionApiService
     {
         try {
             Log::channel('google-vision')->info('Analyzing document', ['path' => $imagePath]);
+
+            if (!file_exists($imagePath)) {
+                throw new Exception("Image file not found at: {$imagePath}");
+            }
 
             $imageContent = file_get_contents($imagePath);
             $image = (new Image())->setContent($imageContent);
@@ -102,14 +108,25 @@ class GoogleVisionApiService
     }
 
     /**
-     * Analyze profile photo for face detection.
+     * ✅ Analyze profile photo for face detection.
      */
     public function analyzeProfilePhoto(string $imagePath): array
     {
         try {
-            Log::channel('google-vision')->info('Analyzing profile photo', ['path' => $imagePath]);
+            Log::channel('google-vision')->info('Analyzing profile photo', [
+                'path' => $imagePath,
+                'file_exists' => file_exists($imagePath)
+            ]);
+
+            if (!file_exists($imagePath)) {
+                throw new Exception("Image file not found at: {$imagePath}");
+            }
 
             $imageContent = file_get_contents($imagePath);
+            if ($imageContent === false) {
+                throw new Exception("Failed to read image file at: {$imagePath}");
+            }
+
             $image = (new Image())->setContent($imageContent);
 
             // Detect faces
@@ -160,7 +177,8 @@ class GoogleVisionApiService
         } catch (Exception $e) {
             Log::channel('google-vision')->error('Error analyzing profile photo', [
                 'error' => $e->getMessage(),
-                'path' => $imagePath
+                'path' => $imagePath,
+                'file_exists' => file_exists($imagePath)
             ]);
             throw $e;
         }
@@ -172,6 +190,10 @@ class GoogleVisionApiService
     public function detectText(string $imagePath): array
     {
         try {
+            if (!file_exists($imagePath)) {
+                throw new Exception("Image file not found at: {$imagePath}");
+            }
+
             $imageContent = file_get_contents($imagePath);
             $image = (new Image())->setContent($imageContent);
 
@@ -202,6 +224,10 @@ class GoogleVisionApiService
     public function detectFaces(string $imagePath): array
     {
         try {
+            if (!file_exists($imagePath)) {
+                throw new Exception("Image file not found at: {$imagePath}");
+            }
+
             $imageContent = file_get_contents($imagePath);
             $image = (new Image())->setContent($imageContent);
 
@@ -235,6 +261,10 @@ class GoogleVisionApiService
     public function detectLabels(string $imagePath): array
     {
         try {
+            if (!file_exists($imagePath)) {
+                throw new Exception("Image file not found at: {$imagePath}");
+            }
+
             $imageContent = file_get_contents($imagePath);
             $image = (new Image())->setContent($imageContent);
 
