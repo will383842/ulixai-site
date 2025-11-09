@@ -7,10 +7,9 @@
 💎 Indicateurs visuels de succès
 ⚡ Structure header fixe + contenu scrollable
 🔧 Optimisations CPU, RAM, GPU
-✅ Persistance localStorage
+✅ Persistance localStorage avec clé 'expats'
 ⚡ Performance maximale
 ✅ CONFORME AU GUIDE SYSTÈME WIZARD
-🔧 MODIFIED: localStorage key changed to 'expats'
 ============================================
 -->
 
@@ -44,7 +43,7 @@
       <!-- Title & Subtitle -->
       <div>
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
-          What's Your Number? ☎️
+          What's Your Number?
         </h2>
         <p class="text-sm sm:text-base font-semibold text-gray-600">
           We'll use this to communicate with you
@@ -66,7 +65,7 @@
   <!-- ============================================
        CONTENU SCROLLABLE
        ============================================ -->
-  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
+  <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
 
     <!-- Info Banner -->
     <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-2xl p-3 sm:p-4">
@@ -82,26 +81,23 @@
     </div>
 
     <!-- Phone Input -->
-    <div class="input-container">
-      <label class="input-label">
-        <span class="text-lg sm:text-xl">📞</span>
-        <span class="label-text label-blue">Phone Number</span>
+    <div class="space-y-2">
+      <label for="phone_number_input" class="block text-sm font-semibold text-gray-700">
+        <span class="text-lg">📞</span> Phone Number <span class="text-red-500">*</span>
       </label>
-      <div class="input-wrapper">
+      <div class="relative">
         <input 
           id="phone_number_input" 
           type="tel" 
+          name="phone_number"
           placeholder="Enter your phone number"
-          class="phone-input"
+          class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-base
+                 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none
+                 transition-all duration-200"
           autocomplete="tel"
         />
-        <div class="success-indicator">
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-        </div>
       </div>
-      <p class="input-hint">We'll never share your phone number without your permission</p>
+      <p class="text-xs text-gray-500 mt-1">We'll never share your phone number without your permission</p>
     </div>
 
     <!-- Error Alert (Hidden by default) -->
@@ -136,10 +132,6 @@
      STYLES OPTIMISÉS
      ============================================ -->
 <style>
-/* ============================================
-   🎨 BASE STYLES
-   ============================================ */
-
 /* Animations des blobs - optimisé GPU */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -171,145 +163,18 @@
   animation: shake 0.5s ease-in-out;
 }
 
-/* ============================================
-   📝 INPUT STYLES
-   ============================================ */
-
-#step14 .input-container {
-  width: 100%;
-  transition: transform 0.3s ease;
-}
-
-#step14 .input-container:hover {
-  transform: translateY(-2px);
-}
-
-#step14 .input-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.625rem;
-  font-weight: 700;
-  font-size: 0.875rem;
-}
-
-@media (min-width: 640px) {
-  #step14 .input-label {
-    font-size: 1rem;
-  }
-}
-
-#step14 .label-text {
-  font-weight: 800;
-}
-
-#step14 .label-blue {
-  color: #2563eb;
-}
-
-#step14 .input-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-#step14 .phone-input {
-  width: 100%;
-  padding: 0.875rem 3rem 0.875rem 1.25rem;
-  border: 2px solid #d1d5db;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  background: white;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  outline: none;
-}
-
-@media (min-width: 640px) {
-  #step14 .phone-input {
-    padding: 1rem 3rem 1rem 1.25rem;
-    font-size: 1rem;
-  }
-}
-
-#step14 .phone-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-#step14 .phone-input.valid {
+/* Phone input validation states */
+#step14 #phone_number_input.valid {
   border-color: #10b981;
   background-color: #f0fdf4;
-  padding-right: 3rem;
 }
 
-#step14 .phone-input.invalid {
+#step14 #phone_number_input.invalid {
   border-color: #ef4444;
   background-color: #fef2f2;
 }
 
-#step14 .success-indicator {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2rem;
-  height: 2rem;
-  background: linear-gradient(135deg, #10b981, #059669);
-  border-radius: 50%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-@media (min-width: 640px) {
-  #step14 .success-indicator {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-}
-
-#step14 .phone-input.valid ~ .success-indicator {
-  display: flex;
-  opacity: 1;
-  animation: scaleIn 0.3s ease;
-}
-
-@keyframes scaleIn {
-  0% {
-    transform: translateY(-50%) scale(0);
-  }
-  50% {
-    transform: translateY(-50%) scale(1.1);
-  }
-  100% {
-    transform: translateY(-50%) scale(1);
-  }
-}
-
-#step14 .input-hint {
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  color: #6b7280;
-  font-weight: 500;
-}
-
-@media (min-width: 640px) {
-  #step14 .input-hint {
-    font-size: 0.875rem;
-  }
-}
-
-/* Error shake animation */
-#step14 .input-container.error-shake {
-  animation: shake 0.5s ease-in-out;
-}
-
-/* ============================================
-   📱 INTL-TEL-INPUT OVERRIDES
-   ============================================ */
-
+/* intl-tel-input overrides */
 #step14 .iti {
   width: 100%;
   display: block;
@@ -360,11 +225,6 @@
   background-color: rgba(59, 130, 246, 0.15);
 }
 
-#step14 .iti__selected-flag .iti__arrow {
-  border-top-color: #6b7280;
-  margin-left: 0.25rem;
-}
-
 #step14 .iti--allow-dropdown input {
   padding-left: 4.5rem !important;
 }
@@ -375,38 +235,13 @@
   }
 }
 
-/* ============================================
-   ♿ ACCESSIBILITY
-   ============================================ */
-
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-@media (prefers-contrast: high) {
-  #step14 .phone-input {
-    border: 3px solid currentColor;
-  }
-  
-  #step14 .phone-input:focus {
-    border: 3px solid #1d4ed8;
-  }
-}
-
-/* ============================================
-   ⚡ PERFORMANCE
-   ============================================ */
-
-#step14 .input-container,
-#step14 .phone-input,
-#step14 .success-indicator {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
 }
 </style>
 
@@ -415,18 +250,13 @@
    🎯 STEP 14 - PHONE VALIDATION
    ✅ CONFORME AU GUIDE SYSTÈME WIZARD
    ✅ Validation téléphone (min 6 chiffres)
-   ✅ Persistance localStorage
+   ✅ Persistance localStorage avec clé 'expats'
    ✅ intl-tel-input integration
-   🔧 MODIFIED: localStorage key 'expats'
    ============================================ */
 
 (function() {
   'use strict';
 
-  // ============================================
-  // 📦 STATE & CONSTANTS
-  // ============================================
-  
   const STORAGE_KEY = 'expats';
   
   const state = {
@@ -457,7 +287,7 @@
   }
 
   // ============================================
-  // 💾 LOCAL STORAGE - expats
+  // 💾 LOCAL STORAGE
   // ============================================
   
   function getLocalStorage() {
@@ -469,7 +299,6 @@
   }
 
   function saveToLocalStorage() {
-    // Debouncing - sauvegarder après 500ms d'inactivité
     if (state.saveTimeout) {
       clearTimeout(state.saveTimeout);
     }
@@ -479,8 +308,9 @@
         const data = getLocalStorage();
         data.phone_number = state.phone;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        console.log('💾 [Step 14] Phone saved to localStorage:', state.phone);
       } catch (e) {
-        console.warn('localStorage error:', e);
+        console.warn('⚠️ [Step 14] localStorage error:', e);
       }
     }, 500);
   }
@@ -503,9 +333,10 @@
         utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js'
       });
       
+      console.log('✅ [Step 14] intl-tel-input initialized');
       return true;
     } catch (e) {
-      console.error('Error initializing intl-tel-input:', e);
+      console.error('❌ [Step 14] Error initializing intl-tel-input:', e);
       return false;
     }
   }
@@ -520,7 +351,7 @@
     state.phone = elements.phoneInput.value.trim();
     const digitsOnly = state.phone.replace(/\D/g, '');
     
-    // Validation assouplie: au moins 6 chiffres
+    // Validation: au moins 6 chiffres
     state.isValid = digitsOnly.length >= 6;
     
     // Mise à jour des classes CSS
@@ -561,13 +392,16 @@
   // ============================================
   
   window.validateStep14 = function() {
+    console.log('🔍 [Step 14] validateStep14() called');
     const elements = getCachedElements();
     
     if (!validatePhone()) {
+      console.warn('⚠️ [Step 14] Validation failed');
       showError();
       return false;
     }
     
+    console.log('✅ [Step 14] Validation passed');
     return true;
   };
 
@@ -582,7 +416,6 @@
       elements.errorAlert.classList.remove('hidden');
       elements.errorAlert.classList.add('shake-animation');
       
-      // Scroll vers l'erreur
       requestAnimationFrame(() => {
         elements.errorAlert.scrollIntoView({ 
           behavior: 'smooth', 
@@ -590,17 +423,9 @@
         });
       });
       
-      // Retirer l'animation après
       setTimeout(() => {
         elements.errorAlert.classList.remove('shake-animation');
       }, 500);
-    }
-    
-    // Shake sur l'input
-    const inputContainer = elements.phoneInput?.closest('.input-container');
-    if (inputContainer) {
-      inputContainer.classList.add('error-shake');
-      setTimeout(() => inputContainer.classList.remove('error-shake'), 500);
     }
   }
 
@@ -612,7 +437,6 @@
     const input = e.target;
     if (!input || input.id !== 'phone_number_input') return;
     
-    // Debouncing pour la validation
     if (state.validationTimeout) {
       clearTimeout(state.validationTimeout);
     }
@@ -624,7 +448,6 @@
           saveToLocalStorage();
         }
         
-        // ✅ Notifier wizard-steps.js
         if (typeof window.updateNavigationButtons === 'function') {
           window.updateNavigationButtons();
         }
@@ -639,7 +462,6 @@
         saveToLocalStorage();
       }
       
-      // ✅ Notifier wizard-steps.js
       if (typeof window.updateNavigationButtons === 'function') {
         window.updateNavigationButtons();
       }
@@ -653,30 +475,12 @@
   function initEventDelegation() {
     const elements = getCachedElements();
     
-    // Event delegation sur le step
     if (elements.step) {
       elements.step.addEventListener('input', handleInput, { passive: true });
     }
     
-    // Event spécifique pour le changement de pays
     if (elements.phoneInput) {
       elements.phoneInput.addEventListener('countrychange', handleCountryChange);
-      
-      // Gestion de la direction du dropdown (up/down)
-      elements.phoneInput.addEventListener('open:countrydropdown', function() {
-        const list = document.querySelector('.iti__country-list');
-        if (!list) return;
-        
-        const rect = elements.phoneInput.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
-        
-        if (spaceAbove > spaceBelow && spaceAbove > 300) {
-          list.classList.add('iti__country-list--up');
-        } else {
-          list.classList.remove('iti__country-list--up');
-        }
-      });
     }
   }
 
@@ -688,17 +492,15 @@
     const elements = getCachedElements();
     const data = getLocalStorage();
     
-    // Restaurer le téléphone depuis localStorage
     if (elements.phoneInput && data.phone_number) {
       elements.phoneInput.value = data.phone_number;
       state.phone = data.phone_number;
+      console.log('🔄 [Step 14] Phone restored from localStorage:', data.phone_number);
     }
     
-    // Valider après restauration
     requestAnimationFrame(() => {
       validatePhone();
       
-      // ✅ Notifier wizard-steps.js
       if (typeof window.updateNavigationButtons === 'function') {
         window.updateNavigationButtons();
       }
@@ -710,27 +512,23 @@
   // ============================================
   
   function init() {
-    // Vérifier que intl-tel-input est chargé
     if (!window.intlTelInput) {
-      console.warn('intl-tel-input library not loaded');
+      console.warn('⚠️ [Step 14] intl-tel-input library not loaded');
       return;
     }
 
-    // Init intl-tel-input
     const itiSuccess = initIntlTelInput();
     if (!itiSuccess) {
-      console.error('Failed to initialize intl-tel-input');
+      console.error('❌ [Step 14] Failed to initialize intl-tel-input');
       return;
     }
 
-    // Observer pour détecter quand le step devient visible
     const elements = getCachedElements();
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
             if (!elements.step.classList.contains('hidden')) {
-              // Step est visible, restaurer l'état et valider
               restoreState();
             }
           }
@@ -740,14 +538,12 @@
       observer.observe(elements.step, { attributes: true });
     }
 
-    // Init event delegation
     initEventDelegation();
-
-    // Restaurer l'état initial
     restoreState();
+    
+    console.log('✅ [Step 14] Phone validation initialized');
   }
 
-  // Start when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

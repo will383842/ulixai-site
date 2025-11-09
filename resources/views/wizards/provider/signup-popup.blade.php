@@ -3,7 +3,7 @@
   PROVIDER SIGNUP POPUP - Multi-step wizard
   ═══════════════════════════════════════════════════════════
   This popup is only displayed for non-authenticated users
-  Handles provider registration in 16 steps with validation
+  Handles provider registration in 17 steps with validation
 --}}
 
 @php
@@ -32,7 +32,7 @@
         <div class="sm:hidden">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs font-medium text-gray-500">
-              Step <span id="currentStepNum">1</span> of 16
+              Step <span id="currentStepNum">1</span> of 17
             </span>
             <span class="text-xs font-semibold text-blue-600">
               <span id="progressPercentage">6</span>%
@@ -105,11 +105,14 @@
       {{-- Step 13: Email --}}
       @include('wizards.provider.steps.email')
       
-      {{-- Step 14: Verify email --}}
-      @include('wizards.provider.steps.verify_email')
+      {{-- Step 13bis: Password (NOUVEAU) --}}
+      @include('wizards.provider.steps.password')
       
-      {{-- Step 15: Phone number --}}
+      {{-- Step 14: Phone number --}}
       @include('wizards.provider.steps.phone_number')
+      
+      {{-- Step 15: Verify email (OTP) - AUTO-LOGIN APRÈS VALIDATION --}}
+      @include('wizards.provider.steps.verify_email')
       
       {{-- Step 16: Success confirmation --}}
       @include('wizards.provider.steps.success_confirmation')

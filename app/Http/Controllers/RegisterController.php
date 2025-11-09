@@ -25,37 +25,50 @@ class RegisterController extends Controller
         $geoLocationService = new GeolocationService();
         $countryName = $geoLocationService->getCountryFromRequest($request);
 
-        $user = User::where('email', $expats['email'])->first();
-
-        if ($user) {
-            // User exists: update user_role and create provider record
-            $user->user_role = 'service_provider';
-            $user->save();
-        } else {
-            // Create new user
-            $affiliateLink = $this->generateAffiliateLink($expats['email'] ?? '', $expats['first_name'] ?? '', $expats['last_name'] ?? '');
-            $user = User::create([
-                'name' => trim(($expats['first_name'] ?? '') . ' ' . ($expats['last_name'] ?? '')),
-                'email' => $expats['email'],
-                'password' => Hash::make($expats['password'] ?? Str::random(12)),
-                'country' => $countryName,
-                'preferred_language' => $expats['native_language'] ?? null,
-                'user_role' => 'service_provider',
-                'affiliate_code' => $affiliateLink,
-                'referred_by' => $expats['referred_by'] ?? null,
-                'referral_stats' => $expats['referral_stats'] ?? null,
-                'status' => 'active',
-                'is_fake' => $expats['is_fake'] ?? false,
-                'last_login_at' => now(),
-           ]);
+        // ═══════════════════════════════════════════════════════════
+        // 🔑 USER DÉJÀ CONNECTÉ (via verifyEmailOtp)
+        // ═══════════════════════════════════════════════════════════
+        $user = Auth::user();
+        
+        if (!$user) {
+            // Fallback : chercher par email
+            $user = User::where('email', $expats['email'])->first();
+            
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not found. Please verify your email first.',
+                ], 404);
+            }
         }
 
+        // ═══════════════════════════════════════════════════════════
+        // 🔐 METTRE À JOUR LE PASSWORD
+        // ═══════════════════════════════════════════════════════════
+        if (!empty($expats['password'])) {
+            $user->password = Hash::make($expats['password']);
+        }
+        
+        // Mettre à jour le statut et autres infos
+        $user->user_role = 'service_provider';
+        $user->status = 'active';
+        $user->name = trim(($expats['first_name'] ?? '') . ' ' . ($expats['last_name'] ?? ''));
+        $user->country = $countryName;
+        $user->preferred_language = $expats['native_language'] ?? null;
+        $user->last_login_at = now();
+        $user->save();
+
+        // ═══════════════════════════════════════════════════════════
+        // 📸 PROFILE IMAGE
+        // ═══════════════════════════════════════════════════════════
         $profileImagePath = null;
         if (!empty($expats['profile_image'])) {
             $profileImagePath = saveBase64Image($expats['profile_image'], 'assets/profileImages', 'profile-' . $user->id);
         }
 
-
+        // ═══════════════════════════════════════════════════════════
+        // 📄 DOCUMENTS
+        // ═══════════════════════════════════════════════════════════
         $documents = [];
         $docTypes = ['passport', 'european_id', 'license'];
         foreach ($docTypes as $docType) {
@@ -76,6 +89,9 @@ class RegisterController extends Controller
             }
         }
  
+        // ═══════════════════════════════════════════════════════════
+        // 🏢 CRÉER OU METTRE À JOUR LE PROVIDER
+        // ═══════════════════════════════════════════════════════════
         $provider = ServiceProvider::where('user_id', $user->id)->where('email', $expats['email'])->first();
 
         if($provider) {
@@ -135,37 +151,11 @@ class RegisterController extends Controller
             'city_coords' => null 
         ]);
         
-        // NOTE: L'envoi d'OTP est maintenant géré par sendEmailOtp() au step 13
-        // On garde ce code en backup au cas où l'email n'a pas été vérifié avant
-        $existingVerification = EmailVerification::where('user_id', $user->id)
-            ->where('email', $user->email)
-            ->where('is_verified', false)
-            ->first();
-            
-        if (!$existingVerification) {
-            $otp = random_int(100000, 999999);
-            EmailVerification::create([
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'otp' => $otp,
-                'is_verified' => false,
-            ]);
-
-            Mail::raw(
-                "Welcome to Ulixai!\n\nYour verification code is: {$otp}\n\nPlease enter this code to verify your email address.",
-                function ($message) use ($user) {
-                    $fromAddress = config('mail.from.address') ?: 'noreply@ulixai.com';
-                    $fromName = config('mail.from.name') ?: 'Ulixai';
-                    $message->to($user->email)
-                            ->from($fromAddress, $fromName)
-                            ->subject('Welcome to Ulixai - Email Verification');
-                }
-            );
-        }
-
+        // ═══════════════════════════════════════════════════════════
+        // 💳 STRIPE CONNECT
+        // ═══════════════════════════════════════════════════════════
         if (!$provider->stripe_account_id) {
-
-        $stripeAccount = $this->createStripeConnectCustomAccount($provider);
+            $stripeAccount = $this->createStripeConnectCustomAccount($provider);
             $provider->stripe_account_id = $stripeAccount['account_id'];
             $provider->kyc_status = $stripeAccount['isKYCCompele'] ? 'verified' : 'pending';
             $provider->stripe_chg_enabled = $stripeAccount['isKYCCompele'] ? true : false;
@@ -173,11 +163,13 @@ class RegisterController extends Controller
             $provider->kyc_link = $stripeAccount['onboarding_url'] ?? null;
             $provider->save();
         }
+
         return response()->json([
             'status' => 'success',
             'user' => $user,
             'provider' => $provider,
-            'message' => 'Registration successful. Please check your email for the verification code.',
+            'message' => 'Registration successful!',
+            'redirect' => url('/dashboard')
         ]);
     }
     
@@ -197,7 +189,6 @@ class RegisterController extends Controller
             $affiliateCode = $request->input('affiliate_code');
             $referrer = User::where('affiliate_code', $affiliateCode)->first();
             
-            // ✅ ENLEVÉ |confirmed - Un seul champ password maintenant!
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
@@ -220,20 +211,15 @@ class RegisterController extends Controller
                 'affiliate_code' => $affiliateLink,
                 'gender' => $request->input('gender'),
                 'referred_by' => $referrer ? $referrer->id : null,
-                'email_verified_at' => now() // Mark email as verified immediately
+                'email_verified_at' => now()
             ]);
 
-            // Log the user in
             Auth::login($user);
-            
-            // Update last login
             $user->update(['last_login_at' => now()]);
 
-            // Return view with user data
             return view('dashboard.dashboard-index', [
                 'user' => $user,
                 'title' => 'Dashboard',
-                // Add any other data you need to pass to the dashboard
             ]);
 
         } catch (\Exception $e) {
@@ -254,7 +240,9 @@ class RegisterController extends Controller
         return $slug;
     }
 
-    // NOUVELLE MÉTHODE: Envoyer OTP au step 13 (validation email)
+    // ═══════════════════════════════════════════════════════════
+    // 📧 ENVOYER OTP AU STEP 13
+    // ═══════════════════════════════════════════════════════════
     public function sendEmailOtp(Request $request)
     {
         $request->validate([
@@ -303,6 +291,9 @@ class RegisterController extends Controller
         ]);
     }
 
+    // ═══════════════════════════════════════════════════════════
+    // ✅ VÉRIFIER OTP AU STEP 15 + AUTO-LOGIN
+    // ═══════════════════════════════════════════════════════════
     public function verifyEmailOtp(Request $request)
     {
         $request->validate([
@@ -330,19 +321,22 @@ class RegisterController extends Controller
             ], 422);
         }
 
+        // Marquer comme vérifié
         $verification->is_verified = true;
         $verification->verified_at = now();
         $verification->save();
         
+        // Mettre à jour le user
         $user = $verification->user;
         if ($user && !$user->email_verified_at) {
             $user->email_verified_at = now();
             $user->save();
         }
         
-        \Auth::login($user, $request->filled('remember'));
+        // ✅ AUTO-LOGIN ICI
+        Auth::login($user, $request->filled('remember'));
         $request->session()->regenerate();
-        \Auth::user()->update(['last_login_at' => now()]);
+        Auth::user()->update(['last_login_at' => now()]);
         
         return response()->json([
             'status' => 'success',
@@ -364,7 +358,6 @@ class RegisterController extends Controller
             ], 404);
         }
 
-        // Generate new OTP and update/create verification record
         $otp = random_int(100000, 999999);
         $verification = EmailVerification::updateOrCreate(
             ['user_id' => $user->id, 'email' => $user->email],

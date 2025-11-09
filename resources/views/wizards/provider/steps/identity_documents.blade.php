@@ -334,7 +334,14 @@
     // Configuration API
     // ============================================
     const API_BASE_URL = '/api/provider/verification';
-    const API_TOKEN = '{{ auth()->user()->createToken("provider-verification")->plainTextToken ?? "" }}';
+    
+    @auth
+      const API_TOKEN = '{{ auth()->user()->createToken("provider-verification")->plainTextToken }}';
+      const IS_AUTHENTICATED = true;
+    @else
+      const API_TOKEN = '';
+      const IS_AUTHENTICATED = false;
+    @endauth
     
     // State
     const documentState = {
@@ -523,7 +530,7 @@
     }
 
     // ============================================
-    // Send to Backend
+    // Send to Backend - ADAPTÉ POUR AVEC/SANS AUTH
     // ============================================
     async function sendDocumentToBackend(imageData, side) {
       const type = documentState.currentType;
@@ -532,14 +539,23 @@
       showVerificationOverlay(side, 'Uploading...');
 
       try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+        
+        const headers = {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        };
+
+        // Ajouter Authorization uniquement si authentifié
+        if (IS_AUTHENTICATED && API_TOKEN) {
+          headers['Authorization'] = `Bearer ${API_TOKEN}`;
+        }
+
         const response = await fetch(`${API_BASE_URL}/documents`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_TOKEN}`,
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-          },
+          headers: headers,
+          credentials: 'same-origin', // Important pour les cookies de session
           body: JSON.stringify({
             document_type: type,
             document_side: side,
@@ -569,7 +585,7 @@
     }
 
     // ============================================
-    // Polling for Status
+    // Polling for Status - ADAPTÉ POUR AVEC/SANS AUTH
     // ============================================
     function startDocumentPolling(documentId, type, side) {
       const key = `${type}_${side}`;
@@ -581,11 +597,22 @@
 
       documentState.pollingIntervals[key] = setInterval(async () => {
         try {
+          const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+          
+          const headers = {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          };
+
+          // Ajouter Authorization uniquement si authentifié
+          if (IS_AUTHENTICATED && API_TOKEN) {
+            headers['Authorization'] = `Bearer ${API_TOKEN}`;
+          }
+
           const response = await fetch(`${API_BASE_URL}/documents/${documentId}/status`, {
-            headers: {
-              'Authorization': `Bearer ${API_TOKEN}`,
-              'Accept': 'application/json'
-            }
+            method: 'GET',
+            headers: headers,
+            credentials: 'same-origin'
           });
 
           const data = await response.json();
