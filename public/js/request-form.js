@@ -15,6 +15,11 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 (function () {
   'use strict';
 
+  // ✅ VARIABLES GLOBALES POUR L'EMAIL CHECK
+  var userScenario = 'new'; // 'new', 'returning-with-cookie', 'returning-without-cookie'
+  var userFirstName = '';
+  var isPasswordVerificationMode = false;
+
   // ✅ FONCTION DE COMPRESSION D'IMAGES
   function compressImage(file) {
     var maxWidth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1200;
@@ -54,6 +59,8 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   var funTexts = window.formConfig.funTexts;
   var stepLabels = window.formConfig.stepLabels;
   var isAuthenticated = window.formConfig.isAuthenticated;
+  var checkEmailUrl = window.formConfig.checkEmailUrl;
+  var verifyPasswordUrl = window.formConfig.verifyPasswordUrl;
   var steps = document.querySelectorAll('.form-step');
   var nextBtn = document.getElementById('nextBtn');
   var prevBtn = document.getElementById('prevBtn');
@@ -103,6 +110,11 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   var strengthLabel = document.getElementById('strengthLabel');
   if (password && strengthBar) {
     password.addEventListener('input', function () {
+      // Ne pas afficher la barre de force en mode vérification
+      if (isPasswordVerificationMode) {
+        updateNextButton();
+        return;
+      }
       var length = this.value.length;
       var strength = 0;
       var text = 'Too short';
@@ -220,6 +232,146 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   if (termsCheckbox) {
     termsCheckbox.addEventListener('change', updateNextButton);
   }
+
+  // ✅ FONCTION POUR VÉRIFIER L'EMAIL
+  function checkEmailExists(email) {
+    return fetch(checkEmailUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({
+        email: email
+      })
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      console.log('📧 Email check result:', data);
+      return data;
+    })["catch"](function (err) {
+      console.error('❌ Error checking email:', err);
+      return {
+        exists: false,
+        has_valid_cookie: false
+      };
+    });
+  }
+
+  // ✅ FONCTION POUR AFFICHER LE MESSAGE DE BIENVENUE AU STEP 11
+  function showWelcomeMessage(scenario, firstName) {
+    var welcomeMsg = document.getElementById('welcomeMessage');
+    var welcomeTitle = document.getElementById('welcomeTitle');
+    var welcomeText = document.getElementById('welcomeText');
+    if (!welcomeMsg) return;
+    if (scenario === 'new') {
+      welcomeTitle.textContent = '👋 Welcome!';
+      welcomeText.textContent = "Let's create your account 🎉";
+      welcomeMsg.classList.remove('hidden');
+    } else if (scenario === 'returning-with-cookie' || scenario === 'returning-without-cookie') {
+      welcomeTitle.textContent = "Hey ".concat(firstName, "! \uD83D\uDC4B");
+      welcomeText.textContent = 'Happy to see you back! ✨';
+      welcomeMsg.classList.remove('hidden');
+    }
+  }
+
+  // ✅ FONCTION POUR CONFIGURER LE STEP 12 EN MODE LOGIN
+  function setupPasswordLoginMode(firstName) {
+    isPasswordVerificationMode = true;
+    var passwordWelcomeMsg = document.getElementById('passwordWelcomeMessage');
+    var passwordWelcomeTitle = document.getElementById('passwordWelcomeTitle');
+    var passwordWelcomeText = document.getElementById('passwordWelcomeText');
+    var passwordLabel = document.getElementById('passwordLabel');
+    var passwordInput = document.getElementById('password');
+    var passwordStrength = document.getElementById('passwordStrength');
+    var passwordInfoText = document.getElementById('passwordInfoText');
+
+    // Afficher message personnalisé
+    if (passwordWelcomeMsg) {
+      passwordWelcomeTitle.textContent = "Hey ".concat(firstName, "! \uD83D\uDC4B");
+      passwordWelcomeText.textContent = 'Happy to see you back!';
+      passwordWelcomeMsg.classList.remove('hidden');
+    }
+
+    // Changer le placeholder et label
+    if (passwordInput) {
+      passwordInput.placeholder = 'Enter your password';
+      passwordInput.value = '';
+    }
+    if (passwordLabel) {
+      passwordLabel.textContent = 'Password';
+    }
+
+    // Masquer la barre de force
+    if (passwordStrength) {
+      passwordStrength.style.display = 'none';
+    }
+
+    // Changer le message info
+    if (passwordInfoText) {
+      passwordInfoText.innerHTML = '🔐 For security, please enter your <strong>password</strong>';
+    }
+  }
+
+  // ✅ FONCTION POUR CONFIGURER LE STEP 12 EN MODE CRÉATION
+  function setupPasswordCreationMode() {
+    isPasswordVerificationMode = false;
+    var passwordWelcomeMsg = document.getElementById('passwordWelcomeMessage');
+    var passwordLabel = document.getElementById('passwordLabel');
+    var passwordInput = document.getElementById('password');
+    var passwordStrength = document.getElementById('passwordStrength');
+    var passwordInfoText = document.getElementById('passwordInfoText');
+
+    // Masquer message personnalisé
+    if (passwordWelcomeMsg) {
+      passwordWelcomeMsg.classList.add('hidden');
+    }
+
+    // Restaurer placeholder et label
+    if (passwordInput) {
+      passwordInput.placeholder = 'Choose a secure password (min 6 chars)';
+      passwordInput.value = '';
+    }
+    if (passwordLabel) {
+      passwordLabel.textContent = 'Choose a password (minimum 6 characters)';
+    }
+
+    // Afficher la barre de force
+    if (passwordStrength) {
+      passwordStrength.style.display = 'block';
+    }
+
+    // Restaurer le message info
+    if (passwordInfoText) {
+      passwordInfoText.innerHTML = '🔐 Use at least <strong>6 characters</strong> — 8+ recommended';
+    }
+  }
+
+  // ✅ FONCTION POUR VÉRIFIER LE MOT DE PASSE
+  function verifyPassword(email, password) {
+    return fetch(verifyPasswordUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      console.log('🔐 Password verification result:', data);
+      return data;
+    })["catch"](function (err) {
+      console.error('❌ Error verifying password:', err);
+      return {
+        success: false,
+        message: 'Verification failed'
+      };
+    });
+  }
   function showStep(index) {
     if (isAuthenticated && index >= 9 && index <= 11) {
       currentStep = 12;
@@ -253,7 +405,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       if (index < 12) {
         stepCounter.textContent = 'Step ' + (index + 1);
       } else if (index === 12) {
-        stepCounter.textContent = 'Step 12b';
+        stepCounter.textContent = 'Step 12';
       } else {
         stepCounter.textContent = '';
       }
@@ -367,6 +519,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         }
         break;
       case 10:
+        // ✅ VALIDATION EMAIL + CHECK ASYNC
         var emailInput = document.getElementById('email');
         var email = emailInput.value;
         var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -374,16 +527,98 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
           message = 'Please enter a valid email address';
           valid = false;
           emailInput.focus();
-        } else {
-          checkEmailAndLogin(email);
+          showValidationError(message);
+          return false;
         }
-        break;
+
+        // Check email de manière asynchrone
+        nextBtn.disabled = true;
+        nextBtn.textContent = 'Checking...';
+        checkEmailExists(email).then(function (data) {
+          if (data.exists && data.has_valid_cookie) {
+            // Scénario 2: Email connu + cookies valides
+            userScenario = 'returning-with-cookie';
+            userFirstName = data.first_name || 'there';
+
+            // Afficher message au step 10
+            showWelcomeMessage('returning-with-cookie', userFirstName);
+
+            // Skip step 11 (password) et aller direct au step 12
+            setTimeout(function () {
+              currentStep = 11; // On va incrémenter à 12 dans nextBtn.click()
+              storeStepData(10);
+              currentStep++;
+              showStep(currentStep);
+            }, 1500);
+          } else if (data.exists && !data.has_valid_cookie) {
+            // Scénario 3: Email connu + pas de cookies
+            userScenario = 'returning-without-cookie';
+            userFirstName = data.first_name || 'there';
+
+            // Afficher message au step 10
+            showWelcomeMessage('returning-without-cookie', userFirstName);
+
+            // Aller au step 11 en mode login
+            setTimeout(function () {
+              storeStepData(10);
+              currentStep++;
+              setupPasswordLoginMode(userFirstName);
+              showStep(currentStep);
+            }, 1500);
+          } else {
+            // Scénario 1: Email inconnu (nouveau user)
+            userScenario = 'new';
+
+            // Afficher message welcome
+            showWelcomeMessage('new', '');
+
+            // Aller au step 11 en mode création
+            setTimeout(function () {
+              storeStepData(10);
+              currentStep++;
+              setupPasswordCreationMode();
+              showStep(currentStep);
+            }, 1000);
+          }
+          nextBtn.disabled = false;
+          nextBtn.textContent = 'Next →';
+        });
+        return false;
+      // Empêcher la progression immédiate
+
       case 11:
+        // ✅ VALIDATION PASSWORD (création ou vérification)
         var pwd = document.getElementById('password');
         if (!pwd.value || pwd.value.length < 6) {
           message = 'Password must be at least 6 characters';
           valid = false;
           pwd.focus();
+          showValidationError(message);
+          return false;
+        }
+
+        // Si mode vérification, vérifier le mot de passe
+        if (isPasswordVerificationMode) {
+          var _email = document.getElementById('email').value;
+          nextBtn.disabled = true;
+          nextBtn.textContent = 'Verifying...';
+          verifyPassword(_email, pwd.value).then(function (data) {
+            if (data.success) {
+              // Mot de passe correct
+              console.log('✅ Password correct');
+              storeStepData(11);
+              currentStep++;
+              showStep(currentStep);
+            } else {
+              // Mot de passe incorrect
+              showValidationError(data.message || 'Wrong password, please try again');
+              pwd.value = '';
+              pwd.focus();
+            }
+            nextBtn.disabled = false;
+            nextBtn.textContent = 'Next →';
+          });
+          return false; // Empêcher la progression immédiate
         }
         break;
       case 12:
@@ -589,6 +824,11 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   });
   nextBtn.addEventListener('click', function () {
     if (currentStep < totalSteps - 1) {
+      // ✅ Pour les steps 10 et 11, validateStep gère déjà la progression async
+      if (currentStep === 10 || currentStep === 11 && isPasswordVerificationMode) {
+        validateStep(currentStep);
+        return;
+      }
       if (!validateStep(currentStep)) return;
       storeStepData(currentStep);
       if (isAuthenticated && currentStep === 8) {
@@ -666,10 +906,8 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   prevBtn.addEventListener('click', function () {
     if (currentStep > 0) {
       storeStepData(currentStep);
-
-      // ✅ FIX: Gérer le retour depuis step 12b (step 12 quand authentifié)
       if (isAuthenticated && currentStep === 12) {
-        currentStep = 8; // Retourner au step languages (step 9)
+        currentStep = 8;
       } else {
         currentStep--;
       }
@@ -689,8 +927,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   var capturePhotoBtn = document.getElementById('capturePhotoBtn');
   var closeCameraModal = document.getElementById('closeCameraModal');
   var cameraStream = null;
-
-  // Variables pour le zoom
   var currentZoomLevel = 1;
   var currentPhotoBox = null;
   var photoZoomModal = document.getElementById('photoZoomModal');
@@ -706,21 +942,15 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
     var preview = box.querySelector('.photo-preview');
     menuBtn.addEventListener('click', function (e) {
       e.preventDefault();
-
-      // Si une photo existe déjà, ouvrir le zoom
       if (box.classList.contains('has-photo')) {
         openPhotoZoom(preview.src, box);
         return;
       }
-
-      // Sinon ouvrir le menu d'upload
       activePhotoInput = input;
       activePhotoPreview = preview;
       photoMenuModal.classList.remove('hidden');
       photoMenuModal.style.zIndex = '9999';
     });
-
-    // ✅ COMPRESSION lors de la sélection depuis la bibliothèque
     input.addEventListener('change', /*#__PURE__*/function () {
       var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(e) {
         var file, compressedFile, dataTransfer, photoUrl, label, reader;
@@ -752,21 +982,14 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
               return compressImage(file, 1200, 0.8);
             case 4:
               compressedFile = _context.v;
-              // Remplacer le fichier dans l'input
               dataTransfer = new DataTransfer();
               dataTransfer.items.add(compressedFile);
               input.files = dataTransfer.files;
-
-              // Afficher la preview
               photoUrl = URL.createObjectURL(compressedFile);
               preview.src = photoUrl;
-
-              // Changer l'apparence du bloc
               box.classList.add('has-photo');
               label = box.querySelector('.photo-label');
               if (label) label.classList.add('hidden');
-
-              // Sauvegarder dans localStorage
               reader = new FileReader();
               reader.onload = function (readerEvent) {
                 var photoData = JSON.parse(localStorage.getItem('photo-previews')) || {};
@@ -882,7 +1105,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
                       file = new File([blob], 'camera-photo-' + Date.now() + '.png', {
                         type: 'image/png',
                         lastModified: Date.now()
-                      }); // ✅ COMPRESSION de la photo capturée
+                      });
                       _context2.n = 1;
                       return compressImage(file, 1200, 0.8);
                     case 1:
@@ -931,8 +1154,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       }, _callee3);
     }));
   }
-
-  // ✅ FONCTIONS DE ZOOM
   function openPhotoZoom(imageUrl, photoBox) {
     currentPhotoBox = photoBox;
     zoomedImage.src = imageUrl;
@@ -978,8 +1199,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   if (deletePhotoBtn) {
     deletePhotoBtn.addEventListener('click', function () {
       if (!currentPhotoBox) return;
-
-      // Reset le bloc photo
       var input = currentPhotoBox.querySelector('.photo-input');
       var preview = currentPhotoBox.querySelector('.photo-preview');
       var label = currentPhotoBox.querySelector('.photo-label');
@@ -987,8 +1206,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       preview.src = preview.getAttribute('data-default-src') || '/images/uploadpng.png';
       currentPhotoBox.classList.remove('has-photo');
       if (label) label.classList.remove('hidden');
-
-      // Supprimer du localStorage
       var photoName = input.name;
       var photoData = JSON.parse(localStorage.getItem('photo-previews')) || {};
       delete photoData[photoName];
@@ -997,41 +1214,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       closePhotoZoom();
     });
   }
-  function checkEmailAndLogin(email) {
-    fetch('/check-email-login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      },
-      body: JSON.stringify({
-        email: email
-      })
-    }).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      if (data.success) {
-        updateHeaderUI(data.user);
-        currentStep = 12;
-        showStep(currentStep);
-      }
-    })["catch"](function (err) {
-      console.error('Error checking email:', err);
-    });
-  }
-  function updateHeaderUI(user) {
-    var authButtonsContainer = document.querySelector('.flex.items-center.space-x-3');
-    if (!authButtonsContainer) return;
-    var userMenuHTML = "\n            <div class=\"relative\" x-data=\"{ open:false }\">\n                <button \n                    type=\"button\"\n                    @click=\"open = !open\"\n                    @keydown.escape.window=\"open = false\"\n                    class=\"flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100\"\n                    aria-haspopup=\"menu\"\n                    :aria-expanded=\"open.toString()\"\n                >\n                    <div class=\"w-8 h-8 rounded-full border bg-center bg-cover\"\n                         style=\"background-image: url('".concat(user.avatar || '/images/helpexpat.png', "');\">\n                    </div>\n                    <span id=\"header-user-name\" class=\"font-medium text-gray-700 truncate max-w-[10rem]\">\n                        ").concat(user.name || 'User', "\n                    </span>\n                    <i class=\"fas fa-chevron-down text-gray-500 text-sm\"></i>\n                </button>\n                <div\n                    x-cloak\n                    x-show=\"open\"\n                    x-transition\n                    @click.outside=\"open = false\"\n                    @keydown.escape.window=\"open = false\"\n                    style=\"display:none\"\n                    class=\"absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden z-50\"\n                    role=\"menu\"\n                >\n                    <div class=\"p-3 flex items-center gap-3 border-b\">\n                        <div class=\"w-8 h-8 rounded-full border bg-center bg-cover\"\n                             style=\"background-image: url('").concat(user.avatar || '/images/helpexpat.png', "');\">\n                        </div>\n                        <div class=\"min-w-0\">\n                            <div id=\"header-user-fullname\" class=\"font-semibold truncate mb-1\">\n                                ").concat(user.name || 'User', "\n                            </div>\n                            <div class=\"text-xs\">\n                                <span class=\"inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20 truncate max-w-[12rem]\">\n                                    <i class=\"fas fa-toolbox text-[11px]\"></i>\n                                    Service Provider\n                                </span>\n                            </div>\n                        </div>\n                    </div>\n                    <nav class=\"py-1\">\n                        <a href=\"/dashboard\" \n                           class=\"flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-gray-50\" \n                           role=\"menuitem\">\n                            <i class=\"fas fa-gauge\"></i>\n                            <span>Dashboard</span>\n                        </a>\n                        <form method=\"POST\" action=\"/logout\" class=\"mt-1\">\n                            <input type=\"hidden\" name=\"_token\" value=\"").concat(document.querySelector('meta[name="csrf-token"]').getAttribute('content'), "\">\n                            <button type=\"submit\" \n                                    class=\"w-full text-left flex items-center gap-2 px-4 py-2.5 text-red-600 hover:bg-red-50\" \n                                    role=\"menuitem\">\n                                <i class=\"fas fa-right-from-bracket\"></i>\n                                <span>Log out</span>\n                            </button>\n                        </form>\n                    </nav>\n                </div>\n            </div>\n        ");
-    authButtonsContainer.innerHTML = userMenuHTML;
-    if (window.Alpine) {
-      window.Alpine.initTree(authButtonsContainer);
-    }
-  }
-
-  // Keyboard shortcuts
   document.addEventListener('keydown', function (e) {
-    // Enter key pour next
     if (e.key === 'Enter' && !e.shiftKey && !nextBtn.disabled) {
       var activeEl = document.activeElement;
       if (activeEl && activeEl.tagName !== 'TEXTAREA') {
@@ -1039,8 +1222,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         nextBtn.click();
       }
     }
-
-    // Escape pour fermer le zoom
     if (e.key === 'Escape' && !photoZoomModal.classList.contains('hidden')) {
       closePhotoZoom();
     }

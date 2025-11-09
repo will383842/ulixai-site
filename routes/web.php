@@ -67,6 +67,9 @@ Route::get('/provider/{slug}', [ServiceProviderController::class, 'providerProfi
 
 Route::post('/check-email-login', [App\Http\Controllers\AuthController::class, 'checkEmailAndLogin']);
 
+Route::post('/check-email', [ServiceRequestController::class, 'checkEmail'])->name('check-email');
+Route::post('/verify-password', [ServiceRequestController::class, 'verifyPassword'])->name('verify-password');
+
 // Recruitment
 Route::get('/recruitment', [ReviewController::class, 'recruitment'])->name('recruitment');
 Route::post('/recruit/apply', [RecruitApplicationController::class, 'store'])->name('recruit.apply');

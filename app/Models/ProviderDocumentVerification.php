@@ -21,6 +21,7 @@ class ProviderDocumentVerification extends Model
      */
     protected $fillable = [
         'user_id',
+        'session_id',  // ✅ AJOUTÉ
         'document_type',
         'document_side',
         'image_path',

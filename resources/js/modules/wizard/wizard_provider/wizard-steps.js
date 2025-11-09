@@ -1,9 +1,10 @@
 /**
- * Wizard Steps – VERSION AVEC SUPPORT DE step13bis
+ * Wizard Steps – VERSION CORRIGÉE
  * ✅ totalSteps = 17
  * ✅ Gère step13bis en plus des IDs numériques
  * ✅ Le JavaScript ne touche JAMAIS au style
  * ✅ Gère uniquement btn.disabled = true/false
+ * ✅ HARMONISATION localStorage - pas de conflit entre steps
  */
 
 export class WizardSteps {
@@ -53,8 +54,11 @@ export class WizardSteps {
 
   saveFormData() {
     try { 
-      localStorage.setItem('expats', JSON.stringify(this.formData));
-      console.log('💾 Form data saved to localStorage');
+      // ✅ NE PAS écraser - merger avec l'existant
+      const existing = JSON.parse(localStorage.getItem(this.storeKey) || '{}');
+      const merged = { ...existing, ...this.formData };
+      localStorage.setItem(this.storeKey, JSON.stringify(merged));
+      console.log('💾 Form data merged into localStorage');
     } catch {
       console.warn('⚠️ Failed to save form data to localStorage');
     }
@@ -164,6 +168,13 @@ export class WizardSteps {
       return;
     }
     
+    // ═══════════════════════════════════════════════════════════
+    // 🔄 STEP 4 : Auto-reset quand on y arrive
+    // ═══════════════════════════════════════════════════════════
+    if (i === 3) { // step4
+      this.resetStep4();
+    }
+    
     console.log('🙈 Hiding all steps...');
     for (let k = 0; k < this.totalSteps; k++) {
       const s = this.getStepElement(k);
@@ -189,6 +200,39 @@ export class WizardSteps {
     this.updateNavigationButtons();
     
     console.log('✅ showStep completed - current step is now:', this.getStepId(this.currentStep));
+  }
+
+  resetStep4() {
+    console.log('🔄 Resetting step4...');
+    
+    const step4 = this.getStepElement(3);
+    if (!step4) return;
+    
+    // Reset tous les inputs du step 4
+    step4.querySelectorAll('input, select, textarea').forEach(input => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        input.checked = false;
+      } else {
+        input.value = '';
+      }
+    });
+    
+    // Supprimer les données du step 4 de localStorage
+    try {
+      const data = JSON.parse(localStorage.getItem(this.storeKey) || '{}');
+      
+      // Supprimer toutes les clés liées au step 4
+      step4.querySelectorAll('input, select, textarea').forEach(input => {
+        if (input.name) {
+          delete data[input.name];
+        }
+      });
+      
+      localStorage.setItem(this.storeKey, JSON.stringify(data));
+      console.log('✅ Step 4 reset - data removed from localStorage');
+    } catch (e) {
+      console.warn('⚠️ Failed to reset step4 in localStorage');
+    }
   }
 
   nextStep() {
@@ -334,7 +378,27 @@ export class WizardSteps {
       return;
     }
     
-    console.log('💾 Saving data for', this.getStepId(this.currentStep));
+    const stepId = this.getStepId(this.currentStep);
+    
+    // ═══════════════════════════════════════════════════════════
+    // ✅ STEPS avec gestion CUSTOM de localStorage
+    // Ces steps gèrent leur propre sauvegarde, on ne fait rien ici
+    // ═══════════════════════════════════════════════════════════
+    const customStorageSteps = ['step3', 'step13bis', 'step14', 'step15'];
+    if (customStorageSteps.includes(stepId)) {
+      console.log(`💾 ${stepId} handles its own storage - skipping automatic save`);
+      return;
+    }
+    
+    // ═══════════════════════════════════════════════════════════
+    // ✅ Step 11 (Documents) - Utilise l'API, pas localStorage
+    // ═══════════════════════════════════════════════════════════
+    if (stepId === 'step11') {
+      console.log('💾 step11 uses API backend - skipping localStorage save');
+      return;
+    }
+    
+    console.log('💾 Saving data for', stepId);
     
     el.querySelectorAll('input, select, textarea').forEach(input => {
       if (!input.name) return;

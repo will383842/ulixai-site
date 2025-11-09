@@ -308,7 +308,8 @@
           // Car l'utilisateur devrait avoir été redirigé après OTP
           // On peut forcer la redirection ici
           setTimeout(() => {
-            const dashboardRoute = '{{ route("provider.dashboard") ?? "/provider/dashboard" }}';
+            const dashboardRoute = '/dashboard';
+            php'redirect' => url('/dashboard')
             console.log('🔄 [Step 16] Forcing redirect to dashboard:', dashboardRoute);
             
             if (typeof toastr !== 'undefined') {

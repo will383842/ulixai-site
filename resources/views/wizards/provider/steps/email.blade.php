@@ -1,23 +1,21 @@
 <!-- 
 ============================================
-🚀 STEP 13 - EMAIL INPUT - VERSION PROPRE
-✅ Le JS ne touche JAMAIS au style
+🚀 STEP 13 - EMAIL WITH EXISTENCE CHECK
+✅ Vérification email existant
+🎭 Message fun si email existe déjà
+🔗 Bouton login direct
 ============================================
 -->
 
 <div id="step13" class="hidden flex flex-col h-full" role="region" aria-label="Enter your email">
   
-  <!-- TITRE FIXE (STICKY) -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
-    
-    <!-- Ambient Background Effects -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Header Section -->
     <div class="text-center space-y-2 relative">
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
@@ -45,7 +43,6 @@
     </div>
   </div>
 
-  <!-- CONTENU SCROLLABLE -->
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
     <!-- Info Banner -->
@@ -81,6 +78,13 @@
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
           </svg>
         </div>
+        <!-- Checking indicator -->
+        <div id="checkingIndicator" class="hidden absolute right-3 top-1/2 -translate-y-1/2">
+          <svg class="animate-spin h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+        </div>
       </div>
       <p class="input-hint">We'll never share your email with anyone else</p>
     </div>
@@ -94,6 +98,46 @@
         <div>
           <p class="text-sm font-semibold text-red-800">Invalid email address</p>
           <p class="text-xs text-red-600 mt-0.5">Please enter a valid email (e.g., name@example.com)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email Exists Alert (FUN MESSAGE) -->
+    <div id="step13EmailExists" class="hidden bg-purple-50 border-l-4 border-purple-500 rounded-xl p-4 shake-animation" role="alert">
+      <div class="flex items-start gap-3">
+        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">👋</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-lg font-black text-purple-900 mb-1">Hey, we know you! 🎉</p>
+          <p class="text-sm font-semibold text-purple-800 mb-3">
+            Looks like <span class="font-mono bg-purple-200 px-2 py-0.5 rounded" id="existingEmail"></span> already has an account with us.
+          </p>
+          <p class="text-xs text-purple-700 mb-4">
+            You can only have one account per email. But don't worry, you have options:
+          </p>
+          
+          <!-- Action buttons -->
+          <div class="flex flex-col sm:flex-row gap-2">
+            <button 
+              onclick="goToLogin()" 
+              class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2.5 rounded-lg font-bold text-sm hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+              </svg>
+              <span>Login to my account</span>
+            </button>
+            <button 
+              onclick="tryAnotherEmail()" 
+              class="flex-1 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-purple-50 transition-all flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              <span>Try another email</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -114,7 +158,6 @@
 </div>
 
 <style>
-/* Blob animations */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -126,26 +169,17 @@
   will-change: transform;
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-/* Shake animation */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-8px); }
   75% { transform: translateX(8px); }
 }
 
-.shake-animation {
-  animation: shake 0.5s ease-in-out;
-}
+.shake-animation { animation: shake 0.5s ease-in-out; }
 
-/* Input Styles */
 #step13 .input-container {
   width: 100%;
   transition: transform 0.3s ease;
@@ -165,18 +199,11 @@
 }
 
 @media (min-width: 640px) {
-  #step13 .input-label {
-    font-size: 1rem;
-  }
+  #step13 .input-label { font-size: 1rem; }
 }
 
-#step13 .label-text {
-  font-weight: 800;
-}
-
-#step13 .label-blue {
-  color: #2563eb;
-}
+#step13 .label-text { font-weight: 800; }
+#step13 .label-blue { color: #2563eb; }
 
 #step13 .input-wrapper {
   position: relative;
@@ -218,6 +245,11 @@
   background-color: #fef2f2;
 }
 
+#step13 .email-input.checking {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
 #step13 .success-indicator {
   position: absolute;
   right: 0.75rem;
@@ -248,15 +280,9 @@
 }
 
 @keyframes scaleIn {
-  0% {
-    transform: translateY(-50%) scale(0);
-  }
-  50% {
-    transform: translateY(-50%) scale(1.1);
-  }
-  100% {
-    transform: translateY(-50%) scale(1);
-  }
+  0% { transform: translateY(-50%) scale(0); }
+  50% { transform: translateY(-50%) scale(1.1); }
+  100% { transform: translateY(-50%) scale(1); }
 }
 
 #step13 .input-hint {
@@ -267,17 +293,13 @@
 }
 
 @media (min-width: 640px) {
-  #step13 .input-hint {
-    font-size: 0.875rem;
-  }
+  #step13 .input-hint { font-size: 0.875rem; }
 }
 
-/* Error shake */
 #step13 .input-container.error-shake {
   animation: shake 0.5s ease-in-out;
 }
 
-/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms;
@@ -298,7 +320,8 @@
     email: '',
     isValid: false,
     saveTimeout: null,
-    validationTimeout: null
+    validationTimeout: null,
+    checkTimeout: null
   };
 
   let cachedElements = null;
@@ -310,7 +333,9 @@
         emailInput: document.getElementById('email_input'),
         errorAlert: document.getElementById('step13Error'),
         successAlert: document.getElementById('step13Success'),
-        statusText: document.getElementById('step13StatusText')
+        emailExistsAlert: document.getElementById('step13EmailExists'),
+        statusText: document.getElementById('step13StatusText'),
+        checkingIndicator: document.getElementById('checkingIndicator')
       };
     }
     return cachedElements;
@@ -341,15 +366,77 @@
   }
 
   function validateEmail(email) {
-    if (!email || email.length === 0) {
-      return false;
-    }
-    
-    if (email.length < 5 || email.length > 100) {
-      return false;
-    }
-    
+    if (!email || email.length === 0) return false;
+    if (email.length < 5 || email.length > 100) return false;
     return EMAIL_REGEX.test(email);
+  }
+
+  /**
+   * Vérifier si l'email existe déjà
+   */
+  async function checkEmailExists(email) {
+    const elements = getCachedElements();
+    
+    try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+      
+      const response = await fetch('/check-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+      
+      if (!response.ok) {
+        console.warn('Check email failed:', response.status);
+        return false; // En cas d'erreur, laisser passer
+      }
+      
+      const data = await response.json();
+      return data.exists === true;
+      
+    } catch (error) {
+      console.error('Check email error:', error);
+      return false; // En cas d'erreur réseau, laisser passer
+    }
+  }
+
+  function showEmailExistsMessage() {
+    const elements = getCachedElements();
+    
+    // Cacher autres alertes
+    if (elements.successAlert) elements.successAlert.classList.add('hidden');
+    if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
+    
+    // Afficher message email existe
+    if (elements.emailExistsAlert) {
+      document.getElementById('existingEmail').textContent = state.email;
+      elements.emailExistsAlert.classList.remove('hidden');
+      elements.emailExistsAlert.classList.add('shake-animation');
+      
+      requestAnimationFrame(() => {
+        elements.emailExistsAlert.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      });
+      
+      setTimeout(() => {
+        elements.emailExistsAlert.classList.remove('shake-animation');
+      }, 500);
+    }
+    
+    // Vibration si disponible
+    if (navigator.vibrate) {
+      navigator.vibrate([100, 50, 100, 50, 100]);
+    }
+    
+    if (typeof toastr !== 'undefined') {
+      toastr.warning('This email is already registered!', 'Account Exists');
+    }
   }
 
   function updateValidationState() {
@@ -378,6 +465,11 @@
       }
     }
     
+    // Masquer email exists si on modifie
+    if (elements.emailExistsAlert) {
+      elements.emailExistsAlert.classList.add('hidden');
+    }
+    
     if (state.isValid) {
       if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
       if (elements.successAlert) elements.successAlert.classList.remove('hidden');
@@ -388,15 +480,39 @@
     return state.isValid;
   }
 
-  // ✅ Validation globale
-  window.validateStep13 = function() {
+  /**
+   * ✅ Validation globale avec vérification email existant
+   */
+  window.validateStep13 = async function() {
     const elements = getCachedElements();
+    
+    console.log('🔍 [Step 13] validateStep13() called');
     
     if (!updateValidationState()) {
       showError();
       return false;
     }
     
+    // Afficher indicateur de vérification
+    if (elements.checkingIndicator) elements.checkingIndicator.classList.remove('hidden');
+    if (elements.emailInput) elements.emailInput.classList.add('checking');
+    
+    // Vérifier si email existe
+    const emailExists = await checkEmailExists(state.email);
+    
+    // Masquer indicateur
+    if (elements.checkingIndicator) elements.checkingIndicator.classList.add('hidden');
+    if (elements.emailInput) elements.emailInput.classList.remove('checking');
+    
+    if (emailExists) {
+      console.warn('⚠️ [Step 13] Email already exists');
+      showEmailExistsMessage();
+      return false;
+    }
+    
+    // Email valide et n'existe pas
+    saveToLocalStorage();
+    console.log('✅ [Step 13] Email validation passed');
     return true;
   };
 
@@ -461,6 +577,43 @@
     });
   }
 
+  /**
+   * Actions boutons
+   */
+  window.goToLogin = function() {
+    console.log('🔗 Redirecting to login...');
+    
+    // Fermer le wizard
+    const popup = document.getElementById('signupPopup');
+    if (popup) popup.classList.add('hidden');
+    
+    // Rediriger vers login
+    window.location.href = '/login';
+  };
+
+  window.tryAnotherEmail = function() {
+    console.log('🔄 Trying another email...');
+    
+    const elements = getCachedElements();
+    
+    // Vider l'input
+    if (elements.emailInput) {
+      elements.emailInput.value = '';
+      elements.emailInput.focus();
+    }
+    
+    // Masquer l'alerte
+    if (elements.emailExistsAlert) {
+      elements.emailExistsAlert.classList.add('hidden');
+    }
+    
+    // Reset state
+    state.email = '';
+    state.isValid = false;
+    
+    updateValidationState();
+  };
+
   function initEventDelegation() {
     const elements = getCachedElements();
     
@@ -507,6 +660,8 @@
 
     initEventDelegation();
     restoreState();
+    
+    console.log('✅ [Step 13] Email validation with check initialized');
   }
 
   if (document.readyState === 'loading') {

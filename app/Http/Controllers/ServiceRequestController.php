@@ -30,6 +30,7 @@ class ServiceRequestController extends Controller
     {
         $this->ReputationPointService = $ReputationPointService;
     }
+    
     public function index(Request $request) {
         $user = auth()->user();
         $missions = [];
@@ -65,7 +66,105 @@ class ServiceRequestController extends Controller
     
 
     public function createRequest(Request $request) {
-        return view('pages.request-for-help');
+    return view('wizards.requester.steps.request-for-help');
+}
+
+    /**
+     * ✅ NOUVELLE MÉTHODE - Vérifier si l'email existe et si cookies valides
+     */
+    public function checkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            // Scénario 1: Email inconnu (nouveau user)
+            return response()->json([
+                'exists' => false,
+                'has_valid_cookie' => false
+            ]);
+        }
+
+        // L'email existe, vérifier les cookies
+        $hasValidCookie = false;
+        $cookieName = 'user_session_' . $user->id;
+        
+        // Vérifier si le cookie existe et est valide (moins de 30 jours)
+        if ($request->hasCookie($cookieName)) {
+            try {
+                $cookieValue = $request->cookie($cookieName);
+                $decrypted = decrypt($cookieValue);
+                list($userId, $timestamp) = explode('|', $decrypted);
+                
+                // Vérifier que le cookie a moins de 30 jours
+                $cookieAge = now()->timestamp - $timestamp;
+                $thirtyDaysInSeconds = 60 * 60 * 24 * 30;
+                
+                if ($userId == $user->id && $cookieAge < $thirtyDaysInSeconds) {
+                    $hasValidCookie = true;
+                }
+            } catch (\Exception $e) {
+                $hasValidCookie = false;
+            }
+        }
+
+        return response()->json([
+            'exists' => true,
+            'has_valid_cookie' => $hasValidCookie,
+            'first_name' => $user->name,
+            'user_id' => $user->id
+        ]);
+    }
+
+    /**
+     * ✅ NOUVELLE MÉTHODE - Vérifier le mot de passe
+     */
+    public function verifyPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Wrong password, please try again'
+            ], 401);
+        }
+
+        // Mot de passe correct - Login automatique + cookie
+        \Auth::login($user, true);
+        $request->session()->regenerate();
+        $user->update(['last_login_at' => now()]);
+
+        // ✅ Créer un cookie de 30 jours
+        $cookieName = 'user_session_' . $user->id;
+        $cookieValue = encrypt($user->id . '|' . now()->timestamp);
+        $cookie = cookie($cookieName, $cookieValue, 60 * 24 * 30); // 30 jours
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login successful',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email
+            ]
+        ])->cookie($cookie);
     }
 
     public function saveRequestForm(Request $request)
@@ -83,6 +182,7 @@ class ServiceRequestController extends Controller
 
         $user = auth()->user();
         $affiliateLink = $this->generateAffiliateLink($request->email ?? '', $request->firstName ?? '');
+        
         if (!$user) {
             $user = User::create([
                 'name' => trim($request->firstName),
@@ -156,6 +256,11 @@ class ServiceRequestController extends Controller
             \Auth::login($user, $request->filled('remember'));
             $request->session()->regenerate();
             \Auth::user()->update(['last_login_at' => now()]); 
+            
+            // ✅ AJOUT - Créer un cookie de 30 jours
+            $cookieName = 'user_session_' . $user->id;
+            $cookieValue = encrypt($user->id . '|' . now()->timestamp);
+            cookie()->queue($cookieName, $cookieValue, 60 * 24 * 30); // 30 jours
         }
 
         $topProviders = ProviderMatcher::topForMission($mission, 10);
@@ -165,6 +270,7 @@ class ServiceRequestController extends Controller
             if (!$to) continue;
             Mail::to($to)->queue(new MissionInviteMail($mission, $sp, $sp->match_score));
         }
+        
         return response()->json([
             'status' => 'success',
             'message' => 'Your request has been submitted successfully!',
@@ -293,8 +399,6 @@ class ServiceRequestController extends Controller
         return response()->json(['message' => 'Mission canceled successfully']);
     }
 
-    
-
     public function providerCancelMisssion(Request $request) {
          $request->validate([
             'mission_id' => 'required|exists:missions,id',
@@ -320,7 +424,6 @@ class ServiceRequestController extends Controller
         
         return response()->json(['success' => true,  'message' => 'Mission canceled successfully']);
     }
-
 
     private function refundMissionPayment($mission, $request) {
             Stripe::setApiKey(config('services.stripe.secret'));

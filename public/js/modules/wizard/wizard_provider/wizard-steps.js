@@ -1,17 +1,44 @@
 /**
- * Wizard Steps – VERSION PROPRE
+ * Wizard Steps – VERSION CORRIGÉE
+ * ✅ totalSteps = 17
+ * ✅ Gère step13bis en plus des IDs numériques
  * ✅ Le JavaScript ne touche JAMAIS au style
  * ✅ Gère uniquement btn.disabled = true/false
- * ✅ Tout le style visuel → navigation-buttons-styles.blade.php
+ * ✅ HARMONISATION localStorage - pas de conflit entre steps
  */
 
 export class WizardSteps {
   constructor() {
     this.currentStep = 0;
-    this.totalSteps = 16;
+    this.totalSteps = 17;
     this.storeKey = 'expats';
     this.formData = this.loadFormData();
+    
+    // ═══════════════════════════════════════════════════════════
+    // MAPPING DES STEPS (pour gérer step13bis)
+    // ═══════════════════════════════════════════════════════════
+    this.stepIds = [
+      'step1',     // 0
+      'step2',     // 1
+      'step3',     // 2
+      'step4',     // 3
+      'step5',     // 4
+      'step6',     // 5
+      'step7',     // 6
+      'step8',     // 7
+      'step9',     // 8
+      'step10',    // 9
+      'step11',    // 10
+      'step12',    // 11
+      'step13',    // 12 - Email
+      'step13bis', // 13 - Password ← STEP SPÉCIAL
+      'step14',    // 14 - Phone
+      'step15',    // 15 - OTP
+      'step16'     // 16 - Success
+    ];
+    
     console.log('🎬 WizardSteps constructor called - totalSteps:', this.totalSteps);
+    console.log('📋 Step IDs mapping:', this.stepIds);
   }
 
   loadFormData() {
@@ -27,11 +54,29 @@ export class WizardSteps {
 
   saveFormData() {
     try { 
-      localStorage.setItem('expats', JSON.stringify(this.formData));
-      console.log('💾 Form data saved to localStorage');
+      // ✅ NE PAS écraser - merger avec l'existant
+      const existing = JSON.parse(localStorage.getItem(this.storeKey) || '{}');
+      const merged = { ...existing, ...this.formData };
+      localStorage.setItem(this.storeKey, JSON.stringify(merged));
+      console.log('💾 Form data merged into localStorage');
     } catch {
       console.warn('⚠️ Failed to save form data to localStorage');
     }
+  }
+  
+  /**
+   * Récupérer l'ID du step à partir de l'index
+   */
+  getStepId(index) {
+    return this.stepIds[index] || `step${index + 1}`;
+  }
+  
+  /**
+   * Récupérer l'élément DOM du step à partir de l'index
+   */
+  getStepElement(index) {
+    const stepId = this.getStepId(index);
+    return document.getElementById(stepId);
   }
 
   init() {
@@ -58,11 +103,11 @@ export class WizardSteps {
   }
 
   syncCurrentFromDOM() {
-    for (let i = 1; i <= this.totalSteps; i++) {
-      const s = document.getElementById(`step${i}`);
+    for (let i = 0; i < this.totalSteps; i++) {
+      const s = this.getStepElement(i);
       if (s && !s.classList.contains('hidden')) {
-        this.currentStep = i - 1;
-        console.log('🔄 syncCurrentFromDOM - current step is:', i);
+        this.currentStep = i;
+        console.log('🔄 syncCurrentFromDOM - current step index:', i, '- ID:', this.getStepId(i));
         return;
       }
     }
@@ -72,20 +117,20 @@ export class WizardSteps {
     document.querySelectorAll('#mobileNextBtn, #desktopNextBtn')
       .forEach(btn => btn.addEventListener('click', (e) => { 
         e.preventDefault();
-        console.log('➡️ Next button clicked from step', this.currentStep + 1);
+        console.log('➡️ Next button clicked from step index', this.currentStep, '(', this.getStepId(this.currentStep), ')');
         this.nextStep();
       }));
     document.querySelectorAll('#mobileBackBtn, #desktopBackBtn')
       .forEach(btn => btn.addEventListener('click', (e) => { 
         e.preventDefault();
-        console.log('⬅️ Back button clicked from step', this.currentStep + 1);
+        console.log('⬅️ Back button clicked from step index', this.currentStep, '(', this.getStepId(this.currentStep), ')');
         this.previousStep(); 
       }));
   }
 
   initStepValidation() {
-    for (let i = 1; i <= this.totalSteps; i++) {
-      const el = document.getElementById(`step${i}`); 
+    for (let i = 0; i < this.totalSteps; i++) {
+      const el = this.getStepElement(i);
       if (!el) continue;
       const h = () => this.updateNavigationButtons();
       el.querySelectorAll('input, select, textarea').forEach(n => {
@@ -112,52 +157,92 @@ export class WizardSteps {
     const pct = Math.round(((this.currentStep + 1) / this.totalSteps) * 100);
     if (p) p.textContent = String(pct);
     if (bar) bar.style.width = `${pct}%`;
-    console.log('📊 Progress bar updated - step', this.currentStep + 1, 'of', this.totalSteps, `(${pct}%)`);
+    console.log('📊 Progress bar updated - step index', this.currentStep, '(', this.getStepId(this.currentStep), ')', 'of', this.totalSteps, `(${pct}%)`);
   }
 
   showStep(i) {
-    console.log('🎬 showStep() called with index:', i, '→ Will show step', i + 1);
+    console.log('🎬 showStep() called with index:', i, '→ Will show', this.getStepId(i));
     
     if (i < 0 || i >= this.totalSteps) {
       console.warn('❌ Invalid step index:', i, `(totalSteps: ${this.totalSteps})`);
       return;
     }
     
+    // ═══════════════════════════════════════════════════════════
+    // 🔄 STEP 4 : Auto-reset quand on y arrive
+    // ═══════════════════════════════════════════════════════════
+    if (i === 3) { // step4
+      this.resetStep4();
+    }
+    
     console.log('🙈 Hiding all steps...');
-    for (let k = 1; k <= this.totalSteps; k++) {
-      const s = document.getElementById(`step${k}`);
+    for (let k = 0; k < this.totalSteps; k++) {
+      const s = this.getStepElement(k);
       if (s) {
         s.classList.add('hidden');
-        console.log(`  🙈 step${k} → hidden`);
+        console.log(`  🙈 ${this.getStepId(k)} → hidden`);
       } else {
-        console.warn(`  ❌ step${k} element not found in DOM`);
+        console.warn(`  ❌ ${this.getStepId(k)} element not found in DOM`);
       }
     }
     
-    const cur = document.getElementById(`step${i + 1}`);
+    const cur = this.getStepElement(i);
     if (!cur) {
-      console.error(`❌ Step element not found: step${i + 1}`);
+      console.error(`❌ Step element not found: ${this.getStepId(i)}`);
       return;
     }
     
     cur.classList.remove('hidden');
-    console.log(`👁️ step${i + 1} → VISIBLE`);
+    console.log(`👁️ ${this.getStepId(i)} → VISIBLE`);
     
     this.currentStep = i;
     this.updateProgressBar();
     this.updateNavigationButtons();
     
-    console.log('✅ showStep completed - current step is now:', this.currentStep + 1);
+    console.log('✅ showStep completed - current step is now:', this.getStepId(this.currentStep));
+  }
+
+  resetStep4() {
+    console.log('🔄 Resetting step4...');
+    
+    const step4 = this.getStepElement(3);
+    if (!step4) return;
+    
+    // Reset tous les inputs du step 4
+    step4.querySelectorAll('input, select, textarea').forEach(input => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        input.checked = false;
+      } else {
+        input.value = '';
+      }
+    });
+    
+    // Supprimer les données du step 4 de localStorage
+    try {
+      const data = JSON.parse(localStorage.getItem(this.storeKey) || '{}');
+      
+      // Supprimer toutes les clés liées au step 4
+      step4.querySelectorAll('input, select, textarea').forEach(input => {
+        if (input.name) {
+          delete data[input.name];
+        }
+      });
+      
+      localStorage.setItem(this.storeKey, JSON.stringify(data));
+      console.log('✅ Step 4 reset - data removed from localStorage');
+    } catch (e) {
+      console.warn('⚠️ Failed to reset step4 in localStorage');
+    }
   }
 
   nextStep() {
-    console.log('➡️ nextStep() called from step', this.currentStep + 1);
+    console.log('➡️ nextStep() called from', this.getStepId(this.currentStep));
     
     this.saveCurrentStepData();
     
     if (this.currentStep < this.totalSteps - 1) {
       const nextStepIndex = this.currentStep + 1;
-      console.log('➡️ Moving to step', nextStepIndex + 1);
+      console.log('➡️ Moving to', this.getStepId(nextStepIndex));
       this.showStep(nextStepIndex);
     } else {
       console.log('📤 Last step reached, submitting form');
@@ -166,11 +251,11 @@ export class WizardSteps {
   }
 
   previousStep() { 
-    console.log('⬅️ previousStep() called from step', this.currentStep + 1);
+    console.log('⬅️ previousStep() called from', this.getStepId(this.currentStep));
     
     if (this.currentStep > 0) {
       const prevStepIndex = this.currentStep - 1;
-      console.log('⬅️ Moving to step', prevStepIndex + 1);
+      console.log('⬅️ Moving to', this.getStepId(prevStepIndex));
       this.showStep(prevStepIndex);
     } else {
       console.warn('⚠️ Already at Step 1 - cannot go back further');
@@ -179,32 +264,35 @@ export class WizardSteps {
 
   validateCurrentStep() {
     this.syncCurrentFromDOM();
-    const stepNum = this.currentStep + 1;
-    const el = document.getElementById(`step${stepNum}`); 
+    const stepId = this.getStepId(this.currentStep);
+    const el = this.getStepElement(this.currentStep);
     
-    console.log('🔍 validateCurrentStep() for step', stepNum);
+    console.log('🔍 validateCurrentStep() for', stepId, '(index:', this.currentStep, ')');
     
     if (!el) {
-      console.warn('❌ Step element not found for validation:', stepNum);
+      console.warn('❌ Step element not found for validation:', stepId);
       return true;
     }
 
     // ✅ VALIDATION STEP 1 : toujours valide
-    if (stepNum === 1) {
+    if (this.currentStep === 0) {
       console.log('✅ Step 1 - always valid (profile choice via buttons)');
       return true;
     }
 
-    // ✅ APPELER LA VALIDATION CUSTOM - VALIDATION SILENCIEUSE
-    const custom = window[`validateStep${stepNum}`];
+    // ✅ APPELER LA VALIDATION CUSTOM
+    // Pour step13bis, on cherche validateStep13bis()
+    const validationFunctionName = `validate${stepId.charAt(0).toUpperCase() + stepId.slice(1)}`;
+    const custom = window[validationFunctionName];
+    
     if (typeof custom === 'function') { 
-      console.log(`🔍 Calling custom validation: validateStep${stepNum}() - silent`);
+      console.log(`🔍 Calling custom validation: ${validationFunctionName}() - silent`);
       try { 
         const result = !!custom();
-        console.log(`${result ? '✅' : '❌'} validateStep${stepNum}() returned:`, result);
+        console.log(`${result ? '✅' : '❌'} ${validationFunctionName}() returned:`, result);
         return result;
       } catch (e) { 
-        console.error(`❌ validateStep${stepNum} error:`, e);
+        console.error(`❌ ${validationFunctionName} error:`, e);
         return false; 
       } 
     }
@@ -272,7 +360,7 @@ export class WizardSteps {
 
     // Validation
     const isValid = this.validateCurrentStep();
-    console.log(`🔘 Step ${this.currentStep + 1} validation result:`, isValid);
+    console.log(`🔘 ${this.getStepId(this.currentStep)} validation result:`, isValid);
 
     // ✅ UNIQUEMENT btn.disabled - Le CSS gère TOUT le reste
     nextButtons.forEach(btn => {
@@ -284,13 +372,33 @@ export class WizardSteps {
   }
 
   saveCurrentStepData() {
-    const el = document.getElementById(`step${this.currentStep + 1}`); 
+    const el = this.getStepElement(this.currentStep);
     if (!el) {
       console.warn('❌ Cannot save step data - element not found');
       return;
     }
     
-    console.log('💾 Saving data for step', this.currentStep + 1);
+    const stepId = this.getStepId(this.currentStep);
+    
+    // ═══════════════════════════════════════════════════════════
+    // ✅ STEPS avec gestion CUSTOM de localStorage
+    // Ces steps gèrent leur propre sauvegarde, on ne fait rien ici
+    // ═══════════════════════════════════════════════════════════
+    const customStorageSteps = ['step3', 'step13bis', 'step14', 'step15'];
+    if (customStorageSteps.includes(stepId)) {
+      console.log(`💾 ${stepId} handles its own storage - skipping automatic save`);
+      return;
+    }
+    
+    // ═══════════════════════════════════════════════════════════
+    // ✅ Step 11 (Documents) - Utilise l'API, pas localStorage
+    // ═══════════════════════════════════════════════════════════
+    if (stepId === 'step11') {
+      console.log('💾 step11 uses API backend - skipping localStorage save');
+      return;
+    }
+    
+    console.log('💾 Saving data for', stepId);
     
     el.querySelectorAll('input, select, textarea').forEach(input => {
       if (!input.name) return;

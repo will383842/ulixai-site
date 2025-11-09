@@ -218,6 +218,28 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
         }
 
+        /* Message de bienvenue animé */
+        .welcome-message {
+            animation: slideInDown 0.5s ease-out;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         /* Optimisation Desktop - Contenus compacts */
         @media (min-width: 768px) {
             .form-step {
@@ -670,7 +692,7 @@
 <body class="min-h-screen bg-gradient-to-tr from-white to-blue-50 pb-20 sm:pb-24">
     <a href="#main-content" class="skip-link">Skip to content</a>
     
-    @include('includes.header-content-only')
+    @include('includes.header')
     
     @php 
         use App\Models\Country;
@@ -1028,6 +1050,13 @@
                 <!-- STEP 11: Email -->
                 <fieldset class="form-step hidden" id="step11-email">
                     <legend class="sr-only">Enter your email address</legend>
+                    
+                    <!-- Message de bienvenue dynamique (caché par défaut) -->
+                    <div id="welcomeMessage" class="welcome-message hidden mb-4">
+                        <p class="text-base font-bold mb-1" id="welcomeTitle">👋 Welcome!</p>
+                        <p class="text-sm" id="welcomeText">Let's create your account 🎉</p>
+                    </div>
+                    
                     <label for="email" class="sr-only">Email address</label>
                     <input
                         type="email"
@@ -1052,10 +1081,17 @@
                     <p class="text-xs text-red-500 mt-2 font-semibold" aria-live="polite">* Required</p>
                 </fieldset>
                 
-                <!-- STEP 12: Password -->
+                <!-- STEP 12: Password (Version dynamique) -->
                 <fieldset class="form-step hidden" id="step12-password">
-                    <legend class="sr-only">Choose a password</legend>
-                    <label for="password" class="sr-only">Password (minimum 6 characters)</label>
+                    <legend class="sr-only">Password</legend>
+                    
+                    <!-- Message personnalisé (caché par défaut) -->
+                    <div id="passwordWelcomeMessage" class="welcome-message hidden mb-4">
+                        <p class="text-base font-bold mb-1" id="passwordWelcomeTitle"></p>
+                        <p class="text-sm" id="passwordWelcomeText"></p>
+                    </div>
+                    
+                    <label for="password" class="sr-only" id="passwordLabel">Password</label>
                     <input
                         type="password"
                         id="password"
@@ -1071,6 +1107,8 @@
                             disabled
                         @endif
                     />
+                    
+                    <!-- Barre de force du mot de passe (visible uniquement en mode création) -->
                     <div id="passwordStrength" class="mt-3">
                         <div class="flex justify-between text-xs mb-1">
                             <span id="strengthText" class="font-semibold text-gray-700">Password strength</span>
@@ -1080,8 +1118,9 @@
                             <div id="strengthBar" class="h-full bg-gray-300 transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
-                    <div class="info-box bg-gradient-to-r from-fuchsia-50 to-pink-50 border-2 border-fuchsia-200 rounded-2xl p-4 mt-4 shadow-sm">
-                        <p class="text-sm text-fuchsia-900 leading-relaxed">
+                    
+                    <div class="info-box bg-gradient-to-r from-fuchsia-50 to-pink-50 border-2 border-fuchsia-200 rounded-2xl p-4 mt-4 shadow-sm" id="passwordInfoBox">
+                        <p class="text-sm text-fuchsia-900 leading-relaxed" id="passwordInfoText">
                             🔐 Use at least <strong>6 characters</strong> — 8+ recommended
                         </p>
                     </div>
@@ -1367,7 +1406,9 @@
         window.formConfig = {
             funTexts: @json($funTexts),
             stepLabels: @json($stepLabels),
-            isAuthenticated: @json(Auth::check())
+            isAuthenticated: @json(Auth::check()),
+            checkEmailUrl: "{{ route('check-email') }}", // Route pour vérifier l'email
+            verifyPasswordUrl: "{{ route('verify-password') }}" // Route pour vérifier le mot de passe
         };
     </script>
     

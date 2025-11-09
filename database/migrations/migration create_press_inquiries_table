@@ -8,23 +8,25 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('press_inquiries', function (Blueprint $table) {
-            $table->id();
-            $table->string('media_name');
-            $table->string('full_name');
-            $table->string('phone')->nullable();
-            $table->string('website')->nullable();
-            $table->string('email');
-            $table->string('lang
-            _heard')->nullable();
-            $table->text('message')->nullable();
-            $table->boolean('is_read')->default(false);
-            $table->timestamps();
+        Schema::table('provider_photo_verifications', function (Blueprint $table) {
+            $table->string('session_id')->nullable()->after('id');
+            $table->unsignedBigInteger('user_id')->nullable()->change();
+        });
+
+        Schema::table('provider_document_verifications', function (Blueprint $table) {
+            $table->string('session_id')->nullable()->after('id');
+            $table->unsignedBigInteger('user_id')->nullable()->change();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('press_inquiries');
+        Schema::table('provider_photo_verifications', function (Blueprint $table) {
+            $table->dropColumn('session_id');
+        });
+
+        Schema::table('provider_document_verifications', function (Blueprint $table) {
+            $table->dropColumn('session_id');
+        });
     }
 };
