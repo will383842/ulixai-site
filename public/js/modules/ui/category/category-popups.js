@@ -78,7 +78,6 @@ function createIconHtml(item, iconColor, parentId = 'root') {
   const iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
   const escapedName = item.name.replace(/"/g, '&quot;');
   
-  // ✅ Utiliser l'icône SVG automatique avec parentId pour éviter les doublons
   const iconSVG = getCategoryIcon(item.name, item.id, parentId);
   
   return `<div class="${iconSize} rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0" style="background-color: ${iconColor}; display: flex; align-items: center; justify-content: center;" role="img" aria-label="${escapedName}">` +
@@ -92,6 +91,7 @@ function createCategoryCard(item, level, allIds, onClickHandler, parentId = 'roo
   div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
   div.setAttribute('aria-label', `Sélectionner ${item.name}`);
   div.setAttribute('role', 'button');
+  div.setAttribute('translate', 'yes'); // 🆕 Pour Google Translate
   
   div.style.cssText = `
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -135,12 +135,38 @@ function createCategoryCard(item, level, allIds, onClickHandler, parentId = 'roo
   const shineEffect = createShineEffect();
   const iconHtml = createIconHtml(item, iconColor, parentId);
   const textSize = getResponsiveSize(CONFIG.TEXT.MOBILE_SIZE, CONFIG.TEXT.DESKTOP_SIZE);
-  const textHtml = `<div class="${textSize} font-semibold text-gray-800 category-text">${item.name}</div>`;
+  const textHtml = `<div class="${textSize} font-semibold text-gray-800 category-text" translate="yes">${item.name}</div>`; // 🆕 translate="yes"
   
   div.innerHTML = shineEffect + iconHtml + textHtml;
   div.addEventListener('click', () => onClickHandler(item.id, item.name), { passive: true });
   
   return div;
+}
+
+/**
+ * ✅ MÉTHODE SIMPLIFIÉE : Google Translate est déjà prêt grâce à waitForGoogleTranslateReady
+ */
+function forceTranslationWhenReady() {
+  const currentLang = localStorage.getItem('ulixai_lang') || 'en';
+  
+  // Pas besoin de traduire si c'est de l'anglais
+  if (currentLang === 'en') {
+    console.log('ℹ️ [CategoryPopups] Current language is English, no translation needed');
+    return;
+  }
+  
+  // On sait que Google Translate est prêt grâce à waitForGoogleTranslateReady
+  console.log('🔄 [CategoryPopups] Forcing translation (Google Translate already ready)...');
+  
+  // Petit délai pour que les éléments soient bien dans le DOM
+  setTimeout(() => {
+    if (typeof window.forceTranslateDynamicContent === 'function') {
+      window.forceTranslateDynamicContent();
+      console.log('🌐 [CategoryPopups] Translation forced for dynamic categories');
+    } else {
+      console.warn('⚠️ [CategoryPopups] forceTranslateDynamicContent not available');
+    }
+  }, 300); // Augmenté à 300ms pour être sûr
 }
 
 function renderCategories(items, containerSelector, level, clickHandler, parentId = 'root') {
@@ -160,6 +186,9 @@ function renderCategories(items, containerSelector, level, clickHandler, parentI
       fragment.appendChild(card);
     }
     container.appendChild(fragment);
+    
+    // 🆕 Forcer la retraduction avec la méthode améliorée
+    forceTranslationWhenReady();
   });
 }
 
@@ -173,6 +202,38 @@ async function fetchWithCache(url) {
   return data;
 }
 
+/**
+ * ✅ Attendre que Google Translate soit prêt avant toute action
+ */
+function waitForGoogleTranslateReady(callback, maxWait = 5000) {
+  const startTime = Date.now();
+  const currentLang = localStorage.getItem('ulixai_lang') || 'en';
+  
+  // Si c'est de l'anglais, pas besoin d'attendre
+  if (currentLang === 'en') {
+    callback();
+    return;
+  }
+  
+  const checkReady = () => {
+    const isReady = window.google?.translate?.TranslateElement && 
+                    document.querySelector('.goog-te-combo') &&
+                    typeof window.forceTranslateDynamicContent === 'function';
+    
+    if (isReady) {
+      console.log('✅ [CategoryPopups] Google Translate is ready');
+      callback();
+    } else if (Date.now() - startTime < maxWait) {
+      setTimeout(checkReady, 100);
+    } else {
+      console.warn('⚠️ [CategoryPopups] Google Translate timeout, continuing anyway');
+      callback();
+    }
+  };
+  
+  checkReady();
+}
+
 export function initializeCategoryPopups() {
   
   window.openHelpPopup = function() {
@@ -182,19 +243,22 @@ export function initializeCategoryPopups() {
     popup.classList.remove('hidden');
     popup.setAttribute('aria-hidden', 'false');
     
-    fetchWithCache(API_ENDPOINTS.CATEGORIES)
-      .then(data => {
-        if (data.success) {
-          renderCategories(
-            data.categories,
-            `#${categoryLevels.main.popupId} .${categoryLevels.main.containerClass}`,
-            'main',
-            window.handleCategoryClick,
-            'root'
-          );
-        }
-      })
-      .catch(err => console.error('Fetch error:', err));
+    // ✅ ATTENDRE que Google Translate soit prêt AVANT de charger les catégories
+    waitForGoogleTranslateReady(() => {
+      fetchWithCache(API_ENDPOINTS.CATEGORIES)
+        .then(data => {
+          if (data.success) {
+            renderCategories(
+              data.categories,
+              `#${categoryLevels.main.popupId} .${categoryLevels.main.containerClass}`,
+              'main',
+              window.handleCategoryClick,
+              'root'
+            );
+          }
+        })
+        .catch(err => console.error('Fetch error:', err));
+    });
   };
   
   window.handleCategoryClick = function(categoryId, categoryName) {
@@ -213,19 +277,22 @@ export function initializeCategoryPopups() {
     const createRequest = { category: JSON.stringify({ id: categoryId, name: categoryName }) };
     localStorage.setItem('create-request', JSON.stringify(createRequest));
     
-    fetchWithCache(API_ENDPOINTS.SUBCATEGORIES(categoryId))
-      .then(data => {
-        if (data.success) {
-          renderCategories(
-            data.subcategories,
-            `#${categoryLevels.sub.popupId} .${categoryLevels.sub.containerClass}`,
-            'sub',
-            window.handleSubcategoryClick,
-            categoryId
-          );
-        }
-      })
-      .catch(err => console.error('Error:', err));
+    // ✅ ATTENDRE que Google Translate soit prêt
+    waitForGoogleTranslateReady(() => {
+      fetchWithCache(API_ENDPOINTS.SUBCATEGORIES(categoryId))
+        .then(data => {
+          if (data.success) {
+            renderCategories(
+              data.subcategories,
+              `#${categoryLevels.sub.popupId} .${categoryLevels.sub.containerClass}`,
+              'sub',
+              window.handleSubcategoryClick,
+              categoryId
+            );
+          }
+        })
+        .catch(err => console.error('Error:', err));
+    });
   };
   
   window.handleSubcategoryClick = function(parentId, categoryName) {
@@ -233,33 +300,36 @@ export function initializeCategoryPopups() {
     createRequest.sub_category = JSON.stringify({ id: parentId, name: categoryName });
     localStorage.setItem('create-request', JSON.stringify(createRequest));
     
-    fetchWithCache(API_ENDPOINTS.CHILDREN(parentId))
-      .then(data => {
-        if (data.success && data.subcategories.length > 0) {
-          const subPopup = document.getElementById(categoryLevels.sub.popupId);
-          const childPopup = document.getElementById(categoryLevels.child.popupId);
-          
-          if (subPopup) {
-            subPopup.classList.add('hidden');
-            subPopup.setAttribute('aria-hidden', 'true');
+    // ✅ ATTENDRE que Google Translate soit prêt
+    waitForGoogleTranslateReady(() => {
+      fetchWithCache(API_ENDPOINTS.CHILDREN(parentId))
+        .then(data => {
+          if (data.success && data.subcategories.length > 0) {
+            const subPopup = document.getElementById(categoryLevels.sub.popupId);
+            const childPopup = document.getElementById(categoryLevels.child.popupId);
+            
+            if (subPopup) {
+              subPopup.classList.add('hidden');
+              subPopup.setAttribute('aria-hidden', 'true');
+            }
+            if (childPopup) {
+              childPopup.classList.remove('hidden');
+              childPopup.setAttribute('aria-hidden', 'false');
+            }
+            
+            renderCategories(
+              data.subcategories,
+              `#${categoryLevels.child.popupId} .${categoryLevels.child.containerClass}`,
+              'child',
+              window.requestForHelp,
+              parentId
+            );
+          } else {
+            window.requestForHelp(parentId, categoryName);
           }
-          if (childPopup) {
-            childPopup.classList.remove('hidden');
-            childPopup.setAttribute('aria-hidden', 'false');
-          }
-          
-          renderCategories(
-            data.subcategories,
-            `#${categoryLevels.child.popupId} .${categoryLevels.child.containerClass}`,
-            'child',
-            window.requestForHelp,
-            parentId
-          );
-        } else {
-          window.requestForHelp(parentId, categoryName);
-        }
-      })
-      .catch(err => console.error('Error:', err));
+        })
+        .catch(err => console.error('Error:', err));
+    });
   };
   
   window.requestForHelp = function(childId, childName) {

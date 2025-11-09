@@ -1,7 +1,6 @@
 <!-- 
 ============================================
-🚀 STEP 8 - COMMUNICATION PREFERENCE
-✅ VERSION PROPRE - Le JS ne touche JAMAIS au style
+🚀 STEP 8 - COMMUNICATION PREFERENCE - FINAL
 ============================================
 -->
 
@@ -21,20 +20,22 @@
     <div class="text-center space-y-2 relative">
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
-          <span class="text-lg sm:text-xl">💬</span>
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
         </div>
       </div>
       
       <div>
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
-          Communication Preference 🌐
+          Communication Preference 💬
         </h2>
-        <p class="text-sm sm:text-base font-semibold text-gray-600">
-          Would you like to speak online or in person?
+        <p class="text-xs sm:text-sm font-semibold text-gray-600 px-2">
+          Par téléphone/en ligne ou en présentiel ?
         </p>
       </div>
 
-      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+      <div class="hidden sm:inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
@@ -46,12 +47,12 @@
   </div>
 
   <!-- SCROLLABLE CONTENT -->
-  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
+  <div class="flex-1 overflow-y-auto pt-0 space-y-2 sm:space-y-3 px-1">
 
-    <!-- Info Banner -->
-    <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-300 rounded-2xl p-3 sm:p-4">
+    <!-- Info Banner - MASQUÉ SUR MOBILE -->
+    <div class="hidden sm:block bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-300 rounded-xl p-3">
       <div class="flex items-start gap-2">
-        <span class="text-xl flex-shrink-0">💡</span>
+        <span class="text-lg flex-shrink-0">💡</span>
         <div>
           <p class="text-xs font-bold text-yellow-900">Vous pouvez choisir les deux options</p>
           <p class="text-xs text-yellow-700 mt-0.5">Choisissez ce qui vous convient le mieux</p>
@@ -60,66 +61,62 @@
     </div>
 
     <!-- Communication Options -->
-    <div class="space-y-3 sm:space-y-4">
+    <div class="space-y-2 sm:space-y-3">
       
       <!-- Online Option -->
-      <div class="comm-card bg-white border-2 border-blue-400 rounded-2xl p-4 sm:p-5 shadow-sm">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-3 flex-1">
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-              <span class="text-2xl">💻</span>
-            </div>
-            <div class="flex-1">
-              <h3 class="text-gray-900 font-bold text-base sm:text-lg">En ligne</h3>
-              <p class="text-gray-600 text-xs sm:text-sm">Vous aidez les expats, voyageurs et vacanciers à distance</p>
-            </div>
+      <div class="comm-card bg-white border-2 border-blue-400 rounded-xl p-3 sm:p-4 shadow-sm">
+        <div class="flex items-start gap-2 sm:gap-3">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+            <span class="text-xl sm:text-2xl">💻</span>
           </div>
-          <div class="flex gap-2 w-full sm:w-auto">
-            <button 
-              type="button" 
-              class="toggle-btn flex-1 sm:flex-none px-6 py-2.5 rounded-lg font-bold text-sm border-2 bg-white text-gray-700 border-gray-300 transition-all"
-              data-option="online"
-              data-value="yes">
-              Yes
-            </button>
-            <button 
-              type="button" 
-              class="toggle-btn flex-1 sm:flex-none px-6 py-2.5 rounded-lg font-bold text-sm border-2 bg-white text-gray-700 border-gray-300 transition-all"
-              data-option="online"
-              data-value="no">
-              No
-            </button>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-gray-900 font-bold text-sm sm:text-base mb-0.5">En ligne</h3>
+            <p class="text-gray-600 text-[11px] sm:text-xs leading-tight mb-2 sm:mb-3">Par téléphone ou en ligne</p>
+            <div class="flex gap-2">
+              <button 
+                type="button" 
+                class="toggle-btn flex-1 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm border-2 bg-white text-gray-700 border-gray-300 transition-all"
+                data-option="online"
+                data-value="yes">
+                Oui
+              </button>
+              <button 
+                type="button" 
+                class="toggle-btn flex-1 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm border-2 bg-white text-gray-700 border-gray-300 transition-all"
+                data-option="online"
+                data-value="no">
+                Non
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- In Person Option -->
-      <div class="comm-card bg-white border-2 border-blue-400 rounded-2xl p-4 sm:p-5 shadow-sm">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-3 flex-1">
-            <div class="w-12 h-12 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-              <span class="text-2xl">🤝</span>
-            </div>
-            <div class="flex-1">
-              <h3 class="text-gray-900 font-bold text-base sm:text-lg">En personne</h3>
-              <p class="text-gray-600 text-xs sm:text-sm">Vous aidez les expats, voyageurs et vacanciers en les accompagnant</p>
-            </div>
+      <div class="comm-card bg-white border-2 border-blue-400 rounded-xl p-3 sm:p-4 shadow-sm">
+        <div class="flex items-start gap-2 sm:gap-3">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+            <span class="text-xl sm:text-2xl">🤝</span>
           </div>
-          <div class="flex gap-2 w-full sm:w-auto">
-            <button 
-              type="button" 
-              class="toggle-btn flex-1 sm:flex-none px-6 py-2.5 rounded-lg font-bold text-sm border-2 bg-white text-gray-700 border-gray-300 transition-all"
-              data-option="inperson"
-              data-value="yes">
-              Yes
-            </button>
-            <button 
-              type="button" 
-              class="toggle-btn flex-1 sm:flex-none px-6 py-2.5 rounded-lg font-bold text-sm border-2 bg-white text-gray-700 border-gray-300 transition-all"
-              data-option="inperson"
-              data-value="no">
-              No
-            </button>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-gray-900 font-bold text-sm sm:text-base mb-0.5">En personne</h3>
+            <p class="text-gray-600 text-[11px] sm:text-xs leading-tight mb-2 sm:mb-3">En accompagnant, en présentiel</p>
+            <div class="flex gap-2">
+              <button 
+                type="button" 
+                class="toggle-btn flex-1 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm border-2 bg-white text-gray-700 border-gray-300 transition-all"
+                data-option="inperson"
+                data-value="yes">
+                Oui
+              </button>
+              <button 
+                type="button" 
+                class="toggle-btn flex-1 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm border-2 bg-white text-gray-700 border-gray-300 transition-all"
+                data-option="inperson"
+                data-value="no">
+                Non
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -165,6 +162,13 @@
   backface-visibility: hidden;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  min-width: 60px;
+}
+
+@media (min-width: 640px) {
+  #step8 .toggle-btn {
+    min-width: 70px;
+  }
 }
 
 #step8 .toggle-btn:hover {

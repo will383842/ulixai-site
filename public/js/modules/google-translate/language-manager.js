@@ -91,6 +91,9 @@ export class LanguageManager {
 
     this.initDesktopLanguageSelector();
     this.initMobileLanguageSelector();
+    
+    // 🆕 Exposer la fonction de retraduction globalement
+    window.forceTranslateDynamicContent = () => this.forceTranslateDynamicContent();
 
     console.log('✅ [LangManager] UI initialized');
   }
@@ -373,6 +376,107 @@ export class LanguageManager {
       document.cookie = `googtrans=${val}; expires=${expires}; path=/`;
       document.cookie = `googtransopt=${val}; expires=${expires}; path=/`;
       console.log('✅ [LangManager] Cookies set:', val);
+    }
+  }
+
+  /**
+   * Force Google Translate to re-translate dynamic content
+   * Call this after injecting new content into the DOM
+   * 
+   * ✅ MÉTHODE DOCUMENTÉE QUI FONCTIONNE
+   */
+  forceTranslateDynamicContent() {
+    console.log('🔄 [LangManager] Forcing translation of dynamic content...');
+    
+    try {
+      const currentLang = localStorage.getItem('ulixai_lang') || 'en';
+      
+      // Si la langue est l'anglais, pas besoin de traduire
+      if (currentLang === 'en') {
+        console.log('ℹ️ [LangManager] Current language is English, no translation needed');
+        return;
+      }
+      
+      // Marquer tous les nouveaux éléments pour traduction
+      const selectors = [
+        '[translate="yes"]',
+        '.language-card',
+        '.service-card',
+        '.category-card',
+        '.service-name',
+        '.language-name',
+        '.category-text',
+        '.subcat-chip',
+        '.service-section h4',
+        '.service-section-header'
+      ];
+      
+      const elements = document.querySelectorAll(selectors.join(', '));
+      console.log(`🔍 [LangManager] Found ${elements.length} elements to translate`);
+      
+      // S'assurer que les éléments sont marqués correctement
+      elements.forEach(element => {
+        element.classList.remove('notranslate');
+        element.setAttribute('translate', 'yes');
+      });
+      
+      // ✅ LA MÉTHODE QUI FONCTIONNE : Forcer le widget Google Translate à re-traduire
+      // en changeant la valeur du select et en déclenchant l'événement 'change'
+      const restoreGoogleTranslate = () => {
+        const googleTranslateCombo = document.querySelector('.goog-te-combo');
+        
+        if (googleTranslateCombo) {
+          // Si la langue actuelle est différente de celle stockée, on force le changement
+          if (googleTranslateCombo.value !== currentLang) {
+            console.log('🔄 [LangManager] Setting Google Translate combo to:', currentLang);
+            googleTranslateCombo.value = currentLang;
+            googleTranslateCombo.dispatchEvent(new Event('change'));
+            console.log('✅ [LangManager] Google Translate widget triggered');
+          } else {
+            // Sinon, on force quand même une re-traduction en réinitialisant
+            console.log('🔄 [LangManager] Forcing re-translation (same language)');
+            googleTranslateCombo.value = 'en'; // Reset to English
+            googleTranslateCombo.dispatchEvent(new Event('change'));
+            
+            setTimeout(() => {
+              googleTranslateCombo.value = currentLang; // Back to target language
+              googleTranslateCombo.dispatchEvent(new Event('change'));
+              console.log('✅ [LangManager] Google Translate widget re-triggered');
+            }, 50);
+          }
+        } else {
+          console.warn('⚠️ [LangManager] Google Translate combo not found');
+          
+          // Fallback : Re-appliquer le hash et forcer un refresh du DOM
+          window.location.hash = `#googtrans(en|${currentLang})`;
+          
+          setTimeout(() => {
+            elements.forEach(element => {
+              if (element.parentNode) {
+                const parent = element.parentNode;
+                const next = element.nextSibling;
+                parent.removeChild(element);
+                parent.insertBefore(element, next);
+              }
+            });
+            console.log('🔄 [LangManager] DOM elements re-inserted as fallback');
+          }, 100);
+        }
+      };
+      
+      // Attendre un peu que Google Translate soit prêt
+      if (window.google?.translate?.TranslateElement) {
+        setTimeout(restoreGoogleTranslate, 150);
+      } else {
+        // Si Google Translate n'est pas encore chargé, attendre l'événement
+        window.addEventListener('googleTranslateReady', () => {
+          setTimeout(restoreGoogleTranslate, 150);
+        }, { once: true });
+      }
+      
+      console.log('✅ [LangManager] Dynamic content translation triggered');
+    } catch (error) {
+      console.error('❌ [LangManager] Error forcing translation:', error);
     }
   }
 }

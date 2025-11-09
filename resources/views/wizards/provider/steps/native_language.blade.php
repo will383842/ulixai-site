@@ -1,7 +1,7 @@
 <!-- 
 ============================================
-🚀 STEP 2 - NATIVE LANGUAGE SELECTION (CORRECTED)
-🔧 Performance: Drapeaux locaux au lieu de CDN
+🚀 STEP 2 - NATIVE LANGUAGE SELECTION (OPTIMIZED MOBILE)
+🔧 Performance: Drapeaux locaux + Perfection tactile mobile
 ============================================
 -->
 
@@ -15,7 +15,7 @@
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <div class="text-center space-y-2 relative">
+    <div class="text-center space-y-2 relative px-2">
       <div class="flex justify-center">
         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
           <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -25,15 +25,15 @@
       </div>
       
       <div>
-        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
+        <h2 class="text-lg leading-tight sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight px-1">
           What's Your Native Language? 🌍
         </h2>
-        <p class="text-sm sm:text-base font-semibold text-gray-600">
+        <p class="hidden sm:block text-sm sm:text-base font-semibold text-gray-600">
           Select the language you speak fluently
         </p>
       </div>
 
-      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+      <div class="hidden sm:inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
+  <div class="flex-1 overflow-y-auto overflow-x-hidden pt-0 space-y-3 sm:space-y-4 px-2 sm:px-0">
 
     <div id="step2LanguageError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
       <div class="flex items-start gap-2">
@@ -58,9 +58,9 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-3.5" role="radiogroup" aria-label="Select your native language">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-3.5 pb-4" role="radiogroup" aria-label="Select your native language">
       
-      <!-- English -->
+      <!-- English (TOUJOURS EN PREMIER) -->
       <button 
         type="button"
         class="language-card"
@@ -79,18 +79,75 @@
         </span>
       </button>
 
-      <!-- Spanish -->
+      <!-- Arabic -->
       <button 
         type="button"
         class="language-card"
-        data-language="Spanish"
+        data-language="Arabic"
         role="radio"
         aria-checked="false"
-        aria-label="Select Spanish">
+        aria-label="Select Arabic">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/es.svg') }}" alt="Spanish flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/sa.svg') }}" alt="Arabic flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Spanish</span>
+        <span class="language-name">Arabic</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Bengali -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Bengali"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Bengali">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/bd.svg') }}" alt="Bengali flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Bengali</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Chinese -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Chinese"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Chinese">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/cn.svg') }}" alt="Chinese flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Chinese</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Dutch -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Dutch"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Dutch">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/nl.svg') }}" alt="Dutch flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Dutch</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -136,6 +193,44 @@
         </span>
       </button>
 
+      <!-- Hindi -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Hindi"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Hindi">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/in.svg') }}" alt="Hindi flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Hindi</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Indonesian -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Indonesian"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Indonesian">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/id.svg') }}" alt="Indonesian flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Indonesian</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
       <!-- Italian -->
       <button 
         type="button"
@@ -148,6 +243,63 @@
           <img src="{{ asset('images/flags/it.svg') }}" alt="Italian flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Italian</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Japanese -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Japanese"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Japanese">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/jp.svg') }}" alt="Japanese flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Japanese</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Korean -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Korean"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Korean">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/kr.svg') }}" alt="Korean flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Korean</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Polish -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Polish"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Polish">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/pl.svg') }}" alt="Polish flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Polish</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -193,18 +345,18 @@
         </span>
       </button>
 
-      <!-- Chinese -->
+      <!-- Spanish -->
       <button 
         type="button"
         class="language-card"
-        data-language="Chinese"
+        data-language="Spanish"
         role="radio"
         aria-checked="false"
-        aria-label="Select Chinese">
+        aria-label="Select Spanish">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/cn.svg') }}" alt="Chinese flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/es.svg') }}" alt="Spanish flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Chinese</span>
+        <span class="language-name">Spanish</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -212,18 +364,18 @@
         </span>
       </button>
 
-      <!-- Japanese -->
+      <!-- Swahili -->
       <button 
         type="button"
         class="language-card"
-        data-language="Japanese"
+        data-language="Swahili"
         role="radio"
         aria-checked="false"
-        aria-label="Select Japanese">
+        aria-label="Select Swahili">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/jp.svg') }}" alt="Japanese flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/ke.svg') }}" alt="Swahili flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Japanese</span>
+        <span class="language-name">Swahili</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -231,18 +383,18 @@
         </span>
       </button>
 
-      <!-- Arabic -->
+      <!-- Swedish -->
       <button 
         type="button"
         class="language-card"
-        data-language="Arabic"
+        data-language="Swedish"
         role="radio"
         aria-checked="false"
-        aria-label="Select Arabic">
+        aria-label="Select Swedish">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/sa.svg') }}" alt="Arabic flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/se.svg') }}" alt="Swedish flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Arabic</span>
+        <span class="language-name">Swedish</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -250,18 +402,18 @@
         </span>
       </button>
 
-      <!-- Hindi -->
+      <!-- Tagalog -->
       <button 
         type="button"
         class="language-card"
-        data-language="Hindi"
+        data-language="Tagalog"
         role="radio"
         aria-checked="false"
-        aria-label="Select Hindi">
+        aria-label="Select Tagalog">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/in.svg') }}" alt="Hindi flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/ph.svg') }}" alt="Tagalog flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Hindi</span>
+        <span class="language-name">Tagalog</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -269,18 +421,18 @@
         </span>
       </button>
 
-      <!-- Korean -->
+      <!-- Thai -->
       <button 
         type="button"
         class="language-card"
-        data-language="Korean"
+        data-language="Thai"
         role="radio"
         aria-checked="false"
-        aria-label="Select Korean">
+        aria-label="Select Thai">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/kr.svg') }}" alt="Korean flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/th.svg') }}" alt="Thai flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Korean</span>
+        <span class="language-name">Thai</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -288,18 +440,56 @@
         </span>
       </button>
 
-      <!-- Dutch -->
+      <!-- Turkish -->
       <button 
         type="button"
         class="language-card"
-        data-language="Dutch"
+        data-language="Turkish"
         role="radio"
         aria-checked="false"
-        aria-label="Select Dutch">
+        aria-label="Select Turkish">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/nl.svg') }}" alt="Dutch flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/tr.svg') }}" alt="Turkish flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Dutch</span>
+        <span class="language-name">Turkish</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Ukrainian -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Ukrainian"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Ukrainian">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/ua.svg') }}" alt="Ukrainian flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Ukrainian</span>
+        <span class="check-indicator">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Vietnamese -->
+      <button 
+        type="button"
+        class="language-card"
+        data-language="Vietnamese"
+        role="radio"
+        aria-checked="false"
+        aria-label="Select Vietnamese">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/vn.svg') }}" alt="Vietnamese flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Vietnamese</span>
         <span class="check-indicator">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -312,9 +502,14 @@
 </div>
 
 <style>
+/* ===================================
+   BASE STRUCTURE
+   =================================== */
 #step2 {
   position: relative;
   min-height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 #step2 .sticky {
@@ -323,6 +518,9 @@
   -webkit-backdrop-filter: blur(8px);
 }
 
+/* ===================================
+   ANIMATED BACKGROUND BLOBS
+   =================================== */
 @keyframes blob {
   0%, 100% {
     transform: translate(0, 0) scale(1);
@@ -347,14 +545,17 @@
   animation-delay: 4s;
 }
 
+/* ===================================
+   LANGUAGE CARDS - OPTIMIZED MOBILE
+   =================================== */
 #step2 .language-card {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.625rem;
-  padding: 0.875rem 0.625rem;
+  gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border: 2px solid #e2e8f0;
   border-radius: 1rem;
@@ -362,6 +563,12 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   min-height: 100px;
+  min-width: 0;
+  /* CRITIQUE: Zone tactile optimale mobile (min 44x44px) */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 #step2 .language-card:hover {
@@ -372,7 +579,7 @@
 }
 
 #step2 .language-card:active {
-  transform: translateY(-2px) scale(1);
+  transform: translateY(-2px) scale(0.98);
 }
 
 #step2 .language-card.selected {
@@ -388,9 +595,16 @@
   box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.6);
 }
 
+#step2 .language-card.selected:active {
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* ===================================
+   FLAG CONTAINER
+   =================================== */
 #step2 .flag-container {
-  width: 3rem;
-  height: 2.25rem;
+  width: 2.75rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -398,6 +612,7 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
+  flex-shrink: 0;
 }
 
 #step2 .language-card:hover .flag-container {
@@ -416,25 +631,33 @@
   border-radius: 0.375rem;
 }
 
+/* ===================================
+   LANGUAGE NAME
+   =================================== */
 #step2 .language-name {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   text-align: center;
-  line-height: 1.3;
+  line-height: 1.2;
   color: #1e293b;
   transition: color 0.2s;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 #step2 .language-card.selected .language-name {
   color: white;
 }
 
+/* ===================================
+   CHECK INDICATOR
+   =================================== */
 #step2 .check-indicator {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 1.375rem;
-  height: 1.375rem;
+  top: 0.375rem;
+  right: 0.375rem;
+  width: 1.25rem;
+  height: 1.25rem;
   background: #22c55e;
   border-radius: 50%;
   display: flex;
@@ -452,6 +675,9 @@
   transform: scale(1);
 }
 
+/* ===================================
+   SHAKE ANIMATION
+   =================================== */
 .shake-animation {
   animation: shake 0.4s;
 }
@@ -462,6 +688,9 @@
   20%, 40%, 60%, 80% { transform: translateX(8px); }
 }
 
+/* ===================================
+   MOBILE OPTIMIZATIONS (< 640px)
+   =================================== */
 @media (max-width: 639px) {
   #step2 .sticky {
     padding-top: 0.5rem;
@@ -469,43 +698,67 @@
   }
   
   #step2 h2 {
-    font-size: 1.375rem;
+    font-size: 1.125rem;
     line-height: 1.3;
-  }
-  
-  #step2 p {
-    font-size: 0.8125rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
   }
   
   #step2 .language-card {
-    padding: 0.75rem 0.5rem;
+    padding: 0.625rem 0.375rem;
     min-height: 90px;
+    gap: 0.375rem;
   }
   
   #step2 .flag-container {
-    width: 2.75rem;
-    height: 2rem;
+    width: 2.5rem;
+    height: 1.875rem;
   }
   
   #step2 .language-name {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+  
+  #step2 .check-indicator {
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+  
+  #step2 .check-indicator svg {
+    width: 0.875rem;
+    height: 0.875rem;
   }
 }
 
+/* ===================================
+   TABLET (640px - 1023px)
+   =================================== */
 @media (min-width: 640px) and (max-width: 1023px) {
   #step2 .language-card {
     padding: 0.875rem 0.625rem;
+    gap: 0.5rem;
   }
   
   #step2 .flag-container {
-    width: 3.25rem;
-    height: 2.375rem;
+    width: 3rem;
+    height: 2.25rem;
+  }
+  
+  #step2 .language-name {
+    font-size: 0.875rem;
   }
 }
 
+/* ===================================
+   DESKTOP (≥ 1024px)
+   =================================== */
 @media (min-width: 1024px) {
   #step2 .language-card {
     padding: 1rem 0.75rem;
+    gap: 0.625rem;
   }
   
   #step2 .flag-container {
@@ -518,6 +771,9 @@
   }
 }
 
+/* ===================================
+   ACCESSIBILITY
+   =================================== */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -538,6 +794,9 @@
   }
 }
 
+/* ===================================
+   PERFORMANCE OPTIMIZATIONS
+   =================================== */
 #step2 .language-card,
 #step2 .check-indicator,
 #step2 .flag-container {
@@ -549,26 +808,52 @@
 #step2 .language-card {
   contain: layout style paint;
 }
+
+/* ===================================
+   PREVENT HORIZONTAL SCROLL
+   =================================== */
+#step2,
+#step2 * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#step2 .grid {
+  width: 100%;
+}
 </style>
 
 <script>
 (function(){
+  'use strict';
+  
   var step2 = document.getElementById('step2');
   if (!step2) return;
+  
   var storageKey = 'expats';
   var countEl = document.getElementById('step2SelectedCount');
 
-  function setCount(n){ if (countEl) countEl.textContent = String(n); }
-  function cards(){ return Array.prototype.slice.call(step2.querySelectorAll('.language-card')); }
+  function setCount(n){ 
+    if (countEl) countEl.textContent = String(n); 
+  }
+  
+  function cards(){ 
+    return Array.prototype.slice.call(step2.querySelectorAll('.language-card')); 
+  }
+  
   function langFromCard(card){
     if (!card) return '';
     var byData = (card.getAttribute('data-language') || '').trim();
     if (byData) return byData;
     var byChild = card.querySelector('[data-language]');
-    if (byChild) { var v = (byChild.getAttribute('data-language') || '').trim(); if (v) return v; }
+    if (byChild) { 
+      var v = (byChild.getAttribute('data-language') || '').trim(); 
+      if (v) return v; 
+    }
     var byName = card.querySelector('.language-name');
     return byName ? (byName.textContent || '').trim() : '';
   }
+  
   function ensureHidden(){
     var el = document.getElementById('nativeLanguage') || step2.querySelector('input[name="native_language"]');
     if (!el) {
@@ -580,6 +865,7 @@
     }
     return el;
   }
+  
   function setState(lang){
     try {
       var raw = localStorage.getItem(storageKey) || '{}';
@@ -588,32 +874,51 @@
       localStorage.setItem(storageKey, JSON.stringify(s));
     } catch(_) {}
   }
+  
   function select(card){
     var lang = langFromCard(card);
     if (!lang) return;
+    
+    // Désélectionner toutes les cartes
     cards().forEach(function(c){ 
       c.classList.remove('selected'); 
       c.setAttribute('aria-checked','false'); 
       c.removeAttribute('data-selected');
     });
+    
+    // Sélectionner la carte cliquée
     card.classList.add('selected');
     card.setAttribute('aria-checked','true');
     card.setAttribute('data-selected','true');
+    
+    // Mettre à jour l'input hidden
     var hidden = ensureHidden();
     hidden.value = lang;
     window.selectedLanguage = lang;
+    
+    // Sauvegarder dans localStorage
     setState(lang);
+    
+    // Mettre à jour le compteur
     setCount(1);
     
+    // Feedback haptique sur mobile (si disponible)
+    if (window.navigator && window.navigator.vibrate) {
+      window.navigator.vibrate(50);
+    }
+    
+    // Déclencher l'événement personnalisé
     try { 
       document.dispatchEvent(new CustomEvent('pw:step2:changed')); 
     } catch(_) {}
     
+    // Mettre à jour les boutons de navigation
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
   }
 
+  // Fonction de validation
   window.validateStep2 = function(){
     if (window.selectedLanguage && String(window.selectedLanguage).trim()) return true;
     var hidden = document.getElementById('nativeLanguage') || step2.querySelector('input[name="native_language"]');
@@ -622,37 +927,60 @@
     return false;
   };
 
+  // Gestionnaire de clic (avec support tactile)
   document.addEventListener('click', function(e){
     var t = e.target;
     var card = t && t.closest ? t.closest('#step2 .language-card') : null;
-    if (card) { e.preventDefault(); select(card); }
+    if (card) { 
+      e.preventDefault(); 
+      select(card); 
+    }
   }, true);
   
+  // Gestionnaire de touche (accessibilité clavier)
   document.addEventListener('keydown', function(e){
     if (e.key === 'Enter' || e.key === ' ') {
       var t = e.target;
       var card = t && t.closest ? t.closest('#step2 .language-card') : null;
-      if (card) { e.preventDefault(); select(card); }
+      if (card) { 
+        e.preventDefault(); 
+        select(card); 
+      }
     }
   }, true);
 
+  // Restauration de l'état depuis localStorage
   document.addEventListener('DOMContentLoaded', function(){
     try {
       var raw = localStorage.getItem(storageKey) || '{}';
       var s = JSON.parse(raw);
       var lang = (s.native_language || '').trim();
+      
       if (lang) {
         var all = cards();
         var match = null;
-        for (var i=0;i<all.length;i++){ if (langFromCard(all[i]) === lang) { match = all[i]; break; } }
-        if (match) select(match); else setCount(0);
+        for (var i=0; i<all.length; i++){ 
+          if (langFromCard(all[i]) === lang) { 
+            match = all[i]; 
+            break; 
+          } 
+        }
+        if (match) {
+          select(match);
+        } else {
+          setCount(0);
+        }
       } else {
         setCount(0);
-        if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+        if (typeof window.updateNavigationButtons === 'function') {
+          window.updateNavigationButtons();
+        }
       }
     } catch(_) {
       setCount(0);
-      if (typeof window.updateNavigationButtons === 'function') window.updateNavigationButtons();
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
     }
   }, { once: true });
 })();

@@ -32,7 +32,7 @@
         </p>
       </div>
 
-      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+      <div class="hidden sm:inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
@@ -156,13 +156,13 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
   color: white;
   font-size: 0.6875rem;
   font-weight: 600;
   border-radius: 0.375rem;
   white-space: nowrap;
-  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
   animation: slideIn 0.2s ease-out;
 }
 
@@ -484,11 +484,22 @@
   'use strict';
   
   // Initialiser la variable globale
-  if (!window.selectedCountries) {
+  if (typeof window.selectedCountries === 'undefined') {
     window.selectedCountries = [];
   }
 
-  // Fonction pour mettre à jour l'affichage des pays sélectionnés
+  // Fonction pour sauvegarder dans localStorage
+  function saveToLocalStorage() {
+    try {
+      const existingData = JSON.parse(localStorage.getItem('expats') || '{}');
+      existingData.operational_countries = [...window.selectedCountries];
+      localStorage.setItem('expats', JSON.stringify(existingData));
+    } catch (e) {
+      console.error('Step 6: Error saving to localStorage:', e);
+    }
+  }
+
+  // Fonction pour mettre à jour l'affichage des badges
   function updateSelectedCountriesList() {
     const listContainer = document.getElementById('step6SelectedList');
     if (!listContainer) return;
@@ -503,9 +514,10 @@
     }
     
     listContainer.classList.remove('hidden');
-    wrapper.innerHTML = window.selectedCountries
-      .slice() // Copie pour ne pas modifier l'original
-      .sort() // Tri alphabétique
+    
+    const badges = window.selectedCountries
+      .slice()
+      .sort()
       .map(country => `
         <span class="selected-country-badge">
           <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
@@ -515,67 +527,96 @@
         </span>
       `)
       .join('');
+    
+    wrapper.innerHTML = badges;
+  }
+
+  // Fonction pour restaurer l'état visuel d'une carte
+  function restoreCardVisualState(country) {
+    const container = document.querySelector('#step6');
+    if (!container) return false;
+    
+    // Essayer plusieurs méthodes pour trouver la carte
+    let card = container.querySelector(`[data-country="${country}"]`);
+    
+    if (!card) {
+      try {
+        card = container.querySelector(`[data-country="${CSS.escape(country)}"]`);
+      } catch (e) {}
+    }
+    
+    if (!card) {
+      const allCards = container.querySelectorAll('.country-card');
+      for (let c of allCards) {
+        if (c.getAttribute('data-country') === country) {
+          card = c;
+          break;
+        }
+      }
+    }
+    
+    if (card) {
+      card.classList.add('selected');
+      card.setAttribute('aria-checked', 'true');
+      return true;
+    }
+    
+    return false;
+  }
+
+  // Fonction pour effacer toutes les sélections visuelles
+  function clearAllVisualSelections() {
+    const container = document.querySelector('#step6');
+    if (!container) return;
+    
+    const allCards = container.querySelectorAll('.country-card');
+    allCards.forEach(card => {
+      card.classList.remove('selected');
+      card.setAttribute('aria-checked', 'false');
+    });
   }
 
   // Fonction pour toggle la sélection
   window.toggleCountrySelection = function(country) {
-    console.log('Step 6: toggleCountrySelection called with:', country);
-    
     const container = document.querySelector('#step6');
-    if (!container) {
-      console.warn('Step 6: Container not found');
-      return;
-    }
+    if (!container) return;
     
     const errorAlert = document.getElementById('step6CountryError');
     const selectedCount = document.getElementById('step6SelectedCount');
-    const card = container.querySelector(`.country-card[data-country="${CSS.escape(country)}"]`);
     
+    let card = container.querySelector(`[data-country="${country}"]`);
     if (!card) {
-      console.warn('Step 6: Card not found for country:', country);
-      return;
+      try {
+        card = container.querySelector(`[data-country="${CSS.escape(country)}"]`);
+      } catch (e) {}
     }
+    
+    if (!card) return;
     
     const index = window.selectedCountries.indexOf(country);
     
     if (index > -1) {
-      // Désélectionner
       window.selectedCountries.splice(index, 1);
       card.classList.remove('selected');
       card.setAttribute('aria-checked', 'false');
-      console.log('Step 6: Deselected', country);
     } else {
-      // Sélectionner
       window.selectedCountries.push(country);
       card.classList.add('selected');
       card.setAttribute('aria-checked', 'true');
-      console.log('Step 6: Selected', country);
     }
     
-    // Mettre à jour le compteur
     if (selectedCount) {
       selectedCount.textContent = window.selectedCountries.length;
     }
     
-    // Mettre à jour la liste des pays sélectionnés
     updateSelectedCountriesList();
     
-    // Masquer l'erreur si au moins un pays est sélectionné
     if (errorAlert && window.selectedCountries.length > 0) {
       errorAlert.classList.add('hidden');
     }
     
-    // Sauvegarder dans localStorage
-    try {
-      const data = JSON.parse(localStorage.getItem('expats') || '{}');
-      data.operational_countries = window.selectedCountries;
-      localStorage.setItem('expats', JSON.stringify(data));
-      console.log('Step 6: Saved to localStorage:', window.selectedCountries);
-    } catch (e) {
-      console.error('Step 6: Error saving to localStorage:', e);
-    }
+    saveToLocalStorage();
     
-    // Notifier le wizard
     if (typeof window.updateNavigationButtons === 'function') {
       window.updateNavigationButtons();
     }
@@ -583,8 +624,6 @@
 
   // Fonction de validation
   window.validateStep6 = function() {
-    console.log('Step 6: Validating... Selected countries:', window.selectedCountries);
-    
     const errorAlert = document.getElementById('step6CountryError');
     
     if (!window.selectedCountries || window.selectedCountries.length === 0) {
@@ -603,7 +642,7 @@
     return true;
   };
 
-  // Fonction debounce pour la recherche
+  // Fonction debounce
   function debounce(func, wait) {
     let timeout;
     return function(...args) {
@@ -612,34 +651,29 @@
     };
   }
 
-  // Restaurer depuis localStorage
+  // Fonction de restauration complète
   function restoreFromStorage() {
     try {
       const data = JSON.parse(localStorage.getItem('expats') || '{}');
       
       if (data.operational_countries && Array.isArray(data.operational_countries)) {
-        window.selectedCountries = data.operational_countries;
-        console.log('Step 6: Restored from localStorage:', window.selectedCountries);
+        window.selectedCountries = [...data.operational_countries];
         
         requestAnimationFrame(() => {
           const container = document.querySelector('#step6');
           if (!container) return;
           
-          const selectedCount = document.getElementById('step6SelectedCount');
+          clearAllVisualSelections();
           
           window.selectedCountries.forEach(country => {
-            const card = container.querySelector(`.country-card[data-country="${CSS.escape(country)}"]`);
-            if (card) {
-              card.classList.add('selected');
-              card.setAttribute('aria-checked', 'true');
-            }
+            restoreCardVisualState(country);
           });
           
+          const selectedCount = document.getElementById('step6SelectedCount');
           if (selectedCount) {
             selectedCount.textContent = window.selectedCountries.length;
           }
           
-          // Mettre à jour la liste des pays sélectionnés
           updateSelectedCountriesList();
           
           if (typeof window.updateNavigationButtons === 'function') {
@@ -654,15 +688,10 @@
 
   // Initialisation
   function init() {
-    console.log('Step 6: Initializing...');
-    
     const container = document.querySelector('#step6');
-    if (!container) {
-      console.warn('Step 6: Container not found');
-      return;
-    }
+    if (!container) return;
 
-    // Event delegation pour les clics - SANS passive pour permettre preventDefault
+    // Event delegation pour les clics
     container.addEventListener('click', function(e) {
       const card = e.target.closest('.country-card');
       if (card) {
@@ -670,7 +699,6 @@
         e.stopPropagation();
         const country = card.getAttribute('data-country');
         if (country) {
-          console.log('Step 6: Card clicked:', country);
           window.toggleCountrySelection(country);
         }
       }
@@ -684,14 +712,13 @@
           e.preventDefault();
           const country = card.getAttribute('data-country');
           if (country) {
-            console.log('Step 6: Keyboard selection:', country);
             window.toggleCountrySelection(country);
           }
         }
       }
     });
 
-    // Recherche de pays
+    // Recherche
     const searchInput = document.getElementById('step6Search');
     if (searchInput) {
       const performSearch = debounce(function(searchValue) {
@@ -711,12 +738,11 @@
       });
     }
 
-    // Observer pour restaurer quand le step devient visible
+    // Observer pour restaurer quand visible
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
           if (!container.classList.contains('hidden')) {
-            console.log('Step 6: Now visible, restoring...');
             if (searchInput) searchInput.value = '';
             const cards = container.querySelectorAll('.country-card');
             cards.forEach(card => card.style.display = '');
@@ -733,8 +759,6 @@
 
     // Restauration initiale
     restoreFromStorage();
-    
-    console.log('Step 6: Initialization complete');
   }
 
   // Lancer l'initialisation

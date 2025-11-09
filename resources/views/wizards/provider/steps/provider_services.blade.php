@@ -5,6 +5,9 @@
 ✅ Utilise les boutons mobileSpecialtiesBtn / desktopSpecialtiesBtn
 ✅ Cache Continue, affiche Specialties
 ✅ Grisé par défaut, actif après sélection
+✅ MODAL OPTIMISÉ MOBILE (comme popup principal)
+✅ Message d'erreur caché sur mobile
+✅ Case à cocher verte supprimée
 ============================================
 -->
 
@@ -49,7 +52,7 @@
 
   <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4">
 
-    <div id="step4ServiceError" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
+    <div id="step4ServiceError" class="hidden max-sm:!hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
@@ -182,29 +185,6 @@
   color: white;
 }
 
-.check-indicator {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 1.25rem;
-  height: 1.25rem;
-  background: #22c55e;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  opacity: 0;
-  transform: scale(0);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
-}
-
-.service-card.selected .check-indicator {
-  opacity: 1;
-  transform: scale(1);
-}
-
 .shake-animation {
   animation: shake 0.4s;
 }
@@ -236,15 +216,22 @@
 }
 
 /* ====================================
-   MODAL - SOUS-CATÉGORIES
+   MODAL - SOUS-CATÉGORIES (OPTIMISÉ MOBILE)
    ==================================== */
 
 .service-section {
-  padding: 1rem;
+  padding: 0.875rem;
   border: 2px solid #e5e7eb;
-  border-radius: 1rem;
+  border-radius: 0.875rem;
   background: white;
   transition: all 0.3s;
+}
+
+@media (min-width: 640px) {
+  .service-section {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
 }
 
 .service-section.complete {
@@ -267,9 +254,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
   border-bottom: 2px solid #f3f4f6;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .service-section-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
 }
 
 .service-section.complete .service-section-header {
@@ -281,16 +276,29 @@
 }
 
 .subcat-chip {
-  padding: 0.5rem 1rem;
+  padding: 0.625rem 0.875rem;
   border-radius: 0.625rem;
   border: 2px solid #bfdbfe;
   background: white;
   color: #1e3a8a;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: all 0.2s;
   line-height: 1.3;
+  min-height: 44px; /* Touch target mobile */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .subcat-chip {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    min-height: auto;
+  }
 }
 
 .subcat-chip:hover {
@@ -298,6 +306,10 @@
   background: #eff6ff;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+}
+
+.subcat-chip:active {
+  transform: translateY(0);
 }
 
 .subcat-chip.selected {
@@ -315,12 +327,22 @@
 .subcat-counter {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  font-size: 0.875rem;
+  gap: 0.25rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0.375rem 0.875rem;
+  padding: 0.375rem 0.75rem;
   border-radius: 9999px;
   transition: all 0.3s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .subcat-counter {
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    padding: 0.375rem 0.875rem;
+  }
 }
 
 .subcat-counter.has-selection {
@@ -331,6 +353,53 @@
 .subcat-counter.no-selection {
   background: #fee2e2;
   color: #991b1b;
+}
+
+/* Modal service section title - responsive */
+.service-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .service-section-title {
+    gap: 0.75rem;
+  }
+}
+
+.service-section-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .service-section-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.service-section-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 640px) {
+  .service-section-name {
+    font-size: 1.125rem;
+  }
 }
 </style>
 
@@ -663,12 +732,6 @@ async function loadServices() {
           </div>
           
           <span class="service-name">${category.name}</span>
-          
-          <span class="check-indicator">
-            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-            </svg>
-          </span>
         </button>
       `;
     }).join('');
@@ -699,7 +762,7 @@ function saveToLocalStorage() {
 }
 
 // ============================================
-// MODAL SOUS-CATÉGORIES
+// MODAL SOUS-CATÉGORIES (OPTIMISÉ MOBILE)
 // ============================================
 
 window.showSpecialtiesModal = async function() {
@@ -730,7 +793,7 @@ window.showSpecialtiesModal = async function() {
 };
 
 function createSpecialtiesModal(servicesData) {
-  console.log('🔨 Création modal');
+  console.log('🔨 Création modal (optimisé mobile)');
   
   const workingSubcats = JSON.parse(JSON.stringify(window.selectedSubcategories || {}));
   
@@ -751,22 +814,31 @@ function createSpecialtiesModal(servicesData) {
     };
   });
   
+  // 📱 STRUCTURE OPTIMISÉE MOBILE (comme popup principal)
   const modalHTML = `
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm" style="opacity: 0; transition: opacity 0.2s;">
-      <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
-        <div class="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 text-white p-5">
+    <div class="fixed inset-0 flex items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm z-[99999]" style="opacity: 0; transition: opacity 0.2s;">
+      
+      <!-- Container responsive: plein écran mobile, modal desktop -->
+      <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+        
+        <!-- Header sticky -->
+        <div class="sticky top-0 z-20 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 text-white px-4 sm:px-6 py-3 sm:py-4 border-b border-blue-500/20">
           <div class="flex items-center justify-between mb-2">
-            <h3 class="text-2xl font-black">Choose Your Specialties 🎯</h3>
-            <button type="button" id="closeSpecialtiesModal" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-20 transition-all">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <h3 class="text-xl sm:text-2xl font-black">Choose Your Specialties 🎯</h3>
+            <button type="button" 
+                    id="closeSpecialtiesModal" 
+                    class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/20 active:bg-white/30 transition-all flex-shrink-0"
+                    aria-label="Close">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
               </svg>
             </button>
           </div>
-          <p class="text-blue-100 text-sm font-medium">Choose at least one subcategory per selected category</p>
+          <p class="text-blue-100 text-xs sm:text-sm font-medium">Choose at least one subcategory per selected category</p>
         </div>
         
-        <div class="p-5 overflow-y-auto max-h-[calc(90vh-180px)] space-y-4">
+        <!-- Content scrollable -->
+        <div class="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 pt-4 pb-24 sm:pb-4 space-y-3 sm:space-y-4">
           ${servicesData.map(service => {
             const serviceId = normalizeId(service.serviceId);
             const icon = serviceIcons[serviceId];
@@ -776,11 +848,11 @@ function createSpecialtiesModal(servicesData) {
             return `
               <div class="service-section ${hasSelection ? 'complete' : ''}" data-service-id="${serviceId}">
                 <div class="service-section-header">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: ${icon.color};">
-                      <div class="w-5 h-5 text-white">${icon.svg}</div>
+                  <div class="service-section-title">
+                    <div class="service-section-icon" style="background-color: ${icon.color};">
+                      <div class="w-4 h-4 sm:w-5 sm:h-5 text-white">${icon.svg}</div>
                     </div>
-                    <h4 class="text-lg font-bold text-gray-900">${service.serviceName}</h4>
+                    <h4 class="service-section-name">${service.serviceName}</h4>
                   </div>
                   <div class="subcat-counter ${hasSelection ? 'has-selection' : 'no-selection'}">
                     <span class="count">${serviceSubcats.length}</span>
@@ -805,23 +877,29 @@ function createSpecialtiesModal(servicesData) {
                     }).join('')}
                   </div>
                 ` : `
-                  <p class="text-sm text-gray-500 italic">No specialties available for this service</p>
+                  <p class="text-xs sm:text-sm text-gray-500 italic">No specialties available for this service</p>
                 `}
               </div>
             `;
           }).join('')}
         </div>
         
-        <div class="sticky bottom-0 border-t-2 border-gray-200 p-4 bg-white">
-          <div class="flex gap-3">
-            <button type="button" id="backToServicesBtn" class="flex-1 py-3 px-6 bg-white text-gray-700 border-2 border-gray-300 font-bold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all">
+        <!-- Footer sticky bottom (mobile) ou static (desktop) -->
+        <div class="fixed sm:sticky bottom-0 inset-x-0 z-30 border-t-2 border-gray-200 p-3 sm:p-4 bg-white/95 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none">
+          <div class="flex gap-2 sm:gap-3">
+            <button type="button" 
+                    id="backToServicesBtn" 
+                    class="flex-1 py-3 px-4 sm:px-6 bg-white text-gray-700 border-2 border-gray-300 font-bold rounded-xl hover:bg-gray-50 hover:border-gray-400 active:scale-95 transition-all text-sm sm:text-base">
               Back
             </button>
-            <button type="button" id="saveSpecialtiesBtn" class="flex-1 py-3 px-6 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+            <button type="button" 
+                    id="saveSpecialtiesBtn" 
+                    class="flex-1 py-3 px-4 sm:px-6 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all text-sm sm:text-base">
               Next
             </button>
           </div>
         </div>
+        
       </div>
     </div>
   `;
@@ -830,10 +908,14 @@ function createSpecialtiesModal(servicesData) {
   modalContainer.innerHTML = modalHTML;
   const modal = modalContainer.firstElementChild;
   document.body.appendChild(modal);
+  
+  // Bloquer scroll du body (mobile)
   document.body.style.overflow = 'hidden';
   
+  // Fade in
   setTimeout(() => modal.style.opacity = '1', 10);
   
+  // Event handler pour les chips
   modal.addEventListener('click', (e) => {
     const chip = e.target.closest('.subcat-chip');
     if (!chip) return;
@@ -855,12 +937,14 @@ function createSpecialtiesModal(servicesData) {
       chip.classList.add('selected');
     }
     
+    // Update counter
     const serviceSection = modal.querySelector(`.service-section[data-service-id="${serviceId}"]`);
     const counter = serviceSection?.querySelector('.subcat-counter .count');
     if (counter) {
       counter.textContent = workingSubcats[serviceId].length;
     }
     
+    // Update section state
     const badge = serviceSection?.querySelector('.subcat-counter');
     if (badge) {
       if (workingSubcats[serviceId].length > 0) {
@@ -876,6 +960,7 @@ function createSpecialtiesModal(servicesData) {
     }
   });
   
+  // Close modal function
   function closeModal() {
     window.specialtiesModalOpen = false;
     document.body.style.overflow = '';
@@ -883,8 +968,10 @@ function createSpecialtiesModal(servicesData) {
     setTimeout(() => modal.remove(), 200);
   }
   
+  // Close button
   modal.querySelector('#closeSpecialtiesModal').onclick = closeModal;
   
+  // Back button
   modal.querySelector('#backToServicesBtn').onclick = () => {
     closeModal();
     setTimeout(() => {
@@ -896,6 +983,7 @@ function createSpecialtiesModal(servicesData) {
     }, 200);
   };
   
+  // Save button
   modal.querySelector('#saveSpecialtiesBtn').onclick = () => {
     const servicesWithSubcats = servicesData.filter(s => s.subcategories?.length > 0);
     const servicesWithSubcatsIds = servicesWithSubcats.map(s => normalizeId(s.serviceId));
@@ -919,9 +1007,11 @@ function createSpecialtiesModal(servicesData) {
       return;
     }
     
+    // Save selections
     window.selectedSubcategories = JSON.parse(JSON.stringify(workingSubcats));
     saveToLocalStorage();
     
+    // Go to next step
     if (typeof window.showStep === 'function') {
       window.showStep(4);
     } else if (typeof window.goToNextStep === 'function') {

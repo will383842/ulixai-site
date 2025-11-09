@@ -14125,8 +14125,6 @@ function createIconHtml(item, iconColor) {
   var parentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'root';
   var iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
   var escapedName = item.name.replace(/"/g, '&quot;');
-
-  // ✅ Utiliser l'icône SVG automatique avec parentId pour éviter les doublons
   var iconSVG = (0,_categoryIcons_js__WEBPACK_IMPORTED_MODULE_1__.getCategoryIcon)(item.name, item.id, parentId);
   return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; display: flex; align-items: center; justify-content: center;\" role=\"img\" aria-label=\"").concat(escapedName, "\">") + "<div class=\"w-8 h-8 text-white\" style=\"width: 2rem; height: 2rem;\">".concat(iconSVG, "</div>") + '</div>';
 }
@@ -14138,6 +14136,8 @@ function createCategoryCard(item, level, allIds, onClickHandler) {
   div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
   div.setAttribute('aria-label', "S\xE9lectionner ".concat(item.name));
   div.setAttribute('role', 'button');
+  div.setAttribute('translate', 'yes'); // 🆕 Pour Google Translate
+
   div.style.cssText = "\n    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);\n    transform-style: preserve-3d;\n    position: relative;\n    overflow: visible;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    text-align: center;\n    min-height: fit-content;\n    height: auto;\n  ";
   if (window.innerWidth >= CONFIG.GRID.BREAKPOINT) {
     div.style.padding = '1rem';
@@ -14167,7 +14167,8 @@ function createCategoryCard(item, level, allIds, onClickHandler) {
   var shineEffect = createShineEffect();
   var iconHtml = createIconHtml(item, iconColor, parentId);
   var textSize = getResponsiveSize(CONFIG.TEXT.MOBILE_SIZE, CONFIG.TEXT.DESKTOP_SIZE);
-  var textHtml = "<div class=\"".concat(textSize, " font-semibold text-gray-800 category-text\">").concat(item.name, "</div>");
+  var textHtml = "<div class=\"".concat(textSize, " font-semibold text-gray-800 category-text\" translate=\"yes\">").concat(item.name, "</div>"); // 🆕 translate="yes"
+
   div.innerHTML = shineEffect + iconHtml + textHtml;
   div.addEventListener('click', function () {
     return onClickHandler(item.id, item.name);
@@ -14175,6 +14176,32 @@ function createCategoryCard(item, level, allIds, onClickHandler) {
     passive: true
   });
   return div;
+}
+
+/**
+ * ✅ MÉTHODE SIMPLIFIÉE : Google Translate est déjà prêt grâce à waitForGoogleTranslateReady
+ */
+function forceTranslationWhenReady() {
+  var currentLang = localStorage.getItem('ulixai_lang') || 'en';
+
+  // Pas besoin de traduire si c'est de l'anglais
+  if (currentLang === 'en') {
+    console.log('ℹ️ [CategoryPopups] Current language is English, no translation needed');
+    return;
+  }
+
+  // On sait que Google Translate est prêt grâce à waitForGoogleTranslateReady
+  console.log('🔄 [CategoryPopups] Forcing translation (Google Translate already ready)...');
+
+  // Petit délai pour que les éléments soient bien dans le DOM
+  setTimeout(function () {
+    if (typeof window.forceTranslateDynamicContent === 'function') {
+      window.forceTranslateDynamicContent();
+      console.log('🌐 [CategoryPopups] Translation forced for dynamic categories');
+    } else {
+      console.warn('⚠️ [CategoryPopups] forceTranslateDynamicContent not available');
+    }
+  }, 300); // Augmenté à 300ms pour être sûr
 }
 function renderCategories(items, containerSelector, level, clickHandler) {
   var parentId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'root';
@@ -14193,11 +14220,17 @@ function renderCategories(items, containerSelector, level, clickHandler) {
       fragment.appendChild(card);
     }
     container.appendChild(fragment);
+
+    // 🆕 Forcer la retraduction avec la méthode améliorée
+    forceTranslationWhenReady();
   });
 }
 function fetchWithCache(_x) {
   return _fetchWithCache.apply(this, arguments);
 }
+/**
+ * ✅ Attendre que Google Translate soit prêt avant toute action
+ */
 function _fetchWithCache() {
   _fetchWithCache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
     var cached, response, data;
@@ -14226,18 +14259,47 @@ function _fetchWithCache() {
   }));
   return _fetchWithCache.apply(this, arguments);
 }
+function waitForGoogleTranslateReady(callback) {
+  var maxWait = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
+  var startTime = Date.now();
+  var currentLang = localStorage.getItem('ulixai_lang') || 'en';
+
+  // Si c'est de l'anglais, pas besoin d'attendre
+  if (currentLang === 'en') {
+    callback();
+    return;
+  }
+  var _checkReady = function checkReady() {
+    var _window$google;
+    var isReady = ((_window$google = window.google) === null || _window$google === void 0 || (_window$google = _window$google.translate) === null || _window$google === void 0 ? void 0 : _window$google.TranslateElement) && document.querySelector('.goog-te-combo') && typeof window.forceTranslateDynamicContent === 'function';
+    if (isReady) {
+      console.log('✅ [CategoryPopups] Google Translate is ready');
+      callback();
+    } else if (Date.now() - startTime < maxWait) {
+      setTimeout(_checkReady, 100);
+    } else {
+      console.warn('⚠️ [CategoryPopups] Google Translate timeout, continuing anyway');
+      callback();
+    }
+  };
+  _checkReady();
+}
 function initializeCategoryPopups() {
   window.openHelpPopup = function () {
     var popup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
     if (!popup) return;
     popup.classList.remove('hidden');
     popup.setAttribute('aria-hidden', 'false');
-    fetchWithCache(API_ENDPOINTS.CATEGORIES).then(function (data) {
-      if (data.success) {
-        renderCategories(data.categories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass), 'main', window.handleCategoryClick, 'root');
-      }
-    })["catch"](function (err) {
-      return console.error('Fetch error:', err);
+
+    // ✅ ATTENDRE que Google Translate soit prêt AVANT de charger les catégories
+    waitForGoogleTranslateReady(function () {
+      fetchWithCache(API_ENDPOINTS.CATEGORIES).then(function (data) {
+        if (data.success) {
+          renderCategories(data.categories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass), 'main', window.handleCategoryClick, 'root');
+        }
+      })["catch"](function (err) {
+        return console.error('Fetch error:', err);
+      });
     });
   };
   window.handleCategoryClick = function (categoryId, categoryName) {
@@ -14258,12 +14320,16 @@ function initializeCategoryPopups() {
       })
     };
     localStorage.setItem('create-request', JSON.stringify(createRequest));
-    fetchWithCache(API_ENDPOINTS.SUBCATEGORIES(categoryId)).then(function (data) {
-      if (data.success) {
-        renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.containerClass), 'sub', window.handleSubcategoryClick, categoryId);
-      }
-    })["catch"](function (err) {
-      return console.error('Error:', err);
+
+    // ✅ ATTENDRE que Google Translate soit prêt
+    waitForGoogleTranslateReady(function () {
+      fetchWithCache(API_ENDPOINTS.SUBCATEGORIES(categoryId)).then(function (data) {
+        if (data.success) {
+          renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.containerClass), 'sub', window.handleSubcategoryClick, categoryId);
+        }
+      })["catch"](function (err) {
+        return console.error('Error:', err);
+      });
     });
   };
   window.handleSubcategoryClick = function (parentId, categoryName) {
@@ -14273,24 +14339,28 @@ function initializeCategoryPopups() {
       name: categoryName
     });
     localStorage.setItem('create-request', JSON.stringify(createRequest));
-    fetchWithCache(API_ENDPOINTS.CHILDREN(parentId)).then(function (data) {
-      if (data.success && data.subcategories.length > 0) {
-        var subPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId);
-        var childPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId);
-        if (subPopup) {
-          subPopup.classList.add('hidden');
-          subPopup.setAttribute('aria-hidden', 'true');
+
+    // ✅ ATTENDRE que Google Translate soit prêt
+    waitForGoogleTranslateReady(function () {
+      fetchWithCache(API_ENDPOINTS.CHILDREN(parentId)).then(function (data) {
+        if (data.success && data.subcategories.length > 0) {
+          var subPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId);
+          var childPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId);
+          if (subPopup) {
+            subPopup.classList.add('hidden');
+            subPopup.setAttribute('aria-hidden', 'true');
+          }
+          if (childPopup) {
+            childPopup.classList.remove('hidden');
+            childPopup.setAttribute('aria-hidden', 'false');
+          }
+          renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass), 'child', window.requestForHelp, parentId);
+        } else {
+          window.requestForHelp(parentId, categoryName);
         }
-        if (childPopup) {
-          childPopup.classList.remove('hidden');
-          childPopup.setAttribute('aria-hidden', 'false');
-        }
-        renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass), 'child', window.requestForHelp, parentId);
-      } else {
-        window.requestForHelp(parentId, categoryName);
-      }
-    })["catch"](function (err) {
-      return console.error('Error:', err);
+      })["catch"](function (err) {
+        return console.error('Error:', err);
+      });
     });
   };
   window.requestForHelp = function (childId, childName) {

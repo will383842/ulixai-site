@@ -33,7 +33,7 @@
         </p>
       </div>
 
-      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+      <div class="hidden sm:inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
@@ -60,7 +60,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5" role="group" aria-label="Select languages you speak">
       
-      <!-- English -->
+      <!-- English (TOUJOURS EN PREMIER) -->
       <button type="button" class="lang-btn language-card" data-lang="English" role="checkbox" aria-checked="false" aria-label="Select English">
         <div class="flag-container">
           <img src="{{ asset('images/flags/us.svg') }}" alt="English flag" class="flag-image" loading="lazy" />
@@ -68,12 +68,36 @@
         <span class="language-name">English</span>
       </button>
 
-      <!-- Spanish -->
-      <button type="button" class="lang-btn language-card" data-lang="Spanish" role="checkbox" aria-checked="false" aria-label="Select Spanish">
+      <!-- Arabic -->
+      <button type="button" class="lang-btn language-card" data-lang="Arabic" role="checkbox" aria-checked="false" aria-label="Select Arabic">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/es.svg') }}" alt="Spanish flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/sa.svg') }}" alt="Arabic flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Spanish</span>
+        <span class="language-name">Arabic</span>
+      </button>
+
+      <!-- Bengali -->
+      <button type="button" class="lang-btn language-card" data-lang="Bengali" role="checkbox" aria-checked="false" aria-label="Select Bengali">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/bd.svg') }}" alt="Bengali flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Bengali</span>
+      </button>
+
+      <!-- Chinese -->
+      <button type="button" class="lang-btn language-card" data-lang="Chinese" role="checkbox" aria-checked="false" aria-label="Select Chinese">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/cn.svg') }}" alt="Chinese flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Chinese</span>
+      </button>
+
+      <!-- Dutch -->
+      <button type="button" class="lang-btn language-card" data-lang="Dutch" role="checkbox" aria-checked="false" aria-label="Select Dutch">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/nl.svg') }}" alt="Dutch flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Dutch</span>
       </button>
 
       <!-- French -->
@@ -92,12 +116,52 @@
         <span class="language-name">German</span>
       </button>
 
+      <!-- Hindi -->
+      <button type="button" class="lang-btn language-card" data-lang="Hindi" role="checkbox" aria-checked="false" aria-label="Select Hindi">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/in.svg') }}" alt="Hindi flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Hindi</span>
+      </button>
+
+      <!-- Indonesian -->
+      <button type="button" class="lang-btn language-card" data-lang="Indonesian" role="checkbox" aria-checked="false" aria-label="Select Indonesian">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/id.svg') }}" alt="Indonesian flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Indonesian</span>
+      </button>
+
       <!-- Italian -->
       <button type="button" class="lang-btn language-card" data-lang="Italian" role="checkbox" aria-checked="false" aria-label="Select Italian">
         <div class="flag-container">
           <img src="{{ asset('images/flags/it.svg') }}" alt="Italian flag" class="flag-image" loading="lazy" />
         </div>
         <span class="language-name">Italian</span>
+      </button>
+
+      <!-- Japanese -->
+      <button type="button" class="lang-btn language-card" data-lang="Japanese" role="checkbox" aria-checked="false" aria-label="Select Japanese">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/jp.svg') }}" alt="Japanese flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Japanese</span>
+      </button>
+
+      <!-- Korean -->
+      <button type="button" class="lang-btn language-card" data-lang="Korean" role="checkbox" aria-checked="false" aria-label="Select Korean">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/kr.svg') }}" alt="Korean flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Korean</span>
+      </button>
+
+      <!-- Polish -->
+      <button type="button" class="lang-btn language-card" data-lang="Polish" role="checkbox" aria-checked="false" aria-label="Select Polish">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/pl.svg') }}" alt="Polish flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Polish</span>
       </button>
 
       <!-- Portuguese -->
@@ -116,52 +180,68 @@
         <span class="language-name">Russian</span>
       </button>
 
-      <!-- Chinese -->
-      <button type="button" class="lang-btn language-card" data-lang="Chinese" role="checkbox" aria-checked="false" aria-label="Select Chinese">
+      <!-- Spanish -->
+      <button type="button" class="lang-btn language-card" data-lang="Spanish" role="checkbox" aria-checked="false" aria-label="Select Spanish">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/cn.svg') }}" alt="Chinese flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/es.svg') }}" alt="Spanish flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Chinese</span>
+        <span class="language-name">Spanish</span>
       </button>
 
-      <!-- Japanese -->
-      <button type="button" class="lang-btn language-card" data-lang="Japanese" role="checkbox" aria-checked="false" aria-label="Select Japanese">
+      <!-- Swahili -->
+      <button type="button" class="lang-btn language-card" data-lang="Swahili" role="checkbox" aria-checked="false" aria-label="Select Swahili">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/jp.svg') }}" alt="Japanese flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/ke.svg') }}" alt="Swahili flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Japanese</span>
+        <span class="language-name">Swahili</span>
       </button>
 
-      <!-- Arabic -->
-      <button type="button" class="lang-btn language-card" data-lang="Arabic" role="checkbox" aria-checked="false" aria-label="Select Arabic">
+      <!-- Swedish -->
+      <button type="button" class="lang-btn language-card" data-lang="Swedish" role="checkbox" aria-checked="false" aria-label="Select Swedish">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/sa.svg') }}" alt="Arabic flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/se.svg') }}" alt="Swedish flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Arabic</span>
+        <span class="language-name">Swedish</span>
       </button>
 
-      <!-- Hindi -->
-      <button type="button" class="lang-btn language-card" data-lang="Hindi" role="checkbox" aria-checked="false" aria-label="Select Hindi">
+      <!-- Tagalog -->
+      <button type="button" class="lang-btn language-card" data-lang="Tagalog" role="checkbox" aria-checked="false" aria-label="Select Tagalog">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/in.svg') }}" alt="Hindi flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/ph.svg') }}" alt="Tagalog flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Hindi</span>
+        <span class="language-name">Tagalog</span>
       </button>
 
-      <!-- Korean -->
-      <button type="button" class="lang-btn language-card" data-lang="Korean" role="checkbox" aria-checked="false" aria-label="Select Korean">
+      <!-- Thai -->
+      <button type="button" class="lang-btn language-card" data-lang="Thai" role="checkbox" aria-checked="false" aria-label="Select Thai">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/kr.svg') }}" alt="Korean flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/th.svg') }}" alt="Thai flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Korean</span>
+        <span class="language-name">Thai</span>
       </button>
 
-      <!-- Dutch -->
-      <button type="button" class="lang-btn language-card" data-lang="Dutch" role="checkbox" aria-checked="false" aria-label="Select Dutch">
+      <!-- Turkish -->
+      <button type="button" class="lang-btn language-card" data-lang="Turkish" role="checkbox" aria-checked="false" aria-label="Select Turkish">
         <div class="flag-container">
-          <img src="{{ asset('images/flags/nl.svg') }}" alt="Dutch flag" class="flag-image" loading="lazy" />
+          <img src="{{ asset('images/flags/tr.svg') }}" alt="Turkish flag" class="flag-image" loading="lazy" />
         </div>
-        <span class="language-name">Dutch</span>
+        <span class="language-name">Turkish</span>
+      </button>
+
+      <!-- Ukrainian -->
+      <button type="button" class="lang-btn language-card" data-lang="Ukrainian" role="checkbox" aria-checked="false" aria-label="Select Ukrainian">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/ua.svg') }}" alt="Ukrainian flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Ukrainian</span>
+      </button>
+
+      <!-- Vietnamese -->
+      <button type="button" class="lang-btn language-card" data-lang="Vietnamese" role="checkbox" aria-checked="false" aria-label="Select Vietnamese">
+        <div class="flag-container">
+          <img src="{{ asset('images/flags/vn.svg') }}" alt="Vietnamese flag" class="flag-image" loading="lazy" />
+        </div>
+        <span class="language-name">Vietnamese</span>
       </button>
       
     </div>
@@ -172,6 +252,8 @@
 #step3 {
   position: relative;
   min-height: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 #step3 .sticky {
@@ -204,7 +286,7 @@
   animation-delay: 4s;
 }
 
-/* ===== DESIGN HORIZONTAL MINIMALISTE SANS VIBRATIONS ===== */
+/* ===== DESIGN HORIZONTAL MINIMALISTE OPTIMISÉ TACTILE ===== */
 
 #step3 .lang-btn,
 #step3 .language-card {
@@ -221,12 +303,23 @@
   transition: all 0.2s ease;
   min-height: auto;
   height: 3.5rem;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #step3 .lang-btn:hover,
 #step3 .language-card:hover {
   border-color: #60a5fa;
   background: #f8fafc;
+}
+
+#step3 .lang-btn:active,
+#step3 .language-card:active {
+  transform: scale(0.98);
 }
 
 #step3 .lang-btn.selected,
@@ -253,6 +346,7 @@
   flex-shrink: 0;
   border: 1px solid rgba(0, 0, 0, 0.08);
   transition: border-color 0.2s ease;
+  pointer-events: none;
 }
 
 #step3 .lang-btn.selected .flag-container,
@@ -264,6 +358,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
 }
 
 #step3 .language-name {
@@ -273,6 +368,7 @@
   text-align: left;
   color: #1f2937;
   transition: color 0.2s;
+  pointer-events: none;
 }
 
 #step3 .lang-btn.selected .language-name,
@@ -291,6 +387,7 @@
   20%, 40%, 60%, 80% { transform: translateX(8px); }
 }
 
+/* ===== RESPONSIVE MOBILE FIRST ===== */
 @media (max-width: 639px) {
   #step3 .sticky {
     padding-top: 0.5rem;
@@ -298,7 +395,7 @@
   }
   
   #step3 h2 {
-    font-size: 1.375rem;
+    font-size: 1.25rem;
     line-height: 1.3;
   }
   
@@ -308,9 +405,10 @@
   
   #step3 .lang-btn,
   #step3 .language-card {
-    padding: 0.5rem 0.75rem;
-    height: 3rem;
+    padding: 0.625rem 0.875rem;
+    height: 3.25rem;
     gap: 0.625rem;
+    min-height: 44px;
   }
   
   #step3 .flag-container {
@@ -320,6 +418,10 @@
   
   #step3 .language-name {
     font-size: 0.875rem;
+  }
+  
+  #step3 .grid {
+    gap: 0.5rem;
   }
 }
 
@@ -341,6 +443,7 @@
   }
 }
 
+/* ===== ACCESSIBILITÉ ===== */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -363,9 +466,23 @@
   }
 }
 
+/* ===== PERFORMANCE ===== */
 #step3 .lang-btn,
 #step3 .language-card {
   contain: layout style paint;
+  will-change: transform;
+}
+
+/* ===== PRÉVENTION DU SCROLL HORIZONTAL ===== */
+#step3 .grid {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#step3 > * {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 </style>
 
@@ -446,13 +563,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const container = document.querySelector('#step3');
   if (!container) return;
   
+  // Optimisation tactile avec event delegation
   container.addEventListener('click', function(e) {
     const card = e.target.closest('.lang-btn, .language-card');
     if (card) {
+      e.preventDefault();
       window.selectSpokenLanguage(card);
     }
-  }, { passive: true });
+  }, { passive: false });
   
+  // Support tactile amélioré
+  container.addEventListener('touchend', function(e) {
+    const card = e.target.closest('.lang-btn, .language-card');
+    if (card) {
+      e.preventDefault();
+      window.selectSpokenLanguage(card);
+    }
+  }, { passive: false });
+  
+  // Support clavier
   container.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') {
       const card = e.target.closest('.lang-btn, .language-card');
@@ -463,6 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
+  // Observer pour la visibilité
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
@@ -477,6 +607,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   observer.observe(container, { attributes: true });
   
+  // Restauration de la sélection depuis localStorage
   try {
     const data = JSON.parse(localStorage.getItem('expats') || '{}');
     if (data.spoken_languages && Array.isArray(data.spoken_languages)) {
