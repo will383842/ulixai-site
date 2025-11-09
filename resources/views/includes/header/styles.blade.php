@@ -29,6 +29,7 @@
   transform: translateZ(0);
   backface-visibility: hidden;
   contain: layout style paint;
+  z-index: 100; /* ← AJOUTER */
 }
 
 /* Overlay animation avec flou renforcé */
@@ -535,4 +536,5 @@ html { scroll-behavior: auto !important; }
     padding: 5px 12px; 
   }
 }
+
 </style>

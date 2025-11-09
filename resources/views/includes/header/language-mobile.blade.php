@@ -30,7 +30,7 @@
 </button>
 
 {{-- Bottom Sheet Modal - Moderne 2025 --}}
-<div id="mobileLangModal" class="fixed inset-0 z-[200] hidden">
+<div id="mobileLangModal" class="fixed inset-0 z-[300] hidden">
   {{-- Overlay avec blur --}}
   <div id="mobileLangOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
   

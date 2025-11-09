@@ -7,9 +7,9 @@
   ✅ Le JavaScript gère UNIQUEMENT btn.disabled = true/false
   ✅ Haute spécificité CSS pour éviter les conflits
   
-  @version 3.1.0
+  @version 3.1.1
   @updated 2025-01-08
-  @change Ajout styles pour btn-specialties
+  @change FIX #1 - Z-index corrigé (60 → 210)
 --}}
 
 <style>
@@ -112,7 +112,7 @@
       display: flex; 
       gap: 16px;
       box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-      z-index: 60; 
+      z-index: 210; /* ✅ FIX #1 - Au-dessus du contenu popup (était 60) */
       backdrop-filter: blur(8px);
     }
     
@@ -214,7 +214,7 @@
       background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0.95) 100%);
       backdrop-filter: blur(8px); 
       border-top: 1px solid #e5e7eb; 
-      z-index: 60;
+      z-index: 210; /* ✅ FIX #1 - Au-dessus du contenu popup (était 60) */
     }
     
     div#desktopNavButtons button { 
