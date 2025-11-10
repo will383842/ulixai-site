@@ -65,6 +65,9 @@ export class LanguageManager {
       }
     };
 
+    // 🆕 NETTOYER les anciennes clés conflictuelles
+    this.cleanLegacyStorageKeys();
+
     // Récupérer la langue stockée (SEULE SOURCE DE VÉRITÉ)
     this.selectedLang = localStorage.getItem('ulixai_lang') || 'en';
     
@@ -79,6 +82,39 @@ export class LanguageManager {
       this.selectedFlag = this.languages['en'].flag;
       this.selectedLabel = this.languages['en'].label;
     }
+    
+    console.log('🔍 [LangManager] Constructor initialized:', {
+      selectedLang: this.selectedLang,
+      selectedFlag: this.selectedFlag,
+      selectedLabel: this.selectedLabel
+    });
+  }
+
+  /**
+   * Clean legacy storage keys that may conflict with current system
+   */
+  cleanLegacyStorageKeys() {
+    const legacyKeys = [
+      'selectedLanguage',    // Ancienne clé qui causait le conflit avec 'de'
+      'selectedFlag',        // Ancienne clé pour le drapeau
+      'selectedLabel',       // Ancienne clé pour le label
+      'ulixai_flag',         // Autre ancienne clé
+      'googtrans',           // Parfois stocké à tort dans localStorage
+      'googtransopt'         // Idem
+    ];
+    
+    let cleaned = 0;
+    legacyKeys.forEach(key => {
+      if (localStorage.getItem(key) !== null) {
+        localStorage.removeItem(key);
+        cleaned++;
+        console.log(`🗑️ [LangManager] Removed legacy key: ${key}`);
+      }
+    });
+    
+    if (cleaned > 0) {
+      console.log(`✅ [LangManager] Cleaned ${cleaned} legacy storage keys`);
+    }
   }
 
   /**
@@ -89,13 +125,96 @@ export class LanguageManager {
 
     await this.waitForDOM();
 
+    // 🆕 Diagnostic complet au démarrage
+    this.diagnoseLanguageSetup();
+
     this.initDesktopLanguageSelector();
     this.initMobileLanguageSelector();
     
-    // 🆕 Exposer la fonction de retraduction globalement
+    // 🆕 Exposer les fonctions de traduction globalement
     window.forceTranslateDynamicContent = () => this.forceTranslateDynamicContent();
+    window.cleanGoogleTranslateMarkers = (container) => this.cleanGoogleTranslateMarkers(container);
 
     console.log('✅ [LangManager] UI initialized');
+  }
+
+  /**
+   * Diagnose language setup (cookies, localStorage, hash)
+   */
+  diagnoseLanguageSetup() {
+    const currentLang = this.selectedLang;
+    
+    console.group('🔍 [LangManager] Language Setup Diagnostic');
+    
+    // 1. Check localStorage
+    const legacySelectedLanguage = localStorage.getItem('selectedLanguage');
+    console.log('📦 LocalStorage:', {
+      ulixai_lang: localStorage.getItem('ulixai_lang'),
+      legacyKeys: {
+        selectedLanguage: legacySelectedLanguage,
+        selectedFlag: localStorage.getItem('selectedFlag'),
+        selectedLabel: localStorage.getItem('selectedLabel')
+      }
+    });
+    
+    // 2. Check cookies
+    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      if (key.includes('googtrans')) acc[key] = value;
+      return acc;
+    }, {});
+    console.log('🍪 Google Translate Cookies:', cookies);
+    
+    // 3. Check hash
+    console.log('🔗 Window Hash:', window.location.hash);
+    
+    // 4. Check expected values
+    const expectedHash = currentLang === 'en' ? '' : `#googtrans(en|${currentLang})`;
+    const expectedCookie = currentLang === 'en' ? 'N/A' : `/en/${currentLang}`;
+    
+    console.log('✅ Expected Values:', {
+      hash: expectedHash,
+      cookie: expectedCookie,
+      currentLang: currentLang
+    });
+    
+    // 5. CRITICAL: Detect language conflict
+    if (legacySelectedLanguage && legacySelectedLanguage !== currentLang) {
+      console.error('🚨 [LangManager] CONFLICT DETECTED!', {
+        legacy: legacySelectedLanguage,
+        current: currentLang
+      });
+      console.log('🔄 [LangManager] Forcing page reload to fix conflict...');
+      
+      // Clean legacy keys
+      this.cleanLegacyStorageKeys();
+      
+      // Set correct cookies and hash
+      this.setCookiesForLanguage(currentLang);
+      window.location.hash = expectedHash;
+      
+      // Force reload after a short delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+      
+      return; // Stop here, reload will happen
+    }
+    
+    // 6. Check if there are mismatches
+    const hasCorrectHash = window.location.hash === expectedHash;
+    const hasCorrectCookie = cookies['googtrans'] === expectedCookie || currentLang === 'en';
+    
+    if (!hasCorrectHash || !hasCorrectCookie) {
+      console.warn('⚠️ [LangManager] Mismatch detected! Fixing...');
+      this.setCookiesForLanguage(currentLang);
+      window.location.hash = expectedHash;
+      console.log('✅ [LangManager] Fixed cookies and hash');
+    } else {
+      console.log('✅ [LangManager] All language settings are correct');
+    }
+    
+    console.groupEnd();
   }
 
   /**
@@ -381,9 +500,7 @@ export class LanguageManager {
 
   /**
    * Force Google Translate to re-translate dynamic content
-   * Call this after injecting new content into the DOM
-   * 
-   * ✅ MÉTHODE DOCUMENTÉE QUI FONCTIONNE
+   * ✅ MÉTHODE ULTRA-AGRESSIVE - Manipulation directe du DOM
    */
   forceTranslateDynamicContent() {
     console.log('🔄 [LangManager] Forcing translation of dynamic content...');
@@ -414,70 +531,141 @@ export class LanguageManager {
       const elements = document.querySelectorAll(selectors.join(', '));
       console.log(`🔍 [LangManager] Found ${elements.length} elements to translate`);
       
+      if (elements.length === 0) {
+        console.warn('⚠️ [LangManager] No elements found to translate');
+        return;
+      }
+      
       // S'assurer que les éléments sont marqués correctement
       elements.forEach(element => {
         element.classList.remove('notranslate');
         element.setAttribute('translate', 'yes');
+        // Forcer Google à voir le changement
+        element.style.display = 'none';
       });
       
-      // ✅ LA MÉTHODE QUI FONCTIONNE : Forcer le widget Google Translate à re-traduire
-      // en changeant la valeur du select et en déclenchant l'événement 'change'
-      const restoreGoogleTranslate = () => {
+      // Forcer un reflow
+      void document.body.offsetHeight;
+      
+      // Remettre les éléments visibles
+      setTimeout(() => {
+        elements.forEach(element => {
+          element.style.display = '';
+        });
+        
+        // ✅ MÉTHODE 1 : Forcer via le widget Google Translate
         const googleTranslateCombo = document.querySelector('.goog-te-combo');
         
         if (googleTranslateCombo) {
-          // Si la langue actuelle est différente de celle stockée, on force le changement
-          if (googleTranslateCombo.value !== currentLang) {
-            console.log('🔄 [LangManager] Setting Google Translate combo to:', currentLang);
-            googleTranslateCombo.value = currentLang;
-            googleTranslateCombo.dispatchEvent(new Event('change'));
-            console.log('✅ [LangManager] Google Translate widget triggered');
-          } else {
-            // Sinon, on force quand même une re-traduction en réinitialisant
-            console.log('🔄 [LangManager] Forcing re-translation (same language)');
-            googleTranslateCombo.value = 'en'; // Reset to English
-            googleTranslateCombo.dispatchEvent(new Event('change'));
-            
-            setTimeout(() => {
-              googleTranslateCombo.value = currentLang; // Back to target language
-              googleTranslateCombo.dispatchEvent(new Event('change'));
-              console.log('✅ [LangManager] Google Translate widget re-triggered');
-            }, 50);
-          }
-        } else {
-          console.warn('⚠️ [LangManager] Google Translate combo not found');
+          console.log('🔄 [LangManager] Method 1: Using Google Translate widget');
           
-          // Fallback : Re-appliquer le hash et forcer un refresh du DOM
-          window.location.hash = `#googtrans(en|${currentLang})`;
+          // Triple reset pour être SÛR que Google détecte le changement
+          googleTranslateCombo.value = 'en';
+          googleTranslateCombo.dispatchEvent(new Event('change', { bubbles: true }));
           
           setTimeout(() => {
-            elements.forEach(element => {
-              if (element.parentNode) {
-                const parent = element.parentNode;
-                const next = element.nextSibling;
-                parent.removeChild(element);
-                parent.insertBefore(element, next);
+            googleTranslateCombo.value = currentLang;
+            googleTranslateCombo.dispatchEvent(new Event('change', { bubbles: true }));
+            
+            // Double check après 500ms
+            setTimeout(() => {
+              if (googleTranslateCombo.value !== currentLang) {
+                googleTranslateCombo.value = currentLang;
+                googleTranslateCombo.dispatchEvent(new Event('change', { bubbles: true }));
               }
-            });
-            console.log('🔄 [LangManager] DOM elements re-inserted as fallback');
-          }, 100);
+            }, 500);
+          }, 200);
+          
+          console.log('✅ [LangManager] Google Translate widget triggered');
+        } else {
+          console.warn('⚠️ [LangManager] Google Translate combo not found, using fallback');
+          
+          // ✅ MÉTHODE 2 : Manipulation DOM "nuclear option"
+          this.forceTranslationViaDOM(elements, currentLang);
         }
-      };
-      
-      // Attendre un peu que Google Translate soit prêt
-      if (window.google?.translate?.TranslateElement) {
-        setTimeout(restoreGoogleTranslate, 150);
-      } else {
-        // Si Google Translate n'est pas encore chargé, attendre l'événement
-        window.addEventListener('googleTranslateReady', () => {
-          setTimeout(restoreGoogleTranslate, 150);
-        }, { once: true });
-      }
+        
+      }, 50);
       
       console.log('✅ [LangManager] Dynamic content translation triggered');
     } catch (error) {
       console.error('❌ [LangManager] Error forcing translation:', error);
     }
+  }
+
+  /**
+   * Fallback method: Force translation by DOM manipulation
+   * Cette méthode retire puis remet les éléments dans le DOM
+   */
+  forceTranslationViaDOM(elements, targetLang) {
+    console.log('🔄 [LangManager] Method 2: Using DOM manipulation');
+    
+    // Re-appliquer le hash
+    window.location.hash = `#googtrans(en|${targetLang})`;
+    
+    // Manipuler le DOM pour forcer Google à re-scanner
+    const manipulations = [];
+    
+    elements.forEach(element => {
+      if (element.parentNode) {
+        manipulations.push({
+          element: element,
+          parent: element.parentNode,
+          nextSibling: element.nextSibling
+        });
+      }
+    });
+    
+    // Retirer tous les éléments
+    manipulations.forEach(m => {
+      m.parent.removeChild(m.element);
+    });
+    
+    // Attendre un frame
+    requestAnimationFrame(() => {
+      // Remettre tous les éléments
+      manipulations.forEach(m => {
+        m.parent.insertBefore(m.element, m.nextSibling);
+      });
+      
+      console.log('✅ [LangManager] DOM manipulation complete');
+      
+      // Forcer un dernier reflow
+      void document.body.offsetHeight;
+    });
+  }
+
+  /**
+   * Clean Google Translate markers from containers
+   * Removes font tags and restores original structure
+   */
+  cleanGoogleTranslateMarkers(container) {
+    if (!container) return;
+    
+    console.log('🧹 [LangManager] Cleaning Google Translate markers...');
+    
+    // Supprimer tous les <font> tags ajoutés par Google Translate
+    const fonts = container.querySelectorAll('font');
+    fonts.forEach(font => {
+      const parent = font.parentNode;
+      while (font.firstChild) {
+        parent.insertBefore(font.firstChild, font);
+      }
+      parent.removeChild(font);
+    });
+    
+    // Supprimer les spans avec des classes Google Translate
+    const spans = container.querySelectorAll('span[class*="translated"]');
+    spans.forEach(span => {
+      if (span.className && span.className.includes('translated')) {
+        const parent = span.parentNode;
+        while (span.firstChild) {
+          parent.insertBefore(span.firstChild, span);
+        }
+        parent.removeChild(span);
+      }
+    });
+    
+    console.log('✅ [LangManager] Google Translate markers cleaned');
   }
 }
 

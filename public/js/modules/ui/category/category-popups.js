@@ -144,7 +144,7 @@ function createCategoryCard(item, level, allIds, onClickHandler, parentId = 'roo
 }
 
 /**
- * ✅ MÉTHODE SIMPLIFIÉE : Google Translate est déjà prêt grâce à waitForGoogleTranslateReady
+ * ✅ MÉTHODE AMÉLIORÉE : Force la traduction avec des tentatives multiples et délais optimisés
  */
 function forceTranslationWhenReady() {
   const currentLang = localStorage.getItem('ulixai_lang') || 'en';
@@ -155,26 +155,72 @@ function forceTranslationWhenReady() {
     return;
   }
   
-  // On sait que Google Translate est prêt grâce à waitForGoogleTranslateReady
-  console.log('🔄 [CategoryPopups] Forcing translation (Google Translate already ready)...');
+  console.log('🔄 [CategoryPopups] Starting translation process...');
   
-  // Petit délai pour que les éléments soient bien dans le DOM
-  setTimeout(() => {
-    if (typeof window.forceTranslateDynamicContent === 'function') {
-      window.forceTranslateDynamicContent();
-      console.log('🌐 [CategoryPopups] Translation forced for dynamic categories');
-    } else {
-      console.warn('⚠️ [CategoryPopups] forceTranslateDynamicContent not available');
-    }
-  }, 300); // Augmenté à 300ms pour être sûr
+  // 🆕 DÉLAIS AUGMENTÉS pour laisser plus de temps à Google Translate
+  // Les catégories principales ont besoin de plus de temps car le popup vient de s'ouvrir
+  const delays = [800, 1500, 2500, 3500]; // 4 tentatives avec délais croissants
+  
+  delays.forEach((delay, index) => {
+    setTimeout(() => {
+      if (typeof window.forceTranslateDynamicContent === 'function') {
+        console.log(`🔄 [CategoryPopups] Translation attempt ${index + 1}/${delays.length} (delay: ${delay}ms)`);
+        window.forceTranslateDynamicContent();
+        
+        if (index === delays.length - 1) {
+          console.log('✅ [CategoryPopups] All translation attempts completed');
+          
+          // 🆕 VÉRIFICATION FINALE : Si toujours pas traduit, log un warning
+          setTimeout(() => {
+            const categoryCards = document.querySelectorAll('.category-card .category-text');
+            if (categoryCards.length > 0) {
+              const firstCard = categoryCards[0];
+              const isTranslated = firstCard.querySelector('font') !== null || 
+                                  firstCard.textContent !== firstCard.getAttribute('data-original-text');
+              
+              if (!isTranslated) {
+                console.warn('⚠️ [CategoryPopups] Categories may not be translated. Debug info:', {
+                  currentLang: currentLang,
+                  sampleText: firstCard.textContent,
+                  hasGoogleFont: firstCard.querySelector('font') !== null,
+                  googleComboValue: document.querySelector('.goog-te-combo')?.value
+                });
+              } else {
+                console.log('✅ [CategoryPopups] Categories appear to be translated');
+              }
+            }
+          }, 1000);
+        }
+      } else {
+        console.warn('⚠️ [CategoryPopups] forceTranslateDynamicContent not available');
+      }
+    }, delay);
+  });
 }
 
 function renderCategories(items, containerSelector, level, clickHandler, parentId = 'root') {
   const container = document.querySelector(containerSelector);
   if (!container) return;
   
+  console.log('🎨 [CategoryPopups] Rendering categories in:', containerSelector);
+  
+  // 🆕 Nettoyer les marqueurs Google Translate du container
+  if (typeof window.cleanGoogleTranslateMarkers === 'function') {
+    window.cleanGoogleTranslateMarkers(container);
+    console.log('🧹 [CategoryPopups] Cleaned Google Translate markers from container');
+  }
+  
+  // 🆕 S'assurer que le container ET son parent sont marqués pour traduction
+  container.setAttribute('translate', 'yes');
+  container.classList.remove('notranslate');
+  
+  if (container.parentElement) {
+    container.parentElement.setAttribute('translate', 'yes');
+    container.parentElement.classList.remove('notranslate');
+  }
+  
   const fragment = document.createDocumentFragment();
-  container.innerHTML = '';
+  container.innerHTML = ''; // Clear complètement le container
   setupResponsiveGrid(container);
   
   const allIds = items.map(item => item.id);
@@ -186,6 +232,16 @@ function renderCategories(items, containerSelector, level, clickHandler, parentI
       fragment.appendChild(card);
     }
     container.appendChild(fragment);
+    
+    console.log(`✅ [CategoryPopups] Rendered ${len} categories`);
+    
+    // 🆕 Log des éléments créés pour debug
+    const categoryTexts = container.querySelectorAll('.category-text');
+    if (categoryTexts.length > 0) {
+      console.log('📝 [CategoryPopups] Sample category texts:', 
+        Array.from(categoryTexts).slice(0, 3).map(el => el.textContent)
+      );
+    }
     
     // 🆕 Forcer la retraduction avec la méthode améliorée
     forceTranslationWhenReady();
@@ -234,30 +290,64 @@ function waitForGoogleTranslateReady(callback, maxWait = 5000) {
   checkReady();
 }
 
+/**
+ * ✅ Attendre que le popup soit complètement visible et rendu
+ */
+function waitForPopupVisible(popupElement, callback) {
+  console.log('🔄 [CategoryPopups] Waiting for popup to be fully visible...');
+  
+  // Vérifier que le popup est bien visible
+  const checkVisible = () => {
+    const isVisible = popupElement && 
+                     !popupElement.classList.contains('hidden') &&
+                     popupElement.offsetHeight > 0;
+    
+    if (isVisible) {
+      console.log('✅ [CategoryPopups] Popup is visible');
+      // Attendre encore un peu pour les animations CSS
+      setTimeout(callback, 300);
+    } else {
+      setTimeout(checkVisible, 50);
+    }
+  };
+  
+  checkVisible();
+}
+
 export function initializeCategoryPopups() {
   
   window.openHelpPopup = function() {
     const popup = document.getElementById(categoryLevels.main.popupId);
     if (!popup) return;
     
+    console.log('🎨 [CategoryPopups] Opening help popup...');
+    
+    // 1️⃣ Ouvrir le popup IMMÉDIATEMENT
     popup.classList.remove('hidden');
     popup.setAttribute('aria-hidden', 'false');
     
-    // ✅ ATTENDRE que Google Translate soit prêt AVANT de charger les catégories
-    waitForGoogleTranslateReady(() => {
-      fetchWithCache(API_ENDPOINTS.CATEGORIES)
-        .then(data => {
-          if (data.success) {
-            renderCategories(
-              data.categories,
-              `#${categoryLevels.main.popupId} .${categoryLevels.main.containerClass}`,
-              'main',
-              window.handleCategoryClick,
-              'root'
-            );
-          }
-        })
-        .catch(err => console.error('Fetch error:', err));
+    // 2️⃣ Attendre que le popup soit visible ET que Google Translate soit prêt
+    waitForPopupVisible(popup, () => {
+      console.log('✅ [CategoryPopups] Popup visible, now checking Google Translate...');
+      
+      waitForGoogleTranslateReady(() => {
+        console.log('✅ [CategoryPopups] Google Translate ready, loading categories...');
+        
+        // 3️⃣ Maintenant on peut charger les catégories
+        fetchWithCache(API_ENDPOINTS.CATEGORIES)
+          .then(data => {
+            if (data.success) {
+              renderCategories(
+                data.categories,
+                `#${categoryLevels.main.popupId} .${categoryLevels.main.containerClass}`,
+                'main',
+                window.handleCategoryClick,
+                'root'
+              );
+            }
+          })
+          .catch(err => console.error('Fetch error:', err));
+      });
     });
   };
   
