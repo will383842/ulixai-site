@@ -14054,414 +14054,281 @@ var CONFIG = {
   },
   ICONS: {
     MOBILE_SIZE: 'w-12 h-12',
-    DESKTOP_SIZE: 'w-14 h-14',
-    PADDING: '0.4rem'
+    DESKTOP_SIZE: 'w-14 h-14'
   },
-  TEXT: {
-    MOBILE_SIZE: 'text-xs',
-    DESKTOP_SIZE: 'text-xs'
-  },
-  ANIMATION: {
-    HOVER_TRANSFORM: 'translateY(-8px) scale(1.02)',
-    DEFAULT_TRANSFORM: 'translateY(0) scale(1)'
-  },
-  CACHE: {
-    ENABLED: true,
-    DURATION: 300000
-  }
+  CACHE_DURATION: 300000
 };
-var API_ENDPOINTS = {
-  CATEGORIES: '/api/categories',
-  SUBCATEGORIES: function SUBCATEGORIES(id) {
-    return "/api/categories/".concat(id, "/subcategories");
-  },
-  CHILDREN: function CHILDREN(id) {
-    return "/api/categories/".concat(id, "/children");
-  }
-};
-var cache = {
-  data: new Map(),
-  get: function get(key) {
-    if (!CONFIG.CACHE.ENABLED) return null;
-    var cached = this.data.get(key);
-    if (!cached || Date.now() - cached.timestamp > CONFIG.CACHE.DURATION) {
-      this.data["delete"](key);
-      return null;
-    }
-    return cached.value;
-  },
-  set: function set(key, value) {
-    if (CONFIG.CACHE.ENABLED) {
-      this.data.set(key, {
-        value: value,
-        timestamp: Date.now()
-      });
-    }
-  }
-};
-function debounce(func, wait) {
-  var timeout;
-  return function () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-    clearTimeout(timeout);
-    timeout = setTimeout(function () {
-      return func.apply(void 0, args);
-    }, wait);
-  };
+var cache = new Map();
+function isMobile() {
+  return window.innerWidth < CONFIG.GRID.BREAKPOINT;
 }
-function setupResponsiveGrid(container) {
-  var columns = window.innerWidth >= CONFIG.GRID.BREAKPOINT ? CONFIG.GRID.DESKTOP_COLUMNS : CONFIG.GRID.MOBILE_COLUMNS;
-  container.style.cssText = "display: grid; grid-template-columns: ".concat(columns, "; gap: ").concat(CONFIG.GRID.GAP, ";");
+function setupGrid(container) {
+  var cols = isMobile() ? CONFIG.GRID.MOBILE_COLUMNS : CONFIG.GRID.DESKTOP_COLUMNS;
+  container.style.cssText = "display: grid; grid-template-columns: ".concat(cols, "; gap: ").concat(CONFIG.GRID.GAP, ";");
 }
-function getResponsiveSize(mobileValue, desktopValue) {
-  return window.innerWidth >= CONFIG.GRID.BREAKPOINT ? desktopValue : mobileValue;
-}
-function createShineEffect() {
-  return '<div class="shine-effect" aria-hidden="true"></div>';
-}
-function createIconHtml(item, iconColor) {
-  var parentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'root';
-  var iconSize = getResponsiveSize(CONFIG.ICONS.MOBILE_SIZE, CONFIG.ICONS.DESKTOP_SIZE);
-  var escapedName = item.name.replace(/"/g, '&quot;');
-  var iconSVG = (0,_categoryIcons_js__WEBPACK_IMPORTED_MODULE_1__.getCategoryIcon)(item.name, item.id, parentId);
-  return "<div class=\"".concat(iconSize, " rounded-full mb-2 group-hover:scale-110 transition-transform flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; display: flex; align-items: center; justify-content: center;\" role=\"img\" aria-label=\"").concat(escapedName, "\">") + "<div class=\"w-8 h-8 text-white\" style=\"width: 2rem; height: 2rem;\">".concat(iconSVG, "</div>") + '</div>';
-}
-function createCategoryCard(item, level, allIds, onClickHandler) {
-  var _categoryLevels$level;
+function createCard(item, level, allIds, onClick) {
   var parentId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'root';
-  var div = document.createElement('button');
-  div.type = 'button';
-  div.className = "category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300";
-  div.setAttribute('aria-label', "S\xE9lectionner ".concat(item.name));
-  div.setAttribute('role', 'button');
-  div.setAttribute('translate', 'yes'); // 🆕 Pour Google Translate
+  var card = document.createElement('button');
+  card.type = 'button';
+  card.className = 'category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300';
 
-  div.style.cssText = "\n    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);\n    transform-style: preserve-3d;\n    position: relative;\n    overflow: visible;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    text-align: center;\n    min-height: fit-content;\n    height: auto;\n  ";
-  if (window.innerWidth >= CONFIG.GRID.BREAKPOINT) {
-    div.style.padding = '1rem';
-  }
+  // ✅ IMPORTANT : Attribut translate="yes" pour Google Translate
+  card.setAttribute('translate', 'yes');
   var iconColor = (0,_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.getCategoryColorByLevel)(level, item.id, allIds);
-  var shadowColor = ((_categoryLevels$level = _categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels[level]) === null || _categoryLevels$level === void 0 ? void 0 : _categoryLevels$level.shadowColor) || 'rgba(59, 130, 246, 0.15)';
-  var onMouseEnter = function onMouseEnter() {
-    div.style.willChange = 'transform, box-shadow';
-    div.style.transform = CONFIG.ANIMATION.HOVER_TRANSFORM;
-    div.style.boxShadow = "0 20px 40px ".concat(shadowColor);
-    var shine = div.querySelector('.shine-effect');
-    if (shine) shine.style.left = '100%';
+  var iconSize = isMobile() ? CONFIG.ICONS.MOBILE_SIZE : CONFIG.ICONS.DESKTOP_SIZE;
+  var iconSVG = (0,_categoryIcons_js__WEBPACK_IMPORTED_MODULE_1__.getCategoryIcon)(item.name, item.id, parentId);
+  card.style.cssText = "\n    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    text-align: center;\n  ";
+  card.innerHTML = "\n    <div class=\"".concat(iconSize, " rounded-full mb-2 flex-shrink-0\" style=\"background-color: ").concat(iconColor, "; display: flex; align-items: center; justify-content: center;\">\n      <div class=\"w-8 h-8 text-white\">").concat(iconSVG, "</div>\n    </div>\n    <div class=\"text-xs font-semibold text-gray-800\" translate=\"yes\">").concat(item.name, "</div>\n  ");
+  card.onclick = function () {
+    return onClick(item.id, item.name);
   };
-  var onMouseLeave = function onMouseLeave() {
-    div.style.transform = CONFIG.ANIMATION.DEFAULT_TRANSFORM;
-    div.style.boxShadow = '';
-    div.style.willChange = 'auto';
-    var shine = div.querySelector('.shine-effect');
-    if (shine) shine.style.left = '-100%';
-  };
-  div.addEventListener('mouseenter', onMouseEnter, {
-    passive: true
-  });
-  div.addEventListener('mouseleave', onMouseLeave, {
-    passive: true
-  });
-  var shineEffect = createShineEffect();
-  var iconHtml = createIconHtml(item, iconColor, parentId);
-  var textSize = getResponsiveSize(CONFIG.TEXT.MOBILE_SIZE, CONFIG.TEXT.DESKTOP_SIZE);
-  var textHtml = "<div class=\"".concat(textSize, " font-semibold text-gray-800 category-text\" translate=\"yes\">").concat(item.name, "</div>"); // 🆕 translate="yes"
-
-  div.innerHTML = shineEffect + iconHtml + textHtml;
-  div.addEventListener('click', function () {
-    return onClickHandler(item.id, item.name);
-  }, {
-    passive: true
-  });
-  return div;
+  return card;
 }
-
-/**
- * ✅ MÉTHODE AMÉLIORÉE : Force la traduction avec des tentatives multiples et délais optimisés
- */
-function forceTranslationWhenReady() {
-  var currentLang = localStorage.getItem('ulixai_lang') || 'en';
-
-  // Pas besoin de traduire si c'est de l'anglais
-  if (currentLang === 'en') {
-    console.log('ℹ️ [CategoryPopups] Current language is English, no translation needed');
+function render(items, selector, level, handler) {
+  var parentId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'root';
+  var container = document.querySelector(selector);
+  if (!container) {
+    console.warn("\u274C Container not found: ".concat(selector));
     return;
   }
-  console.log('🔄 [CategoryPopups] Starting translation process...');
-
-  // 🆕 DÉLAIS AUGMENTÉS pour laisser plus de temps à Google Translate
-  // Les catégories principales ont besoin de plus de temps car le popup vient de s'ouvrir
-  var delays = [800, 1500, 2500, 3500]; // 4 tentatives avec délais croissants
-
-  delays.forEach(function (delay, index) {
-    setTimeout(function () {
-      if (typeof window.forceTranslateDynamicContent === 'function') {
-        console.log("\uD83D\uDD04 [CategoryPopups] Translation attempt ".concat(index + 1, "/").concat(delays.length, " (delay: ").concat(delay, "ms)"));
-        window.forceTranslateDynamicContent();
-        if (index === delays.length - 1) {
-          console.log('✅ [CategoryPopups] All translation attempts completed');
-
-          // 🆕 VÉRIFICATION FINALE : Si toujours pas traduit, log un warning
-          setTimeout(function () {
-            var categoryCards = document.querySelectorAll('.category-card .category-text');
-            if (categoryCards.length > 0) {
-              var firstCard = categoryCards[0];
-              var isTranslated = firstCard.querySelector('font') !== null || firstCard.textContent !== firstCard.getAttribute('data-original-text');
-              if (!isTranslated) {
-                var _document$querySelect;
-                console.warn('⚠️ [CategoryPopups] Categories may not be translated. Debug info:', {
-                  currentLang: currentLang,
-                  sampleText: firstCard.textContent,
-                  hasGoogleFont: firstCard.querySelector('font') !== null,
-                  googleComboValue: (_document$querySelect = document.querySelector('.goog-te-combo')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.value
-                });
-              } else {
-                console.log('✅ [CategoryPopups] Categories appear to be translated');
-              }
-            }
-          }, 1000);
-        }
-      } else {
-        console.warn('⚠️ [CategoryPopups] forceTranslateDynamicContent not available');
-      }
-    }, delay);
-  });
-}
-function renderCategories(items, containerSelector, level, clickHandler) {
-  var parentId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'root';
-  var container = document.querySelector(containerSelector);
-  if (!container) return;
-  console.log('🎨 [CategoryPopups] Rendering categories in:', containerSelector);
-
-  // 🆕 Nettoyer les marqueurs Google Translate du container
-  if (typeof window.cleanGoogleTranslateMarkers === 'function') {
-    window.cleanGoogleTranslateMarkers(container);
-    console.log('🧹 [CategoryPopups] Cleaned Google Translate markers from container');
-  }
-
-  // 🆕 S'assurer que le container ET son parent sont marqués pour traduction
+  console.log("\uD83C\uDFA8 Rendering ".concat(items.length, " items in ").concat(selector));
+  container.innerHTML = '';
   container.setAttribute('translate', 'yes');
-  container.classList.remove('notranslate');
-  if (container.parentElement) {
-    container.parentElement.setAttribute('translate', 'yes');
-    container.parentElement.classList.remove('notranslate');
-  }
+  setupGrid(container);
   var fragment = document.createDocumentFragment();
-  container.innerHTML = ''; // Clear complètement le container
-  setupResponsiveGrid(container);
-  var allIds = items.map(function (item) {
-    return item.id;
+  var allIds = items.map(function (i) {
+    return i.id;
   });
-  requestAnimationFrame(function () {
-    var len = items.length;
-    for (var i = 0; i < len; i++) {
-      var card = createCategoryCard(items[i], level, allIds, clickHandler, parentId);
-      fragment.appendChild(card);
-    }
-    container.appendChild(fragment);
-    console.log("\u2705 [CategoryPopups] Rendered ".concat(len, " categories"));
-
-    // 🆕 Log des éléments créés pour debug
-    var categoryTexts = container.querySelectorAll('.category-text');
-    if (categoryTexts.length > 0) {
-      console.log('📝 [CategoryPopups] Sample category texts:', Array.from(categoryTexts).slice(0, 3).map(function (el) {
-        return el.textContent;
-      }));
-    }
-
-    // 🆕 Forcer la retraduction avec la méthode améliorée
-    forceTranslationWhenReady();
+  items.forEach(function (item) {
+    fragment.appendChild(createCard(item, level, allIds, handler, parentId));
   });
+  container.appendChild(fragment);
+
+  // ✅ ENLEVÉ : Plus d'appels à forceTranslateDynamicContent()
+  // Google Translate va automatiquement détecter et traduire les éléments
+  // avec translate="yes"
+
+  console.log("\u2705 Rendered ".concat(items.length, " categories"));
 }
-function fetchWithCache(_x) {
-  return _fetchWithCache.apply(this, arguments);
+function fetchData(_x) {
+  return _fetchData.apply(this, arguments);
 }
-/**
- * ✅ Attendre que Google Translate soit prêt avant toute action
- */
-function _fetchWithCache() {
-  _fetchWithCache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(url) {
-    var cached, response, data;
-    return _regenerator().w(function (_context) {
-      while (1) switch (_context.n) {
+function _fetchData() {
+  _fetchData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(url) {
+    var cached, res, data;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
         case 0:
           cached = cache.get(url);
-          if (!cached) {
+          if (!(cached && Date.now() - cached.time < CONFIG.CACHE_DURATION)) {
+            _context4.n = 1;
+            break;
+          }
+          console.log("\uD83D\uDCE6 Using cached data for ".concat(url));
+          return _context4.a(2, cached.data);
+        case 1:
+          console.log("\uD83C\uDF10 Fetching data from ".concat(url));
+          _context4.n = 2;
+          return fetch(url);
+        case 2:
+          res = _context4.v;
+          _context4.n = 3;
+          return res.json();
+        case 3:
+          data = _context4.v;
+          cache.set(url, {
+            data: data,
+            time: Date.now()
+          });
+          return _context4.a(2, data);
+      }
+    }, _callee4);
+  }));
+  return _fetchData.apply(this, arguments);
+}
+function initializeCategoryPopups() {
+  console.log('🚀 Initializing category popups...');
+  window.openHelpPopup = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+    var popup, container, data, _t;
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.p = _context.n) {
+        case 0:
+          popup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
+          container = popup === null || popup === void 0 ? void 0 : popup.querySelector(".".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass));
+          if (!(!popup || !container)) {
             _context.n = 1;
             break;
           }
-          return _context.a(2, cached);
+          console.error('❌ Popup or container not found');
+          return _context.a(2);
         case 1:
-          _context.n = 2;
-          return fetch(url);
-        case 2:
-          response = _context.v;
+          console.log('📂 Opening main categories popup');
+
+          // Ouvrir immédiatement
+          popup.classList.remove('hidden');
+
+          // Loader
+          container.innerHTML = '<div style="text-align:center;padding:3rem;"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div></div>';
+          _context.p = 2;
           _context.n = 3;
-          return response.json();
+          return fetchData('/api/categories');
         case 3:
           data = _context.v;
-          cache.set(url, data);
-          return _context.a(2, data);
+          if (!(data !== null && data !== void 0 && data.success)) {
+            _context.n = 4;
+            break;
+          }
+          console.log("\u2705 Loaded ".concat(data.categories.length, " main categories"));
+          render(data.categories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass), 'main', window.handleCategoryClick, 'root');
+          _context.n = 5;
+          break;
+        case 4:
+          throw new Error('Invalid API response');
+        case 5:
+          _context.n = 7;
+          break;
+        case 6:
+          _context.p = 6;
+          _t = _context.v;
+          console.error('❌ Error loading categories:', _t);
+          container.innerHTML = '<div style="text-align:center;padding:2rem;color:red;">Error loading categories</div>';
+        case 7:
+          return _context.a(2);
       }
-    }, _callee);
+    }, _callee, null, [[2, 6]]);
   }));
-  return _fetchWithCache.apply(this, arguments);
-}
-function waitForGoogleTranslateReady(callback) {
-  var maxWait = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
-  var startTime = Date.now();
-  var currentLang = localStorage.getItem('ulixai_lang') || 'en';
-
-  // Si c'est de l'anglais, pas besoin d'attendre
-  if (currentLang === 'en') {
-    callback();
-    return;
-  }
-  var _checkReady = function checkReady() {
-    var _window$google;
-    var isReady = ((_window$google = window.google) === null || _window$google === void 0 || (_window$google = _window$google.translate) === null || _window$google === void 0 ? void 0 : _window$google.TranslateElement) && document.querySelector('.goog-te-combo') && typeof window.forceTranslateDynamicContent === 'function';
-    if (isReady) {
-      console.log('✅ [CategoryPopups] Google Translate is ready');
-      callback();
-    } else if (Date.now() - startTime < maxWait) {
-      setTimeout(_checkReady, 100);
-    } else {
-      console.warn('⚠️ [CategoryPopups] Google Translate timeout, continuing anyway');
-      callback();
-    }
-  };
-  _checkReady();
-}
-
-/**
- * ✅ Attendre que le popup soit complètement visible et rendu
- */
-function waitForPopupVisible(popupElement, callback) {
-  console.log('🔄 [CategoryPopups] Waiting for popup to be fully visible...');
-
-  // Vérifier que le popup est bien visible
-  var _checkVisible = function checkVisible() {
-    var isVisible = popupElement && !popupElement.classList.contains('hidden') && popupElement.offsetHeight > 0;
-    if (isVisible) {
-      console.log('✅ [CategoryPopups] Popup is visible');
-      // Attendre encore un peu pour les animations CSS
-      setTimeout(callback, 300);
-    } else {
-      setTimeout(_checkVisible, 50);
-    }
-  };
-  _checkVisible();
-}
-function initializeCategoryPopups() {
-  window.openHelpPopup = function () {
-    var popup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
-    if (!popup) return;
-    console.log('🎨 [CategoryPopups] Opening help popup...');
-
-    // 1️⃣ Ouvrir le popup IMMÉDIATEMENT
-    popup.classList.remove('hidden');
-    popup.setAttribute('aria-hidden', 'false');
-
-    // 2️⃣ Attendre que le popup soit visible ET que Google Translate soit prêt
-    waitForPopupVisible(popup, function () {
-      console.log('✅ [CategoryPopups] Popup visible, now checking Google Translate...');
-      waitForGoogleTranslateReady(function () {
-        console.log('✅ [CategoryPopups] Google Translate ready, loading categories...');
-
-        // 3️⃣ Maintenant on peut charger les catégories
-        fetchWithCache(API_ENDPOINTS.CATEGORIES).then(function (data) {
-          if (data.success) {
-            renderCategories(data.categories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.containerClass), 'main', window.handleCategoryClick, 'root');
-          }
-        })["catch"](function (err) {
-          return console.error('Fetch error:', err);
-        });
-      });
-    });
-  };
-  window.handleCategoryClick = function (categoryId, categoryName) {
-    var mainPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
-    var subPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId);
-    if (mainPopup) {
-      mainPopup.classList.add('hidden');
-      mainPopup.setAttribute('aria-hidden', 'true');
-    }
-    if (subPopup) {
-      subPopup.classList.remove('hidden');
-      subPopup.setAttribute('aria-hidden', 'false');
-    }
-    var createRequest = {
-      category: JSON.stringify({
-        id: categoryId,
-        name: categoryName
-      })
+  window.handleCategoryClick = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(id, name) {
+      var mainPopup, subPopup, container, data, _t2;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.p = _context2.n) {
+          case 0:
+            mainPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
+            subPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId);
+            container = subPopup === null || subPopup === void 0 ? void 0 : subPopup.querySelector(".".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.containerClass));
+            if (mainPopup) mainPopup.classList.add('hidden');
+            if (!(!subPopup || !container)) {
+              _context2.n = 1;
+              break;
+            }
+            return _context2.a(2);
+          case 1:
+            console.log("\uD83D\uDCC2 Opening subcategories for: ".concat(name, " (").concat(id, ")"));
+            subPopup.classList.remove('hidden');
+            container.innerHTML = '<div style="text-align:center;padding:3rem;"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div></div>';
+            localStorage.setItem('create-request', JSON.stringify({
+              category: JSON.stringify({
+                id: id,
+                name: name
+              })
+            }));
+            _context2.p = 2;
+            _context2.n = 3;
+            return fetchData("/api/categories/".concat(id, "/subcategories"));
+          case 3:
+            data = _context2.v;
+            if (data !== null && data !== void 0 && data.success) {
+              console.log("\u2705 Loaded ".concat(data.subcategories.length, " subcategories"));
+              render(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.containerClass), 'sub', window.handleSubcategoryClick, id);
+            }
+            _context2.n = 5;
+            break;
+          case 4:
+            _context2.p = 4;
+            _t2 = _context2.v;
+            console.error('❌ Error loading subcategories:', _t2);
+            container.innerHTML = '<div style="text-align:center;padding:2rem;color:red;">Error loading subcategories</div>';
+          case 5:
+            return _context2.a(2);
+        }
+      }, _callee2, null, [[2, 4]]);
+    }));
+    return function (_x2, _x3) {
+      return _ref2.apply(this, arguments);
     };
-    localStorage.setItem('create-request', JSON.stringify(createRequest));
-
-    // ✅ ATTENDRE que Google Translate soit prêt
-    waitForGoogleTranslateReady(function () {
-      fetchWithCache(API_ENDPOINTS.SUBCATEGORIES(categoryId)).then(function (data) {
-        if (data.success) {
-          renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.containerClass), 'sub', window.handleSubcategoryClick, categoryId);
-        }
-      })["catch"](function (err) {
-        return console.error('Error:', err);
-      });
-    });
-  };
-  window.handleSubcategoryClick = function (parentId, categoryName) {
-    var createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
-    createRequest.sub_category = JSON.stringify({
-      id: parentId,
-      name: categoryName
-    });
-    localStorage.setItem('create-request', JSON.stringify(createRequest));
-
-    // ✅ ATTENDRE que Google Translate soit prêt
-    waitForGoogleTranslateReady(function () {
-      fetchWithCache(API_ENDPOINTS.CHILDREN(parentId)).then(function (data) {
-        if (data.success && data.subcategories.length > 0) {
-          var subPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId);
-          var childPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId);
-          if (subPopup) {
-            subPopup.classList.add('hidden');
-            subPopup.setAttribute('aria-hidden', 'true');
-          }
-          if (childPopup) {
+  }();
+  window.handleSubcategoryClick = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(id, name) {
+      var req, _data$subcategories, data, subPopup, childPopup, container, _t3;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.p = _context3.n) {
+          case 0:
+            req = JSON.parse(localStorage.getItem('create-request') || '{}');
+            req.sub_category = JSON.stringify({
+              id: id,
+              name: name
+            });
+            localStorage.setItem('create-request', JSON.stringify(req));
+            console.log("\uD83D\uDCC2 Checking for child categories: ".concat(name, " (").concat(id, ")"));
+            _context3.p = 1;
+            _context3.n = 2;
+            return fetchData("/api/categories/".concat(id, "/children"));
+          case 2:
+            data = _context3.v;
+            if (!(data !== null && data !== void 0 && data.success && ((_data$subcategories = data.subcategories) === null || _data$subcategories === void 0 ? void 0 : _data$subcategories.length) > 0)) {
+              _context3.n = 4;
+              break;
+            }
+            console.log("\u2705 Found ".concat(data.subcategories.length, " child categories"));
+            subPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.sub.popupId);
+            childPopup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId);
+            container = childPopup === null || childPopup === void 0 ? void 0 : childPopup.querySelector(".".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass));
+            if (subPopup) subPopup.classList.add('hidden');
+            if (!(!childPopup || !container)) {
+              _context3.n = 3;
+              break;
+            }
+            return _context3.a(2);
+          case 3:
             childPopup.classList.remove('hidden');
-            childPopup.setAttribute('aria-hidden', 'false');
-          }
-          renderCategories(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass), 'child', window.requestForHelp, parentId);
-        } else {
-          window.requestForHelp(parentId, categoryName);
+            container.innerHTML = '<div style="text-align:center;padding:3rem;"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div></div>';
+            render(data.subcategories, "#".concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.popupId, " .").concat(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.child.containerClass), 'child', window.requestForHelp, id);
+            _context3.n = 5;
+            break;
+          case 4:
+            console.log('ℹ️ No child categories, redirecting to request form');
+            window.requestForHelp(id, name);
+          case 5:
+            _context3.n = 7;
+            break;
+          case 6:
+            _context3.p = 6;
+            _t3 = _context3.v;
+            console.error('❌ Error loading child categories:', _t3);
+            window.requestForHelp(id, name);
+          case 7:
+            return _context3.a(2);
         }
-      })["catch"](function (err) {
-        return console.error('Error:', err);
-      });
+      }, _callee3, null, [[1, 6]]);
+    }));
+    return function (_x4, _x5) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  window.requestForHelp = function (id, name) {
+    console.log("\u2705 Final selection: ".concat(name, " (").concat(id, ")"));
+    var req = JSON.parse(localStorage.getItem('create-request') || '{}');
+    req.child_category = JSON.stringify({
+      id: id,
+      name: name
     });
-  };
-  window.requestForHelp = function (childId, childName) {
-    var createRequest = JSON.parse(localStorage.getItem('create-request')) || {};
-    createRequest.child_category = JSON.stringify({
-      id: childId,
-      name: childName
-    });
-    localStorage.setItem('create-request', JSON.stringify(createRequest));
+    localStorage.setItem('create-request', JSON.stringify(req));
     window.location.href = '/create-request';
   };
-  var debouncedResize = debounce(function () {
+
+  // Resize handler
+  window.addEventListener('resize', function () {
     Object.values(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels).forEach(function (level) {
+      var _document$getElementB;
       var container = document.querySelector("#".concat(level.popupId, " .").concat(level.containerClass));
-      if (container && !container.classList.contains('hidden')) {
-        setupResponsiveGrid(container);
+      if (container && !((_document$getElementB = document.getElementById(level.popupId)) !== null && _document$getElementB !== void 0 && _document$getElementB.classList.contains('hidden'))) {
+        setupGrid(container);
       }
     });
-  }, 250);
-  window.addEventListener('resize', debouncedResize, {
+  }, {
     passive: true
   });
+  console.log('✅ Category popups initialized');
 }
 
 /***/ }),

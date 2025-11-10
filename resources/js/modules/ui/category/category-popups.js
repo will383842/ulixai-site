@@ -30,6 +30,8 @@ function createCard(item, level, allIds, onClick, parentId = 'root') {
   const card = document.createElement('button');
   card.type = 'button';
   card.className = 'category-card rounded-2xl p-3 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer group transition-all duration-300';
+  
+  // ✅ IMPORTANT : Attribut translate="yes" pour Google Translate
   card.setAttribute('translate', 'yes');
   
   const iconColor = getCategoryColorByLevel(level, item.id, allIds);
@@ -57,7 +59,12 @@ function createCard(item, level, allIds, onClick, parentId = 'root') {
 
 function render(items, selector, level, handler, parentId = 'root') {
   const container = document.querySelector(selector);
-  if (!container) return;
+  if (!container) {
+    console.warn(`❌ Container not found: ${selector}`);
+    return;
+  }
+  
+  console.log(`🎨 Rendering ${items.length} items in ${selector}`);
   
   container.innerHTML = '';
   container.setAttribute('translate', 'yes');
@@ -72,26 +79,21 @@ function render(items, selector, level, handler, parentId = 'root') {
   
   container.appendChild(fragment);
   
-  // Forcer traduction immédiatement
-  setTimeout(() => {
-    if (typeof window.forceTranslateDynamicContent === 'function') {
-      window.forceTranslateDynamicContent();
-    }
-  }, 300);
+  // ✅ ENLEVÉ : Plus d'appels à forceTranslateDynamicContent()
+  // Google Translate va automatiquement détecter et traduire les éléments
+  // avec translate="yes"
   
-  setTimeout(() => {
-    if (typeof window.forceTranslateDynamicContent === 'function') {
-      window.forceTranslateDynamicContent();
-    }
-  }, 800);
+  console.log(`✅ Rendered ${items.length} categories`);
 }
 
 async function fetchData(url) {
   const cached = cache.get(url);
   if (cached && Date.now() - cached.time < CONFIG.CACHE_DURATION) {
+    console.log(`📦 Using cached data for ${url}`);
     return cached.data;
   }
   
+  console.log(`🌐 Fetching data from ${url}`);
   const res = await fetch(url);
   const data = await res.json();
   cache.set(url, { data, time: Date.now() });
@@ -99,11 +101,18 @@ async function fetchData(url) {
 }
 
 export function initializeCategoryPopups() {
+  console.log('🚀 Initializing category popups...');
   
   window.openHelpPopup = async function() {
     const popup = document.getElementById(categoryLevels.main.popupId);
     const container = popup?.querySelector(`.${categoryLevels.main.containerClass}`);
-    if (!popup || !container) return;
+    
+    if (!popup || !container) {
+      console.error('❌ Popup or container not found');
+      return;
+    }
+    
+    console.log('📂 Opening main categories popup');
     
     // Ouvrir immédiatement
     popup.classList.remove('hidden');
@@ -114,6 +123,7 @@ export function initializeCategoryPopups() {
     try {
       const data = await fetchData('/api/categories');
       if (data?.success) {
+        console.log(`✅ Loaded ${data.categories.length} main categories`);
         render(
           data.categories,
           `#${categoryLevels.main.popupId} .${categoryLevels.main.containerClass}`,
@@ -121,9 +131,12 @@ export function initializeCategoryPopups() {
           window.handleCategoryClick,
           'root'
         );
+      } else {
+        throw new Error('Invalid API response');
       }
     } catch (err) {
-      container.innerHTML = '<div style="text-align:center;padding:2rem;color:red;">Erreur</div>';
+      console.error('❌ Error loading categories:', err);
+      container.innerHTML = '<div style="text-align:center;padding:2rem;color:red;">Error loading categories</div>';
     }
   };
   
@@ -135,6 +148,8 @@ export function initializeCategoryPopups() {
     if (mainPopup) mainPopup.classList.add('hidden');
     if (!subPopup || !container) return;
     
+    console.log(`📂 Opening subcategories for: ${name} (${id})`);
+    
     subPopup.classList.remove('hidden');
     container.innerHTML = '<div style="text-align:center;padding:3rem;"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div></div>';
     
@@ -145,6 +160,7 @@ export function initializeCategoryPopups() {
     try {
       const data = await fetchData(`/api/categories/${id}/subcategories`);
       if (data?.success) {
+        console.log(`✅ Loaded ${data.subcategories.length} subcategories`);
         render(
           data.subcategories,
           `#${categoryLevels.sub.popupId} .${categoryLevels.sub.containerClass}`,
@@ -154,7 +170,8 @@ export function initializeCategoryPopups() {
         );
       }
     } catch (err) {
-      container.innerHTML = '<div style="text-align:center;padding:2rem;color:red;">Erreur</div>';
+      console.error('❌ Error loading subcategories:', err);
+      container.innerHTML = '<div style="text-align:center;padding:2rem;color:red;">Error loading subcategories</div>';
     }
   };
   
@@ -163,10 +180,14 @@ export function initializeCategoryPopups() {
     req.sub_category = JSON.stringify({ id, name });
     localStorage.setItem('create-request', JSON.stringify(req));
     
+    console.log(`📂 Checking for child categories: ${name} (${id})`);
+    
     try {
       const data = await fetchData(`/api/categories/${id}/children`);
       
       if (data?.success && data.subcategories?.length > 0) {
+        console.log(`✅ Found ${data.subcategories.length} child categories`);
+        
         const subPopup = document.getElementById(categoryLevels.sub.popupId);
         const childPopup = document.getElementById(categoryLevels.child.popupId);
         const container = childPopup?.querySelector(`.${categoryLevels.child.containerClass}`);
@@ -185,20 +206,26 @@ export function initializeCategoryPopups() {
           id
         );
       } else {
+        console.log('ℹ️ No child categories, redirecting to request form');
         window.requestForHelp(id, name);
       }
     } catch (err) {
+      console.error('❌ Error loading child categories:', err);
       window.requestForHelp(id, name);
     }
   };
   
   window.requestForHelp = function(id, name) {
+    console.log(`✅ Final selection: ${name} (${id})`);
+    
     const req = JSON.parse(localStorage.getItem('create-request') || '{}');
     req.child_category = JSON.stringify({ id, name });
     localStorage.setItem('create-request', JSON.stringify(req));
+    
     window.location.href = '/create-request';
   };
   
+  // Resize handler
   window.addEventListener('resize', () => {
     Object.values(categoryLevels).forEach(level => {
       const container = document.querySelector(`#${level.popupId} .${level.containerClass}`);
@@ -207,4 +234,6 @@ export function initializeCategoryPopups() {
       }
     });
   }, { passive: true });
+  
+  console.log('✅ Category popups initialized');
 }

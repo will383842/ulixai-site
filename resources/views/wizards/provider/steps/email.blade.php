@@ -4,6 +4,8 @@
 ✅ Vérification email existant
 🚫 AUCUN alert/toastr - 100% silencieux
 🔒 Bouton bloqué si email existe
+🔧 VALIDATION SYNCHRONE (pas async)
+📱 COMPACT & RESPONSIVE
 ============================================
 -->
 
@@ -16,24 +18,24 @@
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <div class="text-center space-y-2 relative">
+    <div class="text-center space-y-1.5 relative">
       <div class="flex justify-center">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
-          <span class="text-xl sm:text-2xl">📧</span>
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg ring-2 sm:ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
+          <span class="text-base sm:text-xl">📧</span>
         </div>
       </div>
       
       <div>
-        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
+        <h2 class="text-lg sm:text-xl lg:text-2xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-0.5 tracking-tight">
           What's Your Email? 📬
         </h2>
-        <p class="text-sm sm:text-base font-semibold text-gray-600">
+        <p class="text-xs sm:text-sm font-semibold text-gray-600">
           We'll use this to keep you updated
         </p>
       </div>
 
-      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
-        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+      <div class="inline-flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
         <span class="text-xs font-bold text-blue-700" id="step13StatusText">
@@ -43,17 +45,17 @@
     </div>
   </div>
 
-  <div class="flex-1 overflow-y-auto pt-0 space-y-3 sm:space-y-4 px-4">
+  <div class="flex-1 overflow-y-auto pt-0 space-y-2.5 sm:space-y-3 px-4">
 
     <!-- Info Banner -->
-    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-2xl p-3 sm:p-4">
-      <div class="flex items-start gap-3">
-        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
-          <span class="text-lg sm:text-xl">ℹ️</span>
+    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-xl p-2.5 sm:p-3">
+      <div class="flex items-start gap-2">
+        <div class="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-sm sm:text-base">ℹ️</span>
         </div>
         <div class="flex-1">
-          <p class="text-blue-900 font-black text-sm sm:text-base">Required for communication</p>
-          <p class="text-blue-700 text-xs sm:text-sm font-semibold mt-1">Enter a valid email address to receive updates and notifications</p>
+          <p class="text-blue-900 font-black text-xs sm:text-sm">Required for communication</p>
+          <p class="text-blue-700 text-xs font-semibold mt-0.5">Enter a valid email address</p>
         </div>
       </div>
     </div>
@@ -61,7 +63,7 @@
     <!-- Email Input -->
     <div class="input-container">
       <label class="input-label">
-        <span class="text-lg sm:text-xl">✉️</span>
+        <span class="text-base sm:text-lg">✉️</span>
         <span class="label-text label-blue">Email Address</span>
       </label>
       <div class="input-wrapper">
@@ -74,13 +76,13 @@
           maxlength="100"
         />
         <div class="success-indicator">
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
           </svg>
         </div>
         <!-- Checking indicator -->
         <div id="checkingIndicator" class="hidden absolute right-3 top-1/2 -translate-y-1/2">
-          <svg class="animate-spin h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24">
+          <svg class="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-blue-500" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
           </svg>
@@ -90,30 +92,31 @@
     </div>
 
     <!-- Error Alert - Format invalide -->
-    <div id="step13Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 shake-animation" role="alert">
+    <div id="step13Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-2.5 shake-animation" role="alert">
       <div class="flex items-start gap-2">
-        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-sm font-semibold text-red-800">Invalid email address</p>
-          <p class="text-xs text-red-600 mt-0.5">Please enter a valid email (e.g., name@example.com)</p>
+          <p class="text-xs sm:text-sm font-semibold text-red-800">Invalid email address</p>
+          <p class="text-xs text-red-600 mt-0.5">Please enter a valid email</p>
         </div>
       </div>
     </div>
 
-    <!-- Email Exists Alert - SILENCIEUX (pas de toastr) -->
-    <div id="step13EmailExists" class="hidden bg-purple-50 border-l-4 border-purple-500 rounded-xl p-4 fade-in" role="alert">
-      <div class="flex items-start gap-3">
-        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
-          <span class="text-2xl">👋</span>
+    <!-- Email Exists Alert - COMPACT -->
+    <div id="step13EmailExists" class="hidden bg-purple-50 border-l-4 border-purple-500 rounded-xl p-3 sm:p-4 fade-in" role="alert">
+      <div class="flex items-start gap-2 sm:gap-3">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+          <span class="text-lg sm:text-xl">👋</span>
         </div>
         <div class="flex-1">
-          <p class="text-lg font-black text-purple-900 mb-1">Hey, we know you! 🎉</p>
-          <p class="text-sm font-semibold text-purple-800 mb-3">
-            Looks like <span class="font-mono bg-purple-200 px-2 py-0.5 rounded" id="existingEmail"></span> already has an account with us.
+          <p class="text-sm sm:text-base font-black text-purple-900 mb-1">Hey, we know you! 🎉</p>
+          <p class="text-xs sm:text-sm font-semibold text-purple-800 mb-2 sm:mb-3">
+            Looks like <span class="font-mono bg-purple-200 px-1.5 py-0.5 rounded text-xs" id="existingEmail"></span> already has an account.
           </p>
-          <p class="text-xs text-purple-700 mb-4">
+          <!-- Texte conditionnel - Desktop uniquement -->
+          <p class="hidden sm:block text-xs text-purple-700 mb-3">
             You can only have one account per email. But don't worry, you have options:
           </p>
           
@@ -121,18 +124,18 @@
           <div class="flex flex-col sm:flex-row gap-2">
             <button 
               onclick="goToLogin()" 
-              class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2.5 rounded-lg font-bold text-sm hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
+              class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
               </svg>
               <span>Login to my account</span>
             </button>
             <button 
               onclick="tryAnotherEmail()" 
-              class="flex-1 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-purple-50 transition-all flex items-center justify-center gap-2"
+              class="flex-1 bg-white border-2 border-purple-300 text-purple-700 px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm hover:bg-purple-50 transition-all flex items-center justify-center gap-2"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
               </svg>
               <span>Try another email</span>
@@ -143,13 +146,13 @@
     </div>
 
     <!-- Success Alert -->
-    <div id="step13Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3" role="status">
+    <div id="step13Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-2.5" role="status">
       <div class="flex items-start gap-2">
-        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-sm font-semibold text-green-800">Valid email address!</p>
+          <p class="text-xs sm:text-sm font-semibold text-green-800">Valid email address!</p>
           <p class="text-xs text-green-600 mt-0.5">Ready to continue</p>
         </div>
       </div>
@@ -213,14 +216,17 @@
 #step13 .input-label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.625rem;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 }
 
 @media (min-width: 640px) {
-  #step13 .input-label { font-size: 1rem; }
+  #step13 .input-label { 
+    font-size: 0.875rem;
+    gap: 0.5rem;
+  }
 }
 
 #step13 .label-text { font-weight: 800; }
@@ -233,7 +239,7 @@
 
 #step13 .email-input {
   width: 100%;
-  padding: 0.875rem 3rem 0.875rem 1.25rem;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
   border: 2px solid #d1d5db;
   border-radius: 0.75rem;
   font-size: 0.875rem;
@@ -245,7 +251,7 @@
 
 @media (min-width: 640px) {
   #step13 .email-input {
-    padding: 1rem 3rem 1rem 1.25rem;
+    padding: 0.875rem 3rem 0.875rem 1.25rem;
     font-size: 1rem;
   }
 }
@@ -258,7 +264,6 @@
 #step13 .email-input.valid {
   border-color: #10b981;
   background-color: #f0fdf4;
-  padding-right: 3rem;
 }
 
 #step13 .email-input.invalid {
@@ -278,11 +283,11 @@
 
 #step13 .success-indicator {
   position: absolute;
-  right: 0.75rem;
+  right: 0.625rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   background: linear-gradient(135deg, #10b981, #059669);
   border-radius: 50%;
   display: none;
@@ -294,8 +299,9 @@
 
 @media (min-width: 640px) {
   #step13 .success-indicator {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2rem;
+    height: 2rem;
+    right: 0.75rem;
   }
 }
 
@@ -312,18 +318,34 @@
 }
 
 #step13 .input-hint {
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
+  margin-top: 0.375rem;
+  font-size: 0.6875rem;
   color: #6b7280;
   font-weight: 500;
 }
 
 @media (min-width: 640px) {
-  #step13 .input-hint { font-size: 0.875rem; }
+  #step13 .input-hint { 
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+  }
 }
 
 #step13 .input-container.error-shake {
   animation: shake 0.5s ease-in-out;
+}
+
+/* ⚠️ CRITIQUE : Style pour bouton désactivé */
+#step13Continue:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  background: #9ca3af !important;
+  pointer-events: none !important;
+}
+
+#step13Continue:disabled:hover {
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -341,12 +363,12 @@
   }
   
   #step13 h2 {
-    font-size: 1.375rem;
+    font-size: 1.125rem;
     line-height: 1.3;
   }
   
   #step13 p {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
   }
 }
 </style>
@@ -358,6 +380,7 @@
   const STORAGE_KEY = 'expats';
   const EMAIL_REGEX = /^[a-zA-Z0-9](?:[a-zA-Z0-9._+-]{0,62}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
   const CHECK_DEBOUNCE = 800; // ms
+  const NAV_UPDATE_DEBOUNCE = 300; // ms
   
   const state = {
     email: '',
@@ -366,7 +389,8 @@
     isChecking: false,
     saveTimeout: null,
     validationTimeout: null,
-    checkTimeout: null
+    checkTimeout: null,
+    navUpdateTimeout: null
   };
 
   let cachedElements = null;
@@ -417,9 +441,6 @@
     return EMAIL_REGEX.test(email);
   }
 
-  /**
-   * Vérifier si l'email existe déjà - SILENCIEUX
-   */
   async function checkEmailExists(email) {
     try {
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
@@ -448,17 +469,14 @@
     }
   }
 
-  /**
-   * Afficher message email existe - SILENCIEUX (pas de toastr/alert)
-   */
   function showEmailExistsMessage() {
     const elements = getCachedElements();
     
-    // Masquer autres alertes
+    console.log('🚫 [Step 13] showEmailExistsMessage() - Email exists, BLOCKING button');
+    
     if (elements.successAlert) elements.successAlert.classList.add('hidden');
     if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
     
-    // Afficher message email existe
     if (elements.emailExistsAlert) {
       document.getElementById('existingEmail').textContent = state.email;
       elements.emailExistsAlert.classList.remove('hidden');
@@ -471,36 +489,33 @@
       });
     }
     
-    // Input styling
     if (elements.emailInput) {
       elements.emailInput.classList.remove('valid', 'invalid', 'checking');
       elements.emailInput.classList.add('exists');
     }
     
-    // Update status
     if (elements.statusText) {
       elements.statusText.textContent = 'Email already registered';
     }
     
-    // Vibration discrète si disponible
+    if (elements.continueBtn) {
+      elements.continueBtn.disabled = true;
+      console.log('🔒 [Step 13] Button DISABLED');
+    }
+    
     if (navigator.vibrate) {
       navigator.vibrate([50, 30, 50]);
     }
     
-    // BLOQUER LE BOUTON
-    updateNavigationButton();
+    updateLocalNavigationButton();
   }
 
-  /**
-   * Validation état local
-   */
   function updateValidationState() {
     const elements = getCachedElements();
     
     state.email = elements.emailInput.value.trim();
     state.isValid = validateEmail(state.email);
     
-    // Reset emailExists si on modifie l'email
     if (elements.emailInput.dataset.lastChecked !== state.email) {
       state.emailExists = false;
       if (elements.emailExistsAlert) {
@@ -540,9 +555,6 @@
     return state.isValid && !state.emailExists;
   }
 
-  /**
-   * Vérification avec debounce
-   */
   function scheduleEmailCheck() {
     const elements = getCachedElements();
     
@@ -553,24 +565,24 @@
     if (!state.isValid) return;
     
     state.checkTimeout = setTimeout(async () => {
-      // Afficher indicateur
+      console.log('🔍 [Step 13] Checking email existence...');
+      
       state.isChecking = true;
       if (elements.checkingIndicator) elements.checkingIndicator.classList.remove('hidden');
       if (elements.emailInput) elements.emailInput.classList.add('checking');
       
-      // Vérifier
+      updateLocalNavigationButton();
+      
       const exists = await checkEmailExists(state.email);
       
-      // Masquer indicateur
       state.isChecking = false;
       if (elements.checkingIndicator) elements.checkingIndicator.classList.add('hidden');
       if (elements.emailInput) elements.emailInput.classList.remove('checking');
       
-      // Marquer comme vérifié
       elements.emailInput.dataset.lastChecked = state.email;
-      
-      // Mettre à jour état
       state.emailExists = exists;
+      
+      console.log('📊 [Step 13] Check result:', { email: state.email, exists });
       
       if (exists) {
         showEmailExistsMessage();
@@ -578,82 +590,91 @@
         updateValidationState();
       }
       
-      updateNavigationButton();
+      updateLocalNavigationButton();
       
     }, CHECK_DEBOUNCE);
   }
 
-  /**
-   * Mettre à jour le bouton Continue
-   */
-  function updateNavigationButton() {
+  function updateLocalNavigationButton() {
     const elements = getCachedElements();
     
-    // Le bouton est actif SEULEMENT si:
-    // 1. Email valide
-    // 2. Email n'existe PAS
-    // 3. Pas en cours de vérification
-    const canContinue = state.isValid && !state.emailExists && !state.isChecking;
+    const isVerified = elements.emailInput?.dataset.lastChecked === state.email;
+    const canContinue = state.isValid && !state.emailExists && !state.isChecking && isVerified;
+    
+    console.log('🔄 [Step 13] updateLocalNavigationButton()', {
+      isValid: state.isValid,
+      emailExists: state.emailExists,
+      isChecking: state.isChecking,
+      isVerified: isVerified,
+      canContinue: canContinue
+    });
     
     if (elements.continueBtn) {
       elements.continueBtn.disabled = !canContinue;
-    }
-    
-    // Appeler la fonction globale si elle existe
-    if (typeof window.updateNavigationButtons === 'function') {
-      window.updateNavigationButtons();
+      
+      if (!canContinue) {
+        console.log('🔒 [Step 13] Button DISABLED');
+      } else {
+        console.log('✅ [Step 13] Button ENABLED');
+      }
     }
   }
 
-  /**
-   * ✅ Validation globale - BLOQUE si email existe
-   */
-  window.validateStep13 = async function(showAlert) {
+  function scheduleGlobalNavUpdate() {
+    if (state.navUpdateTimeout) {
+      clearTimeout(state.navUpdateTimeout);
+    }
+    
+    state.navUpdateTimeout = setTimeout(() => {
+      if (typeof window.updateNavigationButtons === 'function') {
+        console.log('🌍 [Step 13] Calling global updateNavigationButtons()');
+        window.updateNavigationButtons();
+      }
+    }, NAV_UPDATE_DEBOUNCE);
+  }
+
+  window.validateStep13 = function(showAlert) {
     const elements = getCachedElements();
     
-    console.log('🔍 [Step 13] validateStep13() called');
+    console.log('🔍 [Step 13] validateStep13() called (SYNC)');
+    console.log('📊 Current state:', {
+      email: state.email,
+      isValid: state.isValid,
+      emailExists: state.emailExists,
+      isChecking: state.isChecking,
+      lastChecked: elements.emailInput?.dataset.lastChecked
+    });
     
-    // Validation format
     if (!updateValidationState()) {
       if (showAlert) {
         showError();
       }
+      console.warn('❌ [Step 13] Invalid format');
       return false;
     }
     
-    // Si déjà vérifié et existe, bloquer
     if (state.emailExists) {
-      console.warn('⚠️ [Step 13] Email already exists - BLOCKED');
+      console.warn('🚫 [Step 13] Email already exists - BLOCKED');
+      if (showAlert) {
+        showEmailExistsMessage();
+      }
       return false;
     }
     
-    // Si pas encore vérifié ou email modifié, vérifier maintenant
-    if (elements.emailInput.dataset.lastChecked !== state.email) {
-      // Afficher indicateur
-      state.isChecking = true;
-      if (elements.checkingIndicator) elements.checkingIndicator.classList.remove('hidden');
-      if (elements.emailInput) elements.emailInput.classList.add('checking');
-      
-      // Vérifier
-      const emailExists = await checkEmailExists(state.email);
-      
-      // Masquer indicateur
-      state.isChecking = false;
-      if (elements.checkingIndicator) elements.checkingIndicator.classList.add('hidden');
-      if (elements.emailInput) elements.emailInput.classList.remove('checking');
-      
-      // Marquer comme vérifié
-      elements.emailInput.dataset.lastChecked = state.email;
-      state.emailExists = emailExists;
-      
-      if (emailExists) {
-        console.warn('⚠️ [Step 13] Email exists - BLOCKED');
-        showEmailExistsMessage();
-        return false;
-      }
+    if (state.isChecking) {
+      console.warn('🚫 [Step 13] Still checking - BLOCKED');
+      return false;
     }
     
-    // Email valide et n'existe pas
+    if (elements.emailInput.dataset.lastChecked !== state.email) {
+      console.warn('🚫 [Step 13] Email not checked yet - BLOCKED');
+      if (showAlert) {
+        showError();
+        scheduleEmailCheck();
+      }
+      return false;
+    }
+    
     saveToLocalStorage();
     console.log('✅ [Step 13] Email validation passed');
     return true;
@@ -701,7 +722,8 @@
           saveToLocalStorage();
           scheduleEmailCheck();
         } else {
-          updateNavigationButton();
+          updateLocalNavigationButton();
+          scheduleGlobalNavUpdate();
         }
       });
     }, 300);
@@ -717,38 +739,33 @@
       if (state.isValid) {
         scheduleEmailCheck();
       } else {
-        updateNavigationButton();
+        updateLocalNavigationButton();
+        scheduleGlobalNavUpdate();
       }
     });
   }
 
-  /**
-   * Actions boutons - SILENCIEUX
-   */
   window.goToLogin = function() {
-    console.log('🔗 Redirecting to login...');
+    console.log('🔗 [Step 13] Redirecting to login...');
     
-    // Fermer le wizard
     const popup = document.getElementById('signupPopup');
     if (popup) popup.classList.add('hidden');
     
-    // Rediriger
     window.location.href = '/login';
   };
 
   window.tryAnotherEmail = function() {
-    console.log('🔄 Trying another email...');
+    console.log('🔄 [Step 13] Trying another email...');
     
     const elements = getCachedElements();
     
-    // Vider
     if (elements.emailInput) {
       elements.emailInput.value = '';
       elements.emailInput.dataset.lastChecked = '';
+      elements.emailInput.classList.remove('valid', 'invalid', 'exists', 'checking');
       elements.emailInput.focus();
     }
     
-    // Masquer alertes
     if (elements.emailExistsAlert) {
       elements.emailExistsAlert.classList.add('hidden');
     }
@@ -759,14 +776,16 @@
       elements.successAlert.classList.add('hidden');
     }
     
-    // Reset state
     state.email = '';
     state.isValid = false;
     state.emailExists = false;
     state.isChecking = false;
     
+    console.log('🔄 [Step 13] State reset:', state);
+    
     updateValidationState();
-    updateNavigationButton();
+    updateLocalNavigationButton();
+    scheduleGlobalNavUpdate();
   };
 
   function initEventDelegation() {
@@ -793,7 +812,8 @@
       if (state.isValid) {
         scheduleEmailCheck();
       } else {
-        updateNavigationButton();
+        updateLocalNavigationButton();
+        scheduleGlobalNavUpdate();
       }
     });
   }
@@ -818,7 +838,7 @@
     initEventDelegation();
     restoreState();
     
-    console.log('✅ [Step 13] Email validation initialized (SILENT MODE)');
+    console.log('✅ [Step 13] Email validation initialized (COMPACT & RESPONSIVE)');
   }
 
   if (document.readyState === 'loading') {

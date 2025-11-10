@@ -18,8 +18,34 @@ use Stripe\Stripe;
 
 class RegisterController extends Controller
 {
+    /**
+     * ═══════════════════════════════════════════════════════════
+     * 🔐 PROVIDER REGISTRATION (WIZARD FINAL STEP)
+     * ═══════════════════════════════════════════════════════════
+     * ⚠️ RÈGLES PASSWORD: Min 6 chars + 1 majuscule + 1 chiffre
+     */
     public function register(Request $request)
     {
+        // ═══════════════════════════════════════════════════════════
+        // 🔐 VALIDATION DU PASSWORD (COORDONNÉE AVEC LE FRONTEND)
+        // ═══════════════════════════════════════════════════════════
+        $validated = $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:6',                          // ✅ Min 6 caractères
+                'regex:/[A-Z]/',                  // ✅ Au moins 1 majuscule
+                'regex:/[0-9]/',                  // ✅ Au moins 1 chiffre
+            ],
+            'email' => 'required|email',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+        ], [
+            'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 6 characters',
+            'password.regex' => 'Password must contain at least one uppercase letter and one number',
+        ]);
+
         $expats = $request->all();
         $ip = $request->ip();
         $geoLocationService = new GeolocationService();
@@ -192,8 +218,17 @@ class RegisterController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:6',
+                'password' => [
+                    'required',
+                    'string',
+                    'min:6',
+                    'regex:/[A-Z]/',
+                    'regex:/[0-9]/',
+                ],
                 'gender' => 'nullable|in:Male,Female'
+            ], [
+                'password.min' => 'Password must be at least 6 characters',
+                'password.regex' => 'Password must contain at least one uppercase letter and one number',
             ]);
 
             if (User::where('email', $request->input('email'))->exists()) {
@@ -432,6 +467,4 @@ class RegisterController extends Controller
             'isKYCCompele' => true
         ];
     }
-
-    
 }

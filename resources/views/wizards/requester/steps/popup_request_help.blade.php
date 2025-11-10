@@ -28,6 +28,15 @@ $popupConfig = [
 (function() {
   'use strict';
   
+  // ✅ VÉRIFIER QUE LES FONCTIONS NE SONT PAS DÉJÀ DÉFINIES
+  if (window.categoryPopupsLoaded) {
+    console.log('⚠️ Category popups already loaded, skipping...');
+    return;
+  }
+  
+  window.categoryPopupsLoaded = true;
+  console.log('🚀 Loading category popups...');
+  
   /**
    * Retour aux catégories principales depuis les sous-catégories
    */
@@ -87,6 +96,9 @@ $popupConfig = [
     
     // Clear localStorage
     localStorage.removeItem('create-request');
+    
+    // ✅ Restaurer le scroll du body
+    document.body.style.overflow = '';
   };
 
   /**
@@ -100,6 +112,9 @@ $popupConfig = [
       popup.classList.add('hidden');
       popup.setAttribute('aria-hidden', 'true');
     }
+    
+    // ✅ Restaurer le scroll du body
+    document.body.style.overflow = '';
   };
 
   console.log('✅ Popup navigation functions loaded');
@@ -108,14 +123,16 @@ $popupConfig = [
 
 <!-- Main Search Popup -->
 <div id="searchPopup" 
-     class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex justify-center items-end sm:items-center p-0 sm:p-4"
+     class="hidden fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm flex justify-center items-end sm:items-center p-0 sm:p-4"
      role="dialog"
      aria-modal="true"
      aria-labelledby="main-popup-title"
      aria-hidden="true"
      data-popup-level="main"
-     data-container-class="main-categories">
-  <div class="bg-white w-full sm:max-w-2xl sm:rounded-[2rem] rounded-t-[2rem] shadow-[0_-4px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.3)] max-h-[95dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden will-change-transform">
+     data-container-class="main-categories"
+     style="pointer-events: auto;">
+  <div class="bg-white w-full sm:max-w-2xl sm:rounded-[2rem] rounded-t-[2rem] shadow-[0_-4px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.3)] max-h-[95dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden will-change-transform"
+       onclick="event.stopPropagation();">
     <div class="sm:hidden flex justify-center pt-3 pb-2 bg-white rounded-t-[2rem]" aria-hidden="true">
       <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
     </div>
@@ -154,14 +171,16 @@ $popupConfig = [
 
 <!-- Subcategories Popup -->
 <div id="expatriesPopup" 
-     class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4"
+     class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] flex items-end sm:items-center justify-center p-0 sm:p-4"
      role="dialog"
      aria-modal="true"
      aria-labelledby="sub-popup-title"
      aria-hidden="true"
      data-popup-level="sub"
-     data-container-class="sub-category">
-  <div class="bg-white w-full sm:max-w-4xl sm:rounded-[2rem] rounded-t-[2rem] shadow-[0_-4px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.3)] max-h-[95dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden will-change-transform">
+     data-container-class="sub-category"
+     style="pointer-events: auto;">
+  <div class="bg-white w-full sm:max-w-4xl sm:rounded-[2rem] rounded-t-[2rem] shadow-[0_-4px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.3)] max-h-[95dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden will-change-transform"
+       onclick="event.stopPropagation();">
     <div class="sm:hidden flex justify-center pt-3 pb-2 bg-white rounded-t-[2rem]" aria-hidden="true">
       <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
     </div>
@@ -211,14 +230,16 @@ $popupConfig = [
 
 <!-- Expat & Traveler - Specific Needs Popup -->
 <div id="vacanciersAutresBesoinsPopup" 
-     class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4"
+     class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] flex items-end sm:items-center justify-center p-0 sm:p-4"
      role="dialog"
      aria-modal="true"
      aria-labelledby="child-popup-title"
      aria-hidden="true"
      data-popup-level="child"
-     data-container-class="child-categories">
-  <div class="bg-white w-full sm:max-w-4xl sm:rounded-[2rem] rounded-t-[2rem] shadow-[0_-4px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.3)] max-h-[95dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden will-change-transform">
+     data-container-class="child-categories"
+     style="pointer-events: auto;">
+  <div class="bg-white w-full sm:max-w-4xl sm:rounded-[2rem] rounded-t-[2rem] shadow-[0_-4px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.3)] max-h-[95dvh] sm:max-h-[90dvh] flex flex-col overflow-hidden will-change-transform"
+       onclick="event.stopPropagation();">
     <div class="sm:hidden flex justify-center pt-3 pb-2 bg-white rounded-t-[2rem]" aria-hidden="true">
       <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
     </div>

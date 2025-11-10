@@ -8,6 +8,7 @@
 ✅ MODAL OPTIMISÉ MOBILE (comme popup principal)
 ✅ Message d'erreur caché sur mobile
 ✅ Case à cocher verte supprimée
+✅ TRADUCTION : Force Google Translate rescan
 ============================================
 -->
 
@@ -286,7 +287,7 @@
   cursor: pointer;
   transition: all 0.2s;
   line-height: 1.3;
-  min-height: 44px; /* Touch target mobile */
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -355,7 +356,6 @@
   color: #991b1b;
 }
 
-/* Modal service section title - responsive */
 .service-section-title {
   display: flex;
   align-items: center;
@@ -404,7 +404,7 @@
 </style>
 
 <script>
-console.log('🔵 STEP 4 - VERSION AVEC BOUTONS DÉDIÉS');
+console.log('🔵 STEP 4 - VERSION AVEC FORCE GOOGLE TRANSLATE RESCAN');
 
 // ============================================
 // ÉTAT GLOBAL
@@ -498,22 +498,19 @@ function showError() {
 function switchToSpecialtiesButtons() {
   console.log('🔄 Basculement vers boutons Specialties');
   
-  // Cacher les boutons Continue
   const mobileNext = document.getElementById('mobileNextBtn');
   const desktopNext = document.getElementById('desktopNextBtn');
   
   if (mobileNext) mobileNext.style.display = 'none';
   if (desktopNext) desktopNext.style.display = 'none';
   
-  // Afficher les boutons Specialties
   const mobileSpecialties = document.getElementById('mobileSpecialtiesBtn');
   const desktopSpecialties = document.getElementById('desktopSpecialtiesBtn');
   
   if (mobileSpecialties) {
     mobileSpecialties.style.display = '';
-    mobileSpecialties.disabled = true; // Grisé par défaut
+    mobileSpecialties.disabled = true;
     
-    // Attacher le handler
     mobileSpecialties.onclick = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -526,9 +523,8 @@ function switchToSpecialtiesButtons() {
   
   if (desktopSpecialties) {
     desktopSpecialties.style.display = '';
-    desktopSpecialties.disabled = true; // Grisé par défaut
+    desktopSpecialties.disabled = true;
     
-    // Attacher le handler
     desktopSpecialties.onclick = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -545,14 +541,12 @@ function switchToSpecialtiesButtons() {
 function switchBackToContinueButtons() {
   console.log('🔄 Retour aux boutons Continue');
   
-  // Afficher les boutons Continue
   const mobileNext = document.getElementById('mobileNextBtn');
   const desktopNext = document.getElementById('desktopNextBtn');
   
   if (mobileNext) mobileNext.style.display = '';
   if (desktopNext) desktopNext.style.display = '';
   
-  // Cacher les boutons Specialties
   const mobileSpecialties = document.getElementById('mobileSpecialtiesBtn');
   const desktopSpecialties = document.getElementById('desktopSpecialtiesBtn');
   
@@ -568,7 +562,6 @@ function updateCount() {
     selectedCount.textContent = Object.keys(window.selectedServices).length;
   }
   
-  // Activer/désactiver les boutons Specialties selon la sélection
   const mobileSpecialties = document.getElementById('mobileSpecialtiesBtn');
   const desktopSpecialties = document.getElementById('desktopSpecialtiesBtn');
   const hasServices = Object.keys(window.selectedServices).length > 0;
@@ -696,7 +689,7 @@ async function loadSubcategories(serviceId) {
 }
 
 // ============================================
-// LOAD SERVICES
+// LOAD SERVICES - AVEC FORCE GOOGLE TRANSLATE
 // ============================================
 
 async function loadServices() {
@@ -711,33 +704,106 @@ async function loadServices() {
       return;
     }
     
+    console.log(`🎨 [Step4] Rendering ${categories.length} services avec createElement()`);
+    
+    // ✅ VIDER le container
+    servicesGrid.innerHTML = '';
+    servicesGrid.setAttribute('translate', 'yes');
+    
+    // ✅ CRÉER un fragment
+    const fragment = document.createDocumentFragment();
     const allIds = categories.map(cat => normalizeId(cat.id));
     
-    const cardsHTML = categories.map(category => {
+    // ✅ CRÉER chaque card avec createElement
+    categories.forEach(category => {
       const categoryId = normalizeId(category.id);
       const iconColor = getCategoryColorByLevel('main', categoryId, allIds);
       const iconSVG = getCategoryIcon(category.name, categoryId, 'root');
       
-      return `
-        <button 
-          type="button"
-          class="service-card"
-          data-service-id="${categoryId}"
-          data-service-name="${category.name}"
-          role="checkbox"
-          aria-checked="false">
-          
-          <div class="service-icon-circle" style="background-color: ${iconColor};">
-            <div class="service-icon-svg">${iconSVG}</div>
-          </div>
-          
-          <span class="service-name">${category.name}</span>
-        </button>
-      `;
-    }).join('');
+      // Créer le bouton
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'service-card';
+      card.setAttribute('data-service-id', categoryId);
+      card.setAttribute('data-service-name', category.name);
+      card.setAttribute('role', 'checkbox');
+      card.setAttribute('aria-checked', 'false');
+      card.setAttribute('translate', 'yes');
+      
+      // Créer l'icône
+      const iconCircle = document.createElement('div');
+      iconCircle.className = 'service-icon-circle';
+      iconCircle.style.backgroundColor = iconColor;
+      iconCircle.innerHTML = `<div class="service-icon-svg">${iconSVG}</div>`;
+      
+      // Créer le nom
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'service-name';
+      nameSpan.setAttribute('translate', 'yes');
+      nameSpan.textContent = category.name;
+      
+      // Assembler
+      card.appendChild(iconCircle);
+      card.appendChild(nameSpan);
+      
+      // Ajouter au fragment
+      fragment.appendChild(card);
+    });
     
-    servicesGrid.innerHTML = cardsHTML;
+    // ✅ INJECTER tout d'un coup
+    servicesGrid.appendChild(fragment);
+    
     updateCount();
+    
+    // 🔥 FORCER LA RETRADUCTION - Méthode agressive
+    setTimeout(() => {
+      console.log('🌐 [Step4] Forcing Google Translate rescan...');
+      
+      // Méthode 1 : Trigger un changement de classe sur le container
+      servicesGrid.classList.add('notranslate');
+      setTimeout(() => {
+        servicesGrid.classList.remove('notranslate');
+        
+        // Méthode 2 : Forcer un "refresh" du DOM pour Google Translate
+        const style = servicesGrid.style.display;
+        servicesGrid.style.display = 'none';
+        servicesGrid.offsetHeight; // Force reflow
+        servicesGrid.style.display = style;
+        
+        // Méthode 3 : Re-trigger Google Translate via l'objet global
+        if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+          try {
+            // Accéder au widget Google Translate
+            const gtCombo = document.querySelector('.goog-te-combo');
+            if (gtCombo && gtCombo.value) {
+              const currentLang = gtCombo.value;
+              console.log('🌐 [Step4] Current language:', currentLang);
+              
+              // Forcer un "re-select" de la langue
+              gtCombo.value = 'en';
+              gtCombo.dispatchEvent(new Event('change'));
+              
+              setTimeout(() => {
+                gtCombo.value = currentLang;
+                gtCombo.dispatchEvent(new Event('change'));
+                console.log('✅ [Step4] Google Translate re-triggered');
+              }, 100);
+            }
+          } catch (e) {
+            console.warn('⚠️ [Step4] Could not trigger Google Translate:', e.message);
+          }
+        }
+        
+        // Méthode 4 : Déclencher un événement personnalisé
+        const event = new CustomEvent('contentUpdated', { 
+          detail: { container: servicesGrid, source: 'step4' } 
+        });
+        document.dispatchEvent(event);
+        
+      }, 50);
+    }, 200);
+    
+    console.log('✅ [Step4] Services rendered');
     
   } catch (error) {
     console.error('Error loading services:', error);
@@ -814,14 +880,11 @@ function createSpecialtiesModal(servicesData) {
     };
   });
   
-  // 📱 STRUCTURE OPTIMISÉE MOBILE (comme popup principal)
   const modalHTML = `
     <div class="fixed inset-0 flex items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm z-[99999]" style="opacity: 0; transition: opacity 0.2s;">
       
-      <!-- Container responsive: plein écran mobile, modal desktop -->
       <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col">
         
-        <!-- Header sticky -->
         <div class="sticky top-0 z-20 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 text-white px-4 sm:px-6 py-3 sm:py-4 border-b border-blue-500/20">
           <div class="flex items-center justify-between mb-2">
             <h3 class="text-xl sm:text-2xl font-black">Choose Your Specialties 🎯</h3>
@@ -837,7 +900,6 @@ function createSpecialtiesModal(servicesData) {
           <p class="text-blue-100 text-xs sm:text-sm font-medium">Choose at least one subcategory per selected category</p>
         </div>
         
-        <!-- Content scrollable -->
         <div class="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 pt-4 pb-24 sm:pb-4 space-y-3 sm:space-y-4">
           ${servicesData.map(service => {
             const serviceId = normalizeId(service.serviceId);
@@ -884,7 +946,6 @@ function createSpecialtiesModal(servicesData) {
           }).join('')}
         </div>
         
-        <!-- Footer sticky bottom (mobile) ou static (desktop) -->
         <div class="fixed sm:sticky bottom-0 inset-x-0 z-30 border-t-2 border-gray-200 p-3 sm:p-4 bg-white/95 sm:bg-white backdrop-blur-sm sm:backdrop-blur-none">
           <div class="flex gap-2 sm:gap-3">
             <button type="button" 
@@ -909,13 +970,10 @@ function createSpecialtiesModal(servicesData) {
   const modal = modalContainer.firstElementChild;
   document.body.appendChild(modal);
   
-  // Bloquer scroll du body (mobile)
   document.body.style.overflow = 'hidden';
   
-  // Fade in
   setTimeout(() => modal.style.opacity = '1', 10);
   
-  // Event handler pour les chips
   modal.addEventListener('click', (e) => {
     const chip = e.target.closest('.subcat-chip');
     if (!chip) return;
@@ -937,14 +995,12 @@ function createSpecialtiesModal(servicesData) {
       chip.classList.add('selected');
     }
     
-    // Update counter
     const serviceSection = modal.querySelector(`.service-section[data-service-id="${serviceId}"]`);
     const counter = serviceSection?.querySelector('.subcat-counter .count');
     if (counter) {
       counter.textContent = workingSubcats[serviceId].length;
     }
     
-    // Update section state
     const badge = serviceSection?.querySelector('.subcat-counter');
     if (badge) {
       if (workingSubcats[serviceId].length > 0) {
@@ -960,7 +1016,6 @@ function createSpecialtiesModal(servicesData) {
     }
   });
   
-  // Close modal function
   function closeModal() {
     window.specialtiesModalOpen = false;
     document.body.style.overflow = '';
@@ -968,10 +1023,8 @@ function createSpecialtiesModal(servicesData) {
     setTimeout(() => modal.remove(), 200);
   }
   
-  // Close button
   modal.querySelector('#closeSpecialtiesModal').onclick = closeModal;
   
-  // Back button
   modal.querySelector('#backToServicesBtn').onclick = () => {
     closeModal();
     setTimeout(() => {
@@ -983,7 +1036,6 @@ function createSpecialtiesModal(servicesData) {
     }, 200);
   };
   
-  // Save button
   modal.querySelector('#saveSpecialtiesBtn').onclick = () => {
     const servicesWithSubcats = servicesData.filter(s => s.subcategories?.length > 0);
     const servicesWithSubcatsIds = servicesWithSubcats.map(s => normalizeId(s.serviceId));
@@ -1007,11 +1059,9 @@ function createSpecialtiesModal(servicesData) {
       return;
     }
     
-    // Save selections
     window.selectedSubcategories = JSON.parse(JSON.stringify(workingSubcats));
     saveToLocalStorage();
     
-    // Go to next step
     if (typeof window.showStep === 'function') {
       window.showStep(4);
     } else if (typeof window.goToNextStep === 'function') {
@@ -1040,15 +1090,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const isHidden = container.classList.contains('hidden');
         
         if (!isHidden) {
-          // Step 4 devient visible
           if (!container.dataset.loaded) {
             loadServices();
             container.dataset.loaded = 'true';
           }
-          // Basculer vers boutons Specialties
           setTimeout(() => switchToSpecialtiesButtons(), 50);
         } else {
-          // Step 4 devient caché - restaurer boutons Continue
           switchBackToContinueButtons();
         }
       }
@@ -1073,5 +1120,5 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-console.log('✅ Step 4 prêt');
+console.log('✅ Step 4 prêt avec force Google Translate');
 </script>

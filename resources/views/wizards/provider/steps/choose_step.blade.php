@@ -1,6 +1,6 @@
 <!-- 
 ============================================
-🚀 STEP 1 - VERSION MOBILE OPTIMISÉE 2025/2026
+🚀 STEP 1 - OPTIMIZED MOBILE VERSION 2025/2026
 ============================================
 -->
 
@@ -11,7 +11,7 @@
     <div class="absolute -bottom-4 right-0 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-blob animation-delay-2000"></div>
   </div>
 
-  <!-- Card 1: Inscription Multi-Profils -->
+  <!-- Card 1: Multi-Profile Registration -->
   <article class="group relative">
     <a 
       href="/signup"
@@ -35,35 +35,35 @@
             
             <div class="flex-1 min-w-0">
               <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight leading-tight">
-                Rejoignez-nous! 🌟
+                Join Us! 🌟
               </h2>
             </div>
           </div>
           
           <span class="flex-shrink-0 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-lg whitespace-nowrap">
-            ✨ GRATUIT
+            ✨ FREE
           </span>
         </div>
         
         <div class="mb-2">
           <p class="text-sm sm:text-base text-white leading-snug font-semibold">
             <strong class="text-white">Expats</strong>, 
-            <strong class="text-white">voyageurs</strong> et 
-            <strong class="text-white">vacanciers</strong> 🌍
+            <strong class="text-white">travelers</strong> and 
+            <strong class="text-white">vacationers</strong> 🌍
           </p>
           <p class="text-[11px] sm:text-xs text-purple-100 mt-0.5 leading-snug">
-            & YouTubers, TikTokers, Influenceurs, Ambassadeurs, Associations
+            & YouTubers, TikTokers, Influencers, Ambassadors, Associations
           </p>
         </div>
         
         <div class="mb-2 pb-2 border-b border-white/20">
           <p class="text-[10px] sm:text-[11px] text-purple-100 text-center italic">
-            💼 Envie de devenir <strong>prestataire</strong> ? Cliquez sur le bloc bleu 💙
+            💼 Want to become a <strong>provider</strong>? Click on the blue block 💙
           </p>
         </div>
         
         <div class="cta-button cta-button-users">
-          <span class="font-bold text-xs sm:text-sm">CRÉER MON COMPTE</span>
+          <span class="font-bold text-xs sm:text-sm">CREATE MY ACCOUNT</span>
           <svg class="w-4 h-4 sm:w-5 sm:h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
           </svg>
@@ -101,29 +101,29 @@
             
             <div class="flex-1 min-w-0">
               <h2 class="text-xl sm:text-2xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent tracking-tight leading-tight">
-                Devenez Prestataire! 💼
+                Become a Provider! 💼
               </h2>
               <p class="text-[11px] sm:text-xs font-medium text-gray-600 mt-0.5">
-                Générer des revenus
+                Generate income
               </p>
             </div>
           </div>
           
           <span class="flex-shrink-0 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-lg whitespace-nowrap">
-            💵 GAGNEZ
+            💵 EARN
           </span>
         </div>
         
         <div class="mb-2">
           <p class="text-xs sm:text-sm text-gray-900 leading-snug">
-            Devenez <strong class="text-blue-600">Expat aidant</strong> et gagnez des revenus 
-            où que vous soyez dans le monde. 
-            <span class="text-gray-700 font-medium">Particulier ou pro local</span> ✨
+            Become an <strong class="text-blue-600">Expat helper</strong> and earn income 
+            wherever you are in the world. 
+            <span class="text-gray-700 font-medium">Individual or local professional</span> ✨
           </p>
         </div>
         
         <div class="cta-button-providers">
-          <span class="font-bold text-xs sm:text-sm">DEVENIR PRESTATAIRE</span>
+          <span class="font-bold text-xs sm:text-sm">BECOME A PROVIDER</span>
           <svg class="w-4 h-4 sm:w-5 sm:h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
           </svg>
@@ -191,7 +191,7 @@
   
 </div>
 
-<!-- Popup Ulix'Map -->
+<!-- Ulix'Map Popup -->
 <div id="ulixMapPopup" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="ulixMapTitle">
   <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all animate-popup">
     
@@ -470,7 +470,7 @@
   display: flex;
 }
 
-/* Optimisations Mobile */
+/* Mobile Optimizations */
 @media (max-width: 640px) {
   .modern-card {
     border-radius: 16px;
@@ -482,14 +482,14 @@
     border-radius: 11px;
   }
   
-  /* Optimiser l'espacement sans trop réduire */
+  /* Optimize spacing without reducing too much */
   #step1 {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
   }
 }
 
-/* Optimisation pour petits écrans */
+/* Optimization for small screens */
 @media (max-width: 640px) and (max-height: 700px) {
   .space-y-2\.5 > * + * {
     margin-top: 0.625rem;
@@ -552,7 +552,7 @@
       originalUpdateNav();
     };
     
-    // Navigation directe pour le bouton provider
+    // Direct navigation for provider button
     const providerBtn = document.getElementById('whiteCardBtn');
     if (providerBtn) {
       providerBtn.addEventListener('click', function(e) {
@@ -565,7 +565,7 @@
       });
     }
     
-    // Gestion du popup Ulix'Map
+    // Ulix'Map popup management
     const ulixMapBtn = document.getElementById('ulixMapBtn');
     const ulixMapPopup = document.getElementById('ulixMapPopup');
     const closeMapPopup = document.getElementById('closeMapPopup');
@@ -578,7 +578,7 @@
         ulixMapPopup.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
         
-        // Fermeture automatique après 6 secondes
+        // Auto-close after 6 seconds
         autoCloseTimer = setTimeout(function() {
           closeMapPopupFunc();
         }, 6000);
@@ -590,7 +590,7 @@
         ulixMapPopup.classList.add('hidden');
         document.body.style.overflow = '';
         
-        // Annuler le timer si le popup est fermé manuellement
+        // Cancel timer if popup is closed manually
         if (autoCloseTimer) {
           clearTimeout(autoCloseTimer);
           autoCloseTimer = null;
@@ -614,7 +614,7 @@
       closeMapPopupCTA.addEventListener('click', closeMapPopupFunc);
     }
     
-    // Fermer le popup en cliquant sur le backdrop
+    // Close popup by clicking on backdrop
     if (ulixMapPopup) {
       ulixMapPopup.addEventListener('click', function(e) {
         if (e.target === ulixMapPopup) {
@@ -623,7 +623,7 @@
       });
     }
     
-    // Fermer avec la touche Escape
+    // Close with Escape key
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && ulixMapPopup && !ulixMapPopup.classList.contains('hidden')) {
         closeMapPopupFunc();

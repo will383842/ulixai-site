@@ -7,15 +7,11 @@
     
     <!-- Critical CSS - Loaded immediately to prevent FOUC -->
     <style>
-        body{margin:0;padding:0;background:linear-gradient(135deg,#eff6ff 0%,#ecfeff 50%,#f0fdfa 100%);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;opacity:0;animation:fadeInBody 0.3s ease-in forwards}
+        /* Hide loaders and prevent flash */
+        .page-loader,.loader,.splash-screen,[class*="loader"]{display:none!important;opacity:0!important;visibility:hidden!important}
+        body{margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;opacity:0;animation:fadeInBody 0.2s ease-in forwards}
         @keyframes fadeInBody{to{opacity:1}}
-        .main-signup{min-height:100vh;display:flex;align-items:center;justify-content:center}
-        
-        .page-loader.hidden{opacity:0;pointer-events:none}
-        
-        
-        50%{transform:translateY(-10px)}}
-        
+        .main-signup{min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;padding-top:10px}
     </style>
     
     <!-- SEO Meta Tags -->
@@ -48,17 +44,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     
-    <!-- Google Fonts - Optimized loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    </noscript>
-    
-    <!-- Toastr CSS - Optimized loading -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" media="print" onload="this.media='all'">
-    
+    <!-- Performance: Using system fonts for instant load -->
     <!-- JSON-LD Schema for SEO -->
     <script type="application/ld+json">
     {
@@ -84,45 +70,39 @@
 </head>
 <body>
 
-<!-- Page Loader -->
-<p class="loader-text">Loading Ulixai...</p>
-    </div>
-</div>
+<!-- Immediate loader removal script -->
+<script>
+(function(){
+  const loaders=document.querySelectorAll('.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"]');
+  loaders.forEach(function(el){el.remove()});
+})();
+</script>
 
 @include('includes.header')
 
+<!-- ============================================
+     🎯 ULIXAI SIGNUP - MOBILE-FIRST & OPTIMIZED
+     ============================================ -->
+
 <main class="main-signup" role="main" aria-labelledby="signup-title">
   
-  <div class="bg-layer" aria-hidden="true">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-  </div>
-
   <div class="container">
     
     <article class="signup-card">
-      
-      <div class="card-border" aria-hidden="true"></div>
       
       <div class="card-content">
         
         <header class="signup-header">
           
           <div class="brand-icon" aria-hidden="true">
-            <div class="icon-container">
-              <svg class="icon-svg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0110.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
+            <svg class="icon-svg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0110.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
           </div>
 
-          <h1 id="signup-title" class="main-title">
-            <span class="title-text">Let's Get Started!</span>
-            <span class="title-emoji" aria-hidden="true">🚀</span>
-          </h1>
+          <h1 id="signup-title" class="main-title">Let's Get Started! 🚀</h1>
           
-          <p class="subtitle">Join thousands of expats and travelers worldwide ✨🌍</p>
+          <p class="subtitle">Join thousands of expats worldwide ✨</p>
           
         </header>
 
@@ -136,11 +116,10 @@
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
           <span>Sign up with Google</span>
-          <span class="rocket" aria-hidden="true">⚡</span>
         </a>
 
         <div class="divider" role="separator" aria-label="Or sign up with email">
-          <span>Or use your email 💌</span>
+          <span>Or use email</span>
         </div>
 
         @php 
@@ -158,7 +137,6 @@
 
           <div class="form-group">
             <label for="name" class="form-label">
-              <span aria-hidden="true">👤</span>
               <span>Full Name</span>
             </label>
             <div class="input-wrapper">
@@ -174,18 +152,14 @@
                 aria-required="true"
                 aria-invalid="@error('name')true @else false @enderror"
                 aria-describedby="error-name" />
-              <div class="input-glow" aria-hidden="true"></div>
             </div>
             @error('name')
-              <p id="error-name" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
-            @else
-              <p id="error-name" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
+              <p id="error-name" class="error-msg" role="alert">{{ $message }}</p>
             @enderror
           </div>
 
           <div class="form-group">
             <label for="email" class="form-label">
-              <span aria-hidden="true">✉️</span>
               <span>Email</span>
             </label>
             <div class="input-wrapper">
@@ -201,18 +175,14 @@
                 aria-required="true"
                 aria-invalid="@error('email')true @else false @enderror"
                 aria-describedby="error-email" />
-              <div class="input-glow" aria-hidden="true"></div>
             </div>
             @error('email')
-              <p id="error-email" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
-            @else
-              <p id="error-email" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
+              <p id="error-email" class="error-msg" role="alert">{{ $message }}</p>
             @enderror
           </div>
 
           <div class="form-group">
             <label for="password" class="form-label">
-              <span aria-hidden="true">🔐</span>
               <span>Password</span>
             </label>
             <div class="input-wrapper">
@@ -228,7 +198,6 @@
                 aria-required="true"
                 aria-invalid="@error('password')true @else false @enderror"
                 aria-describedby="error-password" />
-              <div class="input-glow" aria-hidden="true"></div>
               <button type="button" 
                       class="toggle-password" 
                       data-target="password"
@@ -237,15 +206,12 @@
               </button>
             </div>
             @error('password')
-              <p id="error-password" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
-            @else
-              <p id="error-password" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
+              <p id="error-password" class="error-msg" role="alert">{{ $message }}</p>
             @enderror
           </div>
 
           <fieldset class="form-group">
             <legend class="form-label">
-              <span aria-hidden="true">🎭</span>
               <span>Gender</span>
             </legend>
             <div class="gender-grid" role="radiogroup" aria-label="Select gender">
@@ -280,9 +246,7 @@
 
             </div>
             @error('gender')
-              <p id="error-gender" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
-            @else
-              <p id="error-gender" class="error-msg" role="alert" aria-live="polite" aria-atomic="true"></p>
+              <p id="error-gender" class="error-msg" role="alert">{{ $message }}</p>
             @enderror
           </fieldset>
 
@@ -291,34 +255,15 @@
           @endif
 
           <button type="submit" id="signupBtnSubmit" class="submit-btn">
-            <span class="submit-bg" aria-hidden="true"></span>
-            <span class="submit-text">
-              <span class="submit-label">Join the Adventure! 🎉</span>
-              <span class="submit-emoji" aria-hidden="true">✨</span>
-            </span>
+            <span class="submit-text">Join the Adventure! 🎉</span>
           </button>
-
-          @if(session('success'))
-            <div class="alert alert-success" role="alert" aria-live="polite" aria-atomic="true">
-              ✅ {{ session('success') }}
-            </div>
-          @endif
-
-          @if(session('error'))
-            <div class="alert alert-error" role="alert" aria-live="assertive" aria-atomic="true">
-              ⚠️ {{ session('error') }}
-            </div>
-          @endif
 
         </form>
 
         <footer class="card-footer">
           <p class="footer-text">
-            <span class="already-text">Already part of the family? 🎊</span>
-            <a href="{{ route('login') }}" class="login-link-fun">
-              <span>Welcome back!</span>
-              <span aria-hidden="true">👋✨</span>
-            </a>
+            <span class="already-text">Already have an account?</span>
+            <a href="{{ route('login') }}" class="login-link">Welcome back! 👋</a>
           </p>
         </footer>
 
@@ -328,17 +273,39 @@
 
 </main>
 
-<!-- Fun Error Toast -->
-<div id="funToast" class="fun-toast" role="alert" aria-live="polite" aria-atomic="true">
-  <div class="toast-content">
-    <span class="toast-emoji" id="toastEmoji">😊</span>
-    <div class="toast-message">
-      <p class="toast-title" id="toastTitle">Oops!</p>
-      <p class="toast-text" id="toastText">Something needs your attention</p>
-    </div>
-    <button type="button" class="toast-close" onclick="closeFunToast()" aria-label="Close message">✕</button>
+<!-- Fun Error/Success Popup Modal -->
+<div id="funModal" class="fun-modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+  <div class="modal-overlay" onclick="closeFunModal()"></div>
+  <div class="modal-content">
+    <button type="button" class="modal-close" onclick="closeFunModal()" aria-label="Close">✕</button>
+    <div class="modal-icon" id="modalIcon">😅</div>
+    <h3 class="modal-title" id="modalTitle">Oops!</h3>
+    <p class="modal-message" id="modalMessage">Something went wrong</p>
+    <button type="button" class="modal-btn" onclick="closeFunModal()">Got it! 👍</button>
   </div>
 </div>
+
+@if(session('success') || session('error') || $errors->any())
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    @if(session('success'))
+        showFunModal('🎉', 'Success!', "{{ session('success') }}", 'success');
+    @elseif(session('error'))
+        showFunModal('😅', 'Oops!', "{{ session('error') }}", 'error');
+    @elseif($errors->has('email'))
+        showFunModal('😅', 'Oops!', "{{ $errors->first('email') }}", 'error');
+    @elseif($errors->has('name'))
+        showFunModal('😅', 'Oops!', "{{ $errors->first('name') }}", 'error');
+    @elseif($errors->has('password'))
+        showFunModal('😅', 'Oops!', "{{ $errors->first('password') }}", 'error');
+    @elseif($errors->has('gender'))
+        showFunModal('😅', 'Oops!', "{{ $errors->first('gender') }}", 'error');
+    @elseif($errors->any())
+        showFunModal('😅', 'Oops!', "{{ $errors->first() }}", 'error');
+    @endif
+});
+</script>
+@endif
 
 <section class="faq-section" aria-labelledby="faq-title">
   <div class="container">
@@ -484,130 +451,729 @@
 </footer>
 
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
-.main-signup{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0.5rem;position:relative;overflow:hidden;background:linear-gradient(135deg,#eff6ff 0%,#ecfeff 50%,#f0fdfa 100%)}
-.bg-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.blob{position:absolute;border-radius:50%;mix-blend-mode:multiply;filter:blur(60px);opacity:0;will-change:transform;transform:translateZ(0)}
-.blob-1{width:24rem;height:24rem;background:#3b82f6;top:5rem;left:2.5rem;animation:fade-in 0.8s ease-out forwards,float-1 12s ease-in-out infinite;animation-delay:0.3s}
-.blob-2{width:20rem;height:20rem;background:#06b6d4;top:10rem;right:5rem;animation:fade-in 0.8s ease-out forwards,float-2 15s ease-in-out infinite;animation-delay:0.5s}
-.blob-3{width:18rem;height:18rem;background:#14b8a6;bottom:8rem;left:50%;animation:fade-in 0.8s ease-out forwards,float-3 18s ease-in-out infinite;animation-delay:0.7s}
-@keyframes fade-in{0%{opacity:0}100%{opacity:0.4}}
-@keyframes float-1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(2rem,-2rem) scale(1.1)}66%{transform:translate(-1rem,1rem) scale(0.9)}}
-@keyframes float-2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-2rem,2rem) scale(0.9)}66%{transform:translate(2rem,-1rem) scale(1.1)}}
-@keyframes float-3{0%,100%{transform:translate(-50%,0) scale(1)}50%{transform:translate(-50%,-2rem) scale(1.05)}}
-.container{width:100%;max-width:28rem;margin:0 auto;position:relative;z-index:1}
-.signup-card{position:relative;background:#fff;border-radius:1.5rem;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);overflow:hidden}
-.card-border{position:absolute;inset:-2px;background:linear-gradient(135deg,#06b6d4,#8b5cf6,#ec4899);border-radius:1.5rem;z-index:-1;opacity:0;transition:opacity 0.3s ease}
-.signup-card:hover .card-border{opacity:0.7}
-.card-content{padding:1rem 1.25rem;position:relative;background:#fff;border-radius:1.5rem}
-.signup-header{text-align:center;margin-bottom:0.875rem}
-.brand-icon{display:inline-flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;margin:0 auto 0.5rem;position:relative}
-.icon-container{width:2.25rem;height:2.25rem;background:linear-gradient(135deg,#06b6d4,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 25px rgba(6,182,212,0.3)}
-.icon-svg{width:1.125rem;height:1.125rem;color:#fff}
-.main-title{font-size:clamp(24px,6vw,40px);font-weight:800;background:linear-gradient(135deg,#06b6d4,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.25rem;letter-spacing:-0.025em}
-.title-text{display:inline-block}
-.title-emoji{display:inline-block;margin-left:0.3rem;font-size:clamp(20px,5vw,32px)}
-.subtitle{font-size:clamp(13px,2vw,16px);color:#6b7280;font-weight:500;margin-bottom:0.75rem}
-.google-btn{display:flex;align-items:center;justify-content:center;gap:0.75rem;width:100%;padding:0.625rem 1rem;background:#fff;border:2px solid #e5e7eb;border-radius:0.75rem;font-size:13px;font-weight:600;color:#1f2937;text-decoration:none;transition:all 0.3s ease;box-shadow:0 1px 3px rgba(0,0,0,0.1);margin-bottom:0.75rem;cursor:pointer}
-.google-btn:hover{border-color:#06b6d4;box-shadow:0 10px 25px rgba(6,182,212,0.2);transform:translateY(-2px)}
-.google-icon{width:1rem;height:1rem;flex-shrink:0}
-.rocket{font-size:0.875rem}
-.divider{position:relative;text-align:center;margin:0.75rem 0}
-.divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:#e5e7eb;border-style:dashed}
-.divider span{position:relative;display:inline-block;padding:0 1rem;background:rgba(255,255,255,0.95);font-size:13px;font-weight:600;color:#6b7280}
-.signup-form{display:flex;flex-direction:column;gap:0.75rem}
-.form-group{border:0;padding:0;margin:0}
-.form-label{display:flex;align-items:center;gap:0.5rem;font-size:12px;font-weight:700;color:#374151;margin-bottom:0.25rem}
-.input-wrapper{position:relative}
-.form-input{width:100%;padding:0.625rem 0.875rem;background:#f3f4f6;border:2px solid #d1d5db;border-radius:0.75rem;font-weight:600;font-size:14px;color:#111827;transition:all 0.3s ease;font-family:inherit}
-.form-input::placeholder{color:#9ca3af;font-weight:500;font-size:13px}
-.form-input:focus{outline:none;border-color:#06b6d4;background:#fff;box-shadow:0 0 0 3px rgba(6,182,212,0.1)}
-.input-error{border-color:#ef4444!important;background:#fef2f2!important}
-.input-glow{position:absolute;inset:0;border-radius:0.75rem;opacity:0;background:linear-gradient(135deg,#06b6d4,#8b5cf6);filter:blur(20px);transition:opacity 0.3s ease;pointer-events:none;z-index:-1}
-.form-input:focus+.input-glow{opacity:0.3}
-.toggle-password{position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0.4rem;transition:transform 0.3s ease}
-.toggle-password:hover{transform:translateY(-50%) scale(1.1)}
-.error-msg{color:#ef4444;font-size:12px;font-weight:700;margin-top:0.25rem;min-height:1rem}
-.gender-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.gender-radio{position:absolute;opacity:0;pointer-events:none}
-.gender-label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;padding:1rem 0.625rem;border:2px solid #d1d5db;border-radius:0.75rem;background:#f9fafb;cursor:pointer;transition:all 0.3s ease;position:relative;overflow:hidden}
-.gender-label::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#06b6d4,#8b5cf6);opacity:0;transition:opacity 0.3s ease}
-.gender-label:hover{border-color:#06b6d4;transform:translateY(-2px);box-shadow:0 4px 12px rgba(6,182,212,0.2)}
-.gender-radio:checked+.gender-label{border-color:#06b6d4;background:linear-gradient(135deg,#ecfeff,#f0fdfa);box-shadow:0 8px 20px rgba(6,182,212,0.3)}
-.gender-radio:checked+.gender-label::before{opacity:0.1}
-.gender-emoji{font-size:1.75rem;position:relative;z-index:1}
-.gender-text{font-size:12px;font-weight:700;color:#374151;position:relative;z-index:1}
-.gender-check{position:absolute;top:0.4rem;right:0.4rem;font-size:0.875rem;opacity:0;transition:opacity 0.3s ease}
-.gender-radio:checked+.gender-label .gender-check{opacity:1}
-.submit-btn{position:relative;width:100%;padding:0.7rem 1rem;margin-top:0.125rem;background:linear-gradient(135deg,#06b6d4,#8b5cf6);border:none;border-radius:0.75rem;font-size:14px;font-weight:700;color:#fff;cursor:pointer;overflow:hidden;transition:all 0.3s ease;box-shadow:0 8px 25px -8px rgba(6,182,212,0.4);font-family:inherit}
-.submit-btn:hover{transform:translateY(-2px);box-shadow:0 12px 35px -8px rgba(6,182,212,0.5)}
-.submit-btn:active{transform:translateY(0)}
-.submit-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0891b2,#7c3aed);opacity:0;transition:opacity 0.3s ease}
-.submit-btn:hover .submit-bg{opacity:1}
-.submit-text{position:relative;display:flex;align-items:center;justify-content:center;gap:0.4rem}
-.alert{padding:1rem 1.25rem;border-radius:0.75rem;font-size:12px;font-weight:700;margin-top:1rem;display:flex;align-items:center;gap:0.5rem}
-.alert-success{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;border:2px solid #10b981}
-.alert-error{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b;border:2px solid #ef4444}
-.card-footer{margin-top:0.875rem;padding-top:0.875rem;border-top:2px dashed #d1d5db}
-.footer-text{display:flex;flex-direction:column;gap:0.375rem;align-items:center;text-align:center}
-.already-text{font-size:12px;color:#6b7280;font-weight:600}
-.login-link-fun{display:inline-flex;align-items:center;gap:0.3rem;padding:0.5rem 1rem;background:linear-gradient(135deg,#06b6d4,#8b5cf6);color:#fff;font-weight:700;font-size:12px;border-radius:9999px;text-decoration:none;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(6,182,212,0.3);animation:pulse-glow 2s ease-in-out infinite}
-.login-link-fun:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(6,182,212,0.5);background:linear-gradient(135deg,#0891b2,#7c3aed)}
-@keyframes pulse-glow{0%,100%{box-shadow:0 4px 15px rgba(6,182,212,0.3)}50%{box-shadow:0 4px 25px rgba(139,92,246,0.5)}}
-.faq-section{padding:3rem 1rem;background:#fff}
-.faq-title{font-size:clamp(32px,7vw,56px);font-weight:900;text-align:center;margin-bottom:2rem;background:linear-gradient(135deg,#2563eb,#06b6d4,#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.faq-list{display:flex;flex-direction:column;gap:0.875rem;max-width:48rem;margin:0 auto}
-.faq-item{background:#fff;border:2px solid #e5e7eb;border-radius:0.75rem;overflow:hidden;transition:all 0.3s ease}
-.faq-item:hover{border-color:#06b6d4;box-shadow:0 4px 20px -4px rgba(6,182,212,0.2)}
-.faq-item[open]{border-color:#06b6d4;box-shadow:0 8px 30px -8px rgba(6,182,212,0.3)}
-.faq-question{display:flex;align-items:center;gap:0.875rem;padding:1rem 1.25rem;cursor:pointer;list-style:none;font-size:14px;font-weight:700;color:#1f2937;background:linear-gradient(135deg,#f9fafb,#fff);transition:all 0.3s ease}
-.faq-question::-webkit-details-marker{display:none}
-.faq-question:hover{background:linear-gradient(135deg,#ecfeff,#f0fdfa);color:#06b6d4}
-.faq-icon{font-size:1.25rem;flex-shrink:0}
-.faq-question span:nth-child(2){flex:1}
-.faq-toggle{font-size:1.25rem;font-weight:900;color:#06b6d4;transition:transform 0.3s ease;flex-shrink:0}
-.faq-item[open] .faq-toggle{transform:rotate(45deg)}
-.faq-answer{padding:0 1.25rem 1rem 3rem}
-.faq-answer p{line-height:1.6;color:#4b5563;font-size:14px}
-.footer-links{padding:1.5rem 1rem 2.25rem;background:linear-gradient(to bottom,#fff,#f9fafb);border-top:1px solid #e5e7eb}
-.links-nav{display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem}
-.footer-link{display:inline-flex;align-items:center;gap:0.3rem;font-size:13px;font-weight:600;color:#6b7280;text-decoration:none;transition:color 0.3s ease;padding:0.2rem 0.4rem}
-.footer-link:hover{color:#06b6d4}
-.link-icon{font-size:0.8rem;opacity:0.7}
-.link-separator{color:#d1d5db;font-size:0.65rem;user-select:none}
-.footer-copyright{text-align:center;font-size:12px;color:#9ca3af;font-weight:500}
-@media (min-width:640px){.card-content{padding:1.5rem 1.5rem}.form-input{font-size:15px}.google-btn{font-size:14px;padding:0.7rem 1.25rem}.submit-btn{font-size:14px;padding:0.75rem 1.25rem}}
-@media (min-width:1024px){.container{max-width:32rem}.card-content{padding:1.75rem 1.75rem}.form-input{font-size:16px;padding:0.7rem 1rem}.google-btn{font-size:15px;padding:0.75rem 1.5rem}.submit-btn{font-size:15px;padding:0.8rem 1.5rem}.faq-answer{font-size:15px}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
-@media (prefers-contrast:high){.form-input:focus{border:3px solid #1e40af}.gender-radio:checked+.gender-label{border:3px solid #1e40af}}
+/* ============================================
+   CSS - MOBILE-FIRST & ULTRA-OPTIMIZED
+   ============================================ */
 
-/* Fun Toast */
-.fun-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:linear-gradient(135deg,#06b6d4,#8b5cf6);border-radius:1.5rem;padding:2rem;z-index:9999;box-shadow:0 25px 50px -12px rgba(6,182,212,0.4);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;max-width:90%;width:100%;max-width:28rem}
-.fun-toast.show{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
-.toast-content{display:flex;align-items:center;gap:1.5rem;color:#fff}
-.toast-emoji{font-size:3rem;animation:bounce 0.6s ease-in-out}
-.toast-message{flex:1}
-.toast-title{font-size:1.25rem;font-weight:800;margin:0 0 0.25rem;letter-spacing:-0.025em}
-.toast-text{font-size:0.9375rem;margin:0;opacity:0.95}
-.toast-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.5);color:#fff;border-radius:50%;width:2.5rem;height:2.5rem;font-size:1.25rem;cursor:pointer;transition:all 0.3s ease;font-weight:700}
-.toast-close:hover{background:rgba(255,255,255,0.3);border-color:#fff;transform:rotate(90deg)}
-@keyframes bounce{0%,100%{transform:scale(0)}50%{transform:scale(1.1)}}
+/* Force hide all loaders globally */
+.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"]{
+  display:none!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+
+*,*::before,*::after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-size:14px;
+  line-height:1.5;
+  color:#1f2937;
+  background:#f8fafc;
+}
+
+.sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border-width:0;
+}
+
+/* Main Signup Container */
+.main-signup{
+  min-height:calc(100vh - 80px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0.5rem;
+  padding-top:10px;
+  background:#f8fafc;
+}
+
+.container{
+  width:100%;
+  max-width:26rem;
+  margin:0 auto;
+}
+
+/* Card */
+.signup-card{
+  background:#fff;
+  border-radius:1rem;
+  box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
+  border:1px solid #e5e7eb;
+}
+
+.card-content{
+  padding:1rem;
+}
+
+/* Header */
+.signup-header{
+  text-align:center;
+  margin-bottom:0.75rem;
+}
+
+/* Brand Icon */
+.brand-icon{
+  display:inline-flex;
+  width:2rem;
+  height:2rem;
+  margin:0 auto 0.375rem;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  border-radius:50%;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(6,182,212,0.3);
+}
+
+.icon-svg{
+  width:1rem;
+  height:1rem;
+  color:#fff;
+}
+
+/* Title */
+.main-title{
+  font-size:clamp(18px, 5vw, 24px);
+  font-weight:800;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:0.125rem;
+  letter-spacing:-0.02em;
+}
+
+/* Subtitle */
+.subtitle{
+  font-size:clamp(11px, 2vw, 13px);
+  color:#6b7280;
+  font-weight:500;
+  margin-bottom:0;
+}
+
+/* Google Button - IMPROVED */
+.google-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+  width:100%;
+  padding:0.625rem 1rem;
+  margin-top:0.75rem;
+  background:#fff;
+  border:2px solid #4285F4;
+  border-radius:0.75rem;
+  font-size:13px;
+  font-weight:700;
+  color:#1f2937;
+  text-decoration:none;
+  transition:all 0.2s ease;
+  box-shadow:0 2px 8px rgba(66,133,244,0.15);
+  cursor:pointer;
+}
+
+.google-btn:hover{
+  background:#4285F4;
+  color:#fff;
+  box-shadow:0 4px 12px rgba(66,133,244,0.3);
+  transform:translateY(-1px);
+}
+
+.google-icon{
+  width:1.125rem;
+  height:1.125rem;
+  flex-shrink:0;
+}
+
+/* Divider */
+.divider{
+  position:relative;
+  text-align:center;
+  margin:0.625rem 0;
+}
+
+.divider::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:0;
+  right:0;
+  height:1px;
+  background:#e5e7eb;
+}
+
+.divider span{
+  position:relative;
+  display:inline-block;
+  padding:0 0.75rem;
+  background:#fff;
+  font-size:12px;
+  font-weight:600;
+  color:#9ca3af;
+}
+
+/* Form */
+.signup-form{
+  display:flex;
+  flex-direction:column;
+  gap:0.625rem;
+}
+
+.form-group{
+  border:0;
+  padding:0;
+  margin:0;
+}
+
+.form-label{
+  display:block;
+  font-size:12px;
+  font-weight:600;
+  color:#374151;
+  margin-bottom:0.25rem;
+}
+
+.input-wrapper{
+  position:relative;
+}
+
+.form-input{
+  width:100%;
+  padding:0.5rem 0.75rem;
+  background:#e5e7eb;
+  border:2px solid #d1d5db;
+  border-radius:0.5rem;
+  font-weight:500;
+  font-size:13px;
+  color:#111827;
+  transition:all 0.2s ease;
+  font-family:inherit;
+}
+
+.form-input::placeholder{
+  color:#9ca3af;
+  font-weight:400;
+}
+
+.form-input:focus{
+  outline:none;
+  border-color:#06b6d4;
+  background:#e5e7eb;
+  box-shadow:0 0 0 3px rgba(6,182,212,0.1);
+}
+
+.input-error{
+  border-color:#ef4444!important;
+  background:#fef2f2!important;
+}
+
+.toggle-password{
+  position:absolute;
+  right:0.75rem;
+  top:50%;
+  transform:translateY(-50%);
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:1rem;
+  padding:0.25rem;
+  transition:opacity 0.2s;
+}
+
+.toggle-password:hover{
+  opacity:0.7;
+}
+
+.error-msg{
+  color:#ef4444;
+  font-size:12px;
+  font-weight:600;
+  margin-top:0.25rem;
+}
+
+/* Gender Selection */
+.gender-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0.625rem;
+}
+
+.gender-radio{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.gender-label{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0.375rem;
+  padding:0.75rem 0.5rem;
+  border:2px solid #d1d5db;
+  border-radius:0.5rem;
+  background:#f9fafb;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  position:relative;
+}
+
+.gender-label:hover{
+  border-color:#06b6d4;
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(6,182,212,0.15);
+}
+
+.gender-radio:checked+.gender-label{
+  border-color:#06b6d4;
+  background:linear-gradient(135deg,#ecfeff,#f0fdfa);
+  box-shadow:0 4px 12px rgba(6,182,212,0.2);
+}
+
+.gender-emoji{
+  font-size:1.5rem;
+}
+
+.gender-text{
+  font-size:12px;
+  font-weight:700;
+  color:#374151;
+}
+
+.gender-check{
+  position:absolute;
+  top:0.25rem;
+  right:0.25rem;
+  font-size:0.75rem;
+  opacity:0;
+  transition:opacity 0.2s ease;
+}
+
+.gender-radio:checked+.gender-label .gender-check{
+  opacity:1;
+}
+
+/* Submit Button */
+.submit-btn{
+  width:100%;
+  padding:0.625rem 1rem;
+  margin-top:0.125rem;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  border:none;
+  border-radius:0.5rem;
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  box-shadow:0 4px 14px rgba(6,182,212,0.3);
+  font-family:inherit;
+}
+
+.submit-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(6,182,212,0.4);
+}
+
+.submit-btn:active{
+  transform:translateY(0);
+}
+
+.submit-text{
+  display:block;
+}
+
+/* Footer */
+.card-footer{
+  margin-top:0.75rem;
+  padding-top:0.75rem;
+  border-top:1px solid #e5e7eb;
+  text-align:center;
+}
+
+.footer-text{
+  display:flex;
+  flex-direction:column;
+  gap:0.375rem;
+  align-items:center;
+}
+
+.already-text{
+  font-size:12px;
+  color:#6b7280;
+  font-weight:500;
+}
+
+.login-link{
+  display:inline-block;
+  padding:0.5rem 1rem;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  color:#fff;
+  font-weight:700;
+  font-size:12px;
+  border-radius:9999px;
+  text-decoration:none;
+  transition:all 0.2s ease;
+  box-shadow:0 2px 8px rgba(6,182,212,0.25);
+}
+
+.login-link:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(6,182,212,0.35);
+}
+
+/* FAQ Section */
+.faq-section{
+  padding:2rem 1rem 2.5rem;
+  background:#fff;
+}
+
+.faq-title{
+  font-size:clamp(24px, 6vw, 36px);
+  font-weight:800;
+  text-align:center;
+  margin-bottom:1.5rem;
+  background:linear-gradient(135deg,#2563eb,#06b6d4,#14b8a6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.faq-list{
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
+  max-width:48rem;
+  margin:0 auto;
+}
+
+.faq-item{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:0.5rem;
+  overflow:hidden;
+  transition:all 0.2s ease;
+}
+
+.faq-item:hover{
+  border-color:#06b6d4;
+  box-shadow:0 2px 8px rgba(6,182,212,0.15);
+}
+
+.faq-item[open]{
+  border-color:#06b6d4;
+}
+
+.faq-question{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  padding:0.875rem 1rem;
+  cursor:pointer;
+  list-style:none;
+  font-size:14px;
+  font-weight:600;
+  color:#1f2937;
+  background:#fafafa;
+  transition:all 0.2s ease;
+}
+
+.faq-question::-webkit-details-marker{
+  display:none;
+}
+
+.faq-question:hover{
+  background:#f0f9ff;
+  color:#06b6d4;
+}
+
+.faq-icon{
+  font-size:1.125rem;
+  flex-shrink:0;
+}
+
+.faq-question span:nth-child(2){
+  flex:1;
+}
+
+.faq-toggle{
+  font-size:1.125rem;
+  font-weight:700;
+  color:#06b6d4;
+  transition:transform 0.2s ease;
+  flex-shrink:0;
+}
+
+.faq-item[open] .faq-toggle{
+  transform:rotate(45deg);
+}
+
+.faq-answer{
+  padding:0 1rem 0.875rem 2.875rem;
+}
+
+.faq-answer p{
+  line-height:1.6;
+  color:#4b5563;
+  font-size:13px;
+}
+
+/* Footer Links */
+.footer-links{
+  padding:1.25rem 1rem 1.75rem;
+  background:#f9fafb;
+  border-top:1px solid #e5e7eb;
+}
+
+.links-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+  flex-wrap:wrap;
+  margin-bottom:0.75rem;
+}
+
+.footer-link{
+  display:inline-flex;
+  align-items:center;
+  gap:0.25rem;
+  font-size:12px;
+  font-weight:600;
+  color:#6b7280;
+  text-decoration:none;
+  transition:color 0.2s ease;
+  padding:0.2rem 0.4rem;
+}
+
+.footer-link:hover{
+  color:#06b6d4;
+}
+
+.link-icon{
+  font-size:0.75rem;
+  opacity:0.8;
+}
+
+.link-separator{
+  color:#d1d5db;
+  font-size:0.625rem;
+  user-select:none;
+}
+
+.footer-copyright{
+  text-align:center;
+  font-size:11px;
+  color:#9ca3af;
+  font-weight:500;
+}
+
+/* Fun Modal Popup */
+.fun-modal{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  visibility:hidden;
+  transition:all 0.3s ease;
+  padding:1rem;
+}
+
+.fun-modal.show{
+  opacity:1;
+  visibility:visible;
+}
+
+.modal-overlay{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(4px);
+  animation:fadeIn 0.3s ease;
+}
+
+.modal-content{
+  position:relative;
+  background:#fff;
+  border-radius:1.5rem;
+  padding:2rem 1.5rem;
+  max-width:24rem;
+  width:100%;
+  text-align:center;
+  box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);
+  transform:scale(0.9);
+  animation:popIn 0.3s ease forwards;
+  z-index:1;
+}
+
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+@keyframes popIn{
+  0%{transform:scale(0.8);opacity:0}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1);opacity:1}
+}
+
+.modal-close{
+  position:absolute;
+  top:0.75rem;
+  right:0.75rem;
+  background:transparent;
+  border:none;
+  font-size:1.5rem;
+  color:#9ca3af;
+  cursor:pointer;
+  width:2rem;
+  height:2rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  transition:all 0.2s ease;
+}
+
+.modal-close:hover{
+  background:#f3f4f6;
+  color:#374151;
+  transform:rotate(90deg);
+}
+
+.modal-icon{
+  font-size:4rem;
+  margin-bottom:1rem;
+  animation:bounce 0.6s ease;
+}
+
+@keyframes bounce{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
+
+.modal-title{
+  font-size:1.5rem;
+  font-weight:800;
+  color:#1f2937;
+  margin-bottom:0.5rem;
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.modal-message{
+  font-size:1rem;
+  color:#6b7280;
+  line-height:1.6;
+  margin-bottom:1.5rem;
+}
+
+.modal-btn{
+  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
+  color:#fff;
+  border:none;
+  padding:0.75rem 2rem;
+  border-radius:9999px;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  box-shadow:0 4px 14px rgba(6,182,212,0.3);
+  font-family:inherit;
+}
+
+.modal-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(6,182,212,0.4);
+}
+
+.modal-btn:active{
+  transform:translateY(0);
+}
+
+/* Tablet */
+@media (min-width:640px){
+  .card-content{
+    padding:1.25rem;
+  }
+  
+  .main-signup{
+    padding:1rem;
+    padding-top:40px;
+  }
+}
+
+/* Desktop */
+@media (min-width:1024px){
+  .container{
+    max-width:28rem;
+  }
+  
+  .card-content{
+    padding:1.5rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:0.01ms!important;
+  }
+}
 </style>
 
+<!-- JavaScript - Optimized -->
 <script>
 (function(){
   'use strict';
   
-  // Hide page loader when everything is loaded
-  window.addEventListener('load', function() {
-    
+  const form = document.getElementById('signupForm');
   
-  // Fallback - hide loader after 2 seconds max
-  setTimeout(function() {
+  // Password toggle
+  document.addEventListener('click',function(e){
+    const toggle=e.target.closest('.toggle-password');
+    if(!toggle)return;
     
+    const targetId=toggle.dataset.target;
+    const input=document.getElementById(targetId);
+    const icon=toggle.querySelector('.eye-icon');
+    
+    if(input.type==='password'){
+      input.type='text';
+      icon.textContent='🙈';
+    } else {
+      input.type='password';
+      icon.textContent='👁️';
+    }
+  });
   
+  // Real-time validation - remove errors on input
   const inputs=form.querySelectorAll('input[type="text"],input[type="email"],input[type="password"]');
   inputs.forEach(function(input){
     input.addEventListener('input',function(){
@@ -615,28 +1181,19 @@ body{font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
       if(errorEl && this.value.trim()){
         errorEl.textContent='';
         this.classList.remove('input-error');
-        this.setAttribute('aria-invalid','false');
       }
     });
   });
   
+  // Form submission validation
   form.addEventListener('submit',function(e){
-    const errorIds=['name','email','password','gender'];
-    errorIds.forEach(function(id){
-      const el=document.getElementById('error-'+id);
-      if(el)el.textContent='';
-    });
-    inputs.forEach(function(input){
-      input.classList.remove('input-error');
-      input.setAttribute('aria-invalid','false');
-    });
-    
     let valid=true;
     const name=form.elements.name.value.trim();
     const email=form.elements.email.value.trim();
     const password=form.elements.password.value;
     let gender='';
     
+    // Get gender value
     if(form.elements.gender.length){
       for(const radio of form.elements.gender){
         if(radio.checked)gender=radio.value;
@@ -645,57 +1202,78 @@ body{font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
       gender=form.elements.gender.value;
     }
     
+    // Clear previous errors
+    inputs.forEach(function(input){
+      input.classList.remove('input-error');
+    });
+    
+    // Validate name
     if(!name){
       form.elements.name.classList.add('input-error');
-      showFunToast('😊 Oops!', errorMessages.name_empty, '👤');
+      showFunModal('👤', 'Hey there!', 'We need your full name to create your account! 😊', 'error');
       valid=false;
     }
     
-    if(!email){
+    // Validate email
+    if(!email && valid){
       form.elements.email.classList.add('input-error');
-      showFunToast('✉️ Hold on!', errorMessages.email_empty, '✉️');
+      showFunModal('📧', 'Hold on!', 'We need your email address! ✉️', 'error');
       valid=false;
-    }else if(!/^\S+@\S+\.\S+$/.test(email)){
+    }else if(!/^\S+@\S+\.\S+$/.test(email) && valid){
       form.elements.email.classList.add('input-error');
-      showFunToast('🤔 Hmm...', errorMessages.email_invalid, '📧');
+      showFunModal('🤔', 'Hmm...', 'That doesn\'t look like a valid email address! 📧', 'error');
       valid=false;
     }
     
-    if(!password){
+    // Validate password
+    if(!password && valid){
       form.elements.password.classList.add('input-error');
-      showFunToast('🔐 Oops!', errorMessages.password_empty, '🔐');
+      showFunModal('🔐', 'Almost there!', 'Don\'t forget to create a password! 🔑', 'error');
       valid=false;
-    }else if(password.length<6){
+    }else if(password.length<6 && valid){
       form.elements.password.classList.add('input-error');
-      showFunToast('🚀 Nice try!', errorMessages.password_short, '🚀');
+      showFunModal('🚀', 'Make it stronger!', 'Your password needs at least 6 characters! 💪', 'error');
       valid=false;
     }
     
-    if(!gender){
-      showFunToast('🎭 Decide!', errorMessages.gender_empty, '🎭');
+    // Validate gender
+    if(!gender && valid){
+      showFunModal('🎭', 'One more thing!', 'Please select your gender! 😊', 'error');
       valid=false;
     }
     
     if(!valid){
       e.preventDefault();
-      btn.disabled=false;
       return false;
     }
   });
-  
-  function showFunToast(title, message, emoji){
-    document.getElementById('toastTitle').textContent=title;
-    document.getElementById('toastText').textContent=message;
-    document.getElementById('toastEmoji').textContent=emoji;
-    funToast.classList.add('show');
-    setTimeout(function(){
-      closeFunToast();
-    }, 4500);
-  }
 })();
 
-function closeFunToast(){
-  document.getElementById('funToast').classList.remove('show');
+// Fun Modal Functions
+function showFunModal(icon, title, message, type) {
+  const modal = document.getElementById('funModal');
+  const modalIcon = document.getElementById('modalIcon');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalMessage = document.getElementById('modalMessage');
+  
+  modalIcon.textContent = icon;
+  modalTitle.textContent = title;
+  modalMessage.textContent = message;
+  
+  modal.classList.add('show');
+  
+  // Close on Escape key
+  document.addEventListener('keydown', function escHandler(e) {
+    if (e.key === 'Escape') {
+      closeFunModal();
+      document.removeEventListener('keydown', escHandler);
+    }
+  });
+}
+
+function closeFunModal() {
+  const modal = document.getElementById('funModal');
+  modal.classList.remove('show');
 }
 </script>
 

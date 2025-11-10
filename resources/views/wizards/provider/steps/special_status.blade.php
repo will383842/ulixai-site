@@ -7,7 +7,7 @@
 ⚡ Fixed header structure + scrollable content
 🔧 Integrated with wizard-steps.js
 ✅ localStorage persistence
-🎯 Emojis appliqués par ordre (super simple!)
+🎯 Emojis applied by order (super simple!)
 ⚡ Maximum performance
 ============================================
 -->
@@ -71,8 +71,8 @@
           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-xs font-bold text-purple-900">Démarquez-vous de la foule</p>
-          <p class="text-xs text-purple-700 mt-0.5">Choisissez les statuts qui vous correspondent pour attirer davantage d'opportunités</p>
+          <p class="text-xs font-bold text-purple-900">Stand out from the crowd</p>
+          <p class="text-xs text-purple-700 mt-0.5">Choose the statuses that match you to attract more opportunities</p>
         </div>
       </div>
     </div>
@@ -133,7 +133,7 @@
 }
 
 /* ============================================
-   ⭐ STATUS CARDS - DESIGN HORIZONTAL
+   ⭐ STATUS CARDS - HORIZONTAL DESIGN
    ============================================ */
 
 #step7 .status-card {
@@ -293,20 +293,20 @@
   // ============================================
   // 🎯 ORDERED EMOJI ARRAY
   // ============================================
-  // Changez simplement les emojis dans l'ordre de vos statuts!
-  // L'index 0 correspond au 1er statut, l'index 1 au 2ème, etc.
+  // Simply change the emojis in the order of your statuses!
+  // Index 0 corresponds to the 1st status, index 1 to the 2nd, etc.
   
   const ORDERED_EMOJIS = [
-    '🌍',  // 0 - Expatriés pendant 2 à 5 ans
-    '✈️',  // 1 - Expatriés pendant 6 à 10 ans
-    '🏠',  // 2 - Expatriés depuis plus de 10 ans
-    '⚖️',  // 3 - conseils juridiques
-    '🛡️',  // 4 - Assureur
-    '🏢',  // 5 - Agent immobilier
-    '📝',  // 6 - Traducteur
+    '🌍',  // 0 - Expats for 2 to 5 years
+    '✈️',  // 1 - Expats for 6 to 10 years
+    '🏠',  // 2 - Expats for more than 10 years
+    '⚖️',  // 3 - Legal advice
+    '🛡️',  // 4 - Insurance
+    '🏢',  // 5 - Real estate agent
+    '📝',  // 6 - Translator
     '🗺️',  // 7 - Guide
-    '📚',  // 8 - professeur de langue
-    // Ajoutez plus d'emojis si vous avez plus de statuts...
+    '📚',  // 8 - Language teacher
+    // Add more emojis if you have more statuses...
     '💼',  // 9
     '👨‍⚕️',  // 10
     '🔧',  // 11
@@ -358,7 +358,7 @@
       const iconElement = card.querySelector('.status-icon');
       
       if (iconElement) {
-        // Utiliser l'emoji à l'index correspondant, ou le défaut
+        // Use the emoji at the corresponding index, or the default
         const emoji = ORDERED_EMOJIS[index] || DEFAULT_EMOJI;
         iconElement.textContent = emoji;
       }

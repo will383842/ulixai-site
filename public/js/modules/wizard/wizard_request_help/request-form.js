@@ -700,6 +700,12 @@
         setTimeout(() => warningDiv.classList.add('hidden'), 3000);
     }
     
+    // ═══════════════════════════════════════════════════════════
+    // ✅ FONCTION updateNextButton() SIMPLIFIÉE
+    // ═══════════════════════════════════════════════════════════
+    // ✅ Le JavaScript ne gère QUE btn.disabled = true/false
+    // ✅ Le CSS gère TOUTE l'apparence via #nextBtn:disabled et #nextBtn:not(:disabled)
+    // ═══════════════════════════════════════════════════════════
     function updateNextButton() {
         let canProceed = false;
         
@@ -750,13 +756,8 @@
                 canProceed = true;
         }
         
-        if (canProceed) {
-            nextBtn.className = 'px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg active:scale-95 cursor-pointer';
-            nextBtn.disabled = false;
-        } else {
-            nextBtn.className = 'px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md bg-gray-300 text-gray-500 cursor-not-allowed';
-            nextBtn.disabled = true;
-        }
+        // ✅ UNIQUE LIGNE QUI TOUCHE AU BOUTON - Le CSS fait le reste
+        nextBtn.disabled = !canProceed;
     }
     
     function storeStepData(stepIndex) {

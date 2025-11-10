@@ -20,10 +20,10 @@
       
       <div>
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
-          Take Your Selfie! 🤳
+          Take your selfie! 🤳
         </h2>
         <p class="text-sm sm:text-base font-semibold text-gray-600">
-          Show your authentic self to future clients
+          Your photo will be visible on your profile
         </p>
       </div>
 
@@ -32,114 +32,102 @@
           <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
         </svg>
         <span class="text-xs font-bold text-blue-700">
-          Recommended for better trust & visibility
+          Recommended for better trust and visibility
         </span>
       </div>
     </div>
   </div>
 
   <!-- SCROLLABLE CONTENT -->
-  <div class="flex-1 overflow-y-auto pt-4 space-y-4 px-4">
-
-    <div class="text-center mb-4">
-      <p class="text-gray-600 text-base sm:text-lg font-semibold">
-        Show your real face to build trust with clients.
-      </p>
-    </div>
+  <div class="flex-1 overflow-y-auto pt-4 space-y-4 px-4 pb-6">
 
     <!-- ========================================
-         UN SEUL CERCLE POUR TOUT
+         SINGLE CIRCLE FOR EVERYTHING
          ======================================== -->
     <div class="flex flex-col items-center mb-8">
       <div class="relative mb-6">
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
           
-          <!-- CERCLE UNIQUE - Tous les états se superposent ici -->
+          <!-- SINGLE CIRCLE - All states overlap here -->
           <div class="relative w-40 h-40 sm:w-48 sm:h-48">
             
-            <!-- 1. Placeholder initial (état par défaut) -->
+            <!-- 1. Initial placeholder (default state) -->
             <div id="photoCircle" class="absolute inset-0 rounded-full border-4 border-blue-400 flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 shadow-2xl transition-all duration-300">
               <div id="profilePlaceholder" class="text-center">
                 <div class="text-5xl sm:text-6xl mb-2 animate-float">👤</div>
-                <p class="text-blue-400 font-bold text-xs sm:text-sm">No photo yet</p>
+                <p class="text-blue-400 font-bold text-xs sm:text-sm">No photo</p>
               </div>
             </div>
 
-            <!-- 2. Image de prévisualisation (masquée par défaut) -->
+            <!-- 2. Preview image (hidden by default) -->
             <img id="profilePreview" src="" alt="Profile Preview" class="hidden absolute inset-0 w-full h-full object-cover rounded-full">
 
-            <!-- 3. Flux vidéo caméra (masqué par défaut) -->
+            <!-- 3. Camera video stream (hidden by default) -->
             <video id="videoStream" autoplay playsinline class="hidden absolute inset-0 w-full h-full rounded-full object-cover transform scale-x-[-1]"></video>
 
-            <!-- 4. Overlay de vérification (masqué par défaut) -->
+            <!-- 4. Verification overlay (hidden by default) -->
             <div id="verificationOverlay" class="hidden absolute inset-0 bg-white bg-opacity-95 flex flex-col items-center justify-center rounded-full z-10">
               <div class="spinner mb-3"></div>
               <p id="verificationMessage" class="text-gray-700 font-semibold text-sm text-center px-4">Verifying...</p>
-              <!-- Bouton de secours après timeout -->
+              <!-- Fallback button after timeout -->
               <button type="button" id="fallbackBtn" class="hidden mt-3 px-4 py-2 bg-gray-600 text-white text-xs rounded-lg font-semibold hover:bg-gray-700 transition">
                 Skip verification
               </button>
             </div>
 
-            <!-- Bordure du cercle - Change selon l'état -->
+            <!-- Circle border - Changes according to state -->
             <div id="circleBorder" class="absolute inset-0 rounded-full border-4 border-blue-400 pointer-events-none transition-all duration-300"></div>
           </div>
 
-          <!-- Score Badge -->
-          <div id="scoreBadge" class="hidden score-badge">
-            <div class="flex flex-col items-center justify-center gap-2 px-4 py-3 sm:px-5 sm:py-4 rounded-2xl shadow-2xl ring-4 ring-white min-w-[80px]">
-              <span id="scoreText" class="text-xl sm:text-2xl font-black whitespace-nowrap"></span>
-              <span class="text-[10px] sm:text-xs font-bold opacity-75">Score</span>
+          <!-- SCORE BADGE DESKTOP (hidden on mobile) -->
+          <div id="scoreBadgeDesktop" class="score-badge-container-desktop">
+            <div class="score-badge-inner-desktop">
+              <!-- Main Score Display -->
+              <div class="score-main-desktop">
+                <div id="scoreIconDesktop" class="score-icon-desktop">🏆</div>
+                <div id="scoreNumberDesktop" class="score-number-desktop">95</div>
+                <div class="score-label-desktop">/ 100</div>
+              </div>
+              
+              <!-- Score Bar -->
+              <div class="score-bar-container-desktop">
+                <div id="scoreBarDesktop" class="score-bar-desktop" style="width: 95%"></div>
+              </div>
+              
+              <!-- Score Description -->
+              <div id="scoreDescriptionDesktop" class="score-description-desktop">
+                Exceptional!
+              </div>
             </div>
           </div>
         </div>
-
-
       </div>
 
-      <!-- BOUTONS D'ACTION -->
-      <div id="actionButtons" class="flex flex-col sm:flex-row gap-3 mb-4 w-full sm:w-auto">
-        <!-- Choisir une photo -->
-        <label for="profileUpload" id="uploadLabel" class="upload-btn bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-5 sm:px-8 py-3.5 rounded-2xl cursor-pointer font-bold text-sm sm:text-base shadow-lg flex items-center justify-center space-x-2 w-full sm:w-auto">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
-          <span>Choose photo</span>
-        </label>
-        
-        <!-- Prendre une photo -->
-        <button type="button" id="takePictureBtn" class="upload-btn bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-5 sm:px-8 py-3.5 rounded-2xl font-bold text-sm sm:text-base shadow-lg flex items-center justify-center space-x-2 w-full sm:w-auto">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-          </svg>
-          <span>Take a selfie</span>
-        </button>
-      </div>
-      
-      <!-- Bouton SKIP - Visible uniquement pendant la vérification -->
-      <div id="skipVerificationContainer" class="hidden w-full sm:w-auto mb-4">
-        <button type="button" id="skipVerificationBtn" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 sm:px-8 py-3.5 rounded-2xl font-bold text-sm sm:text-base shadow-lg flex items-center justify-center space-x-2 hover:shadow-xl transform hover:scale-105 transition-all">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-          </svg>
-          <span>Skip verification & continue</span>
-        </button>
-        <p class="text-xs text-center text-gray-500 mt-2">You can verify your photo later in your profile settings</p>
+      <!-- SCORE BADGE MOBILE (hidden on desktop) - Horizontal layout -->
+      <div id="scoreBadgeMobile" class="score-badge-container-mobile w-full max-w-lg mb-4">
+        <div class="score-badge-inner-mobile">
+          <!-- Left: Icon and Number -->
+          <div class="score-left-mobile">
+            <div id="scoreIconMobile" class="score-icon-mobile">🏆</div>
+            <div class="score-number-wrapper-mobile">
+              <div id="scoreNumberMobile" class="score-number-mobile">95</div>
+              <div class="score-label-mobile">/ 100</div>
+            </div>
+          </div>
+          
+          <!-- Right: Bar and Description -->
+          <div class="score-right-mobile">
+            <div id="scoreDescriptionMobile" class="score-description-mobile">Exceptional!</div>
+            <div class="score-bar-container-mobile">
+              <div id="scoreBarMobile" class="score-bar-mobile" style="width: 95%"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Boutons caméra (masqués par défaut) -->
-      <div id="cameraButtons" class="hidden flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto mb-4">
-        <button type="button" id="captureBtn" class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-6 sm:px-8 py-3 rounded-2xl font-bold text-sm sm:text-base shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all w-full sm:w-auto">
-          📸 Capture
-        </button>
-        <button type="button" id="cancelCameraBtn" class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 sm:px-8 py-3 rounded-2xl font-bold text-sm sm:text-base shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all w-full sm:w-auto">
-          ✕ Cancel
-        </button>
-      </div>
-
-      <!-- Bouton changer photo (masqué par défaut) -->
-      <div id="changePhotoContainer" class="hidden w-full sm:w-auto mb-4">
-        <button type="button" id="changePhotoBtn" class="upload-btn bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 sm:px-8 py-3 rounded-2xl font-bold text-sm sm:text-base shadow-lg flex items-center justify-center space-x-2 w-full sm:w-auto">
+      <!-- Change photo button (below badge on mobile, next to badge on desktop) -->
+      <div id="changePhotoContainer" class="hidden w-full max-w-lg mb-4">
+        <button type="button" id="changePhotoBtn" class="upload-btn bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 sm:px-8 py-3 rounded-2xl font-bold text-sm sm:text-base shadow-lg flex items-center justify-center space-x-2 w-full hover:shadow-xl transform hover:scale-105 transition-all">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
           </svg>
@@ -147,46 +135,502 @@
         </button>
       </div>
 
+      <!-- ACTION BUTTONS - SAME LINE (MOBILE INCLUDED) -->
+      <div id="actionButtons" class="flex flex-row gap-2 sm:gap-3 mb-4 w-full max-w-lg">
+        <!-- Photo library -->
+        <label for="profileUpload" id="uploadLabel" class="upload-btn bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl cursor-pointer font-bold text-xs sm:text-base shadow-lg flex items-center justify-center space-x-1 sm:space-x-2 flex-1">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <span class="whitespace-nowrap">Gallery</span>
+        </label>
+        
+        <!-- Selfie photo -->
+        <button type="button" id="takePictureBtn" class="upload-btn bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-base shadow-lg flex items-center justify-center space-x-1 sm:space-x-2 flex-1">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+          <span class="whitespace-nowrap">Selfie</span>
+        </button>
+      </div>
+      
+      <!-- SKIP button - Visible only during verification -->
+      <div id="skipVerificationContainer" class="hidden w-full sm:w-auto mb-4 max-w-lg">
+        <button type="button" id="skipVerificationBtn" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 sm:px-8 py-3.5 rounded-2xl font-bold text-sm sm:text-base shadow-lg flex items-center justify-center space-x-2 hover:shadow-xl transform hover:scale-105 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+          <span>Skip verification and continue</span>
+        </button>
+        <p class="text-xs text-center text-gray-500 mt-2">You can verify your photo later in your profile settings</p>
+      </div>
+
+      <!-- Camera buttons (hidden by default) -->
+      <div id="cameraButtons" class="hidden flex flex-row gap-2 sm:gap-3 w-full max-w-lg mb-4">
+        <button type="button" id="captureBtn" class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-3 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-base shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all flex-1">
+          📸 Capture
+        </button>
+        <button type="button" id="cancelCameraBtn" class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-3 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-base shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all flex-1">
+          ✕ Cancel
+        </button>
+      </div>
+
       <input type="file" id="profileUpload" name="profile_picture" accept="image/*" class="hidden">
 
-      <!-- Carte de résultat -->
+      <!-- Result card -->
       <div id="resultCard" class="w-full max-w-md mb-4 hidden"></div>
     </div>
 
-    <!-- RÈGLES PHOTO -->
-    <div class="mb-8 rounded-3xl bg-gradient-to-br from-amber-50 to-yellow-50 border-3 border-amber-300 p-5 sm:p-6 shadow-lg text-sm sm:text-base">
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">
-          <span class="text-2xl">✅</span>
+    <!-- PHOTO RULES - REDUCED VERSION -->
+    <div class="mb-6 rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 p-4 shadow-md text-sm">
+      <div class="flex items-start gap-2.5">
+        <div class="w-8 h-8 bg-amber-500 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
+          <span class="text-lg">✅</span>
         </div>
         <div>
-          <h3 class="text-amber-900 font-black text-lg sm:text-xl mb-2">Photo rules (quick & simple)</h3>
-          <ul class="text-amber-800 font-semibold space-y-1.5">
-            <li>✓ Your full face is clearly visible.</li>
-            <li>✓ Good lighting, no heavy filters.</li>
-            <li>✓ Professional / friendly appearance.</li>
-            <li>✓ You are alone in the photo.</li>
-            <li>✓ No sunglasses, masks, or hidden face.</li>
+          <h3 class="text-amber-900 font-black text-base mb-1.5">Photo rules (quick & simple)</h3>
+          <ul class="text-amber-800 font-semibold space-y-1 text-xs sm:text-sm">
+            <li>✓ Your face is clearly visible</li>
+            <li>✓ Good lighting, no heavy filters</li>
+            <li>✓ Professional / friendly appearance</li>
+            <li>✓ You are alone in the photo</li>
+            <li>✓ No sunglasses, masks, or hidden face</li>
           </ul>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- NAVIGATION -->
-  <div class="wizard-nav-container px-4">
-    <button id="backToStep9" type="button" class="nav-btn-back">
-      Back
-    </button>
-    <button id="nextStep10" type="button" class="nav-btn-next">
-      Next
-    </button>
-  </div>
-
 </div>
 
-<!-- STYLES -->
+<!-- IMPROVED STYLES -->
 <style>
+/* ========================================
+   SCORE BADGE - DESKTOP VERSION (VERTICAL)
+   ======================================== */
+
+.score-badge-container-desktop {
+  animation: scoreAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+}
+
+/* Desktop badge: hidden on mobile, visible on desktop when .score-visible class is added */
+#scoreBadgeDesktop {
+  display: none;
+}
+
+#scoreBadgeDesktop.score-visible {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  #scoreBadgeDesktop.score-visible {
+    display: block;
+  }
+}
+
+/* Mobile badge: visible on mobile, hidden on desktop when .score-visible class is added */
+#scoreBadgeMobile {
+  display: none;
+}
+
+#scoreBadgeMobile.score-visible {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  #scoreBadgeMobile.score-visible {
+    display: none;
+  }
+}
+
+@keyframes scoreAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(-10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.score-badge-inner-desktop {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 16px 20px;
+  box-shadow: 
+    0 10px 40px rgba(0,0,0,0.15),
+    0 0 0 1px rgba(255,255,255,0.5) inset,
+    0 20px 60px rgba(59, 130, 246, 0.2);
+  min-width: 150px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.score-badge-inner-desktop:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 
+    0 15px 50px rgba(0,0,0,0.2),
+    0 0 0 1px rgba(255,255,255,0.6) inset,
+    0 25px 80px rgba(59, 130, 246, 0.3);
+}
+
+/* Desktop badge color variants */
+.score-badge-inner-desktop.score-exceptional {
+  background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 
+    0 10px 40px rgba(16, 185, 129, 0.4),
+    0 0 0 1px rgba(255,255,255,0.5) inset,
+    0 20px 60px rgba(16, 185, 129, 0.3);
+}
+
+.score-badge-inner-desktop.score-excellent {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 
+    0 10px 40px rgba(59, 130, 246, 0.4),
+    0 0 0 1px rgba(255,255,255,0.5) inset,
+    0 20px 60px rgba(59, 130, 246, 0.3);
+}
+
+.score-badge-inner-desktop.score-good {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 
+    0 10px 40px rgba(245, 158, 11, 0.4),
+    0 0 0 1px rgba(255,255,255,0.5) inset,
+    0 20px 60px rgba(245, 158, 11, 0.3);
+}
+
+.score-badge-inner-desktop.score-acceptable {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 
+    0 10px 40px rgba(239, 68, 68, 0.4),
+    0 0 0 1px rgba(255,255,255,0.5) inset,
+    0 20px 60px rgba(239, 68, 68, 0.3);
+}
+
+.score-main-desktop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.score-icon-desktop {
+  font-size: 40px;
+  line-height: 1;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+}
+
+.score-number-desktop {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.score-badge-inner-desktop.score-exceptional .score-number-desktop {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-badge-inner-desktop.score-excellent .score-number-desktop {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-badge-inner-desktop.score-good .score-number-desktop {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-badge-inner-desktop.score-acceptable .score-number-desktop {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-label-desktop {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(0,0,0,0.5);
+  letter-spacing: 0.05em;
+  margin-top: -6px;
+}
+
+.score-bar-container-desktop {
+  width: 100%;
+  height: 7px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) inset;
+  margin-bottom: 10px;
+}
+
+.score-bar-desktop {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 999px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(102, 126, 234, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.score-bar-desktop::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.score-badge-inner-desktop.score-exceptional .score-bar-desktop {
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+.score-badge-inner-desktop.score-excellent .score-bar-desktop {
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+}
+
+.score-badge-inner-desktop.score-good .score-bar-desktop {
+  background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+}
+
+.score-badge-inner-desktop.score-acceptable .score-bar-desktop {
+  background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+
+.score-description-desktop {
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.7);
+}
+
+/* ========================================
+   SCORE BADGE - MOBILE VERSION (HORIZONTAL)
+   ======================================== */
+
+.score-badge-inner-mobile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 
+    0 6px 24px rgba(0,0,0,0.12),
+    0 0 0 1px rgba(255,255,255,0.5) inset,
+    0 10px 30px rgba(59, 130, 246, 0.15);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Mobile badge color variants */
+.score-badge-inner-mobile.score-exceptional {
+  background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 
+    0 6px 24px rgba(16, 185, 129, 0.3),
+    0 0 0 1px rgba(255,255,255,0.5) inset;
+}
+
+.score-badge-inner-mobile.score-excellent {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 
+    0 6px 24px rgba(59, 130, 246, 0.3),
+    0 0 0 1px rgba(255,255,255,0.5) inset;
+}
+
+.score-badge-inner-mobile.score-good {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 
+    0 6px 24px rgba(245, 158, 11, 0.3),
+    0 0 0 1px rgba(255,255,255,0.5) inset;
+}
+
+.score-badge-inner-mobile.score-acceptable {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 
+    0 6px 24px rgba(239, 68, 68, 0.3),
+    0 0 0 1px rgba(255,255,255,0.5) inset;
+}
+
+.score-left-mobile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.score-icon-mobile {
+  font-size: 36px;
+  line-height: 1;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12));
+}
+
+.score-number-wrapper-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.score-number-mobile {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.score-badge-inner-mobile.score-exceptional .score-number-mobile {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-badge-inner-mobile.score-excellent .score-number-mobile {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-badge-inner-mobile.score-good .score-number-mobile {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-badge-inner-mobile.score-acceptable .score-number-mobile {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.score-label-mobile {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(0,0,0,0.5);
+  letter-spacing: 0.05em;
+  margin-top: -2px;
+}
+
+.score-right-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.score-description-mobile {
+  font-size: 11px;
+  font-weight: 800;
+  text-align: left;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.7);
+  white-space: nowrap;
+}
+
+.score-bar-container-mobile {
+  width: 100%;
+  height: 6px;
+  background: rgba(0,0,0,0.15);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15) inset;
+}
+
+.score-bar-mobile {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 999px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.score-bar-mobile::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 2s infinite;
+}
+
+.score-badge-inner-mobile.score-exceptional .score-bar-mobile {
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.score-badge-inner-mobile.score-excellent .score-bar-mobile {
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+
+.score-badge-inner-mobile.score-good .score-bar-mobile {
+  background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.score-badge-inner-mobile.score-acceptable .score-bar-mobile {
+  background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* ========================================
+   EXISTING ANIMATIONS & STYLES
+   ======================================== */
+
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -258,20 +702,7 @@
   box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
 }
 
-.border-3 {
-  border-width: 3px;
-}
-
-.score-badge {
-  animation: scaleIn 0.3s ease-out;
-}
-
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* États du cercle */
+/* Circle states */
 .circle-camera {
   border-color: #10b981 !important;
   animation: pulse-green 2s infinite;
@@ -317,6 +748,12 @@
   }
 }
 
+@media (min-width: 640px) {
+  #actionButtons {
+    flex-direction: row;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -332,7 +769,7 @@
 }
 </style>
 
-<!-- JAVASCRIPT OPTIMISÉ -->
+<!-- OPTIMIZED JAVASCRIPT -->
 <script>
   (function() {
     'use strict';
@@ -352,7 +789,7 @@
       STORAGE_KEY: 'expats',
       MAX_IMAGE_SIZE: 5 * 1024 * 1024,
       POLLING_INTERVAL: 2000,
-      VERIFICATION_TIMEOUT: 30000, // 30 secondes timeout
+      VERIFICATION_TIMEOUT: 30000,
       MAX_RETRIES: 3
     };
 
@@ -366,7 +803,7 @@
       pollingInterval: null,
       verificationTimeout: null,
       retryCount: 0,
-      currentMode: 'idle' // idle, camera, verifying, validated
+      currentMode: 'idle'
     };
 
     const elements = {
@@ -390,42 +827,46 @@
       cancelCameraBtn: document.getElementById('cancelCameraBtn'),
       changePhotoContainer: document.getElementById('changePhotoContainer'),
       changePhotoBtn: document.getElementById('changePhotoBtn'),
-      scoreBadge: document.getElementById('scoreBadge'),
-      scoreText: document.getElementById('scoreText'),
-      resultCard: document.getElementById('resultCard'),
-      nextStepBtn: document.getElementById('nextStep10')
+      // Desktop badge elements
+      scoreBadgeDesktop: document.getElementById('scoreBadgeDesktop'),
+      scoreNumberDesktop: document.getElementById('scoreNumberDesktop'),
+      scoreBarDesktop: document.getElementById('scoreBarDesktop'),
+      scoreIconDesktop: document.getElementById('scoreIconDesktop'),
+      scoreDescriptionDesktop: document.getElementById('scoreDescriptionDesktop'),
+      // Mobile badge elements
+      scoreBadgeMobile: document.getElementById('scoreBadgeMobile'),
+      scoreNumberMobile: document.getElementById('scoreNumberMobile'),
+      scoreBarMobile: document.getElementById('scoreBarMobile'),
+      scoreIconMobile: document.getElementById('scoreIconMobile'),
+      scoreDescriptionMobile: document.getElementById('scoreDescriptionMobile'),
+      resultCard: document.getElementById('resultCard')
     };
 
     // =======================================
-    // GESTION DES ÉTATS DU CERCLE UNIQUE
+    // SINGLE CIRCLE STATE MANAGEMENT
     // =======================================
     
     function setCircleState(mode) {
       state.currentMode = mode;
       
-      // Reset tous les états
       elements.placeholder?.classList.add('hidden');
       elements.preview?.classList.add('hidden');
       elements.videoStream?.classList.add('hidden');
       elements.verificationOverlay?.classList.add('hidden');
       
-      // Reset classes bordure
       elements.circleBorder?.classList.remove('circle-camera', 'circle-verifying', 'circle-success', 'circle-error');
       
       switch(mode) {
         case 'idle':
           elements.placeholder?.classList.remove('hidden');
           break;
-          
         case 'camera':
           elements.videoStream?.classList.remove('hidden');
           elements.circleBorder?.classList.add('circle-camera');
           break;
-          
         case 'preview':
           elements.preview?.classList.remove('hidden');
           break;
-          
         case 'verifying':
           if (elements.preview?.src) {
             elements.preview?.classList.remove('hidden');
@@ -433,12 +874,10 @@
           elements.verificationOverlay?.classList.remove('hidden');
           elements.circleBorder?.classList.add('circle-verifying');
           break;
-          
         case 'validated':
           elements.preview?.classList.remove('hidden');
           elements.circleBorder?.classList.add('circle-success');
           break;
-          
         case 'error':
           elements.circleBorder?.classList.add('circle-error');
           break;
@@ -462,17 +901,94 @@
           elements.changePhotoContainer?.classList.remove('hidden');
           break;
         case 'skip':
-          // Afficher le bouton Skip pendant la vérification
           elements.skipVerificationContainer?.classList.remove('hidden');
-          break;
-        case 'none':
-          // Ne rien afficher
           break;
       }
     }
 
     // =======================================
-    // SYSTÈME DE FALLBACK
+    // IMPROVED SCORE DISPLAY
+    // =======================================
+    
+    function updateScoreBadge(score) {
+      // Show badges using score-visible class (responsive behavior handled in CSS)
+      if (elements.scoreBadgeDesktop) {
+        elements.scoreBadgeDesktop.classList.add('score-visible');
+      }
+      if (elements.scoreBadgeMobile) {
+        elements.scoreBadgeMobile.classList.add('score-visible');
+      }
+      
+      // Update score numbers (both mobile and desktop)
+      if (elements.scoreNumberDesktop) {
+        elements.scoreNumberDesktop.textContent = score;
+      }
+      if (elements.scoreNumberMobile) {
+        elements.scoreNumberMobile.textContent = score;
+      }
+      
+      // Update progress bars with animation (both mobile and desktop)
+      setTimeout(() => {
+        if (elements.scoreBarDesktop) {
+          elements.scoreBarDesktop.style.width = score + '%';
+        }
+        if (elements.scoreBarMobile) {
+          elements.scoreBarMobile.style.width = score + '%';
+        }
+      }, 100);
+      
+      // Determine badge style based on score
+      let badgeClass, icon, description;
+      
+      if (score >= 95) {
+        badgeClass = 'score-exceptional';
+        icon = '🏆';
+        description = 'Exceptional!';
+      } else if (score >= 80) {
+        badgeClass = 'score-excellent';
+        icon = '✨';
+        description = 'Excellent';
+      } else if (score >= 60) {
+        badgeClass = 'score-good';
+        icon = '👍';
+        description = 'Good';
+      } else {
+        badgeClass = 'score-acceptable';
+        icon = '⚠️';
+        description = 'Acceptable';
+      }
+      
+      // Update desktop badge styling
+      const badgeInnerDesktop = elements.scoreBadgeDesktop?.querySelector('.score-badge-inner-desktop');
+      if (badgeInnerDesktop) {
+        badgeInnerDesktop.className = `score-badge-inner-desktop ${badgeClass}`;
+      }
+      
+      // Update mobile badge styling
+      const badgeInnerMobile = elements.scoreBadgeMobile?.querySelector('.score-badge-inner-mobile');
+      if (badgeInnerMobile) {
+        badgeInnerMobile.className = `score-badge-inner-mobile ${badgeClass}`;
+      }
+      
+      // Update icons (both mobile and desktop)
+      if (elements.scoreIconDesktop) {
+        elements.scoreIconDesktop.textContent = icon;
+      }
+      if (elements.scoreIconMobile) {
+        elements.scoreIconMobile.textContent = icon;
+      }
+      
+      // Update descriptions (both mobile and desktop)
+      if (elements.scoreDescriptionDesktop) {
+        elements.scoreDescriptionDesktop.textContent = description;
+      }
+      if (elements.scoreDescriptionMobile) {
+        elements.scoreDescriptionMobile.textContent = description;
+      }
+    }
+
+    // =======================================
+    // FALLBACK SYSTEM
     // =======================================
     
     function startVerificationTimeout() {
@@ -504,8 +1020,7 @@
       stopPhotoPolling();
       clearVerificationTimeout();
       
-      // Accepter la photo sans vérification complète
-      const fallbackScore = 70; // Score par défaut en mode fallback
+      const fallbackScore = 70;
       
       if (elements.resultCard) {
         elements.resultCard.innerHTML = `
@@ -514,7 +1029,7 @@
               <div class="text-4xl mb-1">⚡</div>
               <p class="text-lg sm:text-xl font-black text-yellow-700">Photo accepted (verification skipped)</p>
               <p class="text-sm sm:text-base font-semibold text-yellow-600">
-                Your photo has been accepted. Manual verification may occur later.
+                Your photo has been accepted. A manual verification may take place later.
               </p>
             </div>
           </div>
@@ -522,6 +1037,7 @@
         elements.resultCard.classList.remove('hidden');
       }
       
+      updateScoreBadge(fallbackScore);
       savePhotoToLocalStorage(state.currentPhotoData, fallbackScore, true);
       setCircleState('validated');
       showButtons('change');
@@ -532,8 +1048,7 @@
       stopPhotoPolling();
       clearVerificationTimeout();
       
-      // Accepter la photo immédiatement sans attendre la vérification
-      const skipScore = 50; // Score minimal pour photo non-vérifiée
+      const skipScore = 50;
       
       if (elements.resultCard) {
         elements.resultCard.innerHTML = `
@@ -542,10 +1057,10 @@
               <div class="text-4xl mb-1">✅</div>
               <p class="text-lg sm:text-xl font-black text-blue-700">Photo saved!</p>
               <p class="text-sm sm:text-base font-semibold text-blue-600">
-                Your photo has been saved. You can continue with your registration.
+                Your photo has been saved. You can continue your registration.
               </p>
               <p class="text-xs text-gray-500 mt-2">
-                💡 Tip: Verified photos get better visibility and trust from clients
+                💡 Tip: Verified photos get better visibility and customer trust
               </p>
             </div>
           </div>
@@ -553,20 +1068,20 @@
         elements.resultCard.classList.remove('hidden');
       }
       
-      // Sauvegarder avec validated=true pour permettre de continuer
+      updateScoreBadge(skipScore);
       savePhotoToLocalStorage(state.currentPhotoData, skipScore, true);
       setCircleState('preview');
       showButtons('change');
     }
 
     // =======================================
-    // GESTION API AVEC RETRY
+    // API MANAGEMENT
     // =======================================
     
     async function sendPhotoToBackend(imageData) {
       setCircleState('verifying');
       updateVerificationMessage('📤 Uploading...');
-      showButtons('skip'); // Afficher le bouton Skip dès le début
+      showButtons('skip');
       
       startVerificationTimeout();
 
@@ -605,31 +1120,9 @@
         console.error('❌ Upload error:', error);
         clearVerificationTimeout();
         
-        // Déterminer le type d'erreur pour un message approprié
-        let errorType = 'network';
-        let errorMessage = error.message;
-        
-        if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
-          errorType = 'network';
-          errorMessage = 'Cannot reach the server. Please check your internet connection.';
-        } else if (error.message.includes('timeout')) {
-          errorType = 'timeout';
-          errorMessage = 'The upload request timed out. Please try again.';
-        } else if (error.message.includes('413') || error.message.includes('too large')) {
-          errorType = 'upload';
-          errorMessage = 'The image file is too large. Please use a smaller image (max 5MB).';
-        } else if (error.message.includes('401') || error.message.includes('403')) {
-          errorType = 'api';
-          errorMessage = 'Authentication error. Please refresh the page and try again.';
-        } else if (error.message.includes('500') || error.message.includes('502') || error.message.includes('503')) {
-          errorType = 'api';
-          errorMessage = 'Server error. Our verification service is temporarily unavailable.';
-        }
-        
-        // Retry logique
         if (state.retryCount < CONFIG.MAX_RETRIES) {
           state.retryCount++;
-          updateVerificationMessage(`⚠️ Retry ${state.retryCount}/${CONFIG.MAX_RETRIES}...`);
+          updateVerificationMessage(`⚠️ Retry attempt ${state.retryCount}/${CONFIG.MAX_RETRIES}...`);
           
           setTimeout(() => {
             sendPhotoToBackend(imageData);
@@ -637,19 +1130,9 @@
           return;
         }
         
-        // Échec après tous les retries
         setCircleState('error');
-        displayError(errorMessage, errorType);
+        displayError(error.message, 'api');
       }
-    }
-
-    function resetAndRetry() {
-      state.retryCount = 0;
-      closeCamera();
-      removePhotoFromLocalStorage();
-      resetPhotoUI();
-      setCircleState('idle');
-      showButtons('main');
     }
 
     function startPhotoPolling() {
@@ -714,7 +1197,7 @@
         case 'error':
           stopPhotoPolling();
           clearVerificationTimeout();
-          displayError(message || 'Verification error occurred during processing', 'api');
+          displayError(message || 'A verification error occurred', 'api');
           break;
 
         case 'processing':
@@ -723,7 +1206,7 @@
 
         case 'pending':
         default:
-          updateVerificationMessage('⏳ Queued for verification...');
+          updateVerificationMessage('⏳ Waiting for verification...');
           break;
       }
     }
@@ -735,68 +1218,45 @@
     }
 
     // =======================================
-    // AFFICHAGE DES RÉSULTATS
+    // RESULTS DISPLAY
     // =======================================
     
     function displayScore(score, message) {
       setCircleState('validated');
       clearVerificationTimeout();
       
-      if (elements.scoreBadge) elements.scoreBadge.classList.remove('hidden');
+      // Update the score badge
+      updateScoreBadge(score);
 
-      let badgeClass, cardClass, barClass, emoji, title, resultMessage;
+      let cardClass, emoji, title, resultMessage;
 
       if (score >= 95) {
-        badgeClass = 'bg-gradient-to-r from-green-600 to-emerald-600';
         cardClass = 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-400';
-        barClass = 'bg-gradient-to-r from-green-600 to-emerald-600';
         emoji = '🏆';
-        title = 'Outstanding selfie!';
-        resultMessage = message || "This photo is perfect to inspire trust.";
+        title = 'Exceptional selfie!';
+        resultMessage = message || "This photo is perfect for inspiring trust.";
       } else if (score >= 80) {
-        badgeClass = 'bg-gradient-to-r from-blue-600 to-cyan-600';
         cardClass = 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-400';
-        barClass = 'bg-gradient-to-r from-blue-600 to-cyan-600';
         emoji = '✨';
-        title = 'Great photo!';
-        resultMessage = message || "Clear, professional and client-friendly.";
+        title = 'Excellent photo!';
+        resultMessage = message || "Clear, professional and welcoming for customers.";
       } else if (score >= 60) {
-        badgeClass = 'bg-gradient-to-r from-yellow-500 to-orange-500';
         cardClass = 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-400';
-        barClass = 'bg-gradient-to-r from-yellow-500 to-orange-500';
         emoji = '👍';
         title = 'Photo validated';
-        resultMessage = message || "It works. You can improve it later if you want.";
+        resultMessage = message || "It works. You can improve it later if you wish.";
       } else {
-        badgeClass = 'bg-gradient-to-r from-orange-600 to-red-500';
         cardClass = 'bg-gradient-to-r from-orange-50 to-red-50 border-orange-400';
-        barClass = 'bg-gradient-to-r from-orange-600 to-red-500';
         emoji = '⚠️';
         title = 'Acceptable photo';
-        resultMessage = message || "It is accepted, but you could upload a clearer one.";
-      }
-
-      if (elements.scoreBadge) {
-        const badgeInner = elements.scoreBadge.querySelector('div');
-        if (badgeInner) {
-          badgeInner.className = `flex flex-col items-center justify-center gap-2 px-4 py-3 sm:px-5 sm:py-4 rounded-2xl shadow-2xl ring-4 ring-white min-w-[80px] ${badgeClass}`;
-        }
-        if (elements.scoreText) {
-          elements.scoreText.textContent = `${emoji} ${score}`;
-        }
+        resultMessage = message || "It's accepted, but you could upload a clearer one.";
       }
 
       if (elements.resultCard) {
         elements.resultCard.innerHTML = `
           <div class="rounded-2xl p-4 sm:p-5 space-y-3 border-3 transition-all ${cardClass} fade-in">
-            <div class="flex justify-between items-center">
-              <span class="text-xs sm:text-sm font-bold text-gray-700">Selfie check result</span>
-              <span class="text-3xl sm:text-4xl font-black">${emoji} ${score}</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-              <div class="h-full rounded-full transition-all duration-700 ${barClass}" style="width: ${score}%;"></div>
-            </div>
             <div class="text-center space-y-1">
+              <p class="text-3xl sm:text-4xl font-black mb-2">${emoji}</p>
               <p class="text-lg sm:text-xl font-black leading-relaxed">${title}</p>
               <p class="text-sm sm:text-base font-semibold leading-relaxed">${resultMessage}</p>
             </div>
@@ -816,18 +1276,17 @@
       removePhotoFromLocalStorage();
       resetPhotoUI();
 
-      if (elements.scoreBadge) elements.scoreBadge.classList.add('hidden');
+      if (elements.scoreBadgeDesktop) elements.scoreBadgeDesktop.classList.remove('score-visible');
+      if (elements.scoreBadgeMobile) elements.scoreBadgeMobile.classList.remove('score-visible');
 
-      // Construire un message détaillé et explicite
       let mainReason = reason || "Your photo could not be validated.";
       
-      // Si le backend a fourni des suggestions précises
       const solutionsList = suggestions && suggestions.length > 0 
         ? suggestions.map(s => `<li class="text-xs sm:text-sm text-gray-700 font-medium">✓ ${s}</li>`).join('')
         : `
           <li class="text-xs sm:text-sm text-gray-700 font-medium">✓ Make sure your face is fully visible</li>
-          <li class="text-xs sm:text-sm text-gray-700 font-medium">✓ Use good lighting (natural light is best)</li>
-          <li class="text-xs sm:text-sm text-gray-700 font-medium">✓ Remove sunglasses, masks, or face coverings</li>
+          <li class="text-xs sm:text-sm text-gray-700 font-medium">✓ Use good lighting (natural light preferred)</li>
+          <li class="text-xs sm:text-sm text-gray-700 font-medium">✓ Remove sunglasses, masks, or facial coverings</li>
           <li class="text-xs sm:text-sm text-gray-700 font-medium">✓ Look directly at the camera</li>
           <li class="text-xs sm:text-sm text-gray-700 font-medium">✓ Be alone in the photo (no other people)</li>
         `;
@@ -837,10 +1296,9 @@
           <div class="bg-gradient-to-r from-red-50 to-orange-50 border-3 border-red-300 rounded-2xl p-4 sm:p-5 space-y-4 fade-in">
             <div class="text-center space-y-2">
               <div class="text-4xl mb-1">❌</div>
-              <p class="text-lg sm:text-xl font-black text-red-700">Photo Rejected</p>
+              <p class="text-lg sm:text-xl font-black text-red-700">Photo rejected</p>
             </div>
             
-            <!-- Raison détaillée de refus -->
             <div class="bg-red-100 border-2 border-red-300 rounded-xl p-3 sm:p-4">
               <p class="text-xs sm:text-sm font-bold text-red-900 mb-1">Why was it rejected?</p>
               <p class="text-sm sm:text-base font-semibold text-red-700 whitespace-pre-line leading-relaxed">
@@ -848,17 +1306,12 @@
               </p>
             </div>
             
-            <!-- Solutions concrètes -->
             <div class="bg-white/80 border-2 border-orange-300 rounded-xl p-3 sm:p-4 space-y-2">
               <p class="text-xs sm:text-sm font-bold text-gray-900 flex items-center gap-2">
-                <span class="text-lg">💡</span> How to fix it:
+                <span class="text-lg">💡</span> How to fix:
               </p>
               <ul class="space-y-2">${solutionsList}</ul>
             </div>
-            
-            <p class="text-xs sm:text-sm font-bold text-center text-red-700 bg-red-100 py-2 px-3 rounded-lg">
-              📸 Please take a new selfie following these guidelines
-            </p>
           </div>
         `;
         elements.resultCard.classList.remove('hidden');
@@ -868,87 +1321,23 @@
       showButtons('main');
     }
 
-    function displayError(message, errorType = 'unknown') {
+    function displayError(message, errorType) {
       setCircleState('error');
-      
-      // Messages détaillés selon le type d'erreur
-      let errorTitle = 'Verification Error';
-      let errorIcon = '⚠️';
-      let errorDetails = message || 'An unknown error occurred.';
-      let troubleshooting = [];
-      
-      // Catégoriser les erreurs pour donner des instructions précises
-      if (errorType === 'timeout') {
-        errorTitle = 'Verification Timeout';
-        errorIcon = '⏱️';
-        errorDetails = 'The verification process took too long (over 30 seconds).';
-        troubleshooting = [
-          'Check your internet connection',
-          'Try again with a smaller image',
-          'Use the "Skip verification" option if problem persists'
-        ];
-      } else if (errorType === 'network') {
-        errorTitle = 'Connection Error';
-        errorIcon = '📡';
-        errorDetails = 'Could not connect to the verification server.';
-        troubleshooting = [
-          'Check your internet connection',
-          'Make sure you\'re not using a VPN that blocks requests',
-          'Try refreshing the page',
-          'Wait a moment and try again'
-        ];
-      } else if (errorType === 'upload') {
-        errorTitle = 'Upload Failed';
-        errorIcon = '📤';
-        errorDetails = message || 'The photo could not be uploaded to the server.';
-        troubleshooting = [
-          'Check your internet connection',
-          'Make sure the image is under 5MB',
-          'Try a different photo format (JPG/PNG)',
-          'Try again in a few seconds'
-        ];
-      } else if (errorType === 'api') {
-        errorTitle = 'Server Error';
-        errorIcon = '🔧';
-        errorDetails = message || 'The verification service encountered an error.';
-        troubleshooting = [
-          'This is likely a temporary issue',
-          'Try again in a few minutes',
-          'Use the "Accept anyway" option below',
-          'Contact support if problem persists'
-        ];
-      }
-      
-      const troubleshootingList = troubleshooting.length > 0
-        ? troubleshooting.map(tip => `<li class="text-xs sm:text-sm text-gray-700 font-medium">→ ${tip}</li>`).join('')
-        : '';
       
       if (elements.resultCard) {
         elements.resultCard.innerHTML = `
           <div class="bg-gradient-to-r from-red-50 to-orange-50 border-3 border-red-300 rounded-2xl p-4 sm:p-5 space-y-4 fade-in">
             <div class="text-center space-y-2">
-              <div class="text-4xl mb-1">${errorIcon}</div>
-              <p class="text-lg sm:text-xl font-black text-red-700">${errorTitle}</p>
+              <div class="text-4xl mb-1">⚠️</div>
+              <p class="text-lg sm:text-xl font-black text-red-700">Verification error</p>
             </div>
             
-            <!-- Détails de l'erreur -->
             <div class="bg-red-100 border-2 border-red-300 rounded-xl p-3 sm:p-4">
-              <p class="text-xs sm:text-sm font-bold text-red-900 mb-1">What happened?</p>
               <p class="text-sm sm:text-base font-semibold text-red-700 leading-relaxed">
-                ${errorDetails}
+                ${message}
               </p>
             </div>
             
-            ${troubleshootingList ? `
-              <div class="bg-blue-50 border-2 border-blue-300 rounded-xl p-3 sm:p-4 space-y-2">
-                <p class="text-xs sm:text-sm font-bold text-blue-900 flex items-center gap-2">
-                  <span class="text-lg">💡</span> Troubleshooting:
-                </p>
-                <ul class="space-y-1.5">${troubleshootingList}</ul>
-              </div>
-            ` : ''}
-            
-            <!-- Action buttons -->
             <div class="space-y-2">
               <button type="button" id="retryErrorBtn" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition">
                 🔄 Try again
@@ -957,27 +1346,31 @@
                 ✓ Accept photo anyway
               </button>
             </div>
-            
-            <p class="text-[10px] sm:text-xs text-center text-gray-500">
-              Error details: ${errorType.toUpperCase()} - ${new Date().toLocaleTimeString()}
-            </p>
           </div>
         `;
         elements.resultCard.classList.remove('hidden');
         
-        // Event listeners pour les boutons d'erreur
         document.getElementById('retryErrorBtn')?.addEventListener('click', resetAndRetry);
         document.getElementById('acceptAnywayErrorBtn')?.addEventListener('click', activateFallbackMode);
       }
     }
 
+    function resetAndRetry() {
+      state.retryCount = 0;
+      closeCamera();
+      removePhotoFromLocalStorage();
+      resetPhotoUI();
+      setCircleState('idle');
+      showButtons('main');
+    }
+
     // =======================================
-    // GESTION CAMÉRA
+    // CAMERA MANAGEMENT
     // =======================================
     
     async function openCamera() {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("Your device camera is not available. Please upload a photo from your gallery instead.");
+        alert("Your device's camera is not available. Please upload a photo from your gallery.");
         return;
       }
 
@@ -1001,50 +1394,28 @@
         
       } catch (e) {
         console.error('Camera error:', e);
-        alert("We could not access your camera. Please upload a photo from your device instead.");
+        alert("We couldn't access your camera. Please upload a photo from your device.");
         setCircleState('idle');
         showButtons('main');
       }
     }
 
     function closeCamera() {
-      console.log('🔴 Closing camera...');
-      
-      // Arrêter TOUS les tracks du stream principal
       if (state.cameraStream) {
         const tracks = state.cameraStream.getTracks();
-        console.log(`🔴 Stopping ${tracks.length} tracks from main stream`);
-        tracks.forEach(track => {
-          console.log(`  → Track ${track.kind}: ${track.label}`);
-          track.stop();
-          track.enabled = false;
-        });
+        tracks.forEach(track => track.stop());
         state.cameraStream = null;
       }
       
-      // Nettoyer COMPLÈTEMENT le video element
       if (elements.videoStream) {
-        // Arrêter les tracks du srcObject si présents
         if (elements.videoStream.srcObject) {
           const videoTracks = elements.videoStream.srcObject.getTracks();
-          console.log(`🔴 Stopping ${videoTracks.length} tracks from video element`);
-          videoTracks.forEach(track => {
-            console.log(`  → Track ${track.kind}: ${track.label}`);
-            track.stop();
-            track.enabled = false;
-          });
+          videoTracks.forEach(track => track.stop());
         }
-        
-        // Détacher complètement le srcObject
         elements.videoStream.srcObject = null;
         elements.videoStream.pause();
-        elements.videoStream.load(); // Force reload pour libérer les ressources
-        
-        // Supprimer les attributs src aussi
-        elements.videoStream.removeAttribute('src');
+        elements.videoStream.load();
       }
-      
-      console.log('✅ Camera fully closed and released');
     }
 
     function capturePhoto() {
@@ -1081,7 +1452,7 @@
     }
 
     // =======================================
-    // GESTION UPLOAD FICHIER
+    // FILE UPLOAD
     // =======================================
     
     function handleFileUpload(file) {
@@ -1091,17 +1462,14 @@
       }
 
       if (file.size > CONFIG.MAX_IMAGE_SIZE) {
-        alert('Your image is too large. Max size: 5 MB.');
+        alert('Your image is too large. Maximum size: 5 MB.');
         return;
       }
 
       const reader = new FileReader();
       reader.onload = function(e) {
-        const result = e.target && e.target.result;
-        if (!result) {
-          alert('We could not read this file. Please try another photo.');
-          return;
-        }
+        const result = e.target?.result;
+        if (!result) return;
 
         const img = new Image();
         img.onload = function() {
@@ -1112,13 +1480,7 @@
           state.currentPhotoData = result;
           sendPhotoToBackend(result);
         };
-        img.onerror = function() {
-          alert('We could not load this image. Please try another one.');
-        };
         img.src = result;
-      };
-      reader.onerror = function() {
-        alert('We could not read this file. Please try again.');
       };
       reader.readAsDataURL(file);
     }
@@ -1132,7 +1494,6 @@
         const data = localStorage.getItem(CONFIG.STORAGE_KEY);
         return data ? JSON.parse(data) : {};
       } catch (e) {
-        console.error('Storage error:', e);
         return {};
       }
     }
@@ -1158,7 +1519,6 @@
         }
         return true;
       } catch (e) {
-        console.error('Save error:', e);
         return false;
       }
     }
@@ -1179,25 +1539,19 @@
         }
         return true;
       } catch (e) {
-        console.error('Remove error:', e);
         return false;
       }
     }
 
     function resetPhotoUI() {
-      if (elements.preview) {
-        elements.preview.src = '';
-      }
-      if (elements.scoreBadge) {
-        elements.scoreBadge.classList.add('hidden');
-      }
+      if (elements.preview) elements.preview.src = '';
+      if (elements.scoreBadgeDesktop) elements.scoreBadgeDesktop.classList.remove('score-visible');
+      if (elements.scoreBadgeMobile) elements.scoreBadgeMobile.classList.remove('score-visible');
       if (elements.resultCard) {
         elements.resultCard.classList.add('hidden');
         elements.resultCard.innerHTML = '';
       }
-      if (elements.upload) {
-        elements.upload.value = '';
-      }
+      if (elements.upload) elements.upload.value = '';
       
       state.currentPhotoData = null;
       state.currentScore = 0;
@@ -1208,54 +1562,21 @@
         const data = getLocalStorage();
         const saved = data.profilePhoto;
 
-        if (saved && saved.image) {
-          const imageData = saved.image;
-          const score = saved.score || 75;
-          const validated = !!saved.validated;
-
+        if (saved?.image) {
           const img = new Image();
           img.onload = function() {
             if (elements.preview) {
-              elements.preview.src = imageData;
+              elements.preview.src = saved.image;
             }
 
             state.hasPhoto = true;
-            state.isValidated = validated;
-            state.currentPhotoData = imageData;
-            state.currentScore = score;
+            state.isValidated = !!saved.validated;
+            state.currentPhotoData = saved.image;
+            state.currentScore = saved.score || 75;
 
-            if (validated) {
+            if (saved.validated) {
               setCircleState('validated');
-              
-              if (elements.scoreBadge) {
-                elements.scoreBadge.classList.remove('hidden');
-
-                let badgeClass = 'bg-gradient-to-r from-blue-600 to-cyan-600';
-                let emoji = '✨';
-                
-                if (score >= 95) { 
-                  badgeClass = 'bg-gradient-to-r from-green-600 to-emerald-600'; 
-                  emoji = '🏆'; 
-                } else if (score >= 80) { 
-                  badgeClass = 'bg-gradient-to-r from-blue-600 to-cyan-600'; 
-                  emoji = '✨'; 
-                } else if (score >= 60) { 
-                  badgeClass = 'bg-gradient-to-r from-yellow-500 to-orange-500'; 
-                  emoji = '👍'; 
-                } else { 
-                  badgeClass = 'bg-gradient-to-r from-orange-600 to-red-500'; 
-                  emoji = '⚠️'; 
-                }
-
-                const badgeInner = elements.scoreBadge.querySelector('div');
-                if (badgeInner) {
-                  badgeInner.className = `flex flex-col items-center justify-center gap-2 px-4 py-3 sm:px-5 sm:py-4 rounded-2xl shadow-2xl ring-4 ring-white min-w-[80px] ${badgeClass}`;
-                }
-                if (elements.scoreText) {
-                  elements.scoreText.textContent = `${emoji} ${score}`;
-                }
-              }
-              
+              updateScoreBadge(state.currentScore);
               showButtons('change');
             } else {
               setCircleState('preview');
@@ -1268,32 +1589,26 @@
           };
           
           img.onerror = function() {
-            state.hasPhoto = false;
-            state.isValidated = false;
-            resetPhotoUI();
             setCircleState('idle');
             showButtons('main');
           };
           
-          img.src = imageData;
+          img.src = saved.image;
         } else {
           setCircleState('idle');
           showButtons('main');
         }
       } catch (e) {
-        console.error('Restore error:', e);
         setCircleState('idle');
         showButtons('main');
       }
     }
 
     // =======================================
-    // VALIDATION & CLEANUP
+    // VALIDATION
     // =======================================
     
     window.validateStep10 = function(showAlert) {
-      // ✅ STEP NON-BLOQUANT : On vérifie juste qu'une photo est présente
-      // La validation Google Vision n'est PAS obligatoire pour continuer
       const ok = state.hasPhoto;
       
       if (!ok && showAlert) {
@@ -1314,58 +1629,33 @@
     // EVENT LISTENERS
     // =======================================
     
-    if (elements.upload) {
-      elements.upload.addEventListener('change', e => {
-        const file = e.target.files && e.target.files[0];
-        if (file) handleFileUpload(file);
-      });
-    }
+    elements.upload?.addEventListener('change', e => {
+      const file = e.target.files?.[0];
+      if (file) handleFileUpload(file);
+    });
 
-    if (elements.takePictureBtn) {
-      elements.takePictureBtn.addEventListener('click', openCamera);
-    }
+    elements.takePictureBtn?.addEventListener('click', openCamera);
+    elements.captureBtn?.addEventListener('click', capturePhoto);
+    
+    elements.cancelCameraBtn?.addEventListener('click', () => {
+      closeCamera();
+      resetPhotoUI();
+      setCircleState('idle');
+      showButtons('main');
+    });
 
-    if (elements.captureBtn) {
-      elements.captureBtn.addEventListener('click', capturePhoto);
-    }
+    elements.changePhotoBtn?.addEventListener('click', () => {
+      closeCamera();
+      removePhotoFromLocalStorage();
+      resetPhotoUI();
+      setCircleState('idle');
+      showButtons('main');
+    });
 
-    if (elements.cancelCameraBtn) {
-      elements.cancelCameraBtn.addEventListener('click', () => {
-        closeCamera();
-        resetPhotoUI();
-        setCircleState('idle');
-        showButtons('main');
-      });
-    }
+    elements.fallbackBtn?.addEventListener('click', activateFallbackMode);
+    elements.skipVerificationBtn?.addEventListener('click', skipVerificationAndContinue);
 
-    if (elements.changePhotoBtn) {
-      elements.changePhotoBtn.addEventListener('click', () => {
-        closeCamera();
-        removePhotoFromLocalStorage();
-        resetPhotoUI();
-        setCircleState('idle');
-        showButtons('main');
-      });
-    }
-
-    if (elements.fallbackBtn) {
-      elements.fallbackBtn.addEventListener('click', activateFallbackMode);
-    }
-
-    if (elements.skipVerificationBtn) {
-      elements.skipVerificationBtn.addEventListener('click', skipVerificationAndContinue);
-    }
-
-    if (elements.nextStepBtn) {
-      elements.nextStepBtn.addEventListener('click', e => {
-        if (!window.validateStep10(true)) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      });
-    }
-
-    // Observer pour détecter quand le step devient visible
+    // Observer for step visibility
     if (elements.step) {
       const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
@@ -1385,7 +1675,7 @@
 
     window.addEventListener('beforeunload', cleanup);
 
-    // Init au chargement si step visible
+    // Init
     if (elements.step && !elements.step.classList.contains('hidden')) {
       restorePhoto();
     }

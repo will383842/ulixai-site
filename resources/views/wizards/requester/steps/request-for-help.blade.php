@@ -425,6 +425,113 @@
         .animate-fadeIn {
             animation: fadeIn 0.3s ease;
         }
+
+        /* ═══════════════════════════════════════════════════════════
+           🎨 NAVIGATION BUTTONS - Request Form
+           ═══════════════════════════════════════════════════════════
+           ✅ Le JavaScript ne touche JAMAIS au style
+           ✅ Le JavaScript gère UNIQUEMENT btn.disabled = true/false
+           ═══════════════════════════════════════════════════════════ */
+
+        /* Bouton Next - État ENABLED */
+        #nextBtn:not(:disabled) {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            padding: 0.75rem 2rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #nextBtn:not(:disabled):hover {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+            transform: translateY(-2px);
+        }
+
+        #nextBtn:not(:disabled):active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Bouton Next - État DISABLED */
+        #nextBtn:disabled {
+            background: #9ca3af;
+            color: #6b7280;
+            cursor: not-allowed;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.75rem 2rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.6;
+        }
+
+        #nextBtn:disabled:hover {
+            transform: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Bouton Previous */
+        #prevBtn {
+            color: #2563eb;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        #prevBtn:hover {
+            background: #eff6ff;
+        }
+
+        #prevBtn:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive - Mobile */
+        @media (max-width: 639px) {
+            #nextBtn:not(:disabled),
+            #nextBtn:disabled {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9375rem;
+            }
+            
+            #prevBtn {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9375rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            #nextBtn,
+            #prevBtn {
+                transition: none;
+            }
+        }
+
+        #nextBtn:focus-visible,
+        #prevBtn:focus-visible {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
     </style>
 <head>
     <meta charset="utf-8">
@@ -1227,7 +1334,8 @@
             <button
                 type="button"
                 id="nextBtn"
-                class="px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md bg-gray-300 text-gray-500"
+                class="px-8 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-md"
+                disabled
                 aria-label="Go to next step">
                 Next →
             </button>
@@ -1302,27 +1410,59 @@
         </div>
     </div>
     
-    <!-- Share Button -->
-    <button id="shareBtn" onclick="openSimpleShare()" class="fixed bottom-20 right-6 z-50 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center group" aria-label="Share this page">
-      <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+    <!-- Share Button - Position optimale avec animation intermittente -->
+    <button id="shareBtn" 
+            onclick="openSimpleShare()" 
+            class="fixed 
+                   top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-24
+                   right-1 sm:right-6
+                   w-8 h-8 sm:w-12 sm:h-12
+                   bg-gradient-to-br from-blue-500 to-blue-600 
+                   hover:from-blue-600 hover:to-blue-700 
+                   text-white rounded-full 
+                   shadow-md hover:shadow-lg sm:shadow-lg sm:hover:shadow-xl 
+                   transition-all duration-300 
+                   transform hover:scale-110 
+                   flex items-center justify-center 
+                   group
+                   z-[100]
+                   opacity-80 hover:opacity-100 sm:opacity-100" 
+            aria-label="Share this form and earn 75% commission">
+      
+      <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" 
+           fill="currentColor" 
+           viewBox="0 0 20 20">
         <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
       </svg>
     </button>
 
     <!-- Share Popup -->
-    <div id="sharePopup" class="hidden fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeSimpleShare()">
-      <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-5" style="animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);" onclick="event.stopPropagation()">
+    <div id="sharePopup" 
+         class="hidden fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" 
+         onclick="closeSimpleShare()">
+      
+      <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-5 animate-scaleIn" 
+           onclick="event.stopPropagation()">
+        
         <div class="flex items-center justify-between mb-3">
-          <h3 class="text-lg font-bold text-gray-800">Share</h3>
-          <button onclick="closeSimpleShare()" class="text-gray-400 hover:text-gray-600 transition-colors">
+          <h3 class="text-lg font-bold text-gray-800">💡 Share & Earn</h3>
+          <button onclick="closeSimpleShare()" 
+                  class="text-gray-400 hover:text-gray-600 transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
         
+        <p class="text-sm text-gray-600 mb-4 leading-relaxed">
+          🌍 Share this form with people who need help abroad and earn <strong>75% commission</strong> on every transaction!
+        </p>
+        
         <div class="grid grid-cols-4 gap-2 mb-3">
-          <button onclick="shareVia('whatsapp')" class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+          
+          <!-- WhatsApp -->
+          <button onclick="shareVia('whatsapp')" 
+                  class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
             <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
               <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -1331,7 +1471,9 @@
             <span class="text-xs text-gray-600 font-medium">WhatsApp</span>
           </button>
           
-          <button onclick="shareVia('facebook')" class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+          <!-- Facebook -->
+          <button onclick="shareVia('facebook')" 
+                  class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
             <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
               <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -1340,7 +1482,9 @@
             <span class="text-xs text-gray-600 font-medium">Facebook</span>
           </button>
           
-          <button onclick="shareVia('twitter')" class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+          <!-- Twitter -->
+          <button onclick="shareVia('twitter')" 
+                  class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
             <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
               <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -1349,7 +1493,54 @@
             <span class="text-xs text-gray-600 font-medium">Twitter</span>
           </button>
           
-          <button onclick="shareVia('copy')" class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+          <!-- LinkedIn -->
+          <button onclick="shareVia('linkedin')" 
+                  class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div class="w-10 h-10 bg-blue-700 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-gray-600 font-medium">LinkedIn</span>
+          </button>
+          
+          <!-- Telegram -->
+          <button onclick="shareVia('telegram')" 
+                  class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-gray-600 font-medium">Telegram</span>
+          </button>
+          
+          <!-- Email -->
+          <button onclick="shareVia('email')" 
+                  class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-gray-600 font-medium">Email</span>
+          </button>
+          
+          <!-- SMS -->
+          <button onclick="shareVia('sms')" 
+                  class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-gray-600 font-medium">SMS</span>
+          </button>
+          
+          <!-- Copy -->
+          <button onclick="shareVia('copy')" 
+                  id="copyRequestBtn"
+                  class="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
             <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -1357,45 +1548,200 @@
             </div>
             <span class="text-xs text-gray-600 font-medium">Copy</span>
           </button>
+          
         </div>
         
         <div class="bg-blue-50 rounded-xl p-2 text-xs text-blue-700 text-center">
-          <p class="font-medium">💡 Share with your friends!</p>
+          <p class="font-medium">💰 Earn 75% commission on every referral!</p>
         </div>
       </div>
     </div>
 
+    <!-- Hidden input pour le lien affilié -->
+    @auth
+    <input type="hidden" id="affiliateLinkRequest" value="{{ url()->current() }}?ref={{ Auth::user()->affiliate_code }}">
+    @else
+    <input type="hidden" id="affiliateLinkRequest" value="{{ url()->current() }}">
+    @endauth
+
     <style>
-      @keyframes scaleIn {
-        from { transform: scale(0.9); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-      }
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .animate-scaleIn {
+      animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Animation subtile intermittente pour attirer l'œil */
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.05); }
+    }
+
+    #shareBtn.animate-attention {
+      animation: gentleBounce 0.6s ease-in-out;
+    }
     </style>
 
     <script>
-      function openSimpleShare() { document.getElementById('sharePopup').classList.remove('hidden'); }
-      function closeSimpleShare() { document.getElementById('sharePopup').classList.add('hidden'); }
-      function shareVia(platform) {
-        const url = window.location.href;
-        const text = 'I found this amazing help request form!';
-        let shareUrl;
-        switch(platform) {
-          case 'whatsapp': shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`; break;
-          case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`; break;
-          case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`; break;
-          case 'copy':
-            navigator.clipboard.writeText(url).then(() => {
-              const btn = event.target.closest('button');
-              const original = btn.innerHTML;
-              btn.innerHTML = '<div class="flex flex-col items-center gap-1 p-2"><div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg></div><span class="text-xs text-green-600 font-medium">Copied!</span></div>';
-              setTimeout(() => btn.innerHTML = original, 2000);
-            });
-            return;
-        }
-        if (shareUrl) window.open(shareUrl, '_blank', 'width=600,height=400');
+    // ═══════════════════════════════════════════════════════════
+    // Système de partage avec tracking affilié - Request Form
+    // ═══════════════════════════════════════════════════════════
+
+    function openSimpleShare() { 
+      document.getElementById('sharePopup').classList.remove('hidden'); 
+      console.log('📢 [Request Form] Share popup opened');
+    }
+
+    function closeSimpleShare() { 
+      document.getElementById('sharePopup').classList.add('hidden'); 
+      console.log('📢 [Request Form] Share popup closed');
+    }
+
+    function shareVia(platform) {
+      // Récupérer l'URL avec le code affilié
+      const affiliateInput = document.getElementById('affiliateLinkRequest');
+      let url = affiliateInput ? affiliateInput.value : window.location.href;
+      
+      // Ajouter les paramètres UTM pour le tracking
+      try {
+        const urlObj = new URL(url);
+        urlObj.searchParams.set('utm_source', 'social');
+        urlObj.searchParams.set('utm_medium', 'share');
+        urlObj.searchParams.set('utm_campaign', 'request_form');
+        urlObj.searchParams.set('utm_content', platform);
+        url = urlObj.toString();
+      } catch (e) {
+        console.error('❌ [Request Form] UTM error:', e);
+      }
+      
+      // Messages adaptés au contexte "demande d'aide"
+      const messages = {
+        en: '🆘 Need help abroad? This form connects you with verified service providers in 197 countries. Post your request for FREE and receive offers in minutes! 🌍',
+        fr: '🆘 Besoin d\'aide à l\'étranger ? Ce formulaire vous connecte avec des prestataires vérifiés dans 197 pays. Postez votre demande GRATUITEMENT et recevez des offres en quelques minutes ! 🌍',
+        es: '🆘 ¿Necesitas ayuda en el extranjero? Este formulario te conecta con proveedores verificados en 197 países. ¡Publica tu solicitud GRATIS y recibe ofertas en minutos! 🌍',
+        de: '🆘 Brauchst du Hilfe im Ausland? Dieses Formular verbindet dich mit verifizierten Dienstleistern in 197 Ländern. Poste deine Anfrage KOSTENLOS und erhalte Angebote in Minuten! 🌍',
+        pt: '🆘 Precisa de ajuda no exterior? Este formulário conecta você com prestadores verificados em 197 países. Publique seu pedido GRATUITAMENTE e receba ofertas em minutos! 🌍',
+        ru: '🆘 Нужна помощь за границей? Эта форма соединяет вас с проверенными поставщиками услуг в 197 странах. Разместите запрос БЕСПЛАТНО и получите предложения за минуты! 🌍',
+        'zh-CN': '🆘 在国外需要帮助吗?此表格将您与197个国家的验证服务提供商联系起来。免费发布您的请求并在几分钟内收到报价!🌍',
+        ar: '🆘 تحتاج مساعدة في الخارج؟ يربطك هذا النموذج بمقدمي خدمات موثوقين في 197 دولة. انشر طلبك مجانًا واحصل على عروض في دقائق! 🌍',
+        hi: '🆘 विदेश में मदद चाहिए? यह फॉर्म आपको 197 देशों में सत्यापित सेवा प्रदाताओं से जोड़ता है। अपना अनुरोध मुफ्त में पोस्ट करें और मिनटों में ऑफर प्राप्त करें! 🌍'
+      };
+      
+      const currentLang = localStorage.getItem('ulixai_lang') || 'en';
+      const text = messages[currentLang] || messages.en;
+      
+      const emailSubject = {
+        en: '🆘 Get Help Abroad - Connect with Service Providers in 197 Countries',
+        fr: '🆘 Obtenez de l\'aide à l\'étranger - Connectez-vous avec des prestataires dans 197 pays',
+        es: '🆘 Obtén ayuda en el extranjero - Conéctate con proveedores en 197 países',
+        de: '🆘 Hilfe im Ausland - Verbinde dich mit Dienstleistern in 197 Ländern',
+        pt: '🆘 Obtenha ajuda no exterior - Conecte-se com prestadores em 197 países',
+        ru: '🆘 Получить помощь за границей - Связаться с поставщиками услуг в 197 странах',
+        'zh-CN': '🆘 在国外获得帮助 - 与197个国家的服务提供商联系',
+        ar: '🆘 احصل على المساعدة في الخارج - تواصل مع مقدمي الخدمات في 197 دولة',
+        hi: '🆘 विदेश में मदद प्राप्त करें - 197 देशों में सेवा प्रदाताओं से जुड़ें'
+      };
+      
+      const subject = emailSubject[currentLang] || emailSubject.en;
+      
+      let shareUrl;
+      
+      switch(platform) {
+        case 'whatsapp':
+          shareUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n\n' + url)}`;
+          break;
+          
+        case 'facebook':
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+          break;
+          
+        case 'twitter':
+          shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+          break;
+          
+        case 'linkedin':
+          shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+          break;
+          
+        case 'telegram':
+          shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+          break;
+          
+        case 'email':
+          shareUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text + '\n\n' + url)}`;
+          break;
+          
+        case 'sms':
+          const smsBody = encodeURIComponent(text + '\n\n' + url);
+          shareUrl = navigator.userAgent.match(/iPhone|iPad|iPod/i) 
+            ? `sms:&body=${smsBody}`
+            : `sms:?body=${smsBody}`;
+          break;
+          
+        case 'copy':
+          navigator.clipboard.writeText(url).then(() => {
+            const btn = document.getElementById('copyRequestBtn');
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = `
+              <div class="flex flex-col items-center gap-1 p-2">
+                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-xs text-green-600 font-medium">Copied!</span>
+              </div>
+            `;
+            
+            setTimeout(() => {
+              btn.innerHTML = originalHTML;
+            }, 2000);
+            
+            console.log('📋 [Request Form] Link copied:', url);
+          }).catch(err => {
+            console.error('❌ [Request Form] Copy failed:', err);
+            alert('Failed to copy link. Please try again.');
+          });
+          return;
+      }
+      
+      if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+        console.log('📢 [Request Form] Opening', platform, 'share dialog');
         setTimeout(() => closeSimpleShare(), 500);
       }
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSimpleShare(); });
+    }
+
+    // Fermer avec Escape
+    document.addEventListener('keydown', (e) => { 
+      if (e.key === 'Escape') closeSimpleShare(); 
+    });
+
+    // Animation subtile intermittente (toutes les 8-12 secondes)
+    (function initShareButtonAnimation() {
+      const shareBtn = document.getElementById('shareBtn');
+      if (!shareBtn) return;
+      
+      function triggerAttention() {
+        shareBtn.classList.add('animate-attention');
+        setTimeout(() => {
+          shareBtn.classList.remove('animate-attention');
+        }, 600);
+      }
+      
+      // Première animation après 5 secondes
+      setTimeout(triggerAttention, 5000);
+      
+      // Puis toutes les 8-12 secondes (aléatoire pour être plus naturel)
+      setInterval(() => {
+        const delay = 8000 + Math.random() * 4000; // Entre 8 et 12 secondes
+        setTimeout(triggerAttention, delay);
+      }, 12000);
+    })();
     </script>
     
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
