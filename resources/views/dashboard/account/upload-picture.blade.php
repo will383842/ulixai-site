@@ -19,7 +19,7 @@
       <div class="border-2 border-blue-400 rounded-xl p-4 flex flex-col items-center gap-2">
 
         <img id="preview" class="w-28 h-28 object-cover rounded-full border mb-2" 
-            src="{{ $user->serviceProvider->profile_photo ? asset($user->serviceProvider->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }}" 
+            src="{{ $user- alt="Profile picture preview">serviceProvider->profile_photo ? asset($user->serviceProvider->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }}" 
             alt="preview">
 
         <label for="profile_picture" class="cursor-pointer border border-blue-400 text-blue-500 px-4 py-1 rounded-full text-sm hover:bg-blue-50 transition">

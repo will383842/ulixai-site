@@ -3,7 +3,7 @@
 <!-- Mobile Header with Hamburger (Sticky) -->
 <div class="lg:hidden sticky top-0 z-40 bg-white shadow-sm border-b border-gray-200 px-4 py-3 flex items-center justify-between">
     <div class="flex items-center space-x-3">
-        <!-- Mobile Shrek Avatar -->
+        <!-- Mobile avatar -->
         <div class="w-8 h-8 shrek-face rounded-full border-2 border-green-300 flex items-center justify-center relative">
             <div class="absolute -top-0.5 -left-0.5 w-2 h-2 bg-green-400 rounded-full transform rotate-45"></div>
             <div class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-400 rounded-full transform -rotate-45"></div>

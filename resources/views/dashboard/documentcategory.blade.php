@@ -44,7 +44,7 @@
           <div class="text-center">
             <p class="text-sm text-gray-700 mb-1">Front</p>
             <label class="border-2 border-blue-400 rounded-xl w-40 h-40 flex flex-col items-center justify-center cursor-pointer">
-              <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="w-10 h-10 mb-1 opacity-70" />
+              <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="w-10 h-10 mb-1 opacity-70"  alt="Document icon" />
               <span class="text-blue-400 text-sm">Upload photo</span>
               <input type="file" class="hidden" />
             </label>
@@ -52,7 +52,7 @@
           <div class="text-center">
             <p class="text-sm text-gray-700 mb-1">Back</p>
             <label class="border-2 border-blue-400 rounded-xl w-40 h-40 flex flex-col items-center justify-center cursor-pointer">
-              <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="w-10 h-10 mb-1 opacity-70" />
+              <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="w-10 h-10 mb-1 opacity-70"  alt="Document icon" />
               <span class="text-blue-400 text-sm">Upload photo</span>
               <input type="file" class="hidden" />
             </label>

@@ -106,7 +106,7 @@
             <img
               :src="image"
               class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-lg"
-            />
+             alt="Related image" />
           </div>
         </div>
       </div>
@@ -176,7 +176,7 @@
               <div class="flex items-center gap-4 mb-2">
                 <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-xl text-gray-500">
                   @if($offer->provider && $offer->provider->profile_photo)
-                    <img src="{{ asset($offer->provider->profile_photo) }}" class="w-12 h-12 rounded-full object-cover" alt="Provider">
+                    <img src="{{ asset($offer- alt="Related image">provider->profile_photo) }}" class="w-12 h-12 rounded-full object-cover" alt="Provider">
                   @else
                     <i class="fas fa-user"></i>
                   @endif

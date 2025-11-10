@@ -44,7 +44,6 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     
-    <!-- Performance: Using system fonts for instant load -->
     <!-- JSON-LD Schema for SEO -->
     <script type="application/ld+json">
     {
@@ -81,7 +80,7 @@
 @include('includes.header')
 
 <!-- ============================================
-     🎯 ULIXAI SIGNUP - MOBILE-FIRST & OPTIMIZED
+     🎯 ULIXAI SIGNUP - EXCEPTIONAL UX
      ============================================ -->
 
 <main class="main-signup" role="main" aria-labelledby="signup-title">
@@ -135,6 +134,7 @@
               aria-label="Sign up form">
           @csrf
 
+          <!-- Name Field -->
           <div class="form-group">
             <label for="name" class="form-label">
               <span>Full Name</span>
@@ -144,20 +144,18 @@
                 type="text"
                 id="name"
                 name="name" 
-                class="form-input @error('name') input-error @enderror"
+                class="form-input"
                 placeholder="John Doe"
                 value="{{ old('name') }}"
                 required
                 autocomplete="name"
-                aria-required="true"
-                aria-invalid="@error('name')true @else false @enderror"
-                aria-describedby="error-name" />
+                data-validate="name" />
+              <span class="input-icon"></span>
             </div>
-            @error('name')
-              <p id="error-name" class="error-msg" role="alert">{{ $message }}</p>
-            @enderror
+            <p class="field-feedback" data-field="name"></p>
           </div>
 
+          <!-- Email Field -->
           <div class="form-group">
             <label for="email" class="form-label">
               <span>Email</span>
@@ -167,20 +165,18 @@
                 type="email"
                 id="email"
                 name="email" 
-                class="form-input @error('email') input-error @enderror"
+                class="form-input"
                 placeholder="you@example.com"
                 value="{{ old('email') }}"
                 required
                 autocomplete="email"
-                aria-required="true"
-                aria-invalid="@error('email')true @else false @enderror"
-                aria-describedby="error-email" />
+                data-validate="email" />
+              <span class="input-icon"></span>
             </div>
-            @error('email')
-              <p id="error-email" class="error-msg" role="alert">{{ $message }}</p>
-            @enderror
+            <p class="field-feedback" data-field="email"></p>
           </div>
 
+          <!-- Password Field -->
           <div class="form-group">
             <label for="password" class="form-label">
               <span>Password</span>
@@ -190,31 +186,35 @@
                 type="password"
                 id="password"
                 name="password" 
-                class="form-input @error('password') input-error @enderror"
+                class="form-input"
                 placeholder="••••••••"
                 required
                 minlength="6"
                 autocomplete="new-password"
-                aria-required="true"
-                aria-invalid="@error('password')true @else false @enderror"
-                aria-describedby="error-password" />
+                data-validate="password" />
               <button type="button" 
                       class="toggle-password" 
-                      data-target="password"
-                      aria-label="Toggle password visibility">
+                      data-target="password">
                 <span class="eye-icon">👁️</span>
               </button>
+              <span class="input-icon"></span>
             </div>
-            @error('password')
-              <p id="error-password" class="error-msg" role="alert">{{ $message }}</p>
-            @enderror
+            <!-- Password Strength Indicator -->
+            <div class="password-strength">
+              <div class="strength-bar">
+                <div class="strength-fill"></div>
+              </div>
+              <span class="strength-text">Enter password</span>
+            </div>
+            <p class="field-feedback" data-field="password"></p>
           </div>
 
+          <!-- Gender Field -->
           <fieldset class="form-group">
             <legend class="form-label">
               <span>Gender</span>
             </legend>
-            <div class="gender-grid" role="radiogroup" aria-label="Select gender">
+            <div class="gender-grid">
               
               <input type="radio" 
                      name="gender" 
@@ -223,11 +223,11 @@
                      class="gender-radio" 
                      {{ old('gender') == 'Male' ? 'checked' : '' }}
                      required
-                     aria-required="true">
+                     data-validate="gender">
               <label for="male" class="gender-label">
-                <span class="gender-emoji" aria-hidden="true">🙋‍♂️</span>
+                <span class="gender-emoji">🙋‍♂️</span>
                 <span class="gender-text">Male</span>
-                <span class="gender-check" aria-hidden="true">✨</span>
+                <span class="gender-check">✨</span>
               </label>
 
               <input type="radio" 
@@ -237,25 +237,25 @@
                      class="gender-radio" 
                      {{ old('gender') == 'Female' ? 'checked' : '' }}
                      required
-                     aria-required="true">
+                     data-validate="gender">
               <label for="female" class="gender-label">
-                <span class="gender-emoji" aria-hidden="true">🙋‍♀️</span>
+                <span class="gender-emoji">🙋‍♀️</span>
                 <span class="gender-text">Female</span>
-                <span class="gender-check" aria-hidden="true">✨</span>
+                <span class="gender-check">✨</span>
               </label>
 
             </div>
-            @error('gender')
-              <p id="error-gender" class="error-msg" role="alert">{{ $message }}</p>
-            @enderror
+            <p class="field-feedback" data-field="gender"></p>
           </fieldset>
 
           @if($affiliateCode)
             <input type="hidden" name="affiliate_code" value="{{ $affiliateCode }}" />
           @endif
 
-          <button type="submit" id="signupBtnSubmit" class="submit-btn">
+          <!-- Submit Button -->
+          <button type="submit" id="signupBtnSubmit" class="submit-btn" disabled>
             <span class="submit-text">Join the Adventure! 🎉</span>
+            <span class="submit-loader"></span>
           </button>
 
         </form>
@@ -272,40 +272,6 @@
   </div>
 
 </main>
-
-<!-- Fun Error/Success Popup Modal -->
-<div id="funModal" class="fun-modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalMessage">
-  <div class="modal-overlay" onclick="closeFunModal()"></div>
-  <div class="modal-content">
-    <button type="button" class="modal-close" onclick="closeFunModal()" aria-label="Close">✕</button>
-    <div class="modal-icon" id="modalIcon">😅</div>
-    <h3 class="modal-title" id="modalTitle">Oops!</h3>
-    <p class="modal-message" id="modalMessage">Something went wrong</p>
-    <button type="button" class="modal-btn" onclick="closeFunModal()">Got it! 👍</button>
-  </div>
-</div>
-
-@if(session('success') || session('error') || $errors->any())
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-    @if(session('success'))
-        showFunModal('🎉', 'Success!', "{{ session('success') }}", 'success');
-    @elseif(session('error'))
-        showFunModal('😅', 'Oops!', "{{ session('error') }}", 'error');
-    @elseif($errors->has('email'))
-        showFunModal('😅', 'Oops!', "{{ $errors->first('email') }}", 'error');
-    @elseif($errors->has('name'))
-        showFunModal('😅', 'Oops!', "{{ $errors->first('name') }}", 'error');
-    @elseif($errors->has('password'))
-        showFunModal('😅', 'Oops!', "{{ $errors->first('password') }}", 'error');
-    @elseif($errors->has('gender'))
-        showFunModal('😅', 'Oops!', "{{ $errors->first('gender') }}", 'error');
-    @elseif($errors->any())
-        showFunModal('😅', 'Oops!', "{{ $errors->first() }}", 'error');
-    @endif
-});
-</script>
-@endif
 
 <section class="faq-section" aria-labelledby="faq-title">
   <div class="container">
@@ -452,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <style>
 /* ============================================
-   CSS - MOBILE-FIRST & ULTRA-OPTIMIZED
+   CSS - EXCEPTIONAL UX FEEDBACK
    ============================================ */
 
 /* Force hide all loaders globally */
@@ -563,7 +529,7 @@ body{
   margin-bottom:0;
 }
 
-/* Google Button - IMPROVED */
+/* Google Button */
 .google-btn{
   display:flex;
   align-items:center;
@@ -651,14 +617,14 @@ body{
 
 .form-input{
   width:100%;
-  padding:0.5rem 0.75rem;
+  padding:0.5rem 2.5rem 0.5rem 0.75rem;
   background:#e5e7eb;
   border:2px solid #d1d5db;
   border-radius:0.5rem;
   font-weight:500;
   font-size:13px;
   color:#111827;
-  transition:all 0.2s ease;
+  transition:all 0.3s ease;
   font-family:inherit;
 }
 
@@ -670,18 +636,96 @@ body{
 .form-input:focus{
   outline:none;
   border-color:#06b6d4;
-  background:#e5e7eb;
+  background:#fff;
   box-shadow:0 0 0 3px rgba(6,182,212,0.1);
 }
 
-.input-error{
-  border-color:#ef4444!important;
-  background:#fef2f2!important;
+/* Input States - Subtle & Elegant */
+.form-input.is-valid{
+  border-color:#10b981;
+  background:#f0fdf4;
 }
 
-.toggle-password{
+.form-input.is-invalid{
+  border-color:#f59e0b;
+  background:#fffbeb;
+  animation:shake 0.4s ease;
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  75%{transform:translateX(4px)}
+}
+
+/* Input Icon - Check/Warning */
+.input-icon{
   position:absolute;
   right:0.75rem;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:1rem;
+  opacity:0;
+  transition:opacity 0.3s ease;
+  pointer-events:none;
+}
+
+.input-wrapper.valid .input-icon{
+  opacity:1;
+}
+
+.input-wrapper.valid .input-icon::before{
+  content:'✓';
+  color:#10b981;
+  font-weight:700;
+}
+
+.input-wrapper.invalid .input-icon{
+  opacity:1;
+}
+
+.input-wrapper.invalid .input-icon::before{
+  content:'!';
+  color:#f59e0b;
+  font-weight:700;
+}
+
+/* Field Feedback - Subtle Messages */
+.field-feedback{
+  font-size:11px;
+  font-weight:600;
+  margin-top:0.25rem;
+  min-height:1rem;
+  opacity:0;
+  transform:translateY(-4px);
+  transition:all 0.3s ease;
+}
+
+.field-feedback.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.field-feedback.success{
+  color:#10b981;
+}
+
+.field-feedback.warning{
+  color:#f59e0b;
+}
+
+.field-feedback.error{
+  color:#ef4444;
+}
+
+.field-feedback.info{
+  color:#06b6d4;
+}
+
+/* Password Toggle */
+.toggle-password{
+  position:absolute;
+  right:2.25rem;
   top:50%;
   transform:translateY(-50%);
   background:none;
@@ -690,17 +734,66 @@ body{
   font-size:1rem;
   padding:0.25rem;
   transition:opacity 0.2s;
+  z-index:1;
 }
 
 .toggle-password:hover{
   opacity:0.7;
 }
 
-.error-msg{
-  color:#ef4444;
-  font-size:12px;
+/* Password Strength Indicator */
+.password-strength{
+  margin-top:0.375rem;
+}
+
+.strength-bar{
+  width:100%;
+  height:0.25rem;
+  background:#e5e7eb;
+  border-radius:9999px;
+  overflow:hidden;
+}
+
+.strength-fill{
+  height:100%;
+  width:0%;
+  transition:all 0.3s ease;
+  border-radius:9999px;
+}
+
+.strength-fill.weak{
+  width:33%;
+  background:#ef4444;
+}
+
+.strength-fill.medium{
+  width:66%;
+  background:#f59e0b;
+}
+
+.strength-fill.strong{
+  width:100%;
+  background:#10b981;
+}
+
+.strength-text{
+  display:block;
+  font-size:11px;
   font-weight:600;
   margin-top:0.25rem;
+  color:#9ca3af;
+}
+
+.strength-text.weak{
+  color:#ef4444;
+}
+
+.strength-text.medium{
+  color:#f59e0b;
+}
+
+.strength-text.strong{
+  color:#10b981;
 }
 
 /* Gender Selection */
@@ -781,19 +874,53 @@ body{
   transition:all 0.2s ease;
   box-shadow:0 4px 14px rgba(6,182,212,0.3);
   font-family:inherit;
+  position:relative;
 }
 
-.submit-btn:hover{
+.submit-btn:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+  transform:none!important;
+}
+
+.submit-btn:not(:disabled):hover{
   transform:translateY(-1px);
   box-shadow:0 6px 20px rgba(6,182,212,0.4);
 }
 
-.submit-btn:active{
+.submit-btn:not(:disabled):active{
   transform:translateY(0);
 }
 
 .submit-text{
   display:block;
+  transition:opacity 0.3s ease;
+}
+
+.submit-btn.loading .submit-text{
+  opacity:0;
+}
+
+.submit-loader{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:1.25rem;
+  height:1.25rem;
+  border:2px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  opacity:0;
+  animation:spin 0.6s linear infinite;
+}
+
+.submit-btn.loading .submit-loader{
+  opacity:1;
+}
+
+@keyframes spin{
+  to{transform:translate(-50%,-50%) rotate(360deg)}
 }
 
 /* Footer */
@@ -981,140 +1108,6 @@ body{
   font-weight:500;
 }
 
-/* Fun Modal Popup */
-.fun-modal{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:9999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:0;
-  visibility:hidden;
-  transition:all 0.3s ease;
-  padding:1rem;
-}
-
-.fun-modal.show{
-  opacity:1;
-  visibility:visible;
-}
-
-.modal-overlay{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  background:rgba(0,0,0,0.5);
-  backdrop-filter:blur(4px);
-  animation:fadeIn 0.3s ease;
-}
-
-.modal-content{
-  position:relative;
-  background:#fff;
-  border-radius:1.5rem;
-  padding:2rem 1.5rem;
-  max-width:24rem;
-  width:100%;
-  text-align:center;
-  box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);
-  transform:scale(0.9);
-  animation:popIn 0.3s ease forwards;
-  z-index:1;
-}
-
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-
-@keyframes popIn{
-  0%{transform:scale(0.8);opacity:0}
-  50%{transform:scale(1.05)}
-  100%{transform:scale(1);opacity:1}
-}
-
-.modal-close{
-  position:absolute;
-  top:0.75rem;
-  right:0.75rem;
-  background:transparent;
-  border:none;
-  font-size:1.5rem;
-  color:#9ca3af;
-  cursor:pointer;
-  width:2rem;
-  height:2rem;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:50%;
-  transition:all 0.2s ease;
-}
-
-.modal-close:hover{
-  background:#f3f4f6;
-  color:#374151;
-  transform:rotate(90deg);
-}
-
-.modal-icon{
-  font-size:4rem;
-  margin-bottom:1rem;
-  animation:bounce 0.6s ease;
-}
-
-@keyframes bounce{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.1)}
-}
-
-.modal-title{
-  font-size:1.5rem;
-  font-weight:800;
-  color:#1f2937;
-  margin-bottom:0.5rem;
-  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.modal-message{
-  font-size:1rem;
-  color:#6b7280;
-  line-height:1.6;
-  margin-bottom:1.5rem;
-}
-
-.modal-btn{
-  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
-  color:#fff;
-  border:none;
-  padding:0.75rem 2rem;
-  border-radius:9999px;
-  font-size:1rem;
-  font-weight:700;
-  cursor:pointer;
-  transition:all 0.2s ease;
-  box-shadow:0 4px 14px rgba(6,182,212,0.3);
-  font-family:inherit;
-}
-
-.modal-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 20px rgba(6,182,212,0.4);
-}
-
-.modal-btn:active{
-  transform:translateY(0);
-}
-
 /* Tablet */
 @media (min-width:640px){
   .card-content{
@@ -1148,14 +1141,249 @@ body{
 }
 </style>
 
-<!-- JavaScript - Optimized -->
+<!-- JavaScript - SPECIFIC ERROR MESSAGES -->
 <script>
 (function(){
   'use strict';
   
   const form = document.getElementById('signupForm');
+  const submitBtn = document.getElementById('signupBtnSubmit');
   
-  // Password toggle
+  // Validation State
+  const validationState = {
+    name: false,
+    email: false,
+    password: false,
+    gender: false
+  };
+  
+  // Update Submit Button State
+  function updateSubmitButton(){
+    const allValid = Object.values(validationState).every(v => v);
+    submitBtn.disabled = !allValid;
+  }
+  
+  // Show Feedback
+  function showFeedback(field, message, type = 'info'){
+    const feedback = document.querySelector(`[data-field="${field}"]`);
+    if(!feedback) return;
+    
+    feedback.textContent = message;
+    feedback.className = `field-feedback ${type} show`;
+  }
+  
+  // Hide Feedback
+  function hideFeedback(field){
+    const feedback = document.querySelector(`[data-field="${field}"]`);
+    if(!feedback) return;
+    
+    feedback.classList.remove('show');
+    setTimeout(() => {
+      feedback.textContent = '';
+      feedback.className = 'field-feedback';
+    }, 300);
+  }
+  
+  // Set Input State
+  function setInputState(input, state){
+    const wrapper = input.closest('.input-wrapper');
+    if(!wrapper) return;
+    
+    wrapper.className = 'input-wrapper';
+    input.classList.remove('is-valid', 'is-invalid');
+    
+    if(state === 'valid'){
+      wrapper.classList.add('valid');
+      input.classList.add('is-valid');
+    } else if(state === 'invalid'){
+      wrapper.classList.add('invalid');
+      input.classList.add('is-invalid');
+    }
+  }
+  
+  // Validate Name
+  function validateName(input){
+    const value = input.value.trim();
+    const name = input.name;
+    
+    if(!value){
+      validationState.name = false;
+      setInputState(input, null);
+      hideFeedback(name);
+      return false;
+    }
+    
+    if(value.length < 2){
+      validationState.name = false;
+      setInputState(input, 'invalid');
+      showFeedback(name, 'Please enter your full name (at least 2 characters)', 'warning');
+      return false;
+    }
+    
+    validationState.name = true;
+    setInputState(input, 'valid');
+    showFeedback(name, 'Looks good! ✨', 'success');
+    return true;
+  }
+  
+  // Validate Email
+  let emailCheckTimeout;
+  function validateEmail(input){
+    const value = input.value.trim();
+    const name = input.name;
+    
+    if(!value){
+      validationState.email = false;
+      setInputState(input, null);
+      hideFeedback(name);
+      return false;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(value)){
+      validationState.email = false;
+      setInputState(input, 'invalid');
+      showFeedback(name, 'Please enter a valid email address (example: you@email.com)', 'warning');
+      return false;
+    }
+    
+    // Check if email exists (debounced)
+    clearTimeout(emailCheckTimeout);
+    showFeedback(name, 'Checking availability...', 'info');
+    
+    emailCheckTimeout = setTimeout(() => {
+      // Simulate email check (replace with actual AJAX call)
+      // For now, just show success
+      validationState.email = true;
+      setInputState(input, 'valid');
+      showFeedback(name, 'Email available! 🎉', 'success');
+      updateSubmitButton();
+    }, 500);
+    
+    return true;
+  }
+  
+  // Validate Password
+  function validatePassword(input){
+    const value = input.value;
+    const name = input.name;
+    
+    const strengthBar = document.querySelector('.strength-fill');
+    const strengthText = document.querySelector('.strength-text');
+    
+    if(!value){
+      validationState.password = false;
+      setInputState(input, null);
+      hideFeedback(name);
+      strengthBar.className = 'strength-fill';
+      strengthBar.style.width = '0%';
+      strengthText.textContent = 'Enter password';
+      strengthText.className = 'strength-text';
+      return false;
+    }
+    
+    if(value.length < 6){
+      validationState.password = false;
+      setInputState(input, 'invalid');
+      showFeedback(name, 'Password must be at least 6 characters long', 'warning');
+      strengthBar.className = 'strength-fill weak';
+      strengthText.textContent = 'Too short';
+      strengthText.className = 'strength-text weak';
+      return false;
+    }
+    
+    // Calculate strength
+    let strength = 0;
+    if(value.length >= 8) strength++;
+    if(/[a-z]/.test(value) && /[A-Z]/.test(value)) strength++;
+    if(/\d/.test(value)) strength++;
+    if(/[^a-zA-Z\d]/.test(value)) strength++;
+    
+    if(strength <= 1){
+      validationState.password = true;
+      setInputState(input, 'valid');
+      showFeedback(name, 'Consider adding numbers or symbols for better security', 'info');
+      strengthBar.className = 'strength-fill weak';
+      strengthText.textContent = 'Weak';
+      strengthText.className = 'strength-text weak';
+    } else if(strength === 2){
+      validationState.password = true;
+      setInputState(input, 'valid');
+      showFeedback(name, 'Good! Try adding special characters for extra security', 'info');
+      strengthBar.className = 'strength-fill medium';
+      strengthText.textContent = 'Medium';
+      strengthText.className = 'strength-text medium';
+    } else {
+      validationState.password = true;
+      setInputState(input, 'valid');
+      showFeedback(name, 'Strong password! 🔐', 'success');
+      strengthBar.className = 'strength-fill strong';
+      strengthText.textContent = 'Strong';
+      strengthText.className = 'strength-text strong';
+    }
+    
+    return true;
+  }
+  
+  // Validate Gender
+  function validateGender(){
+    const radios = form.querySelectorAll('input[name="gender"]');
+    const checked = Array.from(radios).some(r => r.checked);
+    
+    validationState.gender = checked;
+    
+    if(checked){
+      showFeedback('gender', 'Perfect! ✨', 'success');
+    } else {
+      hideFeedback('gender');
+    }
+    
+    return checked;
+  }
+  
+  // Real-time Validation
+  const nameInput = form.querySelector('#name');
+  const emailInput = form.querySelector('#email');
+  const passwordInput = form.querySelector('#password');
+  const genderInputs = form.querySelectorAll('input[name="gender"]');
+  
+  nameInput.addEventListener('input', function(){
+    validateName(this);
+    updateSubmitButton();
+  });
+  
+  nameInput.addEventListener('blur', function(){
+    validateName(this);
+    updateSubmitButton();
+  });
+  
+  emailInput.addEventListener('input', function(){
+    validateEmail(this);
+  });
+  
+  emailInput.addEventListener('blur', function(){
+    validateEmail(this);
+    updateSubmitButton();
+  });
+  
+  passwordInput.addEventListener('input', function(){
+    validatePassword(this);
+    updateSubmitButton();
+  });
+  
+  passwordInput.addEventListener('blur', function(){
+    validatePassword(this);
+    updateSubmitButton();
+  });
+  
+  genderInputs.forEach(input => {
+    input.addEventListener('change', function(){
+      validateGender();
+      updateSubmitButton();
+    });
+  });
+  
+  // Password Toggle
   document.addEventListener('click',function(e){
     const toggle=e.target.closest('.toggle-password');
     if(!toggle)return;
@@ -1173,108 +1401,85 @@ body{
     }
   });
   
-  // Real-time validation - remove errors on input
-  const inputs=form.querySelectorAll('input[type="text"],input[type="email"],input[type="password"]');
-  inputs.forEach(function(input){
-    input.addEventListener('input',function(){
-      const errorEl=document.getElementById('error-'+this.name);
-      if(errorEl && this.value.trim()){
-        errorEl.textContent='';
-        this.classList.remove('input-error');
-      }
-    });
+  // Form Submission
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    
+    // Final validation
+    const nameValid = validateName(nameInput);
+    const emailValid = validationState.email; // Already validated
+    const passwordValid = validatePassword(passwordInput);
+    const genderValid = validateGender();
+    
+    if(!nameValid || !emailValid || !passwordValid || !genderValid){
+      // Focus first invalid field
+      if(!nameValid) nameInput.focus();
+      else if(!emailValid) emailInput.focus();
+      else if(!passwordValid) passwordInput.focus();
+      return;
+    }
+    
+    // Show loading state
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+    
+    // Submit form
+    this.submit();
   });
   
-  // Form submission validation
-  form.addEventListener('submit',function(e){
-    let valid=true;
-    const name=form.elements.name.value.trim();
-    const email=form.elements.email.value.trim();
-    const password=form.elements.password.value;
-    let gender='';
-    
-    // Get gender value
-    if(form.elements.gender.length){
-      for(const radio of form.elements.gender){
-        if(radio.checked)gender=radio.value;
-      }
-    }else{
-      gender=form.elements.gender.value;
-    }
-    
-    // Clear previous errors
-    inputs.forEach(function(input){
-      input.classList.remove('input-error');
-    });
-    
-    // Validate name
-    if(!name){
-      form.elements.name.classList.add('input-error');
-      showFunModal('👤', 'Hey there!', 'We need your full name to create your account! 😊', 'error');
-      valid=false;
-    }
-    
-    // Validate email
-    if(!email && valid){
-      form.elements.email.classList.add('input-error');
-      showFunModal('📧', 'Hold on!', 'We need your email address! ✉️', 'error');
-      valid=false;
-    }else if(!/^\S+@\S+\.\S+$/.test(email) && valid){
-      form.elements.email.classList.add('input-error');
-      showFunModal('🤔', 'Hmm...', 'That doesn\'t look like a valid email address! 📧', 'error');
-      valid=false;
-    }
-    
-    // Validate password
-    if(!password && valid){
-      form.elements.password.classList.add('input-error');
-      showFunModal('🔐', 'Almost there!', 'Don\'t forget to create a password! 🔑', 'error');
-      valid=false;
-    }else if(password.length<6 && valid){
-      form.elements.password.classList.add('input-error');
-      showFunModal('🚀', 'Make it stronger!', 'Your password needs at least 6 characters! 💪', 'error');
-      valid=false;
-    }
-    
-    // Validate gender
-    if(!gender && valid){
-      showFunModal('🎭', 'One more thing!', 'Please select your gender! 😊', 'error');
-      valid=false;
-    }
-    
-    if(!valid){
-      e.preventDefault();
-      return false;
-    }
-  });
+  // Handle Server Errors - SPECIFIC MESSAGES SOUS CHAQUE CHAMP
+  @if($errors->any() || session('error'))
+    setTimeout(() => {
+      // Remove loading state if error
+      submitBtn.classList.remove('loading');
+      
+      @if($errors->has('name'))
+        const nameInput = document.getElementById('name');
+        setInputState(nameInput, 'invalid');
+        showFeedback('name', "{{ $errors->first('name') }}", 'error');
+        nameInput.focus();
+        validationState.name = false;
+        updateSubmitButton();
+      @endif
+      
+      @if($errors->has('email'))
+        const emailInput = document.getElementById('email');
+        setInputState(emailInput, 'invalid');
+        showFeedback('email', "{{ $errors->first('email') }}", 'error');
+        if(!{{ $errors->has('name') ? 'true' : 'false' }}) emailInput.focus();
+        validationState.email = false;
+        updateSubmitButton();
+      @endif
+      
+      @if($errors->has('password'))
+        const passwordInput = document.getElementById('password');
+        setInputState(passwordInput, 'invalid');
+        showFeedback('password', "{{ $errors->first('password') }}", 'error');
+        if(!{{ $errors->has('name') || $errors->has('email') ? 'true' : 'false' }}) passwordInput.focus();
+        validationState.password = false;
+        updateSubmitButton();
+      @endif
+      
+      @if($errors->has('gender'))
+        showFeedback('gender', "{{ $errors->first('gender') }}", 'error');
+        validationState.gender = false;
+        updateSubmitButton();
+      @endif
+      
+      @if(session('error') && !$errors->any())
+        // Erreur générale - probablement liée à l'email
+        const emailInput = document.getElementById('email');
+        setInputState(emailInput, 'invalid');
+        showFeedback('email', "{{ session('error') }}", 'error');
+        emailInput.focus();
+        validationState.email = false;
+        updateSubmitButton();
+      @endif
+      
+    }, 100);
+  @endif
+  
 })();
-
-// Fun Modal Functions
-function showFunModal(icon, title, message, type) {
-  const modal = document.getElementById('funModal');
-  const modalIcon = document.getElementById('modalIcon');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalMessage = document.getElementById('modalMessage');
-  
-  modalIcon.textContent = icon;
-  modalTitle.textContent = title;
-  modalMessage.textContent = message;
-  
-  modal.classList.add('show');
-  
-  // Close on Escape key
-  document.addEventListener('keydown', function escHandler(e) {
-    if (e.key === 'Escape') {
-      closeFunModal();
-      document.removeEventListener('keydown', escHandler);
-    }
-  });
-}
-
-function closeFunModal() {
-  const modal = document.getElementById('funModal');
-  modal.classList.remove('show');
-}
 </script>
 
 @include('includes.footer')

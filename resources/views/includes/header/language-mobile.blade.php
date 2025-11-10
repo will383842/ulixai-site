@@ -17,7 +17,7 @@
   aria-label="Select language">
   <div class="flex items-center gap-3">
     <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center border border-blue-100">
-      <img id="mobileLangFlag" src="{{ asset('images/flags/us.svg') }}" alt="" class="w-6 h-5 object-cover rounded" width="24" height="20" />
+      <img id="mobileLangFlag" src="{{ asset('images/flags/us.svg') }}" alt="" class="w-6 h-5 object-cover rounded notranslate" width="24" height="20" translate="no" />
     </div>
     <div class="text-left">
       <div class="text-xs text-gray-500 font-medium">Language</div>

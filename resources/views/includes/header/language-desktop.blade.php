@@ -17,7 +17,7 @@
     aria-expanded="false">
     {{-- Drapeau rectangle arrondi --}}
     <div class="w-9 h-7 rounded-md overflow-hidden shadow-sm">
-      <img id="langFlag" src="{{ asset('images/flags/us.svg') }}" alt="EN" class="w-full h-full object-cover" width="36" height="28">
+      <img id="langFlag" src="{{ asset('images/flags/us.svg') }}" alt="EN" class="w-full h-full object-cover notranslate" width="36" height="28" translate="no">
     </div>
     {{-- Petit chevron discret --}}
     <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600 transition-all duration-200" id="langChevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
