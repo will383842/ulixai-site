@@ -1,18 +1,12 @@
 {{-- 
   ═══════════════════════════════════════════════════════════
-  🔧 SCRIPTS COMPONENT
+  🔧 SCRIPTS COMPONENT - VERSION SIMPLE ET PRO
   ═══════════════════════════════════════════════════════════
   
-  Contient :
-  - Toast messages (success/error)
-  - Bouton Scroll To Top
-  - Help button handlers
-  - Laravel Mix/Vite assets
+  Approche simple : fermeture rapide, navigation native
+  Pas d'overlay compliqué qui bug
   
-  Google Translate est géré par le module ES6 dans:
-  resources/js/modules/google-translate/
-  
-  @version 2.0.0
+  @version 2.3.0 - Keep It Simple
 --}}
 
 {{-- 🚀 Bouton Flèche Retour en Haut --}}
@@ -34,23 +28,7 @@
 <div id="google_translate_element" style="display:none;"></div>
 
 {{-- ═══════════════════════════════════════════════════════════
-     🌐 GOOGLE TRANSLATE - GÉRÉ PAR MODULE ES6
-     ═══════════════════════════════════════════════════════════
-     
-     Tous les sélecteurs de langue et la logique Google Translate
-     sont gérés dans le module ES6 :
-     
-     resources/js/modules/google-translate/
-     ├── index.js (point d'entrée)
-     ├── init.js (chargement API)
-     ├── language-manager.js (sélecteurs UI)
-     └── styles.js (CSS)
-     
-     Chargé via header-init.js
---}}
-
-{{-- ═══════════════════════════════════════════════════════════
-     📱 MOBILE MENU OVERLAY & SLIDE-DOWN SCRIPT
+     📱 MOBILE MENU SCRIPT - SIMPLE ET RAPIDE
      ═══════════════════════════════════════════════════════════ --}}
 <script>
 (function() {
@@ -62,7 +40,7 @@
     const menuToggle = document.getElementById('menu-toggle-top');
     
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // 📱 MOBILE MENU - DESCEND DU HAUT
+    // 📱 MOBILE MENU - OUVERTURE & FERMETURE
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     
     function openMobileMenu() {
@@ -70,9 +48,9 @@
       
       // Afficher l'overlay
       overlay.classList.remove('hidden');
-      setTimeout(() => overlay.classList.add('opacity-100'), 10);
+      overlay.classList.add('opacity-100');
       
-      // Descendre le menu (enlever -translate-y-full)
+      // Descendre le menu
       mobileMenu.classList.remove('-translate-y-full');
       mobileMenu.classList.add('translate-y-0');
       mobileMenu.setAttribute('aria-hidden', 'false');
@@ -85,18 +63,15 @@
         menuToggle.classList.add('menu-active');
         menuToggle.setAttribute('aria-expanded', 'true');
       }
-      
-      console.log('✅ Mobile menu opened (slide-down)');
     }
     
     function closeMobileMenu() {
       if (!mobileMenu || !overlay) return;
       
-      // Masquer l'overlay
+      // Fermeture IMMÉDIATE sans animation
+      overlay.classList.add('hidden');
       overlay.classList.remove('opacity-100');
-      setTimeout(() => overlay.classList.add('hidden'), 300);
       
-      // Remonter le menu (ajouter -translate-y-full)
       mobileMenu.classList.remove('translate-y-0');
       mobileMenu.classList.add('-translate-y-full');
       mobileMenu.setAttribute('aria-hidden', 'true');
@@ -109,8 +84,6 @@
         menuToggle.classList.remove('menu-active');
         menuToggle.setAttribute('aria-expanded', 'false');
       }
-      
-      console.log('✅ Mobile menu closed (slide-up)');
     }
     
     // Toggle du menu au clic sur le hamburger
@@ -131,15 +104,35 @@
       overlay.addEventListener('click', closeMobileMenu);
     }
     
+    // ⚡ CRITIQUE : Fermer AVANT navigation (pas d'interception)
+    if (mobileMenu) {
+      mobileMenu.addEventListener('click', function(e) {
+        // Vérifier si c'est un lien de navigation
+        const link = e.target.closest('a[href]:not([href="#"]):not([target="_blank"])');
+        
+        if (link) {
+          // Fermer immédiatement le menu
+          // La navigation se fera naturellement après
+          closeMobileMenu();
+        }
+        
+        // Gérer les formulaires (logout)
+        const submitBtn = e.target.closest('button[type="submit"]');
+        if (submitBtn) {
+          closeMobileMenu();
+        }
+      });
+    }
+    
     // Fermer avec la touche Escape
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        const isOpen = mobileMenu.classList.contains('translate-y-0');
+        const isOpen = mobileMenu && mobileMenu.classList.contains('translate-y-0');
         if (isOpen) {
           closeMobileMenu();
         }
         
-        // Fermer aussi le bottom sheet de langue s'il est ouvert
+        // Fermer aussi le bottom sheet de langue
         const mobileLangModal = document.getElementById('mobileLangModal');
         if (mobileLangModal && !mobileLangModal.classList.contains('hidden')) {
           const closeLangBtn = document.getElementById('mobileLangCloseBtn');
