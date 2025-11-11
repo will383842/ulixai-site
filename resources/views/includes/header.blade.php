@@ -15,8 +15,12 @@
   - COOKIE BANNER
   - SCRIPTS (JS initialization)
   
-  @version 2.0.0
+  ⚠️ IMPORTANT : Ce fichier ne contient PAS @yield('content')
+  Le contenu est géré par les layouts spécifiques (master.blade.php, etc.)
+  
+  @version 2.0.1
   @refactored 2025-01-08
+  @fixed 2025-01-XX - Suppression duplication @yield('content')
   @author ULIXAI Team
 --}}
 
@@ -73,14 +77,13 @@
 @include('includes.cookie-banner')
 
 {{-- ═══════════════════════════════════════════════════════════
-     📄 CONTENT SECTION
-     Page-specific content goes here
-     ═══════════════════════════════════════════════════════════ --}}
-@yield('content')
-
-{{-- ═══════════════════════════════════════════════════════════
      🔧 SCRIPTS COMPONENT
      Google Translate, Language selectors, Help buttons, etc.
+     
+     ⚠️ NOTE IMPORTANTE :
+     @yield('content') doit être placé dans les layouts spécifiques
+     (master.blade.php pour le dashboard, app.blade.php pour le site public, etc.)
+     PAS dans ce fichier header pour éviter la duplication de contenu !
      ═══════════════════════════════════════════════════════════ --}}
 @include('includes.header.scripts')
 
