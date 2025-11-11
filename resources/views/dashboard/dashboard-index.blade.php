@@ -6,8 +6,8 @@
 
 <style>
     /* ========================================
-       DASHBOARD 2025/2026 - MOBILE FIRST EXCELLENCE
-       Design System: Minimaliste, Respirable, Raffiné
+       DASHBOARD 2025/2026 - MOBILE FIRST PRODUCTION
+       Design System: Modern, Breathable, Motivating
        ======================================== */
     
     :root {
@@ -42,44 +42,65 @@
         --transition-smooth: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
-    /* Container principal */
+    /* Fix background noir au chargement */
+    body {
+        background: #ffffff !important;
+    }
+    
+    /* Container principal - MOBILE FIRST */
     .dashboard-2025 {
-        animation: fadeIn 0.4s ease-out;
+        animation: fadeIn 0.25s ease-out;
         max-width: 1400px;
         margin: 0 auto;
         padding: 1rem;
+        background: #ffffff;
+        min-height: 100vh;
     }
     
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
+        from { 
+            opacity: 0.98;
+            transform: translateY(2px);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
     }
     
     /* ========================================
-       STAT CARDS - CLIQUABLES
+       STAT CARDS - MOBILE FIRST
        ======================================== */
     .stat-card-2025 {
         background: var(--color-bg-primary);
         border-radius: var(--border-radius-lg);
-        padding: 1.5rem;
-        border: 1px solid #e2e8f0;
+        padding: 1.25rem;
+        border: 2px solid #cbd5e1;
         transition: var(--transition-base);
         position: relative;
         overflow: hidden;
         cursor: pointer;
-        text-decoration: none;
+        text-decoration: none !important;
         display: block;
-        color: inherit;
+        color: inherit !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        min-height: 100px;
     }
     
-    .stat-card-2025:hover {
-        border-color: #cbd5e1;
-        box-shadow: var(--shadow-md);
-        transform: translateY(-2px);
+    a.stat-card-2025 {
+        pointer-events: auto !important;
+    }
+    
+    button.stat-card-2025 {
+        width: 100%;
+        border: 2px solid #cbd5e1;
+        font-family: inherit;
+        text-align: left;
+        background: var(--color-bg-primary);
     }
     
     .stat-card-2025:active {
-        transform: translateY(0) scale(0.98);
+        transform: scale(0.98);
     }
     
     .stat-card-2025::before {
@@ -101,25 +122,22 @@
     .stat-card-content {
         display: flex;
         align-items: flex-start;
-        gap: 1rem;
+        gap: 0.875rem;
+        pointer-events: none;
     }
     
     .stat-card-icon {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
         border-radius: var(--border-radius-md);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         background: var(--icon-bg, #f1f5f9);
         color: var(--icon-color, var(--color-primary));
         transition: var(--transition-base);
         flex-shrink: 0;
-    }
-    
-    .stat-card-2025:hover .stat-card-icon {
-        transform: scale(1.05);
     }
     
     .stat-card-info {
@@ -128,7 +146,7 @@
     }
     
     .stat-value-2025 {
-        font-size: 1.875rem;
+        font-size: 1.5rem;
         font-weight: 700;
         color: var(--color-text-primary);
         margin-bottom: 0.25rem;
@@ -137,42 +155,39 @@
     }
     
     .stat-label-2025 {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         color: var(--color-text-secondary);
         font-weight: 500;
         letter-spacing: 0.01em;
+        line-height: 1.3;
     }
     
     .stat-card-extra {
         margin-top: 0.5rem;
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         color: var(--color-text-tertiary);
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
     
-    /* Indicateur cliquable */
     .stat-card-action {
         position: absolute;
         bottom: 1rem;
         right: 1rem;
         color: var(--color-text-tertiary);
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         font-weight: 600;
         display: flex;
         align-items: center;
         gap: 0.25rem;
         opacity: 0;
         transition: var(--transition-base);
-    }
-    
-    .stat-card-2025:hover .stat-card-action {
-        opacity: 1;
+        pointer-events: none;
     }
     
     /* ========================================
-       MODAL DE PARTAGE AFFILIATION
+       MODAL AFFILIATION - MOBILE FIRST
        ======================================== */
     .share-modal-overlay {
         position: fixed;
@@ -184,13 +199,15 @@
         backdrop-filter: blur(4px);
         z-index: 9998;
         opacity: 0;
-        pointer-events: none;
+        pointer-events: none !important;
         transition: opacity 0.3s ease;
+        display: none;
     }
     
     .share-modal-overlay.active {
         opacity: 1;
-        pointer-events: all;
+        pointer-events: all !important;
+        display: block;
     }
     
     .share-modal {
@@ -200,29 +217,31 @@
         right: 0;
         background: white;
         border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
-        padding: 1.5rem;
+        padding: 1.25rem;
         z-index: 9999;
         transform: translateY(100%);
         transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        max-height: 80vh;
+        max-height: 85vh;
         overflow-y: auto;
+        display: none;
     }
     
     .share-modal.active {
         transform: translateY(0);
+        display: block;
     }
     
     .share-modal-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
         padding-bottom: 1rem;
         border-bottom: 1px solid #e5e7eb;
     }
     
     .share-modal-title {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         font-weight: 700;
         color: var(--color-text-primary);
     }
@@ -249,8 +268,8 @@
     .share-stats-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
         padding: 1rem;
         background: var(--color-bg-secondary);
         border-radius: var(--border-radius-md);
@@ -265,7 +284,7 @@
     }
     
     .share-stat-value {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: 700;
         color: var(--color-text-primary);
         margin-bottom: 0.25rem;
@@ -280,20 +299,20 @@
     }
     
     .share-stat-label {
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         color: var(--color-text-secondary);
         font-weight: 500;
     }
     
     .affiliate-link-section {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         gap: 0.75rem;
         padding: 1rem;
         background: var(--color-bg-secondary);
         border: 1px solid #e5e7eb;
         border-radius: var(--border-radius-md);
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     
     .affiliate-link-input {
@@ -301,9 +320,10 @@
         background: transparent;
         border: none;
         color: var(--color-text-primary);
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         outline: none;
         font-family: monospace;
+        word-break: break-all;
     }
     
     .affiliate-copy-btn {
@@ -311,19 +331,16 @@
         color: white;
         border: none;
         border-radius: var(--border-radius-sm);
-        padding: 0.5rem 1rem;
+        padding: 0.625rem 1rem;
         font-size: 0.8125rem;
         font-weight: 600;
         cursor: pointer;
         transition: var(--transition-base);
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
-        flex-shrink: 0;
-    }
-    
-    .affiliate-copy-btn:hover {
-        background: var(--color-primary-light);
+        width: 100%;
     }
     
     .affiliate-copy-btn:active {
@@ -332,7 +349,7 @@
     
     .share-section-label {
         display: block;
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         font-weight: 600;
         color: var(--color-text-secondary);
         margin-bottom: 0.75rem;
@@ -343,7 +360,7 @@
     .share-options-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
+        gap: 0.75rem;
     }
     
     .share-option {
@@ -351,7 +368,7 @@
         flex-direction: column;
         align-items: center;
         gap: 0.5rem;
-        padding: 1rem 0.5rem;
+        padding: 0.875rem 0.5rem;
         border-radius: var(--border-radius-md);
         background: var(--color-bg-secondary);
         border: 1px solid transparent;
@@ -360,24 +377,18 @@
         text-align: center;
     }
     
-    .share-option:hover {
-        background: var(--color-bg-tertiary);
-        border-color: #e2e8f0;
-        transform: translateY(-2px);
-    }
-    
     .share-option:active {
         transform: scale(0.96);
     }
     
     .share-option-icon {
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         color: white;
     }
     
@@ -388,31 +399,86 @@
     .share-option-icon.twitter { background: #000000; }
     
     .share-option-label {
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         font-weight: 600;
         color: var(--color-text-secondary);
     }
     
     /* ========================================
-       PROGRESS BADGES (REPUTATION)
+       MOTIVATION BANNER - PROVIDER ONLY
+       ======================================== */
+    .motivation-banner {
+        border-radius: var(--border-radius-xl);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        border: 2px solid;
+        animation: slideIn 0.5s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from { 
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .motivation-emoji {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .motivation-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .motivation-message {
+        font-size: 0.875rem;
+        line-height: 1.4;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+    
+    .motivation-next {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.375rem 0.875rem;
+        background: white;
+        border-radius: 999px;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    /* ========================================
+       PROGRESS SECTION - PROVIDER ONLY
        ======================================== */
     .progress-section {
         background: var(--color-bg-primary);
-        border: 1px solid #e2e8f0;
+        border: 2px solid #cbd5e1;
         border-radius: var(--border-radius-xl);
-        padding: 2rem;
-        margin-bottom: 2rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
     
     .progress-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
     }
     
     .progress-title {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         font-weight: 700;
         color: var(--color-text-primary);
     }
@@ -420,9 +486,9 @@
     .progress-points-badge {
         background: #eff6ff;
         color: var(--color-primary);
-        padding: 0.375rem 0.875rem;
+        padding: 0.375rem 0.75rem;
         border-radius: 999px;
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         font-weight: 700;
     }
     
@@ -432,7 +498,7 @@
         background: #e5e7eb;
         border-radius: 999px;
         overflow: hidden;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     
     .progress-bar-fill {
@@ -443,15 +509,15 @@
     }
     
     .progress-milestones {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
     }
     
     .progress-milestone {
-        flex: 1;
         text-align: center;
-        padding: 1rem;
+        padding: 0.875rem 0.5rem;
         border-radius: var(--border-radius-md);
         background: var(--color-bg-secondary);
         transition: var(--transition-base);
@@ -463,15 +529,15 @@
     }
     
     .progress-milestone-icon {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background: #e5e7eb;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 0.5rem;
-        font-size: 1rem;
+        font-size: 0.875rem;
         transition: var(--transition-base);
     }
     
@@ -481,10 +547,11 @@
     }
     
     .progress-milestone-label {
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         font-weight: 600;
         color: var(--color-text-secondary);
         margin-bottom: 0.25rem;
+        line-height: 1.2;
     }
     
     .progress-milestone.active .progress-milestone-label {
@@ -492,32 +559,78 @@
     }
     
     .progress-milestone-points {
-        font-size: 0.6875rem;
+        font-size: 0.625rem;
         color: var(--color-text-tertiary);
     }
     
+    /* Diamond Circle - PROVIDER ONLY */
+    .diamond-circle-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: var(--color-bg-primary);
+        border: 2px solid #cbd5e1;
+        border-radius: var(--border-radius-xl);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .diamond-circle-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        text-align: center;
+    }
+    
+    .diamond-circle-svg {
+        position: relative;
+        width: 120px;
+        height: 120px;
+    }
+    
+    .diamond-circle-percentage {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+    
+    .diamond-circle-description {
+        font-size: 0.8125rem;
+        color: var(--color-text-secondary);
+        text-align: center;
+    }
+    
     /* ========================================
-       TIMELINE & ACTIVITY FEED
+       TIMELINE - MOBILE FIRST
        ======================================== */
     .timeline-card {
         background: var(--color-bg-primary);
-        border: 1px solid #e2e8f0;
+        border: 2px solid #cbd5e1;
         border-radius: var(--border-radius-lg);
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
     
     .timeline-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1.25rem;
-        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.875rem;
         border-bottom: 1px solid #f1f5f9;
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
     
     .timeline-title {
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 700;
         color: var(--color-text-primary);
         display: flex;
@@ -526,14 +639,14 @@
     }
     
     .timeline-title i {
-        font-size: 1rem;
+        font-size: 0.875rem;
         color: var(--color-text-secondary);
     }
     
     .timeline-badge {
         background: var(--color-bg-secondary);
         color: var(--color-text-secondary);
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         font-weight: 600;
         padding: 0.25rem 0.625rem;
         border-radius: 999px;
@@ -542,36 +655,36 @@
     .timeline-list {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.625rem;
     }
     
     .timeline-item {
         display: flex;
-        gap: 1rem;
-        padding: 1rem;
+        gap: 0.875rem;
+        padding: 0.875rem;
         border-radius: var(--border-radius-md);
         background: var(--color-bg-secondary);
         transition: var(--transition-base);
-        text-decoration: none;
-        color: inherit;
+        text-decoration: none !important;
+        color: inherit !important;
         border: 1px solid transparent;
+        pointer-events: auto !important;
     }
     
-    .timeline-item:hover {
-        background: var(--color-bg-tertiary);
-        border-color: #e2e8f0;
-        transform: translateX(4px);
+    .timeline-item:active {
+        transform: scale(0.98);
     }
     
     .timeline-icon {
         flex-shrink: 0;
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: var(--border-radius-sm);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
+        pointer-events: none;
     }
     
     .timeline-icon.success { background: #d1fae5; color: #059669; }
@@ -583,10 +696,11 @@
     .timeline-content {
         flex: 1;
         min-width: 0;
+        pointer-events: none;
     }
     
     .timeline-time {
-        font-size: 0.6875rem;
+        font-size: 0.625rem;
         color: var(--color-text-tertiary);
         font-weight: 600;
         text-transform: uppercase;
@@ -595,7 +709,7 @@
     }
     
     .timeline-text {
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         font-weight: 600;
         color: var(--color-text-primary);
         margin-bottom: 0.125rem;
@@ -603,43 +717,53 @@
     }
     
     .timeline-subtext {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         color: var(--color-text-secondary);
         line-height: 1.4;
     }
     
     .timeline-empty {
         text-align: center;
-        padding: 3rem 1rem;
+        padding: 2.5rem 1rem;
         color: var(--color-text-tertiary);
     }
     
     .timeline-empty-icon {
-        font-size: 2.5rem;
+        font-size: 2rem;
         margin-bottom: 0.75rem;
         opacity: 0.4;
     }
     
     .timeline-empty-text {
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         font-weight: 500;
     }
     
     /* ========================================
-       ACTION CARDS - MINIMALISTES
+       ACTION CARDS - MOBILE FIRST
        ======================================== */
     .action-card {
         background: var(--color-bg-primary);
-        border: 1px solid #e2e8f0;
+        border: 2px solid #cbd5e1;
         border-radius: var(--border-radius-lg);
-        padding: 1.5rem;
+        padding: 1.25rem;
         text-align: center;
         cursor: pointer;
         transition: var(--transition-base);
-        text-decoration: none;
+        text-decoration: none !important;
         display: block;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        color: inherit !important;
+        min-height: 110px;
+    }
+    
+    button.action-card {
+        width: 100%;
+        border: 2px solid #cbd5e1;
+        font-family: inherit;
+        background: var(--color-bg-primary);
     }
     
     .action-card::before {
@@ -654,68 +778,62 @@
         transition: transform 0.3s ease;
     }
     
-    .action-card:hover {
-        border-color: #cbd5e1;
-        box-shadow: var(--shadow-md);
-        transform: translateY(-2px);
-    }
-    
     .action-card:hover::before {
         transform: scaleX(1);
     }
     
     .action-card:active {
-        transform: translateY(0) scale(0.98);
+        transform: scale(0.98);
     }
     
     .action-card-icon {
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         border-radius: var(--border-radius-md);
         background: var(--icon-bg, #f1f5f9);
         color: var(--icon-color, var(--color-primary));
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 1rem;
-        font-size: 1.25rem;
+        margin: 0 auto 0.875rem;
+        font-size: 1.125rem;
         transition: var(--transition-base);
-    }
-    
-    .action-card:hover .action-card-icon {
-        transform: scale(1.1);
+        pointer-events: none;
     }
     
     .action-card-value {
-        font-size: 1.875rem;
+        font-size: 1.5rem;
         font-weight: 700;
         color: var(--color-text-primary);
         margin-bottom: 0.25rem;
         line-height: 1;
+        pointer-events: none;
     }
     
     .action-card-label {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         color: var(--color-text-secondary);
         font-weight: 500;
+        pointer-events: none;
+        line-height: 1.3;
     }
     
     /* ========================================
        SECTION HEADERS
        ======================================== */
     .section-header {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     
     .section-title {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: 700;
         color: var(--color-text-primary);
         letter-spacing: -0.02em;
     }
     
     /* ========================================
-       GRID LAYOUTS
+       GRID LAYOUTS - MOBILE FIRST
        ======================================== */
     .grid-dashboard {
         display: grid;
@@ -723,6 +841,81 @@
         grid-template-columns: 1fr;
     }
     
+    .grid-timeline {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+    }
+    
+    /* ========================================
+       Z-INDEX MANAGEMENT
+       ======================================== */
+    .share-modal-overlay {
+        z-index: 9998 !important;
+    }
+    
+    .share-modal {
+        z-index: 9999 !important;
+    }
+    
+    #searchPopup,
+    #expatriesPopup,
+    #vacanciersAutresBesoinsPopup {
+        z-index: 10000 !important;
+    }
+    
+    /* ========================================
+       TOAST NOTIFICATIONS
+       ======================================== */
+    .toast-notification {
+        position: fixed;
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        max-width: 400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: var(--border-radius-lg);
+        padding: 1rem;
+        box-shadow: var(--shadow-xl);
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1px solid #e5e7eb;
+        animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    @keyframes slideUp {
+        from { transform: translateY(100px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .toast-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+    
+    .toast-icon.success { background: #d1fae5; color: #059669; }
+    .toast-icon.error { background: #fee2e2; color: #dc2626; }
+    .toast-icon.info { background: #dbeafe; color: #2563eb; }
+    
+    .toast-message {
+        flex: 1;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+    }
+    
+    /* ========================================
+       RESPONSIVE - TABLET & DESKTOP
+       ======================================== */
     @media (min-width: 640px) {
         .dashboard-2025 {
             padding: 1.5rem;
@@ -732,8 +925,116 @@
             grid-template-columns: repeat(2, 1fr);
         }
         
+        .grid-timeline {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .stat-card-2025 {
+            padding: 1.5rem;
+        }
+        
+        .stat-card-icon {
+            width: 44px;
+            height: 44px;
+            font-size: 1.25rem;
+        }
+        
+        .stat-value-2025 {
+            font-size: 1.875rem;
+        }
+        
+        .stat-label-2025 {
+            font-size: 0.8125rem;
+        }
+        
+        .stat-card-action {
+            opacity: 0;
+        }
+        
+        .stat-card-2025:hover {
+            border-color: #94a3b8;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .stat-card-2025:hover .stat-card-action {
+            opacity: 1;
+        }
+        
+        .stat-card-2025:hover .stat-card-icon {
+            transform: scale(1.05);
+        }
+        
+        .timeline-item:hover {
+            background: var(--color-bg-tertiary);
+            border-color: #e2e8f0;
+            transform: translateX(4px);
+        }
+        
+        .action-card:hover {
+            border-color: #94a3b8;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .action-card:hover .action-card-icon {
+            transform: scale(1.1);
+        }
+        
+        .share-option:hover {
+            background: var(--color-bg-tertiary);
+            border-color: #e2e8f0;
+            transform: translateY(-2px);
+        }
+        
+        .affiliate-copy-btn:hover {
+            background: var(--color-primary-light);
+        }
+        
         .share-options-grid {
             grid-template-columns: repeat(5, 1fr);
+        }
+        
+        .affiliate-link-section {
+            flex-direction: row;
+            align-items: center;
+        }
+        
+        .affiliate-copy-btn {
+            width: auto;
+        }
+        
+        .affiliate-link-input {
+            font-size: 0.8125rem;
+        }
+        
+        .share-modal-title {
+            font-size: 1.25rem;
+        }
+        
+        .share-stat-value {
+            font-size: 1.5rem;
+        }
+        
+        .motivation-emoji {
+            font-size: 2.5rem;
+        }
+        
+        .motivation-title {
+            font-size: 1.25rem;
+        }
+        
+        .progress-milestones {
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        }
+        
+        .diamond-circle-svg {
+            width: 140px;
+            height: 140px;
+        }
+        
+        .diamond-circle-percentage {
+            font-size: 1.75rem;
         }
     }
     
@@ -768,55 +1069,6 @@
     }
     
     /* ========================================
-       TOAST NOTIFICATIONS
-       ======================================== */
-    .toast-notification {
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        left: 1rem;
-        max-width: 400px;
-        margin: 0 auto;
-        background: white;
-        border-radius: var(--border-radius-lg);
-        padding: 1rem 1.25rem;
-        box-shadow: var(--shadow-xl);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        gap: 0.875rem;
-        border: 1px solid #e5e7eb;
-        animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    
-    @keyframes slideUp {
-        from { transform: translateY(100px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-    
-    .toast-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        flex-shrink: 0;
-    }
-    
-    .toast-icon.success { background: #d1fae5; color: #059669; }
-    .toast-icon.error { background: #fee2e2; color: #dc2626; }
-    .toast-icon.info { background: #dbeafe; color: #2563eb; }
-    
-    .toast-message {
-        flex: 1;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--color-text-primary);
-    }
-    
-    /* ========================================
        REDUCED MOTION
        ======================================== */
     @media (prefers-reduced-motion: reduce) {
@@ -837,11 +1089,64 @@
         $unreadMessagesCount = method_exists($user, 'unreadMessagesCount') ? $user->unreadMessagesCount() : 0;
         
         // ========================================
+        // MESSAGES DE MOTIVATION (PROVIDER ONLY)
+        // ========================================
+        $motivationMessages = [
+            0 => [
+                'emoji' => '🚀',
+                'title' => 'Begin Your Journey!',
+                'message' => 'Complete your first mission to start building your reputation on Ulixai!',
+                'color' => '#2563eb',
+                'bg' => '#eff6ff',
+                'border' => '#bfdbfe'
+            ],
+            20 => [
+                'emoji' => '🌟',
+                'title' => 'Great Start!',
+                'message' => 'You\'re doing amazing! Keep delivering quality service to reach the next level!',
+                'color' => '#10b981',
+                'bg' => '#d1fae5',
+                'border' => '#a7f3d0'
+            ],
+            40 => [
+                'emoji' => '🔥',
+                'title' => 'On Fire!',
+                'message' => 'Impressive progress! Your clients are loving your work. Keep it up!',
+                'color' => '#f59e0b',
+                'bg' => '#fef3c7',
+                'border' => '#fde68a'
+            ],
+            60 => [
+                'emoji' => '⚡',
+                'title' => 'Unstoppable!',
+                'message' => 'You\'re crushing it! The next milestone is just around the corner!',
+                'color' => '#8b5cf6',
+                'bg' => '#f3e8ff',
+                'border' => '#e9d5ff'
+            ],
+            80 => [
+                'emoji' => '💎',
+                'title' => 'Almost Diamond!',
+                'message' => 'Incredible work! Just a few more missions to reach Diamond status!',
+                'color' => '#06b6d4',
+                'bg' => '#cffafe',
+                'border' => '#a5f3fc'
+            ],
+            95 => [
+                'emoji' => '👑',
+                'title' => 'Elite Provider!',
+                'message' => 'You\'re among the best on Ulixai! Diamond level achieved - you\'re a legend!',
+                'color' => '#6366f1',
+                'bg' => '#eef2ff',
+                'border' => '#c7d2fe'
+            ]
+        ];
+        
+        // ========================================
         // RÉCUPÉRATION DES ACTIVITÉS RÉCENTES
         // ========================================
         $recentActivities = collect();
         
-        // Messages récents (TOUS)
         try {
             $recentConversations = \App\Models\Conversation::where(function($query) use ($user) {
                 $query->where('requester_id', $user->id)
@@ -858,15 +1163,12 @@
                     'date' => $conv->updated_at,
                     'title' => 'New message',
                     'subtitle' => 'Conversation updated',
-                    'url' => route('user.conversation.show', $conv->id),
+                    'url' => route('conversations.show', $conv->id),
                     'icon' => 'comment-dots'
                 ]);
             }
-        } catch (\Exception $e) {
-            // Silent fail
-        }
+        } catch (\Exception $e) {}
         
-        // MISSIONS PROVIDER (si profil existe)
         if ($hasProviderProfile) {
             try {
                 $recentMissions = $provider->missions()
@@ -886,17 +1188,14 @@
                     $recentActivities->push([
                         'type' => $status['type'],
                         'date' => $mission->updated_at,
-                        'title' => $status['text'] . ' (as provider)',
+                        'title' => $status['text'],
                         'subtitle' => $mission->title ?? 'Untitled mission',
-                        'url' => route('user.job.show', $mission->id),
+                        'url' => route('view-job', ['id' => $mission->id]),
                         'icon' => $status['icon']
                     ]);
                 }
-            } catch (\Exception $e) {
-                // Silent fail
-            }
+            } catch (\Exception $e) {}
             
-            // Paiements reçus (provider)
             try {
                 if (class_exists(\App\Models\Payment::class)) {
                     $recentPayments = \App\Models\Payment::where('service_provider_id', $provider->id)
@@ -917,12 +1216,9 @@
                         ]);
                     }
                 }
-            } catch (\Exception $e) {
-                // Silent fail
-            }
+            } catch (\Exception $e) {}
         }
         
-        // MISSIONS REQUESTER (TOUS - provider peut aussi créer des missions)
         try {
             $requesterMissions = \App\Models\Mission::where('requester_id', $user->id)
                 ->where('created_at', '>=', now()->subDays(7))
@@ -940,11 +1236,8 @@
                     'icon' => 'briefcase'
                 ]);
             }
-        } catch (\Exception $e) {
-            // Silent fail
-        }
+        } catch (\Exception $e) {}
         
-        // Commissions d'affiliation (TOUS)
         try {
             if (method_exists($user, 'commissions')) {
                 $recentCommissions = $user->commissions()
@@ -964,20 +1257,16 @@
                     ]);
                 }
             }
-        } catch (\Exception $e) {
-            // Silent fail
-        }
+        } catch (\Exception $e) {}
         
-        // Trier par date décroissante et limiter à 10
         $recentActivities = $recentActivities->sortByDesc('date')->take(10);
         
         // ========================================
-        // UPCOMING EVENTS / DEADLINES
+        // UPCOMING EVENTS
         // ========================================
         $upcomingEvents = collect();
         
         if ($hasProviderProfile) {
-            // Missions avec deadline à venir (provider)
             try {
                 $upcomingMissions = $provider->missions()
                     ->where('status', 'in_progress')
@@ -992,48 +1281,41 @@
                     $upcomingEvents->push([
                         'type' => 'warning',
                         'date' => $mission->deadline,
-                        'title' => 'Mission deadline (provider)',
+                        'title' => 'Mission deadline',
                         'subtitle' => ($mission->title ?? 'Untitled') . ' - ' . ($daysUntil == 0 ? 'Today' : "in {$daysUntil} days"),
-                        'url' => route('user.job.show', $mission->id),
+                        'url' => route('view-job', ['id' => $mission->id]),
                         'icon' => 'calendar-exclamation',
                         'urgent' => $daysUntil <= 2
                     ]);
                 }
-            } catch (\Exception $e) {
-                // Silent fail
+            } catch (\Exception $e) {}
+            
+            if (isset($provider->kyc_status) && $provider->kyc_status != 'verified' && isset($provider->stripe_account_id) && $provider->stripe_account_id) {
+                $upcomingEvents->push([
+                    'type' => 'warning',
+                    'date' => now()->addDays(1),
+                    'title' => 'Complete KYC verification',
+                    'subtitle' => 'Required to receive payouts',
+                    'url' => '#kyc-banner',
+                    'icon' => 'shield-halved',
+                    'urgent' => true
+                ]);
             }
         }
         
-        // KYC reminder (si provider et pas vérifié)
-        if ($hasProviderProfile && isset($provider->kyc_status) && $provider->kyc_status != 'verified' && isset($provider->stripe_account_id) && $provider->stripe_account_id) {
-            $upcomingEvents->push([
-                'type' => 'warning',
-                'date' => now()->addDays(1),
-                'title' => 'Complete KYC verification',
-                'subtitle' => 'Required to receive payouts',
-                'url' => '#kyc-banner',
-                'icon' => 'shield-halved',
-                'urgent' => true
-            ]);
-        }
-        
-        // Trier par date
         $upcomingEvents = $upcomingEvents->sortBy('date');
         
         // ========================================
-        // COMPTEURS POUR LES STATS
+        // COMPTEURS
         // ========================================
-        // Service requests count (missions en tant que requester - TOUS)
         try {
             $serviceRequestsCount = \App\Models\Mission::where('requester_id', $user->id)->count();
         } catch (\Exception $e) {
             $serviceRequestsCount = 0;
         }
         
-        // Jobs in progress (provider uniquement)
         $in_progress = $hasProviderProfile ? $provider->missions->where('status', 'in_progress')->count() : 0;
         
-        // Pending payments (provider uniquement)
         try {
             $pendingPayments = 0;
             if ($hasProviderProfile && class_exists(\App\Models\Payment::class)) {
@@ -1045,20 +1327,35 @@
             $pendingPayments = 0;
         }
         
+        // ========================================
+        // PROGRESSION (PROVIDER ONLY)
+        // ========================================
+        $points = $hasProviderProfile ? ($reputationPoints ?? 0) : 0;
+        $progress = $hasProviderProfile ? ($progressLevel ?? 0) : 0;
+        
+        $currentMotivation = null;
+        if ($hasProviderProfile) {
+            $currentMotivation = collect($motivationMessages)->filter(fn($msg, $level) => $progress >= $level)->last();
+        }
+        
+        // Cercle Diamond
+        $circleRadius = 32;
+        $circleCircumference = 2 * pi() * $circleRadius;
+        $offset = $circleCircumference - ($progress / 100 * $circleCircumference);
+        
     @endphp
 
     <!-- ========================================
-         STATS CARDS PRINCIPALES (TOUTES CLIQUABLES)
+         STATS CARDS - MOBILE FIRST
          ======================================== -->
     <div class="section-header">
         <h1 class="section-title">Overview</h1>
     </div>
     
-    <div class="grid-dashboard" style="margin-bottom: 2rem;">
+    <div class="grid-dashboard" style="margin-bottom: 1.5rem;">
         
         @if($hasProviderProfile && isset($balance))
-            <!-- Balance Card (provider) → Balance/Payout page -->
-            <a href="{{ route('user.balance') ?? '#' }}" class="stat-card-2025" style="--card-accent: var(--color-success); --icon-bg: #d1fae5; --icon-color: #059669;">
+            <a href="/my-earning-payment" class="stat-card-2025" data-card-type="link" style="--card-accent: var(--color-success); --icon-bg: #d1fae5; --icon-color: #059669;">
                 <div class="stat-card-content">
                     <div class="stat-card-icon">
                         <i class="fas fa-wallet"></i>
@@ -1074,8 +1371,7 @@
                 </div>
             </a>
             
-            <!-- Jobs In Progress (provider) → Joblist -->
-            <a href="{{ route('user.joblist') }}" class="stat-card-2025" style="--card-accent: var(--color-primary); --icon-bg: #dbeafe; --icon-color: #2563eb;">
+            <a href="{{ route('user.joblist') }}" class="stat-card-2025" data-card-type="link" style="--card-accent: var(--color-primary); --icon-bg: #dbeafe; --icon-color: #2563eb;">
                 <div class="stat-card-content">
                     <div class="stat-card-icon">
                         <i class="fas fa-tasks"></i>
@@ -1092,8 +1388,7 @@
             </a>
         @endif
         
-        <!-- Service Requests (TOUS - requester) → Service requests page -->
-        <a href="{{ route('user.service.requests') }}" class="stat-card-2025" style="--card-accent: var(--color-purple); --icon-bg: #f3e8ff; --icon-color: #7c3aed;">
+        <a href="{{ route('user.service.requests') }}" class="stat-card-2025" data-card-type="link" style="--card-accent: var(--color-purple); --icon-bg: #f3e8ff; --icon-color: #7c3aed;">
             <div class="stat-card-content">
                 <div class="stat-card-icon">
                     <i class="fas fa-briefcase"></i>
@@ -1109,8 +1404,7 @@
             </div>
         </a>
         
-        <!-- Messages (TOUS) → Messages/Conversations page -->
-        <a href="{{ route('user.conversations') ?? '#' }}" class="stat-card-2025" style="--card-accent: var(--color-pink); --icon-bg: #fce7f3; --icon-color: #db2777;">
+        <a href="{{ route('user.conversation') }}" class="stat-card-2025" data-card-type="link" style="--card-accent: var(--color-pink); --icon-bg: #fce7f3; --icon-color: #db2777;">
             <div class="stat-card-content">
                 <div class="stat-card-icon">
                     <i class="fas fa-envelope"></i>
@@ -1126,8 +1420,7 @@
             </div>
         </a>
         
-        <!-- Affiliate Card - OUVRE LE MODAL (pas cliquable vers une page) -->
-        <div class="stat-card-2025" style="--card-accent: var(--color-warning); --icon-bg: #fef3c7; --icon-color: #d97706;" onclick="openShareModal()">
+        <button type="button" class="stat-card-2025" id="btn-affiliate-share" data-card-type="modal" style="--card-accent: var(--color-warning); --icon-bg: #fef3c7; --icon-color: #d97706;">
             <div class="stat-card-content">
                 <div class="stat-card-icon">
                     <i class="fas fa-gift"></i>
@@ -1144,10 +1437,9 @@
                 <span>Share</span>
                 <i class="fas fa-arrow-right" style="font-size: 0.625rem;"></i>
             </div>
-        </div>
+        </button>
         
-        <!-- Commissions (TOUS) → Affiliate account page -->
-        <a href="{{ route('user.affiliate.account') }}" class="stat-card-2025" style="--card-accent: #14b8a6; --icon-bg: #ccfbf1; --icon-color: #0d9488;">
+        <a href="{{ route('user.affiliate.account') }}" class="stat-card-2025" data-card-type="link" style="--card-accent: #14b8a6; --icon-bg: #ccfbf1; --icon-color: #0d9488;">
             <div class="stat-card-content">
                 <div class="stat-card-icon">
                     <i class="fas fa-coins"></i>
@@ -1164,8 +1456,7 @@
         </a>
         
         @if($hasProviderProfile)
-            <!-- Payments Pending (provider) → Payments validation page -->
-            <a href="{{ route('user.payments.validate') }}" class="stat-card-2025" style="--card-accent: #f97316; --icon-bg: #ffedd5; --icon-color: #ea580c;">
+            <a href="{{ route('user.payments.validate') }}" class="stat-card-2025" data-card-type="link" style="--card-accent: #f97316; --icon-bg: #ffedd5; --icon-color: #ea580c;">
                 <div class="stat-card-content">
                     <div class="stat-card-icon">
                         <i class="fas fa-credit-card"></i>
@@ -1184,18 +1475,17 @@
     </div>
 
     <!-- ========================================
-         MODAL DE PARTAGE AFFILIATION
+         MODAL AFFILIATION
          ======================================== -->
-    <div class="share-modal-overlay" id="share-overlay" onclick="closeShareModal()"></div>
+    <div class="share-modal-overlay" id="share-overlay"></div>
     <div class="share-modal" id="share-modal">
         <div class="share-modal-header">
             <h3 class="share-modal-title">Share & Earn 75%</h3>
-            <button class="share-modal-close" onclick="closeShareModal()">
+            <button class="share-modal-close" id="btn-close-share">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <!-- Stats dans le modal -->
         <div class="share-stats-grid">
             <div class="share-stat">
                 <div class="share-stat-value">{{ $user->referrals()->count() }}</div>
@@ -1211,8 +1501,7 @@
             </div>
         </div>
         
-        <!-- Link -->
-        <div style="margin-bottom: 1.5rem;">
+        <div style="margin-bottom: 1.25rem;">
             <label class="share-section-label">Your referral link</label>
             <div class="affiliate-link-section">
                 <input 
@@ -1222,46 +1511,45 @@
                     value="{{ config('app.url') }}/affiliate/sign-up/?code={{ $user->affiliate_code }}" 
                     class="affiliate-link-input"
                 />
-                <button class="affiliate-copy-btn" onclick="copyAffiliateLink()" id="copy-btn">
+                <button class="affiliate-copy-btn" id="copy-btn">
                     <i class="fas fa-copy"></i>
                     <span>Copy</span>
                 </button>
             </div>
         </div>
         
-        <!-- Share options -->
         <div>
             <label class="share-section-label">Share via</label>
             <div class="share-options-grid">
-                <button class="share-option" onclick="shareVia('whatsapp')">
+                <button class="share-option" data-platform="whatsapp">
                     <div class="share-option-icon whatsapp">
                         <i class="fab fa-whatsapp"></i>
                     </div>
                     <span class="share-option-label">WhatsApp</span>
                 </button>
                 
-                <button class="share-option" onclick="shareVia('email')">
+                <button class="share-option" data-platform="email">
                     <div class="share-option-icon email">
                         <i class="fas fa-envelope"></i>
                     </div>
                     <span class="share-option-label">Email</span>
                 </button>
                 
-                <button class="share-option" onclick="shareVia('facebook')">
+                <button class="share-option" data-platform="facebook">
                     <div class="share-option-icon facebook">
                         <i class="fab fa-facebook-f"></i>
                     </div>
                     <span class="share-option-label">Facebook</span>
                 </button>
                 
-                <button class="share-option" onclick="shareVia('linkedin')">
+                <button class="share-option" data-platform="linkedin">
                     <div class="share-option-icon linkedin">
                         <i class="fab fa-linkedin-in"></i>
                     </div>
                     <span class="share-option-label">LinkedIn</span>
                 </button>
                 
-                <button class="share-option" onclick="shareVia('twitter')">
+                <button class="share-option" data-platform="twitter">
                     <div class="share-option-icon twitter">
                         <i class="fab fa-x-twitter"></i>
                     </div>
@@ -1273,60 +1561,114 @@
 
     @if($hasProviderProfile && isset($reputationPoints))
         <!-- ========================================
-             REPUTATION PROGRESS (PROVIDER ONLY)
+             MOTIVATION BANNER - PROVIDER ONLY
+             ======================================== -->
+        @if($currentMotivation)
+        <div class="motivation-banner" style="background: {{ $currentMotivation['bg'] }}; border-color: {{ $currentMotivation['border'] }};">
+            <div class="motivation-emoji">{{ $currentMotivation['emoji'] }}</div>
+            <h3 class="motivation-title" style="color: {{ $currentMotivation['color'] }};">
+                {{ $currentMotivation['title'] }}
+            </h3>
+            <p class="motivation-message">{{ $currentMotivation['message'] }}</p>
+            @php
+                $badges = \App\Models\Badge::where('type', 'reputation')->where('is_auto', true)->orderBy('threshold')->get();
+                $nextBadge = $badges->where('threshold', '>', $points)->first();
+            @endphp
+            @if($nextBadge)
+            <div class="motivation-next" style="color: {{ $currentMotivation['color'] }};">
+                <span>Next milestone:</span>
+                <strong>+{{ $nextBadge->threshold - $points }} pts</strong>
+                <span>→ {{ $nextBadge->title }}</span>
+            </div>
+            @endif
+        </div>
+        @endif
+        
+        <!-- ========================================
+             PROGRESS & DIAMOND CIRCLE - PROVIDER ONLY
              ======================================== -->
         @php
-            $points = $reputationPoints ?? 0;
-            $progress = $progressLevel ?? 0;
             $badges = \App\Models\Badge::where('type', 'reputation')
                 ->where('is_auto', true)
                 ->orderBy('threshold')
                 ->get();
-            $currentBadge = $user->badges()
-                ->where('type', 'reputation')
-                ->where('is_auto', true)
-                ->orderByDesc('threshold')
-                ->first();
         @endphp
         
         @if($badges->count() > 0)
-        <div class="progress-section">
-            <div class="progress-header">
-                <h3 class="progress-title">Reputation Progress</h3>
-                <div class="progress-points-badge">
-                    {{ $points }} / {{ $badges->max('threshold') }} pts
+        <div class="grid-dashboard" style="margin-bottom: 1.5rem;">
+            
+            <!-- Barre de progression -->
+            <div class="progress-section" style="grid-column: 1 / -1;">
+                <div class="progress-header">
+                    <h3 class="progress-title">Reputation Progress</h3>
+                    <div class="progress-points-badge">
+                        {{ $points }} / {{ $badges->max('threshold') }} pts
+                    </div>
+                </div>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: {{ $progress }}%;"></div>
+                </div>
+                
+                <div class="progress-milestones">
+                    @foreach($badges as $badge)
+                        <div class="progress-milestone {{ $points >= $badge->threshold ? 'active' : '' }}">
+                            <div class="progress-milestone-icon">
+                                <i class="fas fa-{{ $points >= $badge->threshold ? 'check' : 'lock' }}"></i>
+                            </div>
+                            <div class="progress-milestone-label">{{ $badge->title }}</div>
+                            <div class="progress-milestone-points">{{ $badge->threshold }} pts</div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
             
-            <div class="progress-bar-container">
-                <div class="progress-bar-fill" style="width: {{ $progress }}%;"></div>
+            <!-- Cercle Diamond -->
+            <div class="diamond-circle-container">
+                <h3 class="diamond-circle-title">Diamond Ulysse Progress</h3>
+                <div class="diamond-circle-svg">
+                    <svg width="100%" height="100%" viewBox="0 0 80 80">
+                        <circle
+                            cx="40"
+                            cy="40"
+                            r="{{ $circleRadius }}"
+                            stroke="#e5e7eb"
+                            stroke-width="6"
+                            fill="none"
+                        />
+                        <circle
+                            cx="40"
+                            cy="40"
+                            r="{{ $circleRadius }}"
+                            stroke="#3b82f6"
+                            stroke-width="6"
+                            fill="none"
+                            stroke-dasharray="{{ $circleCircumference }}"
+                            stroke-dashoffset="{{ $offset }}"
+                            stroke-linecap="round"
+                            style="transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 0.7s ease-out;"
+                        />
+                    </svg>
+                    <div class="diamond-circle-percentage">{{ $progress }}%</div>
+                </div>
+                <p class="diamond-circle-description">
+                    You have earned <strong>{{ $points }} pts</strong> out of {{ $badges->max('threshold') }}.
+                </p>
             </div>
             
-            <div class="progress-milestones">
-                @foreach($badges as $badge)
-                    <div class="progress-milestone {{ $points >= $badge->threshold ? 'active' : '' }}">
-                        <div class="progress-milestone-icon">
-                            <i class="fas fa-{{ $points >= $badge->threshold ? 'check' : 'lock' }}"></i>
-                        </div>
-                        <div class="progress-milestone-label">{{ $badge->title }}</div>
-                        <div class="progress-milestone-points">{{ $badge->threshold }} pts</div>
-                    </div>
-                @endforeach
-            </div>
         </div>
         @endif
     @endif
 
     <!-- ========================================
-         TIMELINE & UPCOMING EVENTS
+         ACTIVITY TIMELINE - MOBILE FIRST
          ======================================== -->
     <div class="section-header">
         <h2 class="section-title">Activity</h2>
     </div>
     
-    <div class="grid-dashboard" style="margin-bottom: 2rem;">
+    <div class="grid-timeline" style="margin-bottom: 1.5rem;">
         
-        <!-- RECENT ACTIVITY -->
         <div class="timeline-card">
             <div class="timeline-header">
                 <h3 class="timeline-title">
@@ -1338,7 +1680,7 @@
             
             <div class="timeline-list">
                 @forelse($recentActivities as $activity)
-                    <a href="{{ $activity['url'] }}" class="timeline-item">
+                    <a href="{{ $activity['url'] }}" class="timeline-item" data-item-type="link">
                         <div class="timeline-icon {{ $activity['type'] }}">
                             <i class="fas fa-{{ $activity['icon'] }}"></i>
                         </div>
@@ -1359,7 +1701,6 @@
             </div>
         </div>
         
-        <!-- UPCOMING EVENTS -->
         <div class="timeline-card">
             <div class="timeline-header">
                 <h3 class="timeline-title">
@@ -1371,7 +1712,7 @@
             
             <div class="timeline-list">
                 @forelse($upcomingEvents as $event)
-                    <a href="{{ $event['url'] }}" class="timeline-item">
+                    <a href="{{ $event['url'] }}" class="timeline-item" data-item-type="link">
                         <div class="timeline-icon {{ $event['type'] }}">
                             <i class="fas fa-{{ $event['icon'] }}"></i>
                         </div>
@@ -1399,7 +1740,7 @@
     </div>
 
     <!-- ========================================
-         QUICK ACTIONS
+         QUICK ACTIONS - MOBILE FIRST
          ======================================== -->
     <div class="section-header">
         <h2 class="section-title">Quick Actions</h2>
@@ -1407,17 +1748,15 @@
     
     <div class="grid-dashboard" style="margin-bottom: 3rem;">
         
-        <!-- Create New Request (TOUS) - OUVRE LE POPUP DES CATÉGORIES -->
-        <a href="javascript:void(0)" onclick="window.location.href='/request-for-help'" class="action-card" style="--card-color: var(--color-purple); --icon-bg: #f3e8ff; --icon-color: #7c3aed;">
+        <button type="button" class="action-card" id="btn-create-request" data-action-type="popup" style="--card-color: var(--color-purple); --icon-bg: #f3e8ff; --icon-color: #7c3aed;">
             <div class="action-card-icon">
                 <i class="fas fa-plus"></i>
             </div>
-            <div class="action-card-value"><i class="fas fa-plus" style="font-size: 1.5rem;"></i></div>
+            <div class="action-card-value"><i class="fas fa-plus" style="font-size: 1.25rem;"></i></div>
             <div class="action-card-label">Create Service Request</div>
-        </a>
+        </button>
         
-        <!-- My Requests (TOUS) -->
-        <a href="{{ route('user.service.requests') }}" class="action-card" style="--card-color: var(--color-primary); --icon-bg: #dbeafe; --icon-color: #2563eb;">
+        <a href="{{ route('user.service.requests') }}" class="action-card" data-action-type="link" style="--card-color: var(--color-primary); --icon-bg: #dbeafe; --icon-color: #2563eb;">
             <div class="action-card-icon">
                 <i class="fas fa-briefcase"></i>
             </div>
@@ -1426,8 +1765,7 @@
         </a>
         
         @if($hasProviderProfile)
-            <!-- Jobs to Complete (provider) -->
-            <a href="{{ route('user.joblist') }}" class="action-card" style="--card-color: var(--color-success); --icon-bg: #d1fae5; --icon-color: #059669;">
+            <a href="{{ route('user.joblist') }}" class="action-card" data-action-type="link" style="--card-color: var(--color-success); --icon-bg: #d1fae5; --icon-color: #059669;">
                 <div class="action-card-icon">
                     <i class="fas fa-tasks"></i>
                 </div>
@@ -1435,8 +1773,7 @@
                 <div class="action-card-label">Jobs to Complete</div>
             </a>
             
-            <!-- Payments to Validate (provider) -->
-            <a href="{{ route('user.payments.validate') }}" class="action-card" style="--card-color: var(--color-warning); --icon-bg: #fef3c7; --icon-color: #d97706;">
+            <a href="{{ route('user.payments.validate') }}" class="action-card" data-action-type="link" style="--card-color: var(--color-warning); --icon-bg: #fef3c7; --icon-color: #d97706;">
                 <div class="action-card-icon">
                     <i class="fas fa-credit-card"></i>
                 </div>
@@ -1452,11 +1789,9 @@
 (function() {
     'use strict';
     
-    // ========================================
-    // TOAST NOTIFICATION SYSTEM
-    // ======================================== 
+    console.log('🚀 Dashboard Production Ready - Mobile First');
+    
     function showToast(type, message) {
-        // Remove existing toast
         const existing = document.querySelector('.toast-notification');
         if (existing) existing.remove();
         
@@ -1477,24 +1812,22 @@
         
         document.body.appendChild(toast);
         
-        // Haptic feedback
         if ('vibrate' in navigator) {
             navigator.vibrate(type === 'success' ? 25 : 50);
         }
         
-        // Auto remove
         setTimeout(() => {
             toast.style.animation = 'slideUp 0.3s ease reverse';
             setTimeout(() => toast.remove(), 300);
         }, 3000);
     }
     
-    // ========================================
-    // COPY AFFILIATE LINK
-    // ========================================
-    window.copyAffiliateLink = function() {
+    function copyAffiliateLink() {
         const input = document.getElementById('affiliate-link-input');
         const btn = document.getElementById('copy-btn');
+        
+        if (!input || !btn) return;
+        
         const originalHTML = btn.innerHTML;
         
         navigator.clipboard.writeText(input.value)
@@ -1509,41 +1842,35 @@
             .catch(() => {
                 showToast('error', 'Failed to copy link');
             });
-    };
+    }
     
-    // ========================================
-    // SHARE MODAL
-    // ========================================
-    window.openShareModal = function() {
+    function openShareModal() {
         const overlay = document.getElementById('share-overlay');
         const modal = document.getElementById('share-modal');
         
-        overlay.classList.add('active');
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    };
-    
-    window.closeShareModal = function() {
-        const overlay = document.getElementById('share-overlay');
-        const modal = document.getElementById('share-modal');
-        
-        overlay.classList.remove('active');
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    };
-    
-    // Close on ESC key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeShareModal();
+        if (overlay && modal) {
+            overlay.classList.add('active');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-    });
+    }
     
-    // ========================================
-    // SOCIAL SHARING
-    // ========================================
-    window.shareVia = function(platform) {
-        const url = document.getElementById('affiliate-link-input').value;
+    function closeShareModal() {
+        const overlay = document.getElementById('share-overlay');
+        const modal = document.getElementById('share-modal');
+        
+        if (overlay && modal) {
+            overlay.classList.remove('active');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    function shareVia(platform) {
+        const input = document.getElementById('affiliate-link-input');
+        if (!input) return;
+        
+        const url = input.value;
         const encodedUrl = encodeURIComponent(url);
         
         const messages = {
@@ -1580,9 +1907,96 @@
             showToast('success', `Shared via ${platform.charAt(0).toUpperCase() + platform.slice(1)}`);
             closeShareModal();
         }
-    };
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('✅ DOM Ready');
+        
+        const overlay = document.getElementById('share-overlay');
+        const modal = document.getElementById('share-modal');
+        if (overlay) overlay.classList.remove('active');
+        if (modal) modal.classList.remove('active');
+        
+        const btnCreateRequest = document.getElementById('btn-create-request');
+        if (btnCreateRequest) {
+            btnCreateRequest.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (typeof openHelpPopup === 'function') {
+                    openHelpPopup();
+                } else {
+                    showToast('error', 'Category popup not available');
+                }
+            });
+        }
+        
+        const btnAffiliateShare = document.getElementById('btn-affiliate-share');
+        if (btnAffiliateShare) {
+            btnAffiliateShare.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openShareModal();
+            });
+        }
+        
+        const copyBtn = document.getElementById('copy-btn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                copyAffiliateLink();
+            });
+        }
+        
+        const shareButtons = document.querySelectorAll('.share-option');
+        shareButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const platform = this.getAttribute('data-platform');
+                if (platform) {
+                    shareVia(platform);
+                }
+            });
+        });
+        
+        const btnCloseShare = document.getElementById('btn-close-share');
+        if (btnCloseShare) {
+            btnCloseShare.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeShareModal();
+            });
+        }
+        
+        if (overlay) {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeShareModal();
+                }
+            });
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeShareModal();
+            }
+        });
+        
+        console.log('✅ Dashboard initialized successfully');
+    });
     
 })();
 </script>
 
 @endsection
+
+@include('wizards.requester.steps.popup_request_help')
+
+@push('scripts')
+<script src="{{ asset('js/category-popups.js') }}"></script>
+<script src="{{ asset('js/categoryColors.js') }}"></script>
+@endpush
