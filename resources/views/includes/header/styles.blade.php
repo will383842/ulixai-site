@@ -19,6 +19,22 @@
 
 <style>
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🔧 FIX - PADDING POUR HEADER FIXE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Desktop - header fait h-16 (64px) + marge de sécurité */
+body {
+  padding-top: 80px;
+}
+
+/* Mobile - header mobile fait ~62px + marge */
+@media (max-width: 1023px) {
+  body {
+    padding-top: 70px;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    📱 MOBILE MENU - DESCEND DU HAUT
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 

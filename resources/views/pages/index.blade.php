@@ -554,7 +554,7 @@ body {
   </script>
 </head>
 
-<body class="bg-white overflow-x-hidden">
+<body class="bg-white overflow-x-hidden pt-20 lg:pt-20">
   
   @include('includes.header')
   <!-- Google Translate Widget -->

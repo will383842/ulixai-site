@@ -43,7 +43,7 @@
   $countries = Country::where('status', 1)->get();
 @endphp
 
-<body class="min-h-screen bg-white pt-25">
+<body class="min-h-screen bg-white pt-20">
 
 {{-- ═══════════════════════════════════════════════════════════
      🖥️ NAVBAR DESKTOP
