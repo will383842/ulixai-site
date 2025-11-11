@@ -5,16 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Language" content="en">
     
-    <!-- Critical CSS - Loaded immediately to prevent FOUC -->
+    <!-- ⚡ CRITICAL: FORCER L'AFFICHAGE IMMÉDIAT -->
     <style>
-        /* Hide loaders and prevent flash */
+        html,body{opacity:1!important;visibility:visible!important;background:#f8fafc!important}
+        .page-loader,.loader,.splash-screen,.loading-screen,.preloader,.overlay,[class*="loader"],[class*="loading"],[class*="splash"],[class*="preload"]{display:none!important;opacity:0!important;visibility:hidden!important;position:absolute!important;left:-9999px!important}
+    </style>
+    
+    <script>
+    (function(){
+        document.documentElement.style.opacity = '1';
+        document.documentElement.style.visibility = 'visible';
+        if(document.body) {
+            document.body.style.opacity = '1';
+            document.body.style.visibility = 'visible';
+            document.body.style.background = '#f8fafc';
+        }
+    })();
+    </script>
+    
+    <style>
         .page-loader,.loader,.splash-screen,[class*="loader"]{display:none!important;opacity:0!important;visibility:hidden!important}
-        body{margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;opacity:0;animation:fadeInBody 0.2s ease-in forwards}
-        @keyframes fadeInBody{to{opacity:1}}
+        body{margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
         .main-signup{min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;padding-top:10px}
     </style>
     
-    <!-- SEO Meta Tags -->
     <title>Create Account - Join Ulixai Global Community</title>
     <meta name="description" content="Create your Ulixai account in seconds. Join thousands of global helpers connecting across borders. Sign up with email or Google.">
     <meta name="keywords" content="Ulixai signup, create account, global help network, registration, community signup, expat help, international support">
@@ -22,7 +36,6 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url()->current() }}">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="Join Ulixai - Global Help Network">
@@ -33,18 +46,15 @@
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:site_name" content="Ulixai">
     
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="Join Ulixai - Global Help Network">
     <meta name="twitter:description" content="Create your account and connect with helpers worldwide. Fast and secure signup.">
     <meta name="twitter:image" content="{{ asset('images/og-signup.jpg') }}">
     
-    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     
-    <!-- JSON-LD Schema for SEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -69,19 +79,85 @@
 </head>
 <body>
 
-<!-- Immediate loader removal script -->
 <script>
+// ⚡ FORCER L'AFFICHAGE IMMÉDIAT - AVANT TOUT
 (function(){
-  const loaders=document.querySelectorAll('.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"]');
-  loaders.forEach(function(el){el.remove()});
+    document.documentElement.style.opacity = '1';
+    document.documentElement.style.visibility = 'visible';
+    document.body.style.opacity = '1';
+    document.body.style.visibility = 'visible';
+    document.body.style.background = '#f8fafc';
+    
+    var removeAll = function() {
+        var selectors = [
+            '.page-loader', '.loader', '.splash-screen', '.loading-screen', 
+            '.preloader', '.overlay', '[class*="loader"]', '[class*="loading"]',
+            '[class*="splash"]', '[class*="preload"]', '.spinner', '.loading',
+            '#page-loader', '#loader', '#splash', '#preloader', '.alert',
+            '.toast', '.notification', '.swal2-container', '.swal-overlay',
+            '[class*="alert"]', '[class*="toast"]', '[class*="notification"]',
+            '[class*="swal"]', '.error-alert', '.success-alert'
+        ];
+        
+        selectors.forEach(function(sel) {
+            try {
+                var els = document.querySelectorAll(sel);
+                els.forEach(function(el) {
+                    el.style.display = 'none';
+                    el.style.opacity = '0';
+                    el.style.visibility = 'hidden';
+                    el.style.position = 'absolute';
+                    el.style.left = '-9999px';
+                    el.remove();
+                });
+            } catch(e) {}
+        });
+    };
+    
+    removeAll();
+    
+    var count = 0;
+    var interval = setInterval(function() {
+        removeAll();
+        count++;
+        if (count > 100) clearInterval(interval);
+    }, 10);
+})();
+</script>
+
+<script>
+// 🚫 BLOQUER TOUTES LES ALERTES/TOASTS/POPUPS
+(function(){
+    var removeAlerts = function() {
+        var alerts = document.querySelectorAll('.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"],.alert,.toast,.notification,.swal2-container,.swal-overlay,[class*="alert"],[class*="toast"],[class*="notification"],[class*="swal"],.error-alert,.success-alert,.warning-alert,.info-alert');
+        alerts.forEach(function(el){
+            el.style.display = 'none';
+            el.style.opacity = '0';
+            el.style.visibility = 'hidden';
+            el.remove();
+        });
+    };
+    
+    removeAlerts();
+    
+    if(window.Swal) window.Swal = {fire: function(){}, close: function(){}};
+    if(window.toastr) window.toastr = {success: function(){}, error: function(){}, warning: function(){}, info: function(){}};
+    if(window.showToast) window.showToast = function(){};
+    if(window.showAlert) window.showAlert = function(){};
+    
+    var observer = new MutationObserver(function(mutations) {
+        removeAlerts();
+    });
+    
+    if(document.body) {
+        observer.observe(document.body, {childList: true, subtree: true});
+    }
+    
+    setInterval(removeAlerts, 100);
 })();
 </script>
 
 @include('includes.header')
-
-<!-- ============================================
-     🎯 ULIXAI SIGNUP - EXCEPTIONAL UX
-     ============================================ -->
 
 <main class="main-signup" role="main" aria-labelledby="signup-title">
   
@@ -134,7 +210,6 @@
               aria-label="Sign up form">
           @csrf
 
-          <!-- Name Field -->
           <div class="form-group">
             <label for="name" class="form-label">
               <span>Full Name</span>
@@ -148,14 +223,11 @@
                 placeholder="John Doe"
                 value="{{ old('name') }}"
                 required
-                autocomplete="name"
-                data-validate="name" />
-              <span class="input-icon"></span>
+                autocomplete="name" />
             </div>
-            <p class="field-feedback" data-field="name"></p>
+            <div id="error-name" class="error-msg"></div>
           </div>
 
-          <!-- Email Field -->
           <div class="form-group">
             <label for="email" class="form-label">
               <span>Email</span>
@@ -169,14 +241,11 @@
                 placeholder="you@example.com"
                 value="{{ old('email') }}"
                 required
-                autocomplete="email"
-                data-validate="email" />
-              <span class="input-icon"></span>
+                autocomplete="email" />
             </div>
-            <p class="field-feedback" data-field="email"></p>
+            <div id="error-email" class="error-msg"></div>
           </div>
 
-          <!-- Password Field -->
           <div class="form-group">
             <label for="password" class="form-label">
               <span>Password</span>
@@ -190,26 +259,32 @@
                 placeholder="••••••••"
                 required
                 minlength="6"
-                autocomplete="new-password"
-                data-validate="password" />
+                autocomplete="new-password" />
               <button type="button" 
                       class="toggle-password" 
                       data-target="password">
                 <span class="eye-icon">👁️</span>
               </button>
-              <span class="input-icon"></span>
             </div>
-            <!-- Password Strength Indicator -->
-            <div class="password-strength">
-              <div class="strength-bar">
-                <div class="strength-fill"></div>
+            
+            <div class="password-requirements">
+              <div class="requirement" data-req="length">
+                <span class="req-icon">○</span>
+                <span class="req-text">At least 6 characters</span>
               </div>
-              <span class="strength-text">Enter password</span>
+              <div class="requirement" data-req="uppercase">
+                <span class="req-icon">○</span>
+                <span class="req-text">One uppercase letter (A-Z)</span>
+              </div>
+              <div class="requirement" data-req="number">
+                <span class="req-icon">○</span>
+                <span class="req-text">One number (0-9)</span>
+              </div>
             </div>
-            <p class="field-feedback" data-field="password"></p>
+            
+            <div id="error-password" class="error-msg"></div>
           </div>
 
-          <!-- Gender Field -->
           <fieldset class="form-group">
             <legend class="form-label">
               <span>Gender</span>
@@ -221,9 +296,7 @@
                      id="male" 
                      value="Male" 
                      class="gender-radio" 
-                     {{ old('gender') == 'Male' ? 'checked' : '' }}
-                     required
-                     data-validate="gender">
+                     {{ old('gender') == 'Male' ? 'checked' : '' }}>
               <label for="male" class="gender-label">
                 <span class="gender-emoji">🙋‍♂️</span>
                 <span class="gender-text">Male</span>
@@ -235,9 +308,7 @@
                      id="female" 
                      value="Female" 
                      class="gender-radio" 
-                     {{ old('gender') == 'Female' ? 'checked' : '' }}
-                     required
-                     data-validate="gender">
+                     {{ old('gender') == 'Female' ? 'checked' : '' }}>
               <label for="female" class="gender-label">
                 <span class="gender-emoji">🙋‍♀️</span>
                 <span class="gender-text">Female</span>
@@ -245,17 +316,15 @@
               </label>
 
             </div>
-            <p class="field-feedback" data-field="gender"></p>
+            <div id="error-gender" class="error-msg"></div>
           </fieldset>
 
           @if($affiliateCode)
             <input type="hidden" name="affiliate_code" value="{{ $affiliateCode }}" />
           @endif
 
-          <!-- Submit Button -->
-          <button type="submit" id="signupBtnSubmit" class="submit-btn" disabled>
+          <button type="submit" id="signupBtnSubmit" class="submit-btn">
             <span class="submit-text">Join the Adventure! 🎉</span>
-            <span class="submit-loader"></span>
           </button>
 
         </form>
@@ -417,22 +486,23 @@
 </footer>
 
 <style>
-/* ============================================
-   CSS - EXCEPTIONAL UX FEEDBACK
-   ============================================ */
-
-/* Force hide all loaders globally */
-.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"]{
+.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"],.alert,.toast,.notification,.swal2-container,.swal-overlay,[class*="alert"],[class*="toast"],[class*="notification"],[class*="swal"],.error-alert,.success-alert,.warning-alert,.info-alert,.preloader,.overlay,[class*="splash"],[class*="preload"]{
   display:none!important;
   opacity:0!important;
   visibility:hidden!important;
   pointer-events:none!important;
+  position:absolute!important;
+  left:-9999px!important;
 }
 
 *,*::before,*::after{
   box-sizing:border-box;
   margin:0;
   padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
 }
 
 body{
@@ -455,7 +525,6 @@ body{
   border-width:0;
 }
 
-/* Main Signup Container */
 .main-signup{
   min-height:calc(100vh - 80px);
   display:flex;
@@ -472,7 +541,6 @@ body{
   margin:0 auto;
 }
 
-/* Card */
 .signup-card{
   background:#fff;
   border-radius:1rem;
@@ -484,13 +552,11 @@ body{
   padding:1rem;
 }
 
-/* Header */
 .signup-header{
   text-align:center;
   margin-bottom:0.75rem;
 }
 
-/* Brand Icon */
 .brand-icon{
   display:inline-flex;
   width:2rem;
@@ -509,7 +575,6 @@ body{
   color:#fff;
 }
 
-/* Title */
 .main-title{
   font-size:clamp(18px, 5vw, 24px);
   font-weight:800;
@@ -521,7 +586,6 @@ body{
   letter-spacing:-0.02em;
 }
 
-/* Subtitle */
 .subtitle{
   font-size:clamp(11px, 2vw, 13px);
   color:#6b7280;
@@ -529,7 +593,6 @@ body{
   margin-bottom:0;
 }
 
-/* Google Button */
 .google-btn{
   display:flex;
   align-items:center;
@@ -563,7 +626,6 @@ body{
   flex-shrink:0;
 }
 
-/* Divider */
 .divider{
   position:relative;
   text-align:center;
@@ -590,7 +652,6 @@ body{
   color:#9ca3af;
 }
 
-/* Form */
 .signup-form{
   display:flex;
   flex-direction:column;
@@ -617,14 +678,14 @@ body{
 
 .form-input{
   width:100%;
-  padding:0.5rem 2.5rem 0.5rem 0.75rem;
+  padding:0.5rem 0.75rem;
   background:#e5e7eb;
   border:2px solid #d1d5db;
   border-radius:0.5rem;
   font-weight:500;
   font-size:13px;
   color:#111827;
-  transition:all 0.3s ease;
+  transition:all 0.2s ease;
   font-family:inherit;
 }
 
@@ -636,20 +697,19 @@ body{
 .form-input:focus{
   outline:none;
   border-color:#06b6d4;
-  background:#fff;
+  background:#e5e7eb;
   box-shadow:0 0 0 3px rgba(6,182,212,0.1);
 }
 
-/* Input States - Subtle & Elegant */
-.form-input.is-valid{
-  border-color:#10b981;
-  background:#f0fdf4;
+.form-input.input-error{
+  border-color:#f87171;
+  background:#fef2f2;
+  animation:shake 0.3s ease;
 }
 
-.form-input.is-invalid{
-  border-color:#f59e0b;
-  background:#fffbeb;
-  animation:shake 0.4s ease;
+.form-input.input-success{
+  border-color:#10b981;
+  background:#f0fdf4;
 }
 
 @keyframes shake{
@@ -658,74 +718,9 @@ body{
   75%{transform:translateX(4px)}
 }
 
-/* Input Icon - Check/Warning */
-.input-icon{
-  position:absolute;
-  right:0.75rem;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:1rem;
-  opacity:0;
-  transition:opacity 0.3s ease;
-  pointer-events:none;
-}
-
-.input-wrapper.valid .input-icon{
-  opacity:1;
-}
-
-.input-wrapper.valid .input-icon::before{
-  content:'✓';
-  color:#10b981;
-  font-weight:700;
-}
-
-.input-wrapper.invalid .input-icon{
-  opacity:1;
-}
-
-.input-wrapper.invalid .input-icon::before{
-  content:'!';
-  color:#f59e0b;
-  font-weight:700;
-}
-
-/* Field Feedback - Subtle Messages */
-.field-feedback{
-  font-size:11px;
-  font-weight:600;
-  margin-top:0.25rem;
-  min-height:1rem;
-  opacity:0;
-  transform:translateY(-4px);
-  transition:all 0.3s ease;
-}
-
-.field-feedback.show{
-  opacity:1;
-  transform:translateY(0);
-}
-
-.field-feedback.success{
-  color:#10b981;
-}
-
-.field-feedback.warning{
-  color:#f59e0b;
-}
-
-.field-feedback.error{
-  color:#ef4444;
-}
-
-.field-feedback.info{
-  color:#06b6d4;
-}
-
-/* Password Toggle */
 .toggle-password{
   position:absolute;
-  right:2.25rem;
+  right:0.75rem;
   top:50%;
   transform:translateY(-50%);
   background:none;
@@ -734,69 +729,73 @@ body{
   font-size:1rem;
   padding:0.25rem;
   transition:opacity 0.2s;
-  z-index:1;
 }
 
 .toggle-password:hover{
   opacity:0.7;
 }
 
-/* Password Strength Indicator */
-.password-strength{
-  margin-top:0.375rem;
-}
-
-.strength-bar{
-  width:100%;
-  height:0.25rem;
-  background:#e5e7eb;
-  border-radius:9999px;
-  overflow:hidden;
-}
-
-.strength-fill{
-  height:100%;
-  width:0%;
-  transition:all 0.3s ease;
-  border-radius:9999px;
-}
-
-.strength-fill.weak{
-  width:33%;
-  background:#ef4444;
-}
-
-.strength-fill.medium{
-  width:66%;
-  background:#f59e0b;
-}
-
-.strength-fill.strong{
-  width:100%;
-  background:#10b981;
-}
-
-.strength-text{
-  display:block;
-  font-size:11px;
-  font-weight:600;
-  margin-top:0.25rem;
-  color:#9ca3af;
-}
-
-.strength-text.weak{
+.error-msg{
+  display:none;
   color:#ef4444;
+  font-size:11px;
+  font-weight:500;
+  margin-top:0.25rem;
+  padding-left:0.25rem;
 }
 
-.strength-text.medium{
-  color:#f59e0b;
+.error-msg.show{
+  display:block;
+  animation:slideDown 0.2s ease;
 }
 
-.strength-text.strong{
+@keyframes slideDown{
+  from{
+    opacity:0;
+    transform:translateY(-4px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.password-requirements{
+  margin-top:0.5rem;
+  padding:0.5rem;
+  background:#f9fafb;
+  border-radius:0.375rem;
+  border:1px solid #e5e7eb;
+}
+
+.requirement{
+  display:flex;
+  align-items:center;
+  gap:0.375rem;
+  font-size:11px;
+  margin:0.25rem 0;
+  color:#6b7280;
+  transition:color 0.2s ease;
+}
+
+.requirement.met{
   color:#10b981;
 }
 
-/* Gender Selection */
+.req-icon{
+  font-size:0.875rem;
+  font-weight:700;
+  transition:all 0.2s ease;
+}
+
+.requirement.met .req-icon::before{
+  content:'✓';
+}
+
+.req-text{
+  font-weight:500;
+}
+
 .gender-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -859,7 +858,6 @@ body{
   opacity:1;
 }
 
-/* Submit Button */
 .submit-btn{
   width:100%;
   padding:0.625rem 1rem;
@@ -874,56 +872,21 @@ body{
   transition:all 0.2s ease;
   box-shadow:0 4px 14px rgba(6,182,212,0.3);
   font-family:inherit;
-  position:relative;
 }
 
-.submit-btn:disabled{
-  opacity:0.5;
-  cursor:not-allowed;
-  transform:none!important;
-}
-
-.submit-btn:not(:disabled):hover{
+.submit-btn:hover{
   transform:translateY(-1px);
   box-shadow:0 6px 20px rgba(6,182,212,0.4);
 }
 
-.submit-btn:not(:disabled):active{
+.submit-btn:active{
   transform:translateY(0);
 }
 
 .submit-text{
   display:block;
-  transition:opacity 0.3s ease;
 }
 
-.submit-btn.loading .submit-text{
-  opacity:0;
-}
-
-.submit-loader{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:1.25rem;
-  height:1.25rem;
-  border:2px solid rgba(255,255,255,0.3);
-  border-top-color:#fff;
-  border-radius:50%;
-  opacity:0;
-  animation:spin 0.6s linear infinite;
-}
-
-.submit-btn.loading .submit-loader{
-  opacity:1;
-}
-
-@keyframes spin{
-  to{transform:translate(-50%,-50%) rotate(360deg)}
-}
-
-/* Footer */
 .card-footer{
   margin-top:0.75rem;
   padding-top:0.75rem;
@@ -962,7 +925,6 @@ body{
   box-shadow:0 4px 12px rgba(6,182,212,0.35);
 }
 
-/* FAQ Section */
 .faq-section{
   padding:2rem 1rem 2.5rem;
   background:#fff;
@@ -1058,7 +1020,6 @@ body{
   font-size:13px;
 }
 
-/* Footer Links */
 .footer-links{
   padding:1.25rem 1rem 1.75rem;
   background:#f9fafb;
@@ -1108,7 +1069,6 @@ body{
   font-weight:500;
 }
 
-/* Tablet */
 @media (min-width:640px){
   .card-content{
     padding:1.25rem;
@@ -1120,7 +1080,6 @@ body{
   }
 }
 
-/* Desktop */
 @media (min-width:1024px){
   .container{
     max-width:28rem;
@@ -1131,351 +1090,390 @@ body{
   }
 }
 
-/* Accessibility */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{
     animation-duration:0.01ms!important;
     animation-iteration-count:1!important;
     transition-duration:0.01ms!important;
   }
+  html{
+    scroll-behavior:auto;
+  }
 }
 </style>
 
-<!-- JavaScript - SPECIFIC ERROR MESSAGES -->
 <script>
 (function(){
   'use strict';
   
   const form = document.getElementById('signupForm');
-  const submitBtn = document.getElementById('signupBtnSubmit');
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const genderInputs = document.querySelectorAll('input[name="gender"]');
   
-  // Validation State
+  const nameError = document.getElementById('error-name');
+  const emailError = document.getElementById('error-email');
+  const passwordError = document.getElementById('error-password');
+  const genderError = document.getElementById('error-gender');
+  
   const validationState = {
     name: false,
     email: false,
     password: false,
-    gender: false
+    gender: {{ old('gender') ? 'true' : 'false' }}
   };
   
-  // Update Submit Button State
-  function updateSubmitButton(){
-    const allValid = Object.values(validationState).every(v => v);
-    submitBtn.disabled = !allValid;
+  function showError(input, errorEl, message) {
+    input.classList.add('input-error');
+    input.classList.remove('input-success');
+    errorEl.textContent = message;
+    errorEl.classList.add('show');
   }
   
-  // Show Feedback
-  function showFeedback(field, message, type = 'info'){
-    const feedback = document.querySelector(`[data-field="${field}"]`);
-    if(!feedback) return;
-    
-    feedback.textContent = message;
-    feedback.className = `field-feedback ${type} show`;
+  function showSuccess(input) {
+    input.classList.remove('input-error');
+    input.classList.add('input-success');
   }
   
-  // Hide Feedback
-  function hideFeedback(field){
-    const feedback = document.querySelector(`[data-field="${field}"]`);
-    if(!feedback) return;
-    
-    feedback.classList.remove('show');
-    setTimeout(() => {
-      feedback.textContent = '';
-      feedback.className = 'field-feedback';
-    }, 300);
+  function clearError(input, errorEl) {
+    input.classList.remove('input-error');
+    input.classList.remove('input-success');
+    errorEl.textContent = '';
+    errorEl.classList.remove('show');
   }
   
-  // Set Input State
-  function setInputState(input, state){
-    const wrapper = input.closest('.input-wrapper');
-    if(!wrapper) return;
+  function clearAllErrors() {
+    clearError(nameInput, nameError);
+    clearError(emailInput, emailError);
+    clearError(passwordInput, passwordError);
+    genderError.textContent = '';
+    genderError.classList.remove('show');
+  }
+  
+  function parseErrorMessage(message) {
+    const lowerMsg = message.toLowerCase();
     
-    wrapper.className = 'input-wrapper';
-    input.classList.remove('is-valid', 'is-invalid');
-    
-    if(state === 'valid'){
-      wrapper.classList.add('valid');
-      input.classList.add('is-valid');
-    } else if(state === 'invalid'){
-      wrapper.classList.add('invalid');
-      input.classList.add('is-invalid');
+    if (lowerMsg.includes('already') && (lowerMsg.includes('email') || lowerMsg.includes('user') || lowerMsg.includes('exists') || lowerMsg.includes('registered'))) {
+      return {
+        field: 'email',
+        message: '😅 This email is already registered! Try logging in instead? 👉',
+        showLoginLink: true
+      };
     }
+    
+    if (lowerMsg.includes('email') && (lowerMsg.includes('valid') || lowerMsg.includes('invalid') || lowerMsg.includes('format'))) {
+      return {
+        field: 'email',
+        message: '📧 Hmm, that doesn\'t look like a valid email address'
+      };
+    }
+    
+    if (lowerMsg.includes('password')) {
+      if (lowerMsg.includes('uppercase') || lowerMsg.includes('capital')) {
+        return {
+          field: 'password',
+          message: '🔤 Add at least one uppercase letter (A-Z)'
+        };
+      }
+      if (lowerMsg.includes('number') || lowerMsg.includes('digit')) {
+        return {
+          field: 'password',
+          message: '🔢 Add at least one number (0-9)'
+        };
+      }
+      if (lowerMsg.includes('6') || lowerMsg.includes('character') || lowerMsg.includes('long')) {
+        return {
+          field: 'password',
+          message: '⚠️ Password must be at least 6 characters long'
+        };
+      }
+      return {
+        field: 'password',
+        message: '🔐 Password doesn\'t meet the requirements'
+      };
+    }
+    
+    if (lowerMsg.includes('name')) {
+      return {
+        field: 'name',
+        message: '👋 Please enter your full name (at least 2 characters)'
+      };
+    }
+    
+    if (lowerMsg.includes('gender')) {
+      return {
+        field: 'gender',
+        message: '🙋 Please select your gender'
+      };
+    }
+    
+    return {
+      field: 'email',
+      message: message.length > 100 ? '😅 Something went wrong. Please check your email and try again.' : message
+    };
   }
   
-  // Validate Name
-  function validateName(input){
-    const value = input.value.trim();
-    const name = input.name;
+  function validateName() {
+    const value = nameInput.value.trim();
     
-    if(!value){
+    if (!value) {
       validationState.name = false;
-      setInputState(input, null);
-      hideFeedback(name);
+      clearError(nameInput, nameError);
       return false;
     }
     
-    if(value.length < 2){
+    if (value.length < 2) {
       validationState.name = false;
-      setInputState(input, 'invalid');
-      showFeedback(name, 'Please enter your full name (at least 2 characters)', 'warning');
+      showError(nameInput, nameError, '🤔 Please enter your full name (at least 2 characters)');
       return false;
     }
     
     validationState.name = true;
-    setInputState(input, 'valid');
-    showFeedback(name, 'Looks good! ✨', 'success');
+    showSuccess(nameInput);
+    clearError(nameInput, nameError);
     return true;
   }
   
-  // Validate Email
-  let emailCheckTimeout;
-  function validateEmail(input){
-    const value = input.value.trim();
-    const name = input.name;
+  function validateEmail() {
+    const value = emailInput.value.trim();
     
-    if(!value){
+    if (!value) {
       validationState.email = false;
-      setInputState(input, null);
-      hideFeedback(name);
+      clearError(emailInput, emailError);
       return false;
     }
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(value)){
+    if (!emailRegex.test(value)) {
       validationState.email = false;
-      setInputState(input, 'invalid');
-      showFeedback(name, 'Please enter a valid email address (example: you@email.com)', 'warning');
+      showError(emailInput, emailError, '😅 Hmm, that doesn\'t look like a valid email address');
       return false;
     }
     
-    // Check if email exists (debounced)
-    clearTimeout(emailCheckTimeout);
-    showFeedback(name, 'Checking availability...', 'info');
-    
-    emailCheckTimeout = setTimeout(() => {
-      // Simulate email check (replace with actual AJAX call)
-      // For now, just show success
-      validationState.email = true;
-      setInputState(input, 'valid');
-      showFeedback(name, 'Email available! 🎉', 'success');
-      updateSubmitButton();
-    }, 500);
-    
+    validationState.email = true;
+    showSuccess(emailInput);
+    clearError(emailInput, emailError);
     return true;
   }
   
-  // Validate Password
-  function validatePassword(input){
-    const value = input.value;
-    const name = input.name;
+  function updatePasswordRequirements(password) {
+    const requirements = {
+      length: password.length >= 6,
+      uppercase: /[A-Z]/.test(password),
+      number: /[0-9]/.test(password)
+    };
     
-    const strengthBar = document.querySelector('.strength-fill');
-    const strengthText = document.querySelector('.strength-text');
+    Object.keys(requirements).forEach(req => {
+      const reqEl = document.querySelector(`[data-req="${req}"]`);
+      if (reqEl) {
+        if (requirements[req]) {
+          reqEl.classList.add('met');
+          reqEl.querySelector('.req-icon').textContent = '✓';
+        } else {
+          reqEl.classList.remove('met');
+          reqEl.querySelector('.req-icon').textContent = '○';
+        }
+      }
+    });
     
-    if(!value){
+    return requirements;
+  }
+  
+  function validatePassword() {
+    const value = passwordInput.value;
+    
+    if (!value) {
       validationState.password = false;
-      setInputState(input, null);
-      hideFeedback(name);
-      strengthBar.className = 'strength-fill';
-      strengthBar.style.width = '0%';
-      strengthText.textContent = 'Enter password';
-      strengthText.className = 'strength-text';
+      clearError(passwordInput, passwordError);
+      updatePasswordRequirements('');
       return false;
     }
     
-    if(value.length < 6){
+    const requirements = updatePasswordRequirements(value);
+    
+    if (!requirements.length) {
       validationState.password = false;
-      setInputState(input, 'invalid');
-      showFeedback(name, 'Password must be at least 6 characters long', 'warning');
-      strengthBar.className = 'strength-fill weak';
-      strengthText.textContent = 'Too short';
-      strengthText.className = 'strength-text weak';
+      showError(passwordInput, passwordError, '⚠️ Password must be at least 6 characters long');
       return false;
     }
     
-    // Calculate strength
-    let strength = 0;
-    if(value.length >= 8) strength++;
-    if(/[a-z]/.test(value) && /[A-Z]/.test(value)) strength++;
-    if(/\d/.test(value)) strength++;
-    if(/[^a-zA-Z\d]/.test(value)) strength++;
-    
-    if(strength <= 1){
-      validationState.password = true;
-      setInputState(input, 'valid');
-      showFeedback(name, 'Consider adding numbers or symbols for better security', 'info');
-      strengthBar.className = 'strength-fill weak';
-      strengthText.textContent = 'Weak';
-      strengthText.className = 'strength-text weak';
-    } else if(strength === 2){
-      validationState.password = true;
-      setInputState(input, 'valid');
-      showFeedback(name, 'Good! Try adding special characters for extra security', 'info');
-      strengthBar.className = 'strength-fill medium';
-      strengthText.textContent = 'Medium';
-      strengthText.className = 'strength-text medium';
-    } else {
-      validationState.password = true;
-      setInputState(input, 'valid');
-      showFeedback(name, 'Strong password! 🔐', 'success');
-      strengthBar.className = 'strength-fill strong';
-      strengthText.textContent = 'Strong';
-      strengthText.className = 'strength-text strong';
+    if (!requirements.uppercase) {
+      validationState.password = false;
+      showError(passwordInput, passwordError, '🔤 Add at least one uppercase letter (A-Z)');
+      return false;
     }
     
+    if (!requirements.number) {
+      validationState.password = false;
+      showError(passwordInput, passwordError, '🔢 Add at least one number (0-9)');
+      return false;
+    }
+    
+    validationState.password = true;
+    showSuccess(passwordInput);
+    clearError(passwordInput, passwordError);
     return true;
   }
   
-  // Validate Gender
-  function validateGender(){
-    const radios = form.querySelectorAll('input[name="gender"]');
-    const checked = Array.from(radios).some(r => r.checked);
-    
+  function validateGender() {
+    const checked = Array.from(genderInputs).some(r => r.checked);
     validationState.gender = checked;
     
-    if(checked){
-      showFeedback('gender', 'Perfect! ✨', 'success');
-    } else {
-      hideFeedback('gender');
+    if (checked) {
+      genderError.textContent = '';
+      genderError.classList.remove('show');
     }
     
     return checked;
   }
   
-  // Real-time Validation
-  const nameInput = form.querySelector('#name');
-  const emailInput = form.querySelector('#email');
-  const passwordInput = form.querySelector('#password');
-  const genderInputs = form.querySelectorAll('input[name="gender"]');
+  nameInput.addEventListener('input', validateName);
+  nameInput.addEventListener('blur', validateName);
   
-  nameInput.addEventListener('input', function(){
-    validateName(this);
-    updateSubmitButton();
-  });
+  emailInput.addEventListener('input', validateEmail);
+  emailInput.addEventListener('blur', validateEmail);
   
-  nameInput.addEventListener('blur', function(){
-    validateName(this);
-    updateSubmitButton();
-  });
-  
-  emailInput.addEventListener('input', function(){
-    validateEmail(this);
-  });
-  
-  emailInput.addEventListener('blur', function(){
-    validateEmail(this);
-    updateSubmitButton();
-  });
-  
-  passwordInput.addEventListener('input', function(){
-    validatePassword(this);
-    updateSubmitButton();
-  });
-  
-  passwordInput.addEventListener('blur', function(){
-    validatePassword(this);
-    updateSubmitButton();
-  });
+  passwordInput.addEventListener('input', validatePassword);
+  passwordInput.addEventListener('blur', validatePassword);
   
   genderInputs.forEach(input => {
-    input.addEventListener('change', function(){
-      validateGender();
-      updateSubmitButton();
-    });
+    input.addEventListener('change', validateGender);
   });
   
-  // Password Toggle
-  document.addEventListener('click',function(e){
-    const toggle=e.target.closest('.toggle-password');
-    if(!toggle)return;
+  document.addEventListener('click', function(e){
+    const toggle = e.target.closest('.toggle-password');
+    if (!toggle) return;
     
-    const targetId=toggle.dataset.target;
-    const input=document.getElementById(targetId);
-    const icon=toggle.querySelector('.eye-icon');
+    const targetId = toggle.dataset.target;
+    const input = document.getElementById(targetId);
+    const icon = toggle.querySelector('.eye-icon');
     
-    if(input.type==='password'){
-      input.type='text';
-      icon.textContent='🙈';
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = '🙈';
     } else {
-      input.type='password';
-      icon.textContent='👁️';
+      input.type = 'password';
+      icon.textContent = '👁️';
     }
   });
   
-  // Form Submission
   form.addEventListener('submit', function(e){
     e.preventDefault();
     
-    // Final validation
-    const nameValid = validateName(nameInput);
-    const emailValid = validationState.email; // Already validated
-    const passwordValid = validatePassword(passwordInput);
+    clearAllErrors();
+    
+    const nameValid = validateName();
+    const emailValid = validateEmail();
+    const passwordValid = validatePassword();
     const genderValid = validateGender();
     
-    if(!nameValid || !emailValid || !passwordValid || !genderValid){
-      // Focus first invalid field
-      if(!nameValid) nameInput.focus();
-      else if(!emailValid) emailInput.focus();
-      else if(!passwordValid) passwordInput.focus();
+    if (!nameValid) {
+      if (!nameInput.value.trim()) {
+        showError(nameInput, nameError, '👋 Hey! We need your name to get started');
+      }
+      nameInput.focus();
       return;
     }
     
-    // Show loading state
-    submitBtn.classList.add('loading');
-    submitBtn.disabled = true;
+    if (!emailValid) {
+      if (!emailInput.value.trim()) {
+        showError(emailInput, emailError, '📧 We need your email to create your account');
+      }
+      emailInput.focus();
+      return;
+    }
     
-    // Submit form
-    this.submit();
+    if (!passwordValid) {
+      if (!passwordInput.value) {
+        showError(passwordInput, passwordError, '🔑 Create a secure password to protect your account');
+      }
+      passwordInput.focus();
+      return;
+    }
+    
+    if (!genderValid) {
+      genderError.textContent = '🙋 Please select your gender';
+      genderError.classList.add('show');
+      return;
+    }
+    
+    form.submit();
   });
   
-  // Handle Server Errors - SPECIFIC MESSAGES SOUS CHAQUE CHAMP
   @if($errors->any() || session('error'))
     setTimeout(() => {
-      // Remove loading state if error
-      submitBtn.classList.remove('loading');
-      
       @if($errors->has('name'))
-        const nameInput = document.getElementById('name');
-        setInputState(nameInput, 'invalid');
-        showFeedback('name', "{{ $errors->first('name') }}", 'error');
+        showError(nameInput, nameError, "{{ $errors->first('name') }}");
         nameInput.focus();
         validationState.name = false;
-        updateSubmitButton();
       @endif
       
       @if($errors->has('email'))
-        const emailInput = document.getElementById('email');
-        setInputState(emailInput, 'invalid');
-        showFeedback('email', "{{ $errors->first('email') }}", 'error');
-        if(!{{ $errors->has('name') ? 'true' : 'false' }}) emailInput.focus();
+        var emailErrorMsg = "{{ $errors->first('email') }}";
+        var parsedError = parseErrorMessage(emailErrorMsg);
+        showError(emailInput, emailError, parsedError.message);
+        
+        if (parsedError.showLoginLink) {
+          var loginLink = document.createElement('a');
+          loginLink.href = "{{ route('login') }}";
+          loginLink.textContent = ' Login here';
+          loginLink.style.color = '#06b6d4';
+          loginLink.style.fontWeight = '700';
+          loginLink.style.textDecoration = 'underline';
+          emailError.appendChild(loginLink);
+        }
+        
+        if (!{{ $errors->has('name') ? 'true' : 'false' }}) emailInput.focus();
         validationState.email = false;
-        updateSubmitButton();
       @endif
       
       @if($errors->has('password'))
-        const passwordInput = document.getElementById('password');
-        setInputState(passwordInput, 'invalid');
-        showFeedback('password', "{{ $errors->first('password') }}", 'error');
-        if(!{{ $errors->has('name') || $errors->has('email') ? 'true' : 'false' }}) passwordInput.focus();
+        showError(passwordInput, passwordError, "{{ $errors->first('password') }}");
+        if (!{{ $errors->has('name') || $errors->has('email') ? 'true' : 'false' }}) passwordInput.focus();
         validationState.password = false;
-        updateSubmitButton();
+        updatePasswordRequirements(passwordInput.value);
       @endif
       
       @if($errors->has('gender'))
-        showFeedback('gender', "{{ $errors->first('gender') }}", 'error');
+        genderError.textContent = "{{ $errors->first('gender') }}";
+        genderError.classList.add('show');
         validationState.gender = false;
-        updateSubmitButton();
       @endif
       
       @if(session('error') && !$errors->any())
-        // Erreur générale - probablement liée à l'email
-        const emailInput = document.getElementById('email');
-        setInputState(emailInput, 'invalid');
-        showFeedback('email', "{{ session('error') }}", 'error');
-        emailInput.focus();
-        validationState.email = false;
-        updateSubmitButton();
+        var generalError = "{{ session('error') }}";
+        var parsedError = parseErrorMessage(generalError);
+        
+        if (parsedError.field === 'email') {
+          showError(emailInput, emailError, parsedError.message);
+          
+          if (parsedError.showLoginLink) {
+            var loginLink = document.createElement('a');
+            loginLink.href = "{{ route('login') }}";
+            loginLink.textContent = ' Login here';
+            loginLink.style.color = '#06b6d4';
+            loginLink.style.fontWeight = '700';
+            loginLink.style.textDecoration = 'underline';
+            emailError.appendChild(loginLink);
+          }
+          
+          emailInput.focus();
+          validationState.email = false;
+        } else if (parsedError.field === 'password') {
+          showError(passwordInput, passwordError, parsedError.message);
+          passwordInput.focus();
+          validationState.password = false;
+        } else if (parsedError.field === 'name') {
+          showError(nameInput, nameError, parsedError.message);
+          nameInput.focus();
+          validationState.name = false;
+        } else if (parsedError.field === 'gender') {
+          genderError.textContent = parsedError.message;
+          genderError.classList.add('show');
+          validationState.gender = false;
+        }
       @endif
-      
     }, 100);
   @endif
   

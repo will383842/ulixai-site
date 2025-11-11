@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Language" content="en">
     
-    <!-- Critical CSS - Loaded immediately to prevent FOUC -->
     <style>
-        /* Hide loaders and prevent flash */
         .page-loader,.loader,.splash-screen,[class*="loader"]{display:none!important;opacity:0!important;visibility:hidden!important}
         body{margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;opacity:0;animation:fadeInBody 0.2s ease-in forwards}
         @keyframes fadeInBody{to{opacity:1}}
         .main-login{min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;padding-top:10px}
     </style>
     
-    <!-- SEO Meta Tags -->
     <title>Login - Welcome Back to Ulixai | Secure Sign In</title>
     <meta name="description" content="Log in to your Ulixai account securely. Access your global help network, connect with helpers worldwide, and manage your profile. Sign in with email or Google.">
     <meta name="keywords" content="Ulixai login, sign in, secure login, account access, expat community login, travel help login">
@@ -22,7 +19,6 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url()->current() }}">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="Login to Ulixai - Your Global Help Network">
@@ -33,19 +29,15 @@
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:site_name" content="Ulixai">
     
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="Login to Ulixai">
     <meta name="twitter:description" content="Access your account and connect with helpers worldwide.">
     <meta name="twitter:image" content="{{ asset('images/og-login.jpg') }}">
     
-    <!-- Favicons -->
     <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     
-    <!-- Performance: Using system fonts for instant load -->
-    <!-- JSON-LD Schema for SEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -82,7 +74,6 @@
 </head>
 <body>
 
-<!-- Immediate loader removal script -->
 <script>
 (function(){
   const loaders=document.querySelectorAll('.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"]');
@@ -92,41 +83,28 @@
 
 @include('includes.header')
 
-<!-- ============================================
-     🎯 ULIXAI LOGIN - MOBILE-FIRST & OPTIMIZED
-     ============================================ -->
-
-<!-- Main Content -->
 <main class="main-login" role="main" aria-labelledby="login-title">
   
-  <!-- Content Container -->
   <div class="container">
     
-    <!-- Login Card -->
     <article class="login-card">
       
-      <!-- Card Content -->
       <div class="card-content">
         
-        <!-- Header Section -->
         <header class="login-header">
           
-          <!-- Brand Icon -->
           <div class="brand-icon" aria-hidden="true">
             <svg class="icon-svg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0110.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
 
-          <!-- Main Heading -->
           <h1 id="login-title" class="main-title">Welcome Back! 👋</h1>
           
-          <!-- Subtitle -->
           <p class="subtitle">Log in to continue your adventure ✨</p>
           
         </header>
 
-        <!-- Google Sign In -->
         <a href="{{ route('google.login') }}" 
            class="google-btn" 
            aria-label="Continue with Google">
@@ -139,12 +117,10 @@
           <span>Sign in with Google</span>
         </a>
 
-        <!-- Divider -->
         <div class="divider" role="separator" aria-label="Or sign in with email">
           <span>Or use email</span>
         </div>
 
-        <!-- Login Form -->
         <form id="loginForm" 
               method="POST" 
               action="{{ route('user.login') }}" 
@@ -153,7 +129,6 @@
               aria-label="Login form">
           @csrf
 
-          <!-- Email -->
           <div class="form-group">
             <label for="email" class="form-label">
               <span>Email</span>
@@ -163,21 +138,16 @@
                 type="email"
                 id="email"
                 name="email" 
-                class="form-input @error('email') input-error @enderror"
+                class="form-input"
                 placeholder="you@example.com"
                 value="{{ old('email') }}"
                 required
                 autocomplete="email"
-                aria-required="true"
-                aria-invalid="@error('email')true @else false @enderror"
-                aria-describedby="error-email" />
+                aria-required="true" />
             </div>
-            @error('email')
-              <p id="error-email" class="error-msg" role="alert">{{ $message }}</p>
-            @enderror
+            <div id="error-email" class="error-msg"></div>
           </div>
 
-          <!-- Password -->
           <div class="form-group">
             <label for="password" class="form-label">
               <span>Password</span>
@@ -187,13 +157,11 @@
                 type="password"
                 id="password"
                 name="password" 
-                class="form-input @error('password') input-error @enderror"
+                class="form-input"
                 placeholder="••••••••"
                 required
                 autocomplete="current-password"
-                aria-required="true"
-                aria-invalid="@error('password')true @else false @enderror"
-                aria-describedby="error-password" />
+                aria-required="true" />
               <button type="button" 
                       class="toggle-password" 
                       data-target="password"
@@ -201,15 +169,12 @@
                 <span class="eye-icon">👁️</span>
               </button>
             </div>
-            @error('password')
-              <p id="error-password" class="error-msg" role="alert">{{ $message }}</p>
-            @enderror
+            <div id="error-password" class="error-msg"></div>
             <div class="forgot-password-link">
               <a href="/forgot-password" class="forgot-link">Forgot password?</a>
             </div>
           </div>
 
-          <!-- Remember Me Checkbox -->
           <div class="form-group checkbox-group">
             <label for="remember-me" class="checkbox-label">
               <input 
@@ -222,14 +187,12 @@
             </label>
           </div>
 
-          <!-- Submit Button -->
           <button type="submit" id="loginBtnSubmit" class="submit-btn">
             <span class="submit-text">Login & Explore 🚀</span>
           </button>
 
         </form>
 
-        <!-- Signup Link -->
         <footer class="card-footer">
           <p class="footer-text">
             <span class="already-text">New to Ulixai?</span>
@@ -243,7 +206,6 @@
 
 </main>
 
-<!-- FAQ Section - SEO Rich -->
 <section class="faq-section" aria-labelledby="faq-title">
   <div class="container">
     
@@ -251,7 +213,6 @@
     
     <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
       
-      <!-- Question 1 -->
       <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
         <summary class="faq-question" itemprop="name">
           <span class="faq-icon" aria-hidden="true">🔐</span>
@@ -265,7 +226,6 @@
         </div>
       </details>
 
-      <!-- Question 2 -->
       <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
         <summary class="faq-question" itemprop="name">
           <span class="faq-icon" aria-hidden="true">❓</span>
@@ -279,7 +239,6 @@
         </div>
       </details>
 
-      <!-- Question 3 -->
       <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
         <summary class="faq-question" itemprop="name">
           <span class="faq-icon" aria-hidden="true">🚀</span>
@@ -293,7 +252,6 @@
         </div>
       </details>
 
-      <!-- Question 4 -->
       <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
         <summary class="faq-question" itemprop="name">
           <span class="faq-icon" aria-hidden="true">📱</span>
@@ -307,7 +265,6 @@
         </div>
       </details>
 
-      <!-- Question 5 -->
       <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
         <summary class="faq-question" itemprop="name">
           <span class="faq-icon" aria-hidden="true">⚠️</span>
@@ -321,7 +278,6 @@
         </div>
       </details>
 
-      <!-- Question 6 -->
       <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
         <summary class="faq-question" itemprop="name">
           <span class="faq-icon" aria-hidden="true">🌍</span>
@@ -335,7 +291,6 @@
         </div>
       </details>
 
-      <!-- Question 7 -->
       <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
         <summary class="faq-question" itemprop="name">
           <span class="faq-icon" aria-hidden="true">🔄</span>
@@ -349,7 +304,6 @@
         </div>
       </details>
 
-      <!-- Question 8 -->
       <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
         <summary class="faq-question" itemprop="name">
           <span class="faq-icon" aria-hidden="true">🛡️</span>
@@ -367,7 +321,6 @@
   </div>
 </section>
 
-<!-- Footer Links -->
 <footer class="footer-links" role="contentinfo">
   <div class="container">
     <nav class="links-nav" aria-label="Footer navigation">
@@ -393,11 +346,6 @@
 </footer>
 
 <style>
-/* ============================================
-   CSS - MOBILE-FIRST & ULTRA-OPTIMIZED
-   ============================================ */
-
-/* Force hide all loaders globally */
 .page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"]{
   display:none!important;
   opacity:0!important;
@@ -409,6 +357,10 @@
   box-sizing:border-box;
   margin:0;
   padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
 }
 
 body{
@@ -431,7 +383,6 @@ body{
   border-width:0;
 }
 
-/* Main Login Container */
 .main-login{
   min-height:calc(100vh - 80px);
   display:flex;
@@ -448,7 +399,6 @@ body{
   margin:0 auto;
 }
 
-/* Card */
 .login-card{
   background:#fff;
   border-radius:1rem;
@@ -460,13 +410,11 @@ body{
   padding:1rem;
 }
 
-/* Header */
 .login-header{
   text-align:center;
   margin-bottom:0.75rem;
 }
 
-/* Brand Icon */
 .brand-icon{
   display:inline-flex;
   width:2rem;
@@ -485,7 +433,6 @@ body{
   color:#fff;
 }
 
-/* Title */
 .main-title{
   font-size:clamp(18px, 5vw, 24px);
   font-weight:800;
@@ -497,7 +444,6 @@ body{
   letter-spacing:-0.02em;
 }
 
-/* Subtitle */
 .subtitle{
   font-size:clamp(11px, 2vw, 13px);
   color:#6b7280;
@@ -505,7 +451,6 @@ body{
   margin-bottom:0;
 }
 
-/* Google Button - IMPROVED */
 .google-btn{
   display:flex;
   align-items:center;
@@ -539,7 +484,6 @@ body{
   flex-shrink:0;
 }
 
-/* Divider */
 .divider{
   position:relative;
   text-align:center;
@@ -566,7 +510,6 @@ body{
   color:#9ca3af;
 }
 
-/* Form */
 .login-form{
   display:flex;
   flex-direction:column;
@@ -616,9 +559,16 @@ body{
   box-shadow:0 0 0 3px rgba(6,182,212,0.1);
 }
 
-.input-error{
-  border-color:#ef4444!important;
-  background:#fef2f2!important;
+.form-input.input-error{
+  border-color:#f87171;
+  background:#fef2f2;
+  animation:shake 0.3s ease;
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  75%{transform:translateX(4px)}
 }
 
 .toggle-password{
@@ -639,10 +589,28 @@ body{
 }
 
 .error-msg{
+  display:none;
   color:#ef4444;
-  font-size:12px;
-  font-weight:600;
+  font-size:11px;
+  font-weight:500;
   margin-top:0.25rem;
+  padding-left:0.25rem;
+}
+
+.error-msg.show{
+  display:block;
+  animation:slideDown 0.2s ease;
+}
+
+@keyframes slideDown{
+  from{
+    opacity:0;
+    transform:translateY(-4px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 .forgot-password-link{
@@ -663,7 +631,6 @@ body{
   text-decoration:underline;
 }
 
-/* Checkbox */
 .checkbox-group{
   display:flex;
   align-items:center;
@@ -690,7 +657,6 @@ body{
   user-select:none;
 }
 
-/* Submit Button */
 .submit-btn{
   width:100%;
   padding:0.625rem 1rem;
@@ -720,7 +686,6 @@ body{
   display:block;
 }
 
-/* Footer */
 .card-footer{
   margin-top:0.75rem;
   padding-top:0.75rem;
@@ -759,7 +724,6 @@ body{
   box-shadow:0 4px 12px rgba(6,182,212,0.35);
 }
 
-/* FAQ Section */
 .faq-section{
   padding:2rem 1rem 2.5rem;
   background:#fff;
@@ -855,7 +819,6 @@ body{
   font-size:13px;
 }
 
-/* Footer Links */
 .footer-links{
   padding:1.25rem 1rem 1.75rem;
   background:#f9fafb;
@@ -905,7 +868,6 @@ body{
   font-weight:500;
 }
 
-/* Tablet */
 @media (min-width:640px){
   .card-content{
     padding:1.25rem;
@@ -917,7 +879,6 @@ body{
   }
 }
 
-/* Desktop */
 @media (min-width:1024px){
   .container{
     max-width:28rem;
@@ -928,158 +889,79 @@ body{
   }
 }
 
-/* Accessibility */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{
     animation-duration:0.01ms!important;
     animation-iteration-count:1!important;
     transition-duration:0.01ms!important;
   }
-}
-
-/* Fun Modal Popup */
-.fun-modal{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:9999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:0;
-  visibility:hidden;
-  transition:all 0.3s ease;
-  padding:1rem;
-}
-
-.fun-modal.show{
-  opacity:1;
-  visibility:visible;
-}
-
-.modal-overlay{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  background:rgba(0,0,0,0.5);
-  backdrop-filter:blur(4px);
-  animation:fadeIn 0.3s ease;
-}
-
-.modal-content{
-  position:relative;
-  background:#fff;
-  border-radius:1.5rem;
-  padding:2rem 1.5rem;
-  max-width:24rem;
-  width:100%;
-  text-align:center;
-  box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);
-  transform:scale(0.9);
-  animation:popIn 0.3s ease forwards;
-  z-index:1;
-}
-
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-
-@keyframes popIn{
-  0%{transform:scale(0.8);opacity:0}
-  50%{transform:scale(1.05)}
-  100%{transform:scale(1);opacity:1}
-}
-
-.modal-close{
-  position:absolute;
-  top:0.75rem;
-  right:0.75rem;
-  background:transparent;
-  border:none;
-  font-size:1.5rem;
-  color:#9ca3af;
-  cursor:pointer;
-  width:2rem;
-  height:2rem;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:50%;
-  transition:all 0.2s ease;
-}
-
-.modal-close:hover{
-  background:#f3f4f6;
-  color:#374151;
-  transform:rotate(90deg);
-}
-
-.modal-icon{
-  font-size:4rem;
-  margin-bottom:1rem;
-  animation:bounce 0.6s ease;
-}
-
-@keyframes bounce{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.1)}
-}
-
-.modal-title{
-  font-size:1.5rem;
-  font-weight:800;
-  color:#1f2937;
-  margin-bottom:0.5rem;
-  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.modal-message{
-  font-size:1rem;
-  color:#6b7280;
-  line-height:1.6;
-  margin-bottom:1.5rem;
-}
-
-.modal-btn{
-  background:linear-gradient(135deg,#06b6d4,#8b5cf6);
-  color:#fff;
-  border:none;
-  padding:0.75rem 2rem;
-  border-radius:9999px;
-  font-size:1rem;
-  font-weight:700;
-  cursor:pointer;
-  transition:all 0.2s ease;
-  box-shadow:0 4px 14px rgba(6,182,212,0.3);
-  font-family:inherit;
-}
-
-.modal-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 20px rgba(6,182,212,0.4);
-}
-
-.modal-btn:active{
-  transform:translateY(0);
+  html{
+    scroll-behavior:auto;
+  }
 }
 </style>
 
-<!-- JavaScript - Optimized -->
 <script>
 (function(){
   'use strict';
   
   const form = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const emailError = document.getElementById('error-email');
+  const passwordError = document.getElementById('error-password');
   
-  // Password toggle
+  function showError(input, errorEl, message) {
+    input.classList.add('input-error');
+    errorEl.textContent = message;
+    errorEl.classList.add('show');
+  }
+  
+  function clearError(input, errorEl) {
+    input.classList.remove('input-error');
+    errorEl.textContent = '';
+    errorEl.classList.remove('show');
+  }
+  
+  function clearAllErrors() {
+    clearError(emailInput, emailError);
+    clearError(passwordInput, passwordError);
+  }
+  
+  function getFunMessage(originalMessage) {
+    const msg = originalMessage.toLowerCase();
+    
+    if (msg.includes('credentials') || msg.includes('do not match') || msg.includes('incorrect')) {
+      if (msg.includes('email')) {
+        return "🤔 Hmm, we don't recognize this email. Double-check?";
+      } else {
+        return "🔐 Oops! That password doesn't match. Try again?";
+      }
+    }
+    
+    if (msg.includes('email') && (msg.includes('invalid') || msg.includes('valid'))) {
+      return "📧 Oops! That doesn't look like a real email address";
+    }
+    
+    if (msg.includes('password') && msg.includes('required')) {
+      return "🔑 Don't forget your password! Type it in";
+    }
+    
+    if (msg.includes('email') && msg.includes('required')) {
+      return "👋 Hey! We need your email address to log you in";
+    }
+    
+    if (msg.includes('not found') || msg.includes('does not exist')) {
+      return "😅 We can't find that email in our system. Maybe try signing up?";
+    }
+    
+    if (msg.includes('too many')) {
+      return "⏸️ Whoa there! Too many attempts. Take a quick break?";
+    }
+    
+    return originalMessage;
+  }
+  
   document.addEventListener('click',function(e){
     const toggle=e.target.closest('.toggle-password');
     if(!toggle)return;
@@ -1097,109 +979,70 @@ body{
     }
   });
   
-  // Real-time validation - remove errors on input
-  const inputs=form.querySelectorAll('input[type="email"],input[type="password"]');
-  inputs.forEach(function(input){
-    input.addEventListener('input',function(){
-      const errorEl=document.getElementById('error-'+this.name);
-      if(errorEl && this.value.trim()){
-        errorEl.textContent='';
-        this.classList.remove('input-error');
-      }
-    });
+  emailInput.addEventListener('input', function(){
+    if(this.value.trim()){
+      clearError(this, emailError);
+    }
   });
   
-  // Form submission validation
+  passwordInput.addEventListener('input', function(){
+    if(this.value){
+      clearError(this, passwordError);
+    }
+  });
+  
   form.addEventListener('submit',function(e){
-    let valid=true;
-    const email=form.elements.email.value.trim();
-    const password=form.elements.password.value;
+    e.preventDefault();
     
-    // Clear previous errors
-    inputs.forEach(function(input){
-      input.classList.remove('input-error');
-    });
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    let isValid = true;
+    
+    clearAllErrors();
     
     if(!email){
-      form.elements.email.classList.add('input-error');
-      showFunModal('📧', 'Hey there!', 'We need your email address to log you in! 😊', 'error');
-      valid=false;
-    }else if(!/^\S+@\S+\.\S+$/.test(email)){
-      form.elements.email.classList.add('input-error');
-      showFunModal('🤔', 'Hmm...', 'That doesn\'t look like a valid email address! 📧', 'error');
-      valid=false;
+      showError(emailInput, emailError, "👋 Hey! We need your email address to log you in");
+      isValid = false;
+    } else if(!/^\S+@\S+\.\S+$/.test(email)){
+      showError(emailInput, emailError, "📧 Oops! That doesn't look like a real email address");
+      isValid = false;
     }
     
-    if(!password && valid){
-      form.elements.password.classList.add('input-error');
-      showFunModal('🔐', 'Almost there!', 'Don\'t forget your password! 🔑', 'error');
-      valid=false;
+    if(!password){
+      showError(passwordInput, passwordError, "🔑 Don't forget your password! Type it in");
+      isValid = false;
     }
     
-    if(!valid){
-      e.preventDefault();
-      return false;
+    if(isValid){
+      form.submit();
     }
   });
+  
+  @if(session('toast_error') || session('error'))
+    var errorMsg = "{{ session('toast_error') ?? session('error') }}";
+    var funMsg = getFunMessage(errorMsg);
+    
+    if(errorMsg.toLowerCase().includes('password')) {
+      showError(passwordInput, passwordError, funMsg);
+    } else {
+      showError(emailInput, emailError, funMsg);
+    }
+  @elseif($errors->has('email'))
+    showError(emailInput, emailError, getFunMessage("{{ $errors->first('email') }}"));
+  @elseif($errors->has('password'))
+    showError(passwordInput, passwordError, getFunMessage("{{ $errors->first('password') }}"));
+  @elseif($errors->any())
+    var errorMsg = "{{ $errors->first() }}";
+    var funMsg = getFunMessage(errorMsg);
+    
+    if(errorMsg.toLowerCase().includes('password')) {
+      showError(passwordInput, passwordError, funMsg);
+    } else {
+      showError(emailInput, emailError, funMsg);
+    }
+  @endif
 })();
-
-// Fun Modal Functions
-function showFunModal(icon, title, message, type) {
-  const modal = document.getElementById('funModal');
-  const modalIcon = document.getElementById('modalIcon');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalMessage = document.getElementById('modalMessage');
-  
-  modalIcon.textContent = icon;
-  modalTitle.textContent = title;
-  modalMessage.textContent = message;
-  
-  modal.classList.add('show');
-  
-  // Close on Escape key
-  document.addEventListener('keydown', function escHandler(e) {
-    if (e.key === 'Escape') {
-      closeFunModal();
-      document.removeEventListener('keydown', escHandler);
-    }
-  });
-}
-
-function closeFunModal() {
-  const modal = document.getElementById('funModal');
-  modal.classList.remove('show');
-}
 </script>
-
-<!-- Fun Error/Success Popup Modal -->
-<div id="funModal" class="fun-modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalMessage">
-  <div class="modal-overlay" onclick="closeFunModal()"></div>
-  <div class="modal-content">
-    <button type="button" class="modal-close" onclick="closeFunModal()" aria-label="Close">✕</button>
-    <div class="modal-icon" id="modalIcon">😅</div>
-    <h3 class="modal-title" id="modalTitle">Oops!</h3>
-    <p class="modal-message" id="modalMessage">Something went wrong</p>
-    <button type="button" class="modal-btn" onclick="closeFunModal()">Got it! 👍</button>
-  </div>
-</div>
-
-@if(session('toast_success') || session('toast_error') || session('error') || $errors->any())
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-    @if(session('toast_success') || session('success'))
-        showFunModal('🎉', 'Success!', "{{ session('toast_success') ?? session('success') }}", 'success');
-    @elseif(session('toast_error'))
-        showFunModal('😅', 'Oops!', "{{ session('toast_error') }}", 'error');
-    @elseif(session('error'))
-        showFunModal('😅', 'Oops!', "{{ session('error') }}", 'error');
-    @elseif($errors->has('email'))
-        showFunModal('😅', 'Oops!', "{{ $errors->first('email') }}", 'error');
-    @elseif($errors->any())
-        showFunModal('😅', 'Oops!', "{{ $errors->first() }}", 'error');
-    @endif
-});
-</script>
-@endif
 
 @include('includes.footer')
 
