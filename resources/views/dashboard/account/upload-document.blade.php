@@ -10,6 +10,7 @@
         --color-secondary: #06b6d4;
         --color-success: #10b981;
         --color-danger: #ef4444;
+        --color-warning: #f59e0b;
         --color-text-primary: #0f172a;
         --color-text-secondary: #64748b;
         --color-text-tertiary: #475569;
@@ -92,14 +93,15 @@
         will-change: transform;
         transform: translateZ(0);
         -webkit-tap-highlight-color: transparent;
+        position: relative;
     }
 
-    .document-button:hover {
+    .document-button:hover:not(:disabled) {
         transform: translateY(-2px) translateZ(0);
         box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
     }
 
-    .document-button:active {
+    .document-button:active:not(:disabled) {
         transform: translateY(0) translateZ(0);
         transition-duration: 0.1s;
     }
@@ -107,6 +109,39 @@
     .document-button:focus-visible {
         outline: 3px solid var(--color-primary);
         outline-offset: 3px;
+    }
+
+    .document-button:disabled {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        cursor: not-allowed;
+        opacity: 0.9;
+    }
+
+    .document-button-uploaded {
+        background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+    }
+
+    .document-button-checkmark {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 24px;
+        height: 24px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-success);
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .document-button-locked {
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        opacity: 0.9;
+        display: block;
     }
 
     .progress-section {
@@ -139,6 +174,130 @@
         font-size: 0.8125rem;
         font-weight: 600;
         color: var(--color-text-secondary);
+    }
+
+    /* Documents Display Section */
+    .documents-display-section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-radius: var(--border-radius-lg);
+        border: 2px solid #e2e8f0;
+    }
+
+    .documents-display-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+    }
+
+    .document-item {
+        background: white;
+        border-radius: var(--border-radius-md);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 2px solid #e2e8f0;
+    }
+
+    .document-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .document-item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+
+    .document-item-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+        text-transform: uppercase;
+    }
+
+    .document-item-badge {
+        background: var(--color-success);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .document-item-locked {
+        background: #64748b;
+    }
+
+    .document-images-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .document-image-container {
+        position: relative;
+        aspect-ratio: 1.4;
+        border-radius: var(--border-radius-md);
+        overflow: hidden;
+        border: 2px solid #e2e8f0;
+        background: #f1f5f9;
+    }
+
+    .document-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .document-image-label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .no-documents-message {
+        text-align: center;
+        padding: 2rem;
+        color: var(--color-text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .lock-message {
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        background: #fef3c7;
+        border: 2px solid #fbbf24;
+        border-radius: var(--border-radius-md);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .lock-message-icon {
+        color: #d97706;
+        font-size: 1.125rem;
+    }
+
+    .lock-message-text {
+        font-size: 0.8125rem;
+        color: #92400e;
+        font-weight: 500;
     }
 
     /* Modal Styles */
@@ -188,6 +347,7 @@
         overflow-y: auto;
         position: relative;
         padding: 2rem 1.5rem;
+        padding-bottom: 6rem;
         transform: scale(0.95) translateZ(0);
         transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         will-change: transform;
@@ -215,6 +375,7 @@
         font-size: 1.5rem;
         color: #6b7280;
         -webkit-tap-highlight-color: transparent;
+        z-index: 10;
     }
 
     .modal-close:hover {
@@ -335,6 +496,11 @@
         gap: 1rem;
         padding-top: 1.5rem;
         border-top: 2px solid #e5e7eb;
+        position: absolute;
+        bottom: 1.5rem;
+        left: 1.5rem;
+        right: 1.5rem;
+        background: white;
     }
 
     .btn-cancel {
@@ -420,6 +586,12 @@
 
         .modal-content {
             padding: 2.5rem 2rem;
+            padding-bottom: 6rem;
+        }
+
+        .modal-actions {
+            left: 2rem;
+            right: 2rem;
         }
     }
 
@@ -431,6 +603,17 @@
 
         .documents-upload-card {
             padding: 2.5rem;
+        }
+
+        .modal-content {
+            padding-bottom: 2rem;
+        }
+
+        .modal-actions {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
         }
     }
 
@@ -448,21 +631,141 @@
         <!-- Header -->
         <div class="page-header">
             <h2 class="page-title">My Identity Documents</h2>
-            <p class="page-subtitle">Click on the document you are going to send us</p>
+            <p class="page-subtitle">
+                @if(!empty($documents))
+                    Your documents have been uploaded and locked. They cannot be modified.
+                @else
+                    Click on the document you are going to send us
+                @endif
+            </p>
         </div>
 
         <!-- Document Buttons -->
         <div class="document-buttons-grid">
+            @if(isset($documents['european_id']))
+            <button class="document-button document-button-uploaded" disabled aria-label="European identity card uploaded">
+                <span class="document-button-checkmark">✓</span>
+                European identity card
+                <span class="document-button-locked">🔒 Locked</span>
+            </button>
+            @else
             <button onclick="openModal('european_id')" class="document-button" aria-label="Upload European identity card">
                 European identity card
             </button>
+            @endif
+
+            @if(isset($documents['passport']))
+            <button class="document-button document-button-uploaded" disabled aria-label="Passport uploaded">
+                <span class="document-button-checkmark">✓</span>
+                Passport
+                <span class="document-button-locked">🔒 Locked</span>
+            </button>
+            @else
             <button onclick="openModal('passport')" class="document-button" aria-label="Upload passport">
                 Passport
             </button>
+            @endif
+
+            @if(isset($documents['license']))
+            <button class="document-button document-button-uploaded" disabled aria-label="Driver's license uploaded">
+                <span class="document-button-checkmark">✓</span>
+                Driver's license
+                <span class="document-button-locked">🔒 Locked</span>
+            </button>
+            @else
             <button onclick="openModal('license')" class="document-button" aria-label="Upload driver's license">
                 Driver's license
             </button>
+            @endif
         </div>
+
+        <!-- Display Uploaded Documents -->
+        @if(!empty($documents))
+        <div class="documents-display-section">
+            <h3 class="documents-display-title">📄 Uploaded Documents (Read-only)</h3>
+            
+            @if(isset($documents['european_id']))
+            <div class="document-item">
+                <div class="document-item-header">
+                    <span class="document-item-name">European Identity Card</span>
+                    <span class="document-item-badge document-item-locked">
+                        <i class="fas fa-lock"></i> Locked
+                    </span>
+                </div>
+                <div class="document-images-grid">
+                    @if(isset($documents['european_id']['front']))
+                    <div class="document-image-container">
+                        <img src="{{ asset($documents['european_id']['front']) }}" alt="European ID Front">
+                        <span class="document-image-label">Front</span>
+                    </div>
+                    @endif
+                    @if(isset($documents['european_id']['back']))
+                    <div class="document-image-container">
+                        <img src="{{ asset($documents['european_id']['back']) }}" alt="European ID Back">
+                        <span class="document-image-label">Back</span>
+                    </div>
+                    @endif
+                </div>
+                <div class="lock-message">
+                    <i class="fas fa-lock lock-message-icon"></i>
+                    <span class="lock-message-text">This document has been verified and cannot be modified</span>
+                </div>
+            </div>
+            @endif
+
+            @if(isset($documents['passport']))
+            <div class="document-item">
+                <div class="document-item-header">
+                    <span class="document-item-name">Passport</span>
+                    <span class="document-item-badge document-item-locked">
+                        <i class="fas fa-lock"></i> Locked
+                    </span>
+                </div>
+                <div class="document-images-grid">
+                    @if(isset($documents['passport']['front']))
+                    <div class="document-image-container">
+                        <img src="{{ asset($documents['passport']['front']) }}" alt="Passport">
+                        <span class="document-image-label">Passport</span>
+                    </div>
+                    @endif
+                </div>
+                <div class="lock-message">
+                    <i class="fas fa-lock lock-message-icon"></i>
+                    <span class="lock-message-text">This document has been verified and cannot be modified</span>
+                </div>
+            </div>
+            @endif
+
+            @if(isset($documents['license']))
+            <div class="document-item">
+                <div class="document-item-header">
+                    <span class="document-item-name">Driver's License</span>
+                    <span class="document-item-badge document-item-locked">
+                        <i class="fas fa-lock"></i> Locked
+                    </span>
+                </div>
+                <div class="document-images-grid">
+                    @if(isset($documents['license']['front']))
+                    <div class="document-image-container">
+                        <img src="{{ asset($documents['license']['front']) }}" alt="License Front">
+                        <span class="document-image-label">Front</span>
+                    </div>
+                    @endif
+                    @if(isset($documents['license']['back']))
+                    <div class="document-image-container">
+                        <img src="{{ asset($documents['license']['back']) }}" alt="License Back">
+                        <span class="document-image-label">Back</span>
+                    </div>
+                    @endif
+                </div>
+                <div class="lock-message">
+                    <i class="fas fa-lock lock-message-icon"></i>
+                    <span class="lock-message-text">This document has been verified and cannot be modified</span>
+                </div>
+            </div>
+            @endif
+        </div>
+        @endif
 
         <!-- Progress Bar -->
         <div class="progress-section">
@@ -503,8 +806,19 @@
     'use strict';
     
     let currentDocType = '';
+    const uploadedDocuments = @json($documents ?? []);
 
     window.openModal = function(docType) {
+        // Check if document already exists
+        if (uploadedDocuments[docType]) {
+            if (typeof toastr !== 'undefined') {
+                toastr.warning('🔒 This document has already been uploaded and cannot be modified.');
+            } else {
+                alert('This document has already been uploaded and cannot be modified.');
+            }
+            return;
+        }
+
         currentDocType = docType;
         const modal = document.getElementById('documentModal');
         const overlay = document.getElementById('modalOverlay');
@@ -522,7 +836,7 @@
         document.getElementById('modalTitle').textContent = titles[docType] || 'Upload Document';
 
         // Dynamically generate form fields based on document type
-        if (docType === 'passport' || docType === 'license') {
+        if (docType === 'european_id' || docType === 'license') {
             documentFields.innerHTML = `
                 <div class="upload-field">
                     <label class="upload-label-text">Front Side</label>
@@ -543,14 +857,14 @@
                     </label>
                 </div>
             `;
-        } else if (docType === 'european_id') {
+        } else if (docType === 'passport') {
             documentFields.innerHTML = `
                 <div class="upload-field">
-                    <label class="upload-label-text">Front Side</label>
+                    <label class="upload-label-text">Passport Photo</label>
                     <label class="upload-box" id="front-box">
                         <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="upload-icon" alt="" aria-hidden="true" />
                         <span class="upload-text">Upload photo</span>
-                        <input type="file" class="upload-input" id="front-${docType}" accept="image/*" onchange="previewImage(this, 'front-box')" aria-label="Upload front side of document">
+                        <input type="file" class="upload-input" id="front-${docType}" accept="image/*" onchange="previewImage(this, 'front-box')" aria-label="Upload passport photo">
                         <div class="upload-preview"></div>
                     </label>
                 </div>
@@ -632,7 +946,7 @@
                 }
                 closeModal();
                 setTimeout(() => {
-                    window.location.href = '/account';
+                    window.location.reload();
                 }, 2000);
             } else {
                 if (typeof toastr !== 'undefined') {

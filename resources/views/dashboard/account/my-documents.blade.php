@@ -4,50 +4,27 @@
 
 @section('content')
 
+@php
+    // Décoder le JSON si c'est une chaîne
+    $documentsArray = is_string($documents) ? json_decode($documents, true) : $documents;
+    $hasDocuments = !empty($documentsArray) && is_array($documentsArray);
+    $docCount = $hasDocuments ? count($documentsArray) : 0;
+@endphp
+
 <style>
-    :root {
-        --color-primary: #2563eb;
-        --color-primary-light: #3b82f6;
-        --color-success: #10b981;
-        --color-danger: #ef4444;
-        --color-text-primary: #0f172a;
-        --color-text-secondary: #64748b;
-        --color-text-tertiary: #475569;
-        --color-bg-primary: #ffffff;
-        --color-bg-secondary: #f8fafc;
-        --border-radius-md: 1rem;
-        --border-radius-lg: 1.25rem;
-        --border-radius-xl: 1.5rem;
-        --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Accessibility: Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-        }
-    }
-
     .documents-container-2025 {
         max-width: 900px;
         margin: 0 auto;
-        padding: 0.875rem;
-        padding-bottom: 8rem;
+        padding: 0.875rem 0.875rem 6rem;
         min-height: 100vh;
-        contain: layout style paint;
     }
 
     .documents-card-2025 {
-        background: var(--color-bg-primary);
-        border-radius: var(--border-radius-xl);
+        background: #fff;
+        border-radius: 1.5rem;
         padding: 1.5rem;
         border: 2px solid #cbd5e1;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        contain: layout style;
     }
 
     .documents-header-2025 {
@@ -57,22 +34,21 @@
     .documents-title-2025 {
         font-size: 1.25rem;
         font-weight: 700;
-        color: var(--color-text-primary);
-        margin-bottom: 0.5rem;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        color: #0f172a;
+        margin: 0 0 0.5rem 0;
     }
 
     .documents-subtitle-2025 {
         font-size: 0.875rem;
-        color: var(--color-text-secondary);
+        color: #64748b;
         line-height: 1.5;
+        margin: 0;
     }
 
     .documents-grid-2025 {
         display: grid;
-        grid-template-columns: 1fr;
         gap: 1rem;
+        grid-template-columns: 1fr;
     }
 
     .document-item-2025 {
@@ -82,40 +58,34 @@
         align-items: center;
         justify-content: center;
         padding: 2rem 1.5rem;
-        border-radius: var(--border-radius-lg);
+        border-radius: 1.25rem;
         border: 2px solid;
-        text-decoration: none !important;
-        transition: var(--transition-base);
+        text-decoration: none;
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         min-height: 140px;
-        will-change: transform;
-        transform: translateZ(0);
-        -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
     }
 
     .document-item-2025.completed {
-        border-color: var(--color-success);
+        border-color: #10b981;
         background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
     }
 
     .document-item-2025.pending {
-        border-color: var(--color-danger);
+        border-color: #ef4444;
         background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
     }
 
-    .document-item-2025:hover {
-        transform: translateY(-2px) translateZ(0);
+    .document-item-2025:hover,
+    .document-item-2025:focus {
+        transform: translateY(-2px);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        outline: none;
     }
 
-    .document-item-2025:active {
-        transform: translateY(0) translateZ(0);
-        transition-duration: 0.1s;
-    }
-
-    /* Accessibility: Focus visible */
     .document-item-2025:focus-visible {
-        outline: 3px solid var(--color-primary);
-        outline-offset: 3px;
+        outline: 3px solid #2563eb;
+        outline-offset: 2px;
     }
 
     .document-icon-2025 {
@@ -130,19 +100,19 @@
     }
 
     .document-item-2025.completed .document-icon-2025 {
-        background: var(--color-success);
-        color: white;
+        background: #10b981;
+        color: #fff;
     }
 
     .document-item-2025.pending .document-icon-2025 {
-        background: var(--color-danger);
-        color: white;
+        background: #ef4444;
+        color: #fff;
     }
 
     .document-label-2025 {
         font-size: 0.9375rem;
         font-weight: 600;
-        color: var(--color-text-primary);
+        color: #0f172a;
         text-align: center;
     }
 
@@ -157,27 +127,46 @@
         align-items: center;
         justify-content: center;
         font-size: 1.125rem;
-        font-weight: 700;
     }
 
     .document-item-2025.completed .document-status-badge-2025 {
-        background: var(--color-success);
-        color: white;
+        background: #10b981;
+        color: #fff;
     }
 
     .document-item-2025.pending .document-status-badge-2025 {
-        background: var(--color-danger);
-        color: white;
+        background: #ef4444;
+        color: #fff;
     }
 
-    * {
-        box-sizing: border-box;
+    .document-count-info {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 1rem;
+        text-align: center;
     }
 
+    .document-count-info.all-complete {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        border: 2px solid #10b981;
+    }
+
+    .document-count-text {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #64748b;
+        margin: 0;
+    }
+
+    .document-count-info.all-complete .document-count-text {
+        color: #10b981;
+    }
+
+    /* Tablet et plus */
     @media (min-width: 640px) {
         .documents-container-2025 {
-            padding: 1.5rem;
-            padding-bottom: 8rem;
+            padding: 1.5rem 1.5rem 6rem;
         }
 
         .documents-card-2025 {
@@ -194,14 +183,35 @@
         }
     }
 
+    /* Desktop */
     @media (min-width: 1024px) {
         .documents-container-2025 {
             padding: 2rem;
-            padding-bottom: 2rem;
+        }
+    }
+
+    /* Préférence réduite pour les animations */
+    @media (prefers-reduced-motion: reduce) {
+        .document-item-2025 {
+            transition: none;
+        }
+    }
+
+    /* Mode sombre (si nécessaire) */
+    @media (prefers-color-scheme: dark) {
+        .documents-card-2025 {
+            background: #1e293b;
+            border-color: #334155;
         }
 
-        .documents-card-2025 {
-            padding: 2.5rem;
+        .documents-title-2025,
+        .document-label-2025 {
+            color: #f1f5f9;
+        }
+
+        .documents-subtitle-2025,
+        .document-count-text {
+            color: #94a3b8;
         }
     }
 </style>
@@ -210,37 +220,53 @@
     <div class="documents-card-2025">
         
         <!-- Header -->
-        <div class="documents-header-2025">
-            <h2 class="documents-title-2025">My Documents</h2>
+        <header class="documents-header-2025">
+            <h1 class="documents-title-2025">My Documents</h1>
             <p class="documents-subtitle-2025">Upload your profile picture and identity documents. We recommend using a white background for best results.</p>
-        </div>
+        </header>
 
         <!-- Documents Grid -->
-        <div class="documents-grid-2025">
+        <div class="documents-grid-2025" role="list">
 
             <!-- Profile Picture -->
-            <a href="{{ route('upload-picture') }}" class="document-item-2025 completed" aria-label="Upload profile picture - Status: Completed">
-                <div class="document-icon-2025">
-                    <i class="fas fa-user" aria-hidden="true"></i>
+            <a href="{{ route('upload-picture') }}" 
+               class="document-item-2025 completed" 
+               role="listitem"
+               aria-label="My Profile Picture - Completed">
+                <div class="document-icon-2025" aria-hidden="true">
+                    <i class="fas fa-user"></i>
                 </div>
                 <span class="document-label-2025">My Profile Picture</span>
-                <div class="document-status-badge-2025" aria-label="Completed">
-                    <i class="fas fa-check" aria-hidden="true"></i>
+                <div class="document-status-badge-2025" aria-hidden="true">
+                    <i class="fas fa-check"></i>
                 </div>
             </a>
 
             <!-- Identity Documents -->
-            <a href="{{ route('upload-document') }}" class="document-item-2025 pending" aria-label="Upload identity documents - Status: Pending">
-                <div class="document-icon-2025">
-                    <i class="fas fa-id-card" aria-hidden="true"></i>
+            <a href="{{ route('upload-document') }}" 
+               class="document-item-2025 {{ $hasDocuments ? 'completed' : 'pending' }}"
+               role="listitem"
+               aria-label="Identity Documents - {{ $hasDocuments ? 'Completed' : 'Pending' }}">
+                <div class="document-icon-2025" aria-hidden="true">
+                    <i class="fas fa-id-card"></i>
                 </div>
                 <span class="document-label-2025">Identity Documents</span>
-                <div class="document-status-badge-2025" aria-label="Pending">
-                    <i class="fas fa-exclamation" aria-hidden="true"></i>
+                <div class="document-status-badge-2025" aria-hidden="true">
+                    <i class="fas fa-{{ $hasDocuments ? 'check' : 'exclamation' }}"></i>
                 </div>
             </a>
 
         </div>
+
+        <!-- Document Count Info -->
+        @if($hasDocuments)
+        <div class="document-count-info all-complete" role="status" aria-live="polite">
+            <p class="document-count-text">
+                <i class="fas fa-check-circle" aria-hidden="true"></i> 
+                {{ $docCount }} identity document{{ $docCount > 1 ? 's' : '' }} uploaded successfully
+            </p>
+        </div>
+        @endif
     </div>
 </div>
 

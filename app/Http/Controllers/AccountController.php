@@ -313,7 +313,11 @@ class AccountController extends Controller
 
 
     public function myDocuments(Request $request) {
-        return view('dashboard.account.my-documents');
+        $user = Auth::user();
+        $provider = $user->serviceProvider;
+        $documents = $provider->documents ?? [];
+        
+        return view('dashboard.account.my-documents', compact('documents'));
     }
 
 
@@ -364,7 +368,10 @@ class AccountController extends Controller
 
     public function uploadDocument(Request $request) {
         $user = Auth::user();
-        return view('dashboard.account.upload-document', compact('user'));
+        $provider = $user->serviceProvider;
+        $documents = $provider->documents ?? [];
+        
+        return view('dashboard.account.upload-document', compact('user', 'documents'));
     }
 
 
