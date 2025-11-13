@@ -1,12 +1,6 @@
 {{-- ═══════════════════════════════════════════════════════════
-     🎯 SIDEBAR DASHBOARD - FIXE EN DESKTOP
-     ═══════════════════════════════════════════════════════════
-     
-     Modifications par rapport au code fourni :
-     - lg:static lg:h-auto ENLEVÉ → sidebar fixe
-     - z-45 (invalide) → z-40 (valide Tailwind)
-     
---}}
+     🎯 SIDEBAR DASHBOARD COMPLET - AVEC HEADER MOBILE
+     ═══════════════════════════════════════════════════════════ --}}
 
 <style>
 /* ========================================
@@ -52,16 +46,20 @@
 }
 
 /* État actif avec gradient subtil */
-.nav-link.active {
+.nav-link.active,
+.nav-link.text-blue-600 {
     background: linear-gradient(135deg, 
         rgba(14, 165, 233, 0.12) 0%, 
-        rgba(6, 182, 212, 0.12) 100%);
-    color: #0ea5e9;
+        rgba(6, 182, 212, 0.12) 100%) !important;
+    color: #0ea5e9 !important;
     font-weight: 600;
 }
 
-/* Badge notifications moderne (cohérent avec mobile navbar) */
+/* Badge notifications moderne */
 .notification-badge-sidebar {
+    position: absolute !important;
+    top: -8px !important;
+    right: -8px !important;
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: white;
     font-size: 0.625rem;
@@ -75,8 +73,9 @@
     justify-content: center;
     box-shadow: 
         0 4px 12px rgba(239, 68, 68, 0.5),
-        0 0 0 2px rgba(255, 255, 255, 0.3);
+        0 0 0 2px rgba(255, 255, 255, 1);
     animation: badgePulse 2.5s ease-in-out infinite;
+    z-index: 10;
 }
 
 @keyframes badgePulse {
@@ -160,6 +159,7 @@
     background: linear-gradient(white, white) padding-box,
                 linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%) border-box;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    flex-shrink: 0;
 }
 
 .avatar-container:hover {
@@ -208,7 +208,7 @@
     }
 }
 
-/* Scrollbar personnalisée légère */
+/* Scrollbar personnalisée */
 #sidebar::-webkit-scrollbar {
     width: 6px;
 }
@@ -226,6 +226,19 @@
     background: rgba(14, 165, 233, 0.5);
 }
 
+#sidebar nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+#sidebar nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#sidebar nav::-webkit-scrollbar-thumb {
+    background: rgba(14, 165, 233, 0.2);
+    border-radius: 3px;
+}
+
 /* Performance optimizations */
 .sidebar-transition,
 .nav-link,
@@ -235,16 +248,30 @@
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
 }
+
+/* Position sidebar */
+#sidebar {
+    top: 0; /* Pas de header mobile */
+    height: 100vh;
+}
+
+@media (min-width: 1024px) {
+    #sidebar {
+        top: 4rem; /* Desktop : sous header desktop */
+        height: calc(100vh - 4rem);
+        transform: translateX(0) !important; /* Force visible en desktop */
+    }
+}
 </style>
 
 <!-- Mobile Overlay -->
 <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
 
-<!-- Sidebar FIXE (plus de lg:static, z-40 valide au lieu de z-45) -->
-<div id="sidebar" class="fixed top-0 left-0 h-full w-72 shadow-2xl sidebar-transition transform -translate-x-full lg:translate-x-0 z-40">
-    <div class="p-6 h-screen overflow-y-auto">
+<!-- Sidebar SOUS LE HEADER - CACHÉE PAR DÉFAUT EN MOBILE -->
+<div id="sidebar" class="fixed left-0 w-72 shadow-2xl sidebar-transition -translate-x-full lg:translate-x-0 z-40 overflow-y-auto hidden lg:block">
+    <div class="p-4 h-full flex flex-col min-h-0">
         <!-- Mobile Close Button -->
-        <div class="lg:hidden flex justify-end mb-4">
+        <div class="lg:hidden flex justify-end mb-3 flex-shrink-0">
             <button id="close-sidebar" class="p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Fermer le menu">
                 <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -253,7 +280,7 @@
         </div>
 
         <!-- Greeting Section -->
-        <div class="flex items-center space-x-3 mb-8">
+        <div class="flex items-center space-x-3 mb-6 flex-shrink-0">
             @php
                 $provider = Auth::user()?->serviceProvider;
             @endphp
@@ -262,8 +289,8 @@
                  style="background-image: url('{{ $provider?->profile_photo ? asset($provider->profile_photo) : '' }}'), url('{{ asset('images/helpexpat.png') }}');">
             </div>
 
-            <div>
-                <h2 id="user-greeting" class="text-xl font-bold text-gray-800">
+            <div class="flex-1 min-w-0">
+                <h2 id="user-greeting" class="text-xl font-bold text-gray-800 truncate">
                     {{ Auth::user()->name }}!
                 </h2>
             </div>
@@ -274,78 +301,88 @@
             $unreadMessagesCount = $user->unreadMessagesCount() ?? 0;
         @endphp
 
-        <!-- Navigation Menu -->
-        <nav class="space-y-2 mb-8">
+        <!-- Navigation Menu - AVEC BLOC AFFILIATION INTÉGRÉ -->
+        <nav class="space-y-2 flex-1 overflow-y-auto min-h-0">
+            {{-- Dashboard --}}
             <a href="{{ route('dashboard')}}"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('dashboard') ? 'active' : 'text-gray-600 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-gauge-high w-5 h-5"></i>
+               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('dashboard') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                <i class="fa-solid fa-gauge-high w-5 h-5 flex-shrink-0"></i>
                 <span class="font-medium">Dashboard</span>
             </a>
 
+            {{-- My services request --}}
             <a href="{{ route('user.service.requests') }}"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('service-request') ? 'active' : 'text-gray-600 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-list-check w-5 h-5"></i>
+               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('service-request') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                <i class="fa-solid fa-list-check w-5 h-5 flex-shrink-0"></i>
                 <span>My services request</span>
             </a>
 
             @if($user->user_role == 'service_provider')
+            {{-- My job list --}}
             <a href="{{ route('user.joblist') }}"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('job-list') ? 'active' : 'text-gray-600 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-briefcase w-5 h-5"></i>
+               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('job-list') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                <i class="fa-solid fa-briefcase w-5 h-5 flex-shrink-0"></i>
                 <span>My job list</span>
             </a>
             @endif
 
+            {{-- My earnings --}}
             <a href="{{ route('user.earnings') }}"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('my-earnings') ? 'active' : 'text-gray-600 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-euro-sign w-5 h-5"></i>
+               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('my-earnings') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                <i class="fa-solid fa-euro-sign w-5 h-5 flex-shrink-0"></i>
                 <span>My earnings</span>
             </a>
             
+            {{-- Private messaging avec badge --}}
             <a href="{{ route('user.conversation') }}"
-               class="flex items-center justify-between px-4 py-3 rounded-lg nav-link {{ request()->is('conversations') ? 'active' : 'text-gray-600 hover:bg-gray-50' }}">
+               class="flex items-center justify-between px-4 py-3 rounded-lg nav-link {{ request()->is('conversations') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
                 <div class="flex items-center space-x-3">
-                    <div class="relative">
+                    <div class="relative flex-shrink-0">
                         <i class="fa-solid fa-envelope w-5 h-5"></i>
-                        <span class="notification-badge-sidebar {{ $unreadMessagesCount == 0 ? 'hidden' : ''}}" 
+                        {{-- Badge rouge pour messages non lus --}}
+                        @if($unreadMessagesCount > 0)
+                        <span class="notification-badge-sidebar" 
                               data-value="{{ $unreadMessagesCount }}" 
-                              id="private_messages_notification">{{ $unreadMessagesCount > 0 ? $unreadMessagesCount : '' }}</span>
+                              id="private_messages_notification">{{ $unreadMessagesCount }}</span>
+                        @endif
                     </div>
                     <span>Private messaging</span>
                 </div>     
             </a>
 
+            {{-- My account --}}
             <a href="{{ route('user.account') }}"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('account') ? 'active' : 'text-gray-600 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-user w-5 h-5"></i>
+               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('account') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                <i class="fa-solid fa-user w-5 h-5 flex-shrink-0"></i>
                 <span>My account</span>
             </a>
 
+            {{-- Payments to be validated --}}
             <a href="{{ route('user.payments.validate') }}"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('payments-validate') ? 'active' : 'text-gray-600 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-credit-card w-5 h-5"></i>
+               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('payments-validate') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                <i class="fa-solid fa-credit-card w-5 h-5 flex-shrink-0"></i>
                 <span>Payments to be validated</span>
             </a>
+
+            {{-- BLOC AFFILIATION INTÉGRÉ DANS LE NAV --}}
+            <div class="pt-2">
+                <a href="{{ route('user.affiliate.account') }}" 
+                   class="block promo-card-modern p-4 rounded-xl text-white shadow-lg">
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="promo-icon-container bg-white bg-opacity-20 p-3 rounded-full mb-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <span class="text-base font-bold leading-tight text-center">My Affiliation Account</span>
+                    </div>
+                </a>
+            </div>
         </nav>
 
-        <!-- Promotional Cards -->
-        <div class="space-y-4 mb-8">
-            <a href="{{ route('user.affiliate.account') }}" 
-               class="block promo-card-modern p-4 rounded-xl text-white shadow-lg">
-                <div class="flex flex-col items-center justify-center">
-                    <div class="promo-icon-container bg-white bg-opacity-20 p-3 rounded-full mb-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                    </div>
-                    <span class="text-base font-bold leading-tight text-center">My Affiliation Account</span>
-                </div>
-            </a>
-        </div>
-
         <!-- Logout -->
-        <div class="pt-4 border-t border-gray-200">
+        <div class="pt-4 border-t border-gray-200 flex-shrink-0 mt-4">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="logout-button-modern w-full text-sm font-semibold text-red-500 border-2 border-red-200 px-4 py-2.5 rounded-lg">
@@ -363,26 +400,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeSidebar = document.getElementById('close-sidebar');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    // ═══════════════════════════════════════════════════════════
-    // SIDEBAR FUNCTIONS - ORIGINAL COMPLET PRÉSERVÉ
-    // ═══════════════════════════════════════════════════════════
+    // Toggle sidebar - plus de hamburger, donc on garde juste la fonction pour usage interne
+    function toggleSidebar() {
+        const isOpen = !sidebar.classList.contains('-translate-x-full');
+        if (isOpen) {
+            closeSidebarFunc();
+        } else {
+            openSidebarFunc();
+        }
+    }
+
+    // Open sidebar
+    function openSidebarFunc() {
+        if (!sidebar || !overlay) return;
+        
+        // En mobile, afficher le sidebar
+        if (window.innerWidth < 1024) {
+            sidebar.classList.remove('hidden');
+        }
+        
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
 
     // Close sidebar
     function closeSidebarFunc() {
         if (!sidebar || !overlay) return;
-        
         sidebar.classList.add('-translate-x-full');
         overlay.classList.add('hidden');
-        document.body.style.overflow = ''; // Restore scrolling
-    }
-
-    // Open sidebar (si besoin via le menu hamburger global)
-    function openSidebarFunc() {
-        if (!sidebar || !overlay) return;
+        document.body.style.overflow = '';
         
-        sidebar.classList.remove('-translate-x-full');
-        overlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        // En mobile, cacher complètement le sidebar après l'animation
+        if (window.innerWidth < 1024) {
+            setTimeout(() => {
+                sidebar.classList.add('hidden');
+            }, 400); // Durée de l'animation
+        }
     }
 
     // Event listeners
@@ -394,10 +448,10 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.addEventListener('click', closeSidebarFunc);
     }
 
-    // CRITIQUE : Close sidebar when clicking nav links on MOBILE ONLY
+    // Close sidebar when clicking nav links on MOBILE ONLY
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            if (window.innerWidth < 1024) { // lg breakpoint
+            if (window.innerWidth < 1024) {
                 closeSidebarFunc();
             }
         });
@@ -414,13 +468,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Handle window resize
+    let resizeTimer;
     window.addEventListener('resize', function() {
-        if (window.innerWidth >= 1024) { // lg breakpoint
-            closeSidebarFunc(); // Fermer en cas de resize vers desktop
-        }
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (window.innerWidth >= 1024) {
+                // En desktop, assurer que la sidebar est visible
+                if (sidebar) {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.remove('hidden');
+                }
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                }
+                document.body.style.overflow = '';
+            } else {
+                // En mobile, fermer la sidebar
+                closeSidebarFunc();
+            }
+        }, 250);
     });
 
-    // Extract and display first name only
+    // Extract first name for display
     function extractFirstName(fullNameWithGreeting) {
         const cleanName = fullNameWithGreeting.replace(/[^\w\s]/g, '').trim();
         const nameParts = cleanName.split(/\s+/);
@@ -435,7 +504,7 @@ document.addEventListener('DOMContentLoaded', function() {
         userGreeting.textContent = firstName + '!';
     }
 
-    // Haptic feedback basique sur navigation (si supporté)
+    // Haptic feedback
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             if ('vibrate' in navigator) {
@@ -444,6 +513,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    console.log('✅ Sidebar optimisée 2025/2026 initialisée');
+    // Badge notifications update
+    const updateBadgePosition = () => {
+        const badge = document.getElementById('private_messages_notification');
+        if (badge) {
+            const count = parseInt(badge.dataset.value || '0', 10);
+            if (count > 0) {
+                badge.classList.remove('hidden');
+                badge.textContent = count;
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+    };
+    
+    setInterval(updateBadgePosition, 1000);
+    
+    const badge = document.getElementById('private_messages_notification');
+    if (badge) {
+        const observer = new MutationObserver(updateBadgePosition);
+        observer.observe(badge, {
+            attributes: true,
+            attributeFilter: ['data-value'],
+            childList: true,
+            characterData: true
+        });
+    }
+
+    console.log('✅ Sidebar complète initialisée');
 });
 </script>

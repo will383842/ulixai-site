@@ -6,9 +6,9 @@
     <meta http-equiv="Content-Language" content="en">
     
     <style>
-        .page-loader,.loader,.splash-screen,[class*="loader"]{display:none!important;opacity:0!important;visibility:hidden!important}
-        body{margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;opacity:0;animation:fadeInBody 0.2s ease-in forwards}
-        @keyframes fadeInBody{to{opacity:1}}
+        html{background:#f8fafc}
+        .page-loader,.loader,.splash-screen,[class*="loader"],.toast,.alert,.notification,[class*="toast"],[class*="alert"]{display:none!important;opacity:0!important;visibility:hidden!important}
+        body{margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
         .main-login{min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;padding-top:10px}
     </style>
     
@@ -76,7 +76,7 @@
 
 <script>
 (function(){
-  const loaders=document.querySelectorAll('.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"]');
+  const loaders=document.querySelectorAll('.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"],.toast,.alert,.notification,[class*="toast"],[class*="alert"]');
   loaders.forEach(function(el){el.remove()});
 })();
 </script>
@@ -346,7 +346,7 @@
 </footer>
 
 <style>
-.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"]{
+.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"],.toast,.alert,.notification,[class*="toast"],[class*="alert"]{
   display:none!important;
   opacity:0!important;
   visibility:hidden!important;
@@ -361,6 +361,7 @@
 
 html{
   scroll-behavior:smooth;
+  background:#f8fafc;
 }
 
 body{
@@ -592,9 +593,12 @@ body{
   display:none;
   color:#ef4444;
   font-size:11px;
-  font-weight:500;
-  margin-top:0.25rem;
-  padding-left:0.25rem;
+  font-weight:600;
+  margin-top:0.375rem;
+  padding:0.5rem 0.625rem;
+  background:#fef2f2;
+  border-left:3px solid #ef4444;
+  border-radius:0.375rem;
 }
 
 .error-msg.show{
@@ -951,7 +955,7 @@ body{
       return "👋 Hey! We need your email address to log you in";
     }
     
-    if (msg.includes('not found') || msg.includes('does not exist')) {
+    if (msg.includes('not found') || msg.includes('does not exist') || msg.includes('no account')) {
       return "😅 We can't find that email in our system. Maybe try signing up?";
     }
     

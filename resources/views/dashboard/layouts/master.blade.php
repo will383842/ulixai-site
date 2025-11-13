@@ -292,6 +292,217 @@
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
         }
+
+        /* ========================================
+           🔧 CORRECTIONS DASHBOARD USER 2025/2026
+           ======================================== */
+
+        /* 1. SUPPRESSION COMPLÈTE DU FIL D'ARIANE */
+        .breadcrumbs,
+        .breadcrumb,
+        nav[aria-label="breadcrumb"],
+        nav[aria-label="Breadcrumb"],
+        .dashboard-breadcrumb,
+        ol.breadcrumb,
+        .breadcrumb-container,
+        .breadcrumbs-wrapper {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* 2. RÉDUCTION MARGE HEADER-CONTENU */
+        main.main-content {
+            padding-top: 0.5rem !important;
+            margin-top: 0 !important;
+        }
+
+        @media (min-width: 1024px) {
+            main.main-content {
+                padding-top: 1rem !important;
+                padding-left: 19rem !important; /* 18rem sidebar + 1rem gap */
+            }
+        }
+
+        /* Supprimer espaces inutiles */
+        main.main-content > .max-w-7xl {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        main.main-content > .max-w-7xl > *:first-child {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+        }
+
+        /* 3. CORRECTION SIDEBAR - AFFICHAGE COMPLET */
+        #sidebar {
+            height: 100vh !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            width: 18rem !important;
+        }
+
+        #sidebar > div {
+            padding: 1rem 1.5rem !important;
+            height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            min-height: 0 !important;
+        }
+
+        /* Section greeting - TOUJOURS VISIBLE */
+        #sidebar .flex.items-center.space-x-3:first-of-type,
+        #sidebar > div > .flex.items-center.space-x-3 {
+            flex-shrink: 0 !important;
+            margin-bottom: 1.5rem !important;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            min-height: 3rem !important;
+        }
+
+        /* Avatar et nom utilisateur */
+        #sidebar .w-12.h-12.rounded-full,
+        #sidebar .w-8.h-8.rounded-full {
+            flex-shrink: 0 !important;
+            display: block !important;
+        }
+
+        #user-greeting {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            white-space: nowrap !important;
+            overflow: visible !important;
+            font-size: 1.25rem !important;
+            line-height: 1.75rem !important;
+        }
+
+        /* Navigation - scroll si nécessaire */
+        #sidebar nav {
+            flex: 1 1 auto !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            margin-bottom: 1rem !important;
+            min-height: 0 !important;
+        }
+
+        /* Cards promotionnelles et logout */
+        #sidebar .space-y-4,
+        #sidebar .pt-4.border-t {
+            flex-shrink: 0 !important;
+        }
+
+        #sidebar .pt-4.border-t {
+            margin-top: auto !important;
+        }
+
+        /* Scrollbar personnalisée sidebar */
+        #sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #sidebar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        #sidebar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        #sidebar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        #sidebar nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #sidebar nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #sidebar nav::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        /* 4. MOBILE OPTIMISÉ */
+        @media (max-width: 1023px) {
+            .lg\:hidden.sticky.top-0 {
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+                min-height: 3.5rem !important;
+            }
+
+            #sidebar {
+                top: 5rem !important; /* Sous le header mobile */
+                height: calc(100vh - 5rem) !important;
+                width: 18rem !important;
+            }
+
+            main.main-content {
+                padding-top: 0.5rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        /* 5. DESKTOP LAYOUT */
+        @media (min-width: 1024px) {
+            #sidebar {
+                position: fixed !important;
+                top: 4rem !important; /* Sous le header desktop */
+                left: 0 !important;
+                height: calc(100vh - 4rem) !important;
+            }
+
+            .flex.flex-col.lg\:flex-row {
+                position: relative;
+            }
+        }
+
+        /* 6. TITRES ET HEADERS */
+        h1, h2.text-2xl, h2.text-3xl,
+        main.main-content h1:first-child {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+        }
+
+        /* 7. CARDS ET SECTIONS */
+        .bg-white.rounded-lg.shadow:first-child,
+        .card:first-child {
+            margin-top: 0 !important;
+        }
+
+        /* 8. BADGE NOTIFICATIONS */
+        #private_messages_notification {
+            position: absolute !important;
+            top: -0.5rem !important;
+            right: -0.5rem !important;
+            z-index: 10 !important;
+        }
+
+        /* 9. SMOOTH SCROLL */
+        #sidebar,
+        #sidebar nav {
+            scroll-behavior: smooth !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        /* 10. PERFORMANCE */
+        #sidebar {
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
     </style>
 </head>
 
@@ -404,7 +615,7 @@
         @include('dashboard.partials.sidebar')
     
         <!-- Content Area -->
-        <main class="main-content flex-1 p-4 pt-20 lg:p-6 lg:pt-6 lg:pl-80 min-h-screen">
+        <main class="main-content flex-1 p-4 lg:p-6 min-h-screen">
             <!-- KYC Banner -->
             @include('dashboard.banners.kyc-banner')
             

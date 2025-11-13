@@ -335,7 +335,6 @@
   animation: shake 0.5s ease-in-out;
 }
 
-/* ⚠️ CRITIQUE : Style pour bouton désactivé */
 #step13Continue:disabled {
   opacity: 0.5 !important;
   cursor: not-allowed !important;
@@ -379,8 +378,8 @@
 
   const STORAGE_KEY = 'expats';
   const EMAIL_REGEX = /^[a-zA-Z0-9](?:[a-zA-Z0-9._+-]{0,62}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
-  const CHECK_DEBOUNCE = 800; // ms
-  const NAV_UPDATE_DEBOUNCE = 300; // ms
+  const CHECK_DEBOUNCE = 800;
+  const NAV_UPDATE_DEBOUNCE = 300;
   
   const state = {
     email: '',
@@ -573,24 +572,29 @@
       
       updateLocalNavigationButton();
       
-      const exists = await checkEmailExists(state.email);
-      
-      state.isChecking = false;
-      if (elements.checkingIndicator) elements.checkingIndicator.classList.add('hidden');
-      if (elements.emailInput) elements.emailInput.classList.remove('checking');
-      
-      elements.emailInput.dataset.lastChecked = state.email;
-      state.emailExists = exists;
-      
-      console.log('📊 [Step 13] Check result:', { email: state.email, exists });
-      
-      if (exists) {
-        showEmailExistsMessage();
-      } else {
-        updateValidationState();
+      try {
+        const exists = await checkEmailExists(state.email);
+        
+        elements.emailInput.dataset.lastChecked = state.email;
+        state.emailExists = exists;
+        
+        console.log('📊 [Step 13] Check result:', { email: state.email, exists });
+        
+        if (exists) {
+          showEmailExistsMessage();
+        } else {
+          updateValidationState();
+        }
+      } catch (error) {
+        console.error('❌ [Step 13] Check failed:', error);
+        state.emailExists = false;
+      } finally {
+        state.isChecking = false;
+        if (elements.checkingIndicator) elements.checkingIndicator.classList.add('hidden');
+        if (elements.emailInput) elements.emailInput.classList.remove('checking');
+        
+        updateLocalNavigationButton();
       }
-      
-      updateLocalNavigationButton();
       
     }, CHECK_DEBOUNCE);
   }
@@ -598,14 +602,28 @@
   function updateLocalNavigationButton() {
     const elements = getCachedElements();
     
-    const isVerified = elements.emailInput?.dataset.lastChecked === state.email;
-    const canContinue = state.isValid && !state.emailExists && !state.isChecking && isVerified;
+    if (state.isChecking) {
+      if (elements.continueBtn) {
+        elements.continueBtn.disabled = true;
+        console.log('🔒 [Step 13] Button DISABLED (checking...)');
+      }
+      return;
+    }
+    
+    if (state.emailExists) {
+      if (elements.continueBtn) {
+        elements.continueBtn.disabled = true;
+        console.log('🔒 [Step 13] Button DISABLED (email exists)');
+      }
+      return;
+    }
+    
+    const canContinue = state.isValid;
     
     console.log('🔄 [Step 13] updateLocalNavigationButton()', {
       isValid: state.isValid,
       emailExists: state.emailExists,
       isChecking: state.isChecking,
-      isVerified: isVerified,
       canContinue: canContinue
     });
     
@@ -613,7 +631,7 @@
       elements.continueBtn.disabled = !canContinue;
       
       if (!canContinue) {
-        console.log('🔒 [Step 13] Button DISABLED');
+        console.log('🔒 [Step 13] Button DISABLED (invalid format)');
       } else {
         console.log('✅ [Step 13] Button ENABLED');
       }
@@ -663,15 +681,6 @@
     
     if (state.isChecking) {
       console.warn('🚫 [Step 13] Still checking - BLOCKED');
-      return false;
-    }
-    
-    if (elements.emailInput.dataset.lastChecked !== state.email) {
-      console.warn('🚫 [Step 13] Email not checked yet - BLOCKED');
-      if (showAlert) {
-        showError();
-        scheduleEmailCheck();
-      }
       return false;
     }
     

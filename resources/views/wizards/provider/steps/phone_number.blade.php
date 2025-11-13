@@ -3,48 +3,47 @@
 🚀 STEP 14 - PHONE NUMBER INPUT
 ============================================
 ✨ Design System Blue/Cyan/Teal STRICT
-📱 Téléphone avec intl-tel-input
-🚩 Drapeaux locaux : public/images/flags/
+📱 Téléphone avec select dynamique + input
+🚩 Drapeaux locaux : public/images/flags/*.svg
 🚫 AUCUN alert - 100% silencieux
-⚡ Fix chevauchement chiffres
+⚡ Solution simple et robuste - 197 PAYS
+🔧 Inspiré du Step 5 - Liste dynamique
 ============================================
 -->
 
-<!-- Include intl-tel-input library -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+@php
+  use App\Models\Country;
+  $countries = Country::where('status', 1)->orderBy('country', 'asc')->get();
+@endphp
 
 <div id="step14" class="hidden flex flex-col h-full" role="region" aria-label="Enter your phone number">
   
-  <!-- FIXED HEADER -->
   <div class="sticky top-0 z-10 bg-white pt-2 pb-2 border-b border-gray-100">
     
-    <!-- Ambient Background Effects -->
     <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
       <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Header Section -->
-    <div class="text-center space-y-2 relative">
+    <div class="text-center space-y-1.5 relative">
       <div class="flex justify-center">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
-          <span class="text-xl sm:text-2xl">📱</span>
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 via-cyan-600 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg ring-2 sm:ring-4 ring-blue-100 transform hover:rotate-12 transition-transform duration-300">
+          <span class="text-base sm:text-xl">📱</span>
         </div>
       </div>
       
       <div>
-        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-1 tracking-tight">
+        <h2 class="text-lg sm:text-xl lg:text-2xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent mb-0.5 tracking-tight">
           What's Your Number? 📞
         </h2>
-        <p class="text-sm sm:text-base font-semibold text-gray-600">
+        <p class="text-xs sm:text-sm font-semibold text-gray-600">
           We'll use this to communicate with you
         </p>
       </div>
 
-      <div class="inline-flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
-        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+      <div class="inline-flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-full">
+        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
         <span class="text-xs font-bold text-blue-700" id="step14StatusText">
@@ -54,74 +53,89 @@
     </div>
   </div>
 
-  <!-- SCROLLABLE CONTENT -->
-  <div class="flex-1 overflow-y-auto px-4 pt-4 space-y-4">
+  <div class="flex-1 overflow-y-auto pt-0 space-y-2.5 sm:space-y-3 px-4">
 
-    <!-- Info Banner -->
-    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-3 border-amber-300 rounded-xl p-5 sm:p-6 shadow-lg">
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">
-          <span class="text-2xl">💬</span>
-        </div>
-        <div>
-          <h3 class="text-amber-900 font-black text-lg sm:text-xl mb-2">Required for communication</h3>
-          <p class="text-amber-800 font-semibold text-sm sm:text-base">Your number allows communication with service requesters</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Phone Input -->
-    <div class="space-y-2">
-      <label for="phone_number_input" class="flex items-center gap-2 text-sm sm:text-base font-bold text-gray-700">
-        <span class="text-lg sm:text-xl">📞</span>
-        <span>Phone Number</span>
-        <span class="text-red-500">*</span>
-      </label>
-      <div class="relative">
-        <input 
-          id="phone_number_input" 
-          type="tel" 
-          name="phone_number"
-          placeholder="Enter your phone number"
-          class="w-full px-4 py-3 sm:py-4 bg-white border-2 border-gray-300 rounded-xl text-sm sm:text-base font-medium
-                 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none
-                 transition-all duration-200"
-          autocomplete="tel"
-        />
-      </div>
-      <p class="text-xs sm:text-sm text-gray-500 font-medium">We'll never share your phone number without your permission</p>
-    </div>
-
-    <!-- Error Alert - SILENCIEUX -->
-    <div id="step14Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-3 sm:p-4 fade-in" role="alert">
+    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-xl p-2.5 sm:p-3">
       <div class="flex items-start gap-2">
-        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+        <div class="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-sm sm:text-base">ℹ️</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-blue-900 font-black text-xs sm:text-sm">Required for communication</p>
+          <p class="text-blue-700 text-xs font-semibold mt-0.5">Select your country code and enter your number</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-container">
+      <label class="input-label">
+        <span class="text-base sm:text-lg">📞</span>
+        <span class="label-text label-blue">Phone Number</span>
+      </label>
+      
+      <!-- Sélecteur de pays avec popup -->
+      <div class="space-y-2">
+        <button 
+          type="button" 
+          id="countryCodeButton" 
+          class="w-full flex items-center justify-between px-3 py-2.5 sm:px-4 sm:py-3 bg-white border-2 border-gray-300 rounded-xl text-sm font-medium hover:border-blue-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all"
+        >
+          <div class="flex items-center gap-2">
+            <img id="selectedCountryFlag" src="{{ asset('images/flags/fr.svg') }}" alt="FR" class="w-6 h-4 object-cover rounded-sm shadow-sm">
+            <span id="selectedCountryName" class="font-semibold text-gray-700">France</span>
+            <span id="selectedCountryCode" class="text-blue-600 font-bold">+33</span>
+          </div>
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Phone Number Input -->
+        <div class="input-wrapper">
+          <input 
+            id="phone_number_input" 
+            type="tel" 
+            placeholder="6 12 34 56 78"
+            class="phone-input"
+            autocomplete="tel"
+          />
+          <div class="success-indicator">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <p class="input-hint">We'll never share your phone number without your permission</p>
+    </div>
+
+    <div id="step14Error" class="hidden bg-red-50 border-l-4 border-red-500 rounded-xl p-2.5 shake-animation" role="alert">
+      <div class="flex items-start gap-2">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-sm font-bold text-red-800">Invalid phone number</p>
-          <p class="text-xs text-red-600 mt-1">Please enter at least 6 digits (e.g., +33 6 12 34 56 78)</p>
+          <p class="text-xs sm:text-sm font-semibold text-red-800">Invalid phone number</p>
+          <p class="text-xs text-red-600 mt-0.5">Please enter at least 6 digits</p>
         </div>
       </div>
     </div>
 
-    <!-- Success Alert -->
-    <div id="step14Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-3 sm:p-4 fade-in" role="status">
+    <div id="step14Success" class="hidden bg-green-50 border-l-4 border-green-500 rounded-xl p-2.5" role="status">
       <div class="flex items-start gap-2">
-        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-500 flex-shrink-0 mt-0.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <p class="text-sm font-bold text-green-800">Valid phone number!</p>
-          <p class="text-xs text-green-600 mt-1">Ready to continue</p>
+          <p class="text-xs sm:text-sm font-semibold text-green-800">Valid phone number!</p>
+          <p class="text-xs text-green-600 mt-0.5">Ready to continue</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- NAVIGATION -->
   <div class="wizard-nav-container px-4">
-    <button id="backToStep13" type="button" class="nav-btn-back">
+    <button id="backToStep13bis" type="button" class="nav-btn-back">
       Back
     </button>
     <button id="step14Continue" type="button" class="nav-btn-next" disabled>
@@ -130,9 +144,52 @@
   </div>
 </div>
 
-<!-- STYLES -->
+<!-- MODAL POPUP POUR SÉLECTION DU PAYS -->
+<div id="countryCodeModal" class="hidden fixed inset-0 z-[250] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeCountryModal()">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col" onclick="event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-4 rounded-t-2xl z-10">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg sm:text-xl font-black text-gray-800">Select Country Code</h3>
+        <button onclick="closeCountryModal()" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Search -->
+      <input 
+        type="text" 
+        id="countrySearchInput" 
+        placeholder="🔍 Search country..." 
+        class="w-full px-4 py-2.5 text-sm bg-blue-50 border-2 border-blue-200 rounded-xl focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all font-medium"
+        autocomplete="off"
+      >
+    </div>
+
+    <!-- Country List -->
+    <div id="countryCodeList" class="flex-1 overflow-y-auto p-2 sm:p-4">
+      @foreach($countries as $country)
+        <button 
+          type="button" 
+          class="country-code-option w-full flex items-center gap-3 px-3 py-2.5 hover:bg-blue-50 rounded-lg transition-all text-left" 
+          data-country="{{ $country->country }}"
+          data-code="{{ $country->phone_code }}"
+          data-flag="{{ strtolower($country->country_code) }}"
+          onclick="selectCountryCode('{{ $country->country }}', '{{ $country->phone_code }}', '{{ strtolower($country->country_code) }}')"
+        >
+          <img src="{{ asset('images/flags/' . strtolower($country->country_code) . '.svg') }}" alt="{{ $country->country_code }}" class="w-6 h-4 object-cover rounded-sm shadow-sm flex-shrink-0">
+          <span class="flex-1 font-semibold text-gray-700 text-sm">{{ $country->country }}</span>
+          <span class="font-bold text-blue-600 text-sm">{{ $country->phone_code }}</span>
+        </button>
+      @endforeach
+    </div>
+  </div>
+</div>
+
 <style>
-/* Animations des blobs */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -147,113 +204,156 @@
 .animation-delay-2000 { animation-delay: 2s; }
 .animation-delay-4000 { animation-delay: 4s; }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
 }
 
-.fade-in {
-  animation: fadeIn 0.3s ease-out;
+.shake-animation { 
+  animation: shake 0.5s ease-in-out; 
 }
 
-.border-3 {
-  border-width: 3px;
+#step14 .input-container {
+  width: 100%;
+  transition: transform 0.3s ease;
 }
 
-/* Phone input validation states */
-#step14 #phone_number_input.valid {
+#step14 .input-container:hover {
+  transform: translateY(-2px);
+}
+
+#step14 .input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  #step14 .input-label { 
+    font-size: 0.875rem;
+    gap: 0.5rem;
+  }
+}
+
+#step14 .label-text { font-weight: 800; }
+#step14 .label-blue { color: #2563eb; }
+
+#step14 .input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+#step14 .phone-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  #step14 .phone-input {
+    padding: 0.875rem 3rem 0.875rem 1.25rem;
+    font-size: 1rem;
+  }
+}
+
+#step14 .phone-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#step14 .phone-input.valid {
   border-color: #10b981;
   background-color: #f0fdf4;
 }
 
-#step14 #phone_number_input.invalid {
+#step14 .phone-input.invalid {
   border-color: #ef4444;
   background-color: #fef2f2;
 }
 
-/* intl-tel-input customization */
-#step14 .iti {
-  width: 100%;
-  display: block;
-}
-
-#step14 .iti__flag-container {
+#step14 .success-indicator {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  padding: 0 0 0 1rem;
-  z-index: 2;
-}
-
-#step14 .iti__selected-flag {
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  background: transparent;
-  border: none;
-  outline: none;
-  transition: background-color 0.2s ease;
-  height: 100%;
-  display: flex;
+  right: 0.625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 50%;
+  display: none;
   align-items: center;
-}
-
-#step14 .iti__selected-flag:hover,
-#step14 .iti__selected-flag:focus {
-  background-color: rgba(59, 130, 246, 0.1);
-}
-
-#step14 .iti__country-list {
-  max-height: 250px;
-  background: white;
-  border: 2px solid #d1d5db;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  margin-top: 0.25rem;
-  z-index: 999;
-}
-
-#step14 .iti__country {
-  padding: 0.625rem 1rem;
-  transition: background-color 0.2s ease;
-}
-
-#step14 .iti__country:hover {
-  background-color: rgba(59, 130, 246, 0.1);
-}
-
-#step14 .iti__country.iti__highlight {
-  background-color: rgba(59, 130, 246, 0.15);
-}
-
-/* FIX CHEVAUCHEMENT - padding-left suffisant pour le drapeau + code pays */
-#step14 .iti--allow-dropdown input,
-#step14 .iti--allow-dropdown input[type="tel"] {
-  padding-left: 6rem !important;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 @media (min-width: 640px) {
-  #step14 .iti--allow-dropdown input,
-  #step14 .iti--allow-dropdown input[type="tel"] {
-    padding-left: 7rem !important;
+  #step14 .success-indicator {
+    width: 2rem;
+    height: 2rem;
+    right: 0.75rem;
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 639px) {
-  #step14 .sticky {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+#step14 .phone-input.valid ~ .success-indicator {
+  display: flex;
+  opacity: 1;
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  0% { transform: translateY(-50%) scale(0); }
+  50% { transform: translateY(-50%) scale(1.1); }
+  100% { transform: translateY(-50%) scale(1); }
+}
+
+#step14 .input-hint {
+  margin-top: 0.375rem;
+  font-size: 0.6875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+@media (min-width: 640px) {
+  #step14 .input-hint { 
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
   }
-  
-  #step14 h2 {
-    font-size: 1.375rem;
-    line-height: 1.3;
-  }
-  
-  #step14 p {
-    font-size: 0.8125rem;
-  }
+}
+
+#step14 .input-container.error-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+#step14Continue:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  background: #9ca3af !important;
+  pointer-events: none !important;
+}
+
+#step14Continue:disabled:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.country-code-option:hover {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.05) 100%);
+  transform: translateX(2px);
+}
+
+.country-code-option:active {
+  transform: scale(0.98);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -263,27 +363,40 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+@media (max-width: 639px) {
+  #step14 .sticky {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  #step14 h2 {
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+  
+  #step14 p {
+    font-size: 0.75rem;
+  }
+}
 </style>
 
 <script>
-/* ============================================
-   🎯 STEP 14 - PHONE VALIDATION
-   ✅ Drapeaux locaux : /images/flags/
-   🚫 AUCUN alert - 100% silencieux
-   ✅ Fix chevauchement chiffres
-   ============================================ */
-
 (function() {
   'use strict';
 
   const STORAGE_KEY = 'expats';
   
   const state = {
+    selectedCountry: 'France',
+    countryCode: '+33',
+    countryFlag: 'fr',
     phone: '',
+    fullPhone: '',
     isValid: false,
     saveTimeout: null,
     validationTimeout: null,
-    iti: null
+    navUpdateTimeout: null
   };
 
   let cachedElements = null;
@@ -293,10 +406,16 @@
       cachedElements = {
         step: document.getElementById('step14'),
         phoneInput: document.getElementById('phone_number_input'),
+        countryCodeButton: document.getElementById('countryCodeButton'),
+        selectedCountryName: document.getElementById('selectedCountryName'),
+        selectedCountryCode: document.getElementById('selectedCountryCode'),
+        selectedCountryFlag: document.getElementById('selectedCountryFlag'),
         errorAlert: document.getElementById('step14Error'),
         successAlert: document.getElementById('step14Success'),
         statusText: document.getElementById('step14StatusText'),
-        continueBtn: document.getElementById('step14Continue')
+        continueBtn: document.getElementById('step14Continue'),
+        modal: document.getElementById('countryCodeModal'),
+        searchInput: document.getElementById('countrySearchInput')
       };
     }
     return cachedElements;
@@ -318,63 +437,83 @@
     state.saveTimeout = setTimeout(() => {
       try {
         const data = getLocalStorage();
-        data.phone_number = state.phone;
+        data.phone_number = state.fullPhone;
+        data.country_code = state.countryCode;
+        data.phone_country = state.selectedCountry;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        console.log('💾 [Step 14] Phone saved:', state.phone);
+        console.log('💾 [Step 14] Phone saved:', state.fullPhone);
       } catch (e) {
         console.warn('⚠️ [Step 14] localStorage error:', e);
       }
     }, 500);
   }
 
-  /**
-   * Initialiser intl-tel-input avec drapeaux LOCAUX
-   */
-  function initIntlTelInput() {
+  window.selectCountryCode = function(country, code, flag) {
     const elements = getCachedElements();
-    if (!elements.phoneInput) return false;
-
-    try {
-      state.iti = window.intlTelInput(elements.phoneInput, {
-        initialCountry: 'fr',
-        preferredCountries: ['fr', 'be', 'ch', 'ca', 'us', 'gb', 'de', 'es', 'it'],
-        separateDialCode: true,
-        autoPlaceholder: 'aggressive',
-        nationalMode: false,
-        formatOnDisplay: true,
-        
-        // 🚩 DRAPEAUX LOCAUX - Utiliser /images/flags/
-        utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js',
-        
-        // Customiser le chemin des drapeaux
-        customContainer: 'w-full',
-        
-        // Note: intl-tel-input v17 utilise les flags en CSS background-image
-        // Il faut modifier le CSS pour pointer vers /images/flags/
-        // Voir ci-dessous la configuration CSS
-      });
-      
-      console.log('✅ [Step 14] intl-tel-input initialized with local flags');
-      return true;
-    } catch (e) {
-      console.error('❌ [Step 14] Error initializing intl-tel-input:', e);
-      return false;
+    
+    state.selectedCountry = country;
+    state.countryCode = code;
+    state.countryFlag = flag;
+    
+    if (elements.selectedCountryName) elements.selectedCountryName.textContent = country;
+    if (elements.selectedCountryCode) elements.selectedCountryCode.textContent = code;
+    if (elements.selectedCountryFlag) {
+      elements.selectedCountryFlag.src = `/images/flags/${flag}.svg`;
+      elements.selectedCountryFlag.alt = flag.toUpperCase();
     }
+    
+    closeCountryModal();
+    
+    requestAnimationFrame(() => {
+      validatePhone();
+      if (state.isValid) {
+        saveToLocalStorage();
+      }
+    });
+  };
+
+  window.openCountryModal = function() {
+    const elements = getCachedElements();
+    if (elements.modal) {
+      elements.modal.classList.remove('hidden');
+      elements.modal.classList.add('flex');
+      if (elements.searchInput) {
+        elements.searchInput.value = '';
+        elements.searchInput.focus();
+        filterCountries('');
+      }
+    }
+  };
+
+  window.closeCountryModal = function() {
+    const elements = getCachedElements();
+    if (elements.modal) {
+      elements.modal.classList.add('hidden');
+      elements.modal.classList.remove('flex');
+    }
+  };
+
+  function filterCountries(searchValue) {
+    const search = searchValue.toLowerCase();
+    const options = document.querySelectorAll('.country-code-option');
+    
+    options.forEach(option => {
+      const country = (option.getAttribute('data-country') || '').toLowerCase();
+      const code = (option.getAttribute('data-code') || '').toLowerCase();
+      option.style.display = (country.includes(search) || code.includes(search)) ? '' : 'none';
+    });
   }
 
-  /**
-   * Validation téléphone - SILENCIEUSE
-   */
   function validatePhone() {
     const elements = getCachedElements();
     
     state.phone = elements.phoneInput.value.trim();
+    
     const digitsOnly = state.phone.replace(/\D/g, '');
     
-    // Validation: au moins 6 chiffres
     state.isValid = digitsOnly.length >= 6;
+    state.fullPhone = state.isValid ? `${state.countryCode} ${state.phone}` : '';
     
-    // Mise à jour des classes CSS
     if (state.phone.length > 0) {
       if (state.isValid) {
         elements.phoneInput.classList.remove('invalid');
@@ -387,7 +526,6 @@
       elements.phoneInput.classList.remove('valid', 'invalid');
     }
     
-    // Mise à jour du statut
     if (elements.statusText) {
       if (state.isValid) {
         elements.statusText.textContent = 'Valid phone provided';
@@ -396,7 +534,6 @@
       }
     }
     
-    // Gestion des alertes - SILENCIEUSE
     if (state.isValid) {
       if (elements.errorAlert) elements.errorAlert.classList.add('hidden');
       if (elements.successAlert) elements.successAlert.classList.remove('hidden');
@@ -404,7 +541,6 @@
       if (elements.successAlert) elements.successAlert.classList.add('hidden');
     }
     
-    // Mise à jour bouton
     updateNavigationButton();
     
     return state.isValid;
@@ -417,14 +553,21 @@
       elements.continueBtn.disabled = !state.isValid;
     }
     
-    if (typeof window.updateNavigationButtons === 'function') {
-      window.updateNavigationButtons();
-    }
+    scheduleGlobalNavUpdate();
   }
 
-  /**
-   * Validation globale - SILENCIEUSE (pas d'alert)
-   */
+  function scheduleGlobalNavUpdate() {
+    if (state.navUpdateTimeout) {
+      clearTimeout(state.navUpdateTimeout);
+    }
+    
+    state.navUpdateTimeout = setTimeout(() => {
+      if (typeof window.updateNavigationButtons === 'function') {
+        window.updateNavigationButtons();
+      }
+    }, 300);
+  }
+
   window.validateStep14 = function(showAlert) {
     console.log('🔍 [Step 14] validateStep14() called');
     const elements = getCachedElements();
@@ -432,7 +575,6 @@
     if (!validatePhone()) {
       console.warn('⚠️ [Step 14] Validation failed');
       
-      // Afficher message inline seulement - PAS D'ALERT
       if (showAlert && elements.errorAlert) {
         elements.errorAlert.classList.remove('hidden');
         
@@ -470,13 +612,11 @@
     }, 300);
   }
 
-  function handleCountryChange() {
-    requestAnimationFrame(() => {
-      validatePhone();
-      if (state.isValid) {
-        saveToLocalStorage();
-      }
-    });
+  function handleSearchInput(e) {
+    const input = e.target;
+    if (!input || input.id !== 'countrySearchInput') return;
+    
+    filterCountries(input.value);
   }
 
   function initEventDelegation() {
@@ -486,18 +626,37 @@
       elements.step.addEventListener('input', handleInput, { passive: true });
     }
     
-    if (elements.phoneInput) {
-      elements.phoneInput.addEventListener('countrychange', handleCountryChange);
+    if (elements.countryCodeButton) {
+      elements.countryCodeButton.addEventListener('click', window.openCountryModal);
     }
+    
+    if (elements.searchInput) {
+      elements.searchInput.addEventListener('input', handleSearchInput, { passive: true });
+    }
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        window.closeCountryModal();
+      }
+    });
   }
 
   function restoreState() {
     const elements = getCachedElements();
     const data = getLocalStorage();
     
+    if (data.phone_country && data.country_code) {
+      state.selectedCountry = data.phone_country;
+      state.countryCode = data.country_code;
+      
+      if (elements.selectedCountryName) elements.selectedCountryName.textContent = state.selectedCountry;
+      if (elements.selectedCountryCode) elements.selectedCountryCode.textContent = state.countryCode;
+    }
+    
     if (elements.phoneInput && data.phone_number) {
-      elements.phoneInput.value = data.phone_number;
-      state.phone = data.phone_number;
+      const phoneWithoutCode = data.phone_number.replace(state.countryCode, '').trim();
+      elements.phoneInput.value = phoneWithoutCode;
+      state.phone = phoneWithoutCode;
       console.log('🔄 [Step 14] Phone restored:', data.phone_number);
     }
     
@@ -507,33 +666,8 @@
   }
 
   function init() {
-    if (!window.intlTelInput) {
-      console.warn('⚠️ [Step 14] intl-tel-input library not loaded');
-      return;
-    }
-
-    const itiSuccess = initIntlTelInput();
-    if (!itiSuccess) {
-      console.error('❌ [Step 14] Failed to initialize intl-tel-input');
-      return;
-    }
-
-    // Override CSS pour utiliser les drapeaux locaux
-    const style = document.createElement('style');
-    style.textContent = `
-      .iti__flag {
-        background-image: url("/images/flags/flags.png") !important;
-      }
-      
-      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-        .iti__flag {
-          background-image: url("/images/flags/flags@2x.png") !important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
     const elements = getCachedElements();
+    
     if (elements.step) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -551,7 +685,7 @@
     initEventDelegation();
     restoreState();
     
-    console.log('✅ [Step 14] Phone validation initialized (SILENT MODE)');
+    console.log('✅ [Step 14] Phone validation initialized (197 COUNTRIES + LOCAL FLAGS)');
   }
 
   if (document.readyState === 'loading') {

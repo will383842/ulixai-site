@@ -7,69 +7,648 @@
       $user = auth()->user();
     @endphp
 
-
-
-   <script>
+<script>
   const LOGGED_IN_USER_ID = {{ auth()->user()->id }};
 </script>
 
-<!-- Main Content -->
-<div class="flex flex-col lg:flex-row min-h-screen">
-  <div class="flex-1 p-4 sm:p-6 space-y-10">
+<style>
+    :root {
+        --color-primary: #2563eb;
+        --color-primary-light: #3b82f6;
+        --color-secondary: #06b6d4;
+        --color-success: #10b981;
+        --color-warning: #f59e0b;
+        --color-danger: #ef4444;
+        --color-text-primary: #0f172a;
+        --color-text-secondary: #64748b;
+        --color-text-tertiary: #475569;
+        --color-bg-primary: #ffffff;
+        --color-bg-secondary: #f8fafc;
+        --border-radius-sm: 0.75rem;
+        --border-radius-md: 1rem;
+        --border-radius-lg: 1.25rem;
+        --border-radius-xl: 1.5rem;
+        --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Accessibility: Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* Optimisation: will-change pour les animations fréquentes */
+    .account-container-2025 {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0.875rem;
+        padding-bottom: 8rem;
+        min-height: 100vh;
+        /* Optimisation: Utiliser contain pour isoler le rendu */
+        contain: layout style paint;
+    }
+
+    .section-card-2025 {
+        background: var(--color-bg-primary);
+        border-radius: var(--border-radius-xl);
+        padding: 1.5rem;
+        border: 2px solid #cbd5e1;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 1.5rem;
+        transition: var(--transition-base);
+        /* Optimisation: Utiliser transform au lieu de box-shadow pour les animations */
+        will-change: transform;
+    }
+
+    .section-header-2025 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .section-title-2025 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        /* Optimisation: Éviter le repaint du texte */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .section-subtitle-2025 {
+        font-size: 0.875rem;
+        color: var(--color-text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    .btn-primary-2025 {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius-md);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-base);
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        /* Optimisation: Utiliser transform pour les animations */
+        will-change: transform;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-primary-2025:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 12px -2px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary-2025:active {
+        transform: translateY(0);
+        transition-duration: 0.1s;
+    }
+
+    /* Accessibility: Focus visible */
+    .btn-primary-2025:focus-visible,
+    .btn-secondary-2025:focus-visible,
+    .modal-close-2025:focus-visible,
+    .category-item-2025:focus-visible {
+        outline: 3px solid var(--color-primary);
+        outline-offset: 3px;
+    }
+
+    .info-grid-2025 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .info-item-2025 {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .info-label-2025 {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value-2025 {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+    }
+
+    /* Optimisation: Modal overlay avec GPU acceleration */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
+        z-index: 9998;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        /* Optimisation: Force GPU acceleration */
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Optimisation: Modal avec GPU acceleration */
+    .modal-2025 {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.95) translateZ(0);
+        background: white;
+        border-radius: var(--border-radius-xl);
+        padding: 0;
+        z-index: 9999;
+        max-width: 600px;
+        width: 90%;
+        max-height: 85vh;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        /* Optimisation: Force GPU acceleration */
+        will-change: transform, opacity;
+        -webkit-backface-visibility: hidden;
+    }
+
+    .modal-2025.active {
+        transform: translate(-50%, -50%) scale(1) translateZ(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-header-2025 {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+    }
+
+    .modal-title-2025 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--color-text-primary);
+    }
+
+    .modal-close-2025 {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #f3f4f6;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition-base);
+        font-size: 1.125rem;
+        color: #6b7280;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .modal-close-2025:hover {
+        background: #e5e7eb;
+        transform: rotate(90deg);
+    }
+
+    .modal-body-2025 {
+        padding: 1.5rem;
+        overflow-y: auto;
+        max-height: calc(85vh - 140px);
+        /* Optimisation: Scroll fluide sur iOS */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-footer-2025 {
+        padding: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    .form-group-2025 {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label-2025 {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Optimisation: Input avec meilleure performance */
+    .form-input-2025 {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: var(--border-radius-md);
+        font-size: 0.9375rem;
+        color: var(--color-text-primary);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        background: var(--color-bg-primary);
+        /* Optimisation: Éviter le zoom sur iOS */
+        font-size: max(16px, 0.9375rem);
+    }
+
+    .form-input-2025:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-input-2025:focus-visible {
+        outline: 3px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    .form-textarea-2025 {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: var(--border-radius-md);
+        font-size: 0.9375rem;
+        color: var(--color-text-primary);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        background: var(--color-bg-primary);
+        min-height: 120px;
+        resize: vertical;
+        font-family: inherit;
+        /* Optimisation: Éviter le zoom sur iOS */
+        font-size: max(16px, 0.9375rem);
+    }
+
+    .form-textarea-2025:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .btn-secondary-2025 {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        background: #f1f5f9;
+        color: var(--color-text-primary);
+        border: none;
+        border-radius: var(--border-radius-md);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-base);
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-secondary-2025:hover {
+        background: #e2e8f0;
+    }
+
+    .category-grid-2025 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .category-item-2025 {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: var(--color-bg-secondary);
+        border: 2px solid #e5e7eb;
+        border-radius: var(--border-radius-md);
+        cursor: pointer;
+        transition: var(--transition-base);
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .category-item-2025:active {
+        transform: scale(0.98);
+    }
+
+    .category-item-2025:hover {
+        background: #eff6ff;
+        border-color: var(--color-primary-light);
+    }
+
+    .category-checkbox-2025 {
+        width: 18px;
+        height: 18px;
+        border-radius: 0.375rem;
+        border: 2px solid #cbd5e1;
+        cursor: pointer;
+        accent-color: var(--color-primary);
+    }
+
+    .category-icon-2025 {
+        width: 40px;
+        height: 40px;
+        margin-left: 0.75rem;
+        border-radius: var(--border-radius-md);
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f5f9;
+    }
+
+    .category-icon-2025 img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .category-name-2025 {
+        margin-left: 0.75rem;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+        flex: 1;
+    }
+
+    .step-indicator-2025 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .step-number-2025 {
+        font-size: 0.875rem;
+        color: var(--color-text-secondary);
+        font-weight: 600;
+    }
+
+    .progress-bar-2025 {
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+
+    .progress-fill-2025 {
+        height: 100%;
+        background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        border-radius: 999px;
+        transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        /* Optimisation: GPU acceleration */
+        will-change: width;
+        transform: translateZ(0);
+    }
+
+    .empty-state-2025 {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--color-text-tertiary);
+    }
+
+    .empty-icon-2025 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.4;
+    }
+
+    .empty-text-2025 {
+        font-size: 0.9375rem;
+        color: var(--color-text-secondary);
+    }
+
+    .selection-count-2025 {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.875rem;
+        background: #eff6ff;
+        color: var(--color-primary);
+        border-radius: 999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .toggle-group-2025 {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.25rem;
+        background: var(--color-bg-secondary);
+        border-radius: var(--border-radius-md);
+    }
+
+    .toggle-btn {
+        flex: 1;
+        padding: 0.625rem 1rem;
+        border: 2px solid transparent;
+        border-radius: calc(var(--border-radius-md) - 0.25rem);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-base);
+        background: transparent;
+        color: var(--color-text-secondary);
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .toggle-btn.active {
+        background: white;
+        color: var(--color-primary);
+        border-color: var(--color-primary);
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .status-badge-2025 {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-badge-2025.success {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    .status-badge-2025.warning {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    /* Optimisation: Animation du spinner */
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .spinner {
+        display: inline-block;
+        width: 48px;
+        height: 48px;
+        border: 4px solid #e5e7eb;
+        border-top-color: var(--color-primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        will-change: transform;
+    }
+
+    /* Optimisation: Prevent layout shift */
+    * {
+        box-sizing: border-box;
+    }
+
+    @media (min-width: 640px) {
+        .account-container-2025 {
+            padding: 1.5rem;
+            padding-bottom: 8rem;
+        }
+
+        .info-grid-2025 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .category-grid-2025 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .section-card-2025 {
+            padding: 2rem;
+        }
+
+        .modal-2025 {
+            width: 85%;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .account-container-2025 {
+            padding: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .modal-2025 {
+            width: 600px;
+        }
+    }
+
+    /* Optimisation mobile: Modal en bottom sheet */
+    @media (max-width: 768px) {
+        .modal-2025 {
+            position: fixed;
+            top: auto;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(100%) translateZ(0);
+            max-width: 100%;
+            width: 100%;
+            border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+        }
+
+        .modal-2025.active {
+            transform: translateY(0) translateZ(0);
+        }
+    }
+
+    /* Optimisation: Prevent body scroll when modal is open */
+    body.modal-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<div class="account-container-2025">
 
     <!-- Banking Information Section -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-      <div class="px-6 py-5 sm:px-8">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900">Banking Information</h3>
-            <p class="mt-1 text-sm text-gray-500">
-              Set up your banking details for receiving payments and withdrawals
-            </p>
-          </div>
-          <button onclick="showBankingModal()" 
-                  class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105 shadow-md">
-              <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-              </svg>
-              {{ $user->hasBankingDetails() ? 'Update Banking Details' : 'Add Banking Details' }}
-          </button>
+    <div class="section-card-2025">
+        <div class="section-header-2025">
+            <div>
+                <h3 class="section-title-2025">Banking Information</h3>
+                <p class="section-subtitle-2025">Set up your banking details for receiving payments and withdrawals</p>
+            </div>
+            <button onclick="showBankingModal()" class="btn-primary-2025">
+                <i class="fas fa-credit-card"></i>
+                <span>{{ $user->hasBankingDetails() ? 'Update Details' : 'Add Details' }}</span>
+            </button>
         </div>
 
         @if($user->hasBankingDetails())
-          <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6">
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Account Holder</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ $user->bank_account_holder }}</dd>
+            <div class="info-grid-2025">
+                <div class="info-item-2025">
+                    <div class="info-label-2025">Account Holder</div>
+                    <div class="info-value-2025">{{ $user->bank_account_holder }}</div>
+                </div>
+                <div class="info-item-2025">
+                    <div class="info-label-2025">IBAN</div>
+                    <div class="info-value-2025">{{ substr($user->bank_account_iban, 0, 4) . '****' }}</div>
+                </div>
+                <div class="info-item-2025">
+                    <div class="info-label-2025">Bank Name</div>
+                    <div class="info-value-2025">{{ $user->bank_name }}</div>
+                </div>
+                <div class="info-item-2025">
+                    <div class="info-label-2025">Last Updated</div>
+                    <div class="info-value-2025">{{ $user->bank_details_verified_at?->diffForHumans() }}</div>
+                </div>
             </div>
-            <div>
-              <dt class="text-sm font-medium text-gray-500">IBAN</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ substr($user->bank_account_iban, 0, 4) . '****' }}</dd>
+        @else
+            <div class="empty-state-2025">
+                <div class="empty-icon-2025">
+                    <i class="fas fa-university"></i>
+                </div>
+                <p class="empty-text-2025">No banking information added yet</p>
             </div>
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Bank Name</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ $user->bank_name }}</dd>
-            </div>
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ $user->bank_details_verified_at?->diffForHumans() }}</dd>
-            </div>
-          </div>
         @endif
-      </div>
     </div>
 
-    <!-- Wallet Section (Empty placeholder) -->
-    <div class="flex flex-wrap justify-center sm:justify-start gap-4 mt-4 lg:ml-6"></div>
-
     @if(auth()->user()->user_role === 'service_provider')
-      @include('dashboard.my-account-partials.service-provider-section')
+        @include('dashboard.my-account-partials.service-provider-section')
     @else
-      @include('dashboard.my-account-partials.regular-user-section')
+        @include('dashboard.my-account-partials.regular-user-section')
     @endif
 
-  </div>
 </div>
+
+<!-- Modal Overlay -->
+<div class="modal-overlay" onclick="closeAllPopups()"></div>
 
 <!-- Modals for Service Providers -->
 @if(auth()->user()->user_role === 'service_provider')
@@ -78,22 +657,48 @@
   @include('dashboard.my-account-partials.category-search-modal')
 @endif
 @include('dashboard.my-account-partials.banking-details-modal')
-<!-- JavaScript -->
+
 <script>
+// Optimisation: Debounce function pour limiter les appels
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Optimisation: Lazy loading des images
+if ('loading' in HTMLImageElement.prototype) {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    images.forEach(img => {
+        img.src = img.dataset.src;
+    });
+} else {
+    // Fallback pour les navigateurs qui ne supportent pas lazy loading
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+    document.body.appendChild(script);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   initializeSpecialStatusModal();
   initializeToggleButtons();
 });
 
-
-// === MODAL FUNCTIONS ===
+// === MODAL FUNCTIONS (Optimisées) ===
 function openAboutYouPopup() {
-  document.getElementById("aboutYouPopup").classList.remove("hidden");
+  showModal("aboutYouPopup");
 }
 
 function closeAboutYouPopup() {
-  document.getElementById("aboutYouPopup").classList.add("hidden");
+  hideModal("aboutYouPopup");
 }
+
 function submitAboutYou() {
   const description = document.getElementById("aboutYouText").value;
 
@@ -121,14 +726,19 @@ function submitAboutYou() {
   });
 }
 
+function initializeToggleButtons() {
+  document.querySelectorAll(".special-status-item").forEach(group => {
+    const buttons = group.querySelectorAll(".toggle-btn");
 
-
-
-
-
-
-function closeAboutYouPopup() {
-  hideModal("aboutYouPopup");
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        buttons.forEach(btn => {
+            btn.classList.remove("active");
+        });
+        button.classList.add("active");
+      });
+    });
+  });
 }
 
 function openCategoryPopup() {
@@ -140,73 +750,94 @@ function openCategoryPopup() {
         });
 }
 
+function closeAllPopups() {
+  const modalIds = ['selectet-provider-category', 'aboutYouPopup', 'specialStatusModal', 'bankingDetailsModal'];
+  modalIds.forEach(id => hideModal(id));
+}
+
+// === UTILITY FUNCTIONS (Optimisées) ===
+function showModal(modalId) {
+  const modal = document.getElementById(modalId);
+  const overlay = document.querySelector('.modal-overlay');
+  
+  if (modal) {
+    requestAnimationFrame(() => {
+      modal.classList.add("active");
+      if (overlay) overlay.classList.add("active");
+      document.body.classList.add('modal-open');
+    });
+  }
+}
+
+function hideModal(modalId) {
+  const modal = document.getElementById(modalId);
+  const overlay = document.querySelector('.modal-overlay');
+  
+  if (modal) {
+    modal.classList.remove("active");
+    
+    // Vérifier si d'autres modals sont ouvertes
+    const activeModals = document.querySelectorAll('.modal-2025.active');
+    if (activeModals.length === 0) {
+      if (overlay) overlay.classList.remove("active");
+      document.body.classList.remove('modal-open');
+    }
+  }
+}
+
+// Optimisation: Utiliser requestAnimationFrame pour le rendering
 function renderCategoryStep(response) {
     const modal = document.getElementById('render-selectet-provider-category');
     if (!modal) return;
-    const categories = response.categories;
+    const categories = response.categories || [];
 
-    let html = `
-        <div class="flex flex-col h-full max-h-[70vh]">
-            <!-- Header -->
-            <div class="flex-shrink-0 p-6 pb-4 border-b border-gray-100">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-800">Select Categories</h3>
-                    <span class="text-sm text-gray-500">Step 1 of 3</span>
-                </div>
-                <p class="text-sm text-gray-600">Choose one or more categories that match your services</p>
+    const html = `
+        <div class="step-indicator-2025">
+            <div>
+                <div style="font-size: 1rem; font-weight: 700; color: var(--color-text-primary);">Select Categories</div>
+                <div style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 0.25rem;">Choose categories that match your services</div>
             </div>
-            
-            <!-- Scrollable Content -->
-            <div class="flex-1 overflow-y-auto p-6 pt-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="categoryStep">
-                    ${categories.map(cat => `
-                        <label class="category-card group cursor-pointer">
-                            <div class="flex items-center p-4 bg-white border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all duration-200">
-                                <input type="checkbox" class="main-category-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" value="${cat.id}">
-                                ${cat.icon_image ? `
-                                    <div class="ml-3 w-10 h-10 rounded-lg flex items-center justify-center bg-gray-100 group-hover:bg-blue-200 transition-colors overflow-hidden flex-shrink-0">
-                                        <img src="${cat.icon_image}" alt="${cat.name}" class="w-full h-full object-cover rounded-lg">
-                                    </div>
-                                ` : `
-                                    <div class="ml-3 w-10 h-10 rounded-lg flex items-center justify-center bg-gray-100 group-hover:bg-blue-200 transition-colors flex-shrink-0">
-                                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                                        </svg>
-                                    </div>
-                                `}
-                                <div class="ml-3 flex-1 min-w-0">
-                                    <h4 class="text-sm font-medium text-gray-900 group-hover:text-blue-700 transition-colors truncate">${cat.name}</h4>
-                                </div>
-                            </div>
-                        </label>
-                    `).join('')}
-                </div>
+            <span class="step-number-2025">Step 1 of 3</span>
+        </div>
+        <div class="progress-bar-2025">
+            <div class="progress-fill-2025" style="width: 33%;"></div>
+        </div>
+        <div class="category-grid-2025" id="categoryStep" style="margin-top: 1.5rem;">
+            ${categories.map(cat => `
+                <label class="category-item-2025">
+                    <input type="checkbox" class="category-checkbox-2025 main-category-checkbox" value="${cat.id}">
+                    ${cat.icon_image ? `
+                        <div class="category-icon-2025">
+                            <img src="${cat.icon_image}" alt="${cat.name}" loading="lazy">
+                        </div>
+                    ` : `
+                        <div class="category-icon-2025">
+                            <i class="fas fa-folder"></i>
+                        </div>
+                    `}
+                    <div class="category-name-2025">${cat.name}</div>
+                </label>
+            `).join('')}
+        </div>
+        <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <div class="selection-count-2025">
+                <i class="fas fa-check-circle"></i>
+                <span id="selected-count">0</span> selected
             </div>
-            
-            <!-- Footer with Actions -->
-            <div class="flex-shrink-0 p-6 pt-4 border-t border-gray-100 bg-gray-50">
-                <div class="flex items-center justify-between">
-                    <div class="text-sm text-gray-600">
-                        <span id="selected-count">0</span> categories selected
-                    </div>
-                    <button type="button" onclick="proceedToSubcategories()" 
-                            class="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors" 
-                            id="next-btn" disabled>
-                        Next Step
-                    </button>
-                </div>
-            </div>
+            <button type="button" onclick="proceedToSubcategories()" class="btn-primary-2025" id="next-btn" disabled>
+                <span>Next Step</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
         </div>
     `;
     
-    modal.innerHTML = html;
-    // Initialize empty arrays for storing selections
-    modal.dataset.selectedMainCategories = '[]';
-    modal.dataset.selectedSubCategories = '[]';
-    modal.dataset.selectedSubSubCategories = '[]';
-    
-    // Add event listeners for checkbox changes
-    setupCategoryListeners();
+    requestAnimationFrame(() => {
+        modal.innerHTML = html;
+        modal.dataset.selectedMainCategories = '[]';
+        modal.dataset.selectedSubCategories = '[]';
+        modal.dataset.selectedSubSubCategories = '[]';
+        setupCategoryListeners();
+    });
 }
 
 function setupCategoryListeners() {
@@ -214,13 +845,17 @@ function setupCategoryListeners() {
     const nextBtn = document.getElementById('next-btn');
     const countDisplay = document.getElementById('selected-count');
     
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const selectedCount = document.querySelectorAll('.main-category-checkbox:checked').length;
-            countDisplay.textContent = selectedCount;
-            nextBtn.disabled = selectedCount === 0;
-        });
-    });
+    // Optimisation: Utiliser event delegation
+    const container = document.getElementById('categoryStep');
+    if (container) {
+        container.addEventListener('change', debounce((e) => {
+            if (e.target.classList.contains('main-category-checkbox')) {
+                const selectedCount = document.querySelectorAll('.main-category-checkbox:checked').length;
+                countDisplay.textContent = selectedCount;
+                nextBtn.disabled = selectedCount === 0;
+            }
+        }, 100));
+    }
 }
 
 function proceedToSubcategories() {
@@ -232,13 +867,9 @@ function proceedToSubcategories() {
         return;
     }
     
-    // Store selected main categories BEFORE replacing HTML
     modal.dataset.selectedMainCategories = JSON.stringify(checked);
-    
-    // Show loading state
     showLoadingState(modal);
     
-    // Fetch all subcategories for selected main categories
     Promise.all(checked.map(catId =>
         fetch(`/api/categories/${catId}/subcategories`).then(res => res.json().then(data => ({catId, subs: data.subcategories || []})))
     )).then(results => {
@@ -253,103 +884,89 @@ function renderSubcategoryStepMulti(mainCatIds, subcategoriesArr) {
     const modal = document.getElementById('render-selectet-provider-category');
     const hasSubcategories = subcategoriesArr.some(({subs}) => subs.length > 0);
     
-    let html = `
-        <div class="flex flex-col h-full max-h-[70vh]">
-            <!-- Header -->
-            <div class="flex-shrink-0 p-6 pb-4 border-b border-gray-100">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-800">Select Subcategories</h3>
-                    <span class="text-sm text-gray-500">Step 2 of 3</span>
-                </div>
-                <p class="text-sm text-gray-600">Choose specific subcategories within your selected categories</p>
-            </div>
-            
-            <!-- Scrollable Content -->
-            <div class="flex-1 overflow-y-auto p-6 pt-4">
-                ${hasSubcategories ? `
-                    <div class="space-y-6" id="subcategoryStep">
-                        ${subcategoriesArr.map(({catId, subs}) => subs.length ? `
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h4 class="font-semibold text-blue-700 mb-3 text-sm uppercase tracking-wide">${subs[0]?.parent_name || 'Category'}</h4>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    ${subs.map(sub => `
-                                        <label class="flex items-center p-3 bg-white rounded-md hover:bg-blue-50 cursor-pointer transition-colors group">
-                                            <input type="checkbox" class="sub-category-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" data-main="${catId}" value="${sub.id}">
-                                            ${sub.icon_image ? `
-                                                <div class="ml-3 w-6 h-6 flex-shrink-0">
-                                                    <img src="${sub.icon_image}" alt="${sub.name}" class="w-full h-full object-contain">
-                                                </div>
-                                                <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-700 transition-colors">${sub.name}</span>
-                                            ` : `
-                                                <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-700 transition-colors">${sub.name}</span>
-                                            `}
-                                        </label>
-                                    `).join('')}
+    const html = `
+        <div class="step-indicator-2025">
+            <h3 class="modal-title-2025">Select Subcategories</h3>
+            <span class="step-number-2025">Step 2 of 3</span>
+        </div>
+        <div class="progress-bar-2025">
+            <div class="progress-fill-2025" style="width: 66%;"></div>
+        </div>
+        <div style="margin-top: 1.5rem;">
+            ${hasSubcategories ? `
+                <div class="category-grid-2025" id="subcategoryStep">
+                    ${subcategoriesArr.map(({catId, subs}) => subs.map(sub => `
+                        <label class="category-item-2025">
+                            <input type="checkbox" class="category-checkbox-2025 sub-category-checkbox" data-main="${catId}" value="${sub.id}">
+                            ${sub.icon_image ? `
+                                <div class="category-icon-2025">
+                                    <img src="${sub.icon_image}" alt="${sub.name}" loading="lazy">
                                 </div>
-                            </div>
-                        ` : '').join('')}
-                    </div>
-                ` : `
-                    <div class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">No subcategories available</h3>
-                        <p class="mt-1 text-sm text-gray-500">The selected categories don't have any subcategories.</p>
-                    </div>
-                `}
-            </div>
-            
-            <!-- Footer with Actions -->
-            <div class="flex-shrink-0 p-6 pt-4 border-t border-gray-100 bg-gray-50">
-                <div class="flex items-center justify-between">
-                    <button type="button" onclick="goBackToMainCategories()" 
-                            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors">
-                        Back
-                    </button>
-                    <div class="flex items-center space-x-4">
-                        <div class="text-sm text-gray-600">
-                            <span id="sub-selected-count">0</span> subcategories selected
-                        </div>
-                        ${hasSubcategories ? `
-                            <button type="button" onclick="proceedToSubSubcategories()" 
-                                    class="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors" 
-                                    id="next-sub-btn" disabled>
-                                Next Step
-                            </button>
-                        ` : `
-                            <button type="button" onclick="saveCategorySelectionMulti()" 
-                                    class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
-                                Save Selection
-                            </button>
-                        `}
-                    </div>
+                            ` : `
+                                <div class="category-icon-2025">
+                                    <i class="fas fa-folder-open"></i>
+                                </div>
+                            `}
+                            <div class="category-name-2025">${sub.name}</div>
+                        </label>
+                    `).join('')).join('')}
                 </div>
+            ` : `
+                <div class="empty-state-2025">
+                    <div class="empty-icon-2025">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <p class="empty-text-2025">No subcategories available</p>
+                </div>
+            `}
+        </div>
+        <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <button type="button" onclick="goBackToMainCategories()" class="btn-secondary-2025">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back</span>
+            </button>
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                ${hasSubcategories ? `
+                    <div class="selection-count-2025">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="sub-selected-count">0</span> selected
+                    </div>
+                    <button type="button" onclick="proceedToSubSubcategories()" class="btn-primary-2025" id="next-sub-btn" disabled>
+                        <span>Next Step</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                ` : `
+                    <button type="button" onclick="saveCategorySelectionMulti()" class="btn-primary-2025">
+                        <i class="fas fa-check"></i>
+                        <span>Save Selection</span>
+                    </button>
+                `}
             </div>
         </div>
     `;
     
-    modal.innerHTML = html;
-    // Main categories are already stored, don't overwrite them
-    // modal.dataset.selectedMainCategories is already set from proceedToSubcategories()
-    
-    if (hasSubcategories) {
-        setupSubcategoryListeners();
-    }
+    requestAnimationFrame(() => {
+        modal.innerHTML = html;
+        if (hasSubcategories) {
+            setupSubcategoryListeners();
+        }
+    });
 }
 
 function setupSubcategoryListeners() {
-    const checkboxes = document.querySelectorAll('.sub-category-checkbox');
     const nextBtn = document.getElementById('next-sub-btn');
     const countDisplay = document.getElementById('sub-selected-count');
     
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const selectedCount = document.querySelectorAll('.sub-category-checkbox:checked').length;
-            countDisplay.textContent = selectedCount;
-            if (nextBtn) nextBtn.disabled = selectedCount === 0;
-        });
-    });
+    const container = document.getElementById('subcategoryStep');
+    if (container) {
+        container.addEventListener('change', debounce((e) => {
+            if (e.target.classList.contains('sub-category-checkbox')) {
+                const selectedCount = document.querySelectorAll('.sub-category-checkbox:checked').length;
+                countDisplay.textContent = selectedCount;
+                if (nextBtn) nextBtn.disabled = selectedCount === 0;
+            }
+        }, 100));
+    }
 }
 
 function proceedToSubSubcategories() {
@@ -361,13 +978,9 @@ function proceedToSubSubcategories() {
         return;
     }
     
-    // Store selected subcategories BEFORE replacing HTML
     modal.dataset.selectedSubCategories = JSON.stringify(checked);
-    
-    // Show loading state
     showLoadingState(modal);
     
-    // Fetch all subsubcategories for selected subcategories
     Promise.all(
         checked.map(subId =>
             fetch(`/api/categories/${subId}/subcategories`)
@@ -386,107 +999,93 @@ function renderSubSubcategoryStepMulti(subCatIds, subsubcategoriesArr) {
     const modal = document.getElementById('render-selectet-provider-category');
     const hasSubSubcategories = subsubcategoriesArr.some(({subs}) => subs.length > 0);
     
-    let html = `
-        <div class="flex flex-col h-full max-h-[70vh]">
-            <!-- Header -->
-            <div class="flex-shrink-0 p-6 pb-4 border-b border-gray-100">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-800">Select Specializations</h3>
-                    <span class="text-sm text-gray-500">Step 3 of 3</span>
-                </div>
-                <p class="text-sm text-gray-600">Choose your specific areas of expertise</p>
-            </div>
-            
-            <!-- Scrollable Content -->
-            <div class="flex-1 overflow-y-auto p-6 pt-4">
-                ${hasSubSubcategories ? `
-                    <div class="space-y-6" id="subsubcategoryStep">
-                        ${subsubcategoriesArr.map(({subId, subs}) => subs.length ? `
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h4 class="font-semibold text-blue-700 mb-3 text-sm uppercase tracking-wide">${subs[0]?.parent_name || 'Subcategory'}</h4>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    ${subs.map(subsub => `
-                                        <label class="flex items-center p-3 bg-white rounded-md hover:bg-blue-50 cursor-pointer transition-colors group">
-                                            <input type="checkbox" class="subsub-category-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" data-sub="${subId}" value="${subsub.id}">
-                                            ${subsub.icon_image ? `
-                                                <div class="ml-3 w-6 h-6 flex-shrink-0">
-                                                    <img src="${subsub.icon_image}" alt="${subsub.name}" class="w-full h-full object-contain">
-                                                </div>
-                                                <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-700 transition-colors">${subsub.name}</span>
-                                            ` : `
-                                                <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-700 transition-colors">${subsub.name}</span>
-                                            `}
-                                        </label>
-                                    `).join('')}
+    const html = `
+        <div class="step-indicator-2025">
+            <h3 class="modal-title-2025">Select Specializations</h3>
+            <span class="step-number-2025">Step 3 of 3</span>
+        </div>
+        <div class="progress-bar-2025">
+            <div class="progress-fill-2025" style="width: 100%;"></div>
+        </div>
+        <div style="margin-top: 1.5rem;">
+            ${hasSubSubcategories ? `
+                <div class="category-grid-2025" id="subsubcategoryStep">
+                    ${subsubcategoriesArr.map(({subId, subs}) => subs.map(subsub => `
+                        <label class="category-item-2025">
+                            <input type="checkbox" class="category-checkbox-2025 subsub-category-checkbox" data-sub="${subId}" value="${subsub.id}">
+                            ${subsub.icon_image ? `
+                                <div class="category-icon-2025">
+                                    <img src="${subsub.icon_image}" alt="${subsub.name}" loading="lazy">
                                 </div>
-                            </div>
-                        ` : '').join('')}
-                    </div>
-                ` : `
-                    <div class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">No specializations available</h3>
-                        <p class="mt-1 text-sm text-gray-500">The selected subcategories don't have any specializations.</p>
-                    </div>
-                `}
-            </div>
-            
-            <!-- Footer with Actions -->
-            <div class="flex-shrink-0 p-6 pt-4 border-t border-gray-100 bg-gray-50">
-                <div class="flex items-center justify-between">
-                    <button type="button" onclick="goBackToSubcategories()" 
-                            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors">
-                        Back
-                    </button>
-                    <div class="flex items-center space-x-4">
-                        <div class="text-sm text-gray-600">
-                            <span id="subsub-selected-count">0</span> specializations selected
-                        </div>
-                        <button type="button" onclick="saveCategorySelectionMulti()" 
-                                class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
-                            Save Selection
-                        </button>
-                    </div>
+                            ` : `
+                                <div class="category-icon-2025">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            `}
+                            <div class="category-name-2025">${subsub.name}</div>
+                        </label>
+                    `).join('')).join('')}
                 </div>
+            ` : `
+                <div class="empty-state-2025">
+                    <div class="empty-icon-2025">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="empty-text-2025">No specializations available</p>
+                </div>
+            `}
+        </div>
+        <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <button type="button" onclick="goBackToSubcategories()" class="btn-secondary-2025">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back</span>
+            </button>
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                ${hasSubSubcategories ? `
+                    <div class="selection-count-2025">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="subsub-selected-count">0</span> selected
+                    </div>
+                ` : ''}
+                <button type="button" onclick="saveCategorySelectionMulti()" class="btn-primary-2025">
+                    <i class="fas fa-check"></i>
+                    <span>Save Selection</span>
+                </button>
             </div>
         </div>
     `;
     
-    modal.innerHTML = html;
-    // Subcategories are already stored, don't overwrite them
-    // modal.dataset.selectedSubCategories is already set from proceedToSubSubcategories()
-    
-    if (hasSubSubcategories) {
-        setupSubSubcategoryListeners();
-    }
-}
-
-function setupSubSubcategoryListeners() {
-    const checkboxes = document.querySelectorAll('.subsub-category-checkbox');
-    const countDisplay = document.getElementById('subsub-selected-count');
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const selectedCount = document.querySelectorAll('.subsub-category-checkbox:checked').length;
-            countDisplay.textContent = selectedCount;
-        });
+    requestAnimationFrame(() => {
+        modal.innerHTML = html;
+        if (hasSubSubcategories) {
+            setupSubSubcategoryListeners();
+        }
     });
 }
 
-// Back navigation functions that preserve selections
+function setupSubSubcategoryListeners() {
+    const countDisplay = document.getElementById('subsub-selected-count');
+    
+    const container = document.getElementById('subsubcategoryStep');
+    if (container) {
+        container.addEventListener('change', debounce((e) => {
+            if (e.target.classList.contains('subsub-category-checkbox')) {
+                const selectedCount = document.querySelectorAll('.subsub-category-checkbox:checked').length;
+                if (countDisplay) countDisplay.textContent = selectedCount;
+            }
+        }, 100));
+    }
+}
+
 function goBackToMainCategories() {
     const modal = document.getElementById('render-selectet-provider-category');
     const storedMainCats = JSON.parse(modal.dataset.selectedMainCategories || '[]');
     
-    // Re-fetch categories and restore selections
     fetch('/api/categories')
         .then(res => res.json())
         .then(data => {
             renderCategoryStep(data);
-            // Restore previously selected main categories
-            restoreMainCategorySelections(storedMainCats);
+            setTimeout(() => restoreMainCategorySelections(storedMainCats), 100);
         });
 }
 
@@ -502,12 +1101,10 @@ function goBackToSubcategories() {
     
     showLoadingState(modal);
     
-    // Re-fetch subcategories for stored main categories
     Promise.all(storedMainCats.map(catId =>
         fetch(`/api/categories/${catId}/subcategories`).then(res => res.json().then(data => ({catId, subs: data.subcategories || []})))
     )).then(results => {
         renderSubcategoryStepMulti(storedMainCats, results);
-        // Restore previously selected subcategories
         setTimeout(() => restoreSubcategorySelections(storedSubCats), 100);
     });
 }
@@ -520,7 +1117,6 @@ function restoreMainCategorySelections(selectedIds) {
         }
     });
     
-    // Update UI
     const selectedCount = selectedIds.length;
     const countDisplay = document.getElementById('selected-count');
     const nextBtn = document.getElementById('next-btn');
@@ -537,7 +1133,6 @@ function restoreSubcategorySelections(selectedIds) {
         }
     });
     
-    // Update UI
     const selectedCount = selectedIds.length;
     const countDisplay = document.getElementById('sub-selected-count');
     const nextBtn = document.getElementById('next-sub-btn');
@@ -548,49 +1143,26 @@ function restoreSubcategorySelections(selectedIds) {
 
 function showLoadingState(modal) {
     modal.innerHTML = `
-        <div class="flex items-center justify-center p-12">
-            <div class="text-center">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                <p class="mt-4 text-sm text-gray-600">Loading categories...</p>
-            </div>
+        <div class="empty-state-2025">
+            <div class="spinner"></div>
+            <p class="empty-text-2025" style="margin-top: 1rem;">Loading categories...</p>
         </div>
     `;
 }
 
 function showNotification(message, type = 'info') {
-    // Create a modern notification instead of alert
-    const notification = document.createElement('div');
-    const bgColor = type === 'error' ? 'bg-red-500' : type === 'warning' ? 'bg-yellow-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
-    
-    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-[60] transform translate-x-full transition-transform duration-300`;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    // Slide in
-    setTimeout(() => {
-        notification.classList.remove('translate-x-full');
-    }, 100);
-    
-    // Slide out and remove
-    setTimeout(() => {
-        notification.classList.add('translate-x-full');
-        setTimeout(() => {
-            if (document.body.contains(notification)) {
-                document.body.removeChild(notification);
-            }
-        }, 300);
-    }, 3000);
+    if (typeof toastr !== 'undefined') {
+        toastr[type](message);
+    } else {
+        alert(message);
+    }
 }
 
 function saveCategorySelectionMulti() {
     const modal = document.getElementById('render-selectet-provider-category');
     
-    // Get stored selections from modal dataset (these persist across navigation steps)
     const mainCats = JSON.parse(modal.dataset.selectedMainCategories || '[]');
     const subCats = JSON.parse(modal.dataset.selectedSubCategories || '[]');
-    
-    // Get currently selected sub-subcategories from the DOM (if any exist)
     const subSubCats = Array.from(modal.querySelectorAll('.subsub-category-checkbox:checked')).map(cb => parseInt(cb.value));
     
     if (mainCats.length === 0) {
@@ -600,7 +1172,6 @@ function saveCategorySelectionMulti() {
     
     showLoadingState(modal);
     
-    // Save to backend
     fetch('/api/provider/save-categories', {
         method: 'POST',
         headers: {
@@ -616,10 +1187,10 @@ function saveCategorySelectionMulti() {
     })
     .then(res => res.json())
     .then(resp => {
-        console.log('Save response:', resp); // Debug log
         if (resp.success) {
             showNotification('Categories saved successfully!', 'success');
             closeAllPopups();
+            setTimeout(() => location.reload(), 1000);
         } else {
             showNotification('Failed to save categories. Please try again.', 'error');
         }
@@ -630,62 +1201,10 @@ function saveCategorySelectionMulti() {
     });
 }
 
-// Keep the original single selection function for backward compatibility
-function saveCategorySelection(level, mainCatId, subCatId = null, subSubCatId = null) {
-    let data = {};
-    if (level === 'main') {
-        data = { category_id: mainCatId };
-    } else if (level === 'sub') {
-        data = { category_id: mainCatId, subcategory_id: subCatId };
-    } else if (level === 'subsub') {
-        data = { category_id: mainCatId, subcategory_id: subCatId, subsubcategory_id: subSubCatId };
-    }
-    
-    fetch('/api/provider/save-categories', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(resp => {
-        if (resp.success) {
-            showNotification('Categories saved successfully!', 'success');
-            closeAllPopups();
-        } else {
-            showNotification('Failed to save categories', 'error');
-        }
-    })
-    .catch(() => showNotification('Failed to save categories', 'error'));
-}
-
 function openSpecialStatusModal() {
   showModal("specialStatusModal");
 }
 
-function closeAllPopups() {
-  const modalIds = ['selectet-provider-category', 'aboutYouPopup', 'specialStatusModal'];
-  modalIds.forEach(id => hideModal(id));
-}
-
-// === UTILITY FUNCTIONS ===
-function showModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.classList.remove("hidden");
-  }
-}
-
-function hideModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.classList.add("hidden");
-  }
-}
-
-// === INITIALIZATION FUNCTIONS ===
 function initializeSpecialStatusModal() {
   const openBtn = document.getElementById("openSpecialStatusModal");
   const modal = document.getElementById("specialStatusModal");
@@ -700,57 +1219,7 @@ function initializeSpecialStatusModal() {
     closeBtn.addEventListener("click", () => {
       hideModal("specialStatusModal");
     });
-
-    // Close modal when clicking outside
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        hideModal("specialStatusModal");
-      }
-    });
   }
-}
-
-function initializeToggleButtons() {
-  document.querySelectorAll(".special-status-item").forEach(group => {
-    const buttons = group.querySelectorAll(".toggle-btn");
-
-    buttons.forEach(button => {
-      button.addEventListener("click", () => {
-        // Reset all buttons in this group
-        buttons.forEach(btn => {
-          btn.classList.remove("bg-blue-500", "text-white", "border-blue-500");
-          btn.classList.add("bg-white", "text-gray-600", "border-gray-300");
-        });
-
-        // Activate clicked button
-        button.classList.remove("bg-white", "text-gray-600", "border-gray-300");
-        button.classList.add("bg-blue-500", "text-white", "border-blue-500");
-      });
-    });
-  });
-}
-
-
-
-// === CATEGORY FUNCTIONS ===
-function showExpatriesSubcategories() {
-  // Add your subcategory logic here
-  console.log("Showing Expatriés subcategories");
-}
-
-function showVacanciersSubcategories() {
-  // Add your subcategory logic here
-  console.log("Showing Vacanciers subcategories");
-}
-
-function showInvestisseursSubcategories() {
-  // Add your subcategory logic here
-  console.log("Showing Investisseurs subcategories");
-}
-
-function showTravailleursFreelancesSubcategories() {
-  // Add your subcategory logic here
-  console.log("Showing Travailleurs & Freelances subcategories");
 }
 
 // === EVENT LISTENERS ===
@@ -759,11 +1228,11 @@ document.addEventListener('keydown', function (event) {
     closeAllPopups();
   }
 });
+
+// Optimisation: Passive event listeners pour le scroll
+document.addEventListener('scroll', debounce(() => {
+    // Actions sur scroll si nécessaire
+}, 150), { passive: true });
 </script>
-
-
-<div class = "mb-20"></div>
-
-
 
 @endsection
