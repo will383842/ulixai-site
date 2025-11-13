@@ -33,9 +33,9 @@ class RegisterController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:6',                          // ✅ Min 6 caractères
-                'regex:/[A-Z]/',                  // ✅ Au moins 1 majuscule
-                'regex:/[0-9]/',                  // ✅ Au moins 1 chiffre
+                'min:6',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
             ],
             'email' => 'required|email',
             'first_name' => 'nullable|string|max:255',
@@ -52,12 +52,12 @@ class RegisterController extends Controller
         $countryName = $geoLocationService->getCountryFromRequest($request);
 
         // ═══════════════════════════════════════════════════════════
-        // 🔑 USER DÉJÀ CONNECTÉ (via verifyEmailOtp)
+        // 🔑 USER DÉJÀ CONNECTÉ (via verifyEmailOtp au step 15)
         // ═══════════════════════════════════════════════════════════
         $user = Auth::user();
         
         if (!$user) {
-            // Fallback : chercher par email
+            // Fallback : chercher par email et reconnecter
             $user = User::where('email', $expats['email'])->first();
             
             if (!$user) {
@@ -66,6 +66,10 @@ class RegisterController extends Controller
                     'message' => 'User not found. Please verify your email first.',
                 ], 404);
             }
+            
+            // Reconnecter si session perdue
+            Auth::login($user, true);
+            $request->session()->regenerate();
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -83,6 +87,9 @@ class RegisterController extends Controller
         $user->preferred_language = $expats['native_language'] ?? null;
         $user->last_login_at = now();
         $user->save();
+        
+        // Régénérer la session après mise à jour
+        $request->session()->regenerate();
 
         // ═══════════════════════════════════════════════════════════
         // 📸 PROFILE IMAGE
@@ -116,19 +123,29 @@ class RegisterController extends Controller
         }
  
         // ═══════════════════════════════════════════════════════════
-        // 🏢 CRÉER OU METTRE À JOUR LE PROVIDER
+        // 🏢 VÉRIFIER SI PROVIDER EXISTE
         // ═══════════════════════════════════════════════════════════
-        $provider = ServiceProvider::where('user_id', $user->id)->where('email', $expats['email'])->first();
+        $provider = ServiceProvider::where('user_id', $user->id)->first();
 
         if($provider) {
+            // S'assurer que le user est connecté
+            if (!Auth::check()) {
+                Auth::login($user, true);
+                $request->session()->regenerate();
+            }
+            
             return response()->json([
                 'status' => 'success',
                 'user' => $user,
                 'provider' => $provider,
-                'message' => 'Provider Already Exists',
+                'message' => 'Provider already exists',
+                'redirect' => url('/dashboard')
             ]);
         }
         
+        // ═══════════════════════════════════════════════════════════
+        // 🏗️ CRÉER LE PROVIDER
+        // ═══════════════════════════════════════════════════════════
         $categoriesMetaData = isset($expats['provider_subcategories']) ? json_encode($expats['provider_subcategories']) : null;
         $categoriesArray = json_decode($categoriesMetaData, true); 
         $category = array_keys($categoriesArray);
@@ -181,13 +198,23 @@ class RegisterController extends Controller
         // 💳 STRIPE CONNECT
         // ═══════════════════════════════════════════════════════════
         if (!$provider->stripe_account_id) {
-            $stripeAccount = $this->createStripeConnectCustomAccount($provider);
-            $provider->stripe_account_id = $stripeAccount['account_id'];
-            $provider->kyc_status = $stripeAccount['isKYCCompele'] ? 'verified' : 'pending';
-            $provider->stripe_chg_enabled = $stripeAccount['isKYCCompele'] ? true : false;
-            $provider->stripe_pts_enabled = $stripeAccount['isKYCCompele'] ? true : false;
-            $provider->kyc_link = $stripeAccount['onboarding_url'] ?? null;
-            $provider->save();
+            try {
+                $stripeAccount = $this->createStripeConnectCustomAccount($provider);
+                $provider->stripe_account_id = $stripeAccount['account_id'];
+                $provider->kyc_status = $stripeAccount['isKYCCompele'] ? 'verified' : 'pending';
+                $provider->stripe_chg_enabled = $stripeAccount['isKYCCompele'] ? true : false;
+                $provider->stripe_pts_enabled = $stripeAccount['isKYCCompele'] ? true : false;
+                $provider->kyc_link = $stripeAccount['onboarding_url'] ?? null;
+                $provider->save();
+            } catch (\Exception $e) {
+                \Log::error('Stripe account creation failed: ' . $e->getMessage());
+            }
+        }
+
+        // S'assurer que le user est toujours connecté
+        if (!Auth::check()) {
+            Auth::login($user, true);
+            $request->session()->regenerate();
         }
 
         return response()->json([
@@ -284,7 +311,6 @@ class RegisterController extends Controller
             'email' => 'required|email'
         ]);
 
-        // Chercher ou créer un user temporaire
         $user = User::firstOrCreate(
             ['email' => $request->email],
             [
@@ -295,10 +321,8 @@ class RegisterController extends Controller
             ]
         );
 
-        // Générer OTP
         $otp = random_int(100000, 999999);
         
-        // Sauvegarder avec expiration 10 min
         EmailVerification::updateOrCreate(
             ['user_id' => $user->id, 'email' => $request->email],
             [
@@ -308,7 +332,6 @@ class RegisterController extends Controller
             ]
         );
 
-        // Envoyer email
         Mail::raw(
             "Your verification code is: {$otp}\n\nThis code is valid for 10 minutes.",
             function ($message) use ($user) {
@@ -328,6 +351,7 @@ class RegisterController extends Controller
 
     // ═══════════════════════════════════════════════════════════
     // ✅ VÉRIFIER OTP AU STEP 15 + AUTO-LOGIN
+    // L'utilisateur reste dans le wizard après validation
     // ═══════════════════════════════════════════════════════════
     public function verifyEmailOtp(Request $request)
     {
@@ -368,10 +392,10 @@ class RegisterController extends Controller
             $user->save();
         }
         
-        // ✅ AUTO-LOGIN ICI
-        Auth::login($user, $request->filled('remember'));
+        // ✅ AUTO-LOGIN ICI - Le user reste dans le wizard
+        Auth::login($user, true);
         $request->session()->regenerate();
-        Auth::user()->update(['last_login_at' => now()]);
+        $user->update(['last_login_at' => now()]);
         
         return response()->json([
             'status' => 'success',
@@ -394,9 +418,9 @@ class RegisterController extends Controller
         }
 
         $otp = random_int(100000, 999999);
-        $verification = EmailVerification::updateOrCreate(
+        EmailVerification::updateOrCreate(
             ['user_id' => $user->id, 'email' => $user->email],
-            ['otp' => $otp, 'is_verified' => false]
+            ['otp' => $otp, 'is_verified' => false, 'created_at' => now()]
         );
 
         Mail::raw(

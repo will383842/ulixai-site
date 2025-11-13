@@ -2353,6 +2353,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
  * Wizard Core - VERSION PROPRE
  * ✅ Le JavaScript ne touche JAMAIS au style
  * ✅ Gère uniquement btn.disabled = true/false
+ * ✅ NE SE FERME QUE AVEC LA CROIX
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -2454,6 +2455,17 @@ var WizardCore = /*#__PURE__*/function () {
       }
 
       // ═══════════════════════════════════════════════════════════
+      // 🛡️ EMPÊCHER LA FERMETURE AU CLIC EXTÉRIEUR
+      // ═══════════════════════════════════════════════════════════
+      var popupContainer = popup.querySelector('.bg-white');
+      if (popupContainer) {
+        popupContainer.addEventListener('click', function (e) {
+          // Empêcher la propagation vers le backdrop
+          e.stopPropagation();
+        }, true);
+      }
+
+      // ═══════════════════════════════════════════════════════════
       // 🔧 DÉLÉGATION D'ÉVÉNEMENTS STRICTE
       // ═══════════════════════════════════════════════════════════
 
@@ -2486,24 +2498,26 @@ var WizardCore = /*#__PURE__*/function () {
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 🎯 PRIORITÉ 3 : Clic sur le backdrop (fond noir)
+        // ❌ CLIC SUR LE BACKDROP DÉSACTIVÉ
+        // Le popup ne se ferme QUE avec la croix
         // ═══════════════════════════════════════════════════════════
-        if (popup && e.target === popup && !popup.classList.contains('hidden')) {
-          console.log('🖱️ [Wizard] Backdrop clicked');
-          _this.closePopup();
-          return;
-        }
+        // Ancien code commenté :
+        // if (popup && e.target === popup && !popup.classList.contains('hidden')) {
+        //   console.log('🖱️ [Wizard] Backdrop clicked');
+        //   this.closePopup();
+        //   return;
+        // }
       }, false);
 
       // ═══════════════════════════════════════════════════════════
-      // ⌨️ ESC key pour fermer
+      // ⌨️ ESC key pour fermer - DÉSACTIVÉ AUSSI
       // ═══════════════════════════════════════════════════════════
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
-          console.log('⌨️ [Wizard] ESC pressed');
-          _this.closePopup();
-        }
-      });
+      // document.addEventListener('keydown', (e) => {
+      //   if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
+      //     console.log('⌨️ [Wizard] ESC pressed');
+      //     this.closePopup();
+      //   }
+      // });
 
       // ═══════════════════════════════════════════════════════════
       // 🌍 Fonctions globales pour compatibilité
@@ -2514,7 +2528,7 @@ var WizardCore = /*#__PURE__*/function () {
       window.closeSignupPopup = function () {
         return _this.closePopup();
       };
-      console.log('✅ Popup controls initialized');
+      console.log('✅ Popup controls initialized (backdrop click DISABLED, ESC DISABLED)');
     }
   }, {
     key: "closePopup",
@@ -3148,8 +3162,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
  * ═══════════════════════════════════════════════════════════
  * WIZARD SUBMISSION - Soumission finale vers /register
  * ═══════════════════════════════════════════════════════════
- * Aligné avec RegisterController (ligne 20)
  * Le user est déjà connecté à ce stade (Auth::login fait au step 15)
+ * Cette étape crée juste le provider en BDD
  */
 
 var WizardSubmission = /*#__PURE__*/function () {
@@ -3170,7 +3184,7 @@ var WizardSubmission = /*#__PURE__*/function () {
             case 0:
               console.log('📤 [WizardSubmission] Starting provider signup submission...');
 
-              // 1. Récupérer les données
+              // Récupérer les données
               _context.p = 1;
               formData = JSON.parse(localStorage.getItem(this.storageKey)) || {};
               console.log('📦 [WizardSubmission] Data to send:', formData);
@@ -3190,10 +3204,17 @@ var WizardSubmission = /*#__PURE__*/function () {
               this.handleError(new Error('Email is required'));
               return _context.a(2);
             case 4:
-              // 3. Loader
+              if (formData.password) {
+                _context.n = 5;
+                break;
+              }
+              this.handleError(new Error('Password is required'));
+              return _context.a(2);
+            case 5:
+              // Loader
               this.showLoader();
-              _context.p = 5;
-              _context.n = 6;
+              _context.p = 6;
+              _context.n = 7;
               return fetch(this.endpoint, {
                 method: 'POST',
                 headers: {
@@ -3203,41 +3224,42 @@ var WizardSubmission = /*#__PURE__*/function () {
                 },
                 body: JSON.stringify(formData)
               });
-            case 6:
+            case 7:
               response = _context.v;
               console.log('📡 [WizardSubmission] Response status:', response.status);
               if (response.ok) {
-                _context.n = 8;
+                _context.n = 9;
                 break;
               }
-              _context.n = 7;
+              _context.n = 8;
               return response.json()["catch"](function () {
                 return {};
               });
-            case 7:
+            case 8:
               errorData = _context.v;
               throw new Error(errorData.message || "Server error: ".concat(response.status));
-            case 8:
-              _context.n = 9;
-              return response.json();
             case 9:
-              data = _context.v;
-              this.handleSuccess(data);
-              _context.n = 11;
-              break;
+              _context.n = 10;
+              return response.json();
             case 10:
-              _context.p = 10;
+              data = _context.v;
+              console.log('✅ [WizardSubmission] Server response:', data);
+              this.handleSuccess(data);
+              _context.n = 12;
+              break;
+            case 11:
+              _context.p = 11;
               _t2 = _context.v;
               console.error('❌ [WizardSubmission] Registration failed:', _t2);
               this.handleError(_t2);
-            case 11:
-              _context.p = 11;
-              this.hideLoader();
-              return _context.f(11);
             case 12:
+              _context.p = 12;
+              this.hideLoader();
+              return _context.f(12);
+            case 13:
               return _context.a(2);
           }
-        }, _callee, this, [[5, 10, 11, 12], [1, 2]]);
+        }, _callee, this, [[6, 11, 12, 13], [1, 2]]);
       }));
       function submit() {
         return _submit.apply(this, arguments);
@@ -3253,18 +3275,12 @@ var WizardSubmission = /*#__PURE__*/function () {
       localStorage.removeItem(this.storageKey);
       console.log('🗑️ [WizardSubmission] Cleared localStorage');
 
-      // Message de succès
-      if (typeof toastr !== 'undefined') {
-        toastr.success(data.message || 'Account created successfully!', 'Success');
-      }
-
-      // Afficher Step 16
+      // Afficher step 16
       this.showStep16();
 
-      // ⚠️ ADAPTÉ: Le controller ne retourne pas de champ 'redirect'
-      // On hardcode la redirection vers /dashboard
+      // Rediriger après 3 secondes
+      var redirectUrl = data.redirect || '/dashboard';
       setTimeout(function () {
-        var redirectUrl = '/dashboard'; // Hardcodé
         console.log('🔄 [WizardSubmission] Redirecting to:', redirectUrl);
         window.location.href = redirectUrl;
       }, 3000);
@@ -3274,8 +3290,17 @@ var WizardSubmission = /*#__PURE__*/function () {
     value: function handleError(error) {
       console.error('❌ [WizardSubmission] Error:', error);
       var message = error.message || 'Failed to create account. Please try again.';
-      if (typeof toastr !== 'undefined') {
-        toastr.error(message, 'Error');
+
+      // Message inline uniquement
+      var errorAlert = document.getElementById('step15Error');
+      var errorMessage = document.getElementById('step15ErrorMessage');
+      if (errorAlert && errorMessage) {
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('hidden');
+        errorAlert.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
       } else {
         alert("Error: ".concat(message));
       }
@@ -3287,14 +3312,32 @@ var WizardSubmission = /*#__PURE__*/function () {
     key: "showStep16",
     value: function showStep16() {
       console.log('🎉 [WizardSubmission] Showing step 16');
+
+      // Masquer tous les steps
       for (var i = 1; i <= 16; i++) {
         var step = document.getElementById("step".concat(i));
         if (step) step.classList.add('hidden');
       }
+
+      // Afficher step 16
       var step16 = document.getElementById('step16');
-      if (step16) step16.classList.remove('hidden');
-      var progressBar = document.getElementById('progress-bar');
+      if (step16) {
+        step16.classList.remove('hidden');
+      }
+
+      // Masquer les boutons de navigation
+      var mobileNav = document.getElementById('mobileNavButtons');
+      var desktopNav = document.getElementById('desktopNavButtons');
+      if (mobileNav) mobileNav.style.display = 'none';
+      if (desktopNav) desktopNav.style.display = 'none';
+
+      // Progress bar à 100%
+      var progressBar = document.getElementById('mobileProgressBar');
+      var progressPercentage = document.getElementById('progressPercentage');
+      var currentStepNum = document.getElementById('currentStepNum');
       if (progressBar) progressBar.style.width = '100%';
+      if (progressPercentage) progressPercentage.textContent = '100';
+      if (currentStepNum) currentStepNum.textContent = '16';
     }
   }, {
     key: "showLoader",

@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════════════════
  * WIZARD SUBMISSION - Soumission finale vers /register
  * ═══════════════════════════════════════════════════════════
- * Aligné avec RegisterController (ligne 20)
  * Le user est déjà connecté à ce stade (Auth::login fait au step 15)
+ * Cette étape crée juste le provider en BDD
  */
 
 export class WizardSubmission {
@@ -16,7 +16,7 @@ export class WizardSubmission {
   async submit() {
     console.log('📤 [WizardSubmission] Starting provider signup submission...');
 
-    // 1. Récupérer les données
+    // Récupérer les données
     let formData;
     try {
       formData = JSON.parse(localStorage.getItem(this.storageKey)) || {};
@@ -27,17 +27,22 @@ export class WizardSubmission {
       return;
     }
 
-    // 2. Validation
+    // Validation
     if (!formData.email) {
       this.handleError(new Error('Email is required'));
       return;
     }
 
-    // 3. Loader
+    if (!formData.password) {
+      this.handleError(new Error('Password is required'));
+      return;
+    }
+
+    // Loader
     this.showLoader();
 
     try {
-      // 4. Envoyer à /register
+      // Envoyer à /register
       const response = await fetch(this.endpoint, {
         method: 'POST',
         headers: {
@@ -56,6 +61,8 @@ export class WizardSubmission {
       }
 
       const data = await response.json();
+      console.log('✅ [WizardSubmission] Server response:', data);
+      
       this.handleSuccess(data);
 
     } catch (error) {
@@ -73,18 +80,13 @@ export class WizardSubmission {
     localStorage.removeItem(this.storageKey);
     console.log('🗑️ [WizardSubmission] Cleared localStorage');
     
-    // Message de succès
-    if (typeof toastr !== 'undefined') {
-      toastr.success(data.message || 'Account created successfully!', 'Success');
-    }
-    
-    // Afficher Step 16
+    // Afficher step 16
     this.showStep16();
     
-    // ⚠️ ADAPTÉ: Le controller ne retourne pas de champ 'redirect'
-    // On hardcode la redirection vers /dashboard
+    // Rediriger après 3 secondes
+    const redirectUrl = data.redirect || '/dashboard';
+    
     setTimeout(() => {
-      const redirectUrl = '/dashboard'; // Hardcodé
       console.log('🔄 [WizardSubmission] Redirecting to:', redirectUrl);
       window.location.href = redirectUrl;
     }, 3000);
@@ -95,8 +97,14 @@ export class WizardSubmission {
     
     const message = error.message || 'Failed to create account. Please try again.';
     
-    if (typeof toastr !== 'undefined') {
-      toastr.error(message, 'Error');
+    // Message inline uniquement
+    const errorAlert = document.getElementById('step15Error');
+    const errorMessage = document.getElementById('step15ErrorMessage');
+    
+    if (errorAlert && errorMessage) {
+      errorMessage.textContent = message;
+      errorAlert.classList.remove('hidden');
+      errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
       alert(`Error: ${message}`);
     }
@@ -109,16 +117,32 @@ export class WizardSubmission {
   showStep16() {
     console.log('🎉 [WizardSubmission] Showing step 16');
     
+    // Masquer tous les steps
     for (let i = 1; i <= 16; i++) {
       const step = document.getElementById(`step${i}`);
       if (step) step.classList.add('hidden');
     }
     
+    // Afficher step 16
     const step16 = document.getElementById('step16');
-    if (step16) step16.classList.remove('hidden');
+    if (step16) {
+      step16.classList.remove('hidden');
+    }
     
-    const progressBar = document.getElementById('progress-bar');
+    // Masquer les boutons de navigation
+    const mobileNav = document.getElementById('mobileNavButtons');
+    const desktopNav = document.getElementById('desktopNavButtons');
+    if (mobileNav) mobileNav.style.display = 'none';
+    if (desktopNav) desktopNav.style.display = 'none';
+    
+    // Progress bar à 100%
+    const progressBar = document.getElementById('mobileProgressBar');
+    const progressPercentage = document.getElementById('progressPercentage');
+    const currentStepNum = document.getElementById('currentStepNum');
+    
     if (progressBar) progressBar.style.width = '100%';
+    if (progressPercentage) progressPercentage.textContent = '100';
+    if (currentStepNum) currentStepNum.textContent = '16';
   }
 
   showLoader() {

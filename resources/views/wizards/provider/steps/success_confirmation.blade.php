@@ -4,11 +4,8 @@
 ============================================
 ✨ Design System Blue/Cyan/Teal STRICT
 🎉 Confirmation de succès avec animations
-💎 Redirection automatique vers le dashboard
+💎 Redirection automatique vers le dashboard (via wizard-submission.js)
 ⚡ Structure header fixe + contenu scrollable
-🔧 Optimisations CPU, RAM, GPU
-✅ CONFORME AU GUIDE SYSTÈME WIZARD
-⚠️ Ce step ne devrait pas être affiché car redirection après OTP
 ============================================
 -->
 
@@ -110,22 +107,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Primary CTA Button -->
-    <div class="animate-fade-in-up animation-delay-600">
-      <a 
-        href="{{ route('ongoing-requests') }}" 
-        class="block w-full bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 text-white px-8 py-4 rounded-2xl font-black text-base shadow-2xl hover:shadow-3xl transition-all hover:scale-105 text-center transform"
-      >
-        <span class="flex items-center justify-center gap-3">
-          <span>🔍</span>
-          <span>VIEW SERVICE REQUESTS</span>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-          </svg>
-        </span>
-      </a>
     </div>
 
     <!-- Boost Profile Card -->
@@ -276,57 +257,3 @@
   }
 }
 </style>
-
-<script>
-/**
- * ═══════════════════════════════════════════════════════════
- * STEP 16: Success Confirmation
- * ═══════════════════════════════════════════════════════════
- * ⚠️ NOTE: Ce step ne devrait normalement jamais être affiché
- * car l'utilisateur est redirigé vers le dashboard après OTP.
- * Ce script est là comme fallback au cas où la redirection échoue.
- */
-
-(function() {
-  'use strict';
-  
-  const step16 = document.getElementById('step16');
-  
-  if (!step16) {
-    console.warn('⚠️ [Step 16] Element not found');
-    return;
-  }
-  
-  // Observer pour détecter quand le step devient visible
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        if (!step16.classList.contains('hidden')) {
-          console.log('👁️ [Step 16] Success step is now visible');
-          
-          // Si ce step est visible, c'est probablement une erreur
-          // Car l'utilisateur devrait avoir été redirigé après OTP
-          // On peut forcer la redirection ici
-          setTimeout(() => {
-            const dashboardRoute = '/dashboard';
-            php'redirect' => url('/dashboard')
-            console.log('🔄 [Step 16] Forcing redirect to dashboard:', dashboardRoute);
-            
-            if (typeof toastr !== 'undefined') {
-              toastr.success('Redirecting to your dashboard...', 'Welcome!');
-            }
-            
-            setTimeout(() => {
-              window.location.href = dashboardRoute;
-            }, 2000);
-          }, 3000); // Attendre 3 secondes pour laisser l'utilisateur voir le message
-        }
-      }
-    });
-  });
-  
-  observer.observe(step16, { attributes: true });
-  
-  console.log('✅ [Step 16] Success confirmation initialized');
-})();
-</script>
