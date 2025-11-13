@@ -1,5 +1,5 @@
 <!-- Special Status Modal -->
-<div id="specialStatusModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 modal-overlay" role="dialog" aria-modal="true" aria-labelledby="special-status-title">
+<div id="specialStatusModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-overlay" style="display: none; visibility: visible; opacity: 1;" role="dialog" aria-modal="true" aria-labelledby="special-status-title">
   <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all modal-content">
     
     <!-- Header with gradient -->
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(res => res.json())
         .then(data => {
             if(data.success) {
-                modal.classList.add('hidden');
+                modal.style.display = 'none';
                 document.body.style.overflow = '';
                 toastr.success('Statuts spéciaux enregistrés avec succès !', 'Succès');
                 
@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Close modal handlers
     function closeModal() {
-        modal.classList.add('hidden');
+        modal.style.display = 'none';
         document.body.style.overflow = '';
         
         // Restore focus
@@ -360,7 +360,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Open modal handler
     document.getElementById('openSpecialStatusModal')?.addEventListener('click', function() {
-        modal.classList.remove('hidden');
+        modal.style.display = '';
         document.body.style.overflow = 'hidden';
         
         // Focus first focusable element

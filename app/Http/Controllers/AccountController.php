@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\ServiceProvider;
@@ -477,6 +478,74 @@ class AccountController extends Controller
                 'success' => false,
                 'message' => 'Error updating banking details',
             ], 500);
+        }
+    }
+
+    /**
+     * Update About You section for service providers
+     * ✅ MÉTHODE AJOUTÉE
+     */
+    public function updateAboutYou(Request $request)
+    {
+        $user = User::find($request->user_id);
+        
+        if (!$user || !$user->serviceProvider) {
+            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+        }
+        
+        $user->serviceProvider->update([
+            'about_you' => $request->description
+        ]);
+        
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Delete user account
+     * ✅ NOUVELLE MÉTHODE POUR SUPPRESSION DE COMPTE
+     */
+    public function delete(Request $request)
+    {
+        $request->validate([
+            'confirm_delete' => 'required|accepted',
+        ]);
+
+        $user = Auth::user();
+
+        try {
+            DB::beginTransaction();
+
+            // If service provider, soft delete the service_providers record
+            if ($user->user_role === 'service_provider' && $user->serviceProvider) {
+                $user->serviceProvider()->update([
+                    'is_active' => false,
+                    'deleted_at' => now(),
+                ]);
+                
+                // Delete provider categories
+                DB::table('service_provider_categories')->where('service_provider_id', $user->serviceProvider->id)->delete();
+                DB::table('service_provider_subcategories')->where('service_provider_id', $user->serviceProvider->id)->delete();
+                DB::table('service_provider_sub_subcategories')->where('service_provider_id', $user->serviceProvider->id)->delete();
+            }
+
+            // Soft delete the user
+            $user->update([
+                'deleted_at' => now(),
+                'email' => $user->email . '_deleted_' . time(),
+            ]);
+
+            DB::commit();
+
+            // Logout the user
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect('/')->with('success', 'Your account has been successfully deleted.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'An error occurred while deleting your account. Please try again.');
         }
     }
 }

@@ -47,6 +47,8 @@
         padding-bottom: 8rem; /* Space for mobile navbar */
         background: #ffffff;
         contain: layout style paint;
+        position: relative;
+        z-index: 1;
     }
     
     .page-title-2025 {
@@ -75,6 +77,8 @@
         will-change: box-shadow;
         transform: translateZ(0);
         -webkit-backface-visibility: hidden;
+        position: relative;
+        z-index: 2;
     }
     
     /* Optimisation: Animation plus légère avec GPU */
@@ -114,6 +118,8 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         /* Optimisation: Isoler le rendu */
         contain: layout style;
+        position: relative;
+        z-index: 2;
     }
     
     .form-section-title {
@@ -138,10 +144,14 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+        position: relative;
+        z-index: 1;
     }
     
     .form-field.full-width {
         grid-column: 1 / -1;
+        position: relative;
+        z-index: 3;
     }
     
     .form-label {
@@ -166,6 +176,8 @@
         font-family: inherit;
         /* Optimisation: Éviter le zoom sur iOS */
         font-size: max(16px, 0.9375rem);
+        position: relative;
+        z-index: 1;
     }
     
     .form-input:focus,
@@ -173,6 +185,7 @@
         outline: none;
         border-color: var(--color-primary);
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        z-index: 5;
     }
     
     .form-input[readonly] {
@@ -195,17 +208,131 @@
         padding-right: 2.5rem;
     }
     
-    .form-select[multiple] {
-        height: auto;
-        min-height: 120px;
-        background-image: none;
-        padding-right: 1.125rem;
-    }
-    
     .form-hint {
         font-size: 0.75rem;
         color: var(--color-text-tertiary);
         margin-top: 0.25rem;
+    }
+    
+    /* LANGUAGES CHECKBOX GRID - Nouveau système UX amélioré */
+    .languages-checkbox-container {
+        background: var(--color-bg-secondary);
+        border: 2px solid #e5e7eb;
+        border-radius: var(--border-radius-md);
+        padding: 1rem;
+        max-height: 300px;
+        overflow-y: auto;
+        /* Optimisation: Smooth scrolling */
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .languages-checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 0.75rem;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .language-checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.625rem 0.875rem;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        transition: var(--transition-base);
+        user-select: none;
+        /* Optimisation: GPU acceleration */
+        will-change: transform;
+        transform: translateZ(0);
+        position: relative;
+        z-index: 10;
+    }
+    
+    .language-checkbox-item:hover {
+        border-color: var(--color-primary-light);
+        background: #eff6ff;
+        transform: translateY(-1px) translateZ(0);
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+        z-index: 15;
+    }
+    
+    .language-checkbox-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--color-primary);
+        margin: 0;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 11;
+    }
+    
+    .language-checkbox-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        cursor: pointer;
+        flex: 1;
+    }
+    
+    .language-checkbox-item.checked {
+        border-color: var(--color-primary);
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        z-index: 12;
+    }
+    
+    .language-checkbox-item.checked .language-checkbox-label {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+    
+    /* Search box for languages */
+    .language-search-box {
+        position: sticky;
+        top: 0;
+        background: var(--color-bg-secondary);
+        padding-bottom: 0.75rem;
+        margin-bottom: 0.75rem;
+        border-bottom: 2px solid #e5e7eb;
+        z-index: 20;
+    }
+    
+    .language-search-input {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border: 2px solid #e5e7eb;
+        border-radius: var(--border-radius-sm);
+        font-size: 0.875rem;
+        transition: var(--transition-base);
+        position: relative;
+        z-index: 20;
+    }
+    
+    .language-search-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        z-index: 25;
+    }
+    
+    .selected-languages-count {
+        font-size: 0.75rem;
+        color: var(--color-primary);
+        font-weight: 600;
+        margin-top: 0.5rem;
+        padding: 0.375rem 0.75rem;
+        background: #eff6ff;
+        border-radius: var(--border-radius-sm);
+        display: inline-block;
+        position: relative;
+        z-index: 5;
     }
     
     /* EDITABLE FIELD GROUP */
@@ -213,6 +340,8 @@
         display: flex;
         gap: 0.75rem;
         align-items: flex-end;
+        position: relative;
+        z-index: 2;
     }
     
     .editable-field-input {
@@ -238,11 +367,14 @@
         will-change: transform;
         transform: translateZ(0);
         -webkit-tap-highlight-color: transparent;
+        position: relative;
+        z-index: 3;
     }
     
     .btn-edit:hover {
         transform: translateY(-2px) translateZ(0);
         box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+        z-index: 4;
     }
     
     .btn-edit:active {
@@ -265,9 +397,11 @@
     .btn-edit:focus-visible,
     .btn-submit:focus-visible,
     .form-input:focus-visible,
-    .form-select:focus-visible {
+    .form-select:focus-visible,
+    .language-checkbox-item:focus-within {
         outline: 3px solid var(--color-primary);
         outline-offset: 3px;
+        z-index: 30;
     }
     
     /* SUBMIT BUTTON - Optimisé */
@@ -293,11 +427,14 @@
         will-change: transform;
         transform: translateZ(0);
         -webkit-tap-highlight-color: transparent;
+        position: relative;
+        z-index: 3;
     }
     
     .btn-submit:hover {
         transform: translateY(-2px) translateZ(0);
         box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+        z-index: 4;
     }
     
     .btn-submit:active {
@@ -317,6 +454,8 @@
         margin-top: 2rem;
         padding-top: 1.5rem;
         border-top: 2px solid #e5e7eb;
+        position: relative;
+        z-index: 2;
     }
     
     /* TOAST NOTIFICATION - Optimisé */
@@ -428,6 +567,10 @@
         .earnings-value {
             font-size: 1.5rem;
         }
+        
+        .languages-checkbox-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
     }
     
     @media (min-width: 1024px) {
@@ -442,6 +585,10 @@
         
         .form-card-2025 {
             padding: 2.5rem;
+        }
+        
+        .languages-checkbox-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
         }
     }
     
@@ -525,18 +672,33 @@
                     </select>
                 </div>
 
-                <!-- Full Width Field for Spoken Languages -->
+                <!-- Full Width Field for Spoken Languages with Checkboxes -->
                 <div class="form-field full-width">
                     <label class="form-label">What languages do you speak?</label>
-                    <select name="spoken_languages[]" multiple class="form-select">
-                    @php
-                        $spokenLanguages = is_array($provider->spoken_language ?? []) ? $provider->spoken_language : json_decode($provider->spoken_language ?? '[]', true);
-                    @endphp  
-                    @foreach($languages as $language)
-                        <option value="{{ $language }}" {{ in_array($language, $spokenLanguages) ? 'selected' : '' }}>{{ $language }}</option>
-                    @endforeach
-                    </select>
-                    <small class="form-hint">Hold Ctrl/Cmd to select multiple languages</small>
+                    <div class="languages-checkbox-container">
+                        <div class="language-search-box">
+                            <input type="text" id="languageSearch" class="language-search-input" placeholder="🔍 Search languages..." autocomplete="off">
+                        </div>
+                        <div class="languages-checkbox-grid" id="languagesGrid">
+                            @php
+                                $spokenLanguages = is_array($provider->spoken_language ?? []) ? $provider->spoken_language : json_decode($provider->spoken_language ?? '[]', true);
+                            @endphp  
+                            @foreach($languages as $language)
+                                <label class="language-checkbox-item {{ in_array($language, $spokenLanguages) ? 'checked' : '' }}">
+                                    <input 
+                                        type="checkbox" 
+                                        name="spoken_languages[]" 
+                                        value="{{ $language }}" 
+                                        {{ in_array($language, $spokenLanguages) ? 'checked' : '' }}
+                                    >
+                                    <span class="language-checkbox-label">{{ $language }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="selected-languages-count" id="selectedCount">
+                        <span id="countNumber">{{ count($spokenLanguages) }}</span> language(s) selected
+                    </div>
                 </div>
                 @else
                 <!-- Full Width Field for Regular Users -->
@@ -644,6 +806,62 @@
         }, 5000);
     }
     
+    // Language checkbox functionality
+    function initLanguageCheckboxes() {
+        const checkboxes = document.querySelectorAll('.language-checkbox-item input[type="checkbox"]');
+        const searchInput = document.getElementById('languageSearch');
+        const languagesGrid = document.getElementById('languagesGrid');
+        const countNumber = document.getElementById('countNumber');
+        
+        // Update count
+        function updateCount() {
+            const checkedCount = document.querySelectorAll('.language-checkbox-item input[type="checkbox"]:checked').length;
+            if (countNumber) {
+                countNumber.textContent = checkedCount;
+            }
+        }
+        
+        // Handle checkbox change
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const label = this.closest('.language-checkbox-item');
+                if (this.checked) {
+                    label.classList.add('checked');
+                } else {
+                    label.classList.remove('checked');
+                }
+                updateCount();
+                
+                // Vibration feedback
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(10);
+                }
+            });
+        });
+        
+        // Search functionality
+        if (searchInput) {
+            searchInput.addEventListener('input', debounce(function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                const items = languagesGrid.querySelectorAll('.language-checkbox-item');
+                
+                items.forEach(item => {
+                    const label = item.querySelector('.language-checkbox-label');
+                    const text = label.textContent.toLowerCase();
+                    
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }, 200));
+        }
+        
+        // Initial count
+        updateCount();
+    }
+    
     // Handle form submission - Optimisé
     function handleFormSubmit(e) {
         e.preventDefault();
@@ -747,6 +965,9 @@
     
     // Optimisation: Initialisation avec event delegation
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize language checkboxes
+        initLanguageCheckboxes();
+        
         // Form submission
         const form = document.getElementById('personalInfoForm');
         if (form) {

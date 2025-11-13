@@ -51,10 +51,12 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'bank_account_iban' => 'encrypted',      // ✅ AJOUTÉ
+        'bank_swift_bic' => 'encrypted',         // ✅ AJOUTÉ
+        'bank_details_verified_at' => 'datetime',
         'referral_stats' => 'array',
         'is_fake' => 'boolean',
         'last_login_at' => 'datetime',
-        'bank_details_verified_at' => 'datetime',
         // ✨ AJOUTS GOOGLE VISION
         'profile_photo_verified' => 'boolean',
         'profile_photo_verification_data' => 'array',
@@ -160,11 +162,15 @@ class User extends Authenticatable
         return $this->hasMany(Mission::class, 'requester_id');
     }
 
-    public function hasBankingDetails(): bool
+    /**
+     * Check if user has complete banking details
+     * ✅ MODIFIÉ : Utilise !empty() au lieu de !is_null() et vérifie bank_name au lieu de bank_swift_bic
+     */
+    public function hasBankingDetails()
     {
-        return !is_null($this->bank_account_holder) && 
-               !is_null($this->bank_account_iban) && 
-               !is_null($this->bank_swift_bic);
+        return !empty($this->bank_account_holder) && 
+               !empty($this->bank_account_iban) && 
+               !empty($this->bank_name);
     }
 
     // ===========================================

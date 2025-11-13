@@ -279,6 +279,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/update-provider-profile', [AccountController::class, 'uploadProviderProfile'])->name('provider.profile.photo.ajax');
     Route::post('/provider/upload-document', [AccountController::class, 'uploadDocuments'])->name('provider.upload.document');
     Route::post('/user/banking-details', [AccountController::class, 'updateBankingDetails'])->name('user.banking.details');
+    
+    // ✅ NOUVELLE ROUTE: Suppression de compte
+    Route::delete('/account/delete', [AccountController::class, 'delete'])->name('account.delete');
 
     Route::get('/upload-document', [AccountController::class, 'uploadDocument'])->name('upload-document');
     Route::post('/profile/photo', [AccountController::class, 'uploadProfilePicture'])->name('profile.photo.upload');

@@ -35,13 +35,15 @@ class ServiceProvider extends Model
         'stripe_chg_enabled',
         'stripe_pts_enabled', 
         'kyc_link',
-        'kyc_status' ,
+        'kyc_status',
         'points',
-        'ulysse_status' ,
+        'ulysse_status',
         'provider_visibility',
         'country_coords',
         'city_coords',
-        'pinned'
+        'pinned',
+        'is_active',
+        'deleted_at',
     ];
 
     protected $casts = [
@@ -51,6 +53,8 @@ class ServiceProvider extends Model
         'documents' => 'array',
         'country_coords' => 'array',
         'city_coords' => 'array',
+        'deleted_at' => 'datetime',
+        'is_active' => 'boolean',
         // 'services_to_offer' => 'array',
         // 'services_to_offer_category' => 'array',
     ];
@@ -65,7 +69,7 @@ class ServiceProvider extends Model
         return $this->hasMany(ProviderReview::class, 'provider_id');
     }
 
-    public function missions() : HasMany 
+    public function missions(): HasMany 
     {
         return $this->hasMany(Mission::class, 'selected_provider_id');
     }

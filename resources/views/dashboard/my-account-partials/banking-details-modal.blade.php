@@ -1,14 +1,14 @@
 <div id="bankingDetailsModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-    <div class="flex min-h-screen items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 backdrop-blur-sm transition-opacity" onclick="hideBankingModal()"></div>
+    <div class="flex min-h-screen items-center justify-center p-4">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 backdrop-blur-sm transition-opacity"></div>
 
-        <div class="relative transform overflow-hidden rounded-t-2xl sm:rounded-xl bg-white text-left shadow-2xl transition-all w-full sm:my-8 sm:w-full sm:max-w-xl max-h-[90vh]">
+        <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
             <!-- Header Section with Gradient -->
             <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
                         <div class="rounded-lg bg-white/20 p-2">
-                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                             </svg>
                         </div>
@@ -17,16 +17,30 @@
                             <p class="text-sm text-blue-100">Secure your withdrawals and payments</p>
                         </div>
                     </div>
-                    <button type="button" onclick="hideBankingModal()" class="rounded-lg bg-white/20 p-2 hover:bg-white/30 transition-colors" aria-label="Close modal">
-                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <button type="button" onclick="hideBankingModal()" class="rounded-lg bg-white/20 p-2 hover:bg-white/30 transition-colors">
+                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
             </div>
 
-            <!-- Body - Scrollable -->
-            <div class="overflow-y-auto px-6 py-4" style="max-height: calc(90vh - 80px);">
+            <div class="px-6 py-4">
+                <div class="rounded-lg bg-blue-50 p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-blue-700">
+                                Please ensure all banking details are accurate. Incorrect information may delay your payments.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 <form id="bankingDetailsForm" class="space-y-5">
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <!-- Account Holder Name -->
@@ -130,12 +144,35 @@
                                 <span class="error-message hidden text-xs text-red-600 mt-1"></span>
                             </div>
                         </div>
+
+                        <!-- Banking Consent - ✅ AJOUTÉ -->
+                        <div class="col-span-2 mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <label class="flex items-start cursor-pointer">
+                                <input type="checkbox" name="consent_banking" id="consent_banking" required 
+                                       class="mt-1 mr-3 w-4 h-4 text-blue-600 focus:ring-blue-500">
+                                <span class="text-xs text-gray-700 leading-relaxed">
+                                    <strong>I authorize Ulixai</strong> to securely store my banking information for payment processing. 
+                                    Data is encrypted and complies with international standards 
+                                    <span class="inline-block bg-white px-2 py-0.5 rounded text-[10px] font-mono">
+                                        GDPR · CCPA · LGPD
+                                    </span>
+                                    <br>
+                                    <span class="text-gray-500 mt-1 inline-block">
+                                        You can request data deletion anytime via 
+                                        <a href="/privacy-policy" target="_blank" class="text-blue-600 underline hover:text-blue-800">
+                                            Privacy Settings
+                                        </a>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
                     </div>
                 </form>
-            
-                <!-- Footer -->
-                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 mt-6 mb-32 sm:mb-0">
-                    <div class="flex items-center justify-end space-x-3">
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                <div class="flex items-center justify-end space-x-3">
                     <button type="button" onclick="hideBankingModal()" 
                         class="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors">
                         Cancel
@@ -156,10 +193,6 @@
 </div>
 
 <style>
-#bankingDetailsModal {
-    transition: opacity 0.2s ease-in-out;
-}
-
 #bankingDetailsModal input:focus,
 #bankingDetailsModal select:focus {
     border-color: #3b82f6;
@@ -173,41 +206,15 @@
 #bankingDetailsModal .error-message.show {
     display: block;
 }
-
-/* Animation du spinner */
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-/* Mobile - Footer visible */
-@media (max-width: 640px) {
-    #bankingDetailsModal input,
-    #bankingDetailsModal select {
-        font-size: 16px !important;
-    }
-}
-
-/* Body lock - smooth scroll */
-body.modal-open {
-    overflow: hidden !important;
-    position: fixed;
-    width: 100%;
-}
 </style>
 
 <script>
 function showBankingModal() {
     document.getElementById('bankingDetailsModal').classList.remove('hidden');
-    document.body.classList.add('modal-open');
 }
 
 function hideBankingModal() {
     document.getElementById('bankingDetailsModal').classList.add('hidden');
-    document.body.classList.remove('modal-open');
     clearFormErrors();
 }
 
@@ -228,8 +235,10 @@ function validateForm() {
     let isValid = true;
     const form = document.getElementById('bankingDetailsForm');
     
+    // Clear previous errors
     clearFormErrors();
     
+    // Account Holder Name
     const accountHolder = document.getElementById('bankAccountHolder');
     if (!accountHolder.value.trim()) {
         showError(accountHolder, 'Account holder name is required');
@@ -239,6 +248,7 @@ function validateForm() {
         isValid = false;
     }
     
+    // IBAN validation
     const iban = document.getElementById('bankAccountIban');
     const ibanValue = iban.value.replace(/\s/g, '');
     if (!ibanValue) {
@@ -249,6 +259,7 @@ function validateForm() {
         isValid = false;
     }
     
+    // SWIFT/BIC validation
     const swift = document.getElementById('bankSwiftBic');
     const swiftValue = swift.value.trim();
     if (!swiftValue) {
@@ -259,12 +270,14 @@ function validateForm() {
         isValid = false;
     }
     
+    // Bank Name
     const bankName = document.getElementById('bankName');
     if (!bankName.value.trim()) {
         showError(bankName, 'Bank name is required');
         isValid = false;
     }
     
+    // Country
     const country = document.getElementById('accountCountry');
     if (!country.value) {
         showError(country, 'Please select a country');
@@ -285,16 +298,16 @@ function showError(input, message) {
 }
 
 function saveBankingDetails() {
+    // ✅ AJOUT DE LA VÉRIFICATION DU CONSENTEMENT
+    const consentCheckbox = document.getElementById('consent_banking');
+    if (!consentCheckbox || !consentCheckbox.checked) {
+        toastr.error('Please accept the consent terms to continue');
+        return;
+    }
+
     if (!validateForm()) {
         return;
     }
-    
-    const saveButton = event.target;
-    const originalText = saveButton.innerHTML;
-    
-    // Désactiver le bouton et afficher un loader
-    saveButton.disabled = true;
-    saveButton.innerHTML = '<svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
     
     const form = document.getElementById('bankingDetailsForm');
     const formData = new FormData(form);
@@ -311,22 +324,20 @@ function saveBankingDetails() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            toastr.success('Banking details saved successfully');
             hideBankingModal();
-            // Pas de rechargement de page - mise à jour dynamique si nécessaire
+            setTimeout(() => location.reload(), 1500);
         } else {
-            saveButton.disabled = false;
-            saveButton.innerHTML = originalText;
-            toastr.error(data.message || '😅 Oups ! Quelque chose a coincé. Vérifiez vos informations et réessayez !');
+            toastr.error(data.message || 'Error saving banking details');
         }
     })
     .catch(error => {
-        saveButton.disabled = false;
-        saveButton.innerHTML = originalText;
-        toastr.error('🤔 Hmm... Une petite erreur s\'est glissée. Vérifiez votre connexion et retentez votre chance !');
+        toastr.error('Error saving banking details');
         console.error('Error:', error);
     });
 }
 
+// Auto-format IBAN input
 document.addEventListener('DOMContentLoaded', function() {
     const ibanInput = document.getElementById('bankAccountIban');
     if (ibanInput) {

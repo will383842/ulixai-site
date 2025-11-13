@@ -1,5 +1,5 @@
 <!-- Category Search Popup -->
-<div id="selectet-provider-category" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 modal-overlay" role="dialog" aria-modal="true" aria-labelledby="category-title">
+<div id="selectet-provider-category" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 modal-overlay" style="display: none; visibility: visible; opacity: 1;" role="dialog" aria-modal="true" aria-labelledby="category-title">
   <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all modal-content">
     
     <!-- Header with gradient -->

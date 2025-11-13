@@ -31,7 +31,6 @@
         --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Accessibility: Reduced motion */
     @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -42,15 +41,35 @@
         }
     }
 
-    /* Optimisation: will-change pour les animations fréquentes */
     .account-container-2025 {
         max-width: 1400px;
         margin: 0 auto;
         padding: 0.875rem;
         padding-bottom: 8rem;
         min-height: 100vh;
-        /* Optimisation: Utiliser contain pour isoler le rendu */
         contain: layout style paint;
+    }
+
+    .welcome-header-2025 {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+        border-radius: var(--border-radius-xl);
+        padding: 2rem 1.5rem;
+        margin-bottom: 1.5rem;
+        color: white;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    .welcome-title-2025 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .welcome-subtitle-2025 {
+        font-size: 1rem;
+        opacity: 0.95;
     }
 
     .section-card-2025 {
@@ -61,7 +80,6 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         margin-bottom: 1.5rem;
         transition: var(--transition-base);
-        /* Optimisation: Utiliser transform au lieu de box-shadow pour les animations */
         will-change: transform;
     }
 
@@ -80,7 +98,6 @@
         font-size: 1.25rem;
         font-weight: 700;
         color: var(--color-text-primary);
-        /* Optimisation: Éviter le repaint du texte */
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
@@ -105,7 +122,6 @@
         cursor: pointer;
         transition: var(--transition-base);
         box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-        /* Optimisation: Utiliser transform pour les animations */
         will-change: transform;
         -webkit-tap-highlight-color: transparent;
     }
@@ -120,9 +136,32 @@
         transition-duration: 0.1s;
     }
 
-    /* Accessibility: Focus visible */
+    .btn-danger-2025 {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        background: linear-gradient(135deg, var(--color-danger) 0%, #dc2626 100%);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius-md);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-base);
+        box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+        will-change: transform;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-danger-2025:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 12px -2px rgba(239, 68, 68, 0.4);
+    }
+
     .btn-primary-2025:focus-visible,
     .btn-secondary-2025:focus-visible,
+    .btn-danger-2025:focus-visible,
     .modal-close-2025:focus-visible,
     .category-item-2025:focus-visible {
         outline: 3px solid var(--color-primary);
@@ -156,7 +195,6 @@
         color: var(--color-text-primary);
     }
 
-    /* Optimisation: Modal overlay avec GPU acceleration */
     .modal-overlay {
         position: fixed;
         inset: 0;
@@ -166,7 +204,6 @@
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.2s ease, visibility 0.2s ease;
-        /* Optimisation: Force GPU acceleration */
         transform: translateZ(0);
         -webkit-backface-visibility: hidden;
     }
@@ -176,7 +213,6 @@
         visibility: visible;
     }
 
-    /* Optimisation: Modal avec GPU acceleration */
     .modal-2025 {
         position: fixed;
         top: 50%;
@@ -194,7 +230,6 @@
         visibility: hidden;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-        /* Optimisation: Force GPU acceleration */
         will-change: transform, opacity;
         -webkit-backface-visibility: hidden;
     }
@@ -245,7 +280,6 @@
         padding: 1.5rem;
         overflow-y: auto;
         max-height: calc(85vh - 140px);
-        /* Optimisation: Scroll fluide sur iOS */
         -webkit-overflow-scrolling: touch;
     }
 
@@ -271,7 +305,6 @@
         margin-bottom: 0.5rem;
     }
 
-    /* Optimisation: Input avec meilleure performance */
     .form-input-2025 {
         width: 100%;
         padding: 0.75rem 1rem;
@@ -281,7 +314,6 @@
         color: var(--color-text-primary);
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
         background: var(--color-bg-primary);
-        /* Optimisation: Éviter le zoom sur iOS */
         font-size: max(16px, 0.9375rem);
     }
 
@@ -308,7 +340,6 @@
         min-height: 120px;
         resize: vertical;
         font-family: inherit;
-        /* Optimisation: Éviter le zoom sur iOS */
         font-size: max(16px, 0.9375rem);
     }
 
@@ -429,7 +460,6 @@
         background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
         border-radius: 999px;
         transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        /* Optimisation: GPU acceleration */
         will-change: width;
         transform: translateZ(0);
     }
@@ -512,7 +542,6 @@
         color: #d97706;
     }
 
-    /* Optimisation: Animation du spinner */
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
@@ -528,7 +557,49 @@
         will-change: transform;
     }
 
-    /* Optimisation: Prevent layout shift */
+    .checkbox-group-2025 {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: #fff5f5;
+        border: 2px solid #fecaca;
+        border-radius: var(--border-radius-md);
+        cursor: pointer;
+        transition: var(--transition-base);
+    }
+
+    .checkbox-group-2025:hover {
+        background: #fee2e2;
+        border-color: #fca5a5;
+    }
+
+    .checkbox-group-2025 input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-top: 0.125rem;
+        cursor: pointer;
+        accent-color: var(--color-danger);
+        flex-shrink: 0;
+    }
+
+    .checkbox-label-2025 {
+        flex: 1;
+    }
+
+    .checkbox-title-2025 {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--color-danger);
+        margin-bottom: 0.25rem;
+    }
+
+    .checkbox-description-2025 {
+        font-size: 0.8125rem;
+        color: #991b1b;
+        line-height: 1.5;
+    }
+
     * {
         box-sizing: border-box;
     }
@@ -537,6 +608,14 @@
         .account-container-2025 {
             padding: 1.5rem;
             padding-bottom: 8rem;
+        }
+
+        .welcome-header-2025 {
+            padding: 2.5rem 2rem;
+        }
+
+        .welcome-title-2025 {
+            font-size: 2rem;
         }
 
         .info-grid-2025 {
@@ -567,7 +646,6 @@
         }
     }
 
-    /* Optimisation mobile: Modal en bottom sheet */
     @media (max-width: 768px) {
         .modal-2025 {
             position: fixed;
@@ -586,7 +664,6 @@
         }
     }
 
-    /* Optimisation: Prevent body scroll when modal is open */
     body.modal-open {
         overflow: hidden;
         position: fixed;
@@ -597,12 +674,18 @@
 
 <div class="account-container-2025">
 
+    <!-- Welcome Header -->
+    <div class="welcome-header-2025">
+        <h1 class="welcome-title-2025">Hey, {{ explode(' ', $user->name)[0] ?? 'there' }}!</h1>
+        <p class="welcome-subtitle-2025">Manage your account settings and preferences</p>
+    </div>
+
     <!-- Banking Information Section -->
     <div class="section-card-2025">
         <div class="section-header-2025">
             <div>
                 <h3 class="section-title-2025">Banking Information</h3>
-                <p class="section-subtitle-2025">Set up your banking details for receiving payments and withdrawals</p>
+                <p class="section-subtitle-2025">Set up your banking details for receiving payments</p>
             </div>
             <button onclick="showBankingModal()" class="btn-primary-2025">
                 <i class="fas fa-credit-card"></i>
@@ -645,10 +728,46 @@
         @include('dashboard.my-account-partials.regular-user-section')
     @endif
 
+    <!-- Account Deletion Section -->
+    <div class="section-card-2025">
+        <div class="section-header-2025">
+            <div>
+                <h3 class="section-title-2025" style="color: var(--color-danger);">Delete Account</h3>
+                <p class="section-subtitle-2025">Permanently delete your account and all associated data</p>
+            </div>
+        </div>
+
+        <form id="deleteAccountForm" method="POST" action="{{ route('account.delete') }}">
+            @csrf
+            @method('DELETE')
+            
+            <label class="checkbox-group-2025">
+                <input type="checkbox" id="confirmDelete" name="confirm_delete" required>
+                <div class="checkbox-label-2025">
+                    <div class="checkbox-title-2025">I want to permanently delete my account</div>
+                    <div class="checkbox-description-2025">
+                        This action cannot be undone. All your data, including profile information, 
+                        @if(auth()->user()->user_role === 'service_provider')
+                        service provider details, categories, reviews,
+                        @endif
+                        and banking details will be permanently deleted.
+                    </div>
+                </div>
+            </label>
+
+            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+                <button type="button" onclick="confirmAccountDeletion()" class="btn-danger-2025" id="deleteAccountBtn" disabled>
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Delete My Account</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
 </div>
 
 <!-- Modal Overlay -->
-<div class="modal-overlay" onclick="closeAllPopups()"></div>
+<div class="modal-overlay hidden" onclick="closeAllPopups()"></div>
 
 <!-- Modals for Service Providers -->
 @if(auth()->user()->user_role === 'service_provider')
@@ -659,7 +778,6 @@
 @include('dashboard.my-account-partials.banking-details-modal')
 
 <script>
-// Optimisation: Debounce function pour limiter les appels
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -672,14 +790,12 @@ function debounce(func, wait) {
     };
 }
 
-// Optimisation: Lazy loading des images
 if ('loading' in HTMLImageElement.prototype) {
     const images = document.querySelectorAll('img[loading="lazy"]');
     images.forEach(img => {
         img.src = img.dataset.src;
     });
 } else {
-    // Fallback pour les navigateurs qui ne supportent pas lazy loading
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
     document.body.appendChild(script);
@@ -688,16 +804,149 @@ if ('loading' in HTMLImageElement.prototype) {
 document.addEventListener("DOMContentLoaded", function () {
   initializeSpecialStatusModal();
   initializeToggleButtons();
+  initializeAccountDeletion();
 });
 
-// === MODAL FUNCTIONS (Optimisées) ===
+function initializeAccountDeletion() {
+    const checkbox = document.getElementById('confirmDelete');
+    const deleteBtn = document.getElementById('deleteAccountBtn');
+    
+    if (checkbox && deleteBtn) {
+        checkbox.addEventListener('change', function() {
+            deleteBtn.disabled = !this.checked;
+        });
+    }
+}
+
+function confirmAccountDeletion() {
+    if (!document.getElementById('confirmDelete').checked) {
+        showNotification('Please confirm account deletion by checking the box', 'warning');
+        return;
+    }
+    
+    if (confirm('Are you absolutely sure you want to delete your account? This action is irreversible and all your data will be permanently lost.')) {
+        document.getElementById('deleteAccountForm').submit();
+    }
+}
+
+// CORRECTION: Fonctions pour gérer l'affichage des modals
+function showModal(modalId) {
+  const modal = document.getElementById(modalId);
+  const overlay = document.querySelector('.modal-overlay');
+  
+  if (modal) {
+    // Retirer la classe hidden
+    modal.classList.remove('hidden');
+    
+    // Pour les modals avec structure différente (aboutYouPopup, selectet-provider-category)
+    if (modalId === 'aboutYouPopup' || modalId === 'selectet-provider-category') {
+      document.body.style.overflow = 'hidden';
+      
+      // Forcer le reflow avant d'ajouter les animations
+      void modal.offsetHeight;
+      
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          overlay.classList.add('active');
+        });
+      }
+    }
+    // Pour bankingDetailsModal (structure différente)
+    else if (modalId === 'bankingDetailsModal') {
+      // Ce modal a déjà sa propre fonction showBankingModal()
+      return;
+    }
+    // Pour les modals avec classe modal-2025
+    else if (modal.classList.contains('modal-2025')) {
+      if (overlay) overlay.classList.remove('hidden');
+      
+      requestAnimationFrame(() => {
+        modal.classList.add('active');
+        if (overlay) overlay.classList.add('active');
+        document.body.classList.add('modal-open');
+      });
+    }
+  }
+}
+
+function hideModal(modalId) {
+  const modal = document.getElementById(modalId);
+  const overlay = document.querySelector('.modal-overlay');
+  
+  if (modal) {
+    if (modalId === 'aboutYouPopup' || modalId === 'selectet-provider-category') {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      
+      if (overlay) {
+        overlay.classList.remove('active');
+        overlay.classList.add('hidden');
+      }
+    }
+    else if (modalId === 'bankingDetailsModal') {
+      // Ce modal a déjà sa propre fonction hideBankingModal()
+      return;
+    }
+    else if (modal.classList.contains('modal-2025')) {
+      modal.classList.remove('active');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        
+        const activeModals = document.querySelectorAll('.modal-2025:not(.hidden)');
+        if (activeModals.length === 0) {
+          if (overlay) {
+            overlay.classList.remove('active');
+            overlay.classList.add('hidden');
+          }
+          document.body.classList.remove('modal-open');
+        }
+      }, 200);
+    }
+  }
+}
+
+// FONCTIONS MODIFIÉES - DÉBUT
 function openAboutYouPopup() {
-  showModal("aboutYouPopup");
+    const modal = document.getElementById('aboutYouPopup');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function closeAboutYouPopup() {
-  hideModal("aboutYouPopup");
+    const modal = document.getElementById('aboutYouPopup');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
 }
+
+function openCategoryPopup() {
+    const modal = document.getElementById('selectet-provider-category');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Charger les catégories
+        fetch('/api/categories')
+            .then(res => res.json())
+            .then(data => {
+                renderCategoryStep(data);
+            });
+    }
+}
+
+function openSpecialStatusModal() {
+    const modal = document.getElementById('specialStatusModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+// FONCTIONS MODIFIÉES - FIN
 
 function submitAboutYou() {
   const description = document.getElementById("aboutYouText").value;
@@ -705,7 +954,8 @@ function submitAboutYou() {
   fetch('/api/update-about-you', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     },
     body: JSON.stringify({
       user_id: LOGGED_IN_USER_ID,
@@ -741,51 +991,17 @@ function initializeToggleButtons() {
   });
 }
 
-function openCategoryPopup() {
-    showModal('selectet-provider-category');
-    fetch('/api/categories')
-        .then(res => res.json())
-        .then(data => {
-            renderCategoryStep(data);
-        });
-}
-
 function closeAllPopups() {
   const modalIds = ['selectet-provider-category', 'aboutYouPopup', 'specialStatusModal', 'bankingDetailsModal'];
-  modalIds.forEach(id => hideModal(id));
-}
-
-// === UTILITY FUNCTIONS (Optimisées) ===
-function showModal(modalId) {
-  const modal = document.getElementById(modalId);
-  const overlay = document.querySelector('.modal-overlay');
-  
-  if (modal) {
-    requestAnimationFrame(() => {
-      modal.classList.add("active");
-      if (overlay) overlay.classList.add("active");
-      document.body.classList.add('modal-open');
-    });
-  }
-}
-
-function hideModal(modalId) {
-  const modal = document.getElementById(modalId);
-  const overlay = document.querySelector('.modal-overlay');
-  
-  if (modal) {
-    modal.classList.remove("active");
-    
-    // Vérifier si d'autres modals sont ouvertes
-    const activeModals = document.querySelectorAll('.modal-2025.active');
-    if (activeModals.length === 0) {
-      if (overlay) overlay.classList.remove("active");
-      document.body.classList.remove('modal-open');
+  modalIds.forEach(id => {
+    if (id === 'bankingDetailsModal') {
+      hideBankingModal();
+    } else {
+      hideModal(id);
     }
-  }
+  });
 }
 
-// Optimisation: Utiliser requestAnimationFrame pour le rendering
 function renderCategoryStep(response) {
     const modal = document.getElementById('render-selectet-provider-category');
     if (!modal) return;
@@ -845,7 +1061,6 @@ function setupCategoryListeners() {
     const nextBtn = document.getElementById('next-btn');
     const countDisplay = document.getElementById('selected-count');
     
-    // Optimisation: Utiliser event delegation
     const container = document.getElementById('categoryStep');
     if (container) {
         container.addEventListener('change', debounce((e) => {
@@ -1201,10 +1416,6 @@ function saveCategorySelectionMulti() {
     });
 }
 
-function openSpecialStatusModal() {
-  showModal("specialStatusModal");
-}
-
 function initializeSpecialStatusModal() {
   const openBtn = document.getElementById("openSpecialStatusModal");
   const modal = document.getElementById("specialStatusModal");
@@ -1222,16 +1433,13 @@ function initializeSpecialStatusModal() {
   }
 }
 
-// === EVENT LISTENERS ===
 document.addEventListener('keydown', function (event) {
   if (event.key === "Escape") {
     closeAllPopups();
   }
 });
 
-// Optimisation: Passive event listeners pour le scroll
 document.addEventListener('scroll', debounce(() => {
-    // Actions sur scroll si nécessaire
 }, 150), { passive: true });
 </script>
 
