@@ -5,8 +5,8 @@
   This popup is only displayed for non-authenticated users
   Handles provider registration in 17 steps with validation
   
-  @version 2.5.0
-  @updated Added Share functionality with affiliate tracking
+  @version 2.5.1
+  @updated Fixed: Ne se ferme plus au clic extérieur
 --}}
 
 @php
@@ -67,6 +67,7 @@ div#signupPopup div#popupContentArea::-webkit-scrollbar,
 }
 </style>
 
+{{-- Ne se ferme QUE avec la croix --}}
 <div id="signupPopup" 
      class="fixed inset-0 bg-black/50 z-[200] hidden items-center justify-center p-0 sm:p-4" 
      role="dialog" 
@@ -74,7 +75,8 @@ div#signupPopup div#popupContentArea::-webkit-scrollbar,
      aria-labelledby="signup-popup-title">
   
   <!-- CONTAINER RESPONSIVE - Plein écran mobile, modal desktop -->
-  <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col">
+  <div class="bg-white w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] sm:rounded-2xl overflow-hidden shadow-2xl animate-slideUp sm:animate-fadeIn flex flex-col"
+       onclick="event.stopPropagation()">
     
     <!-- ═══════════════════════════════════════════════════════════
          HEADER VISIBLE - Progress bar + Language + Close button
@@ -406,11 +408,10 @@ div#signupPopup div#popupContentArea::-webkit-scrollbar,
     </button>
 
     {{-- ═══════════════════════════════════════════════════════════
-         MODAL DE PARTAGE - Superposé au popup principal
+         MODAL DE PARTAGE - Ne se ferme QUE avec la croix
          ═══════════════════════════════════════════════════════════ --}}
     <div id="providerSharePopup" 
-         class="hidden fixed inset-0 z-[300] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" 
-         onclick="closeProviderSharePopup()">
+         class="hidden fixed inset-0 z-[300] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
       
       <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 animate-scaleIn" 
            onclick="event.stopPropagation()">
@@ -770,7 +771,7 @@ function shareProviderVia(platform) {
     de: '💼 Arbeite weltweit und hilf Expats! Tritt ULIX AI als Dienstleister bei und verdiene in 197 Ländern. 🌍✈️',
     pt: '💼 Trabalhe em todo o mundo e ajude expatriados! Junte-se ao ULIX AI como prestador de serviços e ganhe renda em 197 países. 🌍✈️',
     ru: '💼 Работайте по всему миру и помогайте экспатам! Присоединяйтесь к ULIX AI как поставщик услуг и зарабатывайте в 197 странах. 🌍✈️',
-    'zh-CN': '💼 在全球工作并帮助外籍人士！加入ULIX AI作为服务提供商，在197个国家赚取收入。🌍✈️',
+    'zh-CN': '💼 在全球工作并帮助外籍人士!加入ULIX AI作为服务提供商,在197个国家赚取收入。🌍✈️',
     ar: '💼 اعمل في جميع أنحاء العالم وساعد المغتربين! انضم إلى ULIX AI كمزود خدمة واكسب دخلاً في 197 دولة. 🌍✈️',
     hi: '💼 दुनिया भर में काम करें और प्रवासियों की मदद करें! ULIX AI में सेवा प्रदाता के रूप में शामिल हों और 197 देशों में आय अर्जित करें। 🌍✈️'
   };
@@ -872,7 +873,10 @@ function shareProviderVia(platform) {
 // Fermer le modal avec Escape
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    closeProviderSharePopup();
+    const sharePopup = document.getElementById('providerSharePopup');
+    if (sharePopup && !sharePopup.classList.contains('hidden')) {
+      closeProviderSharePopup();
+    }
   }
 });
 

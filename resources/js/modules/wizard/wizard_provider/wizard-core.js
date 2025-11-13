@@ -3,6 +3,7 @@
  * Wizard Core - VERSION PROPRE
  * ✅ Le JavaScript ne touche JAMAIS au style
  * ✅ Gère uniquement btn.disabled = true/false
+ * ✅ NE SE FERME QUE AVEC LA CROIX
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -93,6 +94,17 @@ export class WizardCore {
     }
 
     // ═══════════════════════════════════════════════════════════
+    // 🛡️ EMPÊCHER LA FERMETURE AU CLIC EXTÉRIEUR
+    // ═══════════════════════════════════════════════════════════
+    const popupContainer = popup.querySelector('.bg-white');
+    if (popupContainer) {
+      popupContainer.addEventListener('click', (e) => {
+        // Empêcher la propagation vers le backdrop
+        e.stopPropagation();
+      }, true);
+    }
+
+    // ═══════════════════════════════════════════════════════════
     // 🔧 DÉLÉGATION D'ÉVÉNEMENTS STRICTE
     // ═══════════════════════════════════════════════════════════
     
@@ -129,25 +141,27 @@ export class WizardCore {
       }
 
       // ═══════════════════════════════════════════════════════════
-      // 🎯 PRIORITÉ 3 : Clic sur le backdrop (fond noir)
+      // ❌ CLIC SUR LE BACKDROP DÉSACTIVÉ
+      // Le popup ne se ferme QUE avec la croix
       // ═══════════════════════════════════════════════════════════
-      if (popup && e.target === popup && !popup.classList.contains('hidden')) {
-        console.log('🖱️ [Wizard] Backdrop clicked');
-        this.closePopup();
-        return;
-      }
+      // Ancien code commenté :
+      // if (popup && e.target === popup && !popup.classList.contains('hidden')) {
+      //   console.log('🖱️ [Wizard] Backdrop clicked');
+      //   this.closePopup();
+      //   return;
+      // }
 
     }, false);
 
     // ═══════════════════════════════════════════════════════════
-    // ⌨️ ESC key pour fermer
+    // ⌨️ ESC key pour fermer - DÉSACTIVÉ AUSSI
     // ═══════════════════════════════════════════════════════════
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
-        console.log('⌨️ [Wizard] ESC pressed');
-        this.closePopup();
-      }
-    });
+    // document.addEventListener('keydown', (e) => {
+    //   if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
+    //     console.log('⌨️ [Wizard] ESC pressed');
+    //     this.closePopup();
+    //   }
+    // });
 
     // ═══════════════════════════════════════════════════════════
     // 🌍 Fonctions globales pour compatibilité
@@ -155,7 +169,7 @@ export class WizardCore {
     window.openSignupPopup  = () => this.openPopup();
     window.closeSignupPopup = () => this.closePopup();
 
-    console.log('✅ Popup controls initialized');
+    console.log('✅ Popup controls initialized (backdrop click DISABLED, ESC DISABLED)');
   }
 
   closePopup() {

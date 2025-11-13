@@ -6,7 +6,7 @@
 🔐 Code OTP 6 chiffres
 🚫 AUCUN toastr/alert - 100% silencieux
 ✅ Messages inline uniquement
-⚡ Soumission finale après vérification
+⚡ AUTO-LOGIN après validation OTP
 ============================================
 -->
 
@@ -153,7 +153,7 @@
         </svg>
         <div>
           <p class="text-sm font-bold text-green-800">Email verified successfully! 🎉</p>
-          <p class="text-xs text-green-600 mt-1">Creating your account...</p>
+          <p class="text-xs text-green-600 mt-1">Logging you in...</p>
         </div>
       </div>
     </div>
@@ -162,7 +162,6 @@
 
 <!-- STYLES -->
 <style>
-/* Animations des blobs */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -190,7 +189,6 @@
   border-width: 3px;
 }
 
-/* Glow pulse animation pour le focus */
 @keyframes glow-pulse {
   0%, 100% { 
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 0 15px rgba(59, 130, 246, 0.2);
@@ -214,7 +212,6 @@
   background-color: #fef2f2;
 }
 
-/* Responsive adjustments */
 @media (max-width: 639px) {
   #step15 .sticky {
     padding-top: 0.5rem;
@@ -243,8 +240,9 @@
 <script>
 /**
  * ═══════════════════════════════════════════════════════════
- * STEP 15: Vérification OTP + Soumission Finale
+ * STEP 15: Vérification OTP + AUTO-LOGIN
  * 🚫 AUCUN toastr/alert - 100% SILENCIEUX
+ * 🔐 Connexion automatique après validation OTP
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -267,16 +265,10 @@
     return;
   }
   
-  /**
-   * Validation du format OTP
-   */
   function validateOtpFormat(otp) {
     return /^\d{6}$/.test(otp);
   }
   
-  /**
-   * Activer/désactiver le bouton verify
-   */
   function updateVerifyButton() {
     const otp = otpInput.value.trim();
     const isValid = validateOtpFormat(otp);
@@ -285,7 +277,6 @@
       verifyBtn.disabled = !isValid;
     }
     
-    // Mise à jour des classes CSS
     if (otp.length > 0) {
       if (isValid) {
         otpInput.classList.remove('invalid');
@@ -299,9 +290,6 @@
     }
   }
   
-  /**
-   * Afficher une erreur - SILENCIEUX (pas de toastr)
-   */
   function showError(message) {
     if (errorMessage) {
       errorMessage.textContent = message || 'Invalid code';
@@ -331,9 +319,6 @@
     }
   }
   
-  /**
-   * Afficher le succès - SILENCIEUX (pas de toastr)
-   */
   function showSuccess() {
     if (successAlert) {
       successAlert.classList.remove('hidden');
@@ -359,9 +344,6 @@
     }
   }
   
-  /**
-   * Afficher succès resend - SILENCIEUX
-   */
   function showResendSuccess() {
     if (resendSuccessAlert) {
       resendSuccessAlert.classList.remove('hidden');
@@ -373,7 +355,6 @@
         });
       });
       
-      // Auto-hide après 5 secondes
       setTimeout(() => {
         resendSuccessAlert.classList.add('hidden');
       }, 5000);
@@ -384,9 +365,6 @@
     }
   }
   
-  /**
-   * Vérifier l'OTP auprès du serveur - SILENCIEUX
-   */
   async function verifyOTP() {
     const otpCode = otpInput.value.trim();
     
@@ -395,7 +373,6 @@
       return;
     }
     
-    // Récupérer l'email depuis localStorage
     let data;
     try {
       data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
@@ -412,14 +389,12 @@
     
     console.log('🔐 [Step 15] Verifying OTP:', otpCode, 'for email:', data.email);
     
-    // Désactiver le bouton et afficher le loader
     if (verifyBtn) {
       verifyBtn.disabled = true;
       verifyBtn.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Verifying...';
     }
     
     try {
-      // Appeler l'API de vérification OTP
       const response = await fetch('/verify-email-otp', {
         method: 'POST',
         headers: {
@@ -435,39 +410,28 @@
       
       const result = await response.json();
       
-      if (response.ok) {
-        console.log('✅ [Step 15] OTP verified successfully');
+      // ✅ OTP valide = auto-login côté serveur déjà fait
+      if (response.ok && (result.status === 'success' || result.success)) {
+        console.log('✅ [Step 15] OTP verified - User is now authenticated');
         
         showSuccess();
         
-        // ═══════════════════════════════════════════════════════════
-        // CRITIQUE: Appeler la soumission finale
-        // ═══════════════════════════════════════════════════════════
-        console.log('📤 [Step 15] Calling final submission...');
-        
+        // ✅ FORCER LE RECHARGEMENT DE LA PAGE pour afficher l'utilisateur connecté
         setTimeout(() => {
-          if (typeof window.onProviderSignupSubmit === 'function') {
-            console.log('✅ [Step 15] Calling window.onProviderSignupSubmit()');
-            window.onProviderSignupSubmit();
-          } else {
-            console.error('❌ [Step 15] window.onProviderSignupSubmit is not defined!');
-            showError('System error. Please refresh the page.');
-          }
+          console.log('🔄 [Step 15] Reloading page to show authenticated user...');
+          window.location.reload();
         }, 1500);
         
       } else {
-        // OTP invalide
         console.error('❌ [Step 15] OTP verification failed:', result.message);
         
         showError(result.message || 'Invalid verification code');
         
-        // Réactiver le bouton
         if (verifyBtn) {
           verifyBtn.disabled = false;
           verifyBtn.innerHTML = '🔓 Verify Code';
         }
         
-        // Effacer l'input
         otpInput.value = '';
         otpInput.focus();
         updateVerifyButton();
@@ -478,7 +442,6 @@
       
       showError('Network error. Please try again.');
       
-      // Réactiver le bouton
       if (verifyBtn) {
         verifyBtn.disabled = false;
         verifyBtn.innerHTML = '🔓 Verify Code';
@@ -486,9 +449,6 @@
     }
   }
   
-  /**
-   * Renvoyer le code OTP - SILENCIEUX
-   */
   async function resendOTP() {
     let data;
     try {
@@ -526,19 +486,14 @@
       
       if (response.ok) {
         console.log('✅ [Step 15] OTP resent successfully');
-        
-        // SILENCIEUX - pas de toastr, juste message inline
         showResendSuccess();
-        
       } else {
         console.error('❌ [Step 15] Failed to resend OTP:', result.message);
-        
         showError(result.message || 'Failed to resend code');
       }
       
     } catch (error) {
       console.error('❌ [Step 15] Network error:', error);
-      
       showError('Failed to resend code. Please try again.');
       
     } finally {
@@ -549,15 +504,9 @@
     }
   }
   
-  /**
-   * Event listeners
-   */
-  
-  // Input OTP - mise à jour du bouton verify
   if (otpInput) {
     otpInput.addEventListener('input', updateVerifyButton);
     
-    // Soumission avec Enter
     otpInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && verifyBtn && !verifyBtn.disabled) {
         verifyOTP();
@@ -565,16 +514,14 @@
     });
   }
   
-  // Bouton verify
   if (verifyBtn) {
     verifyBtn.addEventListener('click', verifyOTP);
   }
   
-  // Bouton resend
   if (resendBtn) {
     resendBtn.addEventListener('click', resendOTP);
   }
   
-  console.log('✅ [Step 15] OTP verification initialized (SILENT MODE)');
+  console.log('✅ [Step 15] OTP verification initialized (AUTO-LOGIN)');
 })();
 </script>
