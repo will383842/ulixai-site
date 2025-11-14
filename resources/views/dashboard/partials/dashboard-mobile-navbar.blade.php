@@ -135,6 +135,11 @@
         z-index: 10;
     }
     
+    /* ✅ Cache le badge quand count = 0 - AJOUTÉ */
+    .badge-2025[data-count="0"] {
+        display: none !important;
+    }
+    
     @keyframes badgePulse {
         0%, 100% { transform: scale(1); }
         50% { transform: scale(1.1); }
@@ -270,7 +275,7 @@
             <span class="nav-label-2025">Payments</span>
         </a>
 
-        <!-- Messages with dynamic badge -->
+        <!-- Messages with badge TOUJOURS PRÉSENT -->
         <a href="{{ route('user.conversation') }}" 
            class="nav-item-2025 {{ in_array($currentRoute, ['user.conversation', 'user.conversation.show']) ? 'active' : '' }}"
            aria-label="Messages"
@@ -279,11 +284,14 @@
                 <i class="fas fa-comment-dots"></i>
             </div>
             <span class="nav-label-2025">Messages</span>
-            @if($unreadMessagesCount > 0)
-                <span class="badge-2025" id="mobileBadge2025" role="status" aria-live="polite">
-                    {{ $unreadMessagesCount > 99 ? '99+' : $unreadMessagesCount }}
-                </span>
-            @endif
+            {{-- ✅ Badge TOUJOURS présent, caché si count=0 avec CSS --}}
+            <span class="badge-2025" 
+                  id="mobileBadge2025" 
+                  data-count="{{ $unreadMessagesCount }}"
+                  role="status" 
+                  aria-live="polite">
+                {{ $unreadMessagesCount > 99 ? '99+' : $unreadMessagesCount }}
+            </span>
         </a>
 
     </div>
@@ -326,21 +334,10 @@
             .listen('NotifyUser', function(data) {
                 const badge = document.getElementById('mobileBadge2025');
                 
-                if (!badge && data.type === 'message') {
-                    const messagesLink = document.querySelector('[data-nav="messages"]');
-                    if (messagesLink) {
-                        const newBadge = document.createElement('span');
-                        newBadge.id = 'mobileBadge2025';
-                        newBadge.className = 'badge-2025';
-                        newBadge.setAttribute('role', 'status');
-                        newBadge.setAttribute('aria-live', 'polite');
-                        newBadge.textContent = '1';
-                        messagesLink.appendChild(newBadge);
-                        haptic.trigger(15);
-                    }
-                } else if (badge && data.type === 'message') {
-                    const currentCount = parseInt(badge.textContent) || 0;
+                if (badge && data.type === 'message') {
+                    const currentCount = parseInt(badge.dataset.count || "0", 10);
                     const newCount = currentCount + 1;
+                    badge.dataset.count = newCount;
                     badge.textContent = newCount > 99 ? '99+' : newCount;
                     haptic.trigger(15);
                 }

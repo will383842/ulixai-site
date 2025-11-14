@@ -58,7 +58,7 @@
     .quote-offer-container-2025 {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 0.875rem;
+        padding: 0.75rem;
         background: var(--color-bg-secondary);
         min-height: 100vh;
     }
@@ -66,9 +66,9 @@
     /* HEADER SECTION */
     .mission-header-2025 {
         background: var(--color-bg-primary);
-        border-radius: var(--border-radius-2xl);
-        padding: 1.25rem;
-        margin-bottom: 1.5rem;
+        border-radius: var(--border-radius-xl);
+        padding: 1rem;
+        margin-bottom: 1.25rem;
         box-shadow: var(--shadow-sm);
         animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         will-change: transform, opacity;
@@ -81,10 +81,10 @@
     }
     
     .mission-title-2025 {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         font-weight: 700;
         color: #1e3a8a;
-        margin: 0 0 1rem 0;
+        margin: 0 0 0.875rem 0;
         line-height: 1.4;
         word-break: break-word;
     }
@@ -92,25 +92,25 @@
     .mission-description-box {
         display: flex;
         align-items: flex-start;
-        gap: 1rem;
-        padding: 1rem;
+        gap: 0.75rem;
+        padding: 0.875rem;
         background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         border: 2px solid #93c5fd;
-        border-radius: var(--border-radius-lg);
-        margin-bottom: 1rem;
+        border-radius: var(--border-radius-md);
+        margin-bottom: 0.875rem;
     }
     
     .mission-icon-2025 {
-        width: 56px;
-        height: 56px;
-        min-width: 56px;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
         background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-        border-radius: var(--border-radius-lg);
+        border-radius: var(--border-radius-md);
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     }
     
@@ -118,7 +118,7 @@
         flex: 1;
         min-width: 0;
         color: #374151;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         line-height: 1.6;
         word-break: break-word;
     }
@@ -136,19 +136,19 @@
         user-select: none;
     }
     
-    /* GALERIE D'IMAGES */
+    /* GALERIE D'IMAGES - RESPONSIVE GRID */
     .image-gallery-2025 {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.875rem;
-        margin-bottom: 1.5rem;
+        gap: 0.625rem;
+        margin-bottom: 1.25rem;
     }
     
     /* Ensure attachment images only respond to their specific modal */
     .gallery-item-2025 {
         position: relative;
         aspect-ratio: 4 / 3;
-        border-radius: var(--border-radius-lg);
+        border-radius: var(--border-radius-md);
         overflow: hidden;
         cursor: pointer;
         transition: var(--transition-base);
@@ -251,15 +251,15 @@
     .apply-button-wrapper {
         display: flex;
         justify-content: flex-end;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     
     .btn-apply-2025 {
         background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
         color: white;
         font-weight: 700;
-        font-size: 0.9375rem;
-        padding: 0.875rem 2rem;
+        font-size: 0.8125rem;
+        padding: 0.75rem 1.5rem;
         border-radius: 999px;
         border: none;
         cursor: pointer;
@@ -269,7 +269,7 @@
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         display: inline-flex;
         align-items: center;
-        gap: 0.625rem;
+        gap: 0.5rem;
         touch-action: manipulation;
     }
     
@@ -294,15 +294,15 @@
     .mission-info-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        gap: 0.875rem;
+        margin-bottom: 1.25rem;
     }
     
     .info-card-2025 {
         background: var(--color-bg-primary);
         border: 2px solid #e0f2fe;
-        border-radius: var(--border-radius-lg);
-        padding: 1rem;
+        border-radius: var(--border-radius-md);
+        padding: 0.875rem;
         box-shadow: var(--shadow-sm);
     }
     
@@ -320,13 +320,13 @@
     
     .info-label-2025 {
         color: var(--color-text-secondary);
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         font-weight: 600;
     }
     
     .info-value-2025 {
         color: var(--color-text-primary);
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         font-weight: 600;
         text-align: right;
     }
@@ -335,38 +335,38 @@
     .section-divider-2025 {
         height: 2px;
         background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-        margin: 2rem 0;
+        margin: 1.5rem 0;
     }
     
     /* MAIN CONTENT GRID */
     .content-grid-2025 {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 1.25rem;
     }
     
     /* SECTION HEADERS */
     .section-header-2025 {
         display: inline-flex;
         align-items: center;
-        gap: 0.625rem;
+        gap: 0.5rem;
         background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
         color: white;
-        padding: 0.75rem 1.5rem;
+        padding: 0.625rem 1.25rem;
         border-radius: 999px;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 1.25rem;
+        margin-bottom: 1rem;
         box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
     }
     
     /* OFFERS SECTION */
     .offers-section-2025 {
         background: var(--color-bg-primary);
-        border-radius: var(--border-radius-xl);
-        padding: 1.25rem;
+        border-radius: var(--border-radius-lg);
+        padding: 1rem;
         box-shadow: var(--shadow-sm);
         border: 2px solid #e0f2fe;
     }
@@ -374,9 +374,9 @@
     .offer-card-2025 {
         background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         border: 2px solid #fde68a;
-        border-radius: var(--border-radius-lg);
-        padding: 1rem;
-        margin-bottom: 1rem;
+        border-radius: var(--border-radius-md);
+        padding: 0.875rem;
+        margin-bottom: 0.875rem;
         transition: var(--transition-base);
         animation: fadeInUp 0.4s ease;
     }
@@ -395,30 +395,30 @@
     .offer-header {
         display: flex;
         align-items: center;
-        gap: 0.875rem;
-        margin-bottom: 0.75rem;
+        gap: 0.75rem;
+        margin-bottom: 0.625rem;
     }
     
     .provider-avatar {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid #fbbf24;
     }
     
     .provider-avatar-placeholder {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
         border-radius: 50%;
         background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 1.25rem;
+        font-size: 1rem;
         border: 2px solid #fbbf24;
     }
     
@@ -430,7 +430,7 @@
     .provider-name {
         font-weight: 700;
         color: #78350f;
-        font-size: 0.9375rem;
+        font-size: 0.8125rem;
         margin-bottom: 0.25rem;
     }
     
@@ -439,23 +439,23 @@
         align-items: center;
         gap: 0.375rem;
         color: #92400e;
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
     }
     
     .offer-price {
-        font-size: 1.125rem;
+        font-size: 0.9375rem;
         font-weight: 700;
         color: #78350f;
         white-space: nowrap;
     }
     
     .offer-details {
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.625rem;
     }
     
     .offer-message {
         color: #78350f;
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         line-height: 1.6;
         margin-bottom: 0.5rem;
         word-break: break-word;
@@ -463,7 +463,7 @@
     
     .offer-delivery {
         color: #92400e;
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         font-weight: 600;
     }
     
@@ -471,8 +471,8 @@
         background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
         color: #78350f;
         font-weight: 700;
-        font-size: 0.8125rem;
-        padding: 0.625rem 1.25rem;
+        font-size: 0.75rem;
+        padding: 0.625rem 1rem;
         border-radius: 999px;
         border: none;
         cursor: pointer;
@@ -498,41 +498,41 @@
     
     .empty-state-2025 {
         text-align: center;
-        padding: 2.5rem 1.5rem;
+        padding: 2rem 1.25rem;
         background: var(--color-bg-tertiary);
         border: 2px dashed #cbd5e1;
-        border-radius: var(--border-radius-lg);
+        border-radius: var(--border-radius-md);
         color: var(--color-text-tertiary);
     }
     
     .empty-icon {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
+        font-size: 2rem;
+        margin-bottom: 0.875rem;
         opacity: 0.4;
     }
     
     .empty-text {
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         font-weight: 600;
     }
     
-    /* MESSAGES SECTION */
+    /* MESSAGES SECTION - HEIGHT RESPONSIVE */
     .messages-section-2025 {
         background: var(--color-bg-primary);
-        border-radius: var(--border-radius-xl);
-        padding: 1.25rem;
+        border-radius: var(--border-radius-lg);
+        padding: 1rem;
         box-shadow: var(--shadow-sm);
         border: 2px solid #e0f2fe;
         display: flex;
         flex-direction: column;
-        height: 600px;
+        height: 400px;
     }
     
     .messages-list {
         flex: 1;
         overflow-y: auto;
         padding-right: 0.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.875rem;
         -webkit-overflow-scrolling: touch;
     }
     
@@ -556,15 +556,15 @@
     
     .message-item {
         display: flex;
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
+        gap: 0.625rem;
+        margin-bottom: 1rem;
         animation: fadeInUp 0.3s ease;
     }
     
     .message-avatar {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid #e0f2fe;
@@ -579,24 +579,24 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        margin-bottom: 0.375rem;
+        margin-bottom: 0.25rem;
         flex-wrap: wrap;
     }
     
     .message-author {
         font-weight: 700;
         color: var(--color-text-primary);
-        font-size: 0.875rem;
+        font-size: 0.75rem;
     }
     
     .message-time {
         color: var(--color-text-tertiary);
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
     }
     
     .message-text {
         color: var(--color-text-secondary);
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         line-height: 1.6;
         word-break: break-word;
     }
@@ -604,18 +604,18 @@
     /* MESSAGE FORM */
     .message-form {
         display: flex;
-        gap: 0.625rem;
-        padding-top: 1rem;
+        gap: 0.5rem;
+        padding-top: 0.875rem;
         border-top: 2px solid #f1f5f9;
     }
     
     .message-input {
         flex: 1;
         min-width: 0;
-        padding: 0.75rem 1rem;
+        padding: 0.625rem 0.875rem;
         border: 2px solid #e0f2fe;
         border-radius: 999px;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         transition: var(--transition-base);
         font-family: inherit;
     }
@@ -634,8 +634,8 @@
         background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
         color: white;
         font-weight: 600;
-        font-size: 0.875rem;
-        padding: 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        padding: 0.625rem 1.25rem;
         border-radius: 999px;
         border: none;
         cursor: pointer;
@@ -658,7 +658,7 @@
     
     .message-error {
         color: var(--color-danger);
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         margin-top: 0.5rem;
         display: none;
     }
@@ -672,8 +672,8 @@
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         z-index: 9998;
         display: flex;
         align-items: center;
@@ -691,11 +691,11 @@
     
     .modal-content-2025 {
         background: white;
-        border-radius: var(--border-radius-2xl);
+        border-radius: var(--border-radius-xl);
         box-shadow: var(--shadow-xl);
         max-width: 32rem;
         width: 100%;
-        padding: 2rem;
+        padding: 1.5rem 1rem;
         position: relative;
         transform: scale(0.9);
         opacity: 0;
@@ -712,10 +712,10 @@
     
     .modal-close-btn {
         position: absolute;
-        top: 0.75rem;
-        right: 0.75rem;
-        width: 36px;
-        height: 36px;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 32px;
+        height: 32px;
         background: #f3f4f6;
         border: none;
         border-radius: 50%;
@@ -723,7 +723,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         color: var(--color-text-secondary);
         transition: var(--transition-base);
         z-index: 10;
@@ -739,20 +739,20 @@
     
     /* CONFIRM PROVIDER MODAL */
     .modal-header-icon {
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
         background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 1.25rem;
+        margin: 0 auto 1rem;
         color: var(--color-primary);
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
     
     .modal-title-2025 {
-        font-size: 1.25rem;
+        font-size: 1.0625rem;
         font-weight: 700;
         color: #1e3a8a;
         text-align: center;
@@ -763,8 +763,8 @@
     .modal-subtitle {
         text-align: center;
         color: var(--color-text-secondary);
-        font-size: 0.9375rem;
-        margin-bottom: 1.5rem;
+        font-size: 0.8125rem;
+        margin-bottom: 1.25rem;
         line-height: 1.6;
     }
     
@@ -776,14 +776,14 @@
     .modal-features-list {
         list-style: none;
         padding: 0;
-        margin: 0 0 1.5rem 0;
+        margin: 0 0 1.25rem 0;
     }
     
     .feature-item {
         display: flex;
         align-items: flex-start;
-        gap: 0.75rem;
-        padding: 0.75rem 0;
+        gap: 0.625rem;
+        padding: 0.625rem 0;
         border-bottom: 1px solid #f1f5f9;
     }
     
@@ -792,22 +792,22 @@
     }
     
     .feature-icon {
-        width: 24px;
-        min-width: 24px;
-        height: 24px;
+        width: 20px;
+        min-width: 20px;
+        height: 20px;
         background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 0.75rem;
+        font-size: 0.625rem;
         margin-top: 0.125rem;
     }
     
     .feature-text {
         flex: 1;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         line-height: 1.6;
         color: var(--color-text-secondary);
     }
@@ -827,8 +827,8 @@
         background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
         color: white;
         font-weight: 700;
-        font-size: 0.9375rem;
-        padding: 0.875rem 1.5rem;
+        font-size: 0.8125rem;
+        padding: 0.75rem 1.25rem;
         border-radius: 999px;
         border: none;
         cursor: pointer;
@@ -838,7 +838,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.625rem;
+        gap: 0.5rem;
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         text-decoration: none;
         touch-action: manipulation;
@@ -859,8 +859,8 @@
         background: transparent;
         color: var(--color-danger);
         font-weight: 700;
-        font-size: 0.875rem;
-        padding: 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        padding: 0.625rem 1.25rem;
         border: 2px solid var(--color-danger);
         border-radius: 999px;
         cursor: pointer;
@@ -879,16 +879,16 @@
     
     /* OFFER MODAL */
     .modal-form-2025 {
-        margin-top: 1.25rem;
+        margin-top: 1rem;
     }
     
     .form-group-2025 {
-        margin-bottom: 1.25rem;
+        margin-bottom: 1rem;
     }
     
     .form-label-2025 {
         display: block;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         font-weight: 700;
         color: #1e3a8a;
         margin-bottom: 0.5rem;
@@ -897,10 +897,10 @@
     .form-input-2025,
     .form-textarea-2025 {
         width: 100%;
-        padding: 0.75rem 1rem;
+        padding: 0.625rem 0.875rem;
         border: 2px solid #e0f2fe;
         border-radius: var(--border-radius-md);
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         font-family: inherit;
         transition: var(--transition-base);
     }
@@ -914,12 +914,12 @@
     
     .form-textarea-2025 {
         resize: vertical;
-        min-height: 100px;
+        min-height: 80px;
     }
     
     .form-error {
         color: var(--color-danger);
-        font-size: 0.8125rem;
+        font-size: 0.6875rem;
         margin-top: 0.5rem;
         display: none;
     }
@@ -930,16 +930,16 @@
     
     /* SUCCESS MODAL */
     .modal-success-icon {
-        width: 80px;
-        height: 80px;
+        width: 64px;
+        height: 64px;
         background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 1.5rem;
+        margin: 0 auto 1.25rem;
         color: white;
-        font-size: 2.5rem;
+        font-size: 2rem;
         animation: successPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
@@ -950,24 +950,24 @@
     }
     
     .modal-success-title {
-        font-size: 1.375rem;
+        font-size: 1.125rem;
         font-weight: 700;
         color: #1e3a8a;
         text-align: center;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.625rem;
     }
     
     .modal-success-subtitle {
-        font-size: 0.9375rem;
+        font-size: 0.8125rem;
         font-weight: 600;
         color: #1e40af;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.875rem;
     }
     
     .modal-success-text {
         color: var(--color-text-secondary);
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         text-align: center;
         line-height: 1.6;
     }
@@ -985,49 +985,284 @@
         border-width: 0;
     }
     
-    /* RESPONSIVE - TABLET */
+    /* RESPONSIVE - SMALL TABLET (640px) */
     @media (min-width: 640px) {
         .quote-offer-container-2025 {
-            padding: 1.5rem;
+            padding: 1.25rem;
         }
         
         .mission-header-2025 {
-            padding: 1.75rem;
+            padding: 1.5rem;
+            border-radius: var(--border-radius-2xl);
         }
         
         .mission-title-2025 {
+            font-size: 1.375rem;
+        }
+        
+        .mission-description-box {
+            padding: 1.25rem;
+            border-radius: var(--border-radius-lg);
+        }
+        
+        .mission-icon-2025 {
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
             font-size: 1.5rem;
         }
         
+        .mission-description-text {
+            font-size: 0.875rem;
+        }
+        
+        /* GRID 3 COLONNES SUR TABLET */
         .image-gallery-2025 {
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.875rem;
+        }
+        
+        .gallery-item-2025 {
+            border-radius: var(--border-radius-lg);
+        }
+        
+        .btn-apply-2025 {
+            font-size: 0.9375rem;
+            padding: 0.875rem 2rem;
+            gap: 0.625rem;
         }
         
         .mission-info-grid {
             grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .info-card-2025 {
+            padding: 1rem;
+        }
+        
+        .info-label-2025,
+        .info-value-2025 {
+            font-size: 0.8125rem;
+        }
+        
+        .section-divider-2025 {
+            margin: 2rem 0;
         }
         
         .content-grid-2025 {
             grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .section-header-2025 {
+            font-size: 0.875rem;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 1.25rem;
         }
         
         .offers-section-2025,
         .messages-section-2025 {
-            padding: 1.75rem;
+            padding: 1.5rem;
+            border-radius: var(--border-radius-xl);
+        }
+        
+        /* HEIGHT RESPONSIVE POUR MESSAGES */
+        .messages-section-2025 {
+            height: 600px;
+        }
+        
+        .offer-card-2025 {
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .provider-avatar,
+        .provider-avatar-placeholder {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+        }
+        
+        .provider-name {
+            font-size: 0.9375rem;
+        }
+        
+        .provider-rating {
+            font-size: 0.8125rem;
+        }
+        
+        .offer-price {
+            font-size: 1.125rem;
+        }
+        
+        .offer-message {
+            font-size: 0.8125rem;
+        }
+        
+        .offer-delivery {
+            font-size: 0.8125rem;
+        }
+        
+        .btn-choose-provider {
+            font-size: 0.8125rem;
+            padding: 0.625rem 1.25rem;
+        }
+        
+        .empty-state-2025 {
+            padding: 2.5rem 1.5rem;
+        }
+        
+        .empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-text {
+            font-size: 0.875rem;
+        }
+        
+        .message-item {
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+        }
+        
+        .message-author {
+            font-size: 0.875rem;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+        }
+        
+        .message-text {
+            font-size: 0.8125rem;
+        }
+        
+        .message-form {
+            padding-top: 1rem;
+        }
+        
+        .message-input {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-send-message {
+            font-size: 0.875rem;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .message-error {
+            font-size: 0.8125rem;
+        }
+        
+        .modal-content-2025 {
+            padding: 2rem 1.5rem;
+            border-radius: var(--border-radius-2xl);
+        }
+        
+        .modal-close-btn {
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 36px;
+            height: 36px;
+            font-size: 1.25rem;
+        }
+        
+        .modal-header-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1.25rem;
+            font-size: 2rem;
+        }
+        
+        .modal-title-2025 {
+            font-size: 1.25rem;
+        }
+        
+        .modal-subtitle {
+            font-size: 0.9375rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-item {
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+        }
+        
+        .feature-icon {
+            width: 24px;
+            min-width: 24px;
+            height: 24px;
+            font-size: 0.75rem;
+        }
+        
+        .feature-text {
+            font-size: 0.875rem;
         }
         
         .modal-actions-2025 {
             flex-direction: row;
         }
         
-        .btn-modal-primary,
+        .btn-modal-primary {
+            font-size: 0.9375rem;
+            padding: 0.875rem 1.5rem;
+        }
+        
         .btn-modal-secondary {
-            flex: 1;
+            font-size: 0.875rem;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .form-label-2025 {
+            font-size: 0.875rem;
+        }
+        
+        .form-input-2025,
+        .form-textarea-2025 {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .form-textarea-2025 {
+            min-height: 100px;
+        }
+        
+        .form-error {
+            font-size: 0.8125rem;
+        }
+        
+        .modal-success-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+        
+        .modal-success-title {
+            font-size: 1.375rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .modal-success-subtitle {
+            font-size: 0.9375rem;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-success-text {
+            font-size: 0.875rem;
         }
     }
     
-    /* RESPONSIVE - DESKTOP */
+    /* RESPONSIVE - DESKTOP (1024px) */
     @media (min-width: 1024px) {
         .quote-offer-container-2025 {
             padding: 2rem;
@@ -1037,8 +1272,19 @@
             padding: 2rem;
         }
         
+        .mission-title-2025 {
+            font-size: 1.5rem;
+        }
+        
+        /* GRID 4 COLONNES SUR DESKTOP */
         .image-gallery-2025 {
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.25rem;
+        }
+        
+        .offers-section-2025,
+        .messages-section-2025 {
+            padding: 1.75rem;
         }
     }
     
@@ -1164,8 +1410,6 @@
                 @if(!$provider || ($provider && ($provider->kyc_status != 'verified' || !$provider->stripe_account_id)))
                     if (typeof toastr !== 'undefined') {
                         toastr.error('Please complete KYC verification to apply for missions');
-                    } else {
-                        alert('Please complete KYC verification to apply for missions');
                     }
                 @else
                     const modal = document.getElementById('offerPopupModal');

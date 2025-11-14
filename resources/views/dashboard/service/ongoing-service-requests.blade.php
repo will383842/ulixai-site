@@ -53,7 +53,6 @@
     {{-- Stylesheets --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"></noscript>
     
@@ -403,10 +402,10 @@
             outline-offset: 2px;
         }
         
-        /* REQUESTS GRID - Mobile First */
+        /* REQUESTS GRID - MOBILE FIRST RESPONSIVE */
         .requests-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr; /* 1 colonne sur mobile */
             gap: 1.25rem;
             margin-bottom: 2rem;
         }
@@ -543,16 +542,17 @@
             border-radius: 50%;
         }
         
+        /* REQUEST FOOTER - MOBILE FIRST */
         .request-footer {
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: center;
+            align-items: stretch;
             padding-top: 1rem;
             border-top: 2px solid #f1f5f9;
             margin-top: auto;
             position: relative;
             z-index: 1;
-            flex-wrap: wrap;
             gap: 0.75rem;
         }
         
@@ -581,6 +581,7 @@
             font-weight: 600;
         }
         
+        /* BTN SEE REQUEST - MOBILE FIRST */
         .btn-see-request {
             display: inline-flex;
             align-items: center;
@@ -599,6 +600,7 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            width: 100%; /* Full width sur mobile */
         }
         
         .btn-see-request:hover,
@@ -673,6 +675,7 @@
             inset: 0;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             z-index: 9999;
             display: none;
             align-items: center;
@@ -717,7 +720,7 @@
             border-width: 0;
         }
         
-        /* RESPONSIVE - TABLET */
+        /* RESPONSIVE - TABLET (640px+) */
         @media (min-width: 640px) {
             .page-container {
                 padding: 1.5rem;
@@ -747,6 +750,7 @@
                 grid-column: 1 / -1;
             }
             
+            /* 2 colonnes sur tablet */
             .requests-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.5rem;
@@ -757,11 +761,16 @@
             }
             
             .request-footer {
-                flex-wrap: nowrap;
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .btn-see-request {
+                width: auto; /* Auto width sur desktop */
             }
         }
         
-        /* RESPONSIVE - DESKTOP */
+        /* RESPONSIVE - DESKTOP (1024px+) */
         @media (min-width: 1024px) {
             .page-container {
                 padding: 2rem;
@@ -783,6 +792,7 @@
                 grid-column: auto;
             }
             
+            /* 3 colonnes sur desktop */
             .requests-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 2rem;
@@ -1075,10 +1085,7 @@
     @include('pages.socialmediacard')
     @include('dashboard.partials.dashboard-mobile-navbar')
     
-    {{-- Scripts - NO DEFER for jQuery dependencies --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    
+    {{-- Vanilla JavaScript - NO jQuery or toastr --}}
     <script>
     (function() {
         'use strict';
@@ -1160,7 +1167,6 @@
                     .catch(error => {
                         console.error('Error loading subcategories:', error);
                         hideLoading();
-                        showToast('Failed to load sub-categories. Please try again.', 'error');
                     });
             } else {
                 subcategoryGroup.style.display = 'none';
@@ -1197,7 +1203,6 @@
                 .catch(error => {
                     console.error('Error loading missions:', error);
                     hideLoading();
-                    showToast('Failed to load requests. Please try again.', 'error');
                 });
         });
         
@@ -1348,15 +1353,6 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }
-        
-        // Toast notifications
-        function showToast(message, type = 'info') {
-            if (typeof toastr !== 'undefined') {
-                toastr[type](message);
-            } else {
-                alert(message);
-            }
         }
         
         // Screen reader announcements

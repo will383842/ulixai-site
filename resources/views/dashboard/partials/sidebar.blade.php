@@ -78,6 +78,11 @@
     z-index: 10;
 }
 
+/* Cache le badge quand count = 0 */
+.notification-badge-sidebar[data-value="0"] {
+    display: none !important;
+}
+
 @keyframes badgePulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
@@ -333,18 +338,16 @@
                 <span>My earnings</span>
             </a>
             
-            {{-- Private messaging avec badge --}}
+            {{-- Private messaging avec badge TOUJOURS PRÉSENT --}}
             <a href="{{ route('user.conversation') }}"
                class="flex items-center justify-between px-4 py-3 rounded-lg nav-link {{ request()->is('conversations') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
                 <div class="flex items-center space-x-3">
                     <div class="relative flex-shrink-0">
                         <i class="fa-solid fa-envelope w-5 h-5"></i>
-                        {{-- Badge rouge pour messages non lus --}}
-                        @if($unreadMessagesCount > 0)
+                        {{-- ✅ Badge TOUJOURS présent, caché si count=0 avec CSS --}}
                         <span class="notification-badge-sidebar" 
                               data-value="{{ $unreadMessagesCount }}" 
-                              id="private_messages_notification">{{ $unreadMessagesCount }}</span>
-                        @endif
+                              id="private_messages_notification">{{ $unreadMessagesCount > 99 ? '99+' : $unreadMessagesCount }}</span>
                     </div>
                     <span>Private messaging</span>
                 </div>     
@@ -512,33 +515,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // Badge notifications update
-    const updateBadgePosition = () => {
-        const badge = document.getElementById('private_messages_notification');
-        if (badge) {
-            const count = parseInt(badge.dataset.value || '0', 10);
-            if (count > 0) {
-                badge.classList.remove('hidden');
-                badge.textContent = count;
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-    };
-    
-    setInterval(updateBadgePosition, 1000);
-    
-    const badge = document.getElementById('private_messages_notification');
-    if (badge) {
-        const observer = new MutationObserver(updateBadgePosition);
-        observer.observe(badge, {
-            attributes: true,
-            attributeFilter: ['data-value'],
-            childList: true,
-            characterData: true
-        });
-    }
 
     console.log('✅ Sidebar complète initialisée');
 });

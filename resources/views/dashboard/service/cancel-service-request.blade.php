@@ -11,8 +11,8 @@
         align-items: center;
         justify-content: center;
         padding: 1rem;
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
     
     .cancel-modal-overlay.show {
@@ -27,7 +27,7 @@
     
     .cancel-modal-content {
         background: white;
-        border-radius: 1.5rem;
+        border-radius: 1.25rem;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         width: 100%;
         max-width: 500px;
@@ -35,6 +35,7 @@
         overflow-y: auto;
         animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         position: relative;
+        -webkit-overflow-scrolling: touch;
     }
     
     @keyframes slideUp {
@@ -49,13 +50,13 @@
     }
     
     .cancel-modal-header {
-        padding: 1.5rem;
+        padding: 1.25rem 1rem;
         border-bottom: 2px solid #e5e7eb;
         position: relative;
     }
     
     .cancel-modal-title {
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 700;
         color: #0f172a;
         text-align: center;
@@ -65,10 +66,10 @@
     
     .cancel-modal-close {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
-        width: 36px;
-        height: 36px;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -78,8 +79,9 @@
         color: #94a3b8;
         cursor: pointer;
         transition: all 0.2s ease;
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         line-height: 1;
+        touch-action: manipulation;
     }
     
     .cancel-modal-close:hover,
@@ -94,17 +96,21 @@
         outline-offset: 2px;
     }
     
+    .cancel-modal-close:active {
+        transform: scale(0.95);
+    }
+    
     .cancel-modal-body {
-        padding: 1.5rem;
+        padding: 1.25rem 1rem;
     }
     
     .cancel-form-group {
-        margin-bottom: 1.25rem;
+        margin-bottom: 1rem;
     }
     
     .cancel-form-label {
         display: block;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         font-weight: 600;
         color: #0f172a;
         margin-bottom: 0.5rem;
@@ -113,10 +119,10 @@
     .cancel-form-select,
     .cancel-form-textarea {
         width: 100%;
-        padding: 0.75rem 1rem;
+        padding: 0.625rem 0.875rem;
         border: 2px solid #e5e7eb;
         border-radius: 0.75rem;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         transition: all 0.2s ease;
         font-family: inherit;
         background: white;
@@ -140,17 +146,17 @@
     
     .cancel-form-textarea {
         resize: vertical;
-        min-height: 100px;
+        min-height: 80px;
     }
     
     .cancel-form-hint {
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         color: #64748b;
         margin-top: 0.375rem;
     }
     
     .cancel-modal-footer {
-        padding: 1rem 1.5rem;
+        padding: 1rem;
         border-top: 2px solid #e5e7eb;
         display: flex;
         flex-direction: column-reverse;
@@ -162,10 +168,10 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        padding: 0.875rem 1.5rem;
+        padding: 0.75rem 1.25rem;
         border-radius: 999px;
         font-weight: 600;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         transition: all 0.2s ease;
         border: none;
         cursor: pointer;
@@ -212,18 +218,18 @@
     /* SUCCESS MODAL */
     .success-modal-content {
         text-align: center;
-        padding: 2rem 1.5rem;
+        padding: 1.75rem 1rem;
     }
     
     .success-icon-wrapper {
-        width: 80px;
-        height: 80px;
+        width: 64px;
+        height: 64px;
         background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 1.5rem;
+        margin: 0 auto 1.25rem;
         animation: successPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
     }
@@ -235,21 +241,21 @@
     }
     
     .success-icon {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2rem;
+        height: 2rem;
         color: white;
         stroke-width: 3;
     }
     
     .success-title {
-        font-size: 1.25rem;
+        font-size: 1.0625rem;
         font-weight: 700;
         color: #0f172a;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.625rem;
     }
     
     .success-text {
-        font-size: 0.9375rem;
+        font-size: 0.8125rem;
         color: #64748b;
         font-weight: 600;
     }
@@ -257,17 +263,17 @@
     /* LOADING MODAL */
     .loading-modal-content {
         text-align: center;
-        padding: 2rem 1.5rem;
+        padding: 1.75rem 1rem;
     }
     
     .loading-spinner {
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
         border: 4px solid #e5e7eb;
         border-top-color: #2563eb;
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
-        margin: 0 auto 1.5rem;
+        margin: 0 auto 1.25rem;
     }
     
     @keyframes spin {
@@ -275,16 +281,45 @@
     }
     
     .loading-title {
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 700;
         color: #0f172a;
         margin-bottom: 0.5rem;
     }
     
     .loading-text {
-        font-size: 0.9375rem;
+        font-size: 0.8125rem;
         color: #64748b;
         font-weight: 600;
+    }
+    
+    /* ERROR MESSAGE */
+    .cancel-error-message {
+        background: #fef2f2;
+        border: 2px solid #fca5a5;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        display: none;
+    }
+    
+    .cancel-error-message.visible {
+        display: block;
+    }
+    
+    .cancel-error-text {
+        color: #dc2626;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .cancel-error-icon {
+        width: 1rem;
+        height: 1rem;
+        flex-shrink: 0;
     }
     
     /* SCREEN READER ONLY */
@@ -300,18 +335,129 @@
         border-width: 0;
     }
     
-    /* RESPONSIVE - TABLET & DESKTOP */
+    /* RESPONSIVE - SMALL TABLET (640px) */
     @media (min-width: 640px) {
         .cancel-modal-content {
             border-radius: 1.75rem;
         }
         
         .cancel-modal-header {
-            padding: 2rem;
+            padding: 1.75rem 1.5rem;
         }
         
         .cancel-modal-title {
             font-size: 1.25rem;
+        }
+        
+        .cancel-modal-close {
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            font-size: 1.75rem;
+        }
+        
+        .cancel-modal-body {
+            padding: 1.75rem 1.5rem;
+        }
+        
+        .cancel-form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .cancel-form-label {
+            font-size: 0.875rem;
+        }
+        
+        .cancel-form-select,
+        .cancel-form-textarea {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .cancel-form-textarea {
+            min-height: 100px;
+        }
+        
+        .cancel-form-hint {
+            font-size: 0.75rem;
+        }
+        
+        .cancel-modal-footer {
+            padding: 1.5rem;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        
+        .cancel-btn {
+            font-size: 0.875rem;
+            padding: 0.875rem 1.5rem;
+            width: auto;
+            flex: 1;
+        }
+        
+        .cancel-btn-text {
+            flex: 0;
+            width: auto;
+        }
+        
+        .success-modal-content,
+        .loading-modal-content {
+            padding: 2.5rem 1.5rem;
+        }
+        
+        .success-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .success-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        
+        .success-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .success-text {
+            font-size: 0.9375rem;
+        }
+        
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .loading-title {
+            font-size: 1.125rem;
+        }
+        
+        .loading-text {
+            font-size: 0.9375rem;
+        }
+        
+        .cancel-error-message {
+            padding: 0.875rem 1.25rem;
+        }
+        
+        .cancel-error-text {
+            font-size: 0.875rem;
+        }
+        
+        .cancel-error-icon {
+            width: 1.125rem;
+            height: 1.125rem;
+        }
+    }
+    
+    /* RESPONSIVE - DESKTOP (1024px) */
+    @media (min-width: 1024px) {
+        .cancel-modal-header {
+            padding: 2rem;
         }
         
         .cancel-modal-body {
@@ -320,18 +466,6 @@
         
         .cancel-modal-footer {
             padding: 1.5rem 2rem;
-            flex-direction: row;
-            justify-content: space-between;
-        }
-        
-        .cancel-btn {
-            width: auto;
-            flex: 1;
-        }
-        
-        .cancel-btn-text {
-            flex: 0;
-            width: auto;
         }
         
         .success-modal-content,
@@ -362,6 +496,15 @@
             transition: none !important;
         }
     }
+    
+    /* SAFE AREA SUPPORT */
+    @supports (padding: max(0px)) {
+        .cancel-modal-content {
+            padding-left: max(0px, env(safe-area-inset-left));
+            padding-right: max(0px, env(safe-area-inset-right));
+            padding-bottom: max(0px, env(safe-area-inset-bottom));
+        }
+    }
 </style>
 
 {{-- Cancel Request Modal --}}
@@ -385,6 +528,23 @@
         </div>
         
         <form id="cancelRequestForm" class="cancel-modal-body">
+            
+            <div id="cancelErrorMessage" 
+                 class="cancel-error-message" 
+                 role="alert" 
+                 aria-live="assertive">
+                <div class="cancel-error-text">
+                    <svg class="cancel-error-icon" 
+                         fill="currentColor" 
+                         viewBox="0 0 20 20"
+                         aria-hidden="true">
+                        <path fill-rule="evenodd" 
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" 
+                              clip-rule="evenodd"/>
+                    </svg>
+                    <span id="cancelErrorText"></span>
+                </div>
+            </div>
             
             <div class="cancel-form-group">
                 <label for="cancelReasonSelect" class="cancel-form-label">
@@ -489,12 +649,44 @@
     
     let currentMissionId = null;
     
+    // Show error message
+    function showErrorMessage(message) {
+        const errorDiv = document.getElementById('cancelErrorMessage');
+        const errorText = document.getElementById('cancelErrorText');
+        
+        if (errorDiv && errorText) {
+            errorText.textContent = message;
+            errorDiv.classList.add('visible');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.classList.remove('visible');
+            }, 5000);
+        }
+        
+        // Also use toastr if available
+        if (typeof toastr !== 'undefined') {
+            toastr.error(message);
+        }
+    }
+    
+    // Hide error message
+    function hideErrorMessage() {
+        const errorDiv = document.getElementById('cancelErrorMessage');
+        if (errorDiv) {
+            errorDiv.classList.remove('visible');
+        }
+    }
+    
     // Open cancel request popup
     function openCancelRequestPopup(missionId) {
         currentMissionId = missionId;
         const popup = document.getElementById('cancelRequestPopup');
         popup.classList.add('show');
         document.body.style.overflow = 'hidden';
+        
+        // Hide any existing error
+        hideErrorMessage();
         
         // Focus first form element
         setTimeout(() => {
@@ -511,6 +703,7 @@
         
         // Reset form
         document.getElementById('cancelRequestForm').reset();
+        hideErrorMessage();
     }
     
     // Open success popup
@@ -585,14 +778,16 @@
         const reason = document.getElementById('cancelReasonSelect').value;
         const otherReason = document.getElementById('cancelOtherReason').value;
         
-        // Validation - EXACTEMENT comme l'original
+        // Validation
         if (!reason) {
-            alert('Please select a reason for canceling.');
+            showErrorMessage('Please select a reason for canceling.');
+            document.getElementById('cancelReasonSelect').focus();
             return;
         }
         
         if (reason === 'other' && !otherReason.trim()) {
-            alert('Please specify the other reason.');
+            showErrorMessage('Please specify the other reason.');
+            document.getElementById('cancelOtherReason').focus();
             return;
         }
         
@@ -604,7 +799,7 @@
         deleteMission(currentMissionId, reason, otherReason);
     });
     
-    // API call to delete mission - EXACTEMENT comme l'original
+    // API call to delete mission
     async function deleteMission(missionId, reason, otherReason) {
         try {
             const csrfMeta = document.querySelector('meta[name="csrf-token"]');
@@ -636,7 +831,17 @@
         } catch (error) {
             console.error('Error canceling mission:', error);
             closeLoadingPopup();
-            alert('An error occurred while canceling the mission. Please try again.');
+            
+            // Show error with toastr and inline message
+            const errorMessage = 'An error occurred while canceling the mission. Please try again.';
+            
+            if (typeof toastr !== 'undefined') {
+                toastr.error(errorMessage);
+            }
+            
+            // Reopen cancel modal with error
+            openCancelRequestPopup(missionId);
+            showErrorMessage(errorMessage);
         }
     }
     

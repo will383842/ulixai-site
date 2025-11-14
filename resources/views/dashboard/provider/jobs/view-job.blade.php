@@ -148,10 +148,10 @@
         overflow-wrap: break-word;
     }
     
-    /* GALERIE D'IMAGES - MOBILE FIRST */
+    /* GALERIE D'IMAGES - MOBILE FIRST RESPONSIVE */
     .image-gallery-2025 {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* 2 colonnes sur mobile */
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
@@ -230,7 +230,7 @@
         text-align: left;
     }
     
-    /* BOUTONS D'ACTION */
+    /* BOUTONS D'ACTION - MOBILE FIRST */
     .btn-messaging-2025 {
         border: 1px solid #3b82f6;
         color: #2563eb;
@@ -250,6 +250,7 @@
         touch-action: manipulation;
         -webkit-user-select: none;
         user-select: none;
+        width: 100%; /* Full width sur mobile */
     }
     
     .btn-messaging-2025:hover,
@@ -285,14 +286,14 @@
     .modal-overlay-2025 {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
         z-index: 9998;
         display: none;
         align-items: center;
         justify-content: center;
-        padding: 0.5rem;
+        padding: 1rem; /* px-4 */
         opacity: 0;
         transition: opacity 0.2s ease;
         will-change: opacity;
@@ -427,14 +428,14 @@
         border-left: 3px solid #ef4444;
     }
     
-    /* MODAL ACTIONS */
+    /* MODAL ACTIONS - MOBILE FIRST */
     .modal-actions-2025 {
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: center;
+        align-items: stretch;
         margin-top: 1rem;
         gap: 1rem;
-        flex-wrap: wrap;
     }
     
     .modal-btn-primary-2025 {
@@ -449,8 +450,7 @@
         transition: var(--transition-base);
         text-transform: uppercase;
         letter-spacing: 0.025em;
-        flex: 1;
-        min-width: max-content;
+        width: 100%; /* Full width sur mobile */
         touch-action: manipulation;
     }
     
@@ -472,6 +472,8 @@
         transition: var(--transition-base);
         text-transform: uppercase;
         touch-action: manipulation;
+        width: 100%; /* Full width sur mobile */
+        padding: 0.625rem;
     }
     
     .modal-btn-secondary-2025:hover,
@@ -548,6 +550,7 @@
             font-size: 1rem;
         }
         
+        /* 3 colonnes sur écran moyen */
         .image-gallery-2025 {
             grid-template-columns: repeat(3, 1fr);
         }
@@ -560,6 +563,23 @@
         
         .action-cancel-group {
             text-align: right;
+        }
+        
+        /* Boutons auto width sur desktop */
+        .btn-messaging-2025 {
+            width: auto;
+        }
+        
+        /* Modal actions en ligne */
+        .modal-actions-2025 {
+            flex-direction: row;
+            align-items: center;
+        }
+        
+        .modal-btn-primary-2025,
+        .modal-btn-secondary-2025 {
+            width: auto;
+            flex: 1;
         }
     }
     
@@ -921,7 +941,6 @@
             const description = descriptionTextarea ? descriptionTextarea.value : '';
             
             if (!reason) {
-                alert('Please select the reason');
                 if (reasonSelect) reasonSelect.focus();
                 return;
             }
@@ -956,30 +975,16 @@
                 if (data.success) {
                     openResultPopup();
                     
-                    if (typeof toastr !== 'undefined') {
-                        toastr.success('Mission Cancelled Successfully', 'Success');
-                    }
-                    
                     setTimeout(() => {
                         window.location.href = '/job-list';
                     }, 3000);
                 } else {
-                    if (typeof toastr !== 'undefined') {
-                        toastr.error(data.message || 'Error occurred', 'Error');
-                    } else {
-                        alert('Error: ' + (data.message || 'An error occurred'));
-                    }
+                    console.error('Error:', data.message || 'An error occurred');
                 }
             })
             .catch(error => {
                 closeLoadingPopup();
                 console.error('There was a problem with the fetch operation:', error);
-                
-                if (typeof toastr !== 'undefined') {
-                    toastr.error('There was a problem with the fetch operation', 'Error');
-                } else {
-                    alert('An error occurred. Please try again.');
-                }
             });
         });
     }

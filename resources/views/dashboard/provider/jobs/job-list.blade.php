@@ -318,7 +318,7 @@
         to { opacity: 1; transform: translateY(0); }
     }
     
-    /* JOBS GRID */
+    /* JOBS GRID - RESPONSIVE */
     .jobs-grid-2025 {
         display: grid;
         grid-template-columns: 1fr;
@@ -516,7 +516,7 @@
         transform: scale(1.02);
     }
     
-    /* SERVICE ACTIONS */
+    /* SERVICE ACTIONS - RESPONSIVE */
     .service-actions {
         display: flex;
         flex-direction: column;
@@ -539,6 +539,7 @@
         justify-content: center;
         gap: 0.5rem;
         touch-action: manipulation;
+        width: 100%; /* Full width on mobile */
     }
     
     .btn-job-action:focus {
@@ -672,8 +673,9 @@
     .modal-overlay-2025 {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         z-index: 9998;
         opacity: 0;
         pointer-events: none;
@@ -692,8 +694,8 @@
         transform: translate(-50%, -50%) scale(0.9);
         background: white;
         border-radius: var(--border-radius-xl);
-        padding: 2rem;
-        max-width: 90vw;
+        padding: 1rem; /* px-4 mobile */
+        max-width: calc(100vw - 2rem);
         width: 500px;
         max-height: 85vh;
         overflow-y: auto;
@@ -720,7 +722,7 @@
     }
     
     .modal-title-2025 {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         font-weight: 700;
         color: var(--color-text-primary);
         display: flex;
@@ -808,6 +810,7 @@
         cursor: pointer;
         transition: var(--transition-base);
         text-align: center;
+        width: 100%; /* Full width on mobile */
     }
     
     .modal-btn-outline {
@@ -925,6 +928,7 @@
         
         .btn-job-action {
             flex: 1;
+            width: auto; /* Auto width on desktop */
         }
         
         .info-grid {
@@ -937,6 +941,15 @@
         
         .modal-btn {
             flex: 1;
+            width: auto; /* Auto width on desktop */
+        }
+        
+        .modal-2025 {
+            padding: 2rem; /* More padding on desktop */
+        }
+        
+        .modal-title-2025 {
+            font-size: 1.25rem;
         }
         
         .ongoing-banner-2025 {
@@ -1433,20 +1446,18 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Mission started successfully!');
                 location.reload();
             } else {
-                alert(data.message || 'Failed to start the mission.');
+                console.error('Failed to start mission:', data.message);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('An unexpected error occurred.');
+            console.error('Error starting mission:', error);
         });
     }
 
     function resolveDispute(missionId) {
-        if (!confirm('Are you sure you want to resolve this mission?')) return;
+        if (!confirm('Are you sure you want to resolve this dispute?')) return;
 
         fetch('/api/provider/jobs/resolve', {
             method: 'POST',
@@ -1459,15 +1470,13 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Dispute resolved successfully!');
                 location.reload();
             } else {
-                alert(data.message || 'Failed to resolve the mission.');
+                console.error('Failed to resolve dispute:', data.message);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('An unexpected error occurred.');
+            console.error('Error resolving dispute:', error);
         });
     }
     
