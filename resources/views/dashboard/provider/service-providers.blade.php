@@ -1110,7 +1110,7 @@
 <div class="provider-avatar">
     @if($provider->profile_photo)
         <img 
-            src="{{ asset($provider- alt="Provider image">profile_photo) }}" 
+            src="{{ asset($provider->profile_photo) }}" 
             srcset="{{ asset($provider->profile_photo) }} 1x,
                     {{ asset(str_replace('.jpg', '@2x.jpg', $provider->profile_photo)) }} 2x"
             alt="Photo de profil de {{ $provider->first_name }} {{ $provider->last_name }}, prestataire de services {{ $provider->services_to_offer ? json_decode($provider->services_to_offer)[0] ?? 'vérifié' : 'vérifié' }} - Ulixai"

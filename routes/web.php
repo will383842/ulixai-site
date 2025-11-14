@@ -533,8 +533,30 @@ Route::prefix('api/provider/verification')->group(function () {
     Route::get('/documents', [ProviderDocumentVerificationController::class, 'index']);
 });
 
+    // ⚠️ ROUTE DE TEST - À SUPPRIMER APRÈS
+Route::get('/test-not-available', function () {
+    $similarProviders = \App\Models\ServiceProvider::with(['user', 'reviews'])
+        ->where('is_active', true)
+        ->whereNull('deleted_at')
+        ->whereHas('user', function ($q) {
+            $q->where('status', 'active');
+        })
+        ->withAvg('reviews', 'rating')
+        ->inRandomOrder()
+        ->limit(4)
+        ->get();
+    
+    $category = \App\Models\Category::first();
+    
+    return view('pages.not-available', [
+        'provider_name' => 'John Smith Expat Helper',
+        'category' => $category,
+        'similar_providers' => $similarProviders,
+    ]);
+});
 // ========================================
 // ⚠️ CATCH-ALL (garder en dernier)
 // ========================================
 Route::get('/{slug?}', [PageController::class, 'show'])
     ->where('slug', '^(?!provider|reviews|sitemap|sitemap_index\\.xml).*$');
+

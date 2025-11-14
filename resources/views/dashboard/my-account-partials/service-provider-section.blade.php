@@ -1,20 +1,3 @@
-<!-- Service Provider Alert -->
-<div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl shadow-xl p-6 sm:p-8 max-w-6xl mx-auto mb-6 relative overflow-hidden">
-  <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32" aria-hidden="true"></div>
-  <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" aria-hidden="true"></div>
-  
-  <div class="relative z-10 text-white">
-    <div class="flex items-center gap-4 mb-4">
-      <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-        <i class="fas fa-briefcase text-2xl" aria-hidden="true"></i>
-      </div>
-      <div class="flex-1 min-w-0">
-        <h1 class="text-2xl sm:text-3xl font-bold mb-1">Bienvenue, Prestataire !</h1>
-        <p class="text-blue-100 text-sm">Complétez votre profil pour recevoir plus de missions</p>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Profile Completion Section for Service Providers -->
 <div class="max-w-6xl mx-auto pb-24 sm:pb-20 lg:pb-8">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\ServiceProvider;
 use App\Models\Category;
@@ -31,18 +32,18 @@ class ServiceProviderController extends Controller
     }
     
     public function serviceproviders(Request $request) {
-    // Fetch all service providers with their user info
-    if($request->input('providers')) {
-        $providers = ServiceProvider::with('user')->whereIn('slug', json_decode($request->input('providers')))->latest()->get();
-    } else {
-        $providers = ServiceProvider::with('user')->latest()->get();
+        // Fetch all service providers with their user info
+        if($request->input('providers')) {
+            $providers = ServiceProvider::with('user')->whereIn('slug', json_decode($request->input('providers')))->latest()->get();
+        } else {
+            $providers = ServiceProvider::with('user')->latest()->get();
+        }
+        
+        // ✅ AJOUT : Récupération des catégories pour la vue
+        $category = Category::all();
+        
+        return view('dashboard.provider.service-providers', compact('providers', 'category'));
     }
-    
-    // ✅ AJOUT : Récupération des catégories pour la vue
-    $category = Category::all();
-    
-    return view('dashboard.provider.service-providers', compact('providers', 'category'));
-}
 
     public function providerDetails(Request $request)
     {
@@ -58,14 +59,201 @@ class ServiceProviderController extends Controller
     }
 
    
-    public function providerProfile($slug) {
+    /**
+     * 🎉 MÉTHODE MODIFIÉE : Afficher le profil public d'un provider
+     * 
+     * Gère 3 cas :
+     * 1. Provider n'existe pas → 404
+     * 2. Provider supprimé/inactif → Page fun "Not Available" 😅
+     * 3. Provider actif → Profil normal ✅
+     * 
+     * @param string $slug
+     */
+    public function providerProfile($slug) 
+    {
+        Log::info('🔍 Provider profile accessed: ' . $slug);
+        
+        // Chercher le provider par son slug
         $provider = ServiceProvider::with('user')->where('slug', $slug)->first();
 
+        // ============================================
+        // CAS 1 : Provider n'existe pas du tout
+        // ============================================
         if (!$provider) {
+            Log::info('👻 Provider not found: ' . $slug);
             abort(404, 'Provider not found');
         }
 
+        // ============================================
+        // CAS 2 : Provider existe mais est supprimé/inactif
+        // ============================================
+        if ($provider->deleted_at !== null || $provider->is_active === false) {
+            
+            Log::info('😅 Deleted/inactive provider accessed', [
+                'provider_id' => $provider->id,
+                'slug' => $slug,
+                'deleted_at' => $provider->deleted_at,
+                'is_active' => $provider->is_active,
+            ]);
+            
+            // 🎉 Trouver des providers similaires pour sauver la journée !
+            $similarProviders = $this->getSimilarProviders($provider, 4);
+            
+            // 🎨 Afficher la page fun "Provider Not Available"
+            // HTTP 410 Gone = "Ce provider existait mais il est parti" 
+            return response()->view('pages.not-available', [
+                'provider_name' => $provider->business_name ?? $provider->first_name . ' ' . $provider->last_name ?? 'This awesome provider',
+                'category' => $this->getMainCategory($provider),
+                'similar_providers' => $similarProviders,
+            ], 410); // HTTP 410 Gone 🚀
+        }
+
+        // ============================================
+        // CAS 3 : Provider actif et visible
+        // ============================================
+        Log::info('✅ Active provider viewed: ' . ($provider->business_name ?? $provider->first_name));
+
         return view('dashboard.provider.provider-details', compact('provider'));
+    }
+
+    /**
+     * 🎯 Trouver des providers similaires pour sauver la mise !
+     * 
+     * On cherche des providers dans :
+     * - Même catégorie
+     * - Même pays
+     * - Bien notés (rating desc)
+     * - Actifs bien sûr ! ✅
+     * 
+     * @param ServiceProvider $deletedProvider  Le provider qui est parti
+     * @param int $limit  Combien de suggestions ? (défaut 4)
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    private function getSimilarProviders($deletedProvider, $limit = 4)
+    {
+        Log::info('🔍 Searching for similar providers...');
+        
+        // Récupérer la catégorie principale
+        $mainCategory = $this->getMainCategory($deletedProvider);
+        
+        // Construire la requête de base
+        $query = ServiceProvider::with(['user', 'reviews'])
+            ->where('is_active', true)
+            ->whereNull('deleted_at')
+            ->where('id', '!=', $deletedProvider->id)
+            ->whereHas('user', function ($q) {
+                $q->where('status', 'active');
+            });
+        
+        // Si on a une catégorie, filtrer dessus
+        if ($mainCategory) {
+            $categoryId = (int) $mainCategory->id;
+            $query->where(function ($q) use ($categoryId) {
+                $q->whereJsonContains('services_to_offer', $categoryId)
+                  ->orWhere('services_to_offer', 'LIKE', '%"' . $categoryId . '"%');
+            });
+            
+            Log::info('📂 Filtering by category: ' . $mainCategory->name);
+        }
+        
+        // Décodage du pays
+        $operationalCountries = $deletedProvider->operational_countries;
+        if (is_string($operationalCountries)) {
+            $operationalCountries = json_decode($operationalCountries, true) ?? [];
+        }
+        
+        // Même pays si disponible
+        if (!empty($operationalCountries) && is_array($operationalCountries)) {
+            $firstCountry = $operationalCountries[0] ?? null;
+            if ($firstCountry) {
+                $query->where(function ($q) use ($firstCountry) {
+                    $q->whereJsonContains('operational_countries', $firstCountry)
+                      ->orWhere('operational_countries', 'LIKE', '%' . $firstCountry . '%');
+                });
+                
+                Log::info('🌍 Filtering by country: ' . $firstCountry);
+            }
+        }
+        
+        // Trier par rating (les meilleurs en premier) et récupérer avec moyenne
+        $similarProviders = $query->withAvg('reviews', 'rating')
+            ->orderByDesc('reviews_avg_rating')
+            ->orderBy('reviews_count', 'desc')
+            ->limit($limit)
+            ->get();
+        
+        Log::info('✅ Found ' . $similarProviders->count() . ' similar providers');
+        
+        // ============================================
+        // FALLBACK 1 : Si rien trouvé avec catégorie + pays
+        // ============================================
+        if ($similarProviders->isEmpty() && $mainCategory) {
+            Log::info('🔄 Fallback 1: Removing country filter, keeping category');
+            
+            $categoryId = (int) $mainCategory->id;
+            $similarProviders = ServiceProvider::with(['user', 'reviews'])
+                ->where('is_active', true)
+                ->whereNull('deleted_at')
+                ->where('id', '!=', $deletedProvider->id)
+                ->whereHas('user', function ($q) {
+                    $q->where('status', 'active');
+                })
+                ->where(function ($q) use ($categoryId) {
+                    $q->whereJsonContains('services_to_offer', $categoryId)
+                      ->orWhere('services_to_offer', 'LIKE', '%"' . $categoryId . '"%');
+                })
+                ->withAvg('reviews', 'rating')
+                ->orderByDesc('reviews_avg_rating')
+                ->limit($limit)
+                ->get();
+        }
+        
+        // ============================================
+        // FALLBACK 2 : Si toujours rien, juste les meilleurs providers
+        // ============================================
+        if ($similarProviders->isEmpty()) {
+            Log::info('🌟 Fallback 2: Showing top rated providers globally');
+            
+            $similarProviders = ServiceProvider::with(['user', 'reviews'])
+                ->where('is_active', true)
+                ->whereNull('deleted_at')
+                ->where('id', '!=', $deletedProvider->id)
+                ->whereHas('user', function ($q) {
+                    $q->where('status', 'active');
+                })
+                ->withAvg('reviews', 'rating')
+                ->orderByDesc('reviews_avg_rating')
+                ->orderBy('reviews_count', 'desc')
+                ->limit($limit)
+                ->get();
+        }
+        
+        return $similarProviders;
+    }
+
+    /**
+     * 🔧 Helper : Récupérer la catégorie principale d'un provider
+     * 
+     * @param ServiceProvider $provider
+     * @return Category|null
+     */
+    private function getMainCategory($provider)
+    {
+        // Décodage du JSON services_to_offer
+        $categoryIds = $provider->services_to_offer;
+        if (is_string($categoryIds)) {
+            $categoryIds = json_decode($categoryIds, true) ?? [];
+        }
+        
+        // Récupérer la première catégorie
+        if (!empty($categoryIds) && is_array($categoryIds)) {
+            $firstCategoryId = $categoryIds[0] ?? null;
+            if ($firstCategoryId) {
+                return Category::find($firstCategoryId);
+            }
+        }
+        
+        return null;
     }
 
 

@@ -483,7 +483,6 @@ class AccountController extends Controller
 
     /**
      * Update About You section for service providers
-     * ✅ MÉTHODE AJOUTÉE
      */
     public function updateAboutYou(Request $request)
     {
@@ -494,15 +493,72 @@ class AccountController extends Controller
         }
         
         $user->serviceProvider->update([
-            'about_you' => $request->description
+            'profile_description' => $request->description
         ]);
         
         return response()->json(['success' => true]);
     }
 
     /**
+     * Récupérer les informations "About You" du prestataire
+     * ✅ MÉTHODE AJOUTÉE POUR CHARGER LES DONNÉES
+     */
+    public function getAboutYou(Request $request)
+    {
+        try {
+            $userId = $request->input('user_id', Auth::id());
+            $provider = ServiceProvider::where('user_id', $userId)->first();
+            
+            return response()->json([
+                'success' => true,
+                'about_you' => $provider ? $provider->profile_description : ''
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error retrieving data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Récupérer les catégories sélectionnées par le prestataire
+     * ✅ MÉTHODE AJOUTÉE POUR CHARGER LES CATÉGORIES
+     */
+    public function getProviderCategories(Request $request)
+    {
+        try {
+            $userId = $request->input('user_id', Auth::id());
+            $provider = ServiceProvider::where('user_id', $userId)->first();
+            
+            if (!$provider) {
+                return response()->json(['success' => false, 'message' => 'Provider not found'], 404);
+            }
+
+            // Décodage sécurisé des JSON
+            $categories = is_string($provider->services_to_offer) 
+                ? json_decode($provider->services_to_offer, true) 
+                : $provider->services_to_offer;
+                
+            $subcategories = is_string($provider->services_to_offer_category) 
+                ? json_decode($provider->services_to_offer_category, true) 
+                : $provider->services_to_offer_category;
+            
+            return response()->json([
+                'success' => true,
+                'categories' => $categories ?? [],
+                'subcategories' => $subcategories ?? []
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error retrieving categories: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Delete user account
-     * ✅ NOUVELLE MÉTHODE POUR SUPPRESSION DE COMPTE
      */
     public function delete(Request $request)
     {

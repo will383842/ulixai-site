@@ -34,7 +34,6 @@ return new class extends Migration
             $table->index('affiliate_code', 'idx_affiliate_code');
             $table->index(['country'], 'idx_country_city');
             $table->index('referred_by', 'idx_referred_by');
-
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -51,23 +50,8 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
-
-        // Insert test admin credentials
-        \DB::table('users')->insert([
-            'name' => 'Test Admin',
-            'email' => 'admin@ulixai.com',
-            'password' => bcrypt('admin123'), // Change password as needed
-            'user_role' => 'super_admin',
-            'status' => 'active',
-            'email_verified_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');

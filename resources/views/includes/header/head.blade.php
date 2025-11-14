@@ -50,10 +50,10 @@
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
 
-  {{-- Google Analytics - BLOQUÉ PAR DÉFAUT (RGPD) --}}
+  {{-- Google Analytics - BLOQUÉ PAR DÉFAUT (GDPR) --}}
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-418ZTJHNX6"></script>
   <script>
-    // ⚠️ BLOQUER Google Analytics par défaut (conforme RGPD)
+    // ⚠️ BLOQUER Google Analytics par défaut (conforme GDPR)
     window['ga-disable-G-418ZTJHNX6'] = true;
 
     window.dataLayer = window.dataLayer || [];

@@ -9,6 +9,7 @@
 
 <script>
   const LOGGED_IN_USER_ID = {{ auth()->user()->id }};
+  const USER_ROLE = '{{ auth()->user()->user_role }}';
 </script>
 
 <style>
@@ -557,47 +558,19 @@
         will-change: transform;
     }
 
-    .checkbox-group-2025 {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        padding: 1rem;
-        background: #fff5f5;
-        border: 2px solid #fecaca;
-        border-radius: var(--border-radius-md);
-        cursor: pointer;
-        transition: var(--transition-base);
+    /* Compact Delete Section */
+    .section-card-2025[style*="max-width: 600px"] {
+        padding: 1.25rem;
     }
 
-    .checkbox-group-2025:hover {
-        background: #fee2e2;
-        border-color: #fca5a5;
+    #confirmDeleteInput:focus {
+        outline: none;
+        border-color: var(--color-danger) !important;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
 
-    .checkbox-group-2025 input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        margin-top: 0.125rem;
-        cursor: pointer;
-        accent-color: var(--color-danger);
-        flex-shrink: 0;
-    }
-
-    .checkbox-label-2025 {
-        flex: 1;
-    }
-
-    .checkbox-title-2025 {
-        font-size: 0.9375rem;
+    #confirmDeleteInput[style*="border-color: var(--color-danger)"] {
         font-weight: 600;
-        color: var(--color-danger);
-        margin-bottom: 0.25rem;
-    }
-
-    .checkbox-description-2025 {
-        font-size: 0.8125rem;
-        color: #991b1b;
-        line-height: 1.5;
     }
 
     * {
@@ -680,6 +653,12 @@
         <p class="welcome-subtitle-2025">Manage your account settings and preferences</p>
     </div>
 
+    @if(auth()->user()->user_role === 'service_provider')
+        @include('dashboard.my-account-partials.service-provider-section')
+    @else
+        @include('dashboard.my-account-partials.regular-user-section')
+    @endif
+
     <!-- Banking Information Section -->
     <div class="section-card-2025">
         <div class="section-header-2025">
@@ -722,18 +701,12 @@
         @endif
     </div>
 
-    @if(auth()->user()->user_role === 'service_provider')
-        @include('dashboard.my-account-partials.service-provider-section')
-    @else
-        @include('dashboard.my-account-partials.regular-user-section')
-    @endif
-
-    <!-- Account Deletion Section -->
-    <div class="section-card-2025">
-        <div class="section-header-2025">
+    <!-- Account Deletion Section - Compact Version -->
+    <div class="section-card-2025" style="max-width: 600px;">
+        <div class="section-header-2025" style="margin-bottom: 1rem; padding-bottom: 0.75rem;">
             <div>
-                <h3 class="section-title-2025" style="color: var(--color-danger);">Delete Account</h3>
-                <p class="section-subtitle-2025">Permanently delete your account and all associated data</p>
+                <h3 class="section-title-2025" style="color: var(--color-danger); font-size: 1.125rem;">Delete Account</h3>
+                <p class="section-subtitle-2025" style="font-size: 0.8125rem;">This action is permanent and cannot be undone</p>
             </div>
         </div>
 
@@ -741,24 +714,30 @@
             @csrf
             @method('DELETE')
             
-            <label class="checkbox-group-2025">
-                <input type="checkbox" id="confirmDelete" name="confirm_delete" required>
-                <div class="checkbox-label-2025">
-                    <div class="checkbox-title-2025">I want to permanently delete my account</div>
-                    <div class="checkbox-description-2025">
-                        This action cannot be undone. All your data, including profile information, 
-                        @if(auth()->user()->user_role === 'service_provider')
-                        service provider details, categories, reviews,
-                        @endif
-                        and banking details will be permanently deleted.
-                    </div>
-                </div>
-            </label>
+            <div style="margin-bottom: 1rem;">
+                <label class="form-label-2025" style="font-size: 0.8125rem; color: var(--color-danger);">
+                    Type <strong>"DELETE MY ACCOUNT"</strong> to confirm:
+                </label>
+                <input 
+                    type="text" 
+                    id="confirmDeleteInput" 
+                    class="form-input-2025" 
+                    placeholder="DELETE MY ACCOUNT"
+                    style="font-size: 0.875rem; padding: 0.625rem 0.875rem;"
+                    autocomplete="off"
+                >
+            </div>
 
-            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
-                <button type="button" onclick="confirmAccountDeletion()" class="btn-danger-2025" id="deleteAccountBtn" disabled>
+            <div style="display: flex; justify-content: flex-end;">
+                <button 
+                    type="submit" 
+                    class="btn-danger-2025" 
+                    id="deleteAccountBtn" 
+                    disabled
+                    style="font-size: 0.8125rem; padding: 0.5rem 1rem;"
+                >
                     <i class="fas fa-trash-alt"></i>
-                    <span>Delete My Account</span>
+                    <span>Delete Account</span>
                 </button>
             </div>
         </form>
@@ -808,41 +787,75 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function initializeAccountDeletion() {
-    const checkbox = document.getElementById('confirmDelete');
+    const input = document.getElementById('confirmDeleteInput');
     const deleteBtn = document.getElementById('deleteAccountBtn');
+    const form = document.getElementById('deleteAccountForm');
     
-    if (checkbox && deleteBtn) {
-        checkbox.addEventListener('change', function() {
-            deleteBtn.disabled = !this.checked;
-        });
-    }
-}
-
-function confirmAccountDeletion() {
-    if (!document.getElementById('confirmDelete').checked) {
-        showNotification('Please confirm account deletion by checking the box', 'warning');
+    console.log('🔍 Initializing account deletion...', { 
+        input: input ? 'Found' : 'NOT FOUND', 
+        deleteBtn: deleteBtn ? 'Found' : 'NOT FOUND', 
+        form: form ? 'Found' : 'NOT FOUND' 
+    });
+    
+    if (!input || !deleteBtn || !form) {
+        console.error('❌ Missing elements for account deletion!');
         return;
     }
     
-    if (confirm('Are you absolutely sure you want to delete your account? This action is irreversible and all your data will be permanently lost.')) {
-        document.getElementById('deleteAccountForm').submit();
-    }
+    // Event listener pour l'input
+    input.addEventListener('input', function() {
+        const inputValue = this.value.trim();
+        const isValid = inputValue === 'DELETE MY ACCOUNT';
+        
+        console.log('📝 Input changed:', inputValue, '| Valid:', isValid);
+        
+        deleteBtn.disabled = !isValid;
+        
+        if (isValid) {
+            this.style.borderColor = 'var(--color-danger)';
+            this.style.color = 'var(--color-danger)';
+            this.style.fontWeight = '600';
+        } else {
+            this.style.borderColor = '#e5e7eb';
+            this.style.color = 'var(--color-text-primary)';
+            this.style.fontWeight = '400';
+        }
+    });
+    
+    // Event listener pour la soumission du formulaire
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const inputValue = input.value.trim();
+        
+        console.log('🚀 Form submit attempted with value:', inputValue);
+        
+        if (inputValue !== 'DELETE MY ACCOUNT') {
+            console.warn('⚠️ Invalid input value');
+            showNotification('Please type "DELETE MY ACCOUNT" exactly as shown', 'error');
+            return false;
+        }
+        
+        console.log('✅ Validation passed, submitting form...');
+        
+        // Désactiver le bouton pour éviter les doubles soumissions
+        deleteBtn.disabled = true;
+        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Deleting...</span>';
+        
+        // Soumettre le formulaire
+        this.submit();
+    });
 }
 
-// CORRECTION: Fonctions pour gérer l'affichage des modals
 function showModal(modalId) {
   const modal = document.getElementById(modalId);
   const overlay = document.querySelector('.modal-overlay');
   
   if (modal) {
-    // Retirer la classe hidden
     modal.classList.remove('hidden');
     
-    // Pour les modals avec structure différente (aboutYouPopup, selectet-provider-category)
     if (modalId === 'aboutYouPopup' || modalId === 'selectet-provider-category') {
       document.body.style.overflow = 'hidden';
-      
-      // Forcer le reflow avant d'ajouter les animations
       void modal.offsetHeight;
       
       if (overlay) {
@@ -852,12 +865,9 @@ function showModal(modalId) {
         });
       }
     }
-    // Pour bankingDetailsModal (structure différente)
     else if (modalId === 'bankingDetailsModal') {
-      // Ce modal a déjà sa propre fonction showBankingModal()
       return;
     }
-    // Pour les modals avec classe modal-2025
     else if (modal.classList.contains('modal-2025')) {
       if (overlay) overlay.classList.remove('hidden');
       
@@ -885,7 +895,6 @@ function hideModal(modalId) {
       }
     }
     else if (modalId === 'bankingDetailsModal') {
-      // Ce modal a déjà sa propre fonction hideBankingModal()
       return;
     }
     else if (modal.classList.contains('modal-2025')) {
@@ -907,7 +916,6 @@ function hideModal(modalId) {
   }
 }
 
-// FONCTIONS MODIFIÉES - DÉBUT
 function openAboutYouPopup() {
     const modal = document.getElementById('aboutYouPopup');
     if (modal) {
@@ -930,7 +938,6 @@ function openCategoryPopup() {
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         
-        // Charger les catégories
         fetch('/api/categories')
             .then(res => res.json())
             .then(data => {
@@ -946,7 +953,6 @@ function openSpecialStatusModal() {
         document.body.style.overflow = 'hidden';
     }
 }
-// FONCTIONS MODIFIÉES - FIN
 
 function submitAboutYou() {
   const description = document.getElementById("aboutYouText").value;
