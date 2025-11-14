@@ -79,7 +79,7 @@
         -webkit-user-select: none;
         user-select: none;
         touch-action: manipulation;
-        width: 100%; /* Full width sur mobile */
+        width: 100%;
     }
     
     .btn-premium::before {
@@ -245,6 +245,73 @@
         50% { transform: scale(1.1); }
     }
     
+    /* ✅ NOUVEAUX STYLES - BADGES NOTIFICATIONS PAR CARTE */
+    .notifications-badges-row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.875rem;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border: 2px solid #86efac;
+        border-radius: var(--border-radius-md);
+    }
+    
+    .notif-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: var(--border-radius-md);
+        font-size: 0.75rem;
+        font-weight: 700;
+        flex: 1;
+        min-width: 0;
+        transition: var(--transition-base);
+    }
+    
+    .notif-badge:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .badge-proposals {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #065f46;
+        border: 2px solid #34d399;
+    }
+    
+    .badge-messages {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
+        border: 2px solid #60a5fa;
+    }
+    
+    .notif-badge i {
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+    
+    .notif-badge-text {
+        flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .new-indicator {
+        background: var(--color-danger);
+        color: white;
+        padding: 0.125rem 0.375rem;
+        border-radius: 999px;
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        animation: pulse 2s ease-in-out infinite;
+        flex-shrink: 0;
+    }
+    
     /* FILTERS - MOBILE FIRST */
     .filters-bar {
         display: flex;
@@ -328,7 +395,7 @@
     /* GRID RESPONSIVE - MOBILE FIRST */
     .services-grid-2025 {
         display: grid;
-        grid-template-columns: 1fr; /* 1 colonne sur mobile */
+        grid-template-columns: 1fr;
         gap: 1rem;
         margin-bottom: 2rem;
     }
@@ -692,7 +759,7 @@
         justify-content: center;
         gap: 0.5rem;
         touch-action: manipulation;
-        width: 100%; /* Full width sur mobile */
+        width: 100%;
     }
     
     .btn-service-action:focus {
@@ -879,7 +946,7 @@
         }
         
         .btn-premium {
-            width: auto; /* Auto width sur desktop */
+            width: auto;
         }
         
         .stats-overview {
@@ -896,7 +963,6 @@
             font-size: 0.75rem;
         }
         
-        /* 2 colonnes sur tablet */
         .services-grid-2025 {
             grid-template-columns: repeat(2, 1fr);
             gap: 1.25rem;
@@ -924,7 +990,7 @@
         .btn-service-action {
             flex: 1;
             min-width: 140px;
-            width: auto; /* Auto width sur desktop */
+            width: auto;
         }
         
         .info-grid {
@@ -951,7 +1017,6 @@
             padding: 2rem;
         }
         
-        /* 3 colonnes sur desktop */
         .services-grid-2025 {
             grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
@@ -998,37 +1063,35 @@
 <div class="services-container-2025">
     
     @php
-        // TAB 1: Active Missions (en cours, en attente, complétées mais non payées, disputes)
+        // TAB 1: Active Missions
         $activeInProgress = $missions->filter(function($m) {
             return !empty($m->selected_provider_id) 
                 && in_array($m->status, ['in_progress', 'waiting_to_start', 'disputed']) 
                 && $m->payment_status !== 'released';
         });
         
-        // Missions complétées en attente de paiement (doivent aussi être dans Active)
         $completedAwaitingPayment = $missions->filter(function($m) {
             return !empty($m->selected_provider_id)
                 && $m->status === 'completed' 
                 && $m->payment_status !== 'released';
         });
         
-        // Fusionner pour avoir toutes les missions actives
         $currentRequests = $activeInProgress->merge($completedAwaitingPayment);
         
-        // TAB 2: Published (pas encore de prestataire sélectionné)
+        // TAB 2: Published
         $publishedNoProvider = $missions->filter(function($m) {
             return empty($m->selected_provider_id) && $m->status === 'published';
         });
         
-        // TAB 3: Completed (missions vraiment terminées ET payées)
+        // TAB 3: Completed
         $completedRequests = $missions->filter(function($m) {
             return $m->status === 'completed' && $m->payment_status === 'released';
         });
         
-        // Calculer nouvelles propositions
-        $newProposalsCount = 0;
+        // ✅ NOUVEAU - Compter total badges pour tab Published
+        $totalPublishedNotifications = 0;
         foreach($publishedNoProvider as $mission) {
-            $newProposalsCount += $mission->offers->where('created_at', '>=', now()->subDay())->count();
+            $totalPublishedNotifications += $mission->unreadOffersCount() + $mission->unreadPublicMessagesCount();
         }
     @endphp
     
@@ -1047,19 +1110,19 @@
     <!-- Stats Overview -->
     <section class="stats-overview" aria-label="Requests statistics">
         <div class="stat-item">
-            <div class="stat-value active" aria-label="{{ $currentRequests->count() }} active missions">{{ $currentRequests->count() }}</div>
+            <div class="stat-value active">{{ $currentRequests->count() }}</div>
             <div class="stat-label">Active Missions</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value published" aria-label="{{ $publishedNoProvider->count() }} published requests">{{ $publishedNoProvider->count() }}</div>
+            <div class="stat-value published">{{ $publishedNoProvider->count() }}</div>
             <div class="stat-label">Published</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value published" aria-label="{{ $publishedNoProvider->sum(fn($m) => $m->offers->count()) }} total proposals">{{ $publishedNoProvider->sum(fn($m) => $m->offers->count()) }}</div>
+            <div class="stat-value published">{{ $publishedNoProvider->sum(fn($m) => $m->offers->count()) }}</div>
             <div class="stat-label">Total Proposals</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value completed" aria-label="{{ $completedRequests->count() }} completed missions">{{ $completedRequests->count() }}</div>
+            <div class="stat-value completed">{{ $completedRequests->count() }}</div>
             <div class="stat-label">Completed</div>
         </div>
     </section>
@@ -1075,7 +1138,7 @@
             <i class="fas fa-circle" style="font-size: 0.5rem; color: var(--color-success);" aria-hidden="true"></i>
             <span>Active Missions</span>
             @if($currentRequests->count() > 0)
-                <span class="tab-badge" aria-label="{{ $currentRequests->count() }} active">{{ $currentRequests->count() }}</span>
+                <span class="tab-badge">{{ $currentRequests->count() }}</span>
             @endif
         </button>
         
@@ -1087,8 +1150,8 @@
                 id="tab-btn-published">
             <i class="fas fa-hourglass-half" aria-hidden="true"></i>
             <span>Published</span>
-            @if($publishedNoProvider->count() > 0)
-                <span class="tab-badge" aria-label="{{ $publishedNoProvider->count() }} published">{{ $publishedNoProvider->count() }}</span>
+            @if($totalPublishedNotifications > 0)
+                <span class="tab-badge">{{ $totalPublishedNotifications }}</span>
             @endif
         </button>
         
@@ -1111,23 +1174,19 @@
             <input type="text" 
                    class="search-input" 
                    placeholder="Search requests..." 
-                   id="search-input"
-                   aria-label="Search requests by title">
+                   id="search-input">
         </div>
         
         <label for="filter-urgency" class="sr-only">Filter by urgency</label>
-        <select class="filter-select" id="filter-urgency" aria-label="Filter by urgency level">
+        <select class="filter-select" id="filter-urgency">
             <option value="">All Urgency</option>
-            @php
-                $urgencies = $missions->pluck('urgency')->unique()->filter();
-            @endphp
-            @foreach($urgencies as $urgency)
+            @foreach($missions->pluck('urgency')->unique()->filter() as $urgency)
                 <option value="{{ strtolower($urgency) }}">{{ ucfirst($urgency) }}</option>
             @endforeach
         </select>
         
         <label for="filter-country" class="sr-only">Filter by country</label>
-        <select class="filter-select" id="filter-country" aria-label="Filter by country">
+        <select class="filter-select" id="filter-country">
             <option value="">All Countries</option>
             @foreach($missions->pluck('location_country')->unique()->filter()->sort() as $country)
                 <option value="{{ strtolower(trim($country)) }}">{{ $country }}</option>
@@ -1178,7 +1237,7 @@
                          data-urgency="{{ $safeUrgency }}"
                          data-country="{{ $safeCountry }}"
                          data-search="{{ $safeSearch }}"
-                         aria-label="Service request: {{ $safeTitle }}">
+                         data-mission-id="{{ $mission->id }}">
                     
                     <div class="card-header-row">
                         <div class="service-icon-2025" aria-hidden="true">
@@ -1195,7 +1254,7 @@
                                 
                                 <span class="countdown-inline">
                                     <i class="fas fa-clock" aria-hidden="true"></i>
-                                    <span aria-label="Day {{ $daysElapsed }} of {{ $totalDays }}">Day {{ $daysElapsed }} of {{ $totalDays }}</span>
+                                    <span>Day {{ $daysElapsed }} of {{ $totalDays }}</span>
                                 </span>
                             </div>
                         </div>
@@ -1261,16 +1320,14 @@
                     
                     <div class="service-actions">
                         <a href="{{ route('view.request', ['id' => $mission->id]) }}" 
-                           class="btn-service-action btn-view-request"
-                           aria-label="View details for {{ $safeTitle }}">
+                           class="btn-service-action btn-view-request">
                             <i class="fas fa-file-alt" aria-hidden="true"></i>
                             <span>View Details</span>
                         </a>
                         
                         @if($hasProvider && $providerSlug)
                             <a href="{{ route('provider-details', ['id' => $providerSlug]) }}" 
-                               class="btn-service-action btn-view-provider"
-                               aria-label="View provider profile">
+                               class="btn-service-action btn-view-provider">
                                 <i class="fas fa-user-check" aria-hidden="true"></i>
                                 <span>See Provider</span>
                             </a>
@@ -1323,8 +1380,12 @@
                     $remainingDays = \Carbon\Carbon::now()->diffInDays($endTime, false);
                     $remainingDays = max(0, $remainingDays);
                     
+                    // ✅ NOUVEAUX COMPTEURS
                     $offersCount = $mission->offers->count();
-                    $newCount = $mission->offers->where('created_at', '>=', now()->subDay())->count();
+                    $newOffersCount = $mission->unreadOffersCount();
+                    $messagesCount = $mission->publicMessages->count();
+                    $newMessagesCount = $mission->unreadPublicMessagesCount();
+                    
                     $minPrice = $offersCount > 0 ? $mission->offers->min('price') : null;
                     $maxPrice = $offersCount > 0 ? $mission->offers->max('price') : null;
                     $avgPrice = $offersCount > 0 ? $mission->offers->avg('price') : null;
@@ -1334,7 +1395,7 @@
                          data-urgency="{{ $safeUrgency }}"
                          data-country="{{ $safeCountry }}"
                          data-search="{{ $safeSearch }}"
-                         aria-label="Published request: {{ $safeTitle }}">
+                         data-mission-id="{{ $mission->id }}">
                     
                     <div class="card-header-row">
                         <div class="service-icon-2025 service-icon-published" aria-hidden="true">
@@ -1358,25 +1419,49 @@
                                 
                                 <span class="countdown-inline">
                                     <i class="fas fa-calendar-times" aria-hidden="true"></i>
-                                    <span aria-label="Expires in {{ $remainingDays }} days">Expires in {{ $remainingDays }} days</span>
+                                    <span>Expires in {{ $remainingDays }} days</span>
                                 </span>
                             </div>
                         </div>
                     </div>
                     
-                    @if($offersCount > 0)
-                    <div class="proposals-highlight" role="region" aria-label="Proposals summary">
-                        <div class="proposals-title">
+                    {{-- ✅ NOUVEAUX BADGES PROPOSITIONS + MESSAGES --}}
+                    @if($offersCount > 0 || $messagesCount > 0)
+                    <div class="notifications-badges-row" role="region" aria-label="Notifications">
+                        @if($offersCount > 0)
+                        <div class="notif-badge badge-proposals">
                             <i class="fas fa-file-contract" aria-hidden="true"></i>
-                            <span class="proposals-count-big">{{ $offersCount }}</span>
-                            <span>{{ $offersCount === 1 ? 'Proposal' : 'Proposals' }} Received</span>
-                            @if($newCount > 0)
-                                <span class="new-badge" role="status" aria-label="{{ $newCount }} new proposals">{{ $newCount }} NEW</span>
+                            <span class="notif-badge-text">
+                                <span class="badge-proposals-count">{{ $offersCount }}</span> {{ $offersCount === 1 ? 'Proposal' : 'Proposals' }}
+                            </span>
+                            @if($newOffersCount > 0)
+                                <span class="new-indicator">{{ $newOffersCount }} NEW</span>
                             @endif
                         </div>
+                        @endif
                         
-                        @if($minPrice && $maxPrice)
-                        <div class="price-range-box" aria-label="Price range">
+                        @if($messagesCount > 0)
+                        <div class="notif-badge badge-messages">
+                            <i class="fas fa-comments" aria-hidden="true"></i>
+                            <span class="notif-badge-text">
+                                <span class="badge-messages-count">{{ $messagesCount }}</span> {{ $messagesCount === 1 ? 'Message' : 'Messages' }}
+                            </span>
+                            @if($newMessagesCount > 0)
+                                <span class="new-indicator">{{ $newMessagesCount }} NEW</span>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                    @endif
+                    
+                    @if($offersCount > 0 && $minPrice && $maxPrice)
+                    <div class="proposals-highlight" role="region" aria-label="Price range">
+                        <div class="proposals-title">
+                            <i class="fas fa-euro-sign" aria-hidden="true"></i>
+                            <span>Price Range</span>
+                        </div>
+                        
+                        <div class="price-range-box">
                             <div class="price-item">
                                 <div class="price-label">Min</div>
                                 <div class="price-value">{{ number_format($minPrice, 0) }}€</div>
@@ -1390,7 +1475,6 @@
                                 <div class="price-value">{{ number_format($maxPrice, 0) }}€</div>
                             </div>
                         </div>
-                        @endif
                     </div>
                     @endif
                     
@@ -1423,32 +1507,17 @@
                     </dl>
                     
                     <div class="service-actions">
-                        @if($offersCount > 0)
-                            <a href="{{ route('qoute-offer', ['id'=> $mission->id]) }}" 
-                               class="btn-service-action btn-view-proposals" 
-                               style="flex: 2;"
-                               aria-label="View {{ $offersCount }} proposals for {{ $safeTitle }}">
-                                <i class="fas fa-eye" aria-hidden="true"></i>
-                                <span>View {{ $offersCount }} Proposals</span>
-                                @if($newCount > 0)
-                                    <span class="new-badge">{{ $newCount }} NEW</span>
-                                @endif
-                            </a>
-                        @else
-                            <a href="{{ route('qoute-offer', ['id'=> $mission->id]) }}" 
-                               class="btn-service-action btn-view-request" 
-                               style="flex: 2;"
-                               aria-label="View request details">
-                                <i class="fas fa-file-alt" aria-hidden="true"></i>
-                                <span>View Request</span>
-                            </a>
-                        @endif
+                        <a href="{{ route('qoute-offer', ['id'=> $mission->id]) }}" 
+                           class="btn-service-action btn-view-proposals" 
+                           style="flex: 2;">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                            <span>View {{ $offersCount > 0 ? $offersCount . ' Proposals' : 'Request' }}</span>
+                        </a>
                         
                         <button 
                             class="btn-service-action btn-cancel-request"
                             onclick="openCancelRequestPopup({{ $mission->id }})"
-                            style="flex: 1;"
-                            aria-label="Cancel request">
+                            style="flex: 1;">
                             <i class="fas fa-times-circle" aria-hidden="true"></i>
                             <span>Cancel</span>
                         </button>
@@ -1460,10 +1529,9 @@
                         <i class="fas fa-search"></i>
                     </div>
                     <div class="empty-title">No Published Requests</div>
-                    <p class="empty-text">You don't have any requests waiting for providers. Browse our network of service providers to find the perfect match for your needs!</p>
+                    <p class="empty-text">You don't have any requests waiting for providers.</p>
                     <a href="{{ route('service-providers') }}" 
-                       class="btn-premium" 
-                       aria-label="Browse available service providers">
+                       class="btn-premium">
                         <i class="fas fa-star" aria-hidden="true"></i>
                         <span>Browse Available Providers</span>
                         <i class="fas fa-arrow-right" style="font-size: 0.75rem;" aria-hidden="true"></i>
@@ -1491,7 +1559,7 @@
                          data-urgency="{{ $safeUrgency }}"
                          data-country="{{ $safeCountry }}"
                          data-search="{{ $safeSearch }}"
-                         aria-label="Completed request: {{ $safeTitle }}">
+                         data-mission-id="{{ $mission->id }}">
                     
                     <div class="card-header-row">
                         <div class="service-icon-2025" style="background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);" aria-hidden="true">
@@ -1527,8 +1595,7 @@
                     
                     <div class="service-actions">
                         <a href="{{ route('view.request', ['id' => $mission->id]) }}" 
-                           class="btn-service-action btn-view-request"
-                           aria-label="View completed request details">
+                           class="btn-service-action btn-view-request">
                             <i class="fas fa-file-alt" aria-hidden="true"></i>
                             <span>View Details</span>
                         </a>
@@ -1548,7 +1615,7 @@
     
 </div>
 
-<!-- Notification Toast pour missions complétées -->
+<!-- Notification Toast -->
 <aside class="notification-toast" id="completion-notification" role="alert" aria-live="polite">
     <div class="notification-header">
         <div class="notification-icon">
@@ -1566,7 +1633,7 @@
 (function() {
     'use strict';
     
-    // Performance: Debounce function
+    // Debounce function
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -1579,7 +1646,7 @@
         };
     }
     
-    // Tabs Navigation with ARIA
+    // Tabs Navigation
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
     
@@ -1587,7 +1654,6 @@
         button.addEventListener('click', () => {
             const targetTab = button.dataset.tab;
             
-            // Update ARIA attributes
             tabButtons.forEach(btn => {
                 btn.classList.remove('active');
                 btn.setAttribute('aria-selected', 'false');
@@ -1596,17 +1662,11 @@
                 content.classList.remove('active');
             });
             
-            // Activate current tab
             button.classList.add('active');
             button.setAttribute('aria-selected', 'true');
             const targetContent = document.getElementById(`tab-${targetTab}`);
             targetContent.classList.add('active');
             
-            // Announce to screen readers
-            const announcement = `${button.textContent.trim()} tab selected`;
-            announceToScreenReader(announcement);
-            
-            // Reset filters
             applyFilters();
         });
     });
@@ -1625,19 +1685,11 @@
                 newIndex = (index - 1 + tabButtons.length) % tabButtons.length;
                 tabButtons[newIndex].focus();
                 tabButtons[newIndex].click();
-            } else if (e.key === 'Home') {
-                e.preventDefault();
-                tabButtons[0].focus();
-                tabButtons[0].click();
-            } else if (e.key === 'End') {
-                e.preventDefault();
-                tabButtons[tabButtons.length - 1].focus();
-                tabButtons[tabButtons.length - 1].click();
             }
         });
     });
     
-    // Search & Filters with debounce for performance
+    // Search & Filters
     const searchInput = document.getElementById('search-input');
     const filterUrgency = document.getElementById('filter-urgency');
     const filterCountry = document.getElementById('filter-country');
@@ -1681,9 +1733,8 @@
                 dynamicEmpty.className = 'empty-state-2025';
                 dynamicEmpty.setAttribute('data-dynamic', 'true');
                 dynamicEmpty.style.gridColumn = '1 / -1';
-                dynamicEmpty.setAttribute('role', 'status');
                 dynamicEmpty.innerHTML = `
-                    <div class="empty-icon" aria-hidden="true"><i class="fas fa-search"></i></div>
+                    <div class="empty-icon"><i class="fas fa-search"></i></div>
                     <div class="empty-title">No Results Found</div>
                     <p class="empty-text">Try adjusting your filters or search term.</p>
                 `;
@@ -1692,9 +1743,6 @@
         } else if (dynamicEmpty && visibleCount > 0) {
             dynamicEmpty.remove();
         }
-        
-        // Announce results to screen readers
-        announceToScreenReader(`Showing ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`);
     }
     
     const debouncedFilter = debounce(applyFilters, 300);
@@ -1703,18 +1751,55 @@
     filterUrgency.addEventListener('change', applyFilters);
     filterCountry.addEventListener('change', applyFilters);
     
-    // Screen reader announcements
-    function announceToScreenReader(message) {
-        const announcement = document.createElement('div');
-        announcement.setAttribute('role', 'status');
-        announcement.setAttribute('aria-live', 'polite');
-        announcement.className = 'sr-only';
-        announcement.textContent = message;
-        document.body.appendChild(announcement);
-        setTimeout(() => announcement.remove(), 1000);
+    // ✅ NOUVEAU - Laravel Echo pour mises à jour temps réel
+    if (window.Echo) {
+        window.Echo.channel('notify-user-{{ auth()->id() }}')
+            .listen('.MissionMessageReceived', (data) => {
+                console.log('New public message received:', data);
+                
+                // Trouver la carte de cette mission
+                const missionCard = document.querySelector(`[data-mission-id="${data.mission_id}"]`);
+                if (missionCard) {
+                    const messageBadge = missionCard.querySelector('.badge-messages-count');
+                    if (messageBadge) {
+                        const currentCount = parseInt(messageBadge.textContent || 0);
+                        messageBadge.textContent = currentCount + 1;
+                        
+                        // Ajouter/mettre à jour indicateur NEW
+                        const messagesContainer = messageBadge.closest('.notif-badge');
+                        let newIndicator = messagesContainer.querySelector('.new-indicator');
+                        if (!newIndicator) {
+                            newIndicator = document.createElement('span');
+                            newIndicator.className = 'new-indicator';
+                            messagesContainer.appendChild(newIndicator);
+                        }
+                        const newCount = parseInt(newIndicator.textContent.split(' ')[0] || 0);
+                        newIndicator.textContent = `${newCount + 1} NEW`;
+                    }
+                }
+                
+                // Mettre à jour badge du tab
+                updateTabBadge(1);
+            });
     }
     
-    // Keyboard shortcut: Ctrl/Cmd + K for search
+    // Fonction pour mettre à jour les badges des tabs
+    function updateTabBadge(increment) {
+        const publishedTabButton = document.querySelector('[data-tab="published"]');
+        const badge = publishedTabButton.querySelector('.tab-badge');
+        
+        if (badge) {
+            const currentCount = parseInt(badge.textContent || 0);
+            badge.textContent = currentCount + increment;
+        } else {
+            const newBadge = document.createElement('span');
+            newBadge.className = 'tab-badge';
+            newBadge.textContent = increment;
+            publishedTabButton.appendChild(newBadge);
+        }
+    }
+    
+    // Keyboard shortcut
     document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
@@ -1722,7 +1807,7 @@
         }
     });
     
-    // Notification system for completed missions
+    // Notification system
     let completedMissionId = null;
     
     function showCompletionNotification(missionTitle, missionId) {
@@ -1732,7 +1817,6 @@
         message.textContent = `Your mission "${missionTitle}" has been completed successfully!`;
         notification.classList.add('show');
         
-        // Auto-hide after 10 seconds
         setTimeout(() => {
             notification.classList.remove('show');
         }, 10000);
@@ -1743,48 +1827,6 @@
             window.location.href = `/dashboard/request/${completedMissionId}`;
         }
     };
-    
-    // Check for newly completed missions (via localStorage or API)
-    function checkCompletedMissions() {
-        const lastCheck = localStorage.getItem('last_completion_check');
-        const now = Date.now();
-        
-        // Check every 5 minutes
-        if (!lastCheck || now - lastCheck > 300000) {
-            localStorage.setItem('last_completion_check', now);
-        }
-    }
-    
-    // Run on page load
-    checkCompletedMissions();
-    
-    // Performance: Lazy load images if any
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
-        
-        document.querySelectorAll('img[data-src]').forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-    
-    // Prefetch on hover for better perceived performance
-    document.querySelectorAll('a[href^="/"]').forEach(link => {
-        link.addEventListener('mouseenter', () => {
-            const linkUrl = link.getAttribute('href');
-            const prefetchLink = document.createElement('link');
-            prefetchLink.rel = 'prefetch';
-            prefetchLink.href = linkUrl;
-            document.head.appendChild(prefetchLink);
-        }, { once: true });
-    });
     
 })();
 </script>

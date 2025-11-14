@@ -1,5 +1,5 @@
 {{-- ═══════════════════════════════════════════════════════════
-     🎯 SIDEBAR DASHBOARD COMPLET - AVEC HEADER MOBILE
+     🎯 SIDEBAR DASHBOARD COMPLET - AVEC BADGES TOTAUX
      ═══════════════════════════════════════════════════════════ --}}
 
 <style>
@@ -256,15 +256,15 @@
 
 /* Position sidebar */
 #sidebar {
-    top: 0; /* Pas de header mobile */
+    top: 0;
     height: 100vh;
 }
 
 @media (min-width: 1024px) {
     #sidebar {
-        top: 4rem; /* Desktop : sous header desktop */
+        top: 4rem;
         height: calc(100vh - 4rem);
-        transform: translateX(0) !important; /* Force visible en desktop */
+        transform: translateX(0) !important;
     }
 }
 </style>
@@ -272,7 +272,7 @@
 <!-- Mobile Overlay -->
 <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
 
-<!-- Sidebar SOUS LE HEADER - CACHÉE PAR DÉFAUT EN MOBILE -->
+<!-- Sidebar SOUS LE HEADER -->
 <div id="sidebar" class="fixed left-0 w-72 shadow-2xl sidebar-transition -translate-x-full lg:translate-x-0 z-40 overflow-y-auto hidden lg:block">
     <div class="p-4 h-full flex flex-col min-h-0">
         <!-- Mobile Close Button -->
@@ -304,9 +304,11 @@
         @php 
             $user = Auth::user();
             $unreadMessagesCount = $user->unreadMessagesCount() ?? 0;
+            // ✅ NOUVEAU - Badge total pour My services request
+            $totalServiceNotifications = $user->totalUnreadServiceNotifications() ?? 0;
         @endphp
 
-        <!-- Navigation Menu - AVEC BLOC AFFILIATION INTÉGRÉ -->
+        <!-- Navigation Menu -->
         <nav class="space-y-2 flex-1 overflow-y-auto min-h-0">
             {{-- Dashboard --}}
             <a href="{{ route('dashboard')}}"
@@ -315,11 +317,19 @@
                 <span class="font-medium">Dashboard</span>
             </a>
 
-            {{-- My services request --}}
+            {{-- ✅ My services request AVEC BADGE TOTAL --}}
             <a href="{{ route('user.service.requests') }}"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg nav-link {{ request()->is('service-request') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-list-check w-5 h-5 flex-shrink-0"></i>
-                <span>My services request</span>
+               class="flex items-center justify-between px-4 py-3 rounded-lg nav-link {{ request()->is('service-request') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                <div class="flex items-center space-x-3">
+                    <div class="relative flex-shrink-0">
+                        <i class="fa-solid fa-list-check w-5 h-5"></i>
+                        {{-- ✅ Badge TOTAL (propositions + messages publics) --}}
+                        <span class="notification-badge-sidebar" 
+                              data-value="{{ $totalServiceNotifications }}" 
+                              id="services_notification">{{ $totalServiceNotifications > 99 ? '99+' : $totalServiceNotifications }}</span>
+                    </div>
+                    <span>My services request</span>
+                </div>
             </a>
 
             @if($user->user_role == 'service_provider')
@@ -338,13 +348,13 @@
                 <span>My earnings</span>
             </a>
             
-            {{-- Private messaging avec badge TOUJOURS PRÉSENT --}}
+            {{-- Private messaging avec badge --}}
             <a href="{{ route('user.conversation') }}"
                class="flex items-center justify-between px-4 py-3 rounded-lg nav-link {{ request()->is('conversations') ? 'active text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50' }}">
                 <div class="flex items-center space-x-3">
                     <div class="relative flex-shrink-0">
                         <i class="fa-solid fa-envelope w-5 h-5"></i>
-                        {{-- ✅ Badge TOUJOURS présent, caché si count=0 avec CSS --}}
+                        {{-- Badge messages privés --}}
                         <span class="notification-badge-sidebar" 
                               data-value="{{ $unreadMessagesCount }}" 
                               id="private_messages_notification">{{ $unreadMessagesCount > 99 ? '99+' : $unreadMessagesCount }}</span>
@@ -367,7 +377,7 @@
                 <span>Payments to be validated</span>
             </a>
 
-            {{-- BLOC AFFILIATION INTÉGRÉ DANS LE NAV --}}
+            {{-- BLOC AFFILIATION INTÉGRÉ --}}
             <div class="pt-2">
                 <a href="{{ route('user.affiliate.account') }}" 
                    class="block promo-card-modern p-4 rounded-xl text-white shadow-lg">
@@ -403,7 +413,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeSidebar = document.getElementById('close-sidebar');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    // Toggle sidebar - plus de hamburger, donc on garde juste la fonction pour usage interne
     function toggleSidebar() {
         const isOpen = !sidebar.classList.contains('-translate-x-full');
         if (isOpen) {
@@ -413,11 +422,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Open sidebar
     function openSidebarFunc() {
         if (!sidebar || !overlay) return;
         
-        // En mobile, afficher le sidebar
         if (window.innerWidth < 1024) {
             sidebar.classList.remove('hidden');
         }
@@ -427,22 +434,19 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden';
     }
 
-    // Close sidebar
     function closeSidebarFunc() {
         if (!sidebar || !overlay) return;
         sidebar.classList.add('-translate-x-full');
         overlay.classList.add('hidden');
         document.body.style.overflow = '';
         
-        // En mobile, cacher complètement le sidebar après l'animation
         if (window.innerWidth < 1024) {
             setTimeout(() => {
                 sidebar.classList.add('hidden');
-            }, 400); // Durée de l'animation
+            }, 400);
         }
     }
 
-    // Event listeners
     if (closeSidebar) {
         closeSidebar.addEventListener('click', closeSidebarFunc);
     }
@@ -451,7 +455,6 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.addEventListener('click', closeSidebarFunc);
     }
 
-    // Close sidebar when clicking nav links on MOBILE ONLY
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             if (window.innerWidth < 1024) {
@@ -460,7 +463,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle escape key (mobile only)
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && window.innerWidth < 1024) {
             const isOpen = sidebar && !sidebar.classList.contains('-translate-x-full');
@@ -470,13 +472,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle window resize
     let resizeTimer;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             if (window.innerWidth >= 1024) {
-                // En desktop, assurer que la sidebar est visible
                 if (sidebar) {
                     sidebar.classList.remove('-translate-x-full');
                     sidebar.classList.remove('hidden');
@@ -486,20 +486,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 document.body.style.overflow = '';
             } else {
-                // En mobile, fermer la sidebar
                 closeSidebarFunc();
             }
         }, 250);
     });
 
-    // Extract first name for display
     function extractFirstName(fullNameWithGreeting) {
         const cleanName = fullNameWithGreeting.replace(/[^\w\s]/g, '').trim();
         const nameParts = cleanName.split(/\s+/);
         return nameParts[0] || cleanName;
     }
 
-    // Update sidebar greeting to show first name only
     const userGreeting = document.getElementById('user-greeting');
     if (userGreeting) {
         const fullGreeting = userGreeting.textContent.trim();
@@ -507,7 +504,6 @@ document.addEventListener('DOMContentLoaded', function() {
         userGreeting.textContent = firstName + '!';
     }
 
-    // Haptic feedback
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             if ('vibrate' in navigator) {
@@ -516,6 +512,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    console.log('✅ Sidebar complète initialisée');
+    // ✅ NOUVEAU - Mise à jour temps réel des badges
+    @if(auth()->check())
+    if (window.Echo) {
+        // Badge messages privés
+        window.Echo.channel('notify-user-{{ auth()->id() }}')
+            .listen('NotifyUser', (data) => {
+                if (data.type === 'message') {
+                    const badge = document.getElementById('private_messages_notification');
+                    if (badge) {
+                        const current = parseInt(badge.dataset.value || 0);
+                        const newCount = current + 1;
+                        badge.dataset.value = newCount;
+                        badge.textContent = newCount > 99 ? '99+' : newCount;
+                    }
+                }
+            });
+
+        // Badge services (propositions + messages publics)
+        window.Echo.channel('notify-user-{{ auth()->id() }}')
+            .listen('.MissionMessageReceived', (data) => {
+                const badge = document.getElementById('services_notification');
+                if (badge) {
+                    const current = parseInt(badge.dataset.value || 0);
+                    const newCount = current + 1;
+                    badge.dataset.value = newCount;
+                    badge.textContent = newCount > 99 ? '99+' : newCount;
+                }
+            });
+    }
+    @endif
+
+    console.log('✅ Sidebar avec badges totaux initialisée');
 });
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\MissionMessage;
 use App\Models\Mission;
+use App\Events\MissionMessageSent;  // ✅ AJOUTÉ
 
 class MissionMessageController extends Controller
 {
@@ -64,38 +65,26 @@ class MissionMessageController extends Controller
         if ($contactDetected) {
             // Replace detected contact info with dots/stars
             $filteredMessage = $this->filterContactInfo($originalMessage);
-
-            // Create message with filtered content
-            $msg = MissionMessage::with('user.serviceProvider')->find(
-                MissionMessage::create([
-                    'mission_id' => $mission->id,
-                    'user_id' => $userId,
-                    'message' => $filteredMessage
-                ])->id
-            );
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Message posted.',
-                'data' => [
-                    'user' => [
-                        'name' => $msg->user->name,
-                        'profile_photo' => $msg->user->serviceProvider->profile_photo ?? null,
-                    ],
-                    'message' => $msg->message,
-                    'created_at' => $msg->created_at->diffForHumans()
-                ]
-            ]);
         }
-        
-        // Create normal message if no contact info detected
+
+        // ✅ MODIFIÉ : Ajouter is_read: false
         $msg = MissionMessage::with('user.serviceProvider')->find(
             MissionMessage::create([
                 'mission_id' => $mission->id,
                 'user_id' => $userId,
-                'message' => $filteredMessage
+                'message' => $filteredMessage,
+                'is_read' => false  // ✅ AJOUTÉ
             ])->id
         );
+
+        // ✅ AJOUTÉ : Déclencher événement si ce n'est pas le requester
+        if ($userId !== $mission->requester_id) {
+            event(new MissionMessageSent(
+                $mission->id,
+                $mission->requester_id,
+                $msg->id
+            ));
+        }
 
         return response()->json([
             'status' => 'success',
@@ -113,10 +102,20 @@ class MissionMessageController extends Controller
 
     public function list($id)
     {
+        $mission = Mission::findOrFail($id);
+        
         $messages = MissionMessage::where('mission_id', $id)
             ->with('user.serviceProvider')
             ->orderBy('created_at', 'asc')
             ->get();
+
+        // ✅ AJOUTÉ : Marquer comme lu si c'est le requester qui consulte
+        if (auth()->id() === $mission->requester_id) {
+            MissionMessage::where('mission_id', $id)
+                ->where('is_read', false)
+                ->where('user_id', '!=', auth()->id())
+                ->update(['is_read' => true]);
+        }
 
         $data = $messages->map(function($msg) {
             return [

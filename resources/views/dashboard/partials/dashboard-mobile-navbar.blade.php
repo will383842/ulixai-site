@@ -4,6 +4,11 @@
       ? (method_exists(auth()->user(), 'unreadMessagesCount') ? auth()->user()->unreadMessagesCount() : 0)
       : 0;
   
+  // ✅ NOUVEAU - Badge total pour Services
+  $totalServiceNotifications = auth()->check()
+      ? (method_exists(auth()->user(), 'totalUnreadServiceNotifications') ? auth()->user()->totalUnreadServiceNotifications() : 0)
+      : 0;
+  
   // Détection de la route active
   $currentRoute = Route::currentRouteName();
 @endphp
@@ -135,7 +140,7 @@
         z-index: 10;
     }
     
-    /* ✅ Cache le badge quand count = 0 - AJOUTÉ */
+    /* Cache le badge quand count = 0 */
     .badge-2025[data-count="0"] {
         display: none !important;
     }
@@ -199,7 +204,7 @@
         }
     }
     
-    /* Hover sur desktop (si visible) */
+    /* Hover sur desktop */
     @media (hover: hover) and (min-width: 1024px) {
         .nav-item-2025:hover {
             background: rgba(14, 165, 233, 0.08);
@@ -229,7 +234,7 @@
 <nav class="mobile-nav-2025" id="mobileNav2025" aria-label="Navigation mobile principale">
     <div class="mobile-nav-island" role="navigation">
         
-        <!-- Mon compte (tout à gauche, pour TOUS) -->
+        <!-- Mon compte -->
         <a href="{{ route('user.account') }}" 
            class="nav-item-2025 {{ $currentRoute === 'user.account' ? 'active' : '' }}"
            aria-label="Mon compte"
@@ -240,7 +245,7 @@
             <span class="nav-label-2025">Account</span>
         </a>
 
-        <!-- Services (milieu) -->
+        <!-- ✅ Services AVEC BADGE TOTAL -->
         <a href="{{ route('user.service.requests') }}" 
            class="nav-item-2025 {{ in_array($currentRoute, ['user.service.requests', 'user.service.show']) ? 'active' : '' }}"
            aria-label="Services"
@@ -249,9 +254,17 @@
                 <i class="fas fa-briefcase"></i>
             </div>
             <span class="nav-label-2025">Services</span>
+            {{-- ✅ Badge TOTAL (propositions + messages publics) --}}
+            <span class="badge-2025" 
+                  id="servicesBadge2025" 
+                  data-count="{{ $totalServiceNotifications }}"
+                  role="status" 
+                  aria-live="polite">
+                {{ $totalServiceNotifications > 99 ? '99+' : $totalServiceNotifications }}
+            </span>
         </a>
 
-        <!-- Job (milieu, seulement pour providers) -->
+        <!-- Job (seulement pour providers) -->
         @if(auth()->user()->user_role == 'service_provider')
             <a href="{{ route('user.joblist') }}" 
                class="nav-item-2025 {{ in_array($currentRoute, ['user.joblist', 'user.job.show']) ? 'active' : '' }}"
@@ -264,7 +277,7 @@
             </a>
         @endif
 
-        <!-- Payments (milieu) -->
+        <!-- Payments -->
         <a href="{{ route('user.payments.validate') }}" 
            class="nav-item-2025 {{ $currentRoute === 'user.payments.validate' ? 'active' : '' }}"
            aria-label="Paiements"
@@ -275,7 +288,7 @@
             <span class="nav-label-2025">Payments</span>
         </a>
 
-        <!-- Messages with badge TOUJOURS PRÉSENT -->
+        <!-- Messages privés -->
         <a href="{{ route('user.conversation') }}" 
            class="nav-item-2025 {{ in_array($currentRoute, ['user.conversation', 'user.conversation.show']) ? 'active' : '' }}"
            aria-label="Messages"
@@ -284,7 +297,7 @@
                 <i class="fas fa-comment-dots"></i>
             </div>
             <span class="nav-label-2025">Messages</span>
-            {{-- ✅ Badge TOUJOURS présent, caché si count=0 avec CSS --}}
+            {{-- Badge messages privés --}}
             <span class="badge-2025" 
                   id="mobileBadge2025" 
                   data-count="{{ $unreadMessagesCount }}"
@@ -304,9 +317,7 @@
     const nav = document.getElementById('mobileNav2025');
     if (!nav) return;
     
-    // ========================================
     // Haptic basique
-    // ========================================
     const haptic = {
         trigger(duration = 10) {
             if ('vibrate' in navigator) {
@@ -315,9 +326,7 @@
         }
     };
     
-    // ========================================
     // Feedback sur tap
-    // ========================================
     const navItems = document.querySelectorAll('.nav-item-2025');
     navItems.forEach(item => {
         item.addEventListener('click', function() {
@@ -325,16 +334,29 @@
         });
     });
     
-    // ========================================
-    // Update badge en temps réel
-    // ========================================
+    // ✅ Update badges en temps réel
     @if(auth()->check())
     if (typeof window.Echo !== 'undefined') {
+        // Badge messages privés
         window.Echo.channel('notify-user-{{ auth()->id() }}')
             .listen('NotifyUser', function(data) {
-                const badge = document.getElementById('mobileBadge2025');
-                
-                if (badge && data.type === 'message') {
+                if (data.type === 'message') {
+                    const badge = document.getElementById('mobileBadge2025');
+                    if (badge) {
+                        const currentCount = parseInt(badge.dataset.count || "0", 10);
+                        const newCount = currentCount + 1;
+                        badge.dataset.count = newCount;
+                        badge.textContent = newCount > 99 ? '99+' : newCount;
+                        haptic.trigger(15);
+                    }
+                }
+            });
+
+        // ✅ NOUVEAU - Badge services (propositions + messages publics)
+        window.Echo.channel('notify-user-{{ auth()->id() }}')
+            .listen('.MissionMessageReceived', function(data) {
+                const badge = document.getElementById('servicesBadge2025');
+                if (badge) {
                     const currentCount = parseInt(badge.dataset.count || "0", 10);
                     const newCount = currentCount + 1;
                     badge.dataset.count = newCount;
@@ -345,5 +367,6 @@
     }
     @endif
     
+    console.log('✅ Mobile nav avec badges totaux initialisée');
 })();
 </script>
