@@ -1,6 +1,9 @@
 {{-- Cancel Service Request Modal Component - Modern 2025/2026 Design --}}
 
 <style>
+    <script>
+console.log('🟦 POPUP SCRIPT LOADED - VERSION 2');
+</script>
     /* ===================================
        VARIABLES GLOBALES - COHÉRENTES AVEC LE DASHBOARD
        =================================== */
@@ -936,13 +939,13 @@
                 <span>Keep My Ad Online</span>
             </button>
             
-            <button type="submit" 
-                    form="cancelRequestForm"
-                    class="cancel-btn cancel-btn-primary"
-                    aria-label="Confirm cancellation">
-                <i class="fas fa-times-circle" aria-hidden="true"></i>
-                <span>CANCEL MY AD</span>
-            </button>
+ <button type="button" 
+        onclick="submitCancelForm()"
+        class="cancel-btn cancel-btn-primary"
+        aria-label="Confirm cancellation">
+    <i class="fas fa-times-circle" aria-hidden="true"></i>
+    <span>CANCEL MY AD</span>
+</button>
         </div>
         
     </div>
@@ -1007,10 +1010,11 @@
 </aside>
 
 <script>
-(function() {
+// ✅ DÉCLARATION GLOBALE (HORS DOMContentLoaded)
+let currentMissionId = null;
+
+document.addEventListener('DOMContentLoaded', function() {
     'use strict';
-    
-    let currentMissionId = null;
     
     /**
      * Show error message with animation
@@ -1023,13 +1027,11 @@
             errorText.textContent = message;
             errorDiv.classList.add('visible');
             
-            // Auto-hide after 5 seconds
             setTimeout(() => {
                 errorDiv.classList.remove('visible');
             }, 5000);
         }
         
-        // Also use toastr if available
         if (typeof toastr !== 'undefined') {
             toastr.error(message);
         }
@@ -1048,31 +1050,34 @@
     /**
      * Open cancel request popup
      */
-    function openCancelRequestPopup(missionId) {
+    window.openCancelRequestPopup = function(missionId) {
+        console.log('🟦 OPENING POPUP WITH MISSION ID:', missionId);
         currentMissionId = missionId;
+        
         const popup = document.getElementById('cancelRequestPopup');
         
-        if (!popup) return;
+        if (!popup) {
+            console.error('❌ Popup element not found');
+            return;
+        }
         
         popup.classList.add('show');
         document.body.style.overflow = 'hidden';
         
-        // Hide any existing error
         hideErrorMessage();
         
-        // Focus first form element for accessibility
         setTimeout(() => {
             const firstInput = document.getElementById('cancelReasonSelect');
             if (firstInput) {
                 firstInput.focus();
             }
         }, 150);
-    }
+    };
     
     /**
      * Close cancel request popup
      */
-    function closeCancelRequestPopup() {
+    window.closeCancelRequestPopup = function() {
         const popup = document.getElementById('cancelRequestPopup');
         
         if (!popup) return;
@@ -1081,18 +1086,17 @@
         document.body.style.overflow = '';
         currentMissionId = null;
         
-        // Reset form
         const form = document.getElementById('cancelRequestForm');
         if (form) {
             form.reset();
         }
         hideErrorMessage();
-    }
+    };
     
     /**
      * Open success popup
      */
-    function openCancelSuccessPopup() {
+    window.openCancelSuccessPopup = function() {
         const popup = document.getElementById('cancelSuccessPopup');
         
         if (!popup) return;
@@ -1100,56 +1104,94 @@
         popup.classList.add('show');
         document.body.style.overflow = 'hidden';
         
-        // Auto-close after 3 seconds and reload
         setTimeout(function() {
-            closeCancelSuccessPopup();
+            window.closeCancelSuccessPopup();
             window.location.reload();
         }, 3000);
-    }
+    };
     
     /**
      * Close success popup
      */
-    function closeCancelSuccessPopup() {
+    window.closeCancelSuccessPopup = function() {
         const popup = document.getElementById('cancelSuccessPopup');
         
         if (!popup) return;
         
         popup.classList.remove('show');
         document.body.style.overflow = '';
-    }
+    };
     
     /**
      * Open loading popup
      */
-    function openLoadingPopup() {
+    window.openLoadingPopup = function() {
         const popup = document.getElementById('loadingPopup');
         
         if (!popup) return;
         
         popup.classList.add('show');
         document.body.style.overflow = 'hidden';
-    }
+    };
     
     /**
      * Close loading popup
      */
-    function closeLoadingPopup() {
+    window.closeLoadingPopup = function() {
         const popup = document.getElementById('loadingPopup');
         
         if (!popup) return;
         
         popup.classList.remove('show');
         document.body.style.overflow = '';
-    }
+    };
     
-    // Make functions globally accessible
-    window.openCancelRequestPopup = openCancelRequestPopup;
-    window.closeCancelRequestPopup = closeCancelRequestPopup;
-    window.openCancelSuccessPopup = openCancelSuccessPopup;
-    window.closeCancelSuccessPopup = closeCancelSuccessPopup;
-    window.openLoadingPopup = openLoadingPopup;
-    window.closeLoadingPopup = closeLoadingPopup;
+    /**
+     * Submit cancel form manually
+     */
+window.submitCancelForm = function() {
+        console.log('🔴 SUBMITTING FORM - MISSION ID:', currentMissionId);
+        
+        const reasonSelect = document.getElementById('cancelReasonSelect');
+        const otherReasonTextarea = document.getElementById('cancelOtherReason');
+        
+        if (!reasonSelect || !otherReasonTextarea) {
+            console.error('❌ Form elements not found');
+            return;
+        }
+        
+        const reason = reasonSelect.value;
+        const otherReason = otherReasonTextarea.value;
+        
+        // Validation
+        if (!reason) {
+            showErrorMessage('Please select a reason for canceling.');
+            reasonSelect.focus();
+            return;
+        }
+        
+        if (reason === 'other' && !otherReason.trim()) {
+            showErrorMessage('Please specify the other reason in the text field.');
+            otherReasonTextarea.focus();
+            return;
+        }
+        
+        if (!currentMissionId) {
+            console.error('❌ NO MISSION ID!');
+            showErrorMessage('Error: Mission ID not found. Please try again.');
+            return;
+        }
+        
+        // ✅ SAUVEGARDER L'ID AVANT DE FERMER LE POPUP
+        const missionIdToCancel = currentMissionId;
+        
+        // Close cancel popup and show loading
+        window.closeCancelRequestPopup();
+        window.openLoadingPopup();
+        
+        // Call API avec l'ID sauvegardé
+        deleteMission(missionIdToCancel, reason, otherReason);
+    };
     
     /**
      * Close modal when clicking on overlay
@@ -1160,7 +1202,7 @@
     if (cancelRequestPopup) {
         cancelRequestPopup.addEventListener('click', function(e) {
             if (e.target === this) {
-                closeCancelRequestPopup();
+                window.closeCancelRequestPopup();
             }
         });
     }
@@ -1168,7 +1210,7 @@
     if (cancelSuccessPopup) {
         cancelSuccessPopup.addEventListener('click', function(e) {
             if (e.target === this) {
-                closeCancelSuccessPopup();
+                window.closeCancelSuccessPopup();
             }
         });
     }
@@ -1179,99 +1221,68 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             if (cancelRequestPopup && cancelRequestPopup.classList.contains('show')) {
-                closeCancelRequestPopup();
+                window.closeCancelRequestPopup();
             } else if (cancelSuccessPopup && cancelSuccessPopup.classList.contains('show')) {
-                closeCancelSuccessPopup();
+                window.closeCancelSuccessPopup();
             }
         }
     });
     
     /**
-     * Form submission handler
-     */
-    const cancelForm = document.getElementById('cancelRequestForm');
-    
-    if (cancelForm) {
-        cancelForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const reasonSelect = document.getElementById('cancelReasonSelect');
-            const otherReasonTextarea = document.getElementById('cancelOtherReason');
-            
-            if (!reasonSelect || !otherReasonTextarea) return;
-            
-            const reason = reasonSelect.value;
-            const otherReason = otherReasonTextarea.value;
-            
-            // Validation
-            if (!reason) {
-                showErrorMessage('Please select a reason for canceling.');
-                reasonSelect.focus();
-                return;
-            }
-            
-            if (reason === 'other' && !otherReason.trim()) {
-                showErrorMessage('Please specify the other reason in the text field.');
-                otherReasonTextarea.focus();
-                return;
-            }
-            
-            // Close cancel popup and show loading
-            closeCancelRequestPopup();
-            openLoadingPopup();
-            
-            // Call API
-            deleteMission(currentMissionId, reason, otherReason);
-        });
-    }
-    
-    /**
      * API call to delete mission
      */
     async function deleteMission(missionId, reason, otherReason) {
+        console.log('🚀 CALLING API WITH:', { missionId, reason, otherReason });
+        
         try {
             const csrfMeta = document.querySelector('meta[name="csrf-token"]');
             const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
             
-            const response = await fetch('/api/mission/cancel', {
+            const payload = {
+                mission_id: missionId,
+                reason: reason,
+                description: reason === 'other' ? otherReason : null,
+                cancelled_by: 'requester',
+                cancelled_on: new Date().toISOString()
+            };
+            
+            console.log('📦 PAYLOAD:', payload);
+            
+            const response = await fetch('{{ route("api.cancel.mission.request") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': csrfToken
                 },
-                body: JSON.stringify({
-                    mission_id: missionId,
-                    reason: reason,
-                    description: reason === 'other' ? otherReason : null,
-                    cancelled_by: 'requester',
-                    cancelled_on: new Date().toISOString()
-                })
+                body: JSON.stringify(payload)
             });
+            
+            console.log('📨 RESPONSE STATUS:', response.status);
+            
+            const data = await response.json();
+            console.log('📨 RESPONSE DATA:', data);
             
             if (response.ok) {
                 currentMissionId = null;
-                closeLoadingPopup();
-                openCancelSuccessPopup();
+                window.closeLoadingPopup();
+                window.openCancelSuccessPopup();
             } else {
-                throw new Error('Failed to cancel mission');
+                throw new Error(data.error || 'Failed to cancel mission');
             }
             
         } catch (error) {
-            console.error('Error canceling mission:', error);
-            closeLoadingPopup();
+            console.error('💥 ERROR:', error);
+            window.closeLoadingPopup();
             
-            // Show error message
-            const errorMessage = 'An error occurred while canceling the mission. Please try again.';
+            const errorMessage = error.message || 'An error occurred while canceling the mission. Please try again.';
             
             if (typeof toastr !== 'undefined') {
                 toastr.error(errorMessage);
             }
             
-            // Reopen cancel modal with error
-            openCancelRequestPopup(missionId);
+            window.openCancelRequestPopup(missionId);
             showErrorMessage(errorMessage);
         }
     }
-    
-})();
+});
 </script>

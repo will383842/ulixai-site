@@ -33,13 +33,17 @@ class ServiceProviderController extends Controller
         // Catégories niveau 1
         $category = Category::where('level', 1)->with('subcategories')->get();
         
-        // 🔹 Pays pour le select (on utilise la colonne "country", pas "name")
-        $countries = Country::where('status', 1)
-            ->orderBy('country')
-            ->pluck('country', 'id');
-        
-        // 🔹 'countries' ajouté dans le compact
-        return view('pages.index', compact('providers', 'faqs', 'category', 'countries'));
+ // 🔹 Pays pour le select
+$countries = Country::where('status', 1)
+    ->orderBy('country')
+    ->pluck('country', 'id');
+
+// 🔹 Langues pour le select
+$languages = \App\Models\Language::where('status', 1)
+    ->orderBy('name')
+    ->get();
+
+return view('pages.index', compact('providers', 'faqs', 'category', 'countries', 'languages'));
     }
     
     public function serviceproviders(Request $request) {
@@ -295,23 +299,7 @@ class ServiceProviderController extends Controller
         $country = $request->input('country');
         $language = $request->input('language');
 
-        // Mapping EN → FR
-        $languageMapping = [
-            'English' => 'Anglais',
-            'French' => 'Français',
-            'Spanish' => 'Espagnol',
-            'Portuguese' => 'Portugais',
-            'German' => 'Allemand',
-            'Italian' => 'Italien',
-            'Arabic' => 'Arabe',
-            'Chinese' => 'Chinois',
-            'Japanese' => 'Japonais',
-            'Korean' => 'Coréen',
-            'Russian' => 'Russe',
-            'Hindi' => 'Hindi',
-            'Turkish' => 'Turc'
-        ];
-
+                
         // Convertir la langue si elle existe dans le mapping
         if (!empty($language) && isset($languageMapping[$language])) {
             $language = $languageMapping[$language];

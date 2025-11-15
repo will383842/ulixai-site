@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\MissionMessage;
 use App\Models\Mission;
-use App\Events\MissionMessageSent;  // ✅ AJOUTÉ
+use App\Events\MissionMessageSent;
 
 class MissionMessageController extends Controller
 {
@@ -55,6 +55,15 @@ class MissionMessageController extends Controller
         ]);
         
         $mission = Mission::findOrFail($id);
+        
+        // ✅ BLOQUER si prestataire déjà sélectionné
+        if ($mission->selected_provider_id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Public messaging is closed. This mission has a selected provider.'
+            ], 403);
+        }
+        
         $originalMessage = $request->message;
         $userId = auth()->id();
         
@@ -67,17 +76,17 @@ class MissionMessageController extends Controller
             $filteredMessage = $this->filterContactInfo($originalMessage);
         }
 
-        // ✅ MODIFIÉ : Ajouter is_read: false
+        // Create message with is_read: false
         $msg = MissionMessage::with('user.serviceProvider')->find(
             MissionMessage::create([
                 'mission_id' => $mission->id,
                 'user_id' => $userId,
                 'message' => $filteredMessage,
-                'is_read' => false  // ✅ AJOUTÉ
+                'is_read' => false
             ])->id
         );
 
-        // ✅ AJOUTÉ : Déclencher événement si ce n'est pas le requester
+        // Trigger event if not the requester
         if ($userId !== $mission->requester_id) {
             event(new MissionMessageSent(
                 $mission->id,
@@ -109,7 +118,7 @@ class MissionMessageController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
-        // ✅ AJOUTÉ : Marquer comme lu si c'est le requester qui consulte
+        // Mark as read if requester is viewing
         if (auth()->id() === $mission->requester_id) {
             MissionMessage::where('mission_id', $id)
                 ->where('is_read', false)

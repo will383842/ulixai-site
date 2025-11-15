@@ -67,7 +67,7 @@ class ServiceRequestController extends Controller
     }
 
     /**
-     * Liste des demandes de service en cours
+     * ✅ Liste des demandes de service en cours (CORRIGÉ)
      */
     public function ongoingServiceRequest(Request $request) 
     {
@@ -75,6 +75,7 @@ class ServiceRequestController extends Controller
             ->with('requester') 
             ->where('status', 'published')     
             ->where('payment_status', 'unpaid')
+            ->whereNull('selected_provider_id')  // ✅ CRITIQUE : Masquer si prestataire choisi
             ->get();  
 
         $category = Category::where('level', 1)->with('subcategories')->get();
@@ -569,7 +570,7 @@ class ServiceRequestController extends Controller
     }
 
     /**
-     * ✅ ANNULER UNE DEMANDE DE MISSION (PAR LE REQUESTER) - AVEC SOFT DELETE
+     * ✅ ANNULER UNE DEMANDE DE MISSION (PAR LE REQUESTER) - CORRIGÉ
      */
     public function cancelMissionRequest(Request $request) 
     {
@@ -581,7 +582,7 @@ class ServiceRequestController extends Controller
             'user_id' => auth()->id(),
             'reason' => $request->reason,
         ]);
-
+        
         // ═══════════════════════════════════════════════════════
         // 🛡️ VALIDATION DES DONNÉES
         // ═══════════════════════════════════════════════════════
@@ -638,8 +639,20 @@ class ServiceRequestController extends Controller
                 // Mettre à jour les infos d'annulation
                 $mission->cancelled_by = $request->cancelled_by;
                 $mission->cancelled_on = Carbon::parse($request->cancelled_on);
-                $mission->status = 'cancelled_by_requester';
+                $mission->status = 'cancelled';
                 $mission->save();
+
+                // ✅ Supprimer toutes les propositions
+                $offersCount = $mission->offers()->count();
+                
+                if ($offersCount > 0) {
+                    Log::info('🗑️ [CANCEL] Deleting offers', [
+                        'mission_id' => $mission->id,
+                        'offers_count' => $offersCount
+                    ]);
+                    
+                    $mission->offers()->delete(); // Soft delete
+                }
 
                 // ✅ SOFT DELETE : La mission disparaît de l'interface mais reste en BDD
                 $mission->delete();
@@ -664,6 +677,9 @@ class ServiceRequestController extends Controller
                 try {
                     // Rembourser
                     $this->refundMissionPayment($mission, $request);
+
+                    // ✅ Recharger et corriger le status
+                    $mission->refresh();
                     
                     // Enregistrer la raison
                     MissionCancellationReason::create([
@@ -674,10 +690,13 @@ class ServiceRequestController extends Controller
                         'custum_description' => $request->description ?? null,
                     ]);
 
+                    // ✅ Supprimer les offres
+                    $mission->offers()->delete();
+
                     // Mettre à jour avant suppression
                     $mission->cancelled_by = $request->cancelled_by;
                     $mission->cancelled_on = Carbon::parse($request->cancelled_on);
-                    $mission->status = 'cancelled_by_requester';
+                    $mission->status = 'cancelled';
                     $mission->save();
 
                     // ✅ SOFT DELETE
@@ -784,13 +803,14 @@ class ServiceRequestController extends Controller
     }
 
     /**
-     * Annuler une mission (par le provider)
+     * ✅ Annuler une mission (par le provider) - CORRIGÉ
      */
     public function providerCancelMisssion(Request $request) 
     {
         $request->validate([
             'mission_id' => 'required|exists:missions,id',
             'reason' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
             'cancelled_by' => 'required|in:requester,provider,admin',
             'cancelled_on' => 'required|date',
         ]);
@@ -798,9 +818,18 @@ class ServiceRequestController extends Controller
         $mission = Mission::findOrFail($request->mission_id);
         $provider = $mission->selectedProvider;
         
-        if ($mission) {
+        if (!$mission || !$provider) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Mission or provider not found'
+            ], 404);
+        }
+        
+        try {
+            // 1. Rembourser le demandeur
             $this->refundMissionPayment($mission, $request);
             
+            // 2. Enregistrer la raison
             MissionCancellationReason::create([
                 'mission_id' => $mission->id,
                 'cancelled_by' => $request->cancelled_by,
@@ -809,17 +838,45 @@ class ServiceRequestController extends Controller
                 'custum_description' => $request->description ?? null,
             ]);
             
+            // 3. Pénalité de réputation
             $this->ReputationPointService->updateReputationPointsBasedOnMissionCancellationByProvider($provider);
+            
+            // 4. ✅ SOFT DELETE (au lieu de republier)
+            $mission->refresh(); // Recharger après refund
+            $mission->status = 'cancelled';
+            $mission->cancelled_by = 'provider';
+            $mission->cancelled_on = Carbon::parse($request->cancelled_on);
+            $mission->save();
+            $mission->delete(); // Soft delete
+            
+            // 5. Supprimer toutes les offres
+            $mission->offers()->delete();
+            
+            Log::info('✅ [CANCEL] Provider cancelled and soft deleted', [
+                'mission_id' => $mission->id,
+                'provider_id' => $provider->id
+            ]);
+            
+            return response()->json([
+                'success' => true,  
+                'message' => 'Mission cancelled successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('💥 [CANCEL] Provider cancellation failed', [
+                'mission_id' => $mission->id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'error' => 'Cancellation failed: ' . $e->getMessage()
+            ], 500);
         }
-        
-        return response()->json([
-            'success' => true,  
-            'message' => 'Mission canceled successfully'
-        ]);
     }
 
     /**
-     * Rembourser le paiement d'une mission
+     * ✅ Rembourser le paiement d'une mission - CORRIGÉ
      */
     private function refundMissionPayment($mission, $request) 
     {
@@ -828,6 +885,10 @@ class ServiceRequestController extends Controller
         $transaction = $mission->transactions()
             ->where('status', 'paid')
             ->first();
+            
+        if (!$transaction) {
+            throw new \Exception('No paid transaction found');
+        }
             
         $paymentIntent = PaymentIntent::retrieve($transaction->stripe_payment_intent_id);
         
@@ -839,9 +900,7 @@ class ServiceRequestController extends Controller
         }
 
         if (!$refundAmountInCents) {
-            return response()->json([
-                'error' => 'Refund amount not found in metadata'
-            ], 400);
+            throw new \Exception('Refund amount not found in metadata');
         }
 
         $refund = Refund::create([
@@ -850,21 +909,27 @@ class ServiceRequestController extends Controller
         ]);
         
         if ($refund->status !== 'succeeded') {
-            return response()->json(['error' => 'Refund failed'], 500);
+            throw new \Exception('Refund failed');
         }
 
+        // ✅ Supprimer l'offre du prestataire sélectionné
         MissionOffer::where('provider_id', $mission->selected_provider_id)
             ->where('mission_id', $mission->id)
             ->first()
             ?->delete();
             
+        // ✅ CORRECTION : Réinitialiser SANS cancelled_by/cancelled_on
+        // (Ils seront ajoutés par la fonction appelante si nécessaire)
         $mission->status = 'published';
         $mission->payment_status = 'unpaid';
         $mission->selected_provider_id = null;
-        $mission->cancelled_by = $request->cancelled_by;
-        $mission->cancelled_on = Carbon::parse($request->cancelled_on);
         $mission->save();
         
         $transaction->update(['status' => 'refunded']); 
+        
+        Log::info('✅ [REFUND] Payment refunded', [
+            'mission_id' => $mission->id,
+            'amount' => $refundAmountInCents / 100
+        ]);
     }
 }

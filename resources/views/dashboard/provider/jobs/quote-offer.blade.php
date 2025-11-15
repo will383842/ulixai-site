@@ -1536,38 +1536,67 @@
             @endforelse
         </section>
         
-        <!-- PUBLIC MESSAGES -->
-        <section class="messages-section-2025" aria-labelledby="messages-heading">
-            <h2 class="section-header-2025" id="messages-heading">
-                <i class="fas fa-comments" aria-hidden="true"></i>
-                <span>Public Messages</span>
-            </h2>
-            
-            <div id="public-messages-list"
-                 class="messages-list"
-                 role="log"
-                 aria-live="polite"
-                 aria-label="Public conversation messages">
-                <!-- Messages will be loaded here -->
+<!-- PUBLIC MESSAGES -->
+@if(is_null($mission->selected_provider_id))
+    {{-- ✅ MESSAGERIE PUBLIQUE OUVERTE --}}
+    <section class="messages-section-2025" aria-labelledby="messages-heading">
+        <h2 class="section-header-2025" id="messages-heading">
+            <i class="fas fa-comments" aria-hidden="true"></i>
+            <span>Public Messages</span>
+        </h2>
+        
+        <div id="public-messages-list"
+             class="messages-list"
+             role="log"
+             aria-live="polite"
+             aria-label="Public conversation messages">
+            <!-- Messages will be loaded here -->
+        </div>
+        
+        <form id="publicMessageForm" class="message-form" aria-label="Send public message">
+            <input type="text"
+                   name="message"
+                   id="publicMessageInput"
+                   placeholder="Type your public message..."
+                   class="message-input"
+                   maxlength="500"
+                   aria-label="Message text"
+                   required />
+            <button type="submit"
+                    class="btn-send-message"
+                    aria-label="Send message">
+                Send
+            </button>
+        </form>
+        <div id="public-message-error" class="message-error" role="alert" aria-live="assertive"></div>
+    </section>
+@else
+    {{-- ❌ MESSAGERIE PUBLIQUE FERMÉE --}}
+    <section class="messages-section-2025" aria-labelledby="messages-heading">
+        <h2 class="section-header-2025" id="messages-heading">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            <span>Public Messages</span>
+        </h2>
+        
+        <div style="text-align: center; padding: 3rem 1.5rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #fbbf24; border-radius: 1rem;">
+            <div style="font-size: 3rem; color: #92400e; margin-bottom: 1rem; opacity: 0.6;">
+                <i class="fas fa-lock"></i>
             </div>
-            
-            <form id="publicMessageForm" class="message-form" aria-label="Send public message">
-                <input type="text"
-                       name="message"
-                       id="publicMessageInput"
-                       placeholder="Type your public message..."
-                       class="message-input"
-                       maxlength="500"
-                       aria-label="Message text"
-                       required />
-                <button type="submit"
-                        class="btn-send-message"
-                        aria-label="Send message">
-                    Send
-                </button>
-            </form>
-            <div id="public-message-error" class="message-error" role="alert" aria-live="assertive"></div>
-        </section>
+            <h3 style="font-size: 1.125rem; font-weight: 700; color: #78350f; margin-bottom: 0.75rem;">
+                Public Messaging Closed
+            </h3>
+            <p style="font-size: 0.875rem; color: #92400e; line-height: 1.6; margin-bottom: 1.25rem;">
+                This mission now has a selected provider.<br>
+                Public messaging is no longer available.
+            </p>
+            <a href="{{ route('user.conversation') }}" 
+               style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 999px; font-weight: 700; font-size: 0.875rem; text-decoration: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: all 0.2s;">
+                <i class="fas fa-comments"></i>
+                <span>Use Private Messaging</span>
+            </a>
+        </div>
+    </section>
+@endif
         
     </div>
     

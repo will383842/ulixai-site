@@ -253,7 +253,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ongoing-requests', [ServiceRequestController::class, 'ongoingServiceRequest'])->name('ongoing-requests');
     Route::get('/get-subcategories/{categoryId}', [ServiceRequestController::class, 'getSubcategories']);
     Route::get('/get-missions', [ServiceRequestController::class, 'getMissions']);
-
+    Route::post('/api/mission/cancel', [ServiceRequestController::class, 'cancelMissionRequest'])
+    ->name('api.cancel.mission.request');
     Route::get('/my-earnings', [EarningsController::class, 'index'])->name('user.earnings');
 
     // Conversations

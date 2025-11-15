@@ -88,6 +88,7 @@ class StripePaymentController extends Controller
         $request->validate([
             'payment_intent_id' => 'required|string',
         ]);
+        
         $commission = UlixCommission::first();
         Stripe::setApiKey(config('services.stripe.secret'));
         
@@ -102,15 +103,34 @@ class StripePaymentController extends Controller
                 $clientFee = $paymentIntent->metadata['client_fee'];
                 $remainingCredits = $paymentIntent->metadata['remaining_credits'];
                 $missionAmount = $paymentIntent->metadata['mission_amount'];
+                
                 // Mark mission as paid
                 $mission = Mission::find($missionId);
                 $mission->status = 'waiting_to_start';
                 $mission->payment_status = 'paid';
                 $mission->save();
 
+                // Mark accepted offer
                 $missionOffer = MissionOffer::find($offerId);
                 $missionOffer->status = 'accepted'; 
                 $missionOffer->save();
+
+                // ✅ AJOUT : Soft delete toutes les autres offres non sélectionnées
+                $otherOffers = MissionOffer::where('mission_id', $missionId)
+                    ->where('id', '!=', $offerId)
+                    ->get();
+
+                if ($otherOffers->count() > 0) {
+                    foreach ($otherOffers as $otherOffer) {
+                        $otherOffer->delete(); // Soft delete
+                    }
+                    
+                    \Log::info('✅ [PAYMENT] Other offers soft deleted', [
+                        'mission_id' => $missionId,
+                        'accepted_offer_id' => $offerId,
+                        'rejected_offers_count' => $otherOffers->count()
+                    ]);
+                }
 
                 // Log transaction
                 Transaction::create([
@@ -250,6 +270,4 @@ class StripePaymentController extends Controller
         return response()->json(['completed' => false, 'url' => $accountLink->url]);
     }
 
-
-  
 }
