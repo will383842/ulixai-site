@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Abroad Ease Guide - Support platform for expats | International multilingual services</title>
-  <meta name="description" content="Collaborative platform for expats around the world. Find local professionals and helping expats: visa, translation, housing, relocation.">
-  <meta name="keywords" content="expat help, expat services, helping expat, international local pro, travel assistance, international mutual aid, expat community, multilingual solutions">
+  <meta name="description" content="Collaborative platform for e...ls and helping expats: visa, translation, housing, relocation.">
+  <meta name="keywords" content="expat help, expat services, hel...ernational mutual aid, expat community, multilingual solutions">
   <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png" />
   
   <!-- Leaflet for Map -->
@@ -18,8 +18,8 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <!-- AOS Animation -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
   
@@ -59,20 +59,113 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      overflow-x: hidden;
-      background: #FFFFFF;
+      font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #0F172A;
+      color: #0F172A;
     }
 
-    html {
-      scroll-behavior: smooth;
+    /* Smooth Background Gradient */
+    .gradient-bg {
+      background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 60%),
+                  radial-gradient(circle at top right, rgba(139, 92, 246, 0.15), transparent 55%),
+                  radial-gradient(circle at bottom, rgba(16, 185, 129, 0.12), transparent 55%);
     }
 
-    .font-display {
-      font-family: 'Outfit', sans-serif;
+    /* Glass Morphism Card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.3);
     }
 
-    /* Custom Scrollbar */
+    /* Stat Card */
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      background: conic-gradient(from 220deg, rgba(59, 130, 246, 0.12), transparent 40%, rgba(16, 185, 129, 0.12));
+      top: -10%;
+      left: -10%;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.4s ease;
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-card:hover .stat-number {
+      transform: translateY(-2px);
+    }
+
+    .stat-number {
+      transition: transform 0.3s ease;
+    }
+
+    /* Badge Glow */
+    .badge-glow {
+      border-radius: 999px;
+      border: 1px solid rgba(96, 165, 250, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.5), 0 18px 45px rgba(15, 23, 42, 0.8);
+    }
+
+    .badge-light {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    /* Scrolling Testimonials */
+    .testimonial-track {
+      display: flex;
+      animation: auto-scroll 40s linear infinite;
+      width: max-content;
+    }
+
+    .testimonial-row {
+      display: flex;
+      gap: 24px;
+      padding-block: 8px;
+    }
+
+    .testimonial-card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+      padding: 20px;
+    }
+
+    .testimonial-card p {
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .testimonial-card p::before {
+      content: '“';
+      position: absolute;
+      left: 0;
+      top: -8px;
+      font-size: 32px;
+      color: rgba(59, 130, 246, 0.4);
+      line-height: 1;
+    }
+
+    @keyframes auto-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -153,143 +246,211 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: white;
-      font-weight: 700;
-      font-size: 11px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      flex-shrink: 0;
-      padding: 12px;
-      line-height: 1.2;
+      background: white;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
     .category-bubble:hover {
-      transform: translateY(-10px) scale(1.1);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      transform: translateY(-4px);
+      border-color: rgba(59, 130, 246, 0.6);
+      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.18);
     }
 
-    .category-bubble span {
-      display: block;
+    .category-bubble-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+
+    /* Provider card */
+    .provider-card {
+      border-radius: 24px;
       overflow: hidden;
-      text-overflow: ellipsis;
-      word-wrap: break-word;
-      max-width: 100%;
+      border: 1px solid rgba(203, 213, 225, 0.7);
+      box-shadow: 0 16px 35px rgba(15, 23, 42, 0.12);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
-    /* Category Scroll */
-    .category-scroll {
-      scroll-behavior: smooth;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+    .provider-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 50px rgba(15, 23, 42, 0.24);
+      border-color: rgba(59, 130, 246, 0.7);
     }
 
-    .category-scroll::-webkit-scrollbar {
-      display: none;
+    .provider-image-wrapper {
+      position: relative;
+      padding-top: 60%;
+      overflow: hidden;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.15), rgba(15, 23, 42, 0.85));
     }
 
-    /* Provider Image Hover */
+    .provider-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.8), transparent 50%);
+      opacity: 0.8;
+    }
+
     .provider-image {
       transition: transform 0.4s ease;
     }
 
-    .card-modern:hover .provider-image {
-      transform: scale(1.05);
+    .provider-card:hover .provider-image {
+      transform: scale(1.04);
     }
 
-    /* Badge Styles */
-    .badge-verified {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    }
-
-    .badge-specialty {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    /* FAQ Accordion */
-    .faq-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .faq-content.active {
-      max-height: 500px;
-      transition: max-height 0.5s ease-in;
-    }
-
-    .faq-icon {
-      transition: transform 0.3s ease;
-    }
-
-    .faq-toggle.active .faq-icon {
-      transform: rotate(180deg);
-    }
-
-    /* Status Pulse */
-    @keyframes status-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .status-online {
-      animation: status-pulse 2s ease-in-out infinite;
-    }
-
-    /* Back to Top */
-    #backToTop {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 50%;
-      display: flex;
+    .provider-rating {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 9999;
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.88);
+      color: #FACC15;
+      font-weight: 600;
+      font-size: 0.8rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.5);
     }
 
-    #backToTop.show {
-      opacity: 1;
-      visibility: visible;
+    /* Tags */
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      font-weight: 500;
+      font-size: 0.8rem;
     }
 
-    #backToTop:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6);
+    .tag-chip.secondary {
+      background: #F5F3FF;
+      color: #6D28D9;
     }
 
-    /* Custom Select */
-    select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233B82F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.75rem center;
-      background-size: 1.25rem;
-      padding-right: 2.5rem;
+    .tag-chip.neutral {
+      background: #F1F5F9;
+      color: #0F172A;
     }
 
-    /* Testimonial Card */
-    .testimonial-card {
-      background: white;
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
+    /* Map container */
+    #map {
       height: 100%;
+      min-height: 280px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
     }
 
-    .testimonial-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
+    /* Pill Buttons */
+    .pill-button {
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 500;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .pill-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+    }
+
+    /* CTA Gradient */
+    .cta-gradient {
+      background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.4), transparent 55%),
+                  radial-gradient(circle at top right, rgba(139, 92, 246, 0.4), transparent 55%),
+                  linear-gradient(135deg, #1D4ED8, #4F46E5);
+    }
+
+    /* Divider line */
+    .soft-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.4), transparent);
+    }
+
+    /* AOS triggered elements */
+    [data-aos] {
+      will-change: transform, opacity;
+    }
+
+    /* Hero background blur for the right side card */
+    .hero-floating-card {
+      backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.88);
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.5);
+    }
+
+    /* Trust bar */
+    .trust-badge {
+      border-radius: 999px;
+      padding: 6px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Horizontal scroll container */
+    .scroll-container {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 4px;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.7);
+      border-radius: 999px;
+    }
+
+    /* Aspect Ratio Helper */
+    .aspect-ratio-box {
+      position: relative;
+      width: 100%;
+      padding-top: 60%;
+    }
+
+    .aspect-ratio-box > * {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      color: #16A34A;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22C55E;
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.35);
     }
 
     /* Number Badge */
@@ -304,109 +465,10 @@
       justify-content: center;
       font-weight: bold;
       font-size: 18px;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4)
     }
 
-    /* Gradient Text */
-    .gradient-text {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Horizontal Scroll for Mobile */
-    .horizontal-scroll-mobile {
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-
-    .horizontal-scroll-mobile::-webkit-scrollbar {
-      display: none;
-    }
-
-    .horizontal-scroll-mobile > div {
-      scroll-snap-align: start;
-      flex-shrink: 0;
-    }
-
-    /* How It Works Cards - Fixed size and increased contrast */
-    .how-it-works-card {
-      min-height: 320px;
-      height: 320px;
-      display: flex;
-      flex-direction: column;
-      background: white;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    }
-
-    .how-it-works-card:hover {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-    }
-
-    /* Profile Cards - Reduced height */
-    .profile-card {
-      height: 420px;
-    }
-
-    .profile-card .aspect-ratio-box {
-      height: 260px;
-    }
-
-    /* Mobile Optimizations */
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2rem !important;
-      }
-
-      .category-bubble {
-        width: 90px;
-        height: 90px;
-        font-size: 11px;
-      }
-
-      .category-bubble svg {
-        width: 32px;
-        height: 32px;
-      }
-
-      #backToTop {
-        width: 48px;
-        height: 48px;
-        bottom: 20px;
-        right: 20px;
-      }
-
-      .how-it-works-card {
-        min-height: 280px;
-        height: auto;
-      }
-    }
-
-    /* AI Popup */
-    .ai-popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      z-index: 10000;
-      max-width: 90%;
-      width: 500px;
-    }
-
-    .ai-popup.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
+    /* AI Popup Styles */
     .ai-popup-overlay {
       position: fixed;
       inset: 0;
@@ -435,92 +497,236 @@
     /* Featured Badge */
     .featured-badge {
       background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-      animation: pulse-glow 2s ease-in-out infinite;
+      color: #92400E;
+      border-radius: 999px;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      box-shadow: 0 12px 30px rgba(245, 158, 11, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
-    /* Why Choose Cards */
-    .why-choose-card {
-      background: white;
-      border-radius: 20px;
-      padding: 32px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    .ai-popup {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
       transition: all 0.3s ease;
-      height: 100%;
+      z-index: 10000;
+      padding: 16px;
     }
 
-    .why-choose-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
+    .ai-popup.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
 
+    /* Steps Connector */
+    .steps-connector {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(148, 163, 184, 0.6),
+        rgba(148, 163, 184, 0.6) 10px,
+        transparent 10px,
+        transparent 18px
+      );
+      z-index: -1;
+    }
 
-    /* Google Translate Styles */
-#google_translate_element {
-  position: relative;
-  z-index: 1000;
-}
+    /* Tooltip Style */
+    .tooltip {
+      position: relative;
+    }
 
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
+    .tooltip-text {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.98);
+      color: white;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      margin-bottom: 6px;
+      pointer-events: none;
+    }
 
-body {
-  top: 0px !important;
-}
+    .tooltip:hover .tooltip-text {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -3px);
+    }
 
-.goog-te-gadget {
-  color: transparent !important;
-  font-size: 0 !important;
-}
+    /* Back to top button */
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.35);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.25s ease;
+      z-index: 9980;
+    }
 
-.goog-te-gadget img {
-  display: none !important;
-}
+    #backToTop.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
 
-.goog-te-combo {
-  background: white;
-  border: 2px solid #3B82F6;
-  border-radius: 0.75rem;
-  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #1F2937;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233B82F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 1.25rem;
-}
+    #backToTop:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 55px rgba(37, 99, 235, 0.45);
+    }
 
-.goog-te-combo:hover {
-  border-color: #2563EB;
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
-}
+    /* FAQ accordion */
+    .faq-item {
+      border-radius: 20px;
+      background: white;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
 
-.goog-te-combo:focus {
-  outline: none;
-  border-color: #2563EB;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+    .faq-item.active {
+      border-color: rgba(37, 99, 235, 0.7);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      transform: translateY(-2px);
+    }
 
-.goog-logo-link {
-  display: none !important;
-}
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease-out;
+    }
 
-.goog-te-gadget span {
-  display: none !important;
-}
+    .faq-content.active {
+      max-height: 600px;
+      transition: max-height 0.5s ease-in;
+    }
 
-.goog-te-menu-value {
-  color: #1F2937 !important;
-}
+    .faq-icon {
+      transition: transform 0.3s ease;
+    }
 
-.goog-te-menu-value:before {
-  content: '🌐 ';
-  font-size: 1rem;
-}
+    .faq-toggle.active .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Status Pulse */
+    @keyframes status-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .status-pulse {
+      animation: status-pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Device optimization */
+    @media (max-width: 768px) {
+      .hide-on-mobile {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .hero-layout {
+        flex-direction: column;
+      }
+    }
+
+    /* Google translate override */
+    .goog-te-gadget-simple {
+      background-color: white !important;
+      border: 1px solid rgba(148, 163, 184, 0.8) !important;
+      border-radius: 999px !important;
+      padding: 4px 10px !important;
+      font-size: 0.8rem !important;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+    }
+
+    .goog-te-gadget img {
+      display: none !important;
+    }
+
+    .goog-te-gadget-simple span {
+      color: #1F2937 !important;
+    }
+
+    .goog-te-gadget-simple .goog-te-menu-value span {
+      border: none !important;
+    }
+
+    .goog-te-gadget-simple .goog-te-menu-value span:nth-child(5) {
+      display: none !important;
+    }
+
+    .goog-te-gadget-simple .goog-te-menu-value:before {
+      content: '🌐 ';
+      font-size: 1rem;
+    }
+
+    .goog-logo-link,
+    .goog-te-gadget span {
+      display: none !important;
+    }
+
+    .goog-te-menu-value {
+      color: #1F2937 !important;
+    }
+
+    .goog-te-menu-value:before {
+      content: '🌐 ';
+      font-size: 1rem;
+    }
+
+    /* Performance: disable non-critical animations and heavy blur */
+    .animate-float,
+    .animate-pulse-glow,
+    .animate-pulse,
+    .animate-bounce,
+    .animate-spin,
+    .ai-robot {
+      animation: none !important;
+    }
+
+    .backdrop-blur,
+    .backdrop-blur-sm,
+    .ai-popup-overlay {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
 
 
     /* Reduced Motion */
@@ -555,6 +761,10 @@ body {
 </head>
 
 <body class="bg-white overflow-x-hidden pt-20 lg:pt-20">
+
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:text-blue-600 focus:px-4 focus:py-2 focus:rounded">
+    Skip to main content
+  </a>
   
   @include('includes.header')
   <!-- Google Translate Widget -->
@@ -564,1364 +774,990 @@ body {
 
 
   <!-- HERO SECTION -->
-  <section class="relative bg-blue-600 pt-20 pb-32 px-4 overflow-hidden" style="background-color: #3B82F6;">
+  <main id="main-content">
+    <section class="relative bg-blue-600 pt-20 pb-32 px-4 overflow-hidden" style="background-color: #3B82F6;">
     <div class="max-w-5xl mx-auto text-center relative z-10">
       <!-- Title -->
-      <h1 class="hero-title font-display font-black text-white mb-6 leading-tight text-3xl sm:text-4xl lg:text-6xl" data-aos="fade-up" data-aos-duration="800">
-        Need help, a service abroad?
+      <h1 class="hero-title font-display font-black text-white mb-6 text-3xl sm:text-4xl md:text-5xl leading-tight">
+        International <span class="text-yellow-300">support platform</span> for expats & travellers, <span class="text-yellow-300">available worldwide</span>.
       </h1>
-
+    
       <!-- Subtitle -->
-      <p class="text-white/90 text-lg sm:text-xl mb-10 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
-        The platform that connects expats, travelers & helping expats or local pros wherever you are 🌍
+      <p class="max-w-2xl mx-auto text-blue-100 mb-8 text-base sm:text-lg">
+        Wherever you are, connect with local experts, helpers and pros ready to assist you in your language, in minutes:
+        <span class="font-semibold text-white">housing, relocation, paperwork, emergencies, and more.</span>
       </p>
+    
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+        <a href="#search" class="btn-shine inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 rounded-full bg-white text-blue-700 font-semibold shadow-lg hover:shadow-xl transition">
+          <span>Find an expat helper</span>
+          <span class="text-xl">🌍</span>
+        </a>
+        <a href="#become-helper" class="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 rounded-full bg-blue-800/40 text-white border border-blue-200/40 hover:bg-blue-900/60 transition">
+          <span>Become a helper</span>
+          <span class="text-xl">🤝</span>
+        </a>
+      </div>
+    
+      <!-- Trust indicators -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-blue-100 text-xs sm:text-sm">
+        <div class="inline-flex items-center gap-2 badge-glow px-3 py-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 status-pulse"></span>
+          <span>Expat request answered every day</span>
+        </div>
+        <div class="inline-flex items-center gap-2 badge-light px-3 py-1">
+          <span class="text-yellow-500">★ ★ ★ ★ ★</span>
+          <span class="text-gray-700">Trusted by expats searching for help in 190+ countries</span>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Background gradient shapes -->
+    <div class="absolute inset-0 opacity-40 gradient-bg pointer-events-none"></div>
+    <div class="absolute -top-40 -left-40 w-80 h-80 bg-blue-500/40 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 -right-32 w-80 h-80 bg-indigo-500/40 rounded-full blur-3xl"></div>
+  </section>
+  
 
-      <!-- Search Box -->
-      <div class="max-w-3xl mx-auto mb-4" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
-        <div class="bg-white rounded-full p-2 shadow-2xl">
-          <div class="flex items-center gap-2">
-            <input
-              id="searchInput"
-              type="text"
-              placeholder="Find international help in one click 😉"
-              class="flex-1 px-6 py-4 text-gray-700 bg-transparent rounded-full focus:outline-none text-base"
-              onclick="openHelpPopup()"
-              readonly
-            />
-            <button class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full btn-shine transition-all shadow-lg flex-shrink-0">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7" stroke-width="2"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/>
-              </svg>
+  <!-- QUICK SEARCH SECTION -->
+  <section id="search" class="relative -mt-20 pb-16 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 p-6 sm:p-8 md:p-10 relative overflow-hidden">
+        <!-- Banner -->
+        <div class="flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center mb-6">
+          <div class="flex-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-3">
+              <span class="w-2 h-2 bg-emerald-400 rounded-full status-pulse"></span>
+              <span>Free & instant help guidance – multilingual</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mb-3">
+              First time here? Get your expat situation understood in minutes.
+            </h2>
+            <p class="text-sm sm:text-base text-slate-600">
+              Fill one form, and we route you to the best helpers available. No spam, no hidden fees: you choose if you want to go further.
+            </p>
+          </div>
+          <div class="hidden md:flex flex-col items-center justify-center px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-2xl">⚡</span>
+              <span class="text-sm font-semibold text-slate-800">Smart routing</span>
+            </div>
+            <p class="text-xs text-slate-500 text-center max-w-[170px]">
+              We show your request to helpers matching your country, language & need.
+            </p>
+          </div>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="space-y-6">
+          <!-- Categories row -->
+          <div class="flex flex-wrap gap-2">
+            <button 
+              id="filterAllButton"
+              class="pill-button text-xs sm:text-sm bg-blue-600 text-white shadow-md flex items-center gap-2">
+              <span>All situations</span>
             </button>
+
+            <button 
+              id="filterEmergencyButton"
+              class="pill-button text-xs sm:text-sm bg-white text-slate-700 border-slate-200 flex items-center gap-2">
+              <span>Emergencies</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500 status-pulse"></span>
+            </button>
+
+            <button 
+              id="filterHousingButton"
+              class="pill-button text-xs sm:text-sm bg-white text-slate-700 border-slate-200 flex items-center gap-2">
+              <span>Housing</span>
+            </button>
+
+            <button 
+              id="filterLegalButton"
+              class="pill-button text-xs sm:text-sm bg-white text-slate-700 border-slate-200 flex items-center gap-2">
+              <span>Legal & papers</span>
+            </button>
+
+            <button 
+              id="filterOtherButton"
+              class="pill-button text-xs sm:text-sm bg-white text-slate-700 border-slate-200 flex items-center gap-2">
+              <span>Other questions</span>
+            </button>
+          </div>
+
+          <!-- Smart search form -->
+<form id="filterProvidersForm" action="{{ url('/filter-providers') }}" method="GET" class="space-y-4">
+    {{-- @csrf pas nécessaire en GET, tu peux le retirer --}}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <!-- Country -->
+        <div class="flex flex-col gap-1">
+            <label for="countrySelect" class="text-xs font-semibold text-slate-600">
+                Country where you need help
+            </label>
+    <select
+    id="countrySelect"
+    name="country"
+    class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+>
+    <option value="">Any country</option>
+
+    @foreach ($countries as $country)
+        <option value="{{ $country->id }}">
+            {{ $country->country }}
+        </option>
+    @endforeach
+</select>
+        </div>
+
+              <!-- Language -->
+              <div class="flex flex-col gap-1">
+                <label for="languageSelect" class="text-xs font-semibold text-slate-600">
+                  Language you want to speak
+                </label>
+                <select
+                  id="languageSelect"
+                  name="language"
+                  class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Any language</option>
+                  @foreach ($languages as $language)
+                    <option value="{{ $language->id }}">{{ $language->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+
+              <!-- Category -->
+              <div class="flex flex-col gap-1">
+                <label for="categorySelect" class="text-xs font-semibold text-slate-600">
+                  Type of help
+                </label>
+                <select
+                  id="categorySelect"
+                  name="category_id"
+                  class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Any situation</option>
+                  @foreach ($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+
+              <!-- Subcategory -->
+              <div id="subcategoryWrapper" class="flex flex-col gap-1 hidden">
+                <label for="subcategorySelect" class="text-xs font-semibold text-slate-600">
+                  More precise (optional)
+                </label>
+                <select
+                  id="subcategorySelect"
+                  name="subcategory_id"
+                  class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Any</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Sub-subcategory wrapper -->
+            <div id="subsubcategoryWrapper" class="hidden">
+              <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1">
+                  <label for="subsubcategorySelect" class="text-xs font-semibold text-slate-600">
+                    Even more precise (optional)
+                  </label>
+                  <select
+                    id="subsubcategorySelect"
+                    name="subsubcategory_id"
+                    class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Any</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Free text -->
+            <div class="space-y-2">
+              <label for="description" class="text-xs font-semibold text-slate-600">
+                Describe your situation (optional, but helps a lot)
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                rows="3"
+                class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Example: 'I just arrived in Lisbon, my visa is still in process and I need help finding a room for 3 months, plus someone to explain local registration.'"
+              ></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+              <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                <div class="inline-flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 status-pulse"></span>
+                  <span>Real humans, not a bot.</span>
+                </div>
+                <div class="inline-flex items-center gap-2">
+                  <span class="text-yellow-500">★ 4.9</span>
+                  <span>Average satisfaction from expats helped.</span>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button
+                  type="button"
+                  id="resetFiltersButton"
+                  class="inline-flex items-center justify-center px-4 py-2.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition"
+                >
+                  Reset all filters
+                </button>
+                <button
+                  type="submit"
+                  class="btn-shine inline-flex items-center justify-center px-6 sm:px-8 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition shadow-lg"
+                >
+                  <span>Show me helpers</span>
+                  <span class="ml-2 text-lg">➡️</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES BUBBLES -->
+  <section class="py-10 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+            All situations covered, step by step.
+          </h2>
+          <p class="text-sm text-slate-600 max-w-xl">
+            From “I’m landing next week” to “I’ve been here 3 years, but this paperwork is crazy” –
+            pick the situation that looks the most like yours.
+          </p>
+        </div>
+        <div class="flex gap-2 text-xs text-slate-500">
+          <div class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-50 border border-slate-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 status-pulse"></span>
+            <span>Helpers active now</span>
+          </div>
+          <div class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-50 border border-slate-200">
+            <span class="text-blue-500">190+</span>
+            <span>Countries possible</span>
           </div>
         </div>
       </div>
 
-      <!-- Search Example -->
-      <p class="text-white/80 text-sm mb-8" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
-        💡 Ex: Portugal visa, certified multilingual translation, international relocation, work...
-      </p>
+      <!-- BUBBLES -->
+      <div class="scroll-container pb-1">
+        <button class="category-bubble" data-category="all">
+          <div class="category-bubble-icon bg-blue-50 text-blue-700">
+            🌍
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Any situation</span>
+          <span class="text-[11px] text-slate-500">Don't know yet</span>
+        </button>
 
-      <!-- AI Button -->
-      <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
-        <button onclick="openAIPopup()" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-8 py-4 rounded-full font-bold text-base btn-shine shadow-2xl inline-flex items-center space-x-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-          <span>AI Assistant for expats</span>
+        <button class="category-bubble" data-category="housing">
+          <div class="category-bubble-icon bg-emerald-50 text-emerald-700">
+            🏠
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Housing</span>
+          <span class="text-[11px] text-slate-500">Flat, room, etc.</span>
+        </button>
+
+        <button class="category-bubble" data-category="papers">
+          <div class="category-bubble-icon bg-yellow-50 text-yellow-700">
+            📄
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Visas, papers</span>
+          <span class="text-[11px] text-slate-500">Local rules</span>
+        </button>
+
+        <button class="category-bubble" data-category="emergency">
+          <div class="category-bubble-icon bg-red-50 text-red-700">
+            🚑
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Emergency</span>
+          <span class="text-[11px] text-slate-500">Urgent help</span>
+        </button>
+
+        <button class="category-bubble" data-category="relocation">
+          <div class="category-bubble-icon bg-purple-50 text-purple-700">
+            ✈️
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Relocation</span>
+          <span class="text-[11px] text-slate-500">Arrival & setup</span>
+        </button>
+
+        <button class="category-bubble" data-category="translation">
+          <div class="category-bubble-icon bg-pink-50 text-pink-700">
+            🗣️
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Translation</span>
+          <span class="text-[11px] text-slate-500">Forms & calls</span>
+        </button>
+
+        <button class="category-bubble" data-category="business">
+          <div class="category-bubble-icon bg-indigo-50 text-indigo-700">
+            💼
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Business</span>
+          <span class="text-[11px] text-slate-500">Company, taxes</span>
+        </button>
+
+        <button class="category-bubble" data-category="family">
+          <div class="category-bubble-icon bg-teal-50 text-teal-700">
+            👨‍👩‍👧
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Family</span>
+          <span class="text-[11px] text-slate-500">Kids, school, etc.</span>
+        </button>
+
+        <button class="category-bubble" data-category="health">
+          <div class="category-bubble-icon bg-rose-50 text-rose-700">
+            🏥
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Health</span>
+          <span class="text-[11px] text-slate-500">Doctors, clinics</span>
+        </button>
+
+        <button class="category-bubble" data-category="other">
+          <div class="category-bubble-icon bg-slate-50 text-slate-700">
+            ❓
+          </div>
+          <span class="text-xs font-semibold text-slate-800">Other</span>
+          <span class="text-[11px] text-slate-500">Anything else</span>
         </button>
       </div>
     </div>
   </section>
 
-  <!-- <!-- CATEGORY BUBBLES - Overlapping Hero -->
-<section class="relative -mt-16 z-30 px-4 mb-12">
-  <div class="max-w-7xl mx-auto">
-    <!-- Categories Container -->
-    <div class="relative">
-      <div class="category-scroll flex gap-12 overflow-x-auto pb-4 justify-center items-center" id="categoryContainer">
-        @foreach($category as $index => $cat)
-          @php
-            $colorIndex = ((int) $index) % 9; // ✅ Force la conversion en entier
-            $gradients = [
-              'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-              'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
-              'linear-gradient(135deg, #A855F7 0%, #9333EA 100%)',
-              'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-              'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-              'linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)',
-              'linear-gradient(135deg, #EC4899 0%, #DB2777 100%)'
-            ];
-          @endphp
-          
-          <div onclick="openHelpPopup()" 
-               class="category-bubble" 
-               style="background: {{ $gradients[$colorIndex] }};"
-               data-aos="zoom-in" 
-               data-aos-delay="{{ $index * 30 }}"
-               data-aos-duration="600">
-            <span>{{ $cat->name }}</span>
+  <!-- PROVIDERS + MAP SECTION -->
+  <section class="py-10 px-4 bg-slate-50">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- PROVIDERS LIST -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-1">
+                Helpers & experts matching your filters
+              </h2>
+              <p class="text-sm text-slate-600">
+                We highlight helpers that speak your language, know your target country, and can explain local rules.
+              </p>
+            </div>
+            <div class="hidden sm:flex flex-col items-end text-xs text-slate-500">
+              <span>{{ $providers->count() }} profiles visible</span>
+              <span>Sorted by relevance & reviews.</span>
+            </div>
           </div>
-        @endforeach
+
+          <!-- Providers grid -->
+          <div id="serviceGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            @forelse($providers as $provider)
+              @php
+                $specialStatus = $provider->special_status ? json_decode($provider->special_status, true) : [];
+                $avatar = optional($provider->user)->avatar;
+                $rp = optional($provider->user)->rp;
+                $src = null;
+                $fallback = asset('images/attachment.png');
+
+                if ($avatar) {
+                    $src = asset('storage/'.$avatar);
+                } elseif ($rp && isset($rp->original_name) && isset($rp->extension)) {
+                    $src = asset('storage/uploads/'.$rp->original_name.'.'.$rp->extension);
+                }
+
+                $ext = $rp && isset($rp->extension) ? strtolower($rp->extension) : null;
+                $isSvg = $ext === 'svg';
+              @endphp
+
+              <article class="provider-card bg-white flex flex-col">
+                <div class="provider-image-wrapper">
+                  <div class="aspect-ratio-box relative overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100">
+                    <img loading="lazy"
+              src="{{ $src ?: $fallback }}"
+              alt="{{ $provider->first_name }}"
+              class="provider-image absolute inset-0 w-full h-full {{ $isSvg ? 'object-contain bg-white p-6' : 'object-cover' }}"
+              onerror="this.onerror=null;this.src='{{ $fallback }}';"
+                    />
+                    <div class="provider-image-overlay"></div>
+
+                    <div class="absolute top-3 left-3 flex flex-col gap-2">
+                      @if(isset($specialStatus['featured']) && $specialStatus['featured'])
+                        <span class="featured-badge">
+                          <span class="text-xs">⭐ Featured Helper</span>
+                        </span>
+                      @endif
+                      <span class="provider-rating">
+                        <span class="mr-1">★</span> {{ number_format($provider->average_rating ?? 4.8, 1) }}
+                      </span>
+                    </div>
+
+                    @if(isset($specialStatus['quick_reply']) && $specialStatus['quick_reply'])
+                      <div class="absolute bottom-3 left-3 status-badge status-pulse">
+                        <span class="status-dot"></span>
+                        <span>Replies fast</span>
+                      </div>
+                    @endif
+                  </div>
+                </div>
+
+                <div class="p-4 flex-1 flex flex-col">
+                  <div class="flex items-start justify-between gap-3 mb-2">
+                    <div>
+                      <div class="flex items-center gap-2 mb-1">
+                        <h3 class="text-base font-black text-slate-900">
+                          {{ $provider->first_name }} {{ $provider->last_name }}
+                        </h3>
+                        @if(isset($specialStatus['verified']) && $specialStatus['verified'])
+                          <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 text-[10px] font-bold" title="Verified identity">
+                            ✓
+                          </span>
+                        @endif
+                      </div>
+                      <p class="text-xs font-medium text-blue-700">
+                        {{ $provider->title ?? 'Local expat helper' }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-wrap gap-2 mb-3">
+                    @if(!empty($provider->operational_countries))
+                      @php
+                        $operationalCountries = is_array($provider->operational_countries)
+                          ? $provider->operational_countries
+                          : json_decode($provider->operational_countries, true) ?? [];
+                      @endphp
+                      @foreach($operationalCountries as $countryCode)
+                        <span class="tag-chip">
+                          🌍 {{ $countryCode }}
+                        </span>
+                      @endforeach
+                    @endif
+
+                    @if(!empty($provider->speaks))
+                      @php
+                        $languagesSpoken = is_array($provider->speaks)
+                          ? $provider->speaks
+                          : json_decode($provider->speaks, true) ?? [];
+                      @endphp
+                      @foreach($languagesSpoken as $lang)
+                        <span class="tag-chip secondary">
+                          🗣️ {{ $lang }}
+                        </span>
+                      @endforeach
+                    @endif
+                  </div>
+
+                  <p class="text-xs text-slate-600 mb-4 line-clamp-3">
+                    {{ Str::limit($provider->bio ?? 'No description yet, but available to help with your situation.', 160) }}
+                  </p>
+
+                  <div class="mt-auto flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                      <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-50 border border-slate-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 status-pulse"></span>
+                        <span>Usually replies in &lt; 24h</span>
+                      </span>
+                    </div>
+                    <a 
+                      href="{{ route('providers.show', $provider->id) }}"
+                      class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition"
+                    >
+                      View profile
+                    </a>
+                  </div>
+                </div>
+              </article>
+            @empty
+              <div class="col-span-2 text-center py-10">
+                <p class="text-sm text-slate-600 mb-2">
+                  No helpers match your filters yet.
+                </p>
+                <p class="text-xs text-slate-500">
+                  Try with fewer filters or choose “Any situation” and “Any country”.
+                </p>
+              </div>
+            @endforelse
+          </div>
+        </div>
+
+        <!-- MAP & STATS -->
+        <aside class="space-y-5">
+          <!-- Map -->
+          <div class="bg-slate-900 rounded-3xl p-4 text-white h-full flex flex-col">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <h3 class="text-sm font-semibold">Helpers worldwide</h3>
+                <p class="text-xs text-slate-300">
+                  Where other expats like you are getting help.
+                </p>
+              </div>
+              <div class="inline-flex flex-col items-end text-xs">
+                <span class="text-slate-200 font-semibold">Live</span>
+                <span class="inline-flex items-center gap-1 text-emerald-400">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 status-pulse"></span>
+                  Now
+                </span>
+              </div>
+            </div>
+            <div id="map" class="flex-1 min-h-[260px] rounded-2xl overflow-hidden"></div>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="stat-card bg-white rounded-2xl p-4 border border-slate-100 relative">
+              <p class="text-[11px] text-slate-500 mb-1">Expats already helped</p>
+              <p class="stat-number text-xl font-black text-slate-900">1,250+</p>
+              <p class="text-[11px] text-emerald-600 mt-1">Growing daily</p>
+            </div>
+            <div class="stat-card bg-white rounded-2xl p-4 border border-slate-100 relative">
+              <p class="text-[11px] text-slate-500 mb-1">Average satisfaction</p>
+              <p class="stat-number text-xl font-black text-slate-900">4.9/5</p>
+              <p class="text-[11px] text-yellow-500 mt-1">Based on reviews</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS SECTION -->
+  <section class="py-12 px-4 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+            Stories from expats who got help
+          </h2>
+          <p class="text-sm text-slate-600 max-w-xl">
+            Every story below started with one simple form and a human on the other side of the screen.
+          </p>
+        </div>
+        <div class="inline-flex items-center gap-2 text-xs text-slate-500">
+          <span class="text-green-500">✔</span>
+          <span>Verified by our team</span>
+        </div>
       </div>
 
-        <!-- Navigation Arrows -->
-        <button id="prevBubble" onclick="scrollBubbles('prev')" class="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full p-3 shadow-xl hover:bg-gray-50 transition-all z-10">
-          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-        </button>
-        <button id="nextBubble" onclick="scrollBubbles('next')" class="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full p-3 shadow-xl hover:bg-gray-50 transition-all z-10">
-          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </button>
+      <div class="overflow-hidden">
+        <div class="testimonial-track">
+          <div class="testimonial-row">
+            <article class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="50" data-aos-duration="600">
+              <div class="flex items-center mb-4">
+                <img loading="lazy" src="https://randomuser.me/api/portraits/women/32.jpg" alt="Maria, moved from Brazil to Portugal" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
+                <div>
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-semibold text-slate-900 text-sm">Maria</h3>
+                    <span class="text-xs text-slate-500">Brazil → Portugal</span>
+                  </div>
+                  <p class="text-xs text-yellow-500">★ ★ ★ ★ ★</p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 mb-3">
+                My residence card was delayed and I had no clue what to do. My helper explained the local rules in Portuguese & English, and even came with me to the office.
+              </p>
+              <p class="text-[11px] text-slate-500">Helped with: paperwork & registration</p>
+            </article>
+
+            <article class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="80" data-aos-duration="600">
+              <div class="flex items-center mb-4">
+                <img loading="lazy" src="https://randomuser.me/api/portraits/men/44.jpg" alt="Maxime, moved from France to Canada" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
+                <div>
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-semibold text-slate-900 text-sm">Maxime</h3>
+                    <span class="text-xs text-slate-500">France → Canada</span>
+                  </div>
+                  <p class="text-xs text-yellow-500">★ ★ ★ ★ ★</p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 mb-3">
+                I landed in Montréal with no flat. One helper visited places for me, sent videos and negotiated with the landlord. I signed a lease without being scammed.
+              </p>
+              <p class="text-[11px] text-slate-500">Helped with: housing & local calls</p>
+            </article>
+
+            <article class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="110" data-aos-duration="600">
+              <div class="flex items-center mb-4">
+                <img loading="lazy" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Lina, moved from Germany to Spain" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
+                <div>
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-semibold text-slate-900 text-sm">Lina</h3>
+                    <span class="text-xs text-slate-500">Germany → Spain</span>
+                  </div>
+                  <p class="text-xs text-yellow-500">★ ★ ★ ★ ★</p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 mb-3">
+                I needed medical help but my Spanish was terrible. My helper booked appointments, translated on phone and came with me to the clinic.
+              </p>
+              <p class="text-[11px] text-slate-500">Helped with: health & translation</p>
+            </article>
+
+            <article class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="140" data-aos-duration="600">
+              <div class="flex items-center mb-4">
+                <img loading="lazy" src="https://randomuser.me/api/portraits/men/22.jpg" alt="Tom, moved from UK to Thailand" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
+                <div>
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-semibold text-slate-900 text-sm">Tom</h3>
+                    <span class="text-xs text-slate-500">UK → Thailand</span>
+                  </div>
+                  <p class="text-xs text-yellow-500">★ ★ ★ ★ ★</p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 mb-3">
+                I had a work contract issue and got answers in English from someone who knew both local law and expat reality.
+              </p>
+              <p class="text-[11px] text-slate-500">Helped with: work & legal doubts</p>
+            </article>
+
+            <article class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="170" data-aos-duration="600">
+              <div class="flex items-center mb-4">
+                <img loading="lazy" src="https://randomuser.me/api/portraits/women/45.jpg" alt="Sara, moved from Italy to UAE" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
+                <div>
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-semibold text-slate-900 text-sm">Sara</h3>
+                    <span class="text-xs text-slate-500">Italy → UAE</span>
+                  </div>
+                  <p class="text-xs text-yellow-500">★ ★ ★ ★ ★</p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 mb-3">
+                I didn’t want to ask my company for every little question. Having someone “neutral” to ask about local life & rules was priceless.
+              </p>
+              <p class="text-[11px] text-slate-500">Helped with: daily life & culture</p>
+            </article>
+
+            <article class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
+              <div class="flex items-center mb-4">
+                <img loading="lazy" src="https://randomuser.me/api/portraits/men/67.jpg" alt="Carlos, moved from Mexico to USA" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
+                <div>
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-semibold text-slate-900 text-sm">Carlos</h3>
+                    <span class="text-xs text-slate-500">Mexico → USA</span>
+                  </div>
+                  <p class="text-xs text-yellow-500">★ ★ ★ ★ ★</p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 mb-3">
+                My helper guided me through banking, phone plans and local bureaucracy in Spanish. I saved days of stress.
+              </p>
+              <p class="text-[11px] text-slate-500">Helped with: setup & paperwork</p>
+            </article>
+          </div>
+
+          <!-- Duplicate row for continuous scroll -->
+          <div class="testimonial-row">
+            <article class="testimonial-card w-80 md:w-auto flex-shrink-0">
+              <div class="flex items-center mb-4">
+                <img loading="lazy" src="https://randomuser.me/api/portraits/women/29.jpg" alt="Anna, moved from Poland to Netherlands" class="w-20 h-20 rounded-full border-4 border-white shadow-lg">
+                <div class="ml-4">
+                  <h3 class="font-semibold text-slate-900 text-sm mb-1">Anna</h3>
+                  <p class="text-xs text-slate-500 mb-1">Poland → Netherlands</p>
+                  <p class="text-xs text-yellow-500">★ ★ ★ ★ ★</p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 mb-3">
+                I used the platform twice: first for finding a room, then months later for a tricky immigration question. Both times I felt listened to, not rushed.
+              </p>
+              <p class="text-[11px] text-slate-500">Helped with: housing & immigration</p>
+            </article>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- HOW IT WORKS -->
-  <section class="py-12 px-4 bg-gradient-to-br from-blue-50 to-purple-50">
+  <section class="py-12 px-4 bg-slate-50">
     <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
-        <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
-          <span class="gradient-text">How does it work for expats?</span>
-        </h2>
-        <p class="text-gray-600 text-lg">Simple as hello, anywhere in the world! 🎯</p>
-      </div>
-
-      <!-- Desktop Grid -->
-      <div class="hidden lg:flex items-stretch justify-center gap-0 mb-12">
-        <!-- Card 1 -->
-        <div class="relative" data-aos="fade-up" data-aos-delay="50" data-aos-duration="600">
-          <div class="how-it-works-card rounded-3xl p-8 w-52 hover:shadow-xl transition-all duration-300 border-2 border-gray-200">
-            <div class="absolute -top-3 -right-3 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
-              1
-            </div>
-            <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8" stroke-width="2"/>
-                <line x1="11" y1="7" x2="11" y2="11" stroke-width="2" stroke-linecap="round"/>
-                <line x1="11" y1="11" x2="14" y2="14" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-black text-gray-900 mb-3 text-center">📝 Describe</h3>
-            <p class="text-gray-600 text-sm text-center leading-relaxed">
-              Post your expat need for free in 2 minutes
-            </p>
-          </div>
-          <div class="absolute top-1/2 -right-6 transform -translate-y-1/2 text-blue-600 z-0">
-            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="relative ml-12" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-          <div class="how-it-works-card rounded-3xl p-8 w-52 hover:shadow-xl transition-all duration-300 border-2 border-gray-200">
-            <div class="absolute -top-3 -right-3 w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
-              2
-            </div>
-            <div class="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-black text-gray-900 mb-3 text-center">💼 Receive offers</h3>
-            <p class="text-gray-600 text-sm text-center leading-relaxed">
-              Local pros and helping expats offer you their rates and you can communicate with them via public messaging
-            </p>
-          </div>
-          <div class="absolute top-1/2 -right-6 transform -translate-y-1/2 text-green-600 z-0">
-            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="relative ml-12" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
-          <div class="how-it-works-card rounded-3xl p-8 w-52 hover:shadow-xl transition-all duration-300 border-2 border-gray-200">
-            <div class="absolute -top-3 -right-3 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
-              3
-            </div>
-            <div class="w-20 h-20 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-black text-gray-900 mb-3 text-center">✓ Choose</h3>
-            <p class="text-gray-600 text-sm text-center leading-relaxed">
-              Select the helping expat or local pro based on price, reviews and multilingual skills
-            </p>
-          </div>
-          <div class="absolute top-1/2 -right-6 transform -translate-y-1/2 text-purple-600 z-0">
-            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="relative ml-12" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
-          <div class="how-it-works-card rounded-3xl p-8 w-52 hover:shadow-xl transition-all duration-300 border-2 border-gray-200">
-            <div class="absolute -top-3 -right-3 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
-              4
-            </div>
-            <div class="w-20 h-20 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-black text-gray-900 mb-3 text-center">🚀 In progress</h3>
-            <p class="text-gray-600 text-sm text-center leading-relaxed">
-              A helping expat or local pro completes the mission wherever you are in the world - private messaging is available
-            </p>
-          </div>
-          <div class="absolute top-1/2 -right-6 transform -translate-y-1/2 text-orange-600 z-0">
-            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="relative ml-12" data-aos="fade-up" data-aos-delay="250" data-aos-duration="600">
-          <div class="how-it-works-card rounded-3xl p-8 w-52 hover:shadow-xl transition-all duration-300 border-2 border-gray-200">
-            <div class="absolute -top-3 -right-3 w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
-              5
-            </div>
-            <div class="w-20 h-20 bg-teal-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg class="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-black text-gray-900 mb-3 text-center">⭐ Rate</h3>
-            <p class="text-gray-600 text-sm text-center leading-relaxed">
-              Rate the service and trigger secure payment
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mobile Horizontal Scroll -->
-      <div class="lg:hidden relative">
-        <div class="absolute left-0 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
-          <div class="bg-gradient-to-r from-blue-50 to-transparent w-12 h-full flex items-center">
-            <svg class="w-8 h-8 text-purple-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
-            </svg>
-          </div>
-        </div>
-        
-        <div class="absolute right-0 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
-          <div class="bg-gradient-to-l from-purple-50 to-transparent w-12 h-full flex items-center justify-end">
-            <svg class="w-8 h-8 text-purple-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </div>
-        </div>
-        
-        <div class="text-center mb-4">
-          <p class="text-sm text-gray-600 font-semibold flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
-            </svg>
-            Swipe to see the steps
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+            How it works (for expats & travellers)
+          </h2>
+          <p class="text-sm text-slate-600 max-w-xl">
+            We designed the process to be as simple as sending a message to a friend who “knows someone on the ground”.
           </p>
         </div>
-        
-        <div class="horizontal-scroll-mobile flex gap-6 pb-4 mb-8">
-          <!-- Mobile Cards (1-5) -->
-          <div class="relative flex-shrink-0 w-72">
-            <div class="how-it-works-card rounded-3xl p-8 shadow-lg border-2 border-gray-200">
-              <div class="absolute -top-3 -right-3 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">1</div>
-              <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <circle cx="11" cy="11" r="8" stroke-width="2"/>
-                </svg>
-              </div>
-              <h3 class="text-lg font-black text-gray-900 mb-3 text-center">📝 Describe</h3>
-              <p class="text-gray-600 text-sm text-center leading-relaxed">Post your expat need for free in 2 minutes</p>
-            </div>
-          </div>
-
-          <div class="relative flex-shrink-0 w-72">
-            <div class="how-it-works-card rounded-3xl p-8 shadow-lg border-2 border-gray-200">
-              <div class="absolute -top-3 -right-3 w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">2</div>
-              <div class="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-              </div>
-              <h3 class="text-lg font-black text-gray-900 mb-3 text-center">💼 Receive offers</h3>
-              <p class="text-gray-600 text-sm text-center leading-relaxed">Local pros and helping expats offer you their rates and you can communicate with them via public messaging</p>
-            </div>
-          </div>
-
-          <div class="relative flex-shrink-0 w-72">
-            <div class="how-it-works-card rounded-3xl p-8 shadow-lg border-2 border-gray-200">
-              <div class="absolute -top-3 -right-3 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">3</div>
-              <div class="w-20 h-20 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-              </div>
-              <h3 class="text-lg font-black text-gray-900 mb-3 text-center">✓ Choose</h3>
-              <p class="text-gray-600 text-sm text-center leading-relaxed">Select the helping expat or local pro based on price, reviews and multilingual skills</p>
-            </div>
-          </div>
-
-          <div class="relative flex-shrink-0 w-72">
-            <div class="how-it-works-card rounded-3xl p-8 shadow-lg border-2 border-gray-200">
-              <div class="absolute -top-3 -right-3 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">4</div>
-              <div class="w-20 h-20 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-              </div>
-              <h3 class="text-lg font-black text-gray-900 mb-3 text-center">🚀 In progress</h3>
-              <p class="text-gray-600 text-sm text-center leading-relaxed">A helping expat or local pro completes the mission wherever you are in the world - private messaging is available</p>
-            </div>
-          </div>
-
-          <div class="relative flex-shrink-0 w-72">
-            <div class="how-it-works-card rounded-3xl p-8 shadow-lg border-2 border-gray-200">
-              <div class="absolute -top-3 -right-3 w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">5</div>
-              <div class="w-20 h-20 bg-teal-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
-              <h3 class="text-lg font-black text-gray-900 mb-3 text-center">⭐ Rate</h3>
-              <p class="text-gray-600 text-sm text-center leading-relaxed">Rate the service and trigger secure payment</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="flex justify-center gap-2">
-          <div class="w-2 h-2 rounded-full bg-purple-600"></div>
-          <div class="w-2 h-2 rounded-full bg-purple-300"></div>
-          <div class="w-2 h-2 rounded-full bg-purple-300"></div>
-          <div class="w-2 h-2 rounded-full bg-purple-300"></div>
-          <div class="w-2 h-2 rounded-full bg-purple-300"></div>
+        <div class="inline-flex items-center gap-2 text-xs text-slate-500">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 status-pulse"></span>
+          <span>No subscription. You pay helpers only if you choose to work with them.</span>
         </div>
       </div>
 
-      <!-- CTA Button -->
-      <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
-        <button onclick="openHelpPopup()" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-12 py-4 rounded-full font-bold text-lg btn-shine shadow-2xl inline-flex items-center space-x-2 transform hover:scale-105 transition-all">
-          <span>Start now</span>
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-          </svg>
-        </button>
+      <div class="relative bg-white rounded-3xl border border-slate-100 shadow-lg p-6 sm:p-8">
+        <div class="steps-connector hidden sm:block"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 relative z-10">
+          <!-- Step 1 -->
+          <div class="faq-item p-5 sm:p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="number-badge">1</div>
+              <div>
+                <h3 class="font-semibold text-slate-900 text-sm mb-1">Tell us where you are & what you need</h3>
+                <p class="text-xs text-slate-500">Country, language, situation. Takes 1–2 minutes.</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 mb-3">
+              Use the form above or pick “Any situation” if you’re not sure. You can stay vague at first and add details later.
+            </p>
+            <ul class="text-xs text-slate-500 space-y-1">
+              <li>• No need to know the right legal words or forms.</li>
+              <li>• You can mention if it’s urgent or sensitive.</li>
+            </ul>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="faq-item p-5 sm:p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="number-badge">2</div>
+              <div>
+                <h3 class="font-semibold text-slate-900 text-sm mb-1">We match you with 1–3 helpers</h3>
+                <p class="text-xs text-slate-500">Local expats, helpers, or pros familiar with your case.</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 mb-3">
+              You’ll see profiles that match your filters: languages, country, type of need. You can read reviews, prices and availability.
+            </p>
+            <ul class="text-xs text-slate-500 space-y-1">
+              <li>• Some helpers reply in under 1 hour.</li>
+              <li>• You can ask questions before booking anything.</li>
+            </ul>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="faq-item p-5 sm:p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="number-badge">3</div>
+              <div>
+                <h3 class="font-semibold text-slate-900 text-sm mb-1">If you like someone, you book safely</h3>
+                <p class="text-xs text-slate-500">Payment is held in escrow until the help is delivered.</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 mb-3">
+              You choose how you want to be helped: messaging, one-off call, long-term follow-up. We release the payment only once it’s done.
+            </p>
+            <ul class="text-xs text-slate-500 space-y-1">
+              <li>• If something goes wrong, we’re here to mediate.</li>
+              <li>• You can leave a review to help the next expat.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-<!-- FILTERS & PROVIDERS -->
-@php
-  use App\Models\Country; 
-  $countries = Country::where('status', 1)->pluck('country');
-  $languages = ['English', 'French', 'Spanish', 'Portuguese', 'German', 'Italian', 'Arabic', 'Japanese', 'Korean', 'Hindi', 'Turkish'];
-@endphp
+  <!-- BECOME HELPER -->
+  <section id="become-helper" class="py-12 px-4 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div data-aos="fade-right">
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-3">
+            Lived abroad? You can turn your experience into meaningful help.
+          </h2>
+          <p class="text-sm text-slate-600 mb-4">
+            If you’re an expat, local, or professional who knows how to navigate your country, you can help others avoid the same mistakes.
+          </p>
+          <ul class="space-y-2 text-sm text-slate-600 mb-5">
+            <li>• Answer questions from people preparing to come.</li>
+            <li>• Help with housing searches, visits, and contracts.</li>
+            <li>• Offer “buddy” support for the first weeks or months.</li>
+            <li>• If you’re a pro (lawyer, relocation agent, etc.), receive high-intent requests.</li>
+          </ul>
+          <a href="{{ route('providers.register') }}" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition shadow-md">
+            Become a helper
+          </a>
+        </div>
 
-<section class="py-12 px-4 bg-white">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-10" data-aos="fade-up" data-aos-duration="800">
-      <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
-        <span class="gradient-text">Local pros and multilingual helping expats</span>
-      </h2>
-      <p class="text-gray-600 text-lg">Find help in all countries around the world 🌍</p>
-    </div>
+        <div class="hero-floating-card p-5 sm:p-6 lg:p-7 text-white" data-aos="fade-left">
+          <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
+            <div>
+              <h3 class="text-lg font-semibold mb-1">Helpers & pros benefit too</h3>
+              <p class="text-xs text-slate-300 max-w-xs">
+                We bring you motivated expats who actually need help, not random followers.
+              </p>
+            </div>
+            <div class="inline-flex flex-col items-end text-xs text-slate-300">
+              <span>From side-income to full-time activity</span>
+              <span class="text-sm text-emerald-400 font-semibold">Up to 80% of fee kept by you</span>
+            </div>
+          </div>
 
- <!-- Filters -->
-<div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-3xl p-6 mb-10 shadow-lg" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div>
-      <label class="block text-sm font-bold text-gray-700 mb-2">🗣️ Spoken languages</label>
-      <select id="languageSelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
-        <option value="">Select</option>
-        @foreach($languages as $lang)
-          <option value="{{ $lang }}">{{ $lang }}</option>
-        @endforeach
-        <option value="Others">Others</option>
-      </select>
-    </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <div class="bg-slate-900/50 rounded-2xl p-3">
+              <p class="text-xs text-slate-300 mb-1">For expats & locals</p>
+              <p class="text-sm font-semibold">Share your knowledge, on your schedule.</p>
+            </div>
+            <div class="bg-slate-900/50 rounded-2xl p-3">
+              <p class="text-xs text-slate-300 mb-1">For lawyers & pros</p>
+              <p class="text-sm font-semibold">Receive pre-qualified, detailed requests.</p>
+            </div>
+          </div>
 
-    <div>
-      <label class="block text-sm font-bold text-gray-700 mb-2">🌍 Countries of operation</label>
-      <select id="countrySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
-        <option value="">Select</option>
-        @foreach($countries as $country)
-          <option value="{{ $country }}">{{ $country }}</option>
-        @endforeach
-        <option value="Others">Others</option>
-      </select>
-    </div>
-
-    <div>
-      <label class="block text-sm font-bold text-gray-700 mb-2">📋 Category</label>
-      <select id="categorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
-        <option value="">Select</option>
-        @foreach($category as $cat)
-          <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-        @endforeach  
-      </select>
-    </div>
-
-    <div class="flex items-end">
-      <button id="filterButton" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-xl btn-shine transition-all shadow-lg hover:shadow-xl">
-        🔍 Filter
-      </button>
-    </div>
-  </div>
-
-  <div id="subcategoryWrapper" class="hidden mt-4">
-    <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Subcategory</label>
-    <select id="subcategorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
-      <option value="">Select</option>
-    </select>
-  </div>
-
-  <div id="subsubcategoryWrapper" class="hidden mt-4">
-    <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Sub-subcategory</label>
-    <select id="subsubcategorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
-      <option value="">Select</option>
-    </select>
-  </div>
-
-  <!-- Reset Button -->
-  <div class="mt-4 text-center">
-    <button id="resetFiltersButton" class="text-blue-600 hover:text-blue-800 font-semibold underline">
-      Reset filters
-    </button>
-  </div>
-</div>
-
-    <!-- Providers Grid - Limited to 2 rows of 5 (10 profiles) -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="serviceGrid">
-      @foreach ($providers->take(10) as $provider)
-        @php
-          $avgRating = $provider->reviews()->avg('rating') ?? 5.0;
-          $reviewCount = $provider->reviews()->count();
-          $statuses = json_decode($provider->special_status, true) ?? [];
-          $firstSpecialty = !empty($statuses) ? array_key_first($statuses) : null;
-          
-          $providerCategories = [];
-          if (isset($provider->categories) && is_string($provider->categories)) {
-            $categoryIds = json_decode($provider->categories, true);
-            if (is_array($categoryIds)) {
-              $providerCategories = $category->whereIn('id', $categoryIds)->take(2)->pluck('name')->toArray();
-            }
-          }
-          elseif (isset($provider->categories) && is_array($provider->categories)) {
-            $providerCategories = array_slice($provider->categories, 0, 2);
-          }
-          elseif (method_exists($provider, 'categories')) {
-            try {
-              $providerCategories = $provider->categories()->take(2)->pluck('name')->toArray();
-            } catch (\Exception $e) {
-              $providerCategories = [];
-            }
-          }
-          elseif (isset($provider->category_id)) {
-            $cat = $category->where('id', $provider->category_id)->first();
-            if ($cat) {
-              $providerCategories = [$cat->name];
-            }
-          }
-        @endphp
-
-        <a href="{{ route('provider-details', ['id' => $provider->slug]) }}" 
-          class="profile-card card-modern bg-white rounded-3xl overflow-hidden block group"
-          data-aos="fade-up"
-          data-aos-delay="{{ $loop->index * 30 }}"
-          data-aos-duration="600">
-          
-          @php
-            $src = trim((string)($provider->profile_photo ?? ''));
-            $fallback = asset('images/attachment.png');
-            $path = $src ? parse_url($src, PHP_URL_PATH) : '';
-            $ext  = $path ? strtolower(pathinfo($path, PATHINFO_EXTENSION)) : null;
-            $isSvg = $ext === 'svg';
-          @endphp
-
-          <div class="aspect-ratio-box relative overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100">
-            <img
-              src="{{ $src ?: $fallback }}"
-              alt="{{ $provider->first_name }}"
-              class="provider-image absolute inset-0 w-full h-full {{ $isSvg ? 'object-contain bg-white p-6' : 'object-cover' }}"
-              onerror="this.onerror=null;this.src='{{ $fallback }}';"
-            />
-            
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            
-            @if($firstSpecialty)
-              <div class="absolute top-3 left-3">
-                <span class="badge-specialty text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-                  {{ $firstSpecialty }}
+          <div class="bg-slate-900/80 rounded-2xl p-3 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="relative">
+                <span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full status-pulse border border-slate-900"></span>
+                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 text-lg">
+                  💬
                 </span>
               </div>
-            @endif
-
-            <div class="absolute top-3 right-3">
-              <div class="status-online w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-lg"></div>
-            </div>
-
-            @if($provider->preferred_language)
-              <div class="absolute bottom-3 left-3">
-                <span class="bg-white/90 backdrop-blur text-gray-800 px-2.5 py-1 rounded-full text-xs font-bold">
-                  🗣️ {{ $provider->preferred_language }}
-                </span>
-              </div>
-            @endif
-          </div>
-
-          <div class="p-4">
-            <div class="mb-2">
-              <h3 class="font-bold text-base text-gray-900 truncate mb-1">
-                {{ $provider->first_name ?? 'Provider' }}
-                @if($provider->last_name)
-                  {{ substr($provider->last_name, 0, 1) }}.
-                @endif
-              </h3>
-              
-              <div class="flex items-center mb-2">
-                <div class="flex text-yellow-400 text-xs">
-                  @php
-                    $fullStars = floor($avgRating);
-                  @endphp
-                  @for ($i = 1; $i <= 5; $i++)
-                    <svg class="w-3 h-3 {{ $i <= $fullStars ? 'fill-current' : 'fill-gray-300' }}" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                  @endfor
-                </div>
-                <span class="ml-1 text-xs font-bold text-gray-700">{{ number_format($avgRating, 1) }}</span>
-                <span class="ml-1 text-xs text-gray-500">({{ $reviewCount }})</span>
+              <div>
+                <p class="text-xs text-slate-300">We support you with pricing & structure.</p>
+                <p class="text-[11px] text-slate-400">You’re not alone. We want helpers to succeed.</p>
               </div>
             </div>
-
-            @if(!empty($providerCategories))
-              <div class="mb-2">
-                <p class="text-xs font-bold text-gray-500 mb-1">📂 Services:</p>
-                <div class="flex flex-wrap gap-1">
-                  @foreach($providerCategories as $cat)
-                    <span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                      {{ $cat }}
-                    </span>
-                  @endforeach
-                </div>
-              </div>
-            @endif
-
-            @php 
-              $operationalCountriesRaw = $provider->operational_countries ?? [];
-              if (is_string($operationalCountriesRaw)) {
-                $operationalCountries = json_decode($operationalCountriesRaw, true) ?? [];
-              } else {
-                $operationalCountries = $operationalCountriesRaw;
-              }
-            @endphp
-
-            @if(!empty($operationalCountries))
-              <div class="pt-2 border-t border-gray-100">
-                <p class="text-xs font-bold text-gray-500 mb-1">🌍 Countries of operation:</p>
-                <div class="flex flex-wrap gap-1">
-                  @foreach(array_slice($operationalCountries, 0, 2) as $country)
-                    <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                      {{ $country }}
-                    </span>
-                  @endforeach
-                  @if(count($operationalCountries) > 2)
-                    <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                      +{{ count($operationalCountries) - 2 }}
-                    </span>
-                  @endif
-                </div>
-              </div>
-            @endif
-          </div>
-        </a>
-      @endforeach
-    </div>
-  </div>
-</section>
-
-<!-- EXPERTS AVAILABLE BAR -->
-<section class="py-6 px-4 bg-gradient-to-r from-green-500 to-emerald-600">
-  <div class="max-w-6xl mx-auto">
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-white" data-aos="fade-up" data-aos-duration="800">
-      <div class="flex items-center space-x-4">
-        <div class="flex -space-x-3">
-          @php
-            $randomProviders = App\Models\ServiceProvider::whereNotNull('profile_photo')
-              ->where('profile_photo', '!=', '')
-              ->whereHas('user', function($q) {
-                  $q->where('status', 'active');
-              })
-              ->inRandomOrder()
-              ->take(3)
-              ->get();
-            
-            $totalProviders = App\Models\ServiceProvider::whereHas('user', function($q) {
-                $q->where('status', 'active');
-            })->count();
-          @endphp
-          
-          @foreach($randomProviders as $rp)
-            <div class="w-12 h-12 rounded-full border-2 border-white bg-gray-300 overflow-hidden">
-              <img src="{{ asset($rp->profile_photo) }}" alt="{{ $rp->first_name }}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='{{ asset('images/attachment.png') }}';">
+            <div class="text-right text-xs text-slate-300">
+              <p>Start for free</p>
+              <p>No obligation, you keep control.</p>
             </div>
-          @endforeach
-          
-          @if($totalProviders > 3)
-          <div class="w-12 h-12 rounded-full border-2 border-white bg-white/20 backdrop-blur flex items-center justify-center font-bold">
-            +{{ $totalProviders - 3 }}
           </div>
-          @endif
         </div>
-        <div>
-          <div class="font-bold text-lg">🟢 {{ $totalProviders }} Helping expats & local pros available</div>
-          <div class="text-sm text-white/80">Multilingual, ready to help you in all countries</div>
-        </div>
-      </div>
-      <a href="{{ route('service-providers') }}" class="bg-white text-green-600 px-8 py-3 rounded-full font-bold hover:bg-gray-50 transition-all btn-shine">
-        Discover all profiles →
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURED PROVIDERS SECTION - 5 profiles on 1 line -->
-<section class="py-12 px-4 bg-gradient-to-br from-yellow-50 to-orange-50">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-10" data-aos="fade-up" data-aos-duration="800">
-      <div class="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full font-bold text-sm mb-4">
-        ⭐ Quality selection
-      </div>
-      <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
-        <span class="gradient-text">Featured providers</span>
-      </h2>
-      <p class="text-gray-600 text-lg">Selection based on responsiveness, quality and customer reviews 🏆</p>
-    </div>
-
-    <!-- Featured Providers Grid - 5 profiles on 1 line -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="featuredProvidersGrid">
-      @php
-        // Get providers with best ratings (random among top)
-        $featuredProviders = $providers
-          ->sortByDesc(function($provider) {
-            return $provider->reviews()->avg('rating') ?? 0;
-          })
-          ->take(20)
-          ->shuffle()
-          ->take(5);
-      @endphp
-
-      @foreach ($featuredProviders as $provider)
-        @php
-          $avgRating = $provider->reviews()->avg('rating') ?? 5.0;
-          $reviewCount = $provider->reviews()->count();
-          $statuses = json_decode($provider->special_status, true) ?? [];
-          $firstSpecialty = !empty($statuses) ? array_key_first($statuses) : null;
-          
-          $providerCategories = [];
-          if (isset($provider->categories) && is_string($provider->categories)) {
-            $categoryIds = json_decode($provider->categories, true);
-            if (is_array($categoryIds)) {
-              $providerCategories = $category->whereIn('id', $categoryIds)->take(2)->pluck('name')->toArray();
-            }
-          }
-          elseif (isset($provider->categories) && is_array($provider->categories)) {
-            $providerCategories = array_slice($provider->categories, 0, 2);
-          }
-          elseif (method_exists($provider, 'categories')) {
-            try {
-              $providerCategories = $provider->categories()->take(2)->pluck('name')->toArray();
-            } catch (\Exception $e) {
-              $providerCategories = [];
-            }
-          }
-          elseif (isset($provider->category_id)) {
-            $cat = $category->where('id', $provider->category_id)->first();
-            if ($cat) {
-              $providerCategories = [$cat->name];
-            }
-          }
-        @endphp
-
-        <a href="{{ route('provider-details', ['id' => $provider->slug]) }}" 
-          class="profile-card card-modern bg-white rounded-3xl overflow-hidden block group relative"
-          data-aos="fade-up"
-          data-aos-delay="{{ $loop->index * 30 }}"
-          data-aos-duration="600">
-          
-          <!-- Featured Badge -->
-          <div class="absolute top-2 left-2 z-20">
-            <span class="featured-badge text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-              ⭐ Featured
-            </span>
-          </div>
-
-          @php
-            $src = trim((string)($provider->profile_photo ?? ''));
-            $fallback = asset('images/attachment.png');
-            $path = $src ? parse_url($src, PHP_URL_PATH) : '';
-            $ext  = $path ? strtolower(pathinfo($path, PATHINFO_EXTENSION)) : null;
-            $isSvg = $ext === 'svg';
-          @endphp
-
-          <div class="aspect-ratio-box relative overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100">
-            <img
-              src="{{ $src ?: $fallback }}"
-              alt="{{ $provider->first_name }}"
-              class="provider-image absolute inset-0 w-full h-full {{ $isSvg ? 'object-contain bg-white p-6' : 'object-cover' }}"
-              onerror="this.onerror=null;this.src='{{ $fallback }}';"
-            />
-            
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            
-            @if($firstSpecialty)
-              <div class="absolute top-12 left-3">
-                <span class="badge-specialty text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-                  {{ $firstSpecialty }}
-                </span>
-              </div>
-            @endif
-
-            <div class="absolute top-3 right-3">
-              <div class="status-online w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-lg"></div>
-            </div>
-
-            @if($provider->preferred_language)
-              <div class="absolute bottom-3 left-3">
-                <span class="bg-white/90 backdrop-blur text-gray-800 px-2.5 py-1 rounded-full text-xs font-bold">
-                  🗣️ {{ $provider->preferred_language }}
-                </span>
-              </div>
-            @endif
-          </div>
-
-          <div class="p-4">
-            <div class="mb-2">
-              <h3 class="font-bold text-base text-gray-900 truncate mb-1">
-                {{ $provider->first_name ?? 'Provider' }}
-                @if($provider->last_name)
-                  {{ substr($provider->last_name, 0, 1) }}.
-                @endif
-              </h3>
-              
-              <div class="flex items-center mb-2">
-                <div class="flex text-yellow-400 text-xs">
-                  @php
-                    $fullStars = floor($avgRating);
-                  @endphp
-                  @for ($i = 1; $i <= 5; $i++)
-                    <svg class="w-3 h-3 {{ $i <= $fullStars ? 'fill-current' : 'fill-gray-300' }}" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                  @endfor
-                </div>
-                <span class="ml-1 text-xs font-bold text-gray-700">{{ number_format($avgRating, 1) }}</span>
-                <span class="ml-1 text-xs text-gray-500">({{ $reviewCount }})</span>
-              </div>
-            </div>
-
-            @if(!empty($providerCategories))
-              <div class="mb-2">
-                <p class="text-xs font-bold text-gray-500 mb-1">📂 Services:</p>
-                <div class="flex flex-wrap gap-1">
-                  @foreach($providerCategories as $cat)
-                    <span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                      {{ $cat }}
-                    </span>
-                  @endforeach
-                </div>
-              </div>
-            @endif
-
-            @php 
-              $operationalCountriesRaw = $provider->operational_countries ?? [];
-              if (is_string($operationalCountriesRaw)) {
-                $operationalCountries = json_decode($operationalCountriesRaw, true) ?? [];
-              } else {
-                $operationalCountries = $operationalCountriesRaw;
-              }
-            @endphp
-
-            @if(!empty($operationalCountries))
-              <div class="pt-2 border-t border-gray-100">
-                <p class="text-xs font-bold text-gray-500 mb-1">🌍 Countries of operation:</p>
-                <div class="flex flex-wrap gap-1">
-                  @foreach(array_slice($operationalCountries, 0, 2) as $country)
-                    <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                      {{ $country }}
-                    </span>
-                  @endforeach
-                  @if(count($operationalCountries) > 2)
-                    <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                      +{{ count($operationalCountries) - 2 }}
-                    </span>
-                  @endif
-                </div>
-              </div>
-            @endif
-          </div>
-        </a>
-      @endforeach
-    </div>
-  </div>
-</section>
-
-<!-- WHY CHOOSE US - NEW SECTION -->
-<section class="py-12 px-4 bg-gradient-to-br from-gray-50 to-blue-50">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
-      <div class="inline-block bg-blue-100 text-blue-700 px-6 py-2 rounded-full font-bold text-sm mb-4">
-        ✨ WHY ULIXAI
-      </div>
-      <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
-        Why Ulixai
-      </h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-        The one and only platform that connects traveler seekers and service providers in a benevolent competition
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Card 1: Security -->
-      <div class="why-choose-card" data-aos="fade-up" data-aos-delay="50" data-aos-duration="600">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-100 flex items-center justify-center">
-          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-black text-gray-900 mb-2 text-center">Security</h3>
-        <p class="text-gray-600 text-sm text-center leading-relaxed">
-          Payment held in escrow until service delivery or help
-        </p>
-      </div>
-
-      <!-- Card 2: Speed -->
-      <div class="why-choose-card" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-orange-100 flex items-center justify-center">
-          <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-black text-gray-900 mb-2 text-center">Post... Find!</h3>
-        <p class="text-gray-600 text-sm text-center leading-relaxed">
-          Post your service request ad (visa, bank, work, storage, etc.) and wait for offers from providers, compare and choose!
-        </p>
-      </div>
-
-      <!-- Card 3: International -->
-      <div class="why-choose-card" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-teal-100 flex items-center justify-center">
-          <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-black text-gray-900 mb-2 text-center">International 197+ countries</h3>
-        <p class="text-gray-600 text-sm text-center leading-relaxed">
-          Global presence in all countries
-        </p>
-      </div>
-
-      <!-- Card 4: Trust -->
-      <div class="why-choose-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-purple-100 flex items-center justify-center">
-          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-black text-gray-900 mb-2 text-center">Trust</h3>
-        <p class="text-gray-600 text-sm text-center leading-relaxed">
-          Verified reviews and certified providers
-        </p>
-      </div>
-
-      <!-- Card 5: Transparency -->
-      <div class="why-choose-card" data-aos="fade-up" data-aos-delay="250" data-aos-duration="600">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-green-100 flex items-center justify-center">
-          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-black text-gray-900 mb-2 text-center">Transparency</h3>
-        <p class="text-gray-600 text-sm text-center leading-relaxed">
-          Clear prices, no hidden fees
-        </p>
-      </div>
-
-      <!-- Card 6: Excellence -->
-      <div class="why-choose-card" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-pink-100 flex items-center justify-center">
-          <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-          </svg>
-        </div>
-        <h3 class="text-xl font-black text-gray-900 mb-2 text-center">Excellence</h3>
-        <p class="text-gray-600 text-sm text-center leading-relaxed">
-          100% verified providers
-        </p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-  <!-- WORLD MAP -->
-@include('pages.ulixai-map')
-
-<!-- SECURITY & ESCROW - NEW SECTION -->
-<section class="py-12 px-4 bg-gradient-to-br from-green-50 to-blue-50">
-  <div class="max-w-6xl mx-auto">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <div data-aos="fade-right" data-aos-duration="800">
-        <div class="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-bold text-sm mb-4">
-          🔒 Maximum Security
-        </div>
-        <h2 class="text-4xl sm:text-5xl font-display font-black mb-6">
-          Your money is protected
+  <!-- FAQ -->
+  <section class="py-12 px-4 bg-slate-50">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+          Questions you might have right now
         </h2>
-        <p class="text-gray-600 text-lg mb-8 leading-relaxed">
-          Payment is held in escrow until your validation. 3DS protection, supervised disputes, fast refunds.
+        <p class="text-sm text-slate-600 max-w-2xl mx-auto">
+          If you’re still reading, it probably means you’re serious about getting help or helping others. Let’s clear the last doubts.
         </p>
+      </div>
 
-        <div class="space-y-4">
-          <div class="flex items-start space-x-4 bg-white rounded-2xl p-4 shadow-md">
-            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+      <div class="space-y-3">
+        <!-- FAQ item -->
+        <div class="faq-item p-4 sm:p-5" data-faq>
+          <button type="button" class="faq-toggle w-full flex items-center justify-between text-left">
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-slate-900">
+                Is this a visa or legal service?
+              </p>
+            </div>
+            <div class="faq-icon ml-3 flex-shrink-0">
+              <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </div>
-            <div>
-              <h4 class="font-bold text-gray-900 mb-1">Escrow payment</h4>
-              <p class="text-gray-600 text-sm">Your money is securely held until service validation</p>
-            </div>
+          </button>
+          <div class="faq-content mt-3">
+            <p class="text-xs text-slate-600">
+              Not directly. We are a platform that connects you with people who know the local rules: expats, helpers, and professionals.
+              Some are lawyers or certified experts, others are experienced expats or locals. You always see who you are talking to before accepting anything.
+            </p>
           </div>
+        </div>
 
-          <div class="flex items-start space-x-4 bg-white rounded-2xl p-4 shadow-md">
-            <div class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        <div class="faq-item p-4 sm:p-5" data-faq>
+          <button type="button" class="faq-toggle w-full flex items-center justify-between text-left">
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-slate-900">
+                How much does it cost?
+              </p>
+            </div>
+            <div class="faq-icon ml-3 flex-shrink-0">
+              <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </div>
-            <div>
-              <h4 class="font-bold text-gray-900 mb-1">3D Secure & SSL</h4>
-              <p class="text-gray-600 text-sm">Military-grade banking encryption for all your transactions</p>
-            </div>
+          </button>
+          <div class="faq-content mt-3">
+            <p class="text-xs text-slate-600 mb-2">
+              Browsing helpers and sending your situation is free. Helpers can answer some questions for free or propose a paid plan.
+            </p>
+            <p class="text-xs text-slate-600">
+              You always see the price and format (call, follow-up, document review…) before paying. Payments are secured and held in escrow until the help is delivered.
+            </p>
           </div>
+        </div>
 
-          <div class="flex items-start space-x-4 bg-white rounded-2xl p-4 shadow-md">
-            <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+        <div class="faq-item p-4 sm:p-5" data-faq>
+          <button type="button" class="faq-toggle w-full flex items-center justify-between text-left">
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-slate-900">
+                What if I’m not satisfied?
+              </p>
+            </div>
+            <div class="faq-icon ml-3 flex-shrink-0">
+              <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </div>
-            <div>
-              <h4 class="font-bold text-gray-900 mb-1">Validation before release</h4>
-              <p class="text-gray-600 text-sm">You validate the service before the provider receives payment within 7 days after delivery of your service</p>
-            </div>
+          </button>
+          <div class="faq-content mt-3">
+            <p class="text-xs text-slate-600">
+              We encourage you to talk with the helper before booking to be sure they understand your case.
+              If something goes wrong, you can contact us: we’ll look at the situation, and if the service was clearly not delivered, we can decide a refund.
+            </p>
           </div>
-
-          
         </div>
-      </div>
 
-      <div data-aos="fade-left" data-aos-duration="800" class="relative">
-        <div class="bg-white rounded-3xl p-8 shadow-2xl border-2 border-blue-100">
-          <div class="text-center mb-6">
-            <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center animate-pulse-glow">
-              <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+        <div class="faq-item p-4 sm:p-5" data-faq>
+          <button type="button" class="faq-toggle w-full flex items-center justify-between text-left">
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-slate-900">
+                I’m shy / my situation is complex. Is this for me?
+              </p>
+            </div>
+            <div class="faq-icon ml-3 flex-shrink-0">
+              <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </div>
-            <h3 class="text-2xl font-bold mb-2">How does Escrow payment work?</h3>
-          </div>
-
-          <div class="space-y-4">
-            <div class="flex items-center space-x-4 bg-blue-50 rounded-xl p-4 border-2 border-blue-100">
-              <div class="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">1</div>
-              <div class="text-sm text-gray-700 font-medium">You pay → money is held in a secure account</div>
-            </div>
-            <div class="flex items-center space-x-4 bg-blue-50 rounded-xl p-4 border-2 border-blue-100">
-              <div class="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">2</div>
-              <div class="text-sm text-gray-700 font-medium">The provider performs the service</div>
-            </div>
-            <div class="flex items-center space-x-4 bg-green-50 rounded-xl p-4 border-2 border-green-200">
-              <div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">3</div>
-              <div class="text-sm text-gray-700 font-medium">You validate → payment is released to the provider</div>
-            </div>
+          </button>
+          <div class="faq-content mt-3">
+            <p class="text-xs text-slate-600">
+              Absolutely. Many helpers are expats themselves who went through rough patches.
+              You can say “I’m not ready to share everything yet” and start slowly. You decide what you share and when.
+            </p>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- FOR PROVIDERS CTA -->
-<section class="py-12 px-4 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
-  <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute top-10 right-10 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-10 left-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-  </div>
-
-  <div class="max-w-5xl mx-auto text-center relative z-10">
-    <div data-aos="zoom-in" data-aos-duration="800">
-      <div class="inline-block bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full font-bold text-sm mb-6">
-        💼 For local pros and helping expats
-      </div>
-      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-display font-black text-white mb-6 leading-tight">
-        Become a multilingual helping expat & <br class="hidden sm:block">Develop your international activity
-      </h2>
-      <p class="text-white/90 text-xl mb-10 max-w-3xl mx-auto leading-relaxed">
-        Join thousands of verified helping expats serving other expats and travelers in all countries around the world. 
-        Set your rates, choose your clients, and get paid securely.
-      </p>
-
-      <div class="grid sm:grid-cols-3 gap-6 mb-10">
-        <div class="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
-          <div class="text-4xl mb-3">💰</div>
-          <h4 class="font-bold text-white mb-2">Set your rates</h4>
-          <p class="text-white/80 text-sm">You decide your prices</p>
-        </div>
-        <div class="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
-          <div class="text-4xl mb-3">🌍</div>
-          <h4 class="font-bold text-white mb-2">Global reach</h4>
-          <p class="text-white/80 text-sm">Expat clients in 197 countries</p>
-        </div>
-        <div class="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
-          <div class="text-4xl mb-3">⚡</div>
-          <h4 class="font-bold text-white mb-2">Fast payments</h4>
-          <p class="text-white/80 text-sm">Secure international system</p>
-        </div>
-      </div>
-
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="{{ route('service-providers') }}" class="bg-white text-blue-600 px-10 py-4 rounded-full font-bold text-lg btn-shine hover:scale-105 transition-transform shadow-2xl">
-          Start earning →
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="py-12 px-4 bg-white">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
-      <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
-        <span class="gradient-text">Expat stories, Real impact</span>
-      </h2>
-      <p class="text-gray-600 text-lg">Listen to travelers who found their solution 💬</p>
-    </div>
-
-    <div class="overflow-x-auto md:overflow-visible pb-4 scrollbar-hide">
-      <div class="flex md:grid md:grid-cols-3 gap-8 min-w-max md:min-w-0">
-        <div class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="50" data-aos-duration="600">
-          <div class="flex items-center mb-4">
-            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
-            <div>
-              <div class="flex items-center gap-2 mb-1 flex-wrap">
-                <h4 class="font-bold text-gray-900">Sarah M.</h4>
-                <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Early Beta User</span>
-              </div>
-              <div class="flex text-yellow-400 text-sm">
-                ⭐⭐⭐⭐⭐
-              </div>
-            </div>
-          </div>
-          <h5 class="font-bold text-gray-800 mb-2">🏠 Storage with an expat for 6 months</h5>
-          <p class="text-gray-600 leading-relaxed">
-            Between two assignments, I needed to store my belongings in Barcelona. A French expat offered me secure space at his place for a fraction of the price of traditional storage. Simple and reassuring!
-          </p>
-        </div>
-
-        <div class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-          <div class="flex items-center mb-4">
-            <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Marcus" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
-            <div>
-              <div class="flex items-center gap-2 mb-1 flex-wrap">
-                <h4 class="font-bold text-gray-900">Marcus K.</h4>
-                <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Early Beta User</span>
-              </div>
-              <div class="flex text-yellow-400 text-sm">
-                ⭐⭐⭐⭐⭐
-              </div>
-            </div>
-          </div>
-          <h5 class="font-bold text-gray-800 mb-2">💼 Obtaining work visa in Japan</h5>
-          <p class="text-gray-600 leading-relaxed">
-            Japanese administrative procedures seemed impossible to me. A bilingual expat consultant guided me from start to finish. Visa obtained in 3 weeks instead of 3 months!
-          </p>
-        </div>
-
-        <div class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
-          <div class="flex items-center mb-4">
-            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Elena" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
-            <div>
-              <div class="flex items-center gap-2 mb-1 flex-wrap">
-                <h4 class="font-bold text-gray-900">Elena R.</h4>
-                <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Early Beta User</span>
-              </div>
-              <div class="flex text-yellow-400 text-sm">
-                ⭐⭐⭐⭐⭐
-              </div>
-            </div>
-          </div>
-          <h5 class="font-bold text-gray-800 mb-2">🔧 Emergency apartment repair in Dubai</h5>
-          <p class="text-gray-600 leading-relaxed">
-            Major water leak on a Friday evening in Dubai. A French-speaking expat plumber intervened in 2 hours, negotiated with the local landlord and fixed everything. Pure happiness!
-          </p>
-        </div>
-
-        <div class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="50" data-aos-duration="600">
-          <div class="flex items-center mb-4">
-            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Thomas" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
-            <div>
-              <div class="flex items-center gap-2 mb-1 flex-wrap">
-                <h4 class="font-bold text-gray-900">Thomas B.</h4>
-                <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Early Beta User</span>
-              </div>
-              <div class="flex text-yellow-400 text-sm">
-                ⭐⭐⭐⭐⭐
-              </div>
-            </div>
-          </div>
-          <h5 class="font-bold text-gray-800 mb-2">🚗 Car rental between expats in Lisbon</h5>
-          <p class="text-gray-600 leading-relaxed">
-            Rather than renting from Hertz, I found an expat who rented his car. Half price, local tips included and a real human connection. Top!
-          </p>
-        </div>
-
-        <div class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-          <div class="flex items-center mb-4">
-            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Amira" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
-            <div>
-              <div class="flex items-center gap-2 mb-1 flex-wrap">
-                <h4 class="font-bold text-gray-900">Amira T.</h4>
-                <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Early Beta User</span>
-              </div>
-              <div class="flex text-yellow-400 text-sm">
-                ⭐⭐⭐⭐⭐
-              </div>
-            </div>
-          </div>
-          <h5 class="font-bold text-gray-800 mb-2">📋 Certified translation of marriage documents</h5>
-          <p class="text-gray-600 leading-relaxed">
-            Urgent need to translate my marriage documents into Mandarin. A certified expat translator did everything in 24 hours with apostille. Marriage validated in Shanghai!
-          </p>
-        </div>
-
-        <div class="testimonial-card w-80 md:w-auto flex-shrink-0" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
-          <div class="flex items-center mb-4">
-            <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Carlos" class="w-14 h-14 rounded-full mr-4 border-2 border-blue-200">
-            <div>
-              <div class="flex items-center gap-2 mb-1 flex-wrap">
-                <h4 class="font-bold text-gray-900">Carlos P.</h4>
-                <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Early Beta User</span>
-              </div>
-              <div class="flex text-yellow-400 text-sm">
-                ⭐⭐⭐⭐⭐
-              </div>
-            </div>
-          </div>
-          <h5 class="font-bold text-gray-800 mb-2">🏥 Medical assistance in Bangkok</h5>
-          <p class="text-gray-600 leading-relaxed">
-            Medical emergency in Thailand without speaking Thai. An expat nursing assistant accompanied me to the hospital, translated everything and negotiated rates. A guardian angel!
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt-12" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
-      <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-8 sm:p-12 text-center text-white shadow-2xl">
-        <div class="max-w-3xl mx-auto">
-          <div class="flex justify-center mb-6">
-            <div class="relative">
-              <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Featured" class="w-20 h-20 rounded-full border-4 border-white shadow-lg">
-              <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-purple-700 text-white text-xs px-3 py-1 rounded-full font-semibold whitespace-nowrap border-2 border-white">Early Beta User</span>
-            </div>
-          </div>
-          <div class="text-yellow-300 text-2xl mb-4">⭐⭐⭐⭐⭐</div>
-          <h3 class="text-3xl font-black mb-4">Bank account opening made simple!</h3>
-          <p class="text-xl text-white/90 leading-relaxed">
-            "Opening a bank account in Germany without speaking German seemed impossible. An expat advisor physically accompanied me to the bank, translated and explained everything. <strong>Account opened in 1 hour instead of several weeks of hassle.</strong> This platform is a gem for expats!"
-          </p>
-          <p class="mt-6 font-semibold">— Marie D., Expat in Germany 🇩🇪</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="py-12 px-4 bg-gradient-to-br from-gray-50 to-blue-50">
-  <div class="max-w-4xl mx-auto">
-    <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
-      <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
-        <span class="gradient-text">Frequently asked questions from expats</span>
-      </h2>
-      <p class="text-gray-600 text-lg">Everything you need to know 🤔</p>
-    </div>
-
-    <div class="space-y-4">
-      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-modern" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
-        <button class="w-full flex items-center justify-between p-6 text-left faq-toggle" onclick="toggleFAQ(this)">
-          <span class="flex items-center text-lg font-bold text-gray-800 flex-1 pr-4">
-            <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">1</span>
-            <span>How does the platform work to find a helping expat?</span>
-          </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="faq-content px-6 pb-0">
-          <div class="pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
-            It's very simple! You describe your need (visa, translation, relocation, repair, storage, etc.), we connect you with verified and multilingual helping expats in your country. You choose the profile that suits you, discuss directly with them, and validate the service. Payment is secure and you benefit from 24/7 support.
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-modern" data-aos="fade-up" data-aos-delay="50" data-aos-duration="600">
-        <button class="w-full flex items-center justify-between p-6 text-left faq-toggle" onclick="toggleFAQ(this)">
-          <span class="flex items-center text-lg font-bold text-gray-800 flex-1 pr-4">
-            <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">2</span>
-            <span>What types of services can I find on the platform?</span>
-          </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="faq-content px-6 pb-0">
-          <div class="pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
-            We cover all expat needs: administrative procedures (visas, work permits, bank account opening), certified translations, medical assistance, work and repairs, property storage, vehicle rental between expats, language courses, moving assistance, and much more. If you have a specific need, there is definitely a helping expat to assist you!
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-modern" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-        <button class="w-full flex items-center justify-between p-6 text-left faq-toggle" onclick="toggleFAQ(this)">
-          <span class="flex items-center text-lg font-bold text-gray-800 flex-1 pr-4">
-            <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">3</span>
-            <span>Are helping expats verified and reliable?</span>
-          </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="faq-content px-6 pb-0">
-          <div class="pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
-            Absolutely! All our helping expats go through a rigorous verification process: identity validation, skill verification, professional certification control if necessary, and customer review system. In addition, each transaction is secured and our moderation team monitors service quality 24/7.
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-modern" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
-        <button class="w-full flex items-center justify-between p-6 text-left faq-toggle" onclick="toggleFAQ(this)">
-          <span class="flex items-center text-lg font-bold text-gray-800 flex-1 pr-4">
-            <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">4</span>
-            <span>How are service rates set?</span>
-          </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="faq-content px-6 pb-0">
-          <div class="pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
-            Each helping expat sets their own rates based on their expertise, type of service, and the country where they operate. You can compare profiles, read reviews, and choose the one that fits your budget. Generally, our rates are 30 to 50% cheaper than traditional services, as we eliminate intermediaries.
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-modern border-2 border-purple-200" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
-        <button class="w-full flex items-center justify-between p-6 text-left faq-toggle" onclick="toggleFAQ(this)">
-          <span class="flex items-center text-lg font-bold text-gray-800 flex-1 pr-4">
-            <span class="bg-purple-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold mr-4 flex-shrink-0 text-sm">5</span>
-            <span class="flex items-center gap-2 flex-wrap">
-              What is an "Early Beta User"?
-              <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Early Beta User</span>
-            </span>
-          </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="faq-content px-6 pb-0">
-          <div class="pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
-            "Early Beta Users" are our first platform testers! They are pioneer expats who agreed to test our features in preview, give us constructive feedback, and help us improve the user experience. In exchange, they benefit from lifetime preferential rates, priority access to new features, and a distinctive badge on their profile. Their reviews are particularly valuable because they know the platform inside out!
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-modern" data-aos="fade-up" data-aos-delay="250" data-aos-duration="600">
-        <button class="w-full flex items-center justify-between p-6 text-left faq-toggle" onclick="toggleFAQ(this)">
-          <span class="flex items-center text-lg font-bold text-gray-800 flex-1 pr-4">
-            <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">6</span>
-            <span>In which countries is the platform available?</span>
-          </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="faq-content px-6 pb-0">
-          <div class="pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
-            Our helping expat network currently covers 197 countries around the world! From the United States to Japan, from Australia to Brazil, including all countries in Europe, Africa and Asia. Wherever you are as an expat, you will find a multilingual professional ready to help you. And our community grows every day!
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-modern" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
-        <button class="w-full flex items-center justify-between p-6 text-left faq-toggle" onclick="toggleFAQ(this)">
-          <span class="flex items-center text-lg font-bold text-gray-800 flex-1 pr-4">
-            <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">7</span>
-            <span>How can I become a helping expat and offer my services?</span>
-          </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="faq-content px-6 pb-0">
-          <div class="pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
-            If you are an expat or multilingual local professional, join us! Create your profile in a few minutes, describe your skills and services, set your rates, and start receiving requests. We take a small commission on each transaction, but you keep total control of your activity. It's an excellent way to generate additional income while helping other expats!
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-modern" data-aos="fade-up" data-aos-delay="350" data-aos-duration="600">
-        <button class="w-full flex items-center justify-between p-6 text-left faq-toggle" onclick="toggleFAQ(this)">
-          <span class="flex items-center text-lg font-bold text-gray-800 flex-1 pr-4">
-            <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">8</span>
-            <span>What happens if I am not satisfied with the service?</span>
-          </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="faq-content px-6 pb-0">
-          <div class="pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
-            Your satisfaction is our priority! We have put in place a satisfaction guarantee: if the service does not match what was agreed, contact our support within 48 hours. We will analyze the situation and, depending on the case, offer a partial or full refund, or connect you with another helping expat. Our review system also helps maintain service quality.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
   <!-- FINAL CTA -->
-<section class="py-12 px-4 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
-  <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute top-20 left-20 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float"></div>
-    <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
-  </div>
-
-  <div class="max-w-4xl mx-auto text-center relative z-10" data-aos="zoom-in" data-aos-duration="800">
-    <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-12 sm:p-16">
-      <div class="text-6xl mb-6">🚀</div>
-      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-display font-black text-white mb-6 leading-tight">
-        Ready to simplify <br class="hidden sm:block">your expat life?
+  <section class="py-12 px-4 bg-gradient-to-b from-blue-900 to-slate-900 text-white">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 mb-4">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 status-pulse"></span>
+        <span class="text-xs text-slate-100">Still reading? That might mean you’re ready to move forward.</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black mb-3">
+        Share your situation. Let humans who’ve been there help you.
       </h2>
-      <p class="text-white/90 text-xl sm:text-2xl mb-10 leading-relaxed">
-        Join 304 millions expats and 1,645 milliard travelers who love life in the world
+      <p class="text-sm text-slate-100 mb-6 max-w-2xl mx-auto">
+        Whatever your stage—just landed, long-term, or “thinking about it”—you don’t have to figure it out alone.
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              </div>
-      <p class="text-white/70 text-sm mt-6">✓ No credit card required  •  ✓ 100% free only fees on each operate  •  ✓ Multilingual</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#search" class="btn-shine inline-flex items-center justify-center px-6 sm:px-8 py-3 rounded-full bg-white text-blue-700 text-sm font-semibold shadow-lg hover:shadow-xl transition">
+          <span>Describe my situation</span>
+          <span class="ml-2 text-lg">✍️</span>
+        </a>
+        <button
+          type="button"
+          onclick="openAIPopup()"
+          class="inline-flex items-center justify-center px-6 sm:px-8 py-3 rounded-full bg-blue-700/60 text-white text-sm font-semibold border border-blue-300/40 hover:bg-blue-700 transition"
+        >
+          <span>Get a sneak peek of our AI helper</span>
+          <span class="ml-2 text-lg">🤖</span>
+        </button>
+      </div>
+      <p class="mt-4 text-[11px] text-slate-300">
+        No newsletter forced, no hidden terms. Just a safer, clearer path to your next step abroad.
+      </p>
     </div>
-  </div>
-</section>
+  </section>
 
 
 
@@ -1929,7 +1765,7 @@ body {
 
 <!-- AI POPUP -->
 <div class="ai-popup-overlay" id="aiPopupOverlay" onclick="closeAIPopup()"></div>
-<div class="ai-popup" id="aiPopup">
+<div class="ai-popup" id="aiPopup" role="dialog" aria-modal="true" aria-labelledby="aiPopupTitle">
   <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
     <div class="bg-gradient-to-r from-pink-500 to-purple-600 p-6 relative">
       <button onclick="closeAIPopup()" class="absolute top-4 right-4 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all">
@@ -1939,47 +1775,48 @@ body {
       </button>
       <div class="text-center">
         <div class="text-6xl mb-3 ai-robot">🤖</div>
-        <h3 class="text-2xl font-black text-white">Ulysses coming soon!</h3>
+        <h3 id="aiPopupTitle" class="text-2xl font-black text-white">Ulysses coming soon!</h3>
       </div>
     </div>
     
     <div class="p-8 text-center">
       <div class="mb-6">
-        <div class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-bold text-sm mb-4">
-          🚀 Coming very soon
+        <div class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-xs font-semibold">
+          Coming next: AI + humans, not AI instead of humans.
         </div>
       </div>
-      <p class="text-gray-700 text-lg leading-relaxed mb-6">
-        The AI <strong class="text-purple-600">Ulysses</strong> is learning all the languages of the world! 🌍
+      <p class="text-sm text-slate-700 mb-4">
+        Soon, you’ll be able to describe your situation in natural language and let Ulysses summarize it for you, suggest options,
+        and connect you faster to the right helpers.
       </p>
-      <p class="text-gray-600 text-base leading-relaxed">
-        Stay connected, Ulysses is coming soon with plenty of superpowers for expats, travelers and vacationers around the world! ✨
+      <p class="text-xs text-slate-500 mb-6 max-w-md mx-auto">
+        Our promise: AI will never decide alone on your future. It will simply make the path clearer and smoother.
       </p>
-      
-      <div class="flex justify-center space-x-2 mt-6 text-3xl">
-        <span class="animate-bounce" style="animation-delay: 0s;">📚</span>
-        <span class="animate-bounce" style="animation-delay: 0.1s;">🗣️</span>
-        <span class="animate-bounce" style="animation-delay: 0.2s;">🌐</span>
-        <span class="animate-bounce" style="animation-delay: 0.3s;">💬</span>
+      <div class="flex justify-center">
+        <button
+          type="button"
+          onclick="closeAIPopup()"
+          class="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition"
+        >
+          Close
+        </button>
       </div>
-    </div>
-    
-    <div class="bg-gray-50 px-8 py-4 text-center">
-      <p class="text-sm text-gray-500">The AI that makes expat life even simpler 🎉</p>
     </div>
   </div>
 </div>
 
+</main>
+
 <!-- BACK TO TOP -->
-<div id="backToTop">
+<button id="backToTop" type="button" aria-label="Back to top">
   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
   </svg>
-</div>
+</button>
 
 <!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ mix('js/app.js') }}" defer></script>
 
 <script>
   // Initialize AOS with reduced effects
@@ -2003,9 +1840,14 @@ body {
     popup.classList.add('show');
     overlay.classList.add('show');
     
+    if (aiPopupTimer) {
+      clearTimeout(aiPopupTimer);
+    }
+    
+    // Auto-close after 30s for UX
     aiPopupTimer = setTimeout(() => {
       closeAIPopup();
-    }, 5000);
+    }, 30000);
   }
 
   function closeAIPopup() {
@@ -2040,33 +1882,79 @@ body {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Scroll Bubbles
-  function scrollBubbles(direction) {
-    const container = document.getElementById('categoryContainer');
-    const scrollAmount = 300;
-    if (direction === 'next') {
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    } else {
-      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    }
-  }
+  // FAQ Accordion
+  const faqItems = document.querySelectorAll('[data-faq]');
+  
+  faqItems.forEach(item => {
+    const toggle = item.querySelector('.faq-toggle');
+    const content = item.querySelector('.faq-content');
+    
+    toggle.addEventListener('click', () => {
+      const isActive = toggle.classList.contains('active');
+      
+      faqItems.forEach(otherItem => {
+        if (otherItem !== item) {
+          otherItem.querySelector('.faq-toggle').classList.remove('active');
+          otherItem.querySelector('.faq-content').classList.remove('active');
+          otherItem.classList.remove('active');
+        }
+      });
+      
+      if (!isActive) {
+        toggle.classList.add('active');
+        content.classList.add('active');
+        item.classList.add('active');
+      } else {
+        toggle.classList.remove('active');
+        content.classList.remove('active');
+        item.classList.remove('active');
+      }
+    });
+  });
 
-  // FAQ Toggle
-  function toggleFAQ(button) {
-    const content = button.nextElementSibling;
-    const toggle = button;
+  // Category bubble filters (front only UI)
+  const categoryBubbles = document.querySelectorAll('.category-bubble');
+
+  categoryBubbles.forEach(bubble => {
+    bubble.addEventListener('click', () => {
+      const cat = bubble.getAttribute('data-category');
+
+      // Active state
+      categoryBubbles.forEach(b => b.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50'));
+      bubble.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50');
+
+      // Simple mapping to select fields if needed (optional)
+      const categorySelect = document.getElementById('categorySelect');
+      if (!categorySelect) return;
+
+      if (cat === 'all') {
+        categorySelect.value = '';
+      } else {
+        // Mapping à faire côté back si besoin
+      }
+    });
+  });
+
+  // FAQ simplified open/close function for manual controls
+  function toggleFAQ(index) {
+    const all = document.querySelectorAll('[data-faq]');
+    if (index < 0 || index >= all.length) return;
+
+    const item = all[index];
+    const content = item.querySelector('.faq-content');
+    const toggle = item.querySelector('.faq-toggle');
     const isActive = content.classList.contains('active');
 
-    document.querySelectorAll('.faq-content').forEach(item => {
-      item.classList.remove('active');
-    });
-    document.querySelectorAll('.faq-toggle').forEach(item => {
-      item.classList.remove('active');
+    all.forEach(faq => {
+      faq.classList.remove('active');
+      faq.querySelector('.faq-content').classList.remove('active');
+      faq.querySelector('.faq-toggle').classList.remove('active');
     });
 
     if (!isActive) {
       content.classList.add('active');
       toggle.classList.add('active');
+      item.classList.add('active');
     }
   }
 
@@ -2088,17 +1976,21 @@ body {
             option.textContent = subcategory.name;
             subcategorySelect.appendChild(option);
           });
-          subcategoryWrapper.classList.remove('hidden');
-          subsubcategoryWrapper.classList.add('hidden');
+          if (subcategoryWrapper) subcategoryWrapper.classList.remove('hidden');
+          if (subsubcategoryWrapper) subsubcategoryWrapper.classList.add('hidden');
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+          console.error('Error:', error);
+          if (subcategoryWrapper) subcategoryWrapper.classList.add('hidden');
+          if (subsubcategoryWrapper) subsubcategoryWrapper.classList.add('hidden');
+        });
     } else {
-      subcategoryWrapper.classList.add('hidden');
-      subsubcategoryWrapper.classList.add('hidden');
+      if (subcategoryWrapper) subcategoryWrapper.classList.add('hidden');
+      if (subsubcategoryWrapper) subsubcategoryWrapper.classList.add('hidden');
     }
   });
 
-  // Subcategory Filter
+  // Subcategory change handler
   document.getElementById('subcategorySelect').addEventListener('change', function() {
     const subcategoryId = this.value;
     const subsubcategoryWrapper = document.getElementById('subsubcategoryWrapper');
@@ -2116,17 +2008,17 @@ body {
               option.textContent = subsubcategory.name;
               subsubcategorySelect.appendChild(option);
             });
-            subsubcategoryWrapper.classList.remove('hidden');
+            if (subsubcategoryWrapper) subsubcategoryWrapper.classList.remove('hidden');
           } else {
-            subsubcategoryWrapper.classList.add('hidden');
+            if (subsubcategoryWrapper) subsubcategoryWrapper.classList.add('hidden');
           }
         })
         .catch(error => {
           console.error('Error:', error);
-          subsubcategoryWrapper.classList.add('hidden');
+          if (subsubcategoryWrapper) subsubcategoryWrapper.classList.add('hidden');
         });
     } else {
-      subsubcategoryWrapper.classList.add('hidden');
+      if (subsubcategoryWrapper) subsubcategoryWrapper.classList.add('hidden');
     }
   });
 
@@ -2137,203 +2029,211 @@ body {
     document.getElementById('categorySelect').value = '';
     document.getElementById('subcategorySelect').value = '';
     document.getElementById('subsubcategorySelect').value = '';
-    
-    document.getElementById('subcategoryWrapper').classList.add('hidden');
-    document.getElementById('subsubcategoryWrapper').classList.add('hidden');
-    
-    const serviceGrid = document.getElementById('serviceGrid');
-    serviceGrid.innerHTML = originalProvidersHTML;
-    
-    AOS.refresh();
+
+    const subcategoryWrapper = document.getElementById('subcategoryWrapper');
+    const subsubcategoryWrapper = document.getElementById('subsubcategoryWrapper');
+    if (subcategoryWrapper) subcategoryWrapper.classList.add('hidden');
+    if (subsubcategoryWrapper) subsubcategoryWrapper.classList.add('hidden');
+
+    // Reset providers HTML if needed
+    if (originalProvidersHTML) {
+      document.getElementById('serviceGrid').innerHTML = originalProvidersHTML;
+    }
   });
 
-  // Filter Button
-  document.getElementById('filterButton').addEventListener('click', function() {
-    const categoryId = document.getElementById('categorySelect').value;
-    const subcategoryId = document.getElementById('subcategorySelect').value;
-    const subsubcategoryId = document.getElementById('subsubcategorySelect').value || '';
-    const language = document.getElementById('languageSelect').value;
-    const country = document.getElementById('countrySelect').value;
+  // Filter providers with fetch
+  const filterForm = document.getElementById('filterProvidersForm');
+  if (filterForm) {
+    filterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
 
-    const serviceGrid = document.getElementById('serviceGrid');
-    serviceGrid.innerHTML = `
-      <div class="col-span-full flex justify-center py-16">
-        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
-      </div>
-    `;
+      const language = document.getElementById('languageSelect').value;
+      const country = document.getElementById('countrySelect').value;
+      const categoryId = document.getElementById('categorySelect').value;
+      const subcategoryId = document.getElementById('subcategorySelect').value;
+      const subsubcategoryId = document.getElementById('subsubcategorySelect').value;
+      const description = document.getElementById('description').value;
 
-    fetch(`/filter-providers?category_id=${categoryId}&subcategory_id=${subcategoryId}&subsubcategory_id=${subsubcategoryId}&country=${country}&language=${language}`)
-      .then(response => response.json())
-      .then(providers => {
-        serviceGrid.innerHTML = '';
-        
-        if (providers.length > 0) {
-          providers.slice(0, 10).forEach(function(provider, index) {
-            const specialStatus = provider.special_status ? JSON.parse(provider.special_status) : {};
-            const operationalCountries = Array.isArray(provider.operational_countries) 
-              ? provider.operational_countries 
-              : (provider.operational_countries ? JSON.parse(provider.operational_countries) : []);
-            
-            const avgRating = provider.average_rating || 5.0;
-            const reviewCount = provider.reviews_count || 0;
-            const fullStars = Math.floor(avgRating);
-            const firstSpecialty = Object.keys(specialStatus).length > 0 ? Object.keys(specialStatus)[0] : null;
-            
-            let providerCategories = [];
-            if (provider.categories && Array.isArray(provider.categories)) {
-              providerCategories = provider.categories.slice(0, 2).map(cat => cat.name);
-            } else if (provider.categories && provider.categories.length) {
-              try {
-                providerCategories = provider.categories.slice(0, 2).map(cat => cat.name || cat);
-              } catch(e) {
-                providerCategories = [];
-              }
-            }
-            
-            const providerCard = `
-              <a href="/provider-details/${provider.slug}" 
-                class="profile-card card-modern bg-white rounded-3xl overflow-hidden block group"
-                data-aos="fade-up"
-                data-aos-delay="${index * 30}">
-                
-                <div class="aspect-ratio-box relative overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100">
-                  <img
-                    src="${provider.profile_photo || 'images/attachment.png'}"
-                    alt="${provider.first_name}"
-                    class="provider-image absolute inset-0 w-full h-full object-cover"
-                    onerror="this.src='images/attachment.png';"
-                  />
-                  
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  
-                  ${firstSpecialty ? `
-                    <div class="absolute top-3 left-3">
-                      <span class="badge-specialty text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-                        ${firstSpecialty}
-                      </span>
-                    </div>
-                  ` : ''}
+      const serviceGrid = document.getElementById('serviceGrid');
+      serviceGrid.innerHTML = `
+        <div class="col-span-2 text-center py-10">
+          <p class="text-sm text-slate-600 mb-2">Looking for helpers matching your situation...</p>
+          <p class="text-xs text-slate-500">Please wait a few seconds.</p>
+        </div>
+      `;
 
-                  <div class="absolute top-3 right-3">
-                    <div class="status-online w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-lg"></div>
-                  </div>
+      fetch(`/filter-providers?category_id=${categoryId}&subcategory_id=${subcategoryId}&subsubcategory_id=${subsubcategoryId}&country=${country}&language=${language}`)
+        .then(response => response.json())
+        .then(providers => {
+          serviceGrid.innerHTML = '';
+          
+          if (providers.length > 0) {
+            providers.slice(0, 10).forEach(function(provider, index) {
+              const specialStatus = provider.special_status ? JSON.parse(provider.special_status) : {};
+              const operationalCountries = Array.isArray(provider.operational_countries) 
+                ? provider.operational_countries 
+                : (provider.operational_countries ? JSON.parse(provider.operational_countries) : []);
+              
+              const speaks = Array.isArray(provider.speaks) 
+                ? provider.speaks 
+                : (provider.speaks ? JSON.parse(provider.speaks) : []);
 
-                  ${provider.preferred_language ? `
-                    <div class="absolute bottom-3 left-3">
-                      <span class="bg-white/90 backdrop-blur text-gray-800 px-2.5 py-1 rounded-full text-xs font-bold">
-                        🗣️ ${provider.preferred_language}
-                      </span>
-                    </div>
-                  ` : ''}
-                </div>
+              const fallbackImage = 'images/attachment.png';
+              const srcImage = provider.profile_photo || fallbackImage;
 
-                <div class="p-4">
-                  <div class="mb-2">
-                    <h3 class="font-bold text-base text-gray-900 truncate mb-1">
-                      ${provider.first_name || 'Provider'}
-                    </h3>
-                    
-                    <div class="flex items-center mb-2">
-                      <div class="flex text-yellow-400 text-xs">
-                        ${Array(5).fill(0).map((_, i) => `
-                          <svg class="w-3 h-3 ${i < fullStars ? 'fill-current' : 'fill-gray-300'}" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                          </svg>
-                        `).join('')}
-                      </div>
-                      <span class="ml-1 text-xs font-bold text-gray-700">${avgRating.toFixed(1)}</span>
-                      <span class="ml-1 text-xs text-gray-500">(${reviewCount})</span>
-                    </div>
-                  </div>
-
-                  ${providerCategories.length > 0 ? `
-                    <div class="mb-2">
-                      <p class="text-xs font-bold text-gray-500 mb-1">📂 Services:</p>
-                      <div class="flex flex-wrap gap-1">
-                        ${providerCategories.map(cat => `
-                          <span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                            ${cat}
-                          </span>
-                        `).join('')}
-                      </div>
-                    </div>
-                  ` : ''}
-
-                  ${operationalCountries.length > 0 ? `
-                    <div class="pt-2 border-t border-gray-100">
-                      <p class="text-xs font-bold text-gray-500 mb-1">🌍 Countries of operation:</p>
-                      <div class="flex flex-wrap gap-1">
-                        ${operationalCountries.slice(0, 2).map(country => `
-                          <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                            ${country}
-                          </span>
-                        `).join('')}
-                        ${operationalCountries.length > 2 ? `
-                          <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-lg text-xs font-medium">
-                            +${operationalCountries.length - 2}
+              const cardHtml = `
+                <article class="provider-card bg-white flex flex-col" data-aos="fade-up" data-aos-delay="${index * 50}">
+                  <div class="provider-image-wrapper">
+                    <div class="aspect-ratio-box relative overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100">
+                      <img
+                        loading="lazy"
+                        src="${srcImage}"
+                        alt="${provider.first_name}"
+                        class="provider-image absolute inset-0 w-full h-full object-cover"
+                        onerror="this.src='${fallbackImage}';"
+                      />
+                      <div class="provider-image-overlay"></div>
+                      <div class="absolute top-3 left-3 flex flex-col gap-2">
+                        ${specialStatus.featured ? `
+                          <span class="featured-badge">
+                            <span class="text-xs">⭐ Featured Helper</span>
                           </span>
                         ` : ''}
+                        <span class="provider-rating">
+                          <span class="mr-1">★</span> ${Number(provider.average_rating || 4.8).toFixed(1)}
+                        </span>
+                      </div>
+                      ${specialStatus.quick_reply ? `
+                        <div class="absolute bottom-3 left-3 status-badge status-pulse">
+                          <span class="status-dot"></span>
+                          <span>Replies fast</span>
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                  <div class="p-4 flex-1 flex flex-col">
+                    <div class="flex items-start justify-between gap-3 mb-2">
+                      <div>
+                        <div class="flex items-center gap-2 mb-1">
+                          <h3 class="text-base font-black text-slate-900">
+                            ${provider.first_name} ${provider.last_name || ''}
+                          </h3>
+                          ${specialStatus.verified ? `
+                            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 text-[10px] font-bold" title="Verified identity">
+                              ✓
+                            </span>
+                          ` : ''}
+                        </div>
+                        <p class="text-xs font-medium text-blue-700">
+                          ${provider.title || 'Local expat helper'}
+                        </p>
                       </div>
                     </div>
-                  ` : ''}
-                </div>
-              </a>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                      ${operationalCountries.map(country => `
+                        <span class="tag-chip">
+                          🌍 ${country}
+                        </span>
+                      `).join('')}
+                      ${speaks.map(lang => `
+                        <span class="tag-chip secondary">
+                          🗣️ ${lang}
+                        </span>
+                      `).join('')}
+                    </div>
+                    <p class="text-xs text-slate-600 mb-4">
+                      ${provider.bio ? provider.bio.substring(0, 160) + (provider.bio.length > 160 ? '…' : '') : 'No description yet, but available to help with your situation.'}
+                    </p>
+                    <div class="mt-auto flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                      <div class="flex items-center gap-2 text-xs text-slate-500">
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-50 border border-slate-200">
+                          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 status-pulse"></span>
+                          <span>Usually replies in &lt; 24h</span>
+                        </span>
+                      </div>
+                      <a 
+                        href="/providers/${provider.id}"
+                        class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition"
+                      >
+                        View profile
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              `;
+              serviceGrid.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+            // Refresh AOS for new elements
+            AOS.refresh();
+          } else {
+            serviceGrid.innerHTML = `
+              <div class="col-span-2 text-center py-10">
+                <p class="text-sm text-slate-600 mb-2">
+                  No helpers match your filters yet.
+                </p>
+                <p class="text-xs text-slate-500">
+                  Try with fewer filters or choose “Any situation” and “Any country”.
+                </p>
+              </div>
             `;
-            
-            serviceGrid.innerHTML += providerCard;
-          });
-          
-          AOS.refresh();
-        } else {
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
           serviceGrid.innerHTML = `
-            <div class="col-span-full text-center py-16">
-              <div class="text-6xl mb-4">😢</div>
-              <h3 class="text-2xl font-bold text-gray-800 mb-2">No local pro found</h3>
-              <p class="text-gray-600 mb-4">Try adjusting your filters or</p>
-              <button onclick="document.getElementById('resetFiltersButton').click()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">
-                Reset filters
-              </button>
+            <div class="col-span-2 text-center py-10">
+              <p class="text-sm text-red-600 mb-2">
+                Something went wrong while searching.
+              </p>
+              <p class="text-xs text-slate-500">
+                Please try again in a moment or refresh the page.
+              </p>
             </div>
           `;
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        serviceGrid.innerHTML = `
-          <div class="col-span-full text-center py-16">
-            <div class="text-6xl mb-4">⚠️</div>
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">Oops! Something went wrong</h3>
-            <p class="text-gray-600 mb-4">Please try again</p>
-            <button onclick="location.reload()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">
-              Reload page
-            </button>
-          </div>
-        `;
-      });
-  });
+        });
+    });
+  }
 
-  // Touch swipe for bubbles
-  let startX = 0;
-  let endX = 0;
-  const categoryContainer = document.getElementById('categoryContainer');
+  // Horizontal scroll support for categories on mobile (swipe)
+  const scrollContainer = document.querySelector('.scroll-container');
+  if (scrollContainer) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
 
-  if (categoryContainer) {
-    categoryContainer.addEventListener('touchstart', function(e) {
-      startX = e.touches[0].clientX;
+    scrollContainer.addEventListener('mousedown', (e) => {
+      isDown = true;
+      scrollContainer.classList.add('cursor-grabbing');
+      startX = e.pageX - scrollContainer.offsetLeft;
+      scrollLeft = scrollContainer.scrollLeft;
+    });
+    scrollContainer.addEventListener('mouseleave', () => {
+      isDown = false;
+      scrollContainer.classList.remove('cursor-grabbing');
+    });
+    scrollContainer.addEventListener('mouseup', () => {
+      isDown = false;
+      scrollContainer.classList.remove('cursor-grabbing');
+    });
+    scrollContainer.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - scrollContainer.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      scrollContainer.scrollLeft = scrollLeft - walk;
     });
 
-    categoryContainer.addEventListener('touchend', function(e) {
-      endX = e.changedTouches[0].clientX;
-      const threshold = 50;
-      const diff = startX - endX;
-      
-      if (Math.abs(diff) > threshold) {
-        if (diff > 0) {
-          scrollBubbles('next');
-        } else {
-          scrollBubbles('prev');
-        }
-      }
+    // Touch support
+    let touchStartX;
+    scrollContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].pageX;
+    });
+    scrollContainer.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      const moveX = touch.pageX - touchStartX;
+      scrollContainer.scrollLeft -= moveX * 0.6;
+      touchStartX = touch.pageX;
     });
   }
 </script>

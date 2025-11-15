@@ -225,7 +225,56 @@ export function initializeCategoryPopups() {
     window.location.href = '/create-request';
   };
   
-  // Resize handler
+  // ═══════════════════════════════════════════════════════════
+  // 🔁 FALLBACKS POUR LES FONCTIONS DE FERMETURE
+  // ═══════════════════════════════════════════════════════════
+  // Si pour une raison quelconque le <script> de popup_request_help.blade.php
+  // ne s'exécute pas jusqu'au bout, on recrée ici les fonctions globales
+  // attendues par les boutons "croix".
+  
+  if (typeof window.closeAllPopups !== 'function') {
+    console.log('⚠️ [CategoryPopups] closeAllPopups not defined - creating fallback');
+    
+    window.closeAllPopups = function() {
+      console.log('❌ [CategoryPopups] Closing all category popups (fallback)');
+      
+      // Fermer tous les popups de catégories
+      Object.values(categoryLevels).forEach(level => {
+        const popup = document.getElementById(level.popupId);
+        if (popup) {
+          popup.classList.add('hidden');
+          popup.setAttribute('aria-hidden', 'true');
+        }
+      });
+      
+      // Clear localStorage
+      localStorage.removeItem('create-request');
+      
+      // Rétablir le scroll du body
+      document.body.style.overflow = '';
+    };
+  }
+  
+  if (typeof window.closeSearchPopup !== 'function') {
+    console.log('⚠️ [CategoryPopups] closeSearchPopup not defined - creating fallback');
+    
+    window.closeSearchPopup = function() {
+      console.log('❌ [CategoryPopups] Closing main search popup (fallback)');
+      
+      const popup = document.getElementById(categoryLevels.main.popupId);
+      if (popup) {
+        popup.classList.add('hidden');
+        popup.setAttribute('aria-hidden', 'true');
+      }
+      
+      // Rétablir le scroll du body
+      document.body.style.overflow = '';
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // 🔁 Resize : recalcul de la grille si le popup est ouvert
+  // ═══════════════════════════════════════════════════════════
   window.addEventListener('resize', () => {
     Object.values(categoryLevels).forEach(level => {
       const container = document.querySelector(`#${level.popupId} .${level.containerClass}`);

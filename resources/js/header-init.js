@@ -2,7 +2,7 @@
  * Header Initialization - Professional Modular Architecture
  * Each feature is a self-contained module with a single entry point
  * 
- * @version 2.0.0
+ * @version 2.1.0 - CORRECTION BOUCLE INFINIE
  * @author ULIXAI Team
  */
 
@@ -192,28 +192,69 @@ function exposeWizardWrappers(steps) {
 /**
  * Setup event listeners for wizard functionality
  * Handles form changes and custom wizard events
+ * 
+ * ✅ CORRECTION: Guard anti-boucle infinie ajouté
  */
 function setupWizardEventListeners() {
+  // ═══════════════════════════════════════════════════════════
+  // 🛡️ PROTECTION CONTRE LA BOUCLE INFINIE
+  // ═══════════════════════════════════════════════════════════
+  let isUpdating = false;
+  let updateTimeout = null;
+
   // Update navigation buttons on any form change
-  document.addEventListener('change', () => {
+  document.addEventListener('change', (e) => {
+    // ✅ GUARD #1: Si on est déjà en train de mettre à jour, ignorer
+    if (isUpdating) {
+      console.log('⚠️ [Header] Already updating navigation - skipping');
+      return;
+    }
+
+    // ✅ GUARD #2: Ignorer les événements sur les éléments disabled
+    if (e.target && e.target.disabled) {
+      return;
+    }
+
     if (typeof window.updateNavigationButtons === 'function') {
-      // Use requestAnimationFrame for better performance
-      requestAnimationFrame(() => window.updateNavigationButtons());
+      // ✅ DEBOUNCE: Éviter les appels répétés
+      if (updateTimeout) {
+        clearTimeout(updateTimeout);
+      }
+
+      updateTimeout = setTimeout(() => {
+        isUpdating = true;
+        
+        try {
+          console.log('🔄 [Header] Updating navigation buttons (debounced)');
+          window.updateNavigationButtons();
+        } catch (e) {
+          console.error('❌ [Header] Error updating navigation:', e);
+        } finally {
+          // ✅ Toujours réinitialiser le flag, même en cas d'erreur
+          setTimeout(() => {
+            isUpdating = false;
+            updateTimeout = null;
+          }, 100);
+        }
+      }, 150); // 150ms de délai
     }
   }, { passive: true });
 
   // Handle Step 2 specific change events
   document.addEventListener('pw:step2:changed', () => {
     try {
-      if (typeof window.updateNavigationButtons === 'function') {
+      if (typeof window.updateNavigationButtons === 'function' && !isUpdating) {
+        isUpdating = true;
         window.updateNavigationButtons();
+        setTimeout(() => { isUpdating = false; }, 100);
       }
     } catch (e) {
       console.warn('⚠️ [Header] Step2 event handler failed:', e);
+      isUpdating = false;
     }
   });
 
-  console.log('✅ [Header] Wizard event listeners setup');
+  console.log('✅ [Header] Wizard event listeners setup (with anti-loop protection)');
 }
 
 // ═══════════════════════════════════════════════════════════

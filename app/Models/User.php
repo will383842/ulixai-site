@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -51,13 +52,12 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'bank_account_iban' => 'encrypted',      // ✅ AJOUTÉ
-        'bank_swift_bic' => 'encrypted',         // ✅ AJOUTÉ
+        'bank_account_iban' => 'encrypted',
+        'bank_swift_bic' => 'encrypted',
         'bank_details_verified_at' => 'datetime',
         'referral_stats' => 'array',
         'is_fake' => 'boolean',
         'last_login_at' => 'datetime',
-        // ✨ AJOUTS GOOGLE VISION
         'profile_photo_verified' => 'boolean',
         'profile_photo_verification_data' => 'array',
         'identity_verified' => 'boolean',
@@ -96,7 +96,6 @@ class User extends Authenticatable
         return $this->hasMany(AffiliateCommission::class, 'referrer_id');
     }
 
-    // ✨ NOUVELLE RELATION GOOGLE VISION
     /**
      * Get the document verifications for the user.
      */
@@ -131,40 +130,13 @@ class User extends Authenticatable
         return in_array($this->user_role, $roles);
     }
 
-    public function unreadMessagesCount(): int
+    public function missions() 
     {
-        $userId = $this->id;
-         $proId = $this->serviceProvider->id ?? $userId;
-
-        $asRequesterConversation  = Conversation::where('requester_id', $userId)->with('messages')->get();
-
-        $asProviderConversation  = Conversation::where('provider_id', $proId)->with('messages')->get();
-        $totalUnread = 0;
-        if($asRequesterConversation) {
-            foreach($asRequesterConversation as $conv) {
-                $unreadmessges =  $conv->messages->where('is_read', false)->where('sender_id', '!=', $userId)->count();
-                $totalUnread += $unreadmessges;
-            }
-        }
-
-        if($asProviderConversation) {
-            foreach($asProviderConversation as $conv) {
-                $unreadmessges =  $conv->messages->where('is_read', false)->where('sender_id', '!=', $userId)->count();
-                $totalUnread += $unreadmessges;
-            }
-        }
-
-        return $totalUnread;
-        
-    }
-
-    public function missions() {
         return $this->hasMany(Mission::class, 'requester_id');
     }
 
     /**
      * Check if user has complete banking details
-     * ✅ MODIFIÉ : Utilise !empty() au lieu de !is_null() et vérifie bank_name au lieu de bank_swift_bic
      */
     public function hasBankingDetails()
     {
@@ -174,7 +146,75 @@ class User extends Authenticatable
     }
 
     // ===========================================
-    // ✨ MÉTHODES GOOGLE VISION
+    // MESSAGES & NOTIFICATIONS
+    // ===========================================
+
+    /**
+     * Compte TOUS les messages non lus (services + jobs)
+     */
+    public function unreadMessagesCount(): int
+    {
+        $userId = $this->id;
+        $proId = $this->serviceProvider->id ?? $userId;
+
+        $asRequesterConversation = Conversation::where('requester_id', $userId)->with('messages')->get();
+        $asProviderConversation = Conversation::where('provider_id', $proId)->with('messages')->get();
+        
+        $totalUnread = 0;
+        
+        if($asRequesterConversation) {
+            foreach($asRequesterConversation as $conv) {
+                $unreadmessges = $conv->messages->where('is_read', false)->where('sender_id', '!=', $userId)->count();
+                $totalUnread += $unreadmessges;
+            }
+        }
+
+        if($asProviderConversation) {
+            foreach($asProviderConversation as $conv) {
+                $unreadmessges = $conv->messages->where('is_read', false)->where('sender_id', '!=', $userId)->count();
+                $totalUnread += $unreadmessges;
+            }
+        }
+
+        return $totalUnread;
+    }
+
+    /**
+     * Compte le total des notifications non lues pour "My services request"
+     * Inclut : propositions (offers) + messages privés des service requests
+     */
+    public function totalUnreadServiceNotifications(): int
+    {
+        $total = 0;
+        
+        // 1. Messages privés non lus dans les conversations de type "service"
+        $asRequesterConversations = Conversation::where('requester_id', $this->id)
+            ->where('type', 'service')
+            ->with('messages')
+            ->get();
+        
+        foreach($asRequesterConversations as $conv) {
+            $unreadMessages = $conv->messages
+                ->where('is_read', false)
+                ->where('sender_id', '!=', $this->id)
+                ->count();
+            $total += $unreadMessages;
+        }
+        
+        // 2. Propositions (offers) non lues sur mes missions
+        $unreadOffers = DB::table('mission_offers')
+            ->join('missions', 'mission_offers.mission_id', '=', 'missions.id')
+            ->where('missions.requester_id', $this->id)
+            ->whereNull('mission_offers.read_at')
+            ->count();
+        
+        $total += $unreadOffers;
+        
+        return $total;
+    }
+
+    // ===========================================
+    // GOOGLE VISION VERIFICATION
     // ===========================================
 
     /**
@@ -217,5 +257,41 @@ class User extends Authenticatable
             ->exists();
         
         return $hasVerifiedPhoto && $hasVerifiedDocument;
+    }
+
+    // ===========================================
+    // MISSIONS COUNTS BY STATUS
+    // ===========================================
+
+    /**
+     * Compte les missions publiées (published)
+     */
+    public function missionsPublishedCount(): int
+    {
+        return $this->missions()->where('status', 'published')->count();
+    }
+
+    /**
+     * Compte les missions en cours (in_progress)
+     */
+    public function missionsInProgressCount(): int
+    {
+        return $this->missions()->where('status', 'in_progress')->count();
+    }
+
+    /**
+     * Compte les missions complétées (completed)
+     */
+    public function missionsCompletedCount(): int
+    {
+        return $this->missions()->where('status', 'completed')->count();
+    }
+
+    /**
+     * Compte les missions annulées (cancelled)
+     */
+    public function missionsCancelledCount(): int
+    {
+        return $this->missions()->whereIn('status', ['cancelled', 'cancelled_by_requester', 'cancelled_by_provider'])->count();
     }
 }

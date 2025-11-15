@@ -1120,7 +1120,52 @@ function initializeCategoryPopups() {
     window.location.href = '/create-request';
   };
 
-  // Resize handler
+  // ═══════════════════════════════════════════════════════════
+  // 🔁 FALLBACKS POUR LES FONCTIONS DE FERMETURE
+  // ═══════════════════════════════════════════════════════════
+  // Si pour une raison quelconque le <script> de popup_request_help.blade.php
+  // ne s'exécute pas jusqu'au bout, on recrée ici les fonctions globales
+  // attendues par les boutons "croix".
+
+  if (typeof window.closeAllPopups !== 'function') {
+    console.log('⚠️ [CategoryPopups] closeAllPopups not defined - creating fallback');
+    window.closeAllPopups = function () {
+      console.log('❌ [CategoryPopups] Closing all category popups (fallback)');
+
+      // Fermer tous les popups de catégories
+      Object.values(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels).forEach(function (level) {
+        var popup = document.getElementById(level.popupId);
+        if (popup) {
+          popup.classList.add('hidden');
+          popup.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      // Clear localStorage
+      localStorage.removeItem('create-request');
+
+      // Rétablir le scroll du body
+      document.body.style.overflow = '';
+    };
+  }
+  if (typeof window.closeSearchPopup !== 'function') {
+    console.log('⚠️ [CategoryPopups] closeSearchPopup not defined - creating fallback');
+    window.closeSearchPopup = function () {
+      console.log('❌ [CategoryPopups] Closing main search popup (fallback)');
+      var popup = document.getElementById(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels.main.popupId);
+      if (popup) {
+        popup.classList.add('hidden');
+        popup.setAttribute('aria-hidden', 'true');
+      }
+
+      // Rétablir le scroll du body
+      document.body.style.overflow = '';
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // 🔁 Resize : recalcul de la grille si le popup est ouvert
+  // ═══════════════════════════════════════════════════════════
   window.addEventListener('resize', function () {
     Object.values(_categoryColors_js__WEBPACK_IMPORTED_MODULE_0__.categoryLevels).forEach(function (level) {
       var _document$getElementB;
@@ -2350,10 +2395,11 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * ═══════════════════════════════════════════════════════════
- * Wizard Core - VERSION PROPRE
- * ✅ Le JavaScript ne touche JAMAIS au style
- * ✅ Gère uniquement btn.disabled = true/false
- * ✅ NE SE FERME QUE AVEC LA CROIX
+ * Wizard Core - VERSION CORRIGÉE
+ * ✅ CORRECTIONS MAJEURES :
+ * - Suppression du stopPropagation agressif
+ * - Event listeners directs au lieu de délégation
+ * - Meilleure gestion des clics
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -2455,69 +2501,68 @@ var WizardCore = /*#__PURE__*/function () {
       }
 
       // ═══════════════════════════════════════════════════════════
-      // 🛡️ EMPÊCHER LA FERMETURE AU CLIC EXTÉRIEUR
-      // ═══════════════════════════════════════════════════════════
-      var popupContainer = popup.querySelector('.bg-white');
-      if (popupContainer) {
-        popupContainer.addEventListener('click', function (e) {
-          // Empêcher la propagation vers le backdrop
-          e.stopPropagation();
-        }, true);
-      }
-
-      // ═══════════════════════════════════════════════════════════
-      // 🔧 DÉLÉGATION D'ÉVÉNEMENTS STRICTE
+      // ✅ CORRECTION #1 : SUPPRIMER LE STOP PROPAGATION AGRESSIF
+      // On ne bloque plus tous les clics internes
       // ═══════════════════════════════════════════════════════════
 
-      document.addEventListener('click', function (e) {
-        var target = e.target;
-        if (!target || !target.closest) return;
+      // ❌ ANCIEN CODE - SUPPRIMÉ :
+      // const popupContainer = popup.querySelector('.bg-white');
+      // if (popupContainer) {
+      //   popupContainer.addEventListener('click', (e) => {
+      //     e.stopPropagation();
+      //   }, true);
+      // }
 
-        // ═══════════════════════════════════════════════════════════
-        // 🎯 PRIORITÉ 1 : Boutons d'ouverture du popup signup
-        // ═══════════════════════════════════════════════════════════
-        var signupBtn = target.closest('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
-        if (signupBtn) {
-          console.log('📝 [Wizard] Sign Up button clicked');
+      // ✅ NOUVEAU CODE - Bloquer uniquement les clics sur le backdrop
+      popup.addEventListener('click', function (e) {
+        // Si le clic est exactement sur le backdrop (pas sur le contenu)
+        if (e.target === popup) {
           e.preventDefault();
-          e.stopPropagation();
-          _this.openPopup();
-          return;
+          // Ne pas fermer automatiquement - seulement avec la croix
+          console.log('🖱️ Backdrop clicked - popup remains open');
         }
-
-        // ═══════════════════════════════════════════════════════════
-        // 🎯 PRIORITÉ 2 : Boutons de fermeture du popup
-        // ═══════════════════════════════════════════════════════════
-        var closeBtn = target.closest('#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]');
-        if (closeBtn) {
-          console.log('❌ [Wizard] Close button clicked');
-          e.preventDefault();
-          e.stopPropagation();
-          _this.closePopup();
-          return;
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        // ❌ CLIC SUR LE BACKDROP DÉSACTIVÉ
-        // Le popup ne se ferme QUE avec la croix
-        // ═══════════════════════════════════════════════════════════
-        // Ancien code commenté :
-        // if (popup && e.target === popup && !popup.classList.contains('hidden')) {
-        //   console.log('🖱️ [Wizard] Backdrop clicked');
-        //   this.closePopup();
-        //   return;
-        // }
       }, false);
 
       // ═══════════════════════════════════════════════════════════
-      // ⌨️ ESC key pour fermer - DÉSACTIVÉ AUSSI
+      // ✅ CORRECTION #2 : EVENT LISTENERS DIRECTS
+      // Au lieu de délégation d'événements complexe
       // ═══════════════════════════════════════════════════════════
-      // document.addEventListener('keydown', (e) => {
-      //   if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
-      //     console.log('⌨️ [Wizard] ESC pressed');
-      //     this.closePopup();
-      //   }
-      // });
+
+      // Boutons de fermeture
+      var closeButtons = document.querySelectorAll('#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]');
+      closeButtons.forEach(function (btn) {
+        if (btn) {
+          btn.addEventListener('click', function (e) {
+            console.log('❌ [Wizard] Close button clicked:', btn.id || btn.className);
+            e.preventDefault();
+            e.stopPropagation();
+            _this.closePopup();
+          }, false);
+        }
+      });
+
+      // Boutons d'ouverture
+      var openButtons = document.querySelectorAll('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
+      openButtons.forEach(function (btn) {
+        if (btn) {
+          btn.addEventListener('click', function (e) {
+            console.log('📝 [Wizard] Sign Up button clicked:', btn.id || btn.className);
+            e.preventDefault();
+            e.stopPropagation();
+            _this.openPopup();
+          }, false);
+        }
+      });
+
+      // ═══════════════════════════════════════════════════════════
+      // ⌨️ ESC key pour fermer (optionnel - peut être activé)
+      // ═══════════════════════════════════════════════════════════
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
+          console.log('⌨️ [Wizard] ESC pressed');
+          _this.closePopup();
+        }
+      });
 
       // ═══════════════════════════════════════════════════════════
       // 🌍 Fonctions globales pour compatibilité
@@ -2528,7 +2573,9 @@ var WizardCore = /*#__PURE__*/function () {
       window.closeSignupPopup = function () {
         return _this.closePopup();
       };
-      console.log('✅ Popup controls initialized (backdrop click DISABLED, ESC DISABLED)');
+      console.log('✅ Popup controls initialized (direct event listeners)');
+      console.log('   - Close buttons found:', closeButtons.length);
+      console.log('   - Open buttons found:', openButtons.length);
     }
   }, {
     key: "closePopup",
@@ -2541,6 +2588,9 @@ var WizardCore = /*#__PURE__*/function () {
       popup.classList.add('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
       popup.setAttribute('aria-hidden', 'true');
       popup.style.display = 'none';
+
+      // Restaurer le scroll du body
+      document.body.style.overflow = '';
       console.log('✅ Popup closed');
       this.resetToFirstStep();
     }
@@ -2555,6 +2605,9 @@ var WizardCore = /*#__PURE__*/function () {
       popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
       popup.removeAttribute('aria-hidden');
       popup.style.display = 'flex';
+
+      // Bloquer le scroll du body
+      document.body.style.overflow = 'hidden';
       console.log('✅ Popup opened');
       this.resetToFirstStep();
     }
@@ -3451,7 +3504,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
  * Header Initialization - Professional Modular Architecture
  * Each feature is a self-contained module with a single entry point
  * 
- * @version 2.0.0
+ * @version 2.1.0 - CORRECTION BOUCLE INFINIE
  * @author ULIXAI Team
  */
 
@@ -3717,15 +3770,48 @@ function exposeWizardWrappers(steps) {
 /**
  * Setup event listeners for wizard functionality
  * Handles form changes and custom wizard events
+ * 
+ * ✅ CORRECTION: Guard anti-boucle infinie ajouté
  */
 function setupWizardEventListeners() {
+  // ═══════════════════════════════════════════════════════════
+  // 🛡️ PROTECTION CONTRE LA BOUCLE INFINIE
+  // ═══════════════════════════════════════════════════════════
+  var isUpdating = false;
+  var updateTimeout = null;
+
   // Update navigation buttons on any form change
-  document.addEventListener('change', function () {
+  document.addEventListener('change', function (e) {
+    // ✅ GUARD #1: Si on est déjà en train de mettre à jour, ignorer
+    if (isUpdating) {
+      console.log('⚠️ [Header] Already updating navigation - skipping');
+      return;
+    }
+
+    // ✅ GUARD #2: Ignorer les événements sur les éléments disabled
+    if (e.target && e.target.disabled) {
+      return;
+    }
     if (typeof window.updateNavigationButtons === 'function') {
-      // Use requestAnimationFrame for better performance
-      requestAnimationFrame(function () {
-        return window.updateNavigationButtons();
-      });
+      // ✅ DEBOUNCE: Éviter les appels répétés
+      if (updateTimeout) {
+        clearTimeout(updateTimeout);
+      }
+      updateTimeout = setTimeout(function () {
+        isUpdating = true;
+        try {
+          console.log('🔄 [Header] Updating navigation buttons (debounced)');
+          window.updateNavigationButtons();
+        } catch (e) {
+          console.error('❌ [Header] Error updating navigation:', e);
+        } finally {
+          // ✅ Toujours réinitialiser le flag, même en cas d'erreur
+          setTimeout(function () {
+            isUpdating = false;
+            updateTimeout = null;
+          }, 100);
+        }
+      }, 150); // 150ms de délai
     }
   }, {
     passive: true
@@ -3734,14 +3820,19 @@ function setupWizardEventListeners() {
   // Handle Step 2 specific change events
   document.addEventListener('pw:step2:changed', function () {
     try {
-      if (typeof window.updateNavigationButtons === 'function') {
+      if (typeof window.updateNavigationButtons === 'function' && !isUpdating) {
+        isUpdating = true;
         window.updateNavigationButtons();
+        setTimeout(function () {
+          isUpdating = false;
+        }, 100);
       }
     } catch (e) {
       console.warn('⚠️ [Header] Step2 event handler failed:', e);
+      isUpdating = false;
     }
   });
-  console.log('✅ [Header] Wizard event listeners setup');
+  console.log('✅ [Header] Wizard event listeners setup (with anti-loop protection)');
 }
 
 // ═══════════════════════════════════════════════════════════

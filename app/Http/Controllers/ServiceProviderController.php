@@ -10,36 +10,50 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\SpecialStatus;
 use App\Models\Faq;
-
+use App\Models\Country;
 
 class ServiceProviderController extends Controller
 {
     public function main(Request $request) {
+        // Providers actifs
         $providers = ServiceProvider::with(['user', 'reviews'])
-            ->wherehas('user', function ($query) {
+            ->whereHas('user', function ($query) {
                 $query->where('status', 'active');
             })
             ->orderByDesc('pinned')
             ->latest()
             ->get();
+        
+        // FAQs
         $faqs = Faq::where('status', true)
-          ->latest()
-          ->take(5)
-          ->get();
+            ->latest()
+            ->take(5)
+            ->get();
 
+        // Catégories niveau 1
         $category = Category::where('level', 1)->with('subcategories')->get();
-        return view('pages.index', compact('providers', 'faqs', 'category'));
+        
+        // 🔹 Pays pour le select (on utilise la colonne "country", pas "name")
+        $countries = Country::where('status', 1)
+            ->orderBy('country')
+            ->pluck('country', 'id');
+        
+        // 🔹 'countries' ajouté dans le compact
+        return view('pages.index', compact('providers', 'faqs', 'category', 'countries'));
     }
     
     public function serviceproviders(Request $request) {
         // Fetch all service providers with their user info
-        if($request->input('providers')) {
-            $providers = ServiceProvider::with('user')->whereIn('slug', json_decode($request->input('providers')))->latest()->get();
+        if ($request->input('providers')) {
+            $providers = ServiceProvider::with('user')
+                ->whereIn('slug', json_decode($request->input('providers')))
+                ->latest()
+                ->get();
         } else {
             $providers = ServiceProvider::with('user')->latest()->get();
         }
         
-        // ✅ AJOUT : Récupération des catégories pour la vue
+        // ✅ Récupération des catégories pour la vue
         $category = Category::all();
         
         return view('dashboard.provider.service-providers', compact('providers', 'category'));
@@ -49,24 +63,21 @@ class ServiceProviderController extends Controller
     {
         $id = $request->query('id') ?? $request->route('id');
         $provider = null;
+
         if ($id) {
             $provider = ServiceProvider::with('user')->where('slug', $id)->first();
         }
+
         if (!$provider) {
             abort(404, 'Provider not found');
         }
+
         return view('dashboard.provider.provider-details', compact('provider'));
     }
 
-   
     /**
      * 🎉 MÉTHODE MODIFIÉE : Afficher le profil public d'un provider
-     * 
-     * Gère 3 cas :
-     * 1. Provider n'existe pas → 404
-     * 2. Provider supprimé/inactif → Page fun "Not Available" 😅
-     * 3. Provider actif → Profil normal ✅
-     * 
+     *
      * @param string $slug
      */
     public function providerProfile($slug) 
@@ -76,19 +87,14 @@ class ServiceProviderController extends Controller
         // Chercher le provider par son slug
         $provider = ServiceProvider::with('user')->where('slug', $slug)->first();
 
-        // ============================================
         // CAS 1 : Provider n'existe pas du tout
-        // ============================================
         if (!$provider) {
             Log::info('👻 Provider not found: ' . $slug);
             abort(404, 'Provider not found');
         }
 
-        // ============================================
         // CAS 2 : Provider existe mais est supprimé/inactif
-        // ============================================
         if ($provider->deleted_at !== null || $provider->is_active === false) {
-            
             Log::info('😅 Deleted/inactive provider accessed', [
                 'provider_id' => $provider->id,
                 'slug' => $slug,
@@ -96,38 +102,27 @@ class ServiceProviderController extends Controller
                 'is_active' => $provider->is_active,
             ]);
             
-            // 🎉 Trouver des providers similaires pour sauver la journée !
+            // Trouver des providers similaires
             $similarProviders = $this->getSimilarProviders($provider, 4);
             
-            // 🎨 Afficher la page fun "Provider Not Available"
-            // HTTP 410 Gone = "Ce provider existait mais il est parti" 
+            // Page "Provider Not Available"
             return response()->view('pages.not-available', [
-                'provider_name' => $provider->business_name ?? $provider->first_name . ' ' . $provider->last_name ?? 'This awesome provider',
+                'provider_name' => $provider->business_name
+                    ?? ($provider->first_name . ' ' . $provider->last_name)
+                    ?? 'This awesome provider',
                 'category' => $this->getMainCategory($provider),
                 'similar_providers' => $similarProviders,
-            ], 410); // HTTP 410 Gone 🚀
+            ], 410); // HTTP 410 Gone
         }
 
-        // ============================================
         // CAS 3 : Provider actif et visible
-        // ============================================
         Log::info('✅ Active provider viewed: ' . ($provider->business_name ?? $provider->first_name));
 
         return view('dashboard.provider.provider-details', compact('provider'));
     }
 
     /**
-     * 🎯 Trouver des providers similaires pour sauver la mise !
-     * 
-     * On cherche des providers dans :
-     * - Même catégorie
-     * - Même pays
-     * - Bien notés (rating desc)
-     * - Actifs bien sûr ! ✅
-     * 
-     * @param ServiceProvider $deletedProvider  Le provider qui est parti
-     * @param int $limit  Combien de suggestions ? (défaut 4)
-     * @return \Illuminate\Database\Eloquent\Collection
+     * Trouver des providers similaires
      */
     private function getSimilarProviders($deletedProvider, $limit = 4)
     {
@@ -136,7 +131,7 @@ class ServiceProviderController extends Controller
         // Récupérer la catégorie principale
         $mainCategory = $this->getMainCategory($deletedProvider);
         
-        // Construire la requête de base
+        // Requête de base
         $query = ServiceProvider::with(['user', 'reviews'])
             ->where('is_active', true)
             ->whereNull('deleted_at')
@@ -145,7 +140,7 @@ class ServiceProviderController extends Controller
                 $q->where('status', 'active');
             });
         
-        // Si on a une catégorie, filtrer dessus
+        // Filtre catégorie
         if ($mainCategory) {
             $categoryId = (int) $mainCategory->id;
             $query->where(function ($q) use ($categoryId) {
@@ -156,13 +151,13 @@ class ServiceProviderController extends Controller
             Log::info('📂 Filtering by category: ' . $mainCategory->name);
         }
         
-        // Décodage du pays
+        // Décodage pays
         $operationalCountries = $deletedProvider->operational_countries;
         if (is_string($operationalCountries)) {
             $operationalCountries = json_decode($operationalCountries, true) ?? [];
         }
         
-        // Même pays si disponible
+        // Filtre pays si dispo
         if (!empty($operationalCountries) && is_array($operationalCountries)) {
             $firstCountry = $operationalCountries[0] ?? null;
             if ($firstCountry) {
@@ -175,7 +170,7 @@ class ServiceProviderController extends Controller
             }
         }
         
-        // Trier par rating (les meilleurs en premier) et récupérer avec moyenne
+        // Trier par rating
         $similarProviders = $query->withAvg('reviews', 'rating')
             ->orderByDesc('reviews_avg_rating')
             ->orderBy('reviews_count', 'desc')
@@ -184,9 +179,7 @@ class ServiceProviderController extends Controller
         
         Log::info('✅ Found ' . $similarProviders->count() . ' similar providers');
         
-        // ============================================
-        // FALLBACK 1 : Si rien trouvé avec catégorie + pays
-        // ============================================
+        // FALLBACK 1 : même catégorie sans filtre pays
         if ($similarProviders->isEmpty() && $mainCategory) {
             Log::info('🔄 Fallback 1: Removing country filter, keeping category');
             
@@ -208,9 +201,7 @@ class ServiceProviderController extends Controller
                 ->get();
         }
         
-        // ============================================
-        // FALLBACK 2 : Si toujours rien, juste les meilleurs providers
-        // ============================================
+        // FALLBACK 2 : meilleurs providers globalement
         if ($similarProviders->isEmpty()) {
             Log::info('🌟 Fallback 2: Showing top rated providers globally');
             
@@ -232,10 +223,7 @@ class ServiceProviderController extends Controller
     }
 
     /**
-     * 🔧 Helper : Récupérer la catégorie principale d'un provider
-     * 
-     * @param ServiceProvider $provider
-     * @return Category|null
+     * Helper : Récupérer la catégorie principale d'un provider
      */
     private function getMainCategory($provider)
     {
@@ -255,7 +243,6 @@ class ServiceProviderController extends Controller
         
         return null;
     }
-
 
     public function getSubcategories($categoryId)
     {
@@ -284,12 +271,13 @@ class ServiceProviderController extends Controller
                                     ->where('spoken_language', 'LIKE', '%"' . $language . '"%')
                                     ->where('operational_countries', 'LIKE', '%"' . $country . '"%')
                                     ->with(['user', 'reviews'])
-                                    ->withAvg('reviews', 'rating') // This adds avg_rating to each provider
+                                    ->withAvg('reviews', 'rating')
                                     ->get();
+
         // Transform the collection to include avgRating
         $providers = $providers->map(function ($provider) {
             $provider->avgRating = round($provider->reviews()->avg('rating') ?? 5, 1);
-            $provider->reviewCount = $provider->reviews->count() ?? 1; // Add review count
+            $provider->reviewCount = $provider->reviews->count() ?? 1;
             return $provider;
         });
         
@@ -307,8 +295,7 @@ class ServiceProviderController extends Controller
         $country = $request->input('country');
         $language = $request->input('language');
 
-        // 🔄 MAPPING ANGLAIS → FRANÇAIS (Frontend → BDD)
-        // Conversion des noms de langues de l'interface vers les valeurs de la BDD
+        // Mapping EN → FR
         $languageMapping = [
             'English' => 'Anglais',
             'French' => 'Français',
@@ -330,22 +317,21 @@ class ServiceProviderController extends Controller
             $language = $languageMapping[$language];
         }
 
-        // Log pour debug (optionnel, tu peux le retirer plus tard)
         \Log::info('Filter Request:', [
             'category' => $categoryId,
             'subcategory' => $subcategoryId,
             'subsubcategory' => $subsubcategoryId,
             'country' => $country,
-            'language' => $language // Maintenant converti en français
+            'language' => $language
         ]);
 
-        // 🔍 Début de la requête
+        // Début de la requête
         $query = ServiceProvider::with(['user', 'reviews'])
             ->whereHas('user', function ($q) {
                 $q->where('status', 'active');
             });
 
-        // 🎯 Filtre par catégorie (colonne JSON services_to_offer)
+        // Filtre catégorie
         if ($categoryId) {
             $categoryId = (int) $categoryId;
             $query->where(function ($q) use ($categoryId) {
@@ -354,7 +340,7 @@ class ServiceProviderController extends Controller
             });
         }
 
-        // 🎯 Filtre par sous-catégorie (colonne JSON services_to_offer_category)
+        // Filtre sous-catégorie
         if ($subcategoryId) {
             $subcategoryId = (int) $subcategoryId;
             $query->where(function ($q) use ($subcategoryId) {
@@ -363,7 +349,7 @@ class ServiceProviderController extends Controller
             });
         }
 
-        // 🎯 Filtre par sous-sous-catégorie (colonne JSON services_to_offer_category)
+        // Filtre sous-sous-catégorie
         if ($subsubcategoryId) {
             $subsubcategoryId = (int) $subsubcategoryId;
             $query->where(function ($q) use ($subsubcategoryId) {
@@ -372,7 +358,7 @@ class ServiceProviderController extends Controller
             });
         }
 
-        // 🌍 Filtre par pays (colonne JSON operational_countries)
+        // Filtre pays
         if ($country && $country !== 'Others') {
             $query->where(function ($q) use ($country) {
                 $q->whereJsonContains('operational_countries', $country)
@@ -380,7 +366,7 @@ class ServiceProviderController extends Controller
             });
         }
 
-        // 🗣️ Filtre par langue (maintenant avec la valeur convertie)
+        // Filtre langue
         if ($language && $language !== 'Others') {
             $query->where(function ($q) use ($language) {
                 $q->where('preferred_language', $language)
@@ -389,28 +375,28 @@ class ServiceProviderController extends Controller
             });
         }
 
-        // 📊 Récupération avec moyenne des notes
+        // Récupération avec moyenne des notes
         $providers = $query->withAvg('reviews', 'rating')
             ->orderByDesc('pinned')
             ->latest()
             ->take(10)
             ->get();
 
-        // 📦 Formatage des données pour le frontend
+        // Formatage pour le frontend
         $formattedProviders = $providers->map(function ($provider) {
-            // Décodage sécurisé de operational_countries
+            // Décodage operational_countries
             $operationalCountries = $provider->operational_countries;
             if (is_string($operationalCountries)) {
                 $operationalCountries = json_decode($operationalCountries, true) ?? [];
             }
 
-            // Décodage sécurisé de special_status
+            // Décodage special_status
             $specialStatus = $provider->special_status;
             if (is_string($specialStatus)) {
                 $specialStatus = json_decode($specialStatus, true) ?? [];
             }
 
-            // 🔧 Récupération des noms de catégories depuis les IDs JSON
+            // Récupération noms catégories
             $categoryIds = $provider->services_to_offer;
             if (is_string($categoryIds)) {
                 $categoryIds = json_decode($categoryIds, true) ?? [];
@@ -424,7 +410,7 @@ class ServiceProviderController extends Controller
                     ->map(function ($cat) {
                         return [
                             'id' => $cat->id,
-                            'name' => $cat->name
+                            'name' => $cat->name,
                         ];
                     })
                     ->toArray();
@@ -441,7 +427,7 @@ class ServiceProviderController extends Controller
                 'special_status' => $specialStatus,
                 'categories' => $categories,
                 'average_rating' => round($provider->reviews_avg_rating ?? 5.0, 1),
-                'reviews_count' => $provider->reviews->count()
+                'reviews_count' => $provider->reviews->count(),
             ];
         });
 
@@ -459,14 +445,13 @@ class ServiceProviderController extends Controller
         if (!$provider) {
             return response()->json(['error' => 'Provider not found'], 404);
         }
+
         $provider->services_to_offer = $request->categories;
         $provider->services_to_offer_category = $request->subcategories;
         $provider->save();
 
         return response()->json(['success' => true, 'message' => 'Categories updated successfully']);
     }
-
-
 
     public function updateAboutYou(Request $request)
     {
@@ -481,7 +466,7 @@ class ServiceProviderController extends Controller
             return response()->json(['success' => false, 'message' => 'Service provider not found'], 404);
         }
 
-        // ✅ Fixed column name
+        // Colonne correcte
         $provider->profile_description = $request->description;
         $provider->save();
 

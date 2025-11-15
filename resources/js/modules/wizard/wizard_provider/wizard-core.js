@@ -1,9 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════
- * Wizard Core - VERSION PROPRE
- * ✅ Le JavaScript ne touche JAMAIS au style
- * ✅ Gère uniquement btn.disabled = true/false
- * ✅ NE SE FERME QUE AVEC LA CROIX
+ * Wizard Core - VERSION CORRIGÉE
+ * ✅ CORRECTIONS MAJEURES :
+ * - Suppression du stopPropagation agressif
+ * - Event listeners directs au lieu de délégation
+ * - Meilleure gestion des clics
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -94,74 +95,74 @@ export class WizardCore {
     }
 
     // ═══════════════════════════════════════════════════════════
-    // 🛡️ EMPÊCHER LA FERMETURE AU CLIC EXTÉRIEUR
-    // ═══════════════════════════════════════════════════════════
-    const popupContainer = popup.querySelector('.bg-white');
-    if (popupContainer) {
-      popupContainer.addEventListener('click', (e) => {
-        // Empêcher la propagation vers le backdrop
-        e.stopPropagation();
-      }, true);
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // 🔧 DÉLÉGATION D'ÉVÉNEMENTS STRICTE
+    // ✅ CORRECTION #1 : SUPPRIMER LE STOP PROPAGATION AGRESSIF
+    // On ne bloque plus tous les clics internes
     // ═══════════════════════════════════════════════════════════
     
-    document.addEventListener('click', (e) => {
-      const target = e.target;
-      if (!target || !target.closest) return;
+    // ❌ ANCIEN CODE - SUPPRIMÉ :
+    // const popupContainer = popup.querySelector('.bg-white');
+    // if (popupContainer) {
+    //   popupContainer.addEventListener('click', (e) => {
+    //     e.stopPropagation();
+    //   }, true);
+    // }
 
-      // ═══════════════════════════════════════════════════════════
-      // 🎯 PRIORITÉ 1 : Boutons d'ouverture du popup signup
-      // ═══════════════════════════════════════════════════════════
-      const signupBtn = target.closest('#signupBtn, #mobileSignupBtn, [data-action="open-signup"]');
-      
-      if (signupBtn) {
-        console.log('📝 [Wizard] Sign Up button clicked');
+    // ✅ NOUVEAU CODE - Bloquer uniquement les clics sur le backdrop
+    popup.addEventListener('click', (e) => {
+      // Si le clic est exactement sur le backdrop (pas sur le contenu)
+      if (e.target === popup) {
         e.preventDefault();
-        e.stopPropagation();
-        this.openPopup();
-        return;
+        // Ne pas fermer automatiquement - seulement avec la croix
+        console.log('🖱️ Backdrop clicked - popup remains open');
       }
-
-      // ═══════════════════════════════════════════════════════════
-      // 🎯 PRIORITÉ 2 : Boutons de fermeture du popup
-      // ═══════════════════════════════════════════════════════════
-      const closeBtn = target.closest(
-        '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]'
-      );
-      
-      if (closeBtn) {
-        console.log('❌ [Wizard] Close button clicked');
-        e.preventDefault();
-        e.stopPropagation();
-        this.closePopup();
-        return;
-      }
-
-      // ═══════════════════════════════════════════════════════════
-      // ❌ CLIC SUR LE BACKDROP DÉSACTIVÉ
-      // Le popup ne se ferme QUE avec la croix
-      // ═══════════════════════════════════════════════════════════
-      // Ancien code commenté :
-      // if (popup && e.target === popup && !popup.classList.contains('hidden')) {
-      //   console.log('🖱️ [Wizard] Backdrop clicked');
-      //   this.closePopup();
-      //   return;
-      // }
-
     }, false);
 
     // ═══════════════════════════════════════════════════════════
-    // ⌨️ ESC key pour fermer - DÉSACTIVÉ AUSSI
+    // ✅ CORRECTION #2 : EVENT LISTENERS DIRECTS
+    // Au lieu de délégation d'événements complexe
     // ═══════════════════════════════════════════════════════════
-    // document.addEventListener('keydown', (e) => {
-    //   if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
-    //     console.log('⌨️ [Wizard] ESC pressed');
-    //     this.closePopup();
-    //   }
-    // });
+
+    // Boutons de fermeture
+    const closeButtons = document.querySelectorAll(
+      '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]'
+    );
+    
+    closeButtons.forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          console.log('❌ [Wizard] Close button clicked:', btn.id || btn.className);
+          e.preventDefault();
+          e.stopPropagation();
+          this.closePopup();
+        }, false);
+      }
+    });
+
+    // Boutons d'ouverture
+    const openButtons = document.querySelectorAll(
+      '#signupBtn, #mobileSignupBtn, [data-action="open-signup"]'
+    );
+    
+    openButtons.forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          console.log('📝 [Wizard] Sign Up button clicked:', btn.id || btn.className);
+          e.preventDefault();
+          e.stopPropagation();
+          this.openPopup();
+        }, false);
+      }
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // ⌨️ ESC key pour fermer (optionnel - peut être activé)
+    // ═══════════════════════════════════════════════════════════
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
+        console.log('⌨️ [Wizard] ESC pressed');
+        this.closePopup();
+      }
+    });
 
     // ═══════════════════════════════════════════════════════════
     // 🌍 Fonctions globales pour compatibilité
@@ -169,7 +170,9 @@ export class WizardCore {
     window.openSignupPopup  = () => this.openPopup();
     window.closeSignupPopup = () => this.closePopup();
 
-    console.log('✅ Popup controls initialized (backdrop click DISABLED, ESC DISABLED)');
+    console.log('✅ Popup controls initialized (direct event listeners)');
+    console.log('   - Close buttons found:', closeButtons.length);
+    console.log('   - Open buttons found:', openButtons.length);
   }
 
   closePopup() {
@@ -182,6 +185,9 @@ export class WizardCore {
     popup.classList.add('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.setAttribute('aria-hidden', 'true');
     popup.style.display = 'none';
+
+    // Restaurer le scroll du body
+    document.body.style.overflow = '';
 
     console.log('✅ Popup closed');
     this.resetToFirstStep();
@@ -197,6 +203,9 @@ export class WizardCore {
     popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.removeAttribute('aria-hidden');
     popup.style.display = 'flex';
+
+    // Bloquer le scroll du body
+    document.body.style.overflow = 'hidden';
 
     console.log('✅ Popup opened');
     this.resetToFirstStep();

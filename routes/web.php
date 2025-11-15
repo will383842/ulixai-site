@@ -57,22 +57,39 @@ use App\Http\Controllers\Admin\MessagesController;
 use App\Http\Controllers\Api\ProviderDocumentVerificationController;
 use App\Http\Controllers\Api\ProviderPhotoVerificationController;
 
-// ========================================
+// ═══════════════════════════════════════════════════════════
 // 🎯 ROUTES PRIORITAIRES - NE PAS DÉPLACER
-// ========================================
+// ═══════════════════════════════════════════════════════════
 
 // Doit rester en premier pour éviter le catch-all
 Route::get('/provider/{slug}', [ServiceProviderController::class, 'providerProfile'])
     ->name('provider.profile');
 
-// ========================================
-// ROUTES PUBLIQUES
-// ========================================
+// ═══════════════════════════════════════════════════════════
+// 🌍 ROUTES PUBLIQUES
+// ═══════════════════════════════════════════════════════════
 
+// Auth helpers
 Route::post('/check-email-login', [App\Http\Controllers\AuthController::class, 'checkEmailAndLogin']);
 
-Route::post('/check-email', [ServiceRequestController::class, 'checkEmail'])->name('check-email');
-Route::post('/verify-password', [ServiceRequestController::class, 'verifyPassword'])->name('verify-password');
+// ✅ Check email & verify password (utilisés par le formulaire)
+if (app()->environment('local', 'development')) {
+    // 🔧 DÉVELOPPEMENT : Pas de rate limiting
+    Route::post('/check-email', [ServiceRequestController::class, 'checkEmail'])
+        ->name('check-email');
+    
+    Route::post('/verify-password', [ServiceRequestController::class, 'verifyPassword'])
+        ->name('verify-password');
+} else {
+    // 🚀 PRODUCTION : Rate limiting permissif (100 requêtes/minute)
+    Route::middleware(['throttle:100,1'])->group(function () {
+        Route::post('/check-email', [ServiceRequestController::class, 'checkEmail'])
+            ->name('check-email');
+        
+        Route::post('/verify-password', [ServiceRequestController::class, 'verifyPassword'])
+            ->name('verify-password');
+    });
+}
 
 // Recruitment
 Route::get('/recruitment', [ReviewController::class, 'recruitment'])->name('recruitment');
@@ -93,9 +110,9 @@ Route::get('/cookiemanagment', function () {
     return view('pages.cookiemanagment');
 })->name('cookies.show');
 
-// ========================================
+// ═══════════════════════════════════════════════════════════
 // 🌍 PRESSE PUBLIQUE (multi-langues)
-// ========================================
+// ═══════════════════════════════════════════════════════════
 
 // Hub press (sélecteur de langue)
 Route::get('/press', function () {
@@ -154,9 +171,9 @@ Route::get('/press/preview/{id}/{type}', [PressController::class, 'preview'])
     ->whereIn('type', ['pdf', 'guideline_pdf', 'photo', 'icon'])
     ->name('press.preview');
 
-// ========================================
-// AUTRES ROUTES PUBLIQUES
-// ========================================
+// ═══════════════════════════════════════════════════════════
+// 📝 AUTRES ROUTES PUBLIQUES
+// ═══════════════════════════════════════════════════════════
 
 Route::get('/termsnconditions', [TermsAndConditionsController::class, 'ShowTerms'])->name('terms.show');
 
@@ -188,8 +205,8 @@ Route::get('/signup', function () {
 Route::get('/affiliate/sign-up', [AffiliateController::Class, 'affliateSignup']);
 
 Route::get('/', [ServiceProviderController::class, 'main']);
-Route::get('/get-providers', [ServiceProviderController::class, 'getProviders']); // ✅ Ancienne (garde-la)
-Route::get('/filter-providers', [ServiceProviderController::class, 'filterProviders']); // 🆕 Nouvelle pour la barre de filtres
+Route::get('/get-providers', [ServiceProviderController::class, 'getProviders']);
+Route::get('/filter-providers', [ServiceProviderController::class, 'filterProviders']);
 Route::get('/get-subcategories/{categoryId}', [ServiceProviderController::class, 'getSubcategories']);
 
 // ✅ PUBLIC : liste de tous les prestataires (toujours accessible)
@@ -206,7 +223,7 @@ Route::get('/become-service-provider', function () {
 })->name('become.service.provider');
 
 // Registration
-Route::post('/send-email-otp', [RegisterController::class, 'sendEmailOtp'])->name('send-email-otp'); // ⬅️ AJOUTER CELLE-CI
+Route::post('/send-email-otp', [RegisterController::class, 'sendEmailOtp'])->name('send-email-otp');
 Route::post('/verify-email-otp', [RegisterController::class, 'verifyEmailOtp'])->name('user.verifyEmailOtp');
 Route::post('/resend-email-otp', [RegisterController::class, 'resendEmailOtp'])->name('user.resendEmailOtp');
 Route::post('/register', [RegisterController::class, 'register'])->name('user.register');
@@ -223,9 +240,9 @@ Route::get('/inviteFriend', function () {
     return view('pages.invitefriend');
 });
 
-// ========================================
-// AUTHENTIFIED ROUTES
-// ========================================
+// ═══════════════════════════════════════════════════════════
+// 🔐 ROUTES AUTHENTIFIÉES
+// ═══════════════════════════════════════════════════════════
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/restore-admin', [AdminDashboardController::class, 'restoreAdmin'])->name('restore-admin');
@@ -261,8 +278,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/review-options', [ReviewsController::class, 'reviewOptions'])->name('review-options');
     Route::get('/review-end', [ReviewsController::class, 'reviewEnd'])->name('review-end');
 
-    // Providers (⚠️ retiré d'ici pour être public)
-
     // Jobs
     Route::get('/job-list', [JobListController::class, 'index'])->name('user.joblist');
     Route::get('/view-job', [JobListController::class, 'viewJob'])->name('view-job');
@@ -280,7 +295,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/provider/upload-document', [AccountController::class, 'uploadDocuments'])->name('provider.upload.document');
     Route::post('/user/banking-details', [AccountController::class, 'updateBankingDetails'])->name('user.banking.details');
     
-    // ✅ NOUVELLE ROUTE: Suppression de compte
+    // ✅ Suppression de compte
     Route::delete('/account/delete', [AccountController::class, 'delete'])->name('account.delete');
 
     Route::get('/upload-document', [AccountController::class, 'uploadDocument'])->name('upload-document');
@@ -325,13 +340,32 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-// Request Routes
-Route::get('/create-request', [ServiceRequestController::class, 'createRequest']);
-Route::post('/save-request', [ServiceRequestController::class, 'saveRequestForm'])->name('save-request-form');
+// ═══════════════════════════════════════════════════════════
+// 📝 FORMULAIRE DE DEMANDE (avec rate limiting intelligent)
+// ═══════════════════════════════════════════════════════════
 
-// ========================================
-// ADMIN
-// ========================================
+// Page de création (pas de rate limiting - c'est juste un GET)
+Route::get('/create-request', [ServiceRequestController::class, 'createRequest'])
+    ->name('create-request');
+
+// Soumission du formulaire
+if (app()->environment('local', 'development')) {
+    // 🔧 DÉVELOPPEMENT : Pas de rate limiting pour faciliter les tests
+    Route::post('/save-request', [ServiceRequestController::class, 'saveRequestForm'])
+        ->name('save-request-form');
+        
+} else {
+    // 🚀 PRODUCTION : Rate limiting raisonnable (100 requêtes/minute au niveau route)
+    // + Rate limiting intelligent (30 par IP, 10 par session) au niveau contrôleur
+    Route::middleware(['throttle:100,1'])->group(function () {
+        Route::post('/save-request', [ServiceRequestController::class, 'saveRequestForm'])
+            ->name('save-request-form');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════
+// 👑 ADMIN
+// ═══════════════════════════════════════════════════════════
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login.form');
@@ -344,7 +378,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/seo/gsc-issues', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'gscIssues'])->name('seo.gscIssues');
         Route::get('/seo/pages-to-index', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'pagesToIndex'])->name('seo.pagesToIndex');
         Route::get('/seo/backlinks', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'backlinks'])->name('seo.backlinks');
-        // ➕ Ajouts demandés
         Route::post('/seo/refresh', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'refresh'])->name('seo.refresh');
         Route::get('/seo/bing-summary', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'bingSummary'])->name('seo.bing');
         Route::get('/seo/opr-summary', [\App\Http\Controllers\Admin\SeoAnalyticsController::class, 'oprSummary'])->name('seo.opr');
@@ -386,7 +419,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Missions
         Route::get('/missions', [MissionAdminController::class, 'index'])->name('missions');
         Route::get('/missions/{id}', [MissionAdminController::class, 'show'])->name('missions.show');
-        // 🔁 Alias historique (conserve exactement tes routes existantes)
         Route::get('/admin/missions/{id}', [MissionAdminController::class, 'show'])->name('missions.show');
         Route::get('/missions/{id}/edit', [MissionAdminController::class, 'edit'])->name('missions.edit');
         Route::get('/missions/{id}/conversation', [MissionAdminController::class, 'conversation'])->name('missions.conversation');
@@ -436,7 +468,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/service-fees', [ServiceFeesController::class, 'store'])->name('manage-fee.store');
         Route::put('/service-fees/{serviceFee}', [ServiceFeesController::class, 'update'])->name('manage-fee.update');
 
-        // Bug reports
+        // Bug reports (redirige vers messages)
         Route::get('/bug-reports', function () { return redirect()->route('admin.messages'); })->name('bug-reports');
 
         // Applications
@@ -452,9 +484,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/user-affiliations', [AdminDashboardController::class, 'showAffiliateSummary'])->name('affiliationss');
         Route::get('/affiliate-details/{id}', [AdminDashboardController::class, 'affiliateDetails'])->name('affiliates.details');
 
-        // ============================
+        // ═══════════════════════════════════════════════════════
         // 📰 PRESS MANAGEMENT (admin)
-        // ============================
+        // ═══════════════════════════════════════════════════════
         Route::get('/press', [AdminDashboardController::class, 'showPressSummary'])->name('press');
         Route::post('/press/store', [PressController::class, 'store'])->name('press.store');
 
@@ -469,14 +501,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/press/{press}', [PressController::class, 'destroy'])->name('press.destroy');
         Route::get('/press/by-language', [PressController::class, 'getByLanguage'])->name('press.by-language');
 
-        // Inquiries press (écran existant)
+        // Inquiries press
         Route::get('/press/inquiries', [PressController::class, 'inquiriesPage'])->name('press.inquiries');
         Route::get('/press/inquiries/list', [PressController::class, 'inquiriesList'])->name('press.inquiries.list');
         Route::patch('/press/inquiries/{inquiry}/read', [PressController::class, 'markAsRead'])->name('press.inquiries.read');
 
-        // ============================
+        // ═══════════════════════════════════════════════════════
         // 💬 MESSAGES (admin)
-        // ============================
+        // ═══════════════════════════════════════════════════════
         Route::get('/messages', [MessagesController::class, 'index'])->name('messages');
         Route::get('/messages/list', [MessagesController::class, 'list'])->name('messages.list');
         Route::post('/messages/read', [MessagesController::class, 'toggle'])->name('messages.read');
@@ -499,27 +531,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-// ========================================
-// SITEMAPS (déclarer AVANT le catch-all)
-// ========================================
+// ═══════════════════════════════════════════════════════════
+// 🗺️ SITEMAPS (déclarer AVANT le catch-all)
+// ═══════════════════════════════════════════════════════════
 Route::get('/sitemap_index.xml',     [SitemapController::class, 'index'])->name('sitemaps.index');
 Route::get('/sitemap.xml',           [SitemapController::class, 'static'])->name('sitemaps.static');
 Route::get('/sitemap-providers.xml', [SitemapController::class, 'providers'])->name('sitemaps.providers');
 
-// ========================================
-// CONVERSATION REPORT (Auth)
-// ========================================
+// ═══════════════════════════════════════════════════════════
+// 💬 CONVERSATION REPORT (Auth)
+// ═══════════════════════════════════════════════════════════
 Route::post('/conversations/{conversation}/report', [ConversationController::class, 'report'])->middleware('auth');
 
-// ========================================
-// CUSTOMER REVIEWS
-// ========================================
+// ═══════════════════════════════════════════════════════════
+// ⭐ CUSTOMER REVIEWS
+// ═══════════════════════════════════════════════════════════
 Route::get('/customerreviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('review.show');
 
-// ========================================
+// ═══════════════════════════════════════════════════════════
 // 🔐 GOOGLE VISION API - VERIFICATION
-// ========================================
+// ═══════════════════════════════════════════════════════════
 Route::prefix('api/provider/verification')->group(function () {
     Route::post('/photo', [ProviderPhotoVerificationController::class, 'upload']);
     Route::get('/photo/status', [ProviderPhotoVerificationController::class, 'status']);
@@ -533,30 +565,8 @@ Route::prefix('api/provider/verification')->group(function () {
     Route::get('/documents', [ProviderDocumentVerificationController::class, 'index']);
 });
 
-    // ⚠️ ROUTE DE TEST - À SUPPRIMER APRÈS
-Route::get('/test-not-available', function () {
-    $similarProviders = \App\Models\ServiceProvider::with(['user', 'reviews'])
-        ->where('is_active', true)
-        ->whereNull('deleted_at')
-        ->whereHas('user', function ($q) {
-            $q->where('status', 'active');
-        })
-        ->withAvg('reviews', 'rating')
-        ->inRandomOrder()
-        ->limit(4)
-        ->get();
-    
-    $category = \App\Models\Category::first();
-    
-    return view('pages.not-available', [
-        'provider_name' => 'John Smith Expat Helper',
-        'category' => $category,
-        'similar_providers' => $similarProviders,
-    ]);
-});
-// ========================================
-// ⚠️ CATCH-ALL (garder en dernier)
-// ========================================
+// ═══════════════════════════════════════════════════════════
+// ⚠️ CATCH-ALL (garder en DERNIER)
+// ═══════════════════════════════════════════════════════════
 Route::get('/{slug?}', [PageController::class, 'show'])
     ->where('slug', '^(?!provider|reviews|sitemap|sitemap_index\\.xml).*$');
-
