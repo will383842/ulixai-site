@@ -18,12 +18,8 @@ class PaymentController extends Controller
             abort(404, 'Provider not found');
         }
 
-        // ========== VÉRIFICATION KYC ==========
-        if ($provider->kyc_status !== 'verified' || empty($provider->stripe_account_id)) {
-            return redirect()->back()->with('error', 'This provider has not completed verification. They need to complete KYC (5 minutes) before receiving payments.');
-        }
-        // ======================================
-
+        // ✅ KYC SUPPRIMÉ - Stripe gérera le refus automatiquement si nécessaire
+        
         $commissions = \App\Models\UlixCommission::where('is_active', true)->first();
         $requester = auth()->user(); 
 
@@ -33,6 +29,12 @@ class PaymentController extends Controller
             $offer = MissionOffer::where('mission_id', $missionId)
                 ->where('provider_id', $providerId)
                 ->first();
+        }
+        
+        // Vérifier que l'offre existe
+        if (!$offer) {
+            return redirect()->route('quote-offer', ['id' => $missionId])
+                ->with('error', 'No offer found for this provider and mission.');
         }
         
         $calculateClientFee = number_format($commissions->requester_fee * ($offer->price ?? 0), 2, '.', '');

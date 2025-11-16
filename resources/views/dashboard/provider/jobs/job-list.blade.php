@@ -596,6 +596,26 @@
         box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
     }
     
+    /* ✅ NOUVEAU : Bouton Cancel Offer */
+    .btn-cancel-offer {
+        background: transparent;
+        color: var(--color-danger);
+        border: 2px solid var(--color-danger);
+        box-shadow: none;
+    }
+    
+    .btn-cancel-offer:hover,
+    .btn-cancel-offer:focus {
+        background: var(--color-danger);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    }
+    
+    .btn-cancel-offer:active {
+        transform: translateY(0) scale(0.98);
+    }
+    
     /* EMPTY STATE */
     .empty-state-2025 {
         text-align: center;
@@ -862,6 +882,99 @@
         100% { transform: scale(1); }
     }
     
+    /* ✅ NOUVEAU : Toast Notifications */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        pointer-events: none;
+    }
+    
+    .toast {
+        background: white;
+        border-radius: var(--border-radius-md);
+        padding: 1rem 1.25rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 280px;
+        max-width: 400px;
+        pointer-events: all;
+        animation: slideInRight 0.3s ease;
+        border-left: 4px solid;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .toast.success {
+        border-left-color: var(--color-success);
+    }
+    
+    .toast.error {
+        border-left-color: var(--color-danger);
+    }
+    
+    .toast-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.875rem;
+        color: white;
+    }
+    
+    .toast.success .toast-icon {
+        background: var(--color-success);
+    }
+    
+    .toast.error .toast-icon {
+        background: var(--color-danger);
+    }
+    
+    .toast-message {
+        flex: 1;
+        font-size: 0.875rem;
+        color: var(--color-text-primary);
+        font-weight: 500;
+    }
+    
+    .toast-close {
+        width: 24px;
+        height: 24px;
+        border: none;
+        background: transparent;
+        color: var(--color-text-tertiary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: var(--transition-base);
+        flex-shrink: 0;
+    }
+    
+    .toast-close:hover {
+        background: #f1f5f9;
+        color: var(--color-text-primary);
+    }
+    
     /* SCREEN READER ONLY */
     .sr-only {
         position: absolute;
@@ -988,6 +1101,9 @@
         }
     }
 </style>
+
+<!-- ✅ NOUVEAU : Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
 
 <div class="jobs-container-2025">
     
@@ -1192,7 +1308,7 @@
         
         <div class="jobs-grid-2025">
             @forelse($offers as $offer)
-                <article class="offer-card-2025" aria-label="Quote offer: {{ $offer->mission->title ?? 'Job' }}">
+                <article class="offer-card-2025" data-offer-id="{{ $offer->id }}" aria-label="Quote offer: {{ $offer->mission->title ?? 'Job' }}">
                     <div class="card-header-row">
                         <div class="job-icon-2025 offer-icon-published" aria-hidden="true">
                             <i class="fas fa-file-contract"></i>
@@ -1237,6 +1353,16 @@
                             <i class="fas fa-eye" aria-hidden="true"></i>
                             <span>See the job</span>
                         </a>
+                        
+                        {{-- ✅ NOUVEAU : Bouton Cancel Offer --}}
+                        @if($offer->status === 'pending')
+                        <button class="btn-job-action btn-cancel-offer" 
+                                onclick="confirmCancelOffer({{ $offer->id }})"
+                                aria-label="Cancel this offer">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                            <span>Cancel Offer</span>
+                        </button>
+                        @endif
                     </div>
                 </article>
             @empty
@@ -1392,6 +1518,98 @@
         });
     });
     
+    // ═══════════════════════════════════════════════════════
+    // ✅ NOUVEAU : Toast System
+    // ═══════════════════════════════════════════════════════
+    function showToast(type, message) {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const iconMap = {
+            'success': 'fa-check',
+            'error': 'fa-times'
+        };
+        
+        toast.innerHTML = `
+            <div class="toast-icon">
+                <i class="fas ${iconMap[type] || 'fa-info'}"></i>
+            </div>
+            <div class="toast-message">${message}</div>
+            <button class="toast-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        container.appendChild(toast);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            toast.style.animation = 'slideInRight 0.3s ease reverse';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // ✅ NOUVEAU : Cancel Offer Functions
+    // ═══════════════════════════════════════════════════════
+    function confirmCancelOffer(offerId) {
+        if (confirm('Are you sure you want to cancel this offer? This action is irreversible.')) {
+            cancelOffer(offerId);
+        }
+    }
+    
+    async function cancelOffer(offerId) {
+        try {
+            const response = await fetch(`/api/offers/${offerId}/cancel`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Succès - retirer la card de l'interface
+                const card = document.querySelector(`[data-offer-id="${offerId}"]`);
+                if (card) {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.9)';
+                    setTimeout(() => card.remove(), 300);
+                }
+                
+                // Toast de confirmation
+                showToast('success', data.message || 'Your offer has been cancelled successfully');
+                
+                // Mettre à jour le badge du tab
+                setTimeout(() => {
+                    const remainingOffers = document.querySelectorAll('.offer-card-2025').length - 1;
+                    const badge = document.querySelector('#tab-btn-offers .tab-badge');
+                    if (badge) {
+                        if (remainingOffers > 0) {
+                            badge.textContent = remainingOffers;
+                        } else {
+                            badge.remove();
+                        }
+                    }
+                }, 400);
+            } else {
+                showToast('error', data.message || 'An error occurred while cancelling the offer');
+            }
+        } catch (error) {
+            console.error('Error cancelling offer:', error);
+            showToast('error', 'An error occurred while cancelling the offer');
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // Existing Functions
+    // ═══════════════════════════════════════════════════════
     function openDisputePopup(idx) {
         const overlay = document.getElementById('disputeOverlay');
         const modal = document.getElementById('disputePopup');
@@ -1490,12 +1708,17 @@
         }
     });
     
+    // ═══════════════════════════════════════════════════════
+    // Expose Functions to Global Scope
+    // ═══════════════════════════════════════════════════════
     window.openDisputePopup = openDisputePopup;
     window.closeDisputePopup = closeDisputePopup;
     window.openDecisionPopup = openDecisionPopup;
     window.closeDecisionPopup = closeDecisionPopup;
     window.startMission = startMission;
     window.resolveDispute = resolveDispute;
+    window.confirmCancelOffer = confirmCancelOffer;
+    window.showToast = showToast;
     
 })();
 </script>

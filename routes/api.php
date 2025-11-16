@@ -39,6 +39,11 @@ Route::post('/provider/jobs/start', [JobListController::class, 'startMission']);
 Route::post('/provider/jobs/resolve', [JobListController::class, 'resolveMission']);
 Route::post('/provider/jobs/confirm-delivery', [JobListController::class, 'confirmDelivery']);
 
+// ✅ NOUVEAU : Annulation d'offre par le prestataire
+Route::delete('/offers/{offer}/cancel', [JobListController::class, 'cancelOffer'])
+    ->middleware('auth')
+    ->name('offers.cancel');
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

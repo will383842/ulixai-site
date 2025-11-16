@@ -36,7 +36,7 @@
     .services-container-2025 {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 0.875rem 0.875rem 7rem 0.875rem; /* ✅ AJOUT PADDING BOTTOM MOBILE */
+        padding: 0.875rem 0.875rem 7rem 0.875rem;
         background: #ffffff;
         min-height: 100vh;
     }
@@ -164,7 +164,6 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        /* ✅ MOBILE FIRST - 2 LIGNES SUR TRÈS PETIT ÉCRAN */
         flex-wrap: wrap;
     }
     
@@ -173,10 +172,10 @@
     }
     
     .tab-button {
-        padding: 0.875rem 0.5rem; /* ✅ PADDING OPTIMISÉ */
+        padding: 0.875rem 0.5rem;
         border-radius: var(--border-radius-md);
         font-weight: 700;
-        font-size: 0.6875rem; /* ✅ RÉDUCTION FONT-SIZE MOBILE */
+        font-size: 0.6875rem;
         border: 2px solid transparent;
         cursor: pointer;
         transition: var(--transition-base);
@@ -185,12 +184,11 @@
         white-space: nowrap;
         display: flex;
         align-items: center;
-        gap: 0.25rem; /* ✅ RÉDUCTION GAP */
+        gap: 0.25rem;
         position: relative;
         touch-action: manipulation;
-        min-height: 44px; /* ✅ ACCESSIBILITY - TOUCH TARGET */
-        /* ✅ MOBILE FIRST - AUTO WRAP SUR 2 LIGNES */
-        flex: 1 1 calc(50% - 0.25rem); /* ✅ 2 PAR LIGNE SUR MOBILE */
+        min-height: 44px;
+        flex: 1 1 calc(50% - 0.25rem);
         min-width: 0;
         max-width: none;
     }
@@ -268,16 +266,15 @@
     }
     
     .tab-counter {
-        font-size: 0.5rem; /* ✅ PLUS PETIT POUR MOBILE */
+        font-size: 0.5rem;
         font-weight: 600;
         color: var(--color-text-tertiary);
         opacity: 0.8;
         white-space: nowrap;
-        /* ✅ AJOUT MOBILE */
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 100%;
-        line-height: 1; /* ✅ RÉDUCTION LINE-HEIGHT */
+        line-height: 1;
     }
     
     .tab-button.active .tab-counter {
@@ -382,9 +379,8 @@
         padding: 1rem;
         transition: var(--transition-base);
         position: relative;
-        overflow: hidden;
+        overflow: visible; /* ✅ CHANGEMENT: visible au lieu de hidden */
         will-change: transform;
-        /* ✅ AJOUT CRITIQUE - FORCER LA LARGEUR */
         width: 100%;
         max-width: 100%;
         min-width: 0;
@@ -406,7 +402,6 @@
         align-items: flex-start;
         gap: 0.75rem;
         margin-bottom: 0.875rem;
-        /* ✅ AJOUT CRITIQUE */
         width: 100%;
         min-width: 0;
     }
@@ -432,31 +427,24 @@
     .card-content-main {
         flex: 1;
         min-width: 0;
-        /* ✅ AJOUT CRITIQUE */
-        overflow: hidden;
+        overflow: visible; /* ✅ CHANGEMENT */
         width: 100%;
     }
     
     /* ✅ CORRECTION CRITIQUE - DÉBORDEMENT DE TITRE */
     .service-title-2025 {
-        font-size: 0.8125rem; /* ✅ RÉDUCTION TAILLE MOBILE */
+        font-size: 0.8125rem;
         font-weight: 700;
         color: var(--color-text-primary);
         margin: 0 0 0.5rem 0;
-        line-height: 1.2; /* ✅ RÉDUCTION LINE-HEIGHT */
-        /* ✅ AJOUTS CRITIQUES POUR DÉBORDEMENT */
+        line-height: 1.3;
         word-wrap: break-word;
-        word-break: break-all; /* ✅ PLUS AGRESSIF */
-        overflow-wrap: anywhere; /* ✅ PLUS MODERNE */
+        word-break: break-word;
+        overflow-wrap: break-word;
         hyphens: auto;
         max-width: 100%;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2; /* ✅ LIMITATION À 2 LIGNES MAX */
-        -webkit-box-orient: vertical;
-        /* ✅ FALLBACK POUR ANCIENS NAVIGATEURS */
+        display: block; /* ✅ CHANGEMENT: block au lieu de -webkit-box */
         white-space: normal;
-        max-height: 2.4rem; /* ✅ HAUTEUR MAX CALCULÉE */
     }
     
     .status-row {
@@ -465,7 +453,6 @@
         flex-wrap: wrap;
         align-items: center;
         margin-bottom: 0.75rem;
-        /* ✅ AJOUT CRITIQUE */
         min-width: 0;
     }
     
@@ -479,7 +466,6 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.025em;
-        /* ✅ AJOUT CRITIQUE */
         flex-shrink: 0;
         white-space: nowrap;
     }
@@ -519,7 +505,6 @@
         font-size: 0.625rem;
         font-weight: 700;
         text-transform: uppercase;
-        /* ✅ AJOUT CRITIQUE */
         flex-shrink: 0;
         white-space: nowrap;
     }
@@ -546,7 +531,6 @@
         font-size: 0.6875rem;
         color: var(--color-text-secondary);
         font-weight: 600;
-        /* ✅ AJOUT CRITIQUE */
         flex-shrink: 0;
         white-space: nowrap;
     }
@@ -588,45 +572,48 @@
         border-radius: 999px;
     }
     
+    /* ✅ CORRECTION MAJEURE - INFO-GRID */
     .info-grid {
-        display: grid;
-        gap: 0.5rem;
+        display: block; /* ✅ CHANGEMENT: block au lieu de grid */
         margin-bottom: 0.875rem;
         padding: 0.875rem;
         background: var(--color-bg-secondary);
         border-radius: var(--border-radius-md);
     }
     
+    /* ✅ CORRECTION MAJEURE - INFO-ITEM */
     .info-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        display: block; /* ✅ CHANGEMENT: block au lieu de flex */
         font-size: 0.75rem;
-        /* ✅ AJOUT CRITIQUE */
-        min-width: 0;
+        margin-bottom: 0.5rem;
+        padding: 0.25rem 0;
+    }
+    
+    .info-item:last-child {
+        margin-bottom: 0;
     }
     
     .info-icon {
         color: var(--color-text-tertiary);
         width: 14px;
-        text-align: center;
-        flex-shrink: 0;
+        display: inline-block;
+        margin-right: 0.25rem;
     }
     
     .info-label {
         color: var(--color-text-secondary);
         font-weight: 600;
-        min-width: 60px;
-        flex-shrink: 0;
+        display: inline;
+        margin-right: 0.25rem;
     }
     
+    /* ✅ CORRECTION MAJEURE - INFO-VALUE */
     .info-value {
         color: var(--color-text-primary);
         font-weight: 500;
-        /* ✅ AJOUT CRITIQUE */
+        display: inline;
+        word-wrap: break-word;
         word-break: break-word;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
     
     .proposals-highlight {
@@ -710,7 +697,6 @@
         border-radius: var(--border-radius-md);
         margin-bottom: 0.875rem;
         border: 1px solid #bbf7d0;
-        /* ✅ AJOUT CRITIQUE */
         min-width: 0;
     }
     
@@ -738,7 +724,6 @@
         font-weight: 700;
         color: var(--color-text-primary);
         margin-bottom: 0.125rem;
-        /* ✅ AJOUT CRITIQUE */
         word-break: break-word;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -770,10 +755,10 @@
     }
     
     .btn-service-action {
-        padding: 0.75rem 0.875rem; /* ✅ RÉDUCTION PADDING MOBILE */
+        padding: 0.75rem 0.875rem;
         border-radius: var(--border-radius-md);
         font-weight: 600;
-        font-size: 0.75rem; /* ✅ RÉDUCTION FONT-SIZE MOBILE */
+        font-size: 0.75rem;
         border: none;
         cursor: pointer;
         transition: var(--transition-base);
@@ -781,15 +766,11 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.375rem; /* ✅ RÉDUCTION GAP */
+        gap: 0.375rem;
         touch-action: manipulation;
         width: 100%;
-        /* ✅ AJOUTS CRITIQUES MOBILE */
         min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
-        max-width: 100%;
         box-sizing: border-box;
     }
     
@@ -964,21 +945,21 @@
     /* RESPONSIVE - SMALL MOBILE (480px+) */
     @media (min-width: 480px) {
         .tab-button {
-            flex: 1 1 auto; /* ✅ RETOUR À 1 LIGNE SUR ÉCRAN PLUS LARGE */
+            flex: 1 1 auto;
             font-size: 0.75rem;
             padding: 0.875rem 0.75rem;
             gap: 0.375rem;
         }
         
         .tabs-container {
-            flex-wrap: nowrap; /* ✅ PAS DE WRAP SUR ÉCRAN PLUS LARGE */
+            flex-wrap: nowrap;
         }
     }
     
     /* RESPONSIVE - TABLET (640px+) */
     @media (min-width: 640px) {
         .services-container-2025 {
-            padding: 1.5rem 1.5rem 4rem 1.5rem; /* ✅ RÉDUCTION PADDING BOTTOM TABLET */
+            padding: 1.5rem 1.5rem 4rem 1.5rem;
         }
         
         .services-header-top {
@@ -1024,7 +1005,7 @@
         }
         
         .service-title-2025 {
-            font-size: 0.9375rem; /* ✅ LÉGÈREMENT PLUS GRAND SUR TABLET */
+            font-size: 0.9375rem;
         }
         
         .service-actions {
@@ -1038,25 +1019,45 @@
             width: auto;
         }
         
+        /* ✅ RÉTABLIR FLEX POUR TABLET */
         .info-grid {
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            display: inline-block;
+            min-width: 80px;
+        }
+        
+        .info-value {
+            display: inline-block;
+            flex: 1;
         }
         
         .tab-button {
-            padding: 0.875rem 1rem; /* ✅ AJUSTEMENT TABLET */
+            padding: 0.875rem 1rem;
             font-size: 0.8125rem;
             gap: 0.5rem;
         }
         
         .tab-counter {
-            font-size: 0.625rem; /* ✅ AJUSTEMENT TABLET */
+            font-size: 0.625rem;
         }
     }
     
     /* RESPONSIVE - DESKTOP (1024px+) */
     @media (min-width: 1024px) {
         .services-container-2025 {
-            padding: 2rem 2rem 2rem 2rem; /* ✅ PADDING NORMAL DESKTOP */
+            padding: 2rem 2rem 2rem 2rem;
         }
         
         .services-grid-2025 {
@@ -1069,11 +1070,11 @@
         }
         
         .service-title-2025 {
-            font-size: 1rem; /* ✅ TAILLE NORMALE DESKTOP */
+            font-size: 1rem;
         }
         
         .tab-button {
-            padding: 0.875rem 1.25rem; /* ✅ PADDING COMPLET DESKTOP */
+            padding: 0.875rem 1.25rem;
             font-size: 0.8125rem;
         }
     }

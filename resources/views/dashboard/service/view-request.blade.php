@@ -1,415 +1,860 @@
 @extends('dashboard.layouts.master')
-
 @section('title', 'Service Request Details')
 
 @section('content')
 
+@php
+    $images = json_decode($mission->attachments ?? '[]', true);
+    $user = auth()->user();
+    
+    // Calculate remaining days
+    $remainingDays = 'N/A';
+    $durationMap = [
+        '1 week' => 7,
+        '2 weeks' => 14,
+        '1 month' => 30,
+        '3 months' => 90,
+    ];
+    
+    $serviceDuration = $mission->service_duration ?? $mission->service_durition;
+    if (isset($durationMap[$serviceDuration])) {
+        $totalDays = $durationMap[$serviceDuration];
+        $createdAt = \Carbon\Carbon::parse($mission->created_at);
+        $now = \Carbon\Carbon::now();
+        $daysPassed = $createdAt->diffInDays($now);
+        $remainingDays = max(0, $totalDays - $daysPassed);
+    }
+@endphp
+
+<!-- Alpine.js -->
+<script src="//unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 <style>
+    /* ============================================
+       MOBILE-FIRST RESPONSIVE DESIGN - IDENTICAL TO PROVIDER VIEW
+       Breakpoints: 
+       - Base: 320px+ (mobile)
+       - SM: 640px+ (large mobile)
+       - MD: 768px+ (tablet)
+       - LG: 1024px+ (desktop)
+       - XL: 1280px+ (large desktop)
+    ============================================ */
+    
     :root {
-        --color-primary: #2563eb;
-        --color-primary-light: #3b82f6;
-        --color-secondary: #06b6d4;
-        --color-success: #10b981;
-        --color-warning: #f59e0b;
-        --color-danger: #ef4444;
-        --color-gradient-start: #6366f1;
-        --color-gradient-mid: #8b5cf6;
-        --color-gradient-end: #d946ef;
-        --color-text-primary: #0f172a;
-        --color-text-secondary: #64748b;
-        --color-text-tertiary: #94a3b8;
-        --color-bg-primary: #ffffff;
-        --color-bg-secondary: #f8fafc;
-        --border-radius-sm: 0.75rem;
-        --border-radius-md: 1rem;
-        --border-radius-lg: 1.25rem;
-        --border-radius-xl: 1.5rem;
-        --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        --primary-blue: #007AFF;
+        --primary-blue-light: #5AC8FA;
+        --secondary-gray: #E5E5EA;
+        --text-primary: #000000;
+        --text-secondary: #3C3C43;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #FFFFFF;
+        --bg-secondary: #F2F2F7;
+        --bg-tertiary: #E5E5EA;
+        --success-green: #34C759;
+        --danger-red: #FF3B30;
+        --warning-yellow: #FFCC00;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+        --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.15);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 20px;
+        --radius-full: 9999px;
     }
     
     * {
         -webkit-tap-highlight-color: transparent;
+        box-sizing: border-box;
     }
     
-    /* MOBILE FIRST - Base styles pour mobile */
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: #E8E8ED;
+    }
+    
+    /* ============================================
+       CONTAINER - MOBILE FIRST
+    ============================================ */
     .request-details-container {
-        max-width: 1200px;
+        width: 100%;
+        max-width: 100%;
         margin: 0 auto;
-        padding: 1rem;
-        min-height: 100vh;
+        padding: 0.5rem;
+        padding-bottom: 2rem;
     }
     
+    @media (min-width: 640px) {
+        .request-details-container {
+            padding: 1rem;
+            padding-bottom: 2.5rem;
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .request-details-container {
+            max-width: 1400px;
+            padding: 2rem;
+            padding-bottom: 3rem;
+        }
+    }
+    
+    /* ============================================
+       OWNER INFO BANNER - DESKTOP ONLY
+    ============================================ */
+    .owner-info-banner {
+        display: none;
+        background: linear-gradient(135deg, #34C759, #30D158);
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius-md);
+        align-items: center;
+        gap: 0.625rem;
+        margin-bottom: 1rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    @media (min-width: 1024px) {
+        .owner-info-banner {
+            display: flex;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+    
+    .owner-info-banner i {
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    
+    @media (min-width: 1024px) {
+        .owner-info-banner i {
+            font-size: 1.125rem;
+        }
+    }
+    
+    /* ============================================
+       REQUEST CARD - MOBILE FIRST
+    ============================================ */
     .request-card {
         background: white;
-        border-radius: var(--border-radius-xl);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid rgba(0, 0, 0, 0.06);
     }
     
-    .request-header {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        padding: 1.25rem;
-        border-bottom: 2px solid #93c5fd;
+    @media (min-width: 768px) {
+        .request-card {
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
     }
     
-    .request-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--color-text-primary);
-        margin-bottom: 0.75rem;
-        word-break: break-word;
-        line-height: 1.3;
+    @media (min-width: 1024px) {
+        .request-card {
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+        }
     }
     
-    .status-badges {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-    
-    .status-badge {
+    /* ============================================
+       CATEGORY BADGE - MOBILE FIRST
+    ============================================ */
+    .category-badge {
         display: inline-flex;
         align-items: center;
         gap: 0.375rem;
-        padding: 0.375rem 0.875rem;
-        border-radius: 999px;
-        font-size: 0.75rem;
+        padding: 0.375rem 0.75rem;
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+        color: white;
+        border-radius: var(--radius-full);
+        font-size: 0.625rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.025em;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.75rem;
+        box-shadow: var(--shadow-sm);
     }
     
-    .status-active {
-        background: #dbeafe;
-        color: #1e40af;
+    @media (min-width: 768px) {
+        .category-badge {
+            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
     }
     
-    .status-urgent {
-        background: #fee2e2;
-        color: #991b1b;
+    /* ============================================
+       TITLE - MOBILE FIRST
+    ============================================ */
+    .request-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0 0 0.75rem 0;
+        line-height: 1.3;
+        letter-spacing: -0.3px;
     }
     
-    .request-body {
-        padding: 1.25rem;
+    @media (min-width: 640px) {
+        .request-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
     }
     
-    .section {
-        margin-bottom: 1.75rem;
+    @media (min-width: 1024px) {
+        .request-title {
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
     }
     
-    .section:last-child {
-        margin-bottom: 0;
-    }
-    
-    .section-title {
-        font-size: 0.875rem;
-        font-weight: 700;
-        color: var(--color-text-primary);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 0.875rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .section-title i {
-        color: var(--color-primary);
-    }
-    
-    /* Info Grid - MOBILE FIRST (1 colonne par défaut) */
-    .info-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-        background: var(--color-bg-secondary);
-        padding: 1rem;
-        border-radius: var(--border-radius-md);
-    }
-    
-    .info-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.5rem;
-        font-size: 0.8125rem;
-    }
-    
-    .info-icon {
-        color: var(--color-text-tertiary);
-        width: 16px;
-        flex-shrink: 0;
-        margin-top: 0.125rem;
-    }
-    
-    .info-label {
-        color: var(--color-text-secondary);
-        font-weight: 600;
-        min-width: 90px;
-        flex-shrink: 0;
-    }
-    
-    .info-value {
-        color: var(--color-text-primary);
-        font-weight: 500;
-        flex: 1;
-        word-break: break-word;
-    }
-    
-    .info-value.highlight {
-        color: var(--color-danger);
-        font-weight: 700;
-    }
-    
-    .description-box {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        border: 2px solid #93c5fd;
-        border-radius: var(--border-radius-lg);
-        padding: 1rem;
-        color: var(--color-text-primary);
+    /* ============================================
+       DESCRIPTION - MOBILE FIRST
+    ============================================ */
+    .request-description {
+        color: var(--text-secondary);
         font-size: 0.875rem;
         line-height: 1.6;
+        margin-bottom: 1rem;
         white-space: pre-wrap;
         word-break: break-word;
     }
     
-    /* Attachments Grid - MOBILE FIRST (2 colonnes) */
-    .attachments-grid {
+    @media (min-width: 768px) {
+        .request-description {
+            font-size: 0.9375rem;
+            margin-bottom: 1.25rem;
+        }
+    }
+    
+    /* ============================================
+       IMAGE GALLERY - MOBILE FIRST
+    ============================================ */
+    .image-gallery {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
     }
     
-    .attachment-item {
+    @media (min-width: 640px) {
+        .image-gallery {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .image-gallery {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+    }
+    
+    .gallery-item {
         position: relative;
-        aspect-ratio: 1;
-        border: 2px solid #cbd5e1;
-        border-radius: var(--border-radius-md);
+        aspect-ratio: 4 / 3;
+        border-radius: var(--radius-sm);
         overflow: hidden;
-        background: var(--color-bg-secondary);
         cursor: pointer;
-        transition: var(--transition-base);
+        transition: all 0.2s;
+        box-shadow: var(--shadow-sm);
     }
     
-    .attachment-item:hover,
-    .attachment-item:focus {
-        border-color: var(--color-primary);
-        transform: scale(1.02);
+    @media (min-width: 768px) {
+        .gallery-item {
+            border-radius: var(--radius-md);
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+        }
     }
     
-    .attachment-item img {
+    .gallery-item img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        display: block;
     }
     
-    .attachment-placeholder {
+    /* ============================================
+       INFO GRID - MOBILE FIRST
+    ============================================ */
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    @media (min-width: 640px) {
+        .info-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .info-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+    }
+    
+    .info-item {
+        background: var(--bg-secondary);
+        border-radius: var(--radius-sm);
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        transition: all 0.2s;
+    }
+    
+    @media (min-width: 768px) {
+        .info-item {
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            gap: 0.375rem;
+        }
+        
+        .info-item:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-2px);
+        }
+    }
+    
+    .info-label {
+        font-size: 0.625rem;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
     }
     
-    .attachment-placeholder i {
-        font-size: 1.75rem;
-        color: var(--color-text-tertiary);
-        opacity: 0.4;
+    @media (min-width: 768px) {
+        .info-label {
+            font-size: 0.6875rem;
+        }
     }
     
-    /* Actions - MOBILE FIRST (column layout) */
-    .actions-container {
+    .info-value {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    @media (min-width: 768px) {
+        .info-value {
+            font-size: 0.875rem;
+            gap: 0.375rem;
+        }
+    }
+    
+    .info-value i {
+        color: var(--primary-blue);
+        font-size: 0.875rem;
+    }
+    
+    @media (min-width: 768px) {
+        .info-value i {
+            font-size: 1rem;
+        }
+    }
+    
+    /* ============================================
+       SECTION DIVIDER - MOBILE FIRST
+    ============================================ */
+    .section-divider {
+        height: 1px;
+        background: var(--bg-tertiary);
+        margin: 1rem 0;
+    }
+    
+    @media (min-width: 768px) {
+        .section-divider {
+            background: linear-gradient(90deg, transparent, var(--bg-tertiary), transparent);
+            margin: 1.5rem 0;
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .section-divider {
+            margin: 2rem 0;
+        }
+    }
+    
+    /* ============================================
+       ACTION BUTTONS - MOBILE FIRST
+       Sur mobile : Fixés en bas au-dessus de la navbar
+       Sur desktop : Position normale
+    ============================================ */
+    .action-buttons-container {
+        position: fixed;
+        bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+        left: 0;
+        right: 0;
+        z-index: 999;
         display: flex;
         flex-direction: column;
-        gap: 0.875rem;
-        padding-top: 1.5rem;
-        border-top: 2px solid #e5e7eb;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
     }
     
-    .actions-main {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
+    @media (min-width: 768px) {
+        .action-buttons-container {
+            bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+            flex-direction: row;
+            gap: 0.75rem;
+            padding: 1rem;
+        }
     }
     
-    .actions-secondary {
-        display: flex;
-        justify-content: center;
+    @media (min-width: 1024px) {
+        .action-buttons-container {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none;
+            border-top: none;
+            padding: 0;
+            margin: 1.5rem 0 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     }
     
-    .btn {
+    .btn-primary-action {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+        color: white;
+        font-weight: 700;
+        font-size: 0.875rem;
+        padding: 0.875rem 1.5rem;
+        border-radius: var(--radius-full);
+        border: none;
+        cursor: pointer;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        padding: 0.875rem 1.5rem;
-        border-radius: 999px;
-        font-weight: 600;
-        font-size: 0.875rem;
-        transition: var(--transition-base);
+        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         text-decoration: none;
-        border: none;
-        cursor: pointer;
-        touch-action: manipulation;
-        width: 100%;
+        flex: 1;
     }
     
-    .btn:focus {
-        outline: 3px solid rgba(37, 99, 235, 0.5);
-        outline-offset: 2px;
+    @media (min-width: 768px) {
+        .btn-primary-action {
+            font-size: 0.9375rem;
+            padding: 1rem 2rem;
+            gap: 0.625rem;
+        }
     }
     
-    .btn-outline {
+    @media (min-width: 1024px) {
+        .btn-primary-action {
+            flex: 0 0 auto;
+            font-size: 1rem;
+        }
+        
+        .btn-primary-action:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+        }
+    }
+    
+    .btn-danger-action {
         background: transparent;
-        color: var(--color-primary);
-        border: 2px solid var(--color-primary);
-    }
-    
-    .btn-outline:hover,
-    .btn-outline:focus {
-        background: var(--color-primary);
-        color: white;
-    }
-    
-    .btn-danger-link {
-        background: transparent;
-        color: var(--color-primary);
-        padding: 0.5rem 1rem;
-        text-decoration: underline;
+        color: var(--danger-red);
         font-weight: 600;
-        border: none;
-        width: auto;
+        font-size: 0.8125rem;
+        padding: 0.75rem 1.25rem;
+        border: 2px solid var(--danger-red);
+        border-radius: var(--radius-full);
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+        flex: 1;
     }
     
-    .btn-danger-link:hover,
-    .btn-danger-link:focus {
-        color: #1d4ed8;
+    @media (min-width: 768px) {
+        .btn-danger-action {
+            font-size: 0.875rem;
+            padding: 0.875rem 1.5rem;
+            gap: 0.5rem;
+        }
     }
     
-    /* MODAL STYLES */
-    .modal-overlay {
+    @media (min-width: 1024px) {
+        .btn-danger-action {
+            flex: 0 0 auto;
+            font-size: 0.9375rem;
+        }
+        
+        .btn-danger-action:hover {
+            background: var(--danger-red);
+            color: white;
+            transform: translateY(-2px);
+        }
+    }
+    
+    /* ============================================
+       IMAGE MODAL - MOBILE FIRST
+    ============================================ */
+    .image-modal {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.92);
         z-index: 9999;
-        display: none;
+        display: flex;
         align-items: center;
         justify-content: center;
         padding: 1rem;
-        backdrop-filter: blur(4px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
     }
     
-    .modal-overlay.show {
+    .image-modal.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+    
+    .image-modal-content {
+        max-width: 95vw;
+        max-height: 95vh;
+        position: relative;
+    }
+    
+    @media (min-width: 768px) {
+        .image-modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+    }
+    
+    .image-modal-content img {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: var(--radius-sm);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    @media (min-width: 768px) {
+        .image-modal-content img {
+            max-height: 90vh;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+    }
+    
+    .image-modal-close {
+        position: absolute;
+        top: -0.75rem;
+        right: -0.75rem;
+        width: 36px;
+        height: 36px;
+        background: white;
+        border: none;
+        border-radius: 50%;
         display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.25rem;
+        color: var(--text-primary);
+        box-shadow: var(--shadow-lg);
+        transition: all 0.2s;
+        z-index: 10;
+    }
+    
+    @media (min-width: 768px) {
+        .image-modal-close {
+            top: -1rem;
+            right: -1rem;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+        }
+        
+        .image-modal-close:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+    }
+    
+    /* ============================================
+       MODALS - MOBILE FIRST
+    ============================================ */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 9998;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    @media (min-width: 768px) {
+        .modal-overlay {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    }
+    
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: all;
     }
     
     .modal-content {
         background: white;
-        border-radius: var(--border-radius-xl);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         max-width: 500px;
         width: 100%;
+        padding: 1.5rem 1rem;
+        position: relative;
+        transform: scale(0.95);
+        opacity: 0;
+        transition: all 0.3s;
         max-height: 90vh;
         overflow-y: auto;
-        animation: modalSlideIn 0.3s ease;
     }
     
-    @keyframes modalSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
+    @media (min-width: 768px) {
+        .modal-content {
+            padding: 2rem 1.5rem;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
         }
     }
     
-    .modal-header {
-        padding: 1.25rem;
-        border-bottom: 2px solid #e5e7eb;
-        position: relative;
-    }
-    
-    .modal-title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--color-text-primary);
-        text-align: center;
-        padding-right: 2rem;
-        line-height: 1.3;
+    .modal-overlay.active .modal-content {
+        transform: scale(1);
+        opacity: 1;
     }
     
     .modal-close {
         position: absolute;
-        top: 0.875rem;
-        right: 0.875rem;
-        width: 32px;
-        height: 32px;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 28px;
+        height: 28px;
+        background: var(--bg-secondary);
+        border: none;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
-        background: transparent;
-        border: none;
-        color: var(--color-text-tertiary);
         cursor: pointer;
-        transition: var(--transition-base);
-        font-size: 1.5rem;
+        font-size: 1rem;
+        color: var(--text-secondary);
+        transition: all 0.2s;
     }
     
-    .modal-close:hover,
-    .modal-close:focus {
-        background: var(--color-bg-secondary);
-        color: var(--color-text-primary);
+    @media (min-width: 768px) {
+        .modal-close {
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            font-size: 1.125rem;
+        }
+        
+        .modal-close:hover {
+            background: var(--bg-tertiary);
+            transform: rotate(90deg);
+        }
     }
     
-    .modal-body {
-        padding: 1.25rem;
+    .modal-icon {
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(135deg, var(--danger-red), #FF6B6B);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: white;
+        font-size: 1.75rem;
+        box-shadow: 0 6px 16px rgba(255, 59, 48, 0.3);
     }
     
+    @media (min-width: 768px) {
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3);
+        }
+    }
+    
+    .modal-icon.success {
+        background: linear-gradient(135deg, var(--success-green), #30D158);
+        box-shadow: 0 6px 16px rgba(52, 199, 89, 0.3);
+    }
+    
+    @media (min-width: 768px) {
+        .modal-icon.success {
+            box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3);
+        }
+    }
+    
+    .modal-title {
+        font-size: 1.125rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        text-align: center;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.3px;
+    }
+    
+    @media (min-width: 768px) {
+        .modal-title {
+            font-size: 1.375rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+    }
+    
+    .modal-subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+    
+    @media (min-width: 768px) {
+        .modal-subtitle {
+            font-size: 0.9375rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+    
+    /* ============================================
+       FORM STYLES - MOBILE FIRST
+    ============================================ */
     .form-group {
         margin-bottom: 1rem;
     }
     
-    .form-group:last-child {
-        margin-bottom: 0;
+    @media (min-width: 768px) {
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
     }
     
     .form-label {
         display: block;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--color-text-primary);
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: var(--text-primary);
         margin-bottom: 0.5rem;
+    }
+    
+    @media (min-width: 768px) {
+        .form-label {
+            font-size: 0.875rem;
+            margin-bottom: 0.625rem;
+        }
     }
     
     .form-select,
     .form-textarea {
         width: 100%;
-        padding: 0.75rem 1rem;
-        border: 2px solid #e5e7eb;
-        border-radius: var(--border-radius-md);
+        padding: 0.75rem 0.875rem;
+        background: var(--bg-secondary);
+        border: 2px solid var(--bg-tertiary);
+        border-radius: var(--radius-sm);
         font-size: 0.875rem;
-        transition: var(--transition-base);
         font-family: inherit;
+        transition: all 0.2s;
+    }
+    
+    @media (min-width: 768px) {
+        .form-select,
+        .form-textarea {
+            padding: 0.875rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.9375rem;
+        }
     }
     
     .form-select:focus,
     .form-textarea:focus {
         outline: none;
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        background: white;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    }
+    
+    @media (min-width: 768px) {
+        .form-select:focus,
+        .form-textarea:focus {
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
     }
     
     .form-textarea {
         resize: vertical;
-        min-height: 100px;
+        min-height: 80px;
+    }
+    
+    @media (min-width: 768px) {
+        .form-textarea {
+            min-height: 100px;
+        }
     }
     
     .form-hint {
         font-size: 0.75rem;
-        color: var(--color-primary);
+        color: var(--primary-blue);
         margin-top: 0.75rem;
         display: flex;
         align-items: flex-start;
@@ -417,174 +862,133 @@
         line-height: 1.4;
     }
     
+    @media (min-width: 768px) {
+        .form-hint {
+            font-size: 0.8125rem;
+            margin-top: 0.875rem;
+            gap: 0.5rem;
+        }
+    }
+    
     .form-hint i {
         margin-top: 0.125rem;
         flex-shrink: 0;
     }
     
-    .modal-footer {
-        padding: 1rem 1.25rem;
-        border-top: 2px solid #e5e7eb;
+    .modal-actions {
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
+        margin-top: 1.5rem;
     }
     
-    .modal-footer .btn {
-        width: 100%;
+    @media (min-width: 768px) {
+        .modal-actions {
+            gap: 0.875rem;
+        }
     }
     
-    .btn-primary {
-        background: var(--color-primary);
+    @media (min-width: 1024px) {
+        .modal-actions {
+            flex-direction: row;
+        }
+    }
+    
+    .btn-modal-primary {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
         color: white;
-        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
-    }
-    
-    .btn-primary:hover,
-    .btn-primary:focus {
-        background: #1d4ed8;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-    }
-    
-    .btn-danger-text {
-        background: transparent;
-        color: var(--color-danger);
-        text-decoration: underline;
-        font-weight: 600;
-    }
-    
-    .btn-danger-text:hover,
-    .btn-danger-text:focus {
-        color: #dc2626;
-    }
-    
-    /* SUCCESS MODAL */
-    .success-modal-content {
-        text-align: center;
-        padding: 2rem 1.5rem;
-    }
-    
-    .success-icon {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
-        border-radius: 50%;
+        font-weight: 700;
+        font-size: 0.9375rem;
+        padding: 0.875rem 1.75rem;
+        border-radius: var(--radius-full);
+        border: none;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 1.25rem;
-        animation: successPulse 0.6s ease;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        text-decoration: none;
+        transition: all 0.2s;
+        flex: 1;
+    }
+    
+    @media (min-width: 768px) {
+        .btn-modal-primary {
+            font-size: 1rem;
+            padding: 1rem 2rem;
+            gap: 0.625rem;
+        }
+        
+        .btn-modal-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+        }
+    }
+    
+    .btn-modal-secondary {
+        background: transparent;
+        color: var(--danger-red);
+        font-weight: 600;
+        font-size: 0.875rem;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid var(--danger-red);
+        border-radius: var(--radius-full);
+        cursor: pointer;
+        transition: all 0.2s;
+        flex: 1;
+    }
+    
+    @media (min-width: 768px) {
+        .btn-modal-secondary {
+            font-size: 0.9375rem;
+            padding: 0.875rem 2rem;
+        }
+        
+        .btn-modal-secondary:hover {
+            background: var(--danger-red);
+            color: white;
+        }
+    }
+    
+    /* Success Modal Animation */
+    .modal-icon.success {
+        animation: successPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     @keyframes successPulse {
-        0% { transform: scale(0); opacity: 0; }
+        0% { transform: scale(0); }
         50% { transform: scale(1.1); }
-        100% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(1); }
     }
     
-    .success-icon i {
-        font-size: 2.25rem;
-        color: white;
-    }
-    
-    .success-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--color-text-primary);
-        margin-bottom: 1rem;
-    }
-    
-    .success-text {
-        font-size: 0.875rem;
-        color: var(--color-text-secondary);
-        line-height: 1.6;
-        margin-bottom: 0;
-    }
-    
-    /* LOADING MODAL */
-    .loading-modal-content {
-        text-align: center;
-        padding: 2rem 1.5rem;
-    }
-    
+    /* Loading Spinner */
     .loading-spinner {
-        width: 64px;
-        height: 64px;
-        border: 4px solid #e5e7eb;
-        border-top-color: var(--color-primary);
+        width: 48px;
+        height: 48px;
+        border: 4px solid var(--bg-tertiary);
+        border-top-color: var(--primary-blue);
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
-        margin: 0 auto 1.25rem;
+        margin: 0 auto 1rem;
+    }
+    
+    @media (min-width: 768px) {
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            border-width: 5px;
+            margin-bottom: 1.5rem;
+        }
     }
     
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
     
-    .loading-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--color-text-primary);
-        margin-bottom: 0.5rem;
-    }
-    
-    .loading-text {
-        font-size: 0.875rem;
-        color: var(--color-text-secondary);
-    }
-    
-    /* LIGHTBOX */
-    .lightbox {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 10000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-    }
-    
-    .lightbox.show {
-        display: flex;
-    }
-    
-    .lightbox-content {
-        max-width: 90vw;
-        max-height: 90vh;
-        position: relative;
-    }
-    
-    .lightbox-image {
-        max-width: 100%;
-        max-height: 90vh;
-        object-fit: contain;
-    }
-    
-    .lightbox-close {
-        position: absolute;
-        top: -3rem;
-        right: 0;
-        width: 40px;
-        height: 40px;
-        background: white;
-        border: none;
-        border-radius: 50%;
-        color: var(--color-text-primary);
-        font-size: 1.5rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: var(--transition-base);
-    }
-    
-    .lightbox-close:hover,
-    .lightbox-close:focus {
-        background: #e5e7eb;
-    }
-    
+    /* ============================================
+       UTILITY CLASSES
+    ============================================ */
     .sr-only {
         position: absolute;
         width: 1px;
@@ -597,166 +1001,16 @@
         border-width: 0;
     }
     
-    /* TABLET - 640px+ */
-    @media (min-width: 640px) {
-        .request-details-container {
-            padding: 1.5rem;
-        }
-        
-        .request-card {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        }
-        
-        .request-header {
-            padding: 1.75rem;
-        }
-        
-        .request-title {
-            font-size: 1.375rem;
-        }
-        
-        .request-body {
-            padding: 1.75rem;
-        }
-        
-        .section {
-            margin-bottom: 2rem;
-        }
-        
-        .section-title {
-            font-size: 0.9375rem;
-            margin-bottom: 1rem;
-        }
-        
-        .info-grid {
-            grid-template-columns: repeat(2, 1fr);
-            padding: 1.25rem;
-        }
-        
-        .info-item {
-            font-size: 0.875rem;
-        }
-        
-        .description-box {
-            padding: 1.25rem;
-            font-size: 0.9375rem;
-        }
-        
-        .attachments-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-        
-        .attachment-placeholder i {
-            font-size: 2rem;
-        }
-        
-        .actions-container {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .actions-main {
-            flex-direction: row;
-            flex: 1;
-        }
-        
-        .actions-main .btn {
-            width: auto;
-            flex: 1;
-        }
-        
-        .actions-secondary {
-            flex-shrink: 0;
-        }
-        
-        .btn-danger-link {
-            width: auto;
-        }
-        
-        .modal-header {
-            padding: 1.5rem;
-        }
-        
-        .modal-title {
-            font-size: 1.125rem;
-        }
-        
-        .modal-body {
-            padding: 1.5rem;
-        }
-        
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            flex-direction: row;
-            justify-content: space-between;
-        }
-        
-        .modal-footer .btn {
-            width: auto;
-            flex: 1;
-        }
-        
-        .success-modal-content,
-        .loading-modal-content {
-            padding: 2.5rem 2rem;
-        }
-        
-        .success-icon {
-            width: 80px;
-            height: 80px;
-        }
-        
-        .success-icon i {
-            font-size: 2.5rem;
-        }
-        
-        .success-title {
-            font-size: 1.25rem;
-        }
-        
-        .success-text {
-            font-size: 0.9375rem;
-        }
+    /* Hide scroll to top button */
+    #scrollToTop,
+    .scroll-to-top,
+    .back-to-top,
+    [class*="scroll-top"],
+    [id*="scroll-top"] {
+        display: none !important;
     }
     
-    /* DESKTOP SMALL - 768px+ */
-    @media (min-width: 768px) {
-        .attachments-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    }
-    
-    /* DESKTOP - 1024px+ */
-    @media (min-width: 1024px) {
-        .request-details-container {
-            padding: 2rem;
-        }
-        
-        .request-header {
-            padding: 2rem;
-        }
-        
-        .request-title {
-            font-size: 1.5rem;
-        }
-        
-        .request-body {
-            padding: 2rem;
-        }
-        
-        .description-box {
-            padding: 1.5rem;
-        }
-        
-        .info-grid {
-            padding: 1.5rem;
-        }
-    }
-    
-    /* REDUCED MOTION */
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -766,426 +1020,430 @@
             transition-duration: 0.01ms !important;
         }
     }
-    
-    /* DARK MODE SUPPORT */
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --color-text-primary: #f8fafc;
-            --color-text-secondary: #cbd5e1;
-            --color-text-tertiary: #94a3b8;
-            --color-bg-primary: #1e293b;
-            --color-bg-secondary: #0f172a;
-        }
-    }
 </style>
 
-@php
-    $createdDate = \Carbon\Carbon::parse($mission->created_at);
+<div class="request-details-container" x-data="requestDetailsApp()">
     
-    if($mission->service_durition === '1 week') {
-        $endTime = $createdDate->copy()->addWeek();
-    } elseif($mission->service_durition === '2 weeks') {
-        $endTime = $createdDate->copy()->addWeeks(2);
-    } elseif($mission->service_durition === '1 month') {
-        $endTime = $createdDate->copy()->addMonth();
-    } elseif($mission->service_durition === '3 months') {
-        $endTime = $createdDate->copy()->addMonths(3);
-    } else {
-        $endTime = $createdDate->copy()->addWeek();
-    }
+    {{-- Bandeau informatif Owner - visible uniquement sur desktop --}}
+    <div class="owner-info-banner">
+        <i class="fas fa-user-check"></i>
+        <span>Owner view - This is your service request. You can manage it here.</span>
+    </div>
     
-    $remainingDays = \Carbon\Carbon::now()->diffInDays($endTime, false);
-    $remainingDays = max(0, $remainingDays);
-    
-    $attachments = !empty($mission->attachments) ? json_decode($mission->attachments, true) : [];
-@endphp
-
-<div class="request-details-container">
-    
-    <!-- Request Card -->
-    <article class="request-card">
+    <!-- REQUEST CARD -->
+    <div class="request-card">
         
-        <!-- Header -->
-        <header class="request-header">
-            <h1 class="request-title">{{ $mission->title ?? 'Service Request' }}</h1>
-            
-            <div class="status-badges" role="group" aria-label="Request status">
-                <span class="status-badge status-active" role="status">
-                    <i class="fas fa-circle" style="font-size: 0.5rem;" aria-hidden="true"></i>
-                    Active
-                </span>
-                @if($remainingDays <= 3 && $remainingDays > 0)
-                    <span class="status-badge status-urgent" role="status">
-                        <i class="fas fa-clock" aria-hidden="true"></i>
-                        {{ $remainingDays }} days left
-                    </span>
+        <!-- Category Badge -->
+        <div class="category-badge">
+            <i class="fas fa-folder-open"></i>
+            <span>
+                {{ $mission->category->name ?? 'Category' }} 
+                @if($mission->subcategory)
+                    › {{ $mission->subcategory->name }}
                 @endif
-            </div>
-        </header>
+                @if($mission->subsubcategory)
+                    › {{ $mission->subsubcategory->name }}
+                @endif
+            </span>
+        </div>
         
-        <!-- Body -->
-        <div class="request-body">
-            
-            <!-- Requester Information -->
-            <section class="section">
-                <h2 class="section-title">
-                    <i class="fas fa-user" aria-hidden="true"></i>
-                    Requester Information
-                </h2>
-                
-                <dl class="info-grid">
-                    <div class="info-item">
-                        <i class="fas fa-user-circle info-icon" aria-hidden="true"></i>
-                        <dt class="info-label">Requester Name:</dt>
-                        <dd class="info-value highlight">{{ $mission->requester->name ?? '-' }}</dd>
-                    </div>
-                    
-                    <div class="info-item">
-                        <i class="fas fa-phone info-icon" aria-hidden="true"></i>
-                        <dt class="info-label">Phone Number:</dt>
-                        <dd class="info-value highlight">{{ $mission->requester->phone_number ?? '-' }}</dd>
-                    </div>
-                    
-                    <div class="info-item">
-                        <i class="fas fa-calendar-plus info-icon" aria-hidden="true"></i>
-                        <dt class="info-label">Date:</dt>
-                        <dd class="info-value">
-                            <time datetime="{{ $createdDate }}">{{ $createdDate->format('d/m/Y') }}</time>
-                        </dd>
-                    </div>
-                    
-                    <div class="info-item">
-                        <i class="fas fa-calendar-times info-icon" aria-hidden="true"></i>
-                        <dt class="info-label">Ends at:</dt>
-                        <dd class="info-value">{{ $remainingDays }} Days</dd>
-                    </div>
-                    
-                    <div class="info-item">
-                        <i class="fas fa-map-marker-alt info-icon" aria-hidden="true"></i>
-                        <dt class="info-label">Location:</dt>
-                        <dd class="info-value">{{ $mission->location_city ?? '-' }}</dd>
-                    </div>
-                </dl>
-            </section>
-            
-            <!-- Service Details -->
-            <section class="section">
-                <h2 class="section-title">
-                    <i class="fas fa-file-alt" aria-hidden="true"></i>
-                    Details of the Service Request
-                </h2>
-                
-                <div class="description-box" role="region" aria-label="Service description">
-                    {{ $mission->description ?? '-' }}
+        <!-- Title -->
+        <h1 class="request-title">{{ $mission->title }}</h1>
+        
+        <!-- Description -->
+        <div class="request-description">{{ $mission->description }}</div>
+        
+        <!-- Image Gallery -->
+        @if($images && count($images) > 0)
+        <div class="image-gallery">
+            @foreach($images as $img)
+            <div class="gallery-item"
+                 @click="openImageModal('{{ asset($img) }}')"
+                 role="button"
+                 tabindex="0"
+                 @keydown.enter="openImageModal('{{ asset($img) }}')"
+                 aria-label="View attachment">
+                <img src="{{ asset($img) }}" alt="Mission attachment" loading="lazy" />
+            </div>
+            @endforeach
+        </div>
+        @endif
+        
+        <!-- Info Grid -->
+        <div class="info-grid">
+            <!-- Time remaining before deletion -->
+            <div class="info-item">
+                <div class="info-label">Ad Unpublished In</div>
+                <div class="info-value">
+                    <i class="fas fa-calendar-times"></i>
+                    <span>{{ $remainingDays }} {{ $remainingDays == 1 ? 'Day' : 'Days' }}</span>
                 </div>
-            </section>
+            </div>
             
-            <!-- Attachments -->
-            <section class="section">
-                <h2 class="section-title">
-                    <i class="fas fa-paperclip" aria-hidden="true"></i>
-                    Attachments
-                </h2>
-                
-                <div class="attachments-grid" role="list" aria-label="Request attachments">
-                    @if(count($attachments) > 0)
-                        @foreach($attachments as $index => $img)
-                            <div class="attachment-item" 
-                                 role="listitem" 
-                                 onclick="openLightbox('{{ asset($img) }}')"
-                                 tabindex="0"
-                                 onkeypress="if(event.key==='Enter') openLightbox('{{ asset($img) }}')"
-                                 aria-label="View attachment {{ $index + 1 }}">
-                                <img src="{{ asset($img) }}" 
-                                     alt="Attachment" 
-                                     loading="lazy" />
-                            </div>
-                        @endforeach
-                    @else
-                        @for($i = 0; $i < 4; $i++)
-                            <div class="attachment-item" role="listitem" aria-label="No attachment">
-                                <div class="attachment-placeholder">
-                                    <i class="fas fa-image" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        @endfor
-                    @endif
+            <!-- Country of assistance -->
+            <div class="info-item">
+                <div class="info-label">Country of Assistance</div>
+                <div class="info-value">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ $mission->location_country ?? 'Not specified' }}</span>
                 </div>
-            </section>
+            </div>
             
-            <!-- Actions -->
-            <div class="actions-container">
-                <div class="actions-main">
-                    <a href="{{ route('user.conversation') }}" 
-                       class="btn btn-outline"
-                       aria-label="Open private messaging">
-                        <span>PRIVATE MESSAGING</span>
-                    </a>
+            <!-- City -->
+            @if($mission->location_city)
+            <div class="info-item">
+                <div class="info-label">City</div>
+                <div class="info-value">
+                    <i class="fas fa-city"></i>
+                    <span>{{ $mission->location_city }}</span>
+                </div>
+            </div>
+            @endif
+            
+            <!-- Spoken languages -->
+            <div class="info-item">
+                <div class="info-label">Spoken Languages</div>
+                <div class="info-value">
+                    <i class="fas fa-language"></i>
+                    <span>
+                        @php
+                            $languages = json_decode($mission->spoken_languages ?? '[]', true);
+                            if (empty($languages)) {
+                                $languages = $mission->language ? [$mission->language] : ['Not specified'];
+                            } else {
+                                $languages = array_unique($languages);
+                            }
+                            echo implode(', ', $languages);
+                        @endphp
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Type of need -->
+            <div class="info-item">
+                <div class="info-label">Type of Need</div>
+                <div class="info-value">
+                    <i class="fas fa-{{ $mission->is_remote ? 'laptop' : 'handshake' }}"></i>
+                    <span>{{ $mission->is_remote ? 'Online' : 'In-Person' }}</span>
+                </div>
+            </div>
+            
+            <!-- Urgency -->
+            <div class="info-item">
+                <div class="info-label">Urgency</div>
+                <div class="info-value">
+                    @php
+                        $urgencyMap = [
+                            'urgent' => ['icon' => 'exclamation-circle', 'color' => '#FF3B30', 'label' => 'Urgent'],
+                            'high' => ['icon' => 'clock', 'color' => '#FF9500', 'label' => 'Within a week'],
+                            'medium' => ['icon' => 'calendar', 'color' => '#FFCC00', 'label' => '1-2 weeks'],
+                            'low' => ['icon' => 'calendar-alt', 'color' => '#34C759', 'label' => 'More than a month']
+                        ];
+                        $urgency = $urgencyMap[$mission->urgency] ?? ['icon' => 'calendar', 'color' => '#8E8E93', 'label' => 'Not specified'];
+                    @endphp
+                    <i class="fas fa-{{ $urgency['icon'] }}" style="color: {{ $urgency['color'] }};"></i>
+                    <span style="color: {{ $urgency['color'] }}; font-weight: 700;">{{ $urgency['label'] }}</span>
+                </div>
+            </div>
+            
+            <!-- Duration in country -->
+            @if($mission->requester_duration_in_country)
+            <div class="info-item">
+                <div class="info-label">In Country Since</div>
+                <div class="info-value">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>{{ $mission->requester_duration_in_country }}</span>
+                </div>
+            </div>
+            @endif
+            
+            <!-- Requester's origin country -->
+            @if($mission->requester && $mission->requester->country)
+            <div class="info-item">
+                <div class="info-label">Your Origin Country</div>
+                <div class="info-value">
+                    <i class="fas fa-flag"></i>
+                    <span>{{ $mission->requester->country }}</span>
+                </div>
+            </div>
+            @endif
+            
+            <!-- Created date -->
+            <div class="info-item">
+                <div class="info-label">Published On</div>
+                <div class="info-value">
+                    <i class="fas fa-calendar-plus"></i>
+                    <span>{{ \Carbon\Carbon::parse($mission->created_at)->format('M d, Y') }}</span>
+                </div>
+            </div>
+            
+            <!-- Phone number (if available) -->
+            @if($mission->requester && $mission->requester->phone_number)
+            <div class="info-item">
+                <div class="info-label">Your Phone</div>
+                <div class="info-value">
+                    <i class="fas fa-phone"></i>
+                    <span>{{ $mission->requester->phone_number }}</span>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+    
+    <!-- Section Divider -->
+    <div class="section-divider"></div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons-container">
+        <a href="{{ route('user.conversation') }}" class="btn-primary-action">
+            <i class="fas fa-comments"></i>
+            <span>Private Messaging</span>
+        </a>
+        
+        <button @click="openDisputeModal()" class="btn-danger-action">
+            <i class="fas fa-ban"></i>
+            <span>Cancel Request</span>
+        </button>
+    </div>
+    
+    <!-- Image Modal -->
+    <div class="image-modal" 
+         :class="{ 'active': imageModalOpen }"
+         @click="closeImageModal()"
+         role="dialog"
+         aria-modal="true">
+        <div class="image-modal-content" @click.stop>
+            <button class="image-modal-close" @click="closeImageModal()">✕</button>
+            <img :src="currentImage" alt="Full size attachment" />
+        </div>
+    </div>
+    
+    <!-- Dispute Modal -->
+    <div class="modal-overlay"
+         :class="{ 'active': disputeModalOpen }"
+         @click="closeDisputeModal()"
+         role="dialog"
+         aria-modal="true">
+        <div class="modal-content" @click.stop>
+            <button class="modal-close" @click="closeDisputeModal()">✕</button>
+            
+            <div class="modal-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            
+            <h2 class="modal-title">Why Do You Wish to Cancel This Request?</h2>
+            
+            <p class="modal-subtitle">
+                Please let us know why you want to cancel this service request
+            </p>
+            
+            <form @submit.prevent="submitDispute()">
+                <div class="form-group">
+                    <label for="disputeReason" class="form-label">Select a reason</label>
+                    <select id="disputeReason" 
+                            x-model="disputeForm.reason"
+                            class="form-select" 
+                            required>
+                        <option value="">Select a reason...</option>
+                        <option value="mistake">I made a mistake in the information provided.</option>
+                        <option value="situation_changed">My situation has changed, I no longer need the service.</option>
+                        <option value="found_solution">I found a solution elsewhere.</option>
+                        <option value="timing_short">The timing is too short to organize this mission.</option>
+                        <option value="budget">My budget is not sufficient for the type of service I need.</option>
+                        <option value="no_proposals">I didn't receive any relevant proposals.</option>
+                        <option value="criteria_mismatch">The available providers do not match my criteria.</option>
+                        <option value="postpone">I've decided to postpone this request.</option>
+                        <option value="testing">I submitted this request just to test the platform.</option>
+                        <option value="other">Other reason (please specify below)</option>
+                    </select>
                 </div>
                 
-                <div class="actions-secondary">
+                <div class="form-group">
+                    <label for="disputeDescription" class="form-label">Additional details</label>
+                    <textarea id="disputeDescription" 
+                              x-model="disputeForm.description"
+                              class="form-textarea" 
+                              maxlength="300" 
+                              placeholder="Describe here the reason for your cancellation"
+                              required></textarea>
+                </div>
+                
+                <div class="form-hint">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Your service provider will receive your message. They have 3 days to respond</span>
+                </div>
+                
+                <div class="modal-actions">
                     <button type="button" 
-                            class="btn-danger-link" 
-                            onclick="openDisputeModal()"
-                            aria-label="Start dispute process">
-                        I Start Dispute
+                            class="btn-modal-primary" 
+                            @click="closeDisputeModal()">
+                        <i class="fas fa-check"></i>
+                        <span>Keep My Request Online</span>
+                    </button>
+                    
+                    <button type="submit" 
+                            class="btn-modal-secondary">
+                        <span>Confirm Cancellation</span>
                     </button>
                 </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Loading Modal -->
+    <div class="modal-overlay"
+         :class="{ 'active': loadingModalOpen }"
+         role="alert"
+         aria-live="assertive">
+        <div class="modal-content" style="text-align: center;">
+            <div class="loading-spinner"></div>
+            <h2 class="modal-title">Processing...</h2>
+            <p class="modal-subtitle">Please wait while we process your request.</p>
+        </div>
+    </div>
+    
+    <!-- Success Modal -->
+    <div class="modal-overlay"
+         :class="{ 'active': successModalOpen }"
+         @click="closeSuccessModal()"
+         role="dialog"
+         aria-modal="true">
+        <div class="modal-content" @click.stop style="text-align: center;">
+            <button class="modal-close" @click="closeSuccessModal()">✕</button>
+            
+            <div class="modal-icon success">
+                <i class="fas fa-check"></i>
             </div>
             
+            <h2 class="modal-title">Request Cancelled Successfully!</h2>
+            
+            <p class="modal-subtitle">
+                Your cancellation request has been sent.<br>
+                We'll keep you informed about what happens next.<br>
+                <span style="display: block; margin-top: 0.5rem;">Thank you for your trust! 🙏</span>
+            </p>
+            
+            <button @click="closeSuccessModal()" class="btn-modal-primary" style="margin-top: 1rem;">
+                <span>Close</span>
+            </button>
         </div>
-    </article>
+    </div>
     
 </div>
 
-<!-- Dispute Modal -->
-<aside class="modal-overlay" id="disputeModal" role="dialog" aria-labelledby="disputeModalTitle" aria-modal="true">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title" id="disputeModalTitle">WHY DO YOU WISH TO CANCEL THIS ADD?</h2>
-            <button type="button" 
-                    class="modal-close" 
-                    onclick="closeDisputeModal()" 
-                    aria-label="Close modal">
-                <i class="fas fa-times" aria-hidden="true"></i>
-            </button>
-        </div>
-        
-        <form id="disputeForm" class="modal-body">
-            <div class="form-group">
-                <select id="disputeReason" 
-                        class="form-select" 
-                        required 
-                        aria-required="true"
-                        aria-label="Select cancellation reason">
-                    <option value="">Select a reason...</option>
-                    <option value="mistake">I made a mistake in the information provided.</option>
-                    <option value="situation_changed">My situation has changed, I no longer need the service.</option>
-                    <option value="found_solution">I found a solution elsewhere.</option>
-                    <option value="timing_short">The timing is too short to organize this mission.</option>
-                    <option value="budget">My budget is not sufficient for the type of service I need.</option>
-                    <option value="no_proposals">I didn't receive any relevant proposals.</option>
-                    <option value="criteria_mismatch">The available providers do not match my criteria.</option>
-                    <option value="postpone">I've decided to postpone this request.</option>
-                    <option value="testing">I submitted this request just to test the platform.</option>
-                    <option value="other">Other reason (please specify below)</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <textarea id="disputeDescription" 
-                          class="form-textarea" 
-                          maxlength="300" 
-                          placeholder="Describe here the reason for your cancellation" 
-                          required
-                          aria-required="true"
-                          aria-label="Cancellation description"></textarea>
-            </div>
-            
-            <div class="form-hint">
-                <i class="fas fa-info-circle" aria-hidden="true"></i>
-                <span>Your service provider will recieve your mesasge . they have 3 days to respond</span>
-            </div>
-        </form>
-        
-        <div class="modal-footer">
-            <button type="button" 
-                    class="btn btn-primary" 
-                    onclick="closeDisputeModal()"
-                    aria-label="Keep request online">
-                I keep my add online
-            </button>
-            
-            <button type="submit" 
-                    form="disputeForm" 
-                    class="btn btn-danger-text"
-                    aria-label="Confirm dispute">
-                I confirm the dispute
-            </button>
-        </div>
-    </div>
-</aside>
-
-<!-- Success Modal -->
-<aside class="modal-overlay" id="successModal" role="dialog" aria-labelledby="successModalTitle" aria-modal="true">
-    <div class="modal-content">
-        <div class="success-modal-content">
-            <div class="success-icon" aria-hidden="true">
-                <i class="fas fa-check"></i>
-            </div>
-            <h2 class="success-title" id="successModalTitle">Your decision has been sent!</h2>
-            <p class="success-text">
-                The service provider has just received your message.<br>
-                We'll keep you in the loop for what happens next.<br>
-                <span style="display: block; margin-top: 0.5rem;">Thanks a bunch for your trust! 🙌</span>
-            </p>
-        </div>
-    </div>
-</aside>
-
-<!-- Loading Modal -->
-<aside class="modal-overlay" id="loadingModal" role="alert" aria-live="assertive" aria-busy="true">
-    <div class="modal-content">
-        <div class="loading-modal-content">
-            <div class="loading-spinner" aria-hidden="true"></div>
-            <h2 class="loading-title">Canceling...</h2>
-            <p class="loading-text">Please wait while we process your request.</p>
-        </div>
-    </div>
-</aside>
-
-<!-- Lightbox -->
-<aside class="lightbox" id="lightbox" role="dialog" aria-label="Image viewer">
-    <div class="lightbox-content">
-        <button type="button" 
-                class="lightbox-close" 
-                onclick="closeLightbox()" 
-                aria-label="Close image viewer">
-            <i class="fas fa-times" aria-hidden="true"></i>
-        </button>
-        <img src="" alt="Attachment full size" class="lightbox-image" id="lightboxImage" />
-    </div>
-</aside>
-
 <script>
-(function() {
-    'use strict';
-    
-    // Modal Management
-    function openDisputeModal() {
-        document.getElementById('disputeModal').classList.add('show');
-        document.getElementById('disputeReason').focus();
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeDisputeModal() {
-        document.getElementById('disputeModal').classList.remove('show');
-        document.body.style.overflow = '';
-        document.getElementById('disputeForm').reset();
-    }
-    
-    function openSuccessModal() {
-        document.getElementById('successModal').classList.add('show');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeSuccessModal() {
-        document.getElementById('successModal').classList.remove('show');
-        document.body.style.overflow = '';
-    }
-    
-    function openLoadingModal() {
-        document.getElementById('loadingModal').classList.add('show');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeLoadingModal() {
-        document.getElementById('loadingModal').classList.remove('show');
-        document.body.style.overflow = '';
-    }
-    
-    // Lightbox
-    function openLightbox(imageSrc) {
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImage = document.getElementById('lightboxImage');
-        lightboxImage.src = imageSrc;
-        lightbox.classList.add('show');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeLightbox() {
-        const lightbox = document.getElementById('lightbox');
-        lightbox.classList.remove('show');
-        document.body.style.overflow = '';
-    }
-    
-    // Make functions global
-    window.openDisputeModal = openDisputeModal;
-    window.closeDisputeModal = closeDisputeModal;
-    window.openSuccessModal = openSuccessModal;
-    window.closeSuccessModal = closeSuccessModal;
-    window.openLoadingModal = openLoadingModal;
-    window.closeLoadingModal = closeLoadingModal;
-    window.openLightbox = openLightbox;
-    window.closeLightbox = closeLightbox;
-    
-    // Close modal on overlay click
-    document.getElementById('disputeModal').addEventListener('click', function(e) {
-        if (e.target === this) closeDisputeModal();
-    });
-    
-    document.getElementById('successModal').addEventListener('click', function(e) {
-        if (e.target === this) closeSuccessModal();
-    });
-    
-    document.getElementById('lightbox').addEventListener('click', function(e) {
-        if (e.target === this) closeLightbox();
-    });
-    
-    // Close on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const lightbox = document.getElementById('lightbox');
-            const disputeModal = document.getElementById('disputeModal');
-            const successModal = document.getElementById('successModal');
+function requestDetailsApp() {
+    return {
+        // Image Modal
+        imageModalOpen: false,
+        currentImage: '',
+        
+        // Dispute Modal
+        disputeModalOpen: false,
+        disputeForm: {
+            reason: '',
+            description: ''
+        },
+        
+        // Loading Modal
+        loadingModalOpen: false,
+        
+        // Success Modal
+        successModalOpen: false,
+        
+        init() {
+            // Initialization
+        },
+        
+        // Image Modal Methods
+        openImageModal(imageUrl) {
+            this.currentImage = imageUrl;
+            this.imageModalOpen = true;
+            document.body.style.overflow = 'hidden';
+        },
+        
+        closeImageModal() {
+            this.imageModalOpen = false;
+            document.body.style.overflow = '';
+        },
+        
+        // Dispute Modal Methods
+        openDisputeModal() {
+            this.disputeModalOpen = true;
+            document.body.style.overflow = 'hidden';
+        },
+        
+        closeDisputeModal() {
+            this.disputeModalOpen = false;
+            this.disputeForm = { reason: '', description: '' };
+            document.body.style.overflow = '';
+        },
+        
+        async submitDispute() {
+            if (!this.disputeForm.reason) {
+                alert('Please select a reason');
+                return;
+            }
             
-            if (lightbox.classList.contains('show')) closeLightbox();
-            else if (disputeModal.classList.contains('show')) closeDisputeModal();
-            else if (successModal.classList.contains('show')) closeSuccessModal();
-        }
-    });
-    
-    // Form Submission
-    document.getElementById('disputeForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const reason = document.getElementById('disputeReason').value;
-        const description = document.getElementById('disputeDescription').value;
-        
-        if (!reason) {
-            alert('Please select the reason');
-            return;
-        }
-        
-        closeDisputeModal();
-        openLoadingModal();
-        
-        fetch('/api/mission/cancel', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                mission_id: {{ $mission->id }},
-                reason: reason,
-                description: description,
-                cancelled_by: 'requester',
-                cancelled_on: new Date().toISOString()
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            this.closeDisputeModal();
+            this.loadingModalOpen = true;
+            
+            try {
+                const response = await fetch('/api/mission/cancel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        mission_id: {{ $mission->id }},
+                        reason: this.disputeForm.reason,
+                        description: this.disputeForm.description,
+                        cancelled_by: 'requester',
+                        cancelled_on: new Date().toISOString()
+                    })
+                });
+                
+                const data = await response.json();
+                
+                this.loadingModalOpen = false;
+                
+                if (data.success) {
+                    this.successModalOpen = true;
+                    setTimeout(() => {
+                        window.location.href = '{{ route("user.dashboard") }}';
+                    }, 3000);
+                } else {
+                    alert('Error: ' + (data.message || 'An error occurred'));
+                }
+            } catch (error) {
+                this.loadingModalOpen = false;
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             }
-            return response.json();
-        })
-        .then(data => {
-            closeLoadingModal();
-            if (data.success) {
-                openSuccessModal();
-            } else {
-                alert('Error: ' + (data.message || 'An error occurred'));
-            }
-        })
-        .catch(error => {
-            closeLoadingModal();
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        });
-    });
-    
-})();
+        },
+        
+        // Success Modal Methods
+        closeSuccessModal() {
+            this.successModalOpen = false;
+            document.body.style.overflow = '';
+            window.location.href = '{{ route("user.dashboard") }}';
+        }
+    }
+}
+
+// Close modals on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const app = Alpine.$data(document.querySelector('[x-data]'));
+        if (app) {
+            if (app.imageModalOpen) app.closeImageModal();
+            if (app.disputeModalOpen) app.closeDisputeModal();
+            if (app.successModalOpen) app.closeSuccessModal();
+        }
+    }
+});
 </script>
 
 @endsection

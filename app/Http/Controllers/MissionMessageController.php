@@ -100,6 +100,7 @@ class MissionMessageController extends Controller
             'message' => 'Message posted.',
             'data' => [
                 'user' => [
+                    'id' => $msg->user->id,  // ✅ AJOUTÉ
                     'name' => $msg->user->name,
                     'profile_photo' => $msg->user->serviceProvider->profile_photo ?? null,
                 ],
@@ -129,6 +130,7 @@ class MissionMessageController extends Controller
         $data = $messages->map(function($msg) {
             return [
                 'user' => [
+                    'id' => $msg->user->id,  // ✅ AJOUTÉ - permet au frontend de savoir qui a envoyé
                     'name' => $msg->user->name,
                     'profile_photo' => $msg->user->serviceProvider->profile_photo ?? null,
                 ],
