@@ -1,6 +1,6 @@
 /**
  * Scroll Utils - Scroll to top et autres utilitaires
- * SAFE: Code extrait exact
+ * MODIFIÉ: Bloque le bouton scroll dans le dashboard
  */
 
 export class ScrollUtils {
@@ -22,8 +22,14 @@ export class ScrollUtils {
       clearTimeout(scrollTimer);
       scrollTimer = setTimeout(() => {
         const btn = document.getElementById('scrollToTopBtn');
-        if (btn && window.innerWidth > 768) {
+        
+        // 🔥 NOUVEAU: Bloquer dans le dashboard
+        const isDashboard = document.body.dataset.page === 'dashboard';
+        
+        if (btn && window.innerWidth > 768 && !isDashboard) {
           btn.className = window.pageYOffset > 400 ? 'show' : '';
+        } else if (btn && isDashboard) {
+          btn.className = ''; // Force le masquage
         }
       }, 100);
     };

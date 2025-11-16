@@ -2,5 +2,7 @@
     "/js/app.js": "/js/app.js",
     "/js/header-init.js": "/js/header-init.js",
     "/js/request-form.js": "/js/request-form.js",
+    "/js/pages/index.js": "/js/pages/index.js",
+    "/css/pages/index.css": "/css/pages/index.css",
     "/css/app.css": "/css/app.css"
 }

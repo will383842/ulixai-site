@@ -506,7 +506,7 @@
     </style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 text-gray-800 antialiased">
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 text-gray-800 antialiased" data-page="dashboard">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     
     <!-- Google Translate Element -->

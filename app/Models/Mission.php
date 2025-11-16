@@ -30,8 +30,10 @@ class Mission extends Model
         'service_duration',
         'location_country',
         'location_city',
+        'requester_duration_in_country',
         'is_remote',
         'language',
+        'spoken_languages',
         'urgency',
         'status',
         'selected_provider_id',
@@ -55,7 +57,8 @@ class Mission extends Model
         'is_remote' => 'boolean',
         'is_fake' => 'boolean',
         'cancelled_on' => 'datetime',
-        'deleted_at' => 'datetime', // ✅ AJOUT : Cast pour Soft Delete
+        'deleted_at' => 'datetime', 
+        'spoken_languages' => 'array',
         
         // ✅ GDPR: Cast consentement
         'terms_accepted' => 'boolean',

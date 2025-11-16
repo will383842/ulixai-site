@@ -13,12 +13,19 @@ class PaymentController extends Controller
         $providerId = $request->query('id');
         $missionId = $request->query('mission_id');
         $provider = ServiceProvider::find($providerId);
-        $commissions = \App\Models\UlixCommission::where('is_active', true)->first();
-        $requester = auth()->user(); 
-
+        
         if (!$provider) {
             abort(404, 'Provider not found');
         }
+
+        // ========== VÉRIFICATION KYC ==========
+        if ($provider->kyc_status !== 'verified' || empty($provider->stripe_account_id)) {
+            return redirect()->back()->with('error', 'This provider has not completed verification. They need to complete KYC (5 minutes) before receiving payments.');
+        }
+        // ======================================
+
+        $commissions = \App\Models\UlixCommission::where('is_active', true)->first();
+        $requester = auth()->user(); 
 
         $offer = null;
 
@@ -27,6 +34,7 @@ class PaymentController extends Controller
                 ->where('provider_id', $providerId)
                 ->first();
         }
+        
         $calculateClientFee = number_format($commissions->requester_fee * ($offer->price ?? 0), 2, '.', '');
 
         $requesterCreditBalance = $requester->credit_balance;
@@ -59,6 +67,7 @@ class PaymentController extends Controller
         }
         return view('dashboard.payments.payments-validate', compact('missions', 'user'));
     }
+
     public function earningAndPayments(Request $request) {
         return view('dashboard.my-earnings-payments');
     }

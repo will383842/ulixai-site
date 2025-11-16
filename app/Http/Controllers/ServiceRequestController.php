@@ -362,6 +362,7 @@ class ServiceRequestController extends Controller
                     'status' => 'active',
                     'affiliate_code' => $affiliateLink,
                     'preferred_language' => $request->input('languages.0') ?? null,
+                    'spoken_languages' => $request->languages ? json_encode($request->languages) : null,
                     'last_login_at' => now(),
                 ]);
                 
@@ -419,8 +420,10 @@ class ServiceRequestController extends Controller
                 'service_duration' => $request->serviceDuration ?? null,
                 'location_country' => $request->countryNeed,
                 'location_city' => strip_tags($request->currentCity),
+                'requester_duration_in_country' => $request->durationHere,
                 'is_remote' => $request->supportOnline === 'yes',
                 'language' => $request->input('languages.0') ?? null,
+                'spoken_languages' => $request->languages ? json_encode($request->languages) : null,
                 'urgency' => $urgency,
                 'status' => 'published',
                 'selected_provider_id' => null,
