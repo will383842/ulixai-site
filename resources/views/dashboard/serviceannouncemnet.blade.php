@@ -65,7 +65,7 @@
      <!-- Action Buttons -->
 <div class="flex flex-wrap justify-center gap-4 pt-2">
   <button class="bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-700 transition">
-   <a href="{{ route('qoute-offer')}}"> I SEND PUBLIC MESSAGE </a>
+   <a href="{{ route('quote-offer', ['id' => $mission->id ?? 0])}}">
   </button>
 
   <!-- I APPLY button triggers Popup 1 -->

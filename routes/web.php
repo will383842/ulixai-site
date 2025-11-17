@@ -282,7 +282,7 @@ Route::middleware(['auth'])->group(function () {
     // Jobs
     Route::get('/job-list', [JobListController::class, 'index'])->name('user.joblist');
     Route::get('/view-job', [JobListController::class, 'viewJob'])->name('view-job');
-    Route::get('/quote-offer', [JobListController::class, 'quoteOffer'])->name('qoute-offer');
+    Route::get('/quote-offer', [JobListController::class, 'quoteOffer'])->name('quote-offer');
     Route::get('/archivejobs/{user}', [JobListController::class, 'archive'])->name('provider.jobs.archive');
 
     // Account

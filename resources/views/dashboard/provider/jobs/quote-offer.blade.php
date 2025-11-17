@@ -2384,96 +2384,9 @@ document.getElementById('accessDeniedModal')?.addEventListener('click', function
 @endif
 
         
-        // Offer Modal Methods
-        openOfferModal() {
-            this.offerModalOpen = true;
-            this.offerError = '';
-            document.body.style.overflow = 'hidden';
-        },
-        
-        closeOfferModal() {
-            this.offerModalOpen = false;
-            this.offerForm = { price: '', delivery_time: '', message: '' };
-            this.offerError = '';
-            document.body.style.overflow = '';
-        },
-        
-        async submitOffer() {
-            this.offerError = '';
-            
-            const formData = new FormData();
-            formData.append('price', this.offerForm.price);
-            formData.append('delivery_time', this.offerForm.delivery_time);
-            formData.append('message', this.offerForm.message);
-            
-            try {
-                const response = await fetch("{{ route('mission.offer', $mission->id) }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    this.closeOfferModal();
-                    this.successModalOpen = true;
-                    setTimeout(() => location.reload(), 3000);
-                } else {
-                    this.offerError = data.message || 'Failed to submit offer.';
-                }
-            } catch (error) {
-                this.offerError = 'Failed to submit offer. Please try again.';
-            }
-        },
-        
-        // Confirm Modal Methods
-        // Confirm Modal Methods
-chooseProvider(providerId, providerName) {
-    console.log('🎯 Provider selected:', providerId, providerName);
-    
-    this.selectedProviderId = providerId;
-    this.selectedProviderName = providerName;
-    this.paymentUrl = `{{ route('user.payments') }}?id=${providerId}&mission_id={{ $mission->id }}`;
-    
-    console.log('📍 Payment URL generated:', this.paymentUrl);
-    
-    this.confirmModalOpen = true;
-    document.body.style.overflow = 'hidden';
-},
-
-closeConfirmModal() {
-    this.confirmModalOpen = false;
-    document.body.style.overflow = '';
-},
-
-// ✅ NOUVELLE MÉTHODE : Redirection explicite
-redirectToPayment() {
-    console.log('💳 Redirecting to payment...');
-    console.log('📍 URL:', this.paymentUrl);
-    
-    if (!this.paymentUrl) {
-        console.error('❌ Payment URL is empty!');
-        alert('Error: Payment URL not generated. Please try again.');
-        return;
-    }
-    
-    // Redirection immédiate
-    window.location.href = this.paymentUrl;
-},
-        
-        // Success Modal Methods
-        closeSuccessModal() {
-            this.successModalOpen = false;
-            document.body.style.overflow = '';
-        }
-    }
-}
-
-// ✅ VANILLA JS POUR LES MESSAGES - STYLE iPHONE RESPONSIVE
+@if(is_null($mission->selected_provider_id))
+<script>
+// ✅ VANILLA JS POUR LES MESSAGES - STYLE IPHONE RESPONSIVE
 @if(is_null($mission->selected_provider_id))
 document.addEventListener('DOMContentLoaded', function() {
     const currentUserId = {{ auth()->id() ?? 'null' }};
@@ -3155,37 +3068,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-```
-
----
-
-## ✅ ÉTAPE 5 : VÉRIFICATION FINALE
-
-**Après avoir fait TOUTES ces modifications :**
-
-1. ✅ Le mot `x-data` n'apparaît NULLE PART dans le fichier
-2. ✅ Le mot `@click` n'apparaît NULLE PART dans le fichier
-3. ✅ Le mot `:href` n'apparaît NULLE PART dans le fichier
-4. ✅ Le mot `x-show` n'apparaît NULLE PART dans le fichier
-5. ✅ Le script Alpine CDN est SUPPRIMÉ
-
-**Pour vérifier, fais Ctrl+F et cherche :**
-- `x-data` → 0 résultats
-- `@click` → 0 résultats
-- `:href` → 0 résultats
-- `alpine` → 0 résultats
-
----
-
-## 🧪 TESTE
-
-1. Rafraîchis la page
-2. Ouvre la console (F12)
-3. Clique sur "Choose Provider"
-4. Clique sur "Confirm & Pay"
-5. Tu DOIS voir dans la console :
-```
-🎯 Provider selected: 123 John
-💳 REDIRECTING TO: /payments?id=123&mission_id=6
+@endif
 
 @endsection

@@ -1531,7 +1531,7 @@
                     </dl>
                     
                     <div class="service-actions">
-                        <a href="{{ route('qoute-offer', ['id'=> $mission->id]) }}" 
+                        <a href="{{ route('quote-offer', ['id'=> $mission->id]) }}"> 
                            class="btn-service-action btn-view-proposals" 
                            style="flex: 2;">
                             <i class="fas fa-eye" aria-hidden="true"></i>

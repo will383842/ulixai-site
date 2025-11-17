@@ -1412,7 +1412,7 @@ function requestDetailsApp() {
                 if (data.success) {
                     this.successModalOpen = true;
                     setTimeout(() => {
-                        window.location.href = '{{ route("user.dashboard") }}';
+                        window.location.href = '{{ route("dashboard") }}';
                     }, 3000);
                 } else {
                     alert('Error: ' + (data.message || 'An error occurred'));
@@ -1428,7 +1428,7 @@ function requestDetailsApp() {
         closeSuccessModal() {
             this.successModalOpen = false;
             document.body.style.overflow = '';
-            window.location.href = '{{ route("user.dashboard") }}';
+            window.location.href = '{{ route("dashboard") }}';
         }
     }
 }

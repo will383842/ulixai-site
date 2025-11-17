@@ -1046,7 +1046,7 @@
                                 </div>
                             </div>
                             
-                            <a href="{{ route('qoute-offer', ['id' => $mission->id]) }}" 
+                            <a href="{{ route('quote-offer', ['id' => $mission->id]) }}"> 
                                class="btn-see-request"
                                aria-label="View full details and submit proposal for {{ $mission->title ?? 'this request' }}"
                                rel="nofollow">
@@ -1327,7 +1327,7 @@
                         </div>
                     </div>
                     
-                    <a href="/qoute-offer/${mission.id}" 
+                    <a href="/quote-offer/${mission.id}"> 
                        class="btn-see-request"
                        aria-label="View full details and submit proposal for ${escapeHtml(mission.title || 'this request')}"
                        rel="nofollow">
