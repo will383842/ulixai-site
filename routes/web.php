@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\DisputeController;
 use App\Http\Controllers\ProviderReviewController;
 use App\Http\Controllers\MissionMessageController;
 use App\Http\Controllers\StripePaymentController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\UlixaiReviewController;
 use App\Http\Controllers\ServiceFeesController;
@@ -64,6 +65,13 @@ use App\Http\Controllers\Api\ProviderPhotoVerificationController;
 // Doit rester en premier pour éviter le catch-all
 Route::get('/provider/{slug}', [ServiceProviderController::class, 'providerProfile'])
     ->name('provider.profile');
+
+// ═══════════════════════════════════════════════════════════
+// 🔐 STRIPE WEBHOOK (AVANT TOUTES LES AUTRES ROUTES)
+// ═══════════════════════════════════════════════════════════
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
+    ->name('stripe.webhook');
 
 // ═══════════════════════════════════════════════════════════
 // 🌍 ROUTES PUBLIQUES

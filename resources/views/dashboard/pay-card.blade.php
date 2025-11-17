@@ -64,7 +64,7 @@
         </form>
 
         <div class="mt-4 text-center bg-red-500 p-3 rounded-md">
-            <a href="{{ route('qoute-offer', ['id'=> $mission->id ]) }}" class="text-white hover:text-gray-800">
+            <a href="{{ route('quote-offer', ['id'=> $mission->id ]) }}" class="text-white hover:text-gray-800">
                 Cancel and return to mission
             </a>
         </div>

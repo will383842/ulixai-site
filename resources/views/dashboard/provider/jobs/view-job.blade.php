@@ -734,25 +734,36 @@
             </div>
             
             <!-- Action Buttons + Cancel -->
-            <div class="action-section-2025">
-                <!-- Left Buttons -->
-                <div class="action-buttons-group">
-                    <a href="{{ route('user.conversation') }}" 
-                       class="btn-messaging-2025"
-                       aria-label="Send private message to requester">
-                        PRIVATE MESSAGING
-                    </a>
-                </div>
-                
-                <!-- Right Text -->
-                <div class="action-cancel-group">
-                    <a href="#" 
-                       onclick="openCancelServicePopup(event)" 
-                       class="link-cancel-2025"
-                       aria-label="Cancel this service request">
-                        Cancel the service
-                    </a>
-                </div>
+<div class="action-section-2025">
+    <!-- Left Buttons -->
+    <div class="action-buttons-group">
+        <a href="{{ route('user.conversation') }}" 
+           class="btn-messaging-2025">
+            PRIVATE MESSAGING
+        </a>
+    </div>
+    
+    <!-- Right Text -->
+    <div class="action-cancel-group">
+        {{-- ✅ Prestataire peut annuler AVANT démarrage --}}
+        @if(in_array($job->status, ['published', 'waiting_to_start']))
+            <a href="#" 
+               onclick="openCancelServicePopup(event)" 
+               class="link-cancel-2025">
+                Cancel the service
+            </a>
+        @endif
+        
+        {{-- ✅ Pendant in_progress : Prestataire peut signaler un problème --}}
+        @if($job->status === 'in_progress')
+            <a href="#" 
+               onclick="openDisputePopup(event)" 
+               class="link-cancel-2025">
+                <i class="fas fa-flag"></i> Report an issue
+            </a>
+        @endif
+    </div>
+</div>
             </div>
             
         </div>

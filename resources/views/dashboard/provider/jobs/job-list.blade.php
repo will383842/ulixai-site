@@ -1108,14 +1108,19 @@
 <div class="jobs-container-2025">
     
     @php 
-        $jobsAccepted = $jobs->filter(function($job) {
-            return in_array($job->status, ['accepted', 'waiting_to_start', 'in_progress', 'disputed']);
-        });
+    $jobsAccepted = $jobs->filter(function($job) {
+        return in_array($job->status, ['accepted', 'waiting_to_start', 'in_progress', 'disputed']);
+    });
+
+    $jobsOffer = $jobs->filter(function($job) {
+        return in_array($job->status, ['pending']);
+    });
     
-        $jobsOffer = $jobs->filter(function($job) {
-            return in_array($job->status, ['pending']);
-        });
-    @endphp
+    // ✅ NOUVEAU : Filtre pour les jobs completed
+    $jobsCompleted = $jobs->filter(function($job) {
+        return $job->status === 'completed';
+    });
+@endphp
     
     <!-- Header -->
     <header class="jobs-header-top">
@@ -1188,6 +1193,18 @@
                 <span class="tab-badge" aria-label="{{ $jobsOffer->count() }} offers">{{ $jobsOffer->count() }}</span>
             @endif
         </button>
+        <button class="tab-button" 
+        data-tab="completed" 
+        role="tab" 
+        aria-selected="false"
+        aria-controls="tab-completed"
+        id="tab-btn-completed">
+    <i class="fas fa-check-circle" aria-hidden="true"></i>
+    <span>Completed</span>
+    @if($jobsCompleted->count() > 0)
+        <span class="tab-badge" aria-label="{{ $jobsCompleted->count() }} completed">{{ $jobsCompleted->count() }}</span>
+    @endif
+</button>
     </nav>
     
     <!-- TAB 1: Current Jobs -->
@@ -1371,6 +1388,91 @@
                         <i class="fas fa-file-contract"></i>
                     </div>
                     <div class="empty-title">No pending quote offers.</div>
+                </div>
+            @endforelse
+        </div>
+    </section>
+    
+    <!-- TAB 3: Completed Jobs -->
+    <section class="tab-content" 
+             id="tab-completed" 
+             role="tabpanel" 
+             aria-labelledby="tab-btn-completed">
+        
+        <div class="section-badge-2025">
+            <i class="fas fa-check-double"></i>
+            <span>Completed jobs</span>
+        </div>
+        
+        <div class="jobs-grid-2025">
+            @forelse($jobsCompleted as $job)
+                <article class="job-card-2025" 
+                         style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-color: #86efac;"
+                         aria-label="Completed job: {{ $job->title ?? 'Job' }}">
+                    <div class="card-header-row">
+                        <div class="job-icon-2025" 
+                             style="background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);"
+                             aria-hidden="true">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="card-content-main">
+                            <h3 class="job-title-2025">{{ strtoupper($job->title ?? 'JOB') }}</h3>
+                            <div class="status-row">
+                                <span class="status-badge-2025" 
+                                      style="background: #d1fae5; color: #065f46;"
+                                      role="status">
+                                    <i class="fas fa-check-circle" style="font-size: 0.5rem;" aria-hidden="true"></i>
+                                    Completed & Paid
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="price-box-highlight" 
+                         style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-color: #6ee7b7;">
+                        <div class="price-label-main" style="color: #065f46;">You earned</div>
+                        <div class="price-value-main" style="color: #047857;">- €</div>
+                    </div>
+                    
+                    <dl class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-calendar-check info-icon" aria-hidden="true"></i>
+                            <dt class="info-label">Completed:</dt>
+                            <dd class="info-value">{{ \Carbon\Carbon::parse($job->updated_at)->format('M d, Y') }}</dd>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock info-icon" aria-hidden="true"></i>
+                            <dt class="info-label">Duration:</dt>
+                            <dd class="info-value">{{ $job->service_durition ?? '-' }}</dd>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt info-icon" aria-hidden="true"></i>
+                            <dt class="info-label">Country:</dt>
+                            <dd class="info-value">{{ $job->location_country ?? '-' }}</dd>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-language info-icon" aria-hidden="true"></i>
+                            <dt class="info-label">Language:</dt>
+                            <dd class="info-value">{{ $job->language ?? '-' }}</dd>
+                        </div>
+                    </dl>
+                    
+                    <div class="service-actions">
+                        <a href="{{ route('view-job', ['id' => $job->id]) }}" 
+                           class="btn-job-action btn-view-job"
+                           aria-label="View completed job details">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                            <span>View Details</span>
+                        </a>
+                    </div>
+                </article>
+            @empty
+                <div class="empty-state-2025" style="grid-column: 1 / -1;" role="status">
+                    <div class="empty-icon" aria-hidden="true">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <div class="empty-title">No completed jobs yet.</div>
+                    <p class="empty-text">Your completed jobs will appear here once finished and paid.</p>
                 </div>
             @endforelse
         </div>

@@ -40,6 +40,7 @@ class StripePaymentController extends Controller
             $provider->kyc_link = $stripeAccount['onboarding_url'] ?? null;
             $provider->save();
         }
+        
         // Calculate fees
         $amount = (float) $request->amount;
         $clientFee = (float) $request->client_fee;
@@ -65,11 +66,9 @@ class StripePaymentController extends Controller
             ],
         ]);
 
-        // Update mission status
-        $mission->status = 'waiting_to_start';
-        $mission->payment_status = 'held';
-        $mission->selected_provider_id = $provider->id;
-        $mission->save();
+        // ✅ CORRECTION : Ne plus modifier la mission ICI
+        // On attend la confirmation du paiement dans processPayment()
+        // L'annonce reste visible jusqu'au paiement effectif
 
         return view('dashboard.pay-card', [
             'mission' => $mission,
@@ -88,7 +87,6 @@ class StripePaymentController extends Controller
         $request->validate([
             'payment_intent_id' => 'required|string',
         ]);
-        
         $commission = UlixCommission::first();
         Stripe::setApiKey(config('services.stripe.secret'));
         
@@ -104,35 +102,28 @@ class StripePaymentController extends Controller
                 $remainingCredits = $paymentIntent->metadata['remaining_credits'];
                 $missionAmount = $paymentIntent->metadata['mission_amount'];
                 
-                // Mark mission as paid
+                // ✅ Vérifier si déjà traité (évite les doublons)
+                $existingTransaction = Transaction::where('stripe_payment_intent_id', $paymentIntent->id)->first();
+                if ($existingTransaction) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect_url' => route('payments.success', ['mission' => $missionId, 'credits' => $remainingCredits])
+                    ]);
+                }
+
+                // ✅ CORRECTION : Maintenant on modifie la mission APRÈS le paiement réussi
                 $mission = Mission::find($missionId);
                 $mission->status = 'waiting_to_start';
                 $mission->payment_status = 'paid';
+                $mission->selected_provider_id = $providerId; // ✅ AJOUTÉ - Crucial !
                 $mission->save();
 
-                // Mark accepted offer
+                // ✅ Accepter l'offre
                 $missionOffer = MissionOffer::find($offerId);
                 $missionOffer->status = 'accepted'; 
                 $missionOffer->save();
 
-                // ✅ AJOUT : Soft delete toutes les autres offres non sélectionnées
-                $otherOffers = MissionOffer::where('mission_id', $missionId)
-                    ->where('id', '!=', $offerId)
-                    ->get();
-
-                if ($otherOffers->count() > 0) {
-                    foreach ($otherOffers as $otherOffer) {
-                        $otherOffer->delete(); // Soft delete
-                    }
-                    
-                    \Log::info('✅ [PAYMENT] Other offers soft deleted', [
-                        'mission_id' => $missionId,
-                        'accepted_offer_id' => $offerId,
-                        'rejected_offers_count' => $otherOffers->count()
-                    ]);
-                }
-
-                // Log transaction
+                // ✅ Enregistrer la transaction
                 Transaction::create([
                     'mission_id' => $missionId,
                     'provider_id' => $providerId,
@@ -269,5 +260,4 @@ class StripePaymentController extends Controller
 
         return response()->json(['completed' => false, 'url' => $accountLink->url]);
     }
-
 }

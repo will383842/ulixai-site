@@ -1113,30 +1113,22 @@
 <div class="services-container-2025">
     
     @php
-    // TAB 1: Active Missions
-    $activeInProgress = $missions->filter(function($m) {
-        return !empty($m->selected_provider_id) 
-            && in_array($m->status, ['in_progress', 'waiting_to_start', 'disputed']) 
-            && $m->payment_status !== 'released';
-    });
-    
-    $completedAwaitingPayment = $missions->filter(function($m) {
-        return !empty($m->selected_provider_id)
-            && $m->status === 'completed' 
-            && $m->payment_status !== 'released';
-    });
-    
-    $currentRequests = $activeInProgress->merge($completedAwaitingPayment);
-    
-    // TAB 2: Published
-    $publishedNoProvider = $missions->filter(function($m) {
-        return empty($m->selected_provider_id) && $m->status === 'published';
-    });
-    
-    // TAB 3: Completed
-    $completedRequests = $missions->filter(function($m) {
-        return $m->status === 'completed' && $m->payment_status === 'released';
-    });
+    // TAB 1: Active Missions (CORRIGÉ)
+$currentRequests = $missions->filter(function($m) {
+    return !empty($m->selected_provider_id) 
+        && in_array($m->status, ['in_progress', 'waiting_to_start', 'disputed']) 
+        && $m->payment_status !== 'released';
+});
+
+// TAB 2: Published
+$publishedNoProvider = $missions->filter(function($m) {
+    return empty($m->selected_provider_id) && $m->status === 'published';
+});
+
+// TAB 3: Completed (CORRIGÉ)
+$completedRequests = $missions->filter(function($m) {
+    return $m->status === 'completed';
+});
     
        
     // Compter total badges pour tab Published
@@ -1531,7 +1523,8 @@
                     </dl>
                     
                     <div class="service-actions">
-                        <a href="{{ route('quote-offer', ['id'=> $mission->id]) }}"> 
+                        <a href="{{ route('quote-offer', ['id'=> $mission->id]) }}">
+
                            class="btn-service-action btn-view-proposals" 
                            style="flex: 2;">
                             <i class="fas fa-eye" aria-hidden="true"></i>

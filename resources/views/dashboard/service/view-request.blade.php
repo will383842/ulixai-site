@@ -1200,10 +1200,23 @@
             <span>Private Messaging</span>
         </a>
         
-        <button @click="openDisputeModal()" class="btn-danger-action">
-            <i class="fas fa-ban"></i>
-            <span>Cancel Request</span>
-        </button>
+        {{-- ✅ Cancel UNIQUEMENT si mission pas encore payée (published) --}}
+        @if($mission->status === 'published')
+            <button @click="openCancelModal()" class="btn-danger-action">
+                <i class="fas fa-ban"></i>
+                <span>Cancel Request</span>
+            </button>
+        @endif
+        
+        {{-- ✅ Dispute UNIQUEMENT si mission en cours (in_progress) --}}
+        @if($mission->status === 'in_progress')
+            <button @click="openDisputeModal()" class="btn-danger-action">
+                <i class="fas fa-flag"></i>
+                <span>Open Dispute</span>
+            </button>
+        @endif
+        
+        {{-- ❌ AUCUN bouton si: waiting_to_start, completed, disputed, cancelled --}}
     </div>
     
     <!-- Image Modal -->
@@ -1218,14 +1231,14 @@
         </div>
     </div>
     
-    <!-- Dispute Modal -->
+    <!-- Cancel Modal (AVANT paiement - status: published) -->
     <div class="modal-overlay"
-         :class="{ 'active': disputeModalOpen }"
-         @click="closeDisputeModal()"
+         :class="{ 'active': cancelModalOpen }"
+         @click="closeCancelModal()"
          role="dialog"
          aria-modal="true">
         <div class="modal-content" @click.stop>
-            <button class="modal-close" @click="closeDisputeModal()">✕</button>
+            <button class="modal-close" @click="closeCancelModal()">✕</button>
             
             <div class="modal-icon">
                 <i class="fas fa-exclamation-triangle"></i>
@@ -1237,11 +1250,11 @@
                 Please let us know why you want to cancel this service request
             </p>
             
-            <form @submit.prevent="submitDispute()">
+            <form @submit.prevent="submitCancel()">
                 <div class="form-group">
-                    <label for="disputeReason" class="form-label">Select a reason</label>
-                    <select id="disputeReason" 
-                            x-model="disputeForm.reason"
+                    <label for="cancelReason" class="form-label">Select a reason</label>
+                    <select id="cancelReason" 
+                            x-model="cancelForm.reason"
                             class="form-select" 
                             required>
                         <option value="">Select a reason...</option>
@@ -1259,9 +1272,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="disputeDescription" class="form-label">Additional details</label>
-                    <textarea id="disputeDescription" 
-                              x-model="disputeForm.description"
+                    <label for="cancelDescription" class="form-label">Additional details</label>
+                    <textarea id="cancelDescription" 
+                              x-model="cancelForm.description"
                               class="form-textarea" 
                               maxlength="300" 
                               placeholder="Describe here the reason for your cancellation"
@@ -1270,13 +1283,13 @@
                 
                 <div class="form-hint">
                     <i class="fas fa-info-circle"></i>
-                    <span>Your service provider will receive your message. They have 3 days to respond</span>
+                    <span>Your cancellation will be processed immediately. This action cannot be undone.</span>
                 </div>
                 
                 <div class="modal-actions">
                     <button type="button" 
                             class="btn-modal-primary" 
-                            @click="closeDisputeModal()">
+                            @click="closeCancelModal()">
                         <i class="fas fa-check"></i>
                         <span>Keep My Request Online</span>
                     </button>
@@ -1284,6 +1297,77 @@
                     <button type="submit" 
                             class="btn-modal-secondary">
                         <span>Confirm Cancellation</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Dispute Modal (PENDANT mission - status: in_progress) -->
+    <div class="modal-overlay"
+         :class="{ 'active': disputeModalOpen }"
+         @click="closeDisputeModal()"
+         role="dialog"
+         aria-modal="true">
+        <div class="modal-content" @click.stop>
+            <button class="modal-close" @click="closeDisputeModal()">✕</button>
+            
+            <div class="modal-icon">
+                <i class="fas fa-flag"></i>
+            </div>
+            
+            <h2 class="modal-title">Open a Dispute</h2>
+            
+            <p class="modal-subtitle">
+                What problem did you encounter with this service?
+            </p>
+            
+            <form @submit.prevent="submitDispute()">
+                <div class="form-group">
+                    <label for="disputeReason" class="form-label">Select the issue</label>
+                    <select id="disputeReason" 
+                            x-model="disputeForm.reason"
+                            class="form-select" 
+                            required>
+                        <option value="">Select a reason...</option>
+                        <option value="provider_unreachable">The provider is unreachable</option>
+                        <option value="service_not_delivered">The service was not delivered as promised</option>
+                        <option value="poor_quality">The quality of service is unsatisfactory</option>
+                        <option value="unprofessional">The provider behaved unprofessionally</option>
+                        <option value="safety_concern">I have safety concerns</option>
+                        <option value="price_dispute">There is a disagreement about the price</option>
+                        <option value="incomplete_work">The work is incomplete</option>
+                        <option value="other">Other issue (please specify below)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="disputeDescription" class="form-label">Describe the problem</label>
+                    <textarea id="disputeDescription" 
+                              x-model="disputeForm.description"
+                              class="form-textarea" 
+                              maxlength="500" 
+                              placeholder="Please provide details about the issue"
+                              required></textarea>
+                </div>
+                
+                <div class="form-hint">
+                    <i class="fas fa-info-circle"></i>
+                    <span>The payment will be held while our team reviews your case. Both parties will have a chance to explain their side.</span>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" 
+                            class="btn-modal-primary" 
+                            @click="closeDisputeModal()">
+                        <i class="fas fa-times"></i>
+                        <span>Cancel</span>
+                    </button>
+                    
+                    <button type="submit" 
+                            class="btn-modal-secondary">
+                        <i class="fas fa-flag"></i>
+                        <span>Open Dispute</span>
                     </button>
                 </div>
             </form>
@@ -1315,10 +1399,10 @@
                 <i class="fas fa-check"></i>
             </div>
             
-            <h2 class="modal-title">Request Cancelled Successfully!</h2>
+            <h2 class="modal-title">Request Processed Successfully!</h2>
             
             <p class="modal-subtitle">
-                Your cancellation request has been sent.<br>
+                Your request has been processed.<br>
                 We'll keep you informed about what happens next.<br>
                 <span style="display: block; margin-top: 0.5rem;">Thank you for your trust! 🙏</span>
             </p>
@@ -1338,7 +1422,14 @@ function requestDetailsApp() {
         imageModalOpen: false,
         currentImage: '',
         
-        // Dispute Modal
+        // Cancel Modal (AVANT paiement)
+        cancelModalOpen: false,
+        cancelForm: {
+            reason: '',
+            description: ''
+        },
+        
+        // Dispute Modal (PENDANT mission)
         disputeModalOpen: false,
         disputeForm: {
             reason: '',
@@ -1367,7 +1458,64 @@ function requestDetailsApp() {
             document.body.style.overflow = '';
         },
         
-        // Dispute Modal Methods
+        // Cancel Modal Methods (AVANT paiement - status: published)
+        openCancelModal() {
+            this.cancelModalOpen = true;
+            document.body.style.overflow = 'hidden';
+        },
+        
+        closeCancelModal() {
+            this.cancelModalOpen = false;
+            this.cancelForm = { reason: '', description: '' };
+            document.body.style.overflow = '';
+        },
+        
+        async submitCancel() {
+            if (!this.cancelForm.reason) {
+                alert('Please select a reason');
+                return;
+            }
+            
+            this.closeCancelModal();
+            this.loadingModalOpen = true;
+            
+            try {
+                const response = await fetch('/api/mission/cancel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        mission_id: {{ $mission->id }},
+                        reason: this.cancelForm.reason,
+                        description: this.cancelForm.description,
+                        cancelled_by: 'requester',
+                        cancelled_on: new Date().toISOString()
+                    })
+                });
+                
+                const data = await response.json();
+                
+                this.loadingModalOpen = false;
+                
+                if (data.success) {
+                    this.successModalOpen = true;
+                    setTimeout(() => {
+                        window.location.href = '{{ route("dashboard") }}';
+                    }, 3000);
+                } else {
+                    alert('Error: ' + (data.message || 'An error occurred'));
+                }
+            } catch (error) {
+                this.loadingModalOpen = false;
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        },
+        
+        // Dispute Modal Methods (PENDANT mission - status: in_progress)
         openDisputeModal() {
             this.disputeModalOpen = true;
             document.body.style.overflow = 'hidden';
@@ -1389,7 +1537,7 @@ function requestDetailsApp() {
             this.loadingModalOpen = true;
             
             try {
-                const response = await fetch('/api/mission/cancel', {
+                const response = await fetch('/api/mission/dispute', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1400,8 +1548,8 @@ function requestDetailsApp() {
                         mission_id: {{ $mission->id }},
                         reason: this.disputeForm.reason,
                         description: this.disputeForm.description,
-                        cancelled_by: 'requester',
-                        cancelled_on: new Date().toISOString()
+                        disputed_by: 'requester',
+                        disputed_on: new Date().toISOString()
                     })
                 });
                 
@@ -1439,6 +1587,7 @@ document.addEventListener('keydown', function(e) {
         const app = Alpine.$data(document.querySelector('[x-data]'));
         if (app) {
             if (app.imageModalOpen) app.closeImageModal();
+            if (app.cancelModalOpen) app.closeCancelModal();
             if (app.disputeModalOpen) app.closeDisputeModal();
             if (app.successModalOpen) app.closeSuccessModal();
         }
