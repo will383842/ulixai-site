@@ -1073,15 +1073,19 @@ body{
 <script>
 (function(){
   'use strict';
-  
-  // Hide page loader when everything is loaded
-  window.addEventListener('load', function() {
-    
-  
-  // Fallback - hide loader after 2 seconds max
-  setTimeout(function() {
-    
-  
+
+  // DOM Elements
+  var form = document.getElementById('resetPasswordForm');
+  var passwordInput = document.getElementById('password');
+  var confirmInput = document.getElementById('password_confirmation');
+  var btn = document.getElementById('resetBtnSubmit');
+
+  // Guard clause - exit if elements not found
+  if (!form || !passwordInput || !confirmInput || !btn) {
+    console.warn('Password reset form elements not found');
+    return;
+  }
+
   // Real-time validation
   passwordInput.addEventListener('input',function(){
     const errorEl=document.getElementById('error-password');

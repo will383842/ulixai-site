@@ -129,38 +129,6 @@
 })();
 </script>
 
-<script>
-// 🚫 BLOQUER TOUTES LES ALERTES/TOASTS/POPUPS
-(function(){
-    var removeAlerts = function() {
-        var alerts = document.querySelectorAll('.page-loader,.loader,.splash-screen,.loading-screen,[class*="loader"],[class*="loading"],.alert,.toast,.notification,.swal2-container,.swal-overlay,[class*="alert"],[class*="toast"],[class*="notification"],[class*="swal"],.error-alert,.success-alert,.warning-alert,.info-alert');
-        alerts.forEach(function(el){
-            el.style.display = 'none';
-            el.style.opacity = '0';
-            el.style.visibility = 'hidden';
-            el.remove();
-        });
-    };
-    
-    removeAlerts();
-    
-    if(window.Swal) window.Swal = {fire: function(){}, close: function(){}};
-    if(window.toastr) window.toastr = {success: function(){}, error: function(){}, warning: function(){}, info: function(){}};
-    if(window.showToast) window.showToast = function(){};
-    if(window.showAlert) window.showAlert = function(){};
-    
-    var observer = new MutationObserver(function(mutations) {
-        removeAlerts();
-    });
-    
-    if(document.body) {
-        observer.observe(document.body, {childList: true, subtree: true});
-    }
-    
-    setInterval(removeAlerts, 100);
-})();
-</script>
-
 @include('includes.header')
 
 <main class="main-signup" role="main" aria-labelledby="signup-title">

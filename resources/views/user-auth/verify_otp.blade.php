@@ -1063,14 +1063,24 @@ body{
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
-  
-  // Hide page loader when everything is loaded
-  window.addEventListener('load', function() {
-    
-  
-  // Fallback - hide loader after 2 seconds max
-  setTimeout(function() {
-    
+
+  // DOM Elements
+  var form = document.getElementById('verifyOtpForm');
+  var emailInput = document.getElementById('verify_email');
+  var otpInput = document.getElementById('verify_otp');
+  var otpSuccess = document.getElementById('otp_success');
+  var otpError = document.getElementById('otp_error');
+  var successText = document.getElementById('success_text');
+  var errorText = document.getElementById('error_text');
+  var verifyBtn = document.getElementById('verifyBtn');
+  var resendBtn = document.getElementById('resendOtpBtn');
+  var cancelBtn = document.getElementById('cancelOtpBtn');
+
+  // Guard clause - exit if elements not found
+  if (!form || !emailInput || !otpInput || !verifyBtn) {
+    console.warn('Verify OTP form elements not found');
+    return;
+  }
 
   // Form submission
   form.addEventListener('submit', function (e) {
