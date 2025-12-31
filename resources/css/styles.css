@@ -18,23 +18,7 @@ body {
 }
 
 
-.glass-effect {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.gradient-text {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.hover-glow:hover {
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-}
+/* Glass, gradient-text, hover-glow are now defined in design-tokens.css */
 
 .nav-button {
     position: relative;
@@ -56,20 +40,7 @@ body {
     left: 100%;
 }
 
-.glass-effect {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-}
-
-.nav-button {
-        position: relative;
-        overflow: hidden;
-}
-
-.hover-glow:hover {
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-}
+/* Duplicate definitions removed - see design-tokens.css */
 
 .animate-glow {
         animation: glow 2s ease-in-out infinite alternate;

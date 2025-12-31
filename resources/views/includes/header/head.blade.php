@@ -34,7 +34,7 @@
   <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://code.jquery.com">
-  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  {{-- dns-prefetch for cdn.tailwindcss.com removed - using local build --}}
 
   {{-- PWA / Mobile --}}
   <meta name="mobile-web-app-capable" content="yes">
@@ -87,49 +87,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
-  {{-- Tailwind CSS CDN (Development Only) --}}
-  <script src="https://cdn.tailwindcss.com"></script>
-
   {{-- ═══════════════════════════════════════════════════════════
-       ⚙️ TAILWIND CONFIGURATION
+       🎨 TAILWIND CSS - Compiled Build (Production Ready)
        ═══════════════════════════════════════════════════════════ --}}
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          animation: {
-            'fade-in': 'fadeIn 0.3s ease-out',
-            'slide-down': 'slideDown 0.3s ease-out',
-            'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-            'bounce-subtle': 'bounceSubtle 0.6s ease-out',
-            'glow': 'glow 2s ease-in-out infinite alternate',
-          },
-          keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0', transform: 'translateY(-10px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' }
-            },
-            slideDown: {
-              '0%': { opacity: '0', transform: 'translateY(-20px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' }
-            },
-            slideUp: {
-              '0%': { opacity: '0', transform: 'translateY(100%)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' }
-            },
-            bounceSubtle: {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-5px)' }
-            },
-            glow: {
-              '0%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' },
-              '100%': { boxShadow: '0 0 30px rgba(59, 130, 246, 0.8)' }
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
   {{-- ═══════════════════════════════════════════════════════════
        🌐 GOOGLE TRANSLATE - PROTECTION CONTRE BOUCLES INFINIES

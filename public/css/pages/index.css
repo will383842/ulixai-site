@@ -2,14 +2,15 @@
    PAGE INDEX - STYLES SPÉCIFIQUES
    ============================================ */
 
-/* CSS Variables */
+/* Note: Colors now centralized in design-tokens.css */
+/* Legacy aliases for backward compatibility */
 :root {
-  --primary: #3B82F6;
-  --primary-dark: #2563EB;
-  --secondary: #8B5CF6;
-  --accent: #EC4899;
-  --success: #10B981;
-  --warning: #F59E0B;
+  --primary: var(--color-primary);
+  --primary-dark: var(--color-primary-dark);
+  --secondary: var(--color-secondary);
+  --accent: var(--color-accent);
+  --success: var(--color-success);
+  --warning: var(--color-warning);
 }
 
 * {
@@ -19,9 +20,9 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-family-sans);
   overflow-x: hidden;
-  background: #FFFFFF;
+  background: var(--color-bg-primary);
 }
 
 html {
@@ -29,7 +30,7 @@ html {
 }
 
 .font-display {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-family-display);
 }
 
 /* Custom Scrollbar */
@@ -39,12 +40,12 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: var(--color-gray-100);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 4px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-sm);
 }
 
 /* Modern Card */
@@ -204,7 +205,7 @@ html {
   right: 30px;
   width: 56px;
   height: 56px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -213,8 +214,8 @@ html {
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  z-index: 9999;
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+  z-index: var(--z-toast);
+  box-shadow: var(--shadow-primary);
 }
 
 #backToTop.show {
@@ -357,8 +358,8 @@ select {
   transform: translate(-50%, -50%) scale(0.9);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  z-index: 10000;
+  transition: var(--transition-bounce);
+  z-index: var(--z-modal);
   max-width: 90%;
   width: 500px;
 }
@@ -375,8 +376,8 @@ select {
   background: rgba(0, 0, 0, 0.5);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
-  z-index: 9999;
+  transition: var(--transition-normal);
+  z-index: var(--z-modal-backdrop);
   backdrop-filter: blur(4px);
 }
 
@@ -418,7 +419,7 @@ select {
 /* Google Translate Styles */
 #google_translate_element {
   position: relative;
-  z-index: 1000;
+  z-index: var(--z-sticky);
 }
 
 .goog-te-banner-frame.skiptranslate {
@@ -485,13 +486,4 @@ body {
   font-size: 1rem;
 }
 
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+/* Reduced Motion - Now centralized in design-tokens.css */

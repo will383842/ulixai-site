@@ -87,28 +87,58 @@ export function initializeScrollUtils() {
 
   window.updateHeaderAfterLogin = (userData) => {
     const authButtons = document.querySelector('.auth-buttons');
+
+    // Sanitize avatar URL - only allow safe URLs
+    const sanitizeUrl = (url) => {
+      if (!url) return '/images/helpexpat.png';
+      try {
+        const parsed = new URL(url, window.location.origin);
+        // Only allow http, https, or relative paths
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+          return parsed.href;
+        }
+        return '/images/helpexpat.png';
+      } catch {
+        // If URL parsing fails, check if it's a safe relative path
+        if (/^\/[a-zA-Z0-9\-_/.]+$/.test(url)) {
+          return url;
+        }
+        return '/images/helpexpat.png';
+      }
+    };
+
+    // Create elements safely without innerHTML
     const userMenu = document.createElement('div');
 
-    userMenu.innerHTML = `
-      <div class="relative" x-data="{ open:false }">
-        <button 
-          type="button"
-          @click="open = !open"
-          @keydown.escape.window="open = false"
-          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100"
-          aria-haspopup="menu"
-          :aria-expanded="open.toString()"
-        >
-          <div class="w-8 h-8 rounded-full border bg-center bg-cover"
-            style="background-image: url('${userData.avatar || '/images/helpexpat.png'}');">
-          </div>
-          <span id="header-user-name" class="font-medium text-gray-700 truncate max-w-[10rem]">
-            ${userData.name}
-          </span>
-          <i class="fas fa-chevron-down text-gray-500 text-sm"></i>
-        </button>
-      </div>
-    `;
+    const relativeDiv = document.createElement('div');
+    relativeDiv.className = 'relative';
+    relativeDiv.setAttribute('x-data', '{ open:false }');
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.setAttribute('@click', 'open = !open');
+    button.setAttribute('@keydown.escape.window', 'open = false');
+    button.className = 'flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100';
+    button.setAttribute('aria-haspopup', 'menu');
+    button.setAttribute(':aria-expanded', 'open.toString()');
+
+    const avatarDiv = document.createElement('div');
+    avatarDiv.className = 'w-8 h-8 rounded-full border bg-center bg-cover';
+    avatarDiv.style.backgroundImage = `url('${sanitizeUrl(userData.avatar)}')`;
+
+    const nameSpan = document.createElement('span');
+    nameSpan.id = 'header-user-name';
+    nameSpan.className = 'font-medium text-gray-700 truncate max-w-[10rem]';
+    nameSpan.textContent = userData.name || ''; // Safe: textContent escapes HTML
+
+    const chevronIcon = document.createElement('i');
+    chevronIcon.className = 'fas fa-chevron-down text-gray-500 text-sm';
+
+    button.appendChild(avatarDiv);
+    button.appendChild(nameSpan);
+    button.appendChild(chevronIcon);
+    relativeDiv.appendChild(button);
+    userMenu.appendChild(relativeDiv);
 
     if (authButtons) {
       authButtons.replaceWith(userMenu);
