@@ -8,8 +8,8 @@
   
   <title>Cookie Preferences | Ulixai & SOS-Expat - Your Privacy, Your Choice</title>
   <meta name="description" content="Manage your cookie preferences at Ulixai.com and SOS-Expat.com. We believe in transparency and giving you control over your data.">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <style>
     * {
       margin: 0;

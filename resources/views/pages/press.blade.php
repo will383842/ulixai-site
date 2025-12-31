@@ -28,7 +28,7 @@
   <meta property="og:url" content="https://ulixai.com/press/{{ $locale ?? 'en' }}">
   
   <link rel="icon" type="image/png" sizes="64x64" href="/images/faviccon.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

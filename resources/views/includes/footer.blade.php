@@ -33,10 +33,9 @@
     <link rel="canonical" href="https://@site.com">
     
     <!-- Preload critical resources -->
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     
     <!-- Structured Data (JSON-LD) for SEO -->

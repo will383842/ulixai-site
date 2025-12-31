@@ -42,7 +42,6 @@
   <meta name="twitter:image" content="https://ulixai.com/images/twitter-affiliate-en.jpg">
   <meta name="twitter:image:alt" content="Ulixai Affiliate Program">
   <link rel="icon" type="image/png" sizes="64x64" href="/images/faviccon.png">
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -174,7 +173,7 @@
     }]
   }
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     * {

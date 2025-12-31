@@ -39,7 +39,6 @@
   <meta name="twitter:image" content="{{ asset('images/twitter-partnership.jpg') }}">
   
   {{-- Preconnect for Performance --}}
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
@@ -181,8 +180,8 @@
     }
   }
   </script>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <style>
     * {
       margin: 0;

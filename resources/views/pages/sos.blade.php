@@ -9,7 +9,7 @@
 <!-- Toastr + JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <title>ULIX AI - SOS Help</title>
   <style>
     body { font-family: 'Inter', sans-serif; }

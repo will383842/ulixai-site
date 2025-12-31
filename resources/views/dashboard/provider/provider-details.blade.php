@@ -7,8 +7,8 @@
     <meta name="description" content="{{ $provider->profile_description }}">
     <title>Provider Detail</title>
 
-    <!-- TAILWIND CDN - NÉCESSAIRE pour les includes -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
+    <!-- Tailwind CSS - Local Build -->
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
@@ -27,10 +27,7 @@
     
     <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
-    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
     <link rel="preload" href="https://code.jquery.com/jquery-3.6.0.min.js" as="script">
     <link rel="dns-prefetch" href="https://code.jquery.com">
     

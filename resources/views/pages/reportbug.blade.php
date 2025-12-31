@@ -38,10 +38,6 @@
   <meta name="twitter:description" content="Help improve Ulixai.com by reporting bugs or sharing suggestions.">
   <meta name="twitter:image" content="{{ asset('images/twitter-feedback.jpg') }}">
   
-  {{-- Preconnect for Performance --}}
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
-  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
-  
   {{-- Favicon --}}
   <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('images/faviccon.png') }}">
   <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/faviccon.png') }}">
@@ -116,10 +112,8 @@
   }
   </script>
   
-  {{-- Preload Critical Resources --}}
-  <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
+  {{-- Tailwind CSS --}}
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   
   <style>
 /* ============================================

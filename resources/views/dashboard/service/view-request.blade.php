@@ -1595,4 +1595,14 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 
-@endsection
+@endsection# 1. Vérifier que vous êtes bien sur dashboard-users
+git branch
+
+# 2. Ajouter tous les changements
+git add .
+
+# 3. Créer le commit
+git commit -m "Votre message de commit"
+
+# 4. Pousser sur dashboard-users (pas sur main)
+git push origin dashboard-users

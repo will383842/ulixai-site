@@ -39,7 +39,6 @@
   <meta name="twitter:image" content="{{ asset('images/twitter-recruitment.jpg') }}">
   
   {{-- Preconnect for Performance --}}
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://code.jquery.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -211,7 +210,7 @@
   </script>
 
   {{-- Tailwind + Dependencies --}}
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

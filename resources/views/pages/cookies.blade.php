@@ -11,12 +11,11 @@
   <meta name="theme-color" content="#3b82f6">
   <link rel="icon" type="image/png" sizes="64x64" href="images/faviccon.png">
   
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <style>
     * {
       margin: 0;

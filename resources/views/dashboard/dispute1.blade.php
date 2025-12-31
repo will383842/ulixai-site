@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dispute Management</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
 <body class="bg-white min-h-screen flex flex-col items-center justify-start p-6 text-blue-900">
    <?php include('../includes/header.php'); ?>

@@ -47,7 +47,6 @@
   
   <!-- DNS Prefetch & Preconnect -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
@@ -56,8 +55,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap"></noscript>
   
   <!-- Tailwind CSS -->
-  <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
-  <script src="https://cdn.tailwindcss.com" defer></script>
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   
   <!-- Critical CSS -->
   <style>

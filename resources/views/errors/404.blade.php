@@ -32,13 +32,11 @@
     <meta name="twitter:title" content="404 - Page Not Found | Ulixai">
     <meta name="twitter:description" content="Page not found on Ulixai.">
     
-    {{-- Preconnect for Performance --}}
-    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
-    
     {{-- Favicon --}}
     <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('images/faviccon.png') }}">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    {{-- Tailwind CSS - Compiled Build --}}
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     
     <style>
         * {

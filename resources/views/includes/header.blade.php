@@ -46,6 +46,13 @@
 <body class="min-h-screen bg-white pt-20">
 
 {{-- ═══════════════════════════════════════════════════════════
+     ♿ ACCESSIBILITY - Skip to content link
+     ═══════════════════════════════════════════════════════════ --}}
+<a href="#main-content" class="skip-to-content">
+  Aller au contenu principal
+</a>
+
+{{-- ═══════════════════════════════════════════════════════════
      🖥️ NAVBAR DESKTOP
      Logo, buttons, language selector, auth menu
      ═══════════════════════════════════════════════════════════ --}}
