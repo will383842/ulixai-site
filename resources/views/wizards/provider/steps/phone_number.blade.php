@@ -457,7 +457,7 @@
     
     if (elements.selectedCountryName) elements.selectedCountryName.textContent = country;
     if (elements.selectedCountryCode) elements.selectedCountryCode.textContent = code;
-    if (elements.selectedCountryFlag) {
+    if (elements.selectedCountryFlag && flag) {
       elements.selectedCountryFlag.src = `/images/flags/${flag}.svg`;
       elements.selectedCountryFlag.alt = flag.toUpperCase();
     }

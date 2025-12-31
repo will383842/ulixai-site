@@ -12,7 +12,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
   
-  <!-- Tailwind CSS - Compiled Build -->
+  <!-- Tailwind CSS v3 - Build local production (safelist complet) -->
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   
   <!-- Google Fonts -->
@@ -24,21 +24,7 @@
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
   
 
-  <!-- Google Translate -->
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-      {
-        pageLanguage: 'en',
-        includedLanguages: 'en,fr,de,ru,zh-CN,es,pt,ar,hi',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      },
-      'google_translate_element'
-    );
-  }
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  {{-- Google Translate est géré par header-init.js via @include('includes.header-content') --}}
 
 
   <style>
@@ -552,19 +538,48 @@ body {
       }
     }
   </script>
+
+  {{-- ═══════════════════════════════════════════════════════════
+       DÉPENDANCES REQUISES POUR LE HEADER
+       ═══════════════════════════════════════════════════════════ --}}
+
+  {{-- CSRF Token --}}
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  {{-- jQuery (required for Toastr and other components) --}}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  {{-- Font Awesome Icons --}}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  {{-- Toastr Notifications --}}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  {{-- International Telephone Input --}}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+  {{-- Alpine.js --}}
+  <script src="https://unpkg.com/alpinejs@3.x.x" defer></script>
+
+  {{-- Header Styles (nav-button, hover-glow, etc.) --}}
+  @include('includes.header.styles')
+
+  {{-- Wizard Navigation Buttons Styles --}}
+  @include('wizards.navigation-buttons-styles')
+
 </head>
 
 <body class="bg-white overflow-x-hidden pt-20 lg:pt-20">
-  
-  @include('includes.header')
-  <!-- Google Translate Widget -->
-<div class="fixed top-20 right-4 z-50">
-  <div id="google_translate_element"></div>
-</div>
 
+  {{-- Header Content - SANS structure HTML (navbars, breadcrumb, popups) --}}
+  @include('includes.header-content')
+
+  {{-- Google Translate Widget géré par le header --}}
 
   <!-- HERO SECTION -->
-  <section class="relative bg-blue-600 pt-20 pb-32 px-4 overflow-hidden" style="background-color: #3B82F6;">
+  <section id="main-content" class="relative bg-blue-600 pt-20 pb-32 px-4 overflow-hidden" style="background-color: #3B82F6;">
     <div class="max-w-5xl mx-auto text-center relative z-10">
       <!-- Title -->
       <h1 class="hero-title font-display font-black text-white mb-6 leading-tight text-3xl sm:text-4xl lg:text-6xl" data-aos="fade-up" data-aos-duration="800">

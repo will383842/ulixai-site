@@ -580,7 +580,7 @@
             });
     </script>
 
-    <!-- Header -->
+    <!-- Header Content (without HTML structure) -->
     @include('includes.header')
     
     <!-- Popup Request Help -->

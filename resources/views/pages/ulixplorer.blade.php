@@ -9,8 +9,8 @@
 </head>
 <body class="bg-white text-gray-800 font-sans">
 
-  <?php include('../includes/header.php'); ?>
-   <?php include('popup.php'); ?>
+@include('includes.header')
+@include('wizards.requester.steps.popup_request_help')
 
   <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Top Grid: Left = Viral Info | Right = Rewards & Leaderboard -->

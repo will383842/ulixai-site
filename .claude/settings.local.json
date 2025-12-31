@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(timeout /t 3)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nrefactor\\(frontend\\): audit et optimisations CSS/JS\n\n- Migrate Tailwind from CDN to local build \\(head.blade.php\\)\n- Fix XSS vulnerability in scroll-utils.js \\(innerHTML → DOM API\\)\n- Add centralized design-tokens.css with color palette, z-index scale, typography\n- Remove duplicate CSS definitions \\(.glass-effect, animations\\)\n- Implement coherent z-index scale \\(10-100 instead of 9999\\)\n- Update index.css to use design tokens\n- Add FRONTEND_AUDIT_REPORT.md with full audit results\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(npm run prod:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(frontend\\): migrate all pages from Tailwind CDN to local build\n\n- Migrate 44+ Blade files from cdn.tailwindcss.com to local Tailwind build\n- Add accessibility improvements: focus-visible styles, skip-to-content link\n- Remove all CDN preconnect/dns-prefetch references\n- Run production build with optimized output \\(JS: 208KB, CSS: 187KB\\)\n- Add AUDIT_REPORT_ULIXAI.md with full frontend analysis\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path ''resources/views/pages'' -Filter ''*.blade.php'' | ForEach-Object { \\(Get-Content $_FullName -Raw\\) -replace ''@include\\\\\\(''''includes\\\\.header''''\\\\\\)'', ''@include\\(''''includes.header-content''''\\)'' | Set-Content $_FullName -NoNewline }\")",
+      "Bash(for file in *.blade.php)",
+      "Bash(do sed -i \"s/@include\\(''includes.header''\\)/@include\\(''includes.header-content''\\)/g\" \"$file\")",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(git checkout:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(fold:*)",
+      "Bash(while read class)",
+      "Bash(do echo:*)",
+      "Bash(php artisan:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: state before critical frontend fixes\n\n- Modified 46+ Blade files from Tailwind CDN migration\n- Updated webpack.mix.js and tailwind.config.js\n- Modified dashboard layouts and components\n- Updated user-auth pages styling\n- Modified admin pages styling\n- Added header-content.blade.php partial\n- Various CSS/JS optimizations in progress\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}

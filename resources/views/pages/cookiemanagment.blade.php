@@ -1,5 +1,3 @@
-@include('includes.header')
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,6 +95,8 @@
   </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+
+@include('includes.header')
 
 <!-- HERO SECTION -->
 <section class="relative py-16 px-4 text-center overflow-hidden" role="banner">

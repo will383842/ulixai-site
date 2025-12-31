@@ -265,7 +265,7 @@
         </a>
 
         <!-- Job (seulement pour providers) -->
-        @if(auth()->user()->user_role == 'service_provider')
+        @if(auth()->check() && auth()->user()->user_role == 'service_provider')
             <a href="{{ route('user.joblist') }}" 
                class="nav-item-2025 {{ in_array($currentRoute, ['user.joblist', 'user.job.show']) ? 'active' : '' }}"
                aria-label="Emplois"

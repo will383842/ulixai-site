@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
 <body class="bg-gray-50 text-gray-900">
-   
+
+@include('includes.header')
 
 <!-- Navigation Bar -->
 <nav class="bg-white shadow-md sticky top-0 z-50">

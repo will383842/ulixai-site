@@ -49,7 +49,9 @@
     {{-- dns-prefetch removed - using local Tailwind build --}}
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -270,10 +272,6 @@
     </style>
 </head>
 <body>
-
-<p style="margin-top:1rem;color:#06b6d4;font-weight:600;font-size:14px">Loading...</p>
-    </div>
-</div>
 
 @include('includes.header')
 @include('wizards.requester.steps.popup_request_help')

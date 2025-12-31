@@ -59,7 +59,7 @@ class TestUsersSeeder extends Seeder
             'spoken_language' => json_encode(['Français', 'Anglais', 'Espagnol']),
             'services_to_offer_category' => json_encode(['Visas & Residence Permits', 'Banking Services', 'Housing rental']),
             'profile_description' => 'Expert en accompagnement des expatriés en France. Plus de 5 ans d\'expérience.',
-            'profile_photo' => 'assets/profileImages/default-provider.jpg',
+            'profile_photo' => 'assets/profileImages/default-provider.svg',
             'provider_address' => '123 Rue de la République, 75001 Paris',
             'communication_online' => true,
             'communication_inperson' => true,

@@ -1199,7 +1199,9 @@
         </div>
     </div>
 
-   @include('dashboard.partials.dashboard-mobile-navbar')
+   @auth
+       @include('dashboard.partials.dashboard-mobile-navbar')
+   @endauth
 
 <!-- Scripts - Optimisés avec defer -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>

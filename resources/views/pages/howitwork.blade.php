@@ -16,7 +16,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
     <style>
     *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
     :root{--primary:#2563EB;--primary-light:#60A5FA;--primary-dark:#1E40AF;--accent:#A855F7;--success:#10b981;--text:#0F172A;--text-light:#64748B;--text-muted:#94A3B8;--bg:#fff;--border:#E2E8F0;--bg-light:#F8FAFC}

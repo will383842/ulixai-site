@@ -10,9 +10,10 @@ mix.js('resources/js/app.js', 'public/js')
    .js('resources/js/modules/wizard/wizard_request_help/request-form.js', 'public/js')
    .js('resources/js/pages/index.js', 'public/js/pages')
 
-// CSS avec Tailwind
+// CSS avec Tailwind v3
 mix.postCss('resources/css/app.css', 'public/css', [
-       require('@tailwindcss/postcss'),
+       require('tailwindcss'),
+       require('autoprefixer'),
    ])
    .postCss('resources/css/pages/index.css', 'public/css/pages', [])
 
