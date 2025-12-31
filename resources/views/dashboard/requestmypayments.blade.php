@@ -21,6 +21,7 @@
 
       <!-- Payment Form -->
       <form action="#" method="POST" class="space-y-5">
+        @csrf
 
         <!-- Full Name -->
         <div>

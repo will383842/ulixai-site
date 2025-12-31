@@ -30,6 +30,7 @@
 
         <!-- Form -->
         <form action="" method="POST" class="space-y-5">
+          @csrf
           <!-- Reason 1 -->
           <select name="reason1" class="w-full px-4 py-3 border rounded-full text-gray-700 border-gray-300 focus:outline-none">
             <option value="">I no longer want to do it</option>

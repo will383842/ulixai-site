@@ -39,6 +39,7 @@
         </h2>
 
         <form method="POST" action="" class="space-y-6">
+          @csrf
           <!-- Inputs -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <input type="text" name="change_time" placeholder="I propose to change time"
