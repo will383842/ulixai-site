@@ -10,7 +10,7 @@
       <button 
         onclick="closeAboutYouPopup()" 
         class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600"
-        aria-label="Close window"
+        aria-label="Close about you modal"
         type="button">
         <i class="fas fa-times text-lg" aria-hidden="true"></i>
       </button>

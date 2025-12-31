@@ -1,4 +1,9 @@
-<div id="bankingDetailsModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+<div id="bankingDetailsModal"
+     class="fixed inset-0 z-50 hidden overflow-y-auto"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="bankingModalTitle"
+     aria-describedby="bankingModalDesc">
     <div class="flex min-h-screen items-center justify-center p-4">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 backdrop-blur-sm transition-opacity"></div>
 
@@ -13,11 +18,13 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-white">Banking Information</h3>
-                            <p class="text-sm text-blue-100">Secure your withdrawals and payments</p>
+                            <h3 id="bankingModalTitle" class="text-lg font-semibold text-white">Banking Information</h3>
+                            <p id="bankingModalDesc" class="text-sm text-blue-100">Secure your withdrawals and payments</p>
                         </div>
                     </div>
-                    <button type="button" onclick="hideBankingModal()" class="rounded-lg bg-white/20 p-2 hover:bg-white/30 transition-colors">
+                    <button type="button" onclick="hideBankingModal()"
+                            class="rounded-lg bg-white/20 p-2 hover:bg-white/30 transition-colors"
+                            aria-label="Close banking information modal">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -173,8 +180,9 @@
             <!-- Footer -->
             <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
                 <div class="flex items-center justify-end space-x-3">
-                    <button type="button" onclick="hideBankingModal()" 
-                        class="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors">
+                    <button type="button" onclick="hideBankingModal()"
+                        class="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors"
+                        aria-label="Cancel and close modal">
                         Cancel
                     </button>
                     <button type="button" onclick="saveBankingDetails()" 
@@ -209,13 +217,68 @@
 </style>
 
 <script>
+// Store trigger element for focus restoration
+let bankingModalTrigger = null;
+
 function showBankingModal() {
-    document.getElementById('bankingDetailsModal').classList.remove('hidden');
+    const modal = document.getElementById('bankingDetailsModal');
+    bankingModalTrigger = document.activeElement;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // Focus first input after a short delay
+    setTimeout(() => {
+        const firstInput = modal.querySelector('input, select, button');
+        if (firstInput) firstInput.focus();
+    }, 100);
+
+    // Add event listeners
+    document.addEventListener('keydown', handleBankingModalKeydown);
 }
 
 function hideBankingModal() {
-    document.getElementById('bankingDetailsModal').classList.add('hidden');
+    const modal = document.getElementById('bankingDetailsModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
     clearFormErrors();
+
+    // Remove event listeners
+    document.removeEventListener('keydown', handleBankingModalKeydown);
+
+    // Restore focus to trigger element
+    if (bankingModalTrigger) {
+        bankingModalTrigger.focus();
+        bankingModalTrigger = null;
+    }
+}
+
+function handleBankingModalKeydown(e) {
+    const modal = document.getElementById('bankingDetailsModal');
+    if (modal.classList.contains('hidden')) return;
+
+    // Close on Escape
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        hideBankingModal();
+        return;
+    }
+
+    // Focus trap on Tab
+    if (e.key === 'Tab') {
+        const focusableElements = modal.querySelectorAll(
+            'button, [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+        }
+    }
 }
 
 function clearFormErrors() {

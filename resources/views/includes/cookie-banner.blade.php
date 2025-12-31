@@ -551,10 +551,19 @@
     console.log('✅ Banner fermé automatiquement');
   });
   
+  // Escape key to reject cookies
+  document.addEventListener('keydown', function(e) {
+    const banner = document.getElementById('cookieBanner');
+    if (e.key === 'Escape' && banner && banner.classList.contains('cookie-banner-visible')) {
+      e.preventDefault();
+      cookieBannerRejectAll();
+    }
+  });
+
   // Initialisation
   document.addEventListener('DOMContentLoaded', function() {
     blockNonEssentialCookies();
-    
+
     if (!hasValidConsent()) {
       showCookieBanner();
     } else {
