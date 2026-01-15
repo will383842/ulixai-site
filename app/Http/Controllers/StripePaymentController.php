@@ -19,26 +19,28 @@ use Stripe\Account as StripeAccount;
 use Illuminate\Support\Facades\DB;
 use App\Models\UlixCommission;
 use App\Models\Country;
+use App\Services\PaymentService;
+use App\Http\Requests\Payment\CheckoutRequest;
+use App\Http\Requests\Payment\ProcessPaymentRequest;
 
 class StripePaymentController extends Controller
 {
-    
-    public function checkout(Request $request)
+    protected PaymentService $paymentService;
+
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
+
+    public function checkout(CheckoutRequest $request)
     {
         $mission = Mission::findOrFail($request->mission_id);
         $provider = ServiceProvider::findOrFail($request->provider_id);
         $offer = MissionOffer::findOrFail($request->offer_id);
 
         if (!$provider->stripe_account_id) {
-
-            $stripeAccount = $this->createStripeConnectCustomAccount($provider);
-            
-            $provider->stripe_account_id = $stripeAccount['account_id'];
-            $provider->kyc_status = $stripeAccount['isKYCCompele'] ? 'verified' : 'pending';
-            $provider->stripe_chg_enabled = $stripeAccount['isKYCCompele'] ? true : false;
-            $provider->stripe_pts_enabled = $stripeAccount['isKYCCompele'] ? true : false;
-            $provider->kyc_link = $stripeAccount['onboarding_url'] ?? null;
-            $provider->save();
+            $stripeAccount = $this->paymentService->createConnectAccount($provider);
+            $this->paymentService->updateProviderStripeInfo($provider, $stripeAccount);
         }
         
         // Calculate fees
@@ -82,11 +84,8 @@ class StripePaymentController extends Controller
     }
 
 
-    public function processPayment(Request $request)
+    public function processPayment(ProcessPaymentRequest $request)
     {
-        $request->validate([
-            'payment_intent_id' => 'required|string',
-        ]);
         $commission = UlixCommission::first();
         Stripe::setApiKey(config('services.stripe.secret'));
         
@@ -179,85 +178,19 @@ class StripePaymentController extends Controller
         return view('dashboard.payments-cancel');
     }
 
-    private function createStripeConnectCustomAccount(ServiceProvider $provider)
-    {
-        Stripe::setApiKey(config('services.stripe.secret'));
-        $country = Country::where('country', $provider->country)->first();
-        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-        $token = $stripe->tokens->create([
-            'account' => [
-                'business_type' => 'individual',
-                'individual' => [
-                    'first_name' => $provider->first_name,
-                    'last_name' => $provider->last_name,
-                    'email' => $provider->email,
-                ],
-                'tos_shown_and_accepted' => true,
-            ],
-        ]);
-        $account = $stripe->accounts->create([
-            'type' => 'custom',
-            'country' => $country ? $country->short_name : 'FR',
-            'email' => $provider->email,
-            'account_token' => $token->id,
-            'capabilities' => [
-                'card_payments' => ['requested' => true],
-                'transfers' => ['requested' => true],
-            ],
-            'business_profile' => [
-                'product_description' => 'Ulixai Service Provider',
-            ],
-        ]);
-
-        if (!$account->details_submitted) {
-           
-            $accountLink = $stripe->accountLinks->create([
-                'account' => $account->id,
-                'refresh_url' => route('stripe.refresh'), 
-                'return_url' => route('stripe.return'),
-                'type' => 'account_onboarding',
-            ]);
-            return [
-                'account_id' => $account->id,
-                'onboarding_url' => $accountLink->url,
-                'isKYCCompele' => false
-            ];
-        }
-
-        return [
-            'account_id' => $account->id,
-            'onboarding_url' => null,
-            'isKYCCompele' => true
-        ];
-    }
-
     public function getOnboardingLink(Request $request)
     {
         $provider = auth()->user()->serviceProvider;
-        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
 
         if (!$provider->stripe_account_id) {
             return response()->json(['error' => 'Stripe account not found.'], 404);
         }
 
-        $account = $stripe->accounts->retrieve($provider->stripe_account_id);
-
-        if ($account->details_submitted) {
-            $provider->kyc_status = 'verified';
-            $provider->stripe_chg_enabled = true;
-            $provider->stripe_pts_enabled = true;
-            $provider->kyc_link = null;
-            $provider->save();
-            return response()->json(['completed' => true]);
+        try {
+            $result = $this->paymentService->refreshOnboardingLink($provider);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        $accountLink = $stripe->accountLinks->create([
-            'account' => $provider->stripe_account_id,
-            'refresh_url' => route('stripe.refresh'),
-            'return_url' => route('stripe.return'),
-            'type' => 'account_onboarding',
-        ]);
-
-        return response()->json(['completed' => false, 'url' => $accountLink->url]);
     }
 }

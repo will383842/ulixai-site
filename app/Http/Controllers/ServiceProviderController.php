@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\SpecialStatus;
 use App\Models\Faq;
 use App\Models\Country;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ServiceProviderResource;
 
 class ServiceProviderController extends Controller
 {
@@ -253,7 +255,7 @@ return view('pages.index', compact('providers', 'faqs', 'category', 'countries',
         // Fetch the subcategories for the selected category
         $subcategories = Category::where('parent_id', $categoryId)->get();
 
-        return response()->json($subcategories);
+        return CategoryResource::collection($subcategories);
     }
 
     /**

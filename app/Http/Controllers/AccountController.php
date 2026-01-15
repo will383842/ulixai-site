@@ -17,6 +17,10 @@ use App\Models\Mission;
 use App\Models\Transaction;
 use App\Models\Conversation;
 use App\Models\MissionOffer;
+use App\Http\Requests\User\UpdatePersonalInfoRequest;
+use App\Http\Requests\User\UpdatePasswordRequest;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\ServiceProviderResource;
 
 class AccountController extends Controller
 {
@@ -39,17 +43,10 @@ class AccountController extends Controller
     }
 
 
-    public function updatePersonalInfo(Request $request)
+    public function updatePersonalInfo(UpdatePersonalInfoRequest $request)
     {
         try {
             $user = Auth::user();
-
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not authenticated'
-                ], 401);
-            }
 
             // Security: Prevent unauthorized access to other users' data
             if ($request->has('user_id') && $request->user_id != $user->id) {
@@ -57,41 +54,6 @@ class AccountController extends Controller
                     'success' => false,
                     'message' => 'Unauthorized access'
                 ], 403);
-            }
-
-            // Validation rules
-            $rules = [
-                'name' => 'required|string|max:255',
-                'dob' => 'nullable|date|before:today',
-                'gender' => 'nullable|in:Male,Female',
-                'address' => 'nullable|string|max:500',
-                'country' => 'nullable|string|max:255',
-                'preferred_language' => 'nullable|string|max:255',
-                'whatsapp_number' => 'nullable|string|max:20',
-                'email' => [
-                    'required',
-                    'email',
-                    Rule::unique('users')->ignore($user->id)
-                ]
-            ];
-
-            // Add service provider specific validation
-            if ($user->user_role === 'service_provider') {
-                $rules['provider_native_language'] = 'nullable|string|max:255';
-                $rules['spoken_languages'] = 'nullable|array';
-                $rules['spoken_languages.*'] = 'string|max:255';
-            } else {
-                $rules['spoken_languages_text'] = 'nullable|string|max:500';
-            }
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
             }
 
             // Update user information
@@ -129,12 +91,16 @@ class AccountController extends Controller
                 }
             }
 
+            $freshUser = $user->fresh();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Personal information updated successfully',
                 'data' => [
-                    'user' => $user->fresh(),
-                    'service_provider' => $user->user_role === 'service_provider' ? $user->serviceProvider : null
+                    'user' => new UserResource($freshUser),
+                    'service_provider' => $freshUser->user_role === 'service_provider'
+                        ? new ServiceProviderResource($freshUser->serviceProvider)
+                        : null
                 ]
             ]);
 
@@ -271,30 +237,10 @@ class AccountController extends Controller
     /**
      * Update password
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordRequest $request)
     {
         try {
             $user = Auth::user();
-            
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not authenticated'
-                ], 401);
-            }
-
-            $validator = Validator::make($request->all(), [
-                'current_password' => 'required',
-                'new_password' => 'required|min:8|confirmed',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
 
             // Check current password
             if (!Hash::check($request->current_password, $user->password)) {

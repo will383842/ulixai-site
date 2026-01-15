@@ -15,6 +15,8 @@ use Stripe\Refund;
 use Stripe\Transfer;
 use Stripe\Account as StripeAccount;
 use App\Services\ReputationPointService;
+use App\Http\Resources\MissionResource;
+use App\Http\Resources\MissionOfferResource;
 
 class JobListController extends Controller
 {
@@ -101,7 +103,7 @@ class JobListController extends Controller
                 'message' => $request->message,
                 'status' => 'pending',
             ]);
-            return response()->json(['status' => 'success', 'message' => 'Offer updated successfully!', 'offer' => $existing]);
+            return response()->json(['status' => 'success', 'message' => 'Offer updated successfully!', 'offer' => new MissionOfferResource($existing)]);
         }
 
         $offer = MissionOffer::create([
@@ -113,7 +115,7 @@ class JobListController extends Controller
             'status' => 'pending',
         ]);
 
-        return response()->json(['status' => 'success', 'message' => 'Offer submitted successfully!', 'offer' => $offer]);
+        return response()->json(['status' => 'success', 'message' => 'Offer submitted successfully!', 'offer' => new MissionOfferResource($offer)]);
     }
 
     /**
@@ -213,7 +215,7 @@ class JobListController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Mission started successfully!',
-            'mission' => $mission
+            'mission' => new MissionResource($mission)
         ]);
     }
 
@@ -240,7 +242,7 @@ class JobListController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Dispute resolved successfully!',
-            'mission' => $mission
+            'mission' => new MissionResource($mission)
         ]);
     }
 
@@ -314,7 +316,7 @@ class JobListController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Delivery confirmed successfully!',
-            'mission' => $mission
+            'mission' => new MissionResource($mission)
         ]);
     }
 

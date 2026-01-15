@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use App\Events\MessageSent;
 use App\Events\NotifyUser;
-
-
+use App\Http\Resources\ConversationResource;
+use App\Http\Resources\MessageResource;
 
 class ConversationController extends Controller
 {
@@ -58,13 +58,13 @@ class ConversationController extends Controller
             ->latest('last_message_at')
             ->get();
 
-        return response()->json($conversations);
+        return ConversationResource::collection($conversations);
     }
 
     public function show(Conversation $conversation)
     {
         $conversation->load(['mission', 'messages.sender']);
-        return response()->json($conversation);
+        return new ConversationResource($conversation);
     }
 
     public function messages(Conversation $conversation)
@@ -86,7 +86,7 @@ class ConversationController extends Controller
             ->where('is_read', false)
             ->update(['is_read' => true]);
         
-        return response()->json($messages);
+        return MessageResource::collection($messages);
     }
 
     public function sendMessage(Request $request, Conversation $conversation)
@@ -152,7 +152,7 @@ class ConversationController extends Controller
         broadcast(new NotifyUser($conversation, $message, $otherUser, $message->sender->name, $conversation->mission->title))->toOthers();
 
         return response()->json([
-            'message' => $message,
+            'message' => new MessageResource($message),
             'attachments' => $attachments
         ]);
     }
@@ -177,7 +177,7 @@ class ConversationController extends Controller
             'provider_id' => $provider->id,
         ]);
 
-        return response()->json($conversation);
+        return new ConversationResource($conversation);
     }
 
     public function status(Conversation $conversation)
