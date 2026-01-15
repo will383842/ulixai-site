@@ -17,11 +17,13 @@ use App\Http\Resources\ServiceProviderResource;
 class ServiceProviderController extends Controller
 {
     public function main(Request $request) {
-        // Providers actifs
+        // Providers actifs (avec slug valide pour éviter les erreurs de route)
         $providers = ServiceProvider::with(['user', 'reviews'])
             ->whereHas('user', function ($query) {
                 $query->where('status', 'active');
             })
+            ->whereNotNull('slug')
+            ->where('slug', '!=', '')
             ->orderByDesc('pinned')
             ->latest()
             ->get();
