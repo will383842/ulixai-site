@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes; // ✅ AJOUT : Import du trait
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Mission extends Model
 {
-    use SoftDeletes; // ✅ AJOUT : Activation du Soft Delete
+    use HasFactory, SoftDeletes;
 
     /**
      * Table associée
