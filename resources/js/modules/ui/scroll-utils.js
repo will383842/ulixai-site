@@ -90,20 +90,20 @@ export function initializeScrollUtils() {
 
     // Sanitize avatar URL - only allow safe URLs
     const sanitizeUrl = (url) => {
-      if (!url) return '/images/helpexpat.png';
+      if (!url) return '/images/helpexpat.webp';
       try {
         const parsed = new URL(url, window.location.origin);
         // Only allow http, https, or relative paths
         if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
           return parsed.href;
         }
-        return '/images/helpexpat.png';
+        return '/images/helpexpat.webp';
       } catch {
         // If URL parsing fails, check if it's a safe relative path
         if (/^\/[a-zA-Z0-9\-_/.]+$/.test(url)) {
           return url;
         }
-        return '/images/helpexpat.png';
+        return '/images/helpexpat.webp';
       }
     };
 

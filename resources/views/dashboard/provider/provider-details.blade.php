@@ -1403,7 +1403,7 @@
                                 @if($review->user && $review->user->profile_photo)
                                     <img loading="lazy" src="{{ asset($review->user->profile_photo) }}" alt="User" class="provider-profile-review-avatar">
                                 @else
-                                    <img loading="lazy" src="{{ asset('images/helpexpat.png') }}" alt="User" class="provider-profile-review-avatar">
+                                    <img loading="lazy" src="{{ asset('images/helpexpat.webp') }}" alt="User" class="provider-profile-review-avatar">
                                 @endif
                                 <div style="flex: 1;">
                                     <div style="font-weight: 800; color: #0066FF; margin-bottom: 0.5rem;">

@@ -106,7 +106,7 @@
 
             $profilePhoto = $provider?->profile_photo ? asset($provider->profile_photo) : null;
             $avatar   = $user?->avatar ? asset($user->avatar) : null;
-            $default      = asset('images/helpexpat.png');
+            $default      = asset('images/helpexpat.webp');
 
             $backgroundImage = "url('{$profilePhoto}'), url('{$avatar}'), url('{$default}')";
         @endphp
