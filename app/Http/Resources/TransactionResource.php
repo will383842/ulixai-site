@@ -12,7 +12,7 @@ class TransactionResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
         return [
             'id' => $this->id,
@@ -52,8 +52,11 @@ class TransactionResource extends JsonResource
 
     /**
      * Check if the user can view fee information.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return bool
      */
-    private function canViewFees(Request $request): bool
+    private function canViewFees($request): bool
     {
         $user = $request->user();
 
