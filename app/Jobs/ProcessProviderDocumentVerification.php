@@ -17,6 +17,13 @@ class ProcessProviderDocumentVerification implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * The queue this job should be sent to.
+     *
+     * @var string
+     */
+    public $queue = 'verification';
+
+    /**
      * The number of times the job may be attempted.
      *
      * @var int

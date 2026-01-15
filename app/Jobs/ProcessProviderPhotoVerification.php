@@ -16,6 +16,13 @@ class ProcessProviderPhotoVerification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The queue this job should be sent to.
+     *
+     * @var string
+     */
+    public $queue = 'verification';
+
     public $tries = 3;
     public $timeout = 120;
     public $backoff = [5, 10, 20];
