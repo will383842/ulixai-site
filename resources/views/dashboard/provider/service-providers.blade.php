@@ -2165,7 +2165,23 @@
     }
   </style>
 
-  {{-- Tailwind config removed - using compiled CSS (mix('css/app.css')) --}}
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            'primary-dark': '#2563EB',
+            secondary: '#8B5CF6',
+            accent: '#EC4899',
+          },
+          fontFamily: {
+            display: ['Outfit', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
 </head>
 
 <body class="bg-white overflow-x-hidden">

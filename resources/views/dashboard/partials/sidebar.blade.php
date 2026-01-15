@@ -291,7 +291,7 @@
             @endphp
 
             <div class="avatar-container w-12 h-12 rounded-full overflow-hidden bg-center bg-cover"
-                 style="background-image: url('{{ $provider?->profile_photo ? asset($provider->profile_photo) : '' }}'), url('{{ asset('images/helpexpat.webp') }}');">
+                 style="background-image: url('{{ $provider?->profile_photo ? asset($provider->profile_photo) : '' }}'), url('{{ asset('images/helpexpat.png') }}');">
             </div>
 
             <div class="flex-1 min-w-0">

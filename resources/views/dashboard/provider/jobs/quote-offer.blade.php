@@ -2406,7 +2406,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const isFromMe = currentUserId && userId && parseInt(userId) === parseInt(currentUserId);
             
             // FIX: Correction pour l'image de profil avec meilleure gestion des chemins
-            let profileImage = '{{ asset('images/helpexpat.webp') }}';
+            let profileImage = '{{ asset('images/helpexpat.png') }}';
             if (msg.user && msg.user.profile_photo) {
                 const photo = msg.user.profile_photo;
                 

@@ -94,7 +94,7 @@ export function initializeScrollUtils() {
           :aria-expanded="open.toString()"
         >
           <div class="w-8 h-8 rounded-full border bg-center bg-cover"
-            style="background-image: url('${userData.avatar || '/images/helpexpat.webp'}');">
+            style="background-image: url('${userData.avatar || '/images/helpexpat.png'}');">
           </div>
           <span id="header-user-name" class="font-medium text-gray-700 truncate max-w-[10rem]">
             ${userData.name}
