@@ -22,7 +22,10 @@
     {{-- Logo à gauche --}}
     <div class="flex items-center justify-start">
       <a href="/" aria-label="ULIXAI Home">
-        <img src="/images/headerlogos.png" alt="ULIXAI Logo" class="w-10 h-10 object-contain" width="40" height="40" />
+        <picture>
+          <source type="image/webp" srcset="{{ asset('images/headerlogos.webp') }}">
+          <img src="{{ asset('images/headerlogos.png') }}" alt="ULIXAI Logo" class="w-10 h-10 object-contain" width="40" height="40" loading="eager" fetchpriority="high" />
+        </picture>
       </a>
     </div>
 

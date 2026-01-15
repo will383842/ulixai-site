@@ -17,21 +17,20 @@
 
       <!-- Cards Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl">
-        <!-- Payment Card 1 -->
-        @foreach($currentRequests as $mission)
+        @forelse($currentRequests as $mission)
             @if($mission->status === 'completed' && $mission->payment_status === 'paid')
                 <a href="{{ route('user-reviews', ['id' => $mission->id]) }}" class="block">
                     <div class="bg-yellow-300 rounded-2xl p-5 text-sm text-blue-900 shadow hover:shadow-md transition duration-300 h-full flex flex-col justify-between">
                         <div class="flex justify-between items-start">
                             <div>
                                 <div class="font-bold mb-2">
-                                    {{ $mission->title }} <span class="font-extrabold">{{ number_format($mission->transactions->first()->amount_paid, 2) }} €</span>
+                                    {{ $mission->title }} <span class="font-extrabold">{{ number_format($mission->transactions->first()->amount_paid ?? 0, 2) }} €</span>
                                 </div>
                                 <div class="mb-1">
                                     Date: <span class="font-medium">{{ $mission->updated_at->format('m/d/Y') }}</span>
                                 </div>
-                                <div class="mb-1">Country: {{ $mission->location_country ?? '_' }}</div>
-                                <div>Language: {{ $mission->language  ?? '_'}}</div>
+                                <div class="mb-1">Country: {{ $mission->location_country ?? '-' }}</div>
+                                <div>Language: {{ $mission->language ?? '-' }}</div>
                             </div>
                             <div class="ml-4 flex-shrink-0">
                                 <div class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center">
@@ -44,7 +43,15 @@
                     </div>
                 </a>
             @endif
-        @endforeach
+        @empty
+            <div class="col-span-full text-center py-12">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No pending payments</h3>
+                <p class="mt-1 text-sm text-gray-500">You don't have any reviews or payments to validate at the moment.</p>
+            </div>
+        @endforelse
       </div>
 
 

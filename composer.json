@@ -15,6 +15,7 @@
         "laravel/sanctum": "^2.14",
         "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.10",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "pusher/pusher-php-server": "^7.2",
         "stichoza/google-translate-php": "*",
         "stripe/stripe-php": "^17.4"

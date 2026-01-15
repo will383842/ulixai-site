@@ -26,6 +26,7 @@
 15. [Audit Infrastructure](#audit-infrastructure)
 16. [Métriques & Statistiques](#métriques--statistiques)
 17. [Plan d'Action Prioritaire](#plan-daction-prioritaire)
+18. [Conformité Internationale](#conformité-internationale)
 
 ---
 
@@ -944,26 +945,148 @@ BROADCAST_DRIVER=pusher
 
 ---
 
-## CONFORMITÉ
+## CONFORMITÉ INTERNATIONALE
 
-### RGPD
+> **Note:** La plateforme Ulixai.com est présente dans **197 pays**. Elle doit se conformer à de multiples réglementations de protection des données à travers le monde.
+
+---
+
+### GDPR (General Data Protection Regulation) - Europe
+
+| Exigence | Article | Status | Détails |
+|----------|---------|--------|---------|
+| Consentement explicite | Art. 7 | ⚠️ | Page cookies existe mais à vérifier |
+| Droit à l'oubli | Art. 17 | ✅ | Delete account implémenté |
+| Droit à la portabilité | Art. 20 | ❌ | **Export données NON implémenté** |
+| Privacy Policy | Art. 13-14 | ⚠️ | À vérifier + multilingue requis |
+| Consentement tracking | Art. 6 | ✅ | Dans missions (terms_accepted) |
+| Notification violation | Art. 33 | ❌ | Procédure non documentée |
+| DPO (Data Protection Officer) | Art. 37 | ❌ | Non désigné |
+| Registre des traitements | Art. 30 | ❌ | Non documenté |
+
+---
+
+### CCPA/CPRA (California Consumer Privacy Act) - États-Unis
 
 | Exigence | Status | Détails |
 |----------|--------|---------|
-| Consentement cookies | ⚠️ | Page existe mais à vérifier |
-| Droit à l'oubli | ✅ | Delete account implémenté |
-| Export données | ❌ | Non implémenté |
-| Privacy Policy | ⚠️ | À vérifier |
-| Tracking consentement | ✅ | Dans missions (terms_accepted) |
+| Droit de savoir | ❌ | Pas de page "Know Your Data" |
+| Droit de suppression | ✅ | Delete account implémenté |
+| Droit d'opt-out | ❌ | Pas de "Do Not Sell My Info" |
+| Non-discrimination | ✅ | Pas de traitement différencié |
+| Privacy Policy mise à jour | ⚠️ | Doit mentionner droits CCPA |
 
-### PCI-DSS (Paiements)
+---
 
-| Exigence | Status |
-|----------|--------|
-| Pas de stockage carte | ✅ Stripe gère |
-| HTTPS | ✅ |
-| Logs transactions | ✅ |
-| Webhooks sécurisés | ✅ Signature vérifiée |
+### LGPD (Lei Geral de Proteção de Dados) - Brésil
+
+| Exigence | Status | Détails |
+|----------|--------|---------|
+| Base légale du traitement | ⚠️ | À documenter |
+| Consentement | ⚠️ | Similaire GDPR |
+| Droits des titulaires | ⚠️ | Partiellement implémenté |
+| Transferts internationaux | ❌ | Non documenté |
+
+---
+
+### Autres Réglementations Applicables
+
+| Réglementation | Région | Status | Actions Requises |
+|----------------|--------|--------|------------------|
+| **POPIA** | Afrique du Sud | ❌ | Désigner un Information Officer |
+| **PDPA** | Singapour | ❌ | Politique de conservation des données |
+| **PDPA** | Thaïlande | ❌ | Consentement explicite requis |
+| **PIPEDA** | Canada | ⚠️ | Vérifier consentement |
+| **Privacy Act** | Australie | ⚠️ | APP (Australian Privacy Principles) |
+| **POPI** | Nouvelle-Zélande | ⚠️ | Information Privacy Principles |
+| **APPI** | Japon | ❌ | Opt-in pour données sensibles |
+| **IT Act** | Inde | ⚠️ | Règles de sécurité raisonnables |
+
+---
+
+### Actions Requises pour Conformité Multi-Juridictionnelle
+
+#### 🔴 CRITIQUE (Obligatoire avant lancement international)
+
+1. **Implémenter l'export de données utilisateur** (GDPR Art. 20, CCPA)
+   ```php
+   // Route à créer
+   Route::get('/account/export-my-data', [AccountController::class, 'exportUserData']);
+   ```
+
+2. **Créer page "Do Not Sell My Personal Information"** (CCPA)
+   ```
+   /privacy/do-not-sell
+   ```
+
+3. **Documenter le registre des traitements** (GDPR Art. 30)
+   - Finalités du traitement
+   - Catégories de données
+   - Destinataires
+   - Durées de conservation
+   - Mesures de sécurité
+
+4. **Désigner un DPO** (Data Protection Officer)
+   - Email: dpo@ulixai.com
+   - Mentionner dans Privacy Policy
+
+5. **Procédure de notification de violation**
+   - Délai: 72h (GDPR)
+   - Template de notification
+   - Liste des autorités par pays
+
+#### ⚠️ IMPORTANT
+
+6. **Privacy Policy multilingue**
+   - Traduire dans les 9 langues de la plateforme
+   - Adapter aux exigences locales
+
+7. **Bannière cookies conforme**
+   - Consentement granulaire (analytics, marketing, fonctionnel)
+   - Option "Tout refuser" visible
+   - Pas de dark patterns
+
+8. **Data Processing Agreements (DPA)**
+   - Stripe (paiements)
+   - Pusher (temps réel)
+   - Google Cloud (Vision API)
+   - Mailgun/SMTP (emails)
+
+9. **Politique de conservation des données**
+   | Type de données | Durée | Base légale |
+   |-----------------|-------|-------------|
+   | Compte utilisateur | Jusqu'à suppression | Contrat |
+   | Transactions | 10 ans | Obligation légale |
+   | Messages | 3 ans après mission | Intérêt légitime |
+   | Logs | 1 an | Sécurité |
+
+10. **Transferts internationaux**
+    - Clauses contractuelles types (SCC) pour transferts hors UE
+    - Documenter les garanties appropriées
+
+---
+
+### PCI-DSS (Payment Card Industry Data Security Standard)
+
+| Exigence | Status | Détails |
+|----------|--------|---------|
+| Pas de stockage carte | ✅ | Stripe gère les données carte |
+| HTTPS obligatoire | ✅ | Certificat SSL actif |
+| Logs transactions | ✅ | Table `transactions` |
+| Webhooks sécurisés | ✅ | Signature Stripe vérifiée |
+| Accès restreint | ✅ | Admin authentifié |
+
+---
+
+### Score Conformité par Région
+
+| Région | Score | Status |
+|--------|-------|--------|
+| Europe (GDPR) | 45/100 | ❌ Non conforme |
+| États-Unis (CCPA) | 35/100 | ❌ Non conforme |
+| Brésil (LGPD) | 40/100 | ❌ Non conforme |
+| Reste du monde | 30/100 | ❌ Non conforme |
+| **Global** | **38/100** | ❌ **CRITIQUE** |
 
 ---
 

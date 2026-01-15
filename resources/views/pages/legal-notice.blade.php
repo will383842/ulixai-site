@@ -514,6 +514,38 @@
               <em>No legal notice content has been configured yet.</em>
             </p>
           @endif
+
+          <hr>
+
+          <!-- Data Protection Officer Section (GDPR Art. 37) -->
+          <h2>Data Protection Officer (DPO)</h2>
+          <p>
+            In accordance with GDPR Article 37 and other international data protection regulations,
+            we have appointed a Data Protection Officer to oversee our data protection strategy and compliance.
+          </p>
+          <p>
+            <strong>Contact our DPO:</strong><br>
+            Email: <a href="mailto:dpo@ulixai.com">dpo@ulixai.com</a><br>
+            Response time: Within 30 days for all privacy-related requests.
+          </p>
+          <p>
+            You may contact our DPO for:
+          </p>
+          <ul>
+            <li>Questions about how we process your personal data</li>
+            <li>Requests to access, correct, or delete your personal data</li>
+            <li>Exercising your rights under GDPR, CCPA, LGPD, or other regulations</li>
+            <li>Filing a complaint about our data processing practices</li>
+            <li>Requesting a copy of your data (data portability)</li>
+          </ul>
+          <p>
+            <strong>Your Privacy Rights:</strong>
+            <a href="{{ route('privacy.do-not-sell') }}">Do Not Sell My Personal Information</a> |
+            <a href="{{ route('cookies.show') }}">Cookie Settings</a>
+            @auth
+            | <a href="{{ route('account.export-data') }}">Export My Data</a>
+            @endauth
+          </p>
         </div>
       </div>
 

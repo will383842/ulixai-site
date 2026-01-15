@@ -23,7 +23,10 @@
         </div>
         <div class="flex items-center h-full">
           <a href="/">
-            <img src="/images/headerlogos.png" alt="Logo ULIXAI" class="w-32 h-auto max-h-14 object-contain" width="128" height="56" />
+            <picture>
+              <source type="image/webp" srcset="{{ asset('images/headerlogos.webp') }}">
+              <img src="{{ asset('images/headerlogos.png') }}" alt="Logo ULIXAI" class="w-32 h-auto max-h-14 object-contain" width="128" height="56" loading="eager" fetchpriority="high" />
+            </picture>
           </a>
         </div>
       </div>

@@ -11,9 +11,12 @@ use App\Models\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Mission;
+use App\Models\Transaction;
+use App\Models\Conversation;
+use App\Models\MissionOffer;
 
 class AccountController extends Controller
 {
@@ -333,7 +336,6 @@ class AccountController extends Controller
 
     public function uploadProviderProfile(Request $request)
     {
-        // Validate the incoming request
         $request->validate([
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg',
         ]);
@@ -341,23 +343,26 @@ class AccountController extends Controller
         try {
             $user = auth()->user();
             $provider = $user->serviceprovider;
+            $disk = Storage::disk(config('filesystems.uploads_disk', 'public'));
 
-            if ($provider->profile_photo && File::exists(public_path($provider->profile_photo))) {
-                File::delete(public_path($provider->profile_photo));
+            // Delete old photo if exists
+            if ($provider->profile_photo) {
+                $disk->delete($provider->profile_photo);
             }
 
             $image = $request->file('profile_picture');
             $filename = 'profile-' . $user->id . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $path = 'profileImages/' . $filename;
 
-            $path = 'assets/profileImages/' . $filename;
-            $image->move(public_path('assets/profileImages'), $filename);
+            // Store using Storage facade (works with local or R2)
+            $disk->putFileAs('profileImages', $image, $filename, 'public');
 
             $provider->profile_photo = $path;
             $provider->save();
 
             return response()->json([
                 'success' => true,
-                'path' => asset($path) 
+                'path' => $disk->url($path)
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -387,37 +392,45 @@ class AccountController extends Controller
         try {
             $user = auth()->user();
             $provider = $user->serviceProvider;
+            $disk = Storage::disk(config('filesystems.uploads_disk', 'public'));
+
+            // Delete old documents if they exist
             if (!empty($provider->documents)) {
                 $documents = json_decode($provider->documents, true);
                 $docTypes = ['passport', 'european_id', 'license'];
-                foreach ($docTypes as $docType) {
-                    if (isset($documents[$docType])) {
-                        if (File::exists(public_path($documents[$docType]['front']))) {
-                            File::delete(public_path($documents[$docType]['front']));
+                foreach ($docTypes as $type) {
+                    if (isset($documents[$type])) {
+                        if (isset($documents[$type]['front'])) {
+                            $disk->delete($documents[$type]['front']);
                         }
-                        if (isset($documents[$docType]['back']) && File::exists(public_path($documents[$docType]['back']))) {
-                            File::delete(public_path($documents[$docType]['back']));
+                        if (isset($documents[$type]['back'])) {
+                            $disk->delete($documents[$type]['back']);
                         }
                     }
                 }
             }
+
             $docType = $request->document_type;
             $docData = [];
+
+            // Upload front image
             $frontImage = $request->file('front');
             if ($frontImage) {
                 $frontImageName = 'docs-' . $user->id . '-' . $docType . '-front.' . $frontImage->getClientOriginalExtension();
-                $frontImagePath = $frontImage->move(public_path('assets/userDocs'), $frontImageName);
-                $docData['front'] = 'assets/userDocs/' . $frontImageName;
+                $disk->putFileAs('userDocs', $frontImage, $frontImageName, 'public');
+                $docData['front'] = 'userDocs/' . $frontImageName;
             }
 
+            // Upload back image if provided
             if ($request->hasFile('back')) {
                 $backImage = $request->file('back');
                 $backImageName = 'docs-' . $user->id . '-' . $docType . '-back.' . $backImage->getClientOriginalExtension();
-                $backImagePath = $backImage->move(public_path('assets/userDocs'), $backImageName);
-                $docData['back'] = 'assets/userDocs/' . $backImageName;
+                $disk->putFileAs('userDocs', $backImage, $backImageName, 'public');
+                $docData['back'] = 'userDocs/' . $backImageName;
             }
+
             $newDocuments[$docType] = $docData;
-            $provider->update(['documents' =>  !empty($newDocuments) ? json_encode($newDocuments) : null]);
+            $provider->update(['documents' => !empty($newDocuments) ? json_encode($newDocuments) : null]);
 
             return response()->json([
                 'success' => true,
@@ -603,5 +616,220 @@ class AccountController extends Controller
             DB::rollBack();
             return back()->with('error', 'An error occurred while deleting your account. Please try again.');
         }
+    }
+
+    /**
+     * Export all user data (GDPR Article 20 - Right to Data Portability)
+     * Also compliant with CCPA, LGPD, and other international data protection regulations
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function exportUserData(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not authenticated'
+                ], 401);
+            }
+
+            // Collect all user data
+            $exportData = [
+                'export_info' => [
+                    'generated_at' => now()->toIso8601String(),
+                    'platform' => 'Ulixai.com',
+                    'data_subject_id' => $user->id,
+                    'format_version' => '1.0',
+                    'legal_basis' => 'GDPR Article 20, CCPA, LGPD',
+                ],
+
+                // Personal Information
+                'personal_data' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone_number' => $user->phone_number,
+                    'date_of_birth' => $user->dob,
+                    'gender' => $user->gender,
+                    'address' => $user->address,
+                    'country' => $user->country,
+                    'preferred_language' => $user->preferred_language,
+                    'user_role' => $user->user_role,
+                    'account_created_at' => $user->created_at?->toIso8601String(),
+                    'email_verified_at' => $user->email_verified_at?->toIso8601String(),
+                    'last_login_at' => $user->last_login_at?->toIso8601String(),
+                    'referral_code' => $user->referral_code,
+                ],
+
+                // Banking Details (masked for security)
+                'banking_data' => [
+                    'bank_name' => $user->bank_name,
+                    'account_holder' => $user->bank_account_holder,
+                    'iban_masked' => $user->bank_account_iban ? $this->maskIban($user->bank_account_iban) : null,
+                    'swift_bic' => $user->bank_swift_bic,
+                    'account_country' => $user->account_country,
+                    'verified_at' => $user->bank_details_verified_at?->toIso8601String(),
+                ],
+            ];
+
+            // Service Provider Data (if applicable)
+            if ($user->user_role === 'service_provider' && $user->serviceProvider) {
+                $provider = $user->serviceProvider;
+                $exportData['service_provider_data'] = [
+                    'id' => $provider->id,
+                    'profile_description' => $provider->profile_description,
+                    'native_language' => $provider->native_language,
+                    'spoken_languages' => $provider->spoken_language,
+                    'services_offered' => $provider->services_to_offer,
+                    'service_categories' => $provider->services_to_offer_category,
+                    'latitude' => $provider->latitude,
+                    'longitude' => $provider->longitude,
+                    'is_active' => $provider->is_active,
+                    'is_visible' => $provider->is_visible,
+                    'special_status' => $provider->special_status,
+                    'stripe_account_id' => $provider->stripe_account_id ? 'Connected' : null,
+                    'stripe_kyc_completed' => $provider->stripe_kyc_completed,
+                    'created_at' => $provider->created_at?->toIso8601String(),
+                ];
+            }
+
+            // Missions (as requester)
+            $missionsAsRequester = Mission::where('user_id', $user->id)
+                ->select(['id', 'title', 'description', 'status', 'amount', 'created_at', 'completed_at'])
+                ->get()
+                ->map(function ($mission) {
+                    return [
+                        'id' => $mission->id,
+                        'title' => $mission->title,
+                        'description' => $mission->description,
+                        'status' => $mission->status,
+                        'amount' => $mission->amount,
+                        'created_at' => $mission->created_at?->toIso8601String(),
+                        'completed_at' => $mission->completed_at?->toIso8601String(),
+                    ];
+                });
+            $exportData['missions_as_requester'] = $missionsAsRequester;
+
+            // Mission Offers (as provider)
+            if ($user->serviceProvider) {
+                $offers = MissionOffer::where('service_provider_id', $user->serviceProvider->id)
+                    ->select(['id', 'mission_id', 'price', 'status', 'message', 'created_at'])
+                    ->get()
+                    ->map(function ($offer) {
+                        return [
+                            'id' => $offer->id,
+                            'mission_id' => $offer->mission_id,
+                            'price' => $offer->price,
+                            'status' => $offer->status,
+                            'message' => $offer->message,
+                            'created_at' => $offer->created_at?->toIso8601String(),
+                        ];
+                    });
+                $exportData['mission_offers_as_provider'] = $offers;
+            }
+
+            // Transactions
+            $transactions = Transaction::where('user_id', $user->id)
+                ->orWhere('provider_id', $user->serviceProvider?->id)
+                ->select(['id', 'type', 'amount', 'status', 'description', 'created_at'])
+                ->get()
+                ->map(function ($transaction) {
+                    return [
+                        'id' => $transaction->id,
+                        'type' => $transaction->type,
+                        'amount' => $transaction->amount,
+                        'status' => $transaction->status,
+                        'description' => $transaction->description,
+                        'created_at' => $transaction->created_at?->toIso8601String(),
+                    ];
+                });
+            $exportData['transactions'] = $transactions;
+
+            // Conversations (metadata only - not message content to protect other users' privacy)
+            $conversations = Conversation::where('user_id', $user->id)
+                ->orWhere('provider_id', $user->serviceProvider?->id)
+                ->select(['id', 'mission_id', 'created_at', 'updated_at'])
+                ->get()
+                ->map(function ($conversation) {
+                    return [
+                        'id' => $conversation->id,
+                        'mission_id' => $conversation->mission_id,
+                        'created_at' => $conversation->created_at?->toIso8601String(),
+                        'last_activity' => $conversation->updated_at?->toIso8601String(),
+                    ];
+                });
+            $exportData['conversations_metadata'] = $conversations;
+
+            // Referrals (affiliate data)
+            $referrals = $user->referrals()
+                ->select(['id', 'name', 'email', 'created_at'])
+                ->get()
+                ->map(function ($referral) {
+                    return [
+                        'id' => $referral->id,
+                        'name' => $referral->name,
+                        'email_masked' => $this->maskEmail($referral->email),
+                        'referred_at' => $referral->created_at?->toIso8601String(),
+                    ];
+                });
+            $exportData['referrals'] = $referrals;
+
+            // Commissions
+            $commissions = $user->commissions()
+                ->select(['id', 'amount', 'status', 'created_at'])
+                ->get()
+                ->map(function ($commission) {
+                    return [
+                        'id' => $commission->id,
+                        'amount' => $commission->amount,
+                        'status' => $commission->status,
+                        'created_at' => $commission->created_at?->toIso8601String(),
+                    ];
+                });
+            $exportData['affiliate_commissions'] = $commissions;
+
+            // Return as downloadable JSON file
+            $filename = 'ulixai_data_export_' . $user->id . '_' . now()->format('Y-m-d_His') . '.json';
+
+            return response()->json($exportData)
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+                ->header('Content-Type', 'application/json');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while exporting your data',
+                'error' => config('app.debug') ? $e->getMessage() : 'Please try again later'
+            ], 500);
+        }
+    }
+
+    /**
+     * Mask IBAN for security (show only last 4 characters)
+     */
+    private function maskIban(?string $iban): ?string
+    {
+        if (!$iban || strlen($iban) < 8) {
+            return $iban;
+        }
+        return str_repeat('*', strlen($iban) - 4) . substr($iban, -4);
+    }
+
+    /**
+     * Mask email for privacy (show only first 2 chars and domain)
+     */
+    private function maskEmail(?string $email): ?string
+    {
+        if (!$email || !str_contains($email, '@')) {
+            return $email;
+        }
+        $parts = explode('@', $email);
+        $name = $parts[0];
+        $domain = $parts[1];
+        $masked = substr($name, 0, 2) . str_repeat('*', max(strlen($name) - 2, 3));
+        return $masked . '@' . $domain;
     }
 }

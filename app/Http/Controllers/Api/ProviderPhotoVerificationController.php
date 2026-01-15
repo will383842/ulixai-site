@@ -180,8 +180,9 @@ class ProviderPhotoVerificationController extends Controller
         }
 
         // Delete physical file if it exists
-        if (file_exists($verification->image_path)) {
-            unlink($verification->image_path);
+        if ($verification->image_path) {
+            $relativePath = str_replace(storage_path('app/'), '', $verification->image_path);
+            Storage::delete($relativePath);
         }
 
         $verification->delete();

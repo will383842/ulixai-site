@@ -68,22 +68,20 @@
 
   {{-- Performance hints --}}
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
-  {{-- jQuery (required by some components) --}}
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {{-- jQuery (required by some components) - kept on CDN for better caching --}}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
 
-  {{-- Font Awesome --}}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-
-  {{-- Toastr Notifications --}}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  {{-- Vendor CSS (Font Awesome + Toastr) - bundled locally --}}
+  <link rel="preload" href="{{ mix('css/vendor.css') }}" as="style">
+  <link rel="stylesheet" href="{{ mix('css/vendor.css') }}">
 
   {{-- International Telephone Input --}}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js" defer></script>
 
   {{-- Tailwind CSS (compiled) --}}
   <link rel="preload" href="{{ mix('css/app.css') }}" as="style">

@@ -118,6 +118,11 @@ Route::get('/cookiemanagment', function () {
     return view('pages.cookiemanagment');
 })->name('cookies.show');
 
+// ✅ CCPA Compliance - Do Not Sell My Personal Information
+Route::get('/privacy/do-not-sell', function () {
+    return view('pages.do-not-sell');
+})->name('privacy.do-not-sell');
+
 // ═══════════════════════════════════════════════════════════
 // 🌍 PRESSE PUBLIQUE (multi-langues)
 // ═══════════════════════════════════════════════════════════
@@ -191,21 +196,27 @@ Route::post('/signup/store', [UserController::class, 'storeViaSignup']);
 // Provider details
 Route::get('providers/{id}', [ServiceProviderController::class, 'providerDetails'])->name('provider-details');
 
-// Auth
+// Auth (avec rate limiting anti brute-force)
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('user.login');
+Route::post('/login', [LoginController::class, 'login'])
+    ->middleware('throttle:5,1') // 5 tentatives par minute
+    ->name('user.login');
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('auth/google/signup', [GoogleController::class, 'redirectToGoogle'])->name('google.signup');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
-// Forgot Password
+// Forgot Password (avec rate limiting anti-abus)
 Route::get('/forgot-password', function () {
     return view('user-auth.forgot-password');
 });
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])
+    ->middleware('throttle:3,1') // 3 tentatives par minute
+    ->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])
+    ->middleware('throttle:5,1') // 5 tentatives par minute
+    ->name('password.update');
 
 Route::get('/signup', function () {
     return view('user-auth.signup');
@@ -230,12 +241,22 @@ Route::get('/become-service-provider', function () {
     return view('pages.service-provider');
 })->name('become.service.provider');
 
-// Registration
-Route::post('/send-email-otp', [RegisterController::class, 'sendEmailOtp'])->name('send-email-otp');
-Route::post('/verify-email-otp', [RegisterController::class, 'verifyEmailOtp'])->name('user.verifyEmailOtp');
-Route::post('/resend-email-otp', [RegisterController::class, 'resendEmailOtp'])->name('user.resendEmailOtp');
-Route::post('/register', [RegisterController::class, 'register'])->name('user.register');
-Route::post('/signup/register', [RegisterController::class, 'signupRegister'])->name('user.signupRegister');
+// Registration (avec rate limiting anti brute-force OTP)
+Route::post('/send-email-otp', [RegisterController::class, 'sendEmailOtp'])
+    ->middleware('throttle:5,1') // 5 envois par minute
+    ->name('send-email-otp');
+Route::post('/verify-email-otp', [RegisterController::class, 'verifyEmailOtp'])
+    ->middleware('throttle:10,1') // 10 tentatives par minute (OTP = 6 chiffres)
+    ->name('user.verifyEmailOtp');
+Route::post('/resend-email-otp', [RegisterController::class, 'resendEmailOtp'])
+    ->middleware('throttle:3,1') // 3 renvois par minute
+    ->name('user.resendEmailOtp');
+Route::post('/register', [RegisterController::class, 'register'])
+    ->middleware('throttle:5,1')
+    ->name('user.register');
+Route::post('/signup/register', [RegisterController::class, 'signupRegister'])
+    ->middleware('throttle:5,1')
+    ->name('user.signupRegister');
 
 // Legal pages
 Route::get('/legal-notice', function () {
@@ -306,6 +327,11 @@ Route::middleware(['auth'])->group(function () {
     
     // ✅ Suppression de compte
     Route::delete('/account/delete', [AccountController::class, 'delete'])->name('account.delete');
+
+    // ✅ Export des données personnelles (GDPR Art. 20, CCPA, LGPD)
+    Route::get('/account/export-my-data', [AccountController::class, 'exportUserData'])
+        ->middleware('throttle:3,60') // 3 exports par heure max
+        ->name('account.export-data');
 
     Route::get('/upload-document', [AccountController::class, 'uploadDocument'])->name('upload-document');
     Route::post('/profile/photo', [AccountController::class, 'uploadProfilePicture'])->name('profile.photo.upload');
@@ -378,7 +404,9 @@ if (app()->environment('local', 'development')) {
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login.form');
-    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
+    Route::post('/login', [AdminAuthController::class, 'login'])
+        ->middleware('throttle:5,1') // 5 tentatives par minute - protection brute-force admin
+        ->name('login.submit');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     Route::middleware(['auth:admin', AdminAuthenticate::class])->group(function () {
