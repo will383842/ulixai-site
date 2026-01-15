@@ -180,5 +180,5 @@
 {{-- ═══════════════════════════════════════════════════════════
      🚀 JAVASCRIPT MODULES
      ═══════════════════════════════════════════════════════════ --}}
-<script src="{{ mix('js/app.js') }}"></script>
+<script defer src="{{ mix('js/app.js') }}"></script>
 <script type="module" src="{{ asset('js/header-init.js') }}"></script>
