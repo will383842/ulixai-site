@@ -808,7 +808,7 @@ class ServiceRequestController extends Controller
     /**
      * ✅ Annuler une mission (par le provider) - CORRIGÉ
      */
-    public function providerCancelMisssion(Request $request) 
+    public function providerCancelMission(Request $request) 
     {
         $request->validate([
             'mission_id' => 'required|exists:missions,id',

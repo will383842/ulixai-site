@@ -42,13 +42,21 @@ class AccountController extends Controller
     public function updatePersonalInfo(Request $request)
     {
         try {
-            $user = User::findorfail($request->user_id);
-            
+            $user = Auth::user();
+
             if (!$user) {
                 return response()->json([
                     'success' => false,
                     'message' => 'User not authenticated'
                 ], 401);
+            }
+
+            // Security: Prevent unauthorized access to other users' data
+            if ($request->has('user_id') && $request->user_id != $user->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized access'
+                ], 403);
             }
 
             // Validation rules

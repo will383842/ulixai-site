@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class ServiceProvider extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'user_id',
         'first_name',
@@ -56,8 +59,8 @@ class ServiceProvider extends Model
         'city_coords' => 'array',
         'deleted_at' => 'datetime',
         'is_active' => 'boolean',
-        // 'services_to_offer' => 'array',
-        // 'services_to_offer_category' => 'array',
+        'services_to_offer' => 'array',
+        'services_to_offer_category' => 'array',
     ];
 
     public function user(): BelongsTo

@@ -17,7 +17,7 @@ class ReputationPointService
 
         $this->updateUlysseStatus($provider);
      } catch (\Exception $e) {
-         Log::error("Failed to update reputation points for provider ID: {$providerId}. Error: {$e->getMessage()}");
+         Log::error("Failed to update reputation points for provider ID: {$provider->id}. Error: {$e->getMessage()}");
      }
  }
 
@@ -35,7 +35,7 @@ class ReputationPointService
         }
         $this->updateUlysseStatus($provider);
      } catch (\Exception $e) {
-         Log::error("Failed to update reputation points for provider ID: {$providerId}. Error: {$e->getMessage()}");
+         Log::error("Failed to update reputation points for provider ID: {$provider->id}. Error: {$e->getMessage()}");
      }
  }
 

@@ -61,7 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Cancel Mission (par client ou prestataire)
     Route::post('/mission/cancel', [ServiceRequestController::class, 'cancelMissionRequest']);
-    Route::post('/mission/cancel/by-provider', [ServiceRequestController::class, 'providerCancelMisssion']);
+    Route::post('/mission/cancel/by-provider', [ServiceRequestController::class, 'providerCancelMission']);
 });
 
 // ═══════════════════════════════════════════════════════════

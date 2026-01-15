@@ -51,7 +51,9 @@
       "Bash(docker:*)",
       "Bash(wsl --version:*)",
       "Bash(wsl -l:*)",
-      "Bash(git check-ignore:*)"
+      "Bash(git check-ignore:*)",
+      "Bash(if not exist \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Policies\" mkdir \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Policies\")",
+      "Bash(git remote:*)"
     ]
   }
 }
