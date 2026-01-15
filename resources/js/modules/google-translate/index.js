@@ -1,59 +1,59 @@
 /**
  * Google Translate Module - Complete Package
  * Single entry point for all Google Translate functionality
- * 
+ *
  * Features:
  * - Loads Google Translate API
  * - Injects required CSS styles
  * - Manages language selection UI
  * - Handles language switching
- * 
+ *
  * Usage:
  *   import { initializeGoogleTranslateModule } from './modules/google-translate/index.js';
  *   await initializeGoogleTranslateModule();
- * 
+ *
  * @module google-translate
- * @version 1.0.0
+ * @version 1.1.0 - Production-safe logging
  */
 
 import { GoogleTranslateInit } from './init.js';
 import { LanguageManager } from './language-manager.js';
 import { injectGoogleTranslateStyles } from './styles.js';
+import logger from '../../utils/logger.js';
 
 /**
  * Main initialization function for the entire Google Translate module
  * Handles the complete setup in the correct order
- * 
+ *
  * @returns {Promise<Object>} Module instances
  */
 export async function initializeGoogleTranslateModule() {
-  console.log('🌐 [GoogleTranslateModule] Starting initialization...');
+  logger.log('[GoogleTranslate] Starting initialization...');
 
   try {
     // Step 0: Inject CSS styles first (must be done before Google loads)
-    console.log('📦 [GoogleTranslateModule] Step 0/3: Injecting styles...');
+    logger.debug('[GoogleTranslate] Step 0/3: Injecting styles...');
     injectGoogleTranslateStyles();
 
     // Step 1: Initialize Google Translate API
-    console.log('📦 [GoogleTranslateModule] Step 1/3: Loading Google Translate API...');
+    logger.debug('[GoogleTranslate] Step 1/3: Loading Google Translate API...');
     const gtInit = new GoogleTranslateInit();
     await gtInit.init();
 
     // Step 2: Initialize Language Manager UI
-    console.log('📦 [GoogleTranslateModule] Step 2/3: Initializing language UI...');
+    logger.debug('[GoogleTranslate] Step 2/3: Initializing language UI...');
     const languageManager = new LanguageManager();
     await languageManager.init();
 
     // Step 3: Expose globally for debugging
-    console.log('📦 [GoogleTranslateModule] Step 3/3: Exposing global references...');
+    logger.debug('[GoogleTranslate] Step 3/3: Exposing global references...');
     window.ulixaiGoogleTranslate = {
       init: gtInit,
       languageManager: languageManager,
-      version: '1.0.0'
+      version: '1.1.0'
     };
 
-    console.log('✅ [GoogleTranslateModule] Initialization complete');
-    console.log('🔍 [GoogleTranslateModule] Available at: window.ulixaiGoogleTranslate');
+    logger.log('[GoogleTranslate] Initialization complete');
 
     return {
       init: gtInit,
@@ -61,7 +61,7 @@ export async function initializeGoogleTranslateModule() {
     };
 
   } catch (error) {
-    console.error('❌ [GoogleTranslateModule] Initialization failed:', error);
+    logger.error('[GoogleTranslate] Initialization failed:', error);
     throw error;
   }
 }
@@ -82,35 +82,31 @@ export function isGoogleTranslateEnabled() {
  * Removes scripts, styles, and global references
  */
 export function unloadGoogleTranslateModule() {
-  console.log('🗑️ [GoogleTranslateModule] Unloading...');
-  
+  logger.log('[GoogleTranslate] Unloading...');
+
   // Remove script
   const script = document.getElementById('google-translate-script');
   if (script) {
     script.remove();
-    console.log('✅ [GoogleTranslateModule] Script removed');
   }
 
   // Remove styles
   const styles = document.getElementById('google-translate-styles');
   if (styles) {
     styles.remove();
-    console.log('✅ [GoogleTranslateModule] Styles removed');
   }
 
   // Clear cookies
   document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   document.cookie = 'googtransopt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  console.log('✅ [GoogleTranslateModule] Cookies cleared');
 
   // Clear global references
   delete window.googleTranslateElementInit;
   delete window.googleTranslateReady;
   delete window.ulixaiGoogleTranslate;
   delete window.providerLanguageManager;
-  console.log('✅ [GoogleTranslateModule] Global references cleared');
 
-  console.log('✅ [GoogleTranslateModule] Unload complete');
+  logger.log('[GoogleTranslate] Unload complete');
 }
 
 // Export classes for advanced usage

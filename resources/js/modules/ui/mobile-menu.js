@@ -1,6 +1,9 @@
 /**
  * Mobile Menu - Gestion complète du menu mobile
+ * @version 1.1.0 - Production-safe logging
  */
+
+import logger from '../../utils/logger.js';
 
 export class MobileMenu {
   constructor() {
@@ -19,7 +22,7 @@ export class MobileMenu {
     this.mobileMenuCloseBtn = document.getElementById("mobileMenuCloseBtn");
 
     if (!this.mobileMenu) {
-      console.warn('Mobile menu not found');
+      logger.debug('[MobileMenu] Not found in DOM');
       return;
     }
 
@@ -28,8 +31,8 @@ export class MobileMenu {
     this.initLinkListeners();
     this.initKeyboardListeners();
     this.initOutsideClickListener();
-    
-    console.log('✅ Mobile menu initialized');
+
+    logger.log('[MobileMenu] Initialized');
   }
 
   openMobileMenu() {

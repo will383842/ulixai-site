@@ -1,12 +1,15 @@
 /**
  * ═══════════════════════════════════════════════════════════
  * Wizard Core - VERSION CORRIGÉE
- * ✅ CORRECTIONS MAJEURES :
+ * CORRECTIONS MAJEURES :
  * - Suppression du stopPropagation agressif
  * - Event listeners directs au lieu de délégation
  * - Meilleure gestion des clics
+ * - Production-safe logging (v2.0)
  * ═══════════════════════════════════════════════════════════
  */
+
+import logger from '../../../utils/logger.js';
 
 export class WizardCore {
   constructor() {
@@ -30,7 +33,7 @@ export class WizardCore {
       sessionStorage.setItem(this.storeKey, JSON.stringify(state));
       localStorage.setItem(this.storeKey, JSON.stringify(state));
     } catch (e) {
-      console.error('Failed to save state', e);
+      logger.error('[Wizard] Failed to save state', e);
     }
   }
 
@@ -48,10 +51,10 @@ export class WizardCore {
   setBtnEnabled(selector, enabled) {
     const nodes = document.querySelectorAll(selector);
     nodes.forEach(el => {
-      try { 
-        el.disabled = !enabled; 
+      try {
+        el.disabled = !enabled;
       } catch (_) {}
-      // ✅ Le CSS gère TOUT le reste via :disabled
+      // Le CSS gère TOUT le reste via :disabled
     });
   }
 
@@ -59,18 +62,18 @@ export class WizardCore {
     const stepNum = i + 1;
     const step = this.steps[i];
     if (!step) return true;
-    
+
     // Appeler la validation custom en premier
     const customValidate = window[`validateStep${stepNum}`];
     if (typeof customValidate === 'function') {
       try {
         return !!customValidate();
       } catch (e) {
-        console.error(`validateStep${stepNum} error:`, e);
+        logger.error(`[Wizard] validateStep${stepNum} error:`, e);
         return false;
       }
     }
-    
+
     // Validation générique
     const required = step.querySelectorAll('[required]');
     for (let r = 0; r < required.length; r++) {
@@ -84,41 +87,30 @@ export class WizardCore {
     this.detectSteps();
     this.updateUI();
     this.initCloseButtons();
-    console.log('✅ Wizard core initialized');
+    logger.log('[Wizard] Core initialized');
   }
 
   initCloseButtons() {
     const popup = document.getElementById('signupPopup');
     if (!popup) {
-      console.log('ℹ️ Signup popup not found - user might be logged in');
+      logger.debug('[Wizard] Signup popup not found - user might be logged in');
       return;
     }
 
     // ═══════════════════════════════════════════════════════════
-    // ✅ CORRECTION #1 : SUPPRIMER LE STOP PROPAGATION AGRESSIF
-    // On ne bloque plus tous les clics internes
+    // CORRECTION #1 : Bloquer uniquement les clics sur le backdrop
     // ═══════════════════════════════════════════════════════════
-    
-    // ❌ ANCIEN CODE - SUPPRIMÉ :
-    // const popupContainer = popup.querySelector('.bg-white');
-    // if (popupContainer) {
-    //   popupContainer.addEventListener('click', (e) => {
-    //     e.stopPropagation();
-    //   }, true);
-    // }
-
-    // ✅ NOUVEAU CODE - Bloquer uniquement les clics sur le backdrop
     popup.addEventListener('click', (e) => {
       // Si le clic est exactement sur le backdrop (pas sur le contenu)
       if (e.target === popup) {
         e.preventDefault();
         // Ne pas fermer automatiquement - seulement avec la croix
-        console.log('🖱️ Backdrop clicked - popup remains open');
+        logger.debug('[Wizard] Backdrop clicked - popup remains open');
       }
     }, false);
 
     // ═══════════════════════════════════════════════════════════
-    // ✅ CORRECTION #2 : EVENT LISTENERS DIRECTS
+    // CORRECTION #2 : EVENT LISTENERS DIRECTS
     // Au lieu de délégation d'événements complexe
     // ═══════════════════════════════════════════════════════════
 
@@ -126,11 +118,11 @@ export class WizardCore {
     const closeButtons = document.querySelectorAll(
       '#closePopup, [data-close="signup"], .js-close-signup, [data-action="close-signup"]'
     );
-    
+
     closeButtons.forEach(btn => {
       if (btn) {
         btn.addEventListener('click', (e) => {
-          console.log('❌ [Wizard] Close button clicked:', btn.id || btn.className);
+          logger.debug('[Wizard] Close button clicked:', btn.id || btn.className);
           e.preventDefault();
           e.stopPropagation();
           this.closePopup();
@@ -142,11 +134,11 @@ export class WizardCore {
     const openButtons = document.querySelectorAll(
       '#signupBtn, #mobileSignupBtn, [data-action="open-signup"]'
     );
-    
+
     openButtons.forEach(btn => {
       if (btn) {
         btn.addEventListener('click', (e) => {
-          console.log('📝 [Wizard] Sign Up button clicked:', btn.id || btn.className);
+          logger.debug('[Wizard] Sign Up button clicked:', btn.id || btn.className);
           e.preventDefault();
           e.stopPropagation();
           this.openPopup();
@@ -155,33 +147,34 @@ export class WizardCore {
     });
 
     // ═══════════════════════════════════════════════════════════
-    // ⌨️ ESC key pour fermer (optionnel - peut être activé)
+    // ESC key pour fermer
     // ═══════════════════════════════════════════════════════════
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && popup && !popup.classList.contains('hidden')) {
-        console.log('⌨️ [Wizard] ESC pressed');
+        logger.debug('[Wizard] ESC pressed');
         this.closePopup();
       }
     });
 
     // ═══════════════════════════════════════════════════════════
-    // 🌍 Fonctions globales pour compatibilité
+    // Fonctions globales pour compatibilité
     // ═══════════════════════════════════════════════════════════
     window.openSignupPopup  = () => this.openPopup();
     window.closeSignupPopup = () => this.closePopup();
 
-    console.log('✅ Popup controls initialized (direct event listeners)');
-    console.log('   - Close buttons found:', closeButtons.length);
-    console.log('   - Open buttons found:', openButtons.length);
+    logger.debug('[Wizard] Popup controls initialized', {
+      closeButtons: closeButtons.length,
+      openButtons: openButtons.length
+    });
   }
 
   closePopup() {
     const popup = document.getElementById('signupPopup');
     if (!popup) {
-      console.warn('⚠️ Popup not found');
+      logger.warn('[Wizard] Popup not found');
       return;
     }
-    
+
     popup.classList.add('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.setAttribute('aria-hidden', 'true');
     popup.style.display = 'none';
@@ -189,17 +182,17 @@ export class WizardCore {
     // Restaurer le scroll du body
     document.body.style.overflow = '';
 
-    console.log('✅ Popup closed');
+    logger.debug('[Wizard] Popup closed');
     this.resetToFirstStep();
   }
 
   openPopup() {
     const popup = document.getElementById('signupPopup');
     if (!popup) {
-      console.warn('⚠️ Popup not found');
+      logger.warn('[Wizard] Popup not found');
       return;
     }
-    
+
     popup.classList.remove('hidden', 'invisible', 'opacity-0', 'pointer-events-none');
     popup.removeAttribute('aria-hidden');
     popup.style.display = 'flex';
@@ -207,29 +200,29 @@ export class WizardCore {
     // Bloquer le scroll du body
     document.body.style.overflow = 'hidden';
 
-    console.log('✅ Popup opened');
+    logger.debug('[Wizard] Popup opened');
     this.resetToFirstStep();
   }
 
   resetToFirstStep() {
     const allSteps = document.querySelectorAll('[id^="step"]');
     allSteps.forEach(step => step.classList.add('hidden'));
-    
+
     const step1 = document.getElementById('step1');
     if (step1) {
       step1.classList.remove('hidden');
       this.current = 0;
-      console.log('✅ Reset to step 1');
+      logger.debug('[Wizard] Reset to step 1');
     }
   }
 }
 
 // ═══════════════════════════════════════════════════════════
-// 🚀 EXPORT ET INITIALISATION
+// EXPORT ET INITIALISATION
 // ═══════════════════════════════════════════════════════════
 export function initializeWizard() {
   if (window.providerWizard) {
-    console.log('⚠️ Wizard already initialized');
+    logger.debug('[Wizard] Already initialized');
     return window.providerWizard;
   }
 
@@ -244,6 +237,6 @@ export function initializeWizard() {
     wizard: wizard
   };
 
-  console.log('✅ Wizard API exposed globally');
+  logger.log('[Wizard] API exposed globally');
   return window.providerWizard;
 }
