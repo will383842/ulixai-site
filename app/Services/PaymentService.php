@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Services;
+
 use Stripe\Stripe;
 use Stripe\StripeClient;
 use App\Models\Transaction;
+use App\Models\ServiceProvider;
+use App\Models\Country;
 use Stripe\PaymentIntent;
 use Stripe\Transfer;
 use Stripe\Balance;
@@ -13,12 +16,175 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {
-    protected $stripe;
+    protected StripeClient $stripe;
 
     public function __construct()
     {
-        $this->stripe = Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
         $this->stripe = new StripeClient(config('services.stripe.secret'));
+    }
+
+    /**
+     * Create a Stripe Connect Custom Account for a service provider.
+     * This method centralizes the account creation logic previously duplicated
+     * in RegisterController and StripePaymentController.
+     *
+     * @param ServiceProvider $provider
+     * @return array{account_id: string, onboarding_url: ?string, isKYCComplete: bool}
+     * @throws \Exception
+     */
+    public function createConnectAccount(ServiceProvider $provider): array
+    {
+        try {
+            // Get country code
+            $countryField = $provider->provider_address ?: $provider->country;
+            $country = Country::where('country', $countryField)->first();
+            $countryCode = $country?->short_name ?? 'FR';
+
+            // Create account token
+            $token = $this->stripe->tokens->create([
+                'account' => [
+                    'business_type' => 'individual',
+                    'individual' => [
+                        'first_name' => $provider->first_name,
+                        'last_name' => $provider->last_name,
+                        'email' => $provider->email,
+                    ],
+                    'tos_shown_and_accepted' => true,
+                ],
+            ]);
+
+            // Create the Connect account
+            $account = $this->stripe->accounts->create([
+                'type' => 'custom',
+                'country' => $countryCode,
+                'email' => $provider->email,
+                'account_token' => $token->id,
+                'capabilities' => [
+                    'card_payments' => ['requested' => true],
+                    'transfers' => ['requested' => true],
+                ],
+                'business_profile' => [
+                    'product_description' => 'Ulixai Service Provider',
+                ],
+            ]);
+
+            // Check if onboarding is needed
+            if (!$account->details_submitted) {
+                $accountLink = $this->stripe->accountLinks->create([
+                    'account' => $account->id,
+                    'refresh_url' => route('stripe.refresh'),
+                    'return_url' => route('stripe.return'),
+                    'type' => 'account_onboarding',
+                ]);
+
+                Log::info('Stripe Connect account created (pending KYC)', [
+                    'provider_id' => $provider->id,
+                    'account_id' => $account->id,
+                ]);
+
+                return [
+                    'account_id' => $account->id,
+                    'onboarding_url' => $accountLink->url,
+                    'isKYCComplete' => false,
+                ];
+            }
+
+            Log::info('Stripe Connect account created (KYC complete)', [
+                'provider_id' => $provider->id,
+                'account_id' => $account->id,
+            ]);
+
+            return [
+                'account_id' => $account->id,
+                'onboarding_url' => null,
+                'isKYCComplete' => true,
+            ];
+        } catch (\Exception $e) {
+            Log::error('Stripe Connect account creation failed', [
+                'provider_id' => $provider->id,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Update provider with Stripe account info after creation.
+     *
+     * @param ServiceProvider $provider
+     * @param array $stripeAccount
+     * @return ServiceProvider
+     */
+    public function updateProviderStripeInfo(ServiceProvider $provider, array $stripeAccount): ServiceProvider
+    {
+        $provider->stripe_account_id = $stripeAccount['account_id'];
+        $provider->kyc_status = $stripeAccount['isKYCComplete'] ? 'verified' : 'pending';
+        $provider->stripe_chg_enabled = $stripeAccount['isKYCComplete'];
+        $provider->stripe_pts_enabled = $stripeAccount['isKYCComplete'];
+        $provider->kyc_link = $stripeAccount['onboarding_url'] ?? null;
+        $provider->save();
+
+        return $provider;
+    }
+
+    /**
+     * Get or create Stripe Connect account for a provider.
+     *
+     * @param ServiceProvider $provider
+     * @return array
+     */
+    public function getOrCreateConnectAccount(ServiceProvider $provider): array
+    {
+        if ($provider->stripe_account_id) {
+            return [
+                'account_id' => $provider->stripe_account_id,
+                'onboarding_url' => $provider->kyc_link,
+                'isKYCComplete' => $provider->kyc_status === 'verified',
+            ];
+        }
+
+        $stripeAccount = $this->createConnectAccount($provider);
+        $this->updateProviderStripeInfo($provider, $stripeAccount);
+
+        return $stripeAccount;
+    }
+
+    /**
+     * Refresh onboarding link for a provider.
+     *
+     * @param ServiceProvider $provider
+     * @return array{completed: bool, url?: string}
+     */
+    public function refreshOnboardingLink(ServiceProvider $provider): array
+    {
+        if (!$provider->stripe_account_id) {
+            throw new \Exception('Stripe account not found.');
+        }
+
+        $account = $this->stripe->accounts->retrieve($provider->stripe_account_id);
+
+        if ($account->details_submitted) {
+            $provider->kyc_status = 'verified';
+            $provider->stripe_chg_enabled = true;
+            $provider->stripe_pts_enabled = true;
+            $provider->kyc_link = null;
+            $provider->save();
+
+            return ['completed' => true];
+        }
+
+        $accountLink = $this->stripe->accountLinks->create([
+            'account' => $provider->stripe_account_id,
+            'refresh_url' => route('stripe.refresh'),
+            'return_url' => route('stripe.return'),
+            'type' => 'account_onboarding',
+        ]);
+
+        $provider->kyc_link = $accountLink->url;
+        $provider->save();
+
+        return ['completed' => false, 'url' => $accountLink->url];
     }
 
     public function processPayment($amount, $currency, $paymentMethod, $customerId)
