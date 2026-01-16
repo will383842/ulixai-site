@@ -73,17 +73,43 @@
       border-radius: 4px;
     }
 
-    /* Modern Card - Very light shadow */
+    /* Modern Profile Card - Elegant Design */
     .card-modern {
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      background: white;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.07),
+        0 2px 4px -2px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+    }
+
+    .card-modern::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #3B82F6, #8B5CF6, #EC4899);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .card-modern:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
+      transform: translateY(-8px);
+      border-color: rgba(59, 130, 246, 0.3);
+      box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 8px 10px -6px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(59, 130, 246, 0.1),
+        0 0 40px -10px rgba(59, 130, 246, 0.15);
+    }
+
+    .card-modern:hover::before {
+      opacity: 1;
     }
 
     /* Animations - REDUCED */
@@ -184,13 +210,59 @@
       transform: scale(1.05);
     }
 
-    /* Badge Styles */
+    /* Badge Styles - Enhanced */
     .badge-verified {
       background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      box-shadow: 0 2px 8px rgba(79, 172, 254, 0.4);
     }
 
     .badge-specialty {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      letter-spacing: 0.02em;
+    }
+
+    /* Profile Card Enhanced Styles */
+    .profile-card .aspect-ratio-box {
+      position: relative;
+    }
+
+    .profile-card .aspect-ratio-box::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+      pointer-events: none;
+    }
+
+    .profile-card .p-4 {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border-top: 1px solid rgba(226, 232, 240, 0.5);
+    }
+
+    /* Provider name styling */
+    .profile-card h3 {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Rating stars enhancement */
+    .profile-card .text-yellow-400 svg {
+      filter: drop-shadow(0 1px 2px rgba(251, 191, 36, 0.3));
+    }
+
+    /* Service tags enhancement */
+    .profile-card .bg-purple-50 {
+      background: linear-gradient(135deg, #f3e8ff 0%, #fae8ff 100%) !important;
+      border: 1px solid rgba(168, 85, 247, 0.15);
+      box-shadow: 0 1px 2px rgba(168, 85, 247, 0.08);
     }
 
     /* FAQ Accordion */
@@ -213,14 +285,21 @@
       transform: rotate(180deg);
     }
 
-    /* Status Pulse */
+    /* Status Pulse - Enhanced */
     @keyframes status-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+      0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+      }
+      50% {
+        opacity: 0.9;
+        box-shadow: 0 0 0 6px rgba(74, 222, 128, 0);
+      }
     }
 
     .status-online {
       animation: status-pulse 2s ease-in-out infinite;
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
     }
 
     /* Back to Top */
@@ -334,13 +413,25 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
     }
 
-    /* Profile Cards - Reduced height */
+    /* Profile Cards - Dimensions */
     .profile-card {
-      height: 420px;
+      height: 440px;
+      border-radius: 20px !important;
     }
 
     .profile-card .aspect-ratio-box {
-      height: 260px;
+      height: 250px;
+    }
+
+    /* Profile Card Featured Variant */
+    .profile-card.featured {
+      border: 2px solid transparent;
+      background: linear-gradient(white, white) padding-box,
+                  linear-gradient(135deg, #3B82F6, #8B5CF6, #EC4899) border-box;
+    }
+
+    .profile-card.featured::before {
+      opacity: 1;
     }
 
     /* Mobile Optimizations */
@@ -370,6 +461,20 @@
       .how-it-works-card {
         min-height: 280px;
         height: auto;
+      }
+
+      /* Profile Cards Mobile */
+      .profile-card {
+        height: auto;
+        min-height: 380px;
+      }
+
+      .profile-card .aspect-ratio-box {
+        height: 200px;
+      }
+
+      .card-modern:hover {
+        transform: translateY(-4px);
       }
     }
 
@@ -1021,7 +1126,7 @@ body {
         @endphp
 
         <a href="{{ route('provider-details', ['id' => $provider->slug]) }}" 
-          class="profile-card card-modern bg-white rounded-3xl overflow-hidden block group"
+          class="profile-card card-modern bg-white overflow-hidden block group"
           data-aos="fade-up"
           data-aos-delay="{{ $loop->index * 30 }}"
           data-aos-duration="600">
@@ -1240,7 +1345,7 @@ body {
         @endphp
 
         <a href="{{ route('provider-details', ['id' => $provider->slug]) }}" 
-          class="profile-card card-modern bg-white rounded-3xl overflow-hidden block group relative"
+          class="profile-card card-modern bg-white overflow-hidden block group relative"
           data-aos="fade-up"
           data-aos-delay="{{ $loop->index * 30 }}"
           data-aos-duration="600">
@@ -2191,7 +2296,7 @@ body {
             
             const providerCard = `
               <a href="/provider-details/${provider.slug}" 
-                class="profile-card card-modern bg-white rounded-3xl overflow-hidden block group"
+                class="profile-card card-modern bg-white overflow-hidden block group"
                 data-aos="fade-up"
                 data-aos-delay="${index * 30}">
                 
