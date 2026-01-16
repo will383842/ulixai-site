@@ -467,6 +467,42 @@
 })();
 </script>
 
+{{-- ========= CV MODAL FUNCTIONS ========= --}}
+<script>
+function openCvModal(url) {
+  const cvModal = document.getElementById('cvModal');
+  const cvFrame = document.getElementById('cvFrame');
+  const cvLoader = document.getElementById('cvLoader');
 
+  if (cvModal && cvFrame) {
+    cvModal.classList.remove('hidden');
+    if (cvLoader) cvLoader.style.display = 'flex';
+    cvFrame.src = url;
+    cvFrame.onload = () => {
+      if (cvLoader) cvLoader.style.display = 'none';
+    };
+  }
+}
+
+function closeCvModal() {
+  const cvModal = document.getElementById('cvModal');
+  const cvFrame = document.getElementById('cvFrame');
+
+  if (cvModal) {
+    cvModal.classList.add('hidden');
+    if (cvFrame) cvFrame.src = '';
+  }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCvModal();
+});
+
+// Close modal on backdrop click
+document.getElementById('cvModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'cvModal') closeCvModal();
+});
+</script>
 
 @endsection
