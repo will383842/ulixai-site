@@ -663,7 +663,7 @@ body {
   </section>
 
   <!-- HOW IT WORKS -->
-  <section class="py-12 px-4 bg-gradient-to-br from-blue-50 to-purple-50">
+  <section class="py-16 px-4 bg-slate-50">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
         <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
@@ -913,7 +913,7 @@ body {
   $languages = ['English', 'French', 'Spanish', 'Portuguese', 'German', 'Italian', 'Arabic', 'Japanese', 'Korean', 'Hindi', 'Turkish'];
 @endphp
 
-<section class="py-12 px-4 bg-white">
+<section class="py-16 px-4 bg-gradient-to-b from-white to-gray-50">
   <div class="max-w-6xl mx-auto">
     <div class="text-center mb-10" data-aos="fade-up" data-aos-duration="800">
       <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
@@ -1182,7 +1182,7 @@ body {
 </section>
 
 <!-- FEATURED PROVIDERS SECTION - 5 profiles on 1 line -->
-<section class="py-12 px-4 bg-gradient-to-br from-yellow-50 to-orange-50">
+<section class="py-16 px-4 bg-amber-50">
   <div class="max-w-6xl mx-auto">
     <div class="text-center mb-10" data-aos="fade-up" data-aos-duration="800">
       <div class="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full font-bold text-sm mb-4">
@@ -1363,7 +1363,7 @@ body {
 </section>
 
 <!-- WHY CHOOSE US - NEW SECTION -->
-<section class="py-12 px-4 bg-gradient-to-br from-gray-50 to-blue-50">
+<section class="py-16 px-4 bg-indigo-50">
   <div class="max-w-6xl mx-auto">
     <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
       <div class="inline-block bg-blue-100 text-blue-700 px-6 py-2 rounded-full font-bold text-sm mb-4">
@@ -1464,7 +1464,7 @@ body {
 @include('pages.ulixai-map')
 
 <!-- SECURITY & ESCROW - NEW SECTION -->
-<section class="py-12 px-4 bg-gradient-to-br from-green-50 to-blue-50">
+<section class="py-16 px-4 bg-emerald-50">
   <div class="max-w-6xl mx-auto">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <div data-aos="fade-right" data-aos-duration="800">
@@ -1598,7 +1598,7 @@ body {
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="py-12 px-4 bg-white">
+<section class="py-16 px-4 bg-purple-50">
   <div class="max-w-6xl mx-auto">
     <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
       <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
@@ -1747,7 +1747,7 @@ body {
 </section>
 
 <!-- FAQ -->
-<section class="py-12 px-4 bg-gradient-to-br from-gray-50 to-blue-50">
+<section class="py-16 px-4 bg-sky-50">
   <div class="max-w-4xl mx-auto">
     <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
       <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">

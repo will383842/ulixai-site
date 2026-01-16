@@ -48,17 +48,64 @@ html {
   border-radius: var(--radius-sm);
 }
 
-/* Modern Card */
+/* Modern Card - Enhanced 2026 */
 .card-modern {
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .card-modern:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
+  transform: translateY(-6px);
+  border-color: rgba(59, 130, 246, 0.15);
+  box-shadow:
+    0 12px 24px rgba(59, 130, 246, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Profile Card Specific Enhancements */
+.profile-card {
+  border-radius: 20px;
+}
+
+.profile-card .aspect-ratio-box {
+  position: relative;
+  height: 220px;
+}
+
+.profile-card:hover .aspect-ratio-box::after {
+  content: 'View Profile →';
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3B82F6;
+  opacity: 0;
+  animation: fadeInUp 0.3s ease forwards;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 50%);
+  }
 }
 
 /* Animations */
@@ -159,13 +206,53 @@ html {
   transform: scale(1.05);
 }
 
-/* Badge Styles */
+/* Badge Styles - Enhanced */
 .badge-verified {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
 }
 
 .badge-specialty {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.25);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Featured Badge */
+.featured-badge {
+  background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+  box-shadow: 0 3px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* Profile Card Content Improvements */
+.profile-card .p-4 {
+  padding: 16px;
+}
+
+.profile-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+}
+
+/* Stars Rating Enhancement */
+.profile-card .text-yellow-400 svg {
+  filter: drop-shadow(0 1px 2px rgba(250, 204, 21, 0.3));
+}
+
+/* Service Tags Enhancement */
+.profile-card .bg-purple-50 {
+  background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  font-weight: 500;
+}
+
+.profile-card .bg-blue-50 {
+  background: linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  font-weight: 500;
 }
 
 /* FAQ Accordion */
@@ -188,14 +275,22 @@ html {
   transform: rotate(180deg);
 }
 
-/* Status Pulse */
+/* Status Online - Modern Pulse */
 @keyframes status-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 4px rgba(74, 222, 128, 0);
+  }
 }
 
 .status-online {
   animation: status-pulse 2s ease-in-out infinite;
+  background: #22C55E !important;
+  border: 2px solid white !important;
 }
 
 /* Back to Top */
