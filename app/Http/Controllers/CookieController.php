@@ -13,7 +13,7 @@ class CookieController extends Controller
      */
     public function show(): View
     {
-        return view('pages.cookies');
+        return view('pages.cookiemanagment');
     }
 
     /**

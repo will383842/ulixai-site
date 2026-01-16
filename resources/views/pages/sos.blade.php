@@ -1,730 +1,1246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Toastr CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-<!-- Toastr + JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link rel="icon" type="image/png" href="{{ asset('images/faviccon.png') }}">
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-  <title>ULIX AI - SOS Help</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <title>SOS Emergency Help - Ulixai</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>document.documentElement.classList.add('js');</script>
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .glass {
+    :root {
+      --primary: #DC2626;
+      --primary-dark: #B91C1C;
+      --primary-light: #F87171;
+      --secondary: #2563EB;
+      --secondary-dark: #1E40AF;
+      --accent: #10B981;
+      --warning: #F59E0B;
+      --text: #0F172A;
+      --text-light: #64748B;
+      --text-muted: #94A3B8;
+      --bg: #FFFFFF;
+      --bg-light: #F8FAFC;
+      --bg-alt: #F1F5F9;
+      --border: #E2E8F0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      text-align: center;
+      padding: clamp(60px, 12vw, 120px) 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      font-size: clamp(15px, 2.5vw, 18px);
+      font-weight: 500;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Share Bar */
+    .share-bar {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(20px, 4vw, 40px) 20px;
+    }
+
+    .share-card {
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+      border-radius: 16px;
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2);
+    }
+
+    .share-card .check-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .share-card .text {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .share-card .text p {
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .share-card .text span {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 12px;
+    }
+
+    .share-icons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .share-icons a,
+    .share-icons button {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .share-icons a:hover,
+    .share-icons button:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .share-icons img {
+      width: 20px;
+      height: 20px;
+      filter: invert(1);
+    }
+
+    .copy-link-btn {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .copy-link-btn:hover {
       background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Reach Section */
+    .reach-section {
+      background: var(--bg-light);
+      padding: clamp(40px, 8vw, 80px) 20px;
+      text-align: center;
+    }
+
+    .reach-section h2 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+
+    .warning-badge {
+      display: inline-block;
+      background: #FEF3C7;
+      border: 1px solid #FDE68A;
+      color: #92400E;
+      font-size: 14px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+    }
+
+    .reach-grid {
+      max-width: 700px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .reach-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .reach-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .reach-card .emoji {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    .reach-card h3 {
+      font-size: clamp(18px, 2.5vw, 22px);
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .reach-card p {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* Signup Cards Section */
+    .signup-section {
+      background: var(--bg);
+      padding: clamp(40px, 8vw, 80px) 20px;
+    }
+
+    .signup-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .signup-card {
+      border-radius: 20px;
+      padding: clamp(24px, 4vw, 40px);
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .signup-card.lawyer {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+    }
+
+    .signup-card.expat {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+    }
+
+    .signup-card .emoji {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .signup-card h3 {
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .signup-card.lawyer h3 { color: var(--primary); }
+    .signup-card.expat h3 { color: var(--secondary); }
+
+    .signup-card .subtitle {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .signup-card p {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .signup-card .highlight {
+      font-weight: 600;
+      margin: 12px 0;
+    }
+
+    .signup-card.lawyer .highlight { color: var(--primary); }
+    .signup-card.expat .highlight { color: var(--secondary); }
+
+    .signup-card .note {
+      font-size: 13px;
+      color: #EC4899;
+      margin-bottom: 20px;
+    }
+
+    .signup-btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .signup-btn.red {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    }
+
+    .signup-btn.red:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+    }
+
+    /* Expert Cards Section */
+    .experts-section {
+      background: var(--bg-alt);
+      padding: clamp(40px, 8vw, 80px) 20px;
+    }
+
+    .experts-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 24px;
+    }
+
+    .expert-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+      transition: transform 0.3s ease;
+    }
+
+    .expert-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .expert-card .image {
+      position: relative;
+      height: 140px;
+    }
+
+    .expert-card .image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .expert-card .badge {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .expert-card .badge.lang {
+      top: 8px;
+      left: 8px;
+      background: #FCE7F3;
+      color: #9D174D;
+    }
+
+    .expert-card .badge.lang.green {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .expert-card .badge.type {
+      bottom: 8px;
+      right: 8px;
+      color: white;
+    }
+
+    .expert-card .badge.type.lawyer { background: var(--primary); }
+    .expert-card .badge.type.expat { background: #059669; }
+
+    .expert-card .badge.online {
+      top: 8px;
+      right: 8px;
+      background: #059669;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .expert-card .badge.online::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #34D399;
+      border-radius: 50%;
+    }
+
+    .expert-card .content {
+      padding: 16px;
+    }
+
+    .expert-card .name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .expert-card .country {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .expert-card .rating {
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .expert-card .rating .star {
+      color: #F59E0B;
+    }
+
+    .expert-card .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .expert-card .tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      background: var(--bg-alt);
+      color: var(--text-light);
+      border-radius: 20px;
+    }
+
+    /* Emergencies Section */
+    .emergencies-section {
+      background: var(--bg-light);
+      padding: clamp(40px, 8vw, 80px) 20px;
+    }
+
+    .emergencies-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .emergencies-content h2 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+
+    .emergencies-list {
+      list-style: none;
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .emergencies-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      font-size: 15px;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .emergencies-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Call Section */
+    .call-section {
+      background: var(--bg);
+      padding: clamp(40px, 8vw, 80px) 20px;
+      text-align: center;
+    }
+
+    .call-section h2 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+
+    .call-btn {
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    }
+
+    .call-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+    }
+
+    /* Popups */
+    .popup-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .popup-modal.is-open {
+      display: flex;
+    }
+
+    .popup-content {
+      background: white;
+      border-radius: 20px;
+      padding: clamp(20px, 4vw, 32px);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup-content h2 {
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .popup-content p {
+      font-size: 15px;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+
+    .popup-close {
+      padding: 12px 24px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .popup-close:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Form Popups */
+    .form-popup {
+      max-width: 550px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .form-popup .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: var(--bg-alt);
+      border: none;
+      border-radius: 50%;
+      font-size: 20px;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-popup .close-btn:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .form-popup form {
+      text-align: left;
+    }
+
+    .form-popup .form-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .form-popup .form-header h2 {
+      font-size: clamp(18px, 3vw, 22px);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .form-popup .form-header.lawyer h2 { color: var(--primary); }
+    .form-popup .form-header.expat h2 { color: var(--secondary); }
+
+    .form-popup .form-header p {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .form-actions .cancel-btn {
+      padding: 10px 20px;
+      background: var(--bg-alt);
+      color: var(--text);
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-actions .cancel-btn:hover {
+      background: var(--border);
+    }
+
+    .form-actions .submit-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-actions .submit-btn.red {
+      background: var(--primary);
+      color: white;
+    }
+
+    .form-actions .submit-btn.green {
+      background: var(--accent);
+      color: white;
+    }
+
+    .form-actions .submit-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Confirmation Popup */
+    .confirm-popup {
+      background: linear-gradient(180deg, white 0%, #FEF2F2 100%);
+    }
+
+    .confirm-popup h2 {
+      color: var(--primary);
     }
   </style>
-  <!-- Put this in <head> BEFORE any HTML paints -->
-<script>document.documentElement.classList.add('js');</script>
-<style>
-  /* Modals are hidden by default to prevent flash */
-  .popup-modal { display: none; }
-  /* When explicitly opened, show as flex */
-  .popup-modal.is-open { display: flex; }
-</style>
-
 </head>
-<body class="bg-white  text-gray-800">
- @include('includes.header')
-     @include('wizards.requester.steps.popup_request_help')
+<body>
+@include('includes.header')
+@include('wizards.requester.steps.popup_request_help')
 
-<!-- 🔴 HERO -->
-<section class="bg-gradient-to-br from-red-700 to-red-600 text-white py-24 px-4 text-center">
-  <div class="max-w-3xl mx-auto animate-fade-in">
-    <h1 class="text-4xl font-extrabold mb-4">🚨  @site SOS Emergency Help</h1>
-    <p class="text-lg font-medium mb-2">Talk to a trusted expert in under 5 minutes.</p>
-    <p class="text-base text-white/90">Legal, medical, real estate, or personal help — we're here when it matters most.</p>
-  </div>
+<!-- Hero Section -->
+<section class="hero">
+  <h1>SOS Emergency Help</h1>
+  <p>Talk to a trusted expert in under 5 minutes.</p>
+  <p>Legal, medical, real estate, or personal help - we're here when it matters most.</p>
 </section>
 
-<!-- Social Media Share Card (below red cards, right side, more down) -->
-<div class="flex justify-end max-w-7xl mx-auto px-4 mt-12 mb-4">
-  <div class="flex flex-wrap items-center bg-gradient-to-r from-blue-500 to-blue-700 rounded-2xl px-4 py-3 shadow-lg space-x-2 sm:space-x-4 w-full sm:w-auto">
-     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/>
-  <path d="M16 9l-5 5-3-3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-
-    <!-- Left Text -->
-    <div class="text-sm leading-snug">
-    <p class="font-semibold text-white">
-        Share this page & earn rewards in €/$ 
-        <span class="text-xs font-normal text-white">(if you are logged in)</span>
-    </p>
-
-    @auth
-        <p 
-            class="text-xs text-white"
-            value="{{ env('APP_URL') . '/affiliate/sign-up/?code=' . Auth::user()->affiliate_code }}">
-            {{ Auth::user()->affiliate_code }}
-        </p>
-    @endauth
-</div>
-
-    
-    <div class="flex gap-2 flex-wrap">
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" class="w-5 h-5 invert" />
-      </a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" class="w-5 h-5 invert" />
-      </a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="TikTok" class="w-5 h-5 invert" />
-      </a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" class="w-5 h-5 invert" />
-      </a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition">
-        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" class="w-5 h-5 invert" />
-      </a>
-      
-      <!-- Copy Link Button -->
-     <!-- Copy Link Button -->
-<button id="copyLinkBtn" 
-    class="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-              d="M8 17l4 4 4-4m-4-5v9" />
+<!-- Share Bar -->
+<div class="share-bar">
+  <div class="share-card">
+    <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/>
+      <path d="M16 9l-5 5-3-3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    Copy Link
-</button>
-
-<!-- Hidden input with the link -->
-@auth
-    <input 
-        type="text" 
-        id="affiliateLink" 
-        value="{{ url('/signup?code=' . Auth::user()->affiliate_code) }}" 
-        hidden
-    >
-@endauth
-
+    <div class="text">
+      <p>Share this page & earn rewards in $/</p>
+      <span>(if you are logged in)</span>
+      @auth
+      <span style="display: block; margin-top: 4px;">{{ Auth::user()->affiliate_code }}</span>
+      @endauth
     </div>
+    <div class="share-icons">
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook"></a>
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram"></a>
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="TikTok"></a>
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube"></a>
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter"></a>
+      <button id="copyLinkBtn" class="copy-link-btn">Copy Link</button>
+    </div>
+    @auth
+    <input type="hidden" id="affiliateLink" value="{{ url('/signup?code=' . Auth::user()->affiliate_code) }}">
+    @endauth
   </div>
 </div>
 
-<!-- 🧑‍💼 WHO CAN YOU REACH -->
-<section class="py-20 px-4 text-center bg-white">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl font-bold text-red-700 mb-8">Who Can You Reach?</h2>
-
-    <div class="bg-yellow-300 border border-red-300 text-red-800 text-sm py-3 px-6 rounded-xl inline-block shadow-sm mb-10">
-      ⚠️ These services will be available soon. Stay tuned.
+<!-- Reach Section -->
+<section class="reach-section">
+  <h2>Who Can You Reach?</h2>
+  <div class="warning-badge">These services will be available soon. Stay tuned.</div>
+  <div class="reach-grid">
+    <div class="reach-card">
+      <div class="emoji">👨‍⚖️</div>
+      <h3>Lawyer</h3>
+      <p>Legal assistance for emergencies abroad</p>
     </div>
-
-    <!-- Center the cards horizontally using justify-center -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10 justify-center">
-      
-      <!-- Card 1 -->
-      <div class="glass rounded-2xl p-6 hover:scale-105 transition-all duration-300 flex flex-col items-center">
-        <div class="text-3xl mb-2">👨‍⚖️</div>
-        <h3 class="text-red-700 text-xl font-bold mb-2">Lawyer</h3>
-        <p class="text-sm text-gray-700 text-center">Legal assistance for emergencies abroad</p>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="glass rounded-2xl p-6 hover:scale-105 transition-all duration-300 flex flex-col items-center">
-        <div class="text-3xl mb-2">🌍</div>
-        <h3 class="text-red-700 text-xl font-bold mb-2">Expat Support</h3>
-        <p class="text-sm text-gray-700 text-center">General help & local orientation</p>
-      </div>
-
+    <div class="reach-card">
+      <div class="emoji">🌍</div>
+      <h3>Expat Support</h3>
+      <p>General help & local orientation</p>
     </div>
   </div>
 </section>
-<!-- 👩‍⚖️ LAWYER & EXPAT SIGNUP CARDS -->
-<section class="py-10 px-2 sm:px-4 flex flex-col md:flex-row gap-2 justify-center items-stretch bg-white"> <!-- Reduced gap from 4 to 2 -->
-  <!-- Lawyer Card -->
-  <div class="flex-1 bg-red-50 rounded-2xl p-8 shadow-md flex flex-col items-center border border-red-100 max-w-md ">
-    <div class="text-2xl mb-2">🧑‍⚖️</div>
-    <h3 class="text-red-700 text-lg font-bold mb-1">Are you a lawyer?</h3>
-    <div class="font-semibold mb-2">Join SOS Urgence</div>
-    <p class="text-gray-700 text-sm mb-2">
-      Offer <span class="font-bold">20-minute calls</span><br>
-      whenever and wherever you want,<br>
-      in the language and country of your choice.
-    </p>
-    <p class="text-gray-700 text-sm mb-2">
-      Activate or deactivate your availability in <span class="font-bold">1 click</span>.
-    </p>
-    <div class="text-red-700 font-semibold mb-1">Paid mission.</div>
-    <div class="text-pink-500 text-sm mb-4">Our travelers will thank you <span class="align-middle">💗</span></div>
-    <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold text-sm shadow transition-all duration-200"
-      onclick="openLawyerSignupPopup(event)">
-      🧑‍⚖️ Sign up as a lawyer
-    </button>
-  </div>
-  <!-- Expat Card -->
-  <div class="flex-1 bg-blue-50 rounded-2xl p-8 shadow-md flex flex-col items-center border border-blue-100 max-w-md ">
-    <div class="text-2xl mb-2">🌍</div>
-    <h3 class="text-blue-700 text-lg font-bold mb-1">Are you an expat? Help other travelers!</h3>
-    <div class="font-semibold mb-2">By joining SOS Urgence,</div>
-    <p class="text-gray-700 text-sm mb-2">
-      you can take <span class="font-bold">30-minute calls</span><br>
-      to help people who need it, instantly.
-    </p>
-    <p class="text-gray-700 text-sm mb-2">
-      Choose your language, your country, your availability.<br>
-      Turn your status on or off in just 1 click.
-    </p>
-    <div class="text-blue-700 font-semibold mb-1">Every call is paid.</div>
-    <div class="text-gray-700 text-sm mb-4">Expats around the world will thank you <span class="align-middle">🙏</span></div>
-    <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold text-sm shadow transition-all duration-200"
-      onclick="openExpatSignupPopup(event)">
-      📞 I'm signing up to help by phone
-    </button>
+
+<!-- Signup Section -->
+<section class="signup-section">
+  <div class="signup-grid">
+    <div class="signup-card lawyer">
+      <div class="emoji">🧑‍⚖️</div>
+      <h3>Are you a lawyer?</h3>
+      <div class="subtitle">Join SOS Urgence</div>
+      <p>Offer <strong>20-minute calls</strong> whenever and wherever you want, in the language and country of your choice.</p>
+      <p>Activate or deactivate your availability in <strong>1 click</strong>.</p>
+      <div class="highlight">Paid mission.</div>
+      <div class="note">Our travelers will thank you</div>
+      <button class="signup-btn red" onclick="openLawyerSignupPopup(event)">Sign up as a lawyer</button>
+    </div>
+    <div class="signup-card expat">
+      <div class="emoji">🌍</div>
+      <h3>Are you an expat? Help other travelers!</h3>
+      <div class="subtitle">By joining SOS Urgence,</div>
+      <p>you can take <strong>30-minute calls</strong> to help people who need it, instantly.</p>
+      <p>Choose your language, your country, your availability. Turn your status on or off in just 1 click.</p>
+      <div class="highlight">Every call is paid.</div>
+      <div class="note">Expats around the world will thank you</div>
+      <button class="signup-btn red" onclick="openExpatSignupPopup(event)">I'm signing up to help by phone</button>
+    </div>
   </div>
 </section>
 
-
-<!-- 🧑‍💼 EXPERT CARDS SECTION (as shown in your screenshot) -->
-<section class="py-8 px-2 sm:px-4 bg-white">
-  <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-    <!-- Card 1: Lawyer -->
-    <div class="rounded-2xl shadow-md bg-white overflow-hidden border border-gray-100 flex flex-col">
-      <div class="relative">
-        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Elisa" class="w-full h-36 object-cover">
-        <span class="absolute top-2 left-2 bg-pink-200 text-pink-800 text-xs px-2 py-0.5 rounded-full font-semibold">Français</span>
-        <span class="absolute bottom-2 right-2 bg-red-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow">Lawyer</span>
+<!-- Expert Cards Section -->
+<section class="experts-section">
+  <div class="experts-grid">
+    <div class="expert-card">
+      <div class="image">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Elisa">
+        <span class="badge lang">Francais</span>
+        <span class="badge type lawyer">Lawyer</span>
       </div>
-      <div class="p-4 flex-1 flex flex-col">
-        <div class="font-bold text-lg mb-1">Elisa</div>
-        <div class="text-xs text-gray-500 mb-1">Country service: <span class="font-semibold text-gray-700">Thailande</span></div>
-        <div class="flex items-center text-xs text-gray-700 mb-2">
-          <span class="text-yellow-500 mr-1">★</span>4,91 <span class="text-gray-400 ml-1">(366 avis)</span>
-        </div>
-        <div class="flex flex-wrap gap-1 mb-2">
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Super pro</span>
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Top</span>
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Sympa</span>
-        </div>
-        <div class="flex items-center justify-between mt-auto">
-          <span class="text-gray-700 font-semibold">€/h</span>
+      <div class="content">
+        <div class="name">Elisa</div>
+        <div class="country">Country service: <strong>Thailande</strong></div>
+        <div class="rating"><span class="star">*</span> 4.91 (366 avis)</div>
+        <div class="tags">
+          <span class="tag">Super pro</span>
+          <span class="tag">Top</span>
+          <span class="tag">Sympa</span>
         </div>
       </div>
     </div>
-    <!-- Card 2: Expat Online -->
-    <div class="rounded-2xl shadow-md bg-white overflow-hidden border border-gray-100 flex flex-col">
-      <div class="relative">
-        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Elisa" class="w-full h-36 object-cover">
-        <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full font-semibold">Japanese</span>
-        <span class="absolute top-2 right-2 bg-green-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow flex items-center gap-1">
-          <span class="w-2 h-2 bg-green-400 rounded-full inline-block"></span>Online
-        </span>
-        <span class="absolute bottom-2 right-2 bg-green-700 text-white text-xs px-3 py-1 rounded-full font-bold shadow">expatriate</span>
+    <div class="expert-card">
+      <div class="image">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Thomas">
+        <span class="badge lang green">Japanese</span>
+        <span class="badge online">Online</span>
+        <span class="badge type expat">Expatriate</span>
       </div>
-      <div class="p-4 flex-1 flex flex-col">
-        <div class="font-bold text-lg mb-1">Elisa</div>
-        <div class="text-xs text-gray-500 mb-1">Country service: <span class="font-semibold text-gray-700">Thailande</span></div>
-        <div class="flex items-center text-xs text-gray-700 mb-2">
-          <span class="text-yellow-500 mr-1">★</span>4,91 <span class="text-gray-400 ml-1">(366 avis)</span>
-        </div>
-        <div class="flex flex-wrap gap-1 mb-2">
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Super pro</span>
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Top</span>
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Sympa</span>
-        </div>
-        <div class="flex items-center justify-between mt-auto">
-          <span class="flex items-center gap-1 text-green-700 font-semibold">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884l2-3A1 1 0 015 2h10a1 1 0 01.832.445l2 3A1 1 0 0118 6v8a1 1 0 01-.168.555l-2 3A1 1 0 0115 18H5a1 1 0 01-.832-.445l-2-3A1 1 0 012 14V6a1 1 0 01.003-.116z"/></svg>
-            Online
-          </span>
-          <span class="text-blue-700 font-bold flex items-center gap-1">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884l2-3A1 1 0 015 2h10a1 1 0 01.832.445l2 3A1 1 0 0118 6v8a1 1 0 01-.168.555l-2 3A1 1 0 0115 18H5a1 1 0 01-.832-.445l-2-3A1 1 0 012 14V6a1 1 0 01.003-.116z"/></svg>
-            32
-          </span>
+      <div class="content">
+        <div class="name">Thomas</div>
+        <div class="country">Country service: <strong>Japan</strong></div>
+        <div class="rating"><span class="star">*</span> 4.87 (142 avis)</div>
+        <div class="tags">
+          <span class="tag">Super pro</span>
+          <span class="tag">Top</span>
         </div>
       </div>
     </div>
-    <!-- Card 3: Lawyer (duplicate for demo) -->
-    <div class="rounded-2xl shadow-md bg-white overflow-hidden border border-gray-100 flex flex-col">
-      <div class="relative">
-        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Elisa" class="w-full h-36 object-cover">
-        <span class="absolute top-2 left-2 bg-pink-200 text-pink-800 text-xs px-2 py-0.5 rounded-full font-semibold">Français</span>
-        <span class="absolute bottom-2 right-2 bg-red-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow">Lawyer</span>
+    <div class="expert-card">
+      <div class="image">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Sophie">
+        <span class="badge lang">Francais</span>
+        <span class="badge type lawyer">Lawyer</span>
       </div>
-      <div class="p-4 flex-1 flex flex-col">
-        <div class="font-bold text-lg mb-1">Elisa</div>
-        <div class="text-xs text-gray-500 mb-1">Country service: <span class="font-semibold text-gray-700">Thailande</span></div>
-        <div class="flex items-center text-xs text-gray-700 mb-2">
-          <span class="text-yellow-500 mr-1">★</span>4,91 <span class="text-gray-400 ml-1">(366 avis)</span>
-        </div>
-        <div class="flex flex-wrap gap-1 mb-2">
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Super pro</span>
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Top</span>
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Sympa</span>
-        </div>
-        <div class="flex items-center justify-between mt-auto">
-          <span class="text-gray-700 font-semibold">€/h</span>
+      <div class="content">
+        <div class="name">Sophie</div>
+        <div class="country">Country service: <strong>Vietnam</strong></div>
+        <div class="rating"><span class="star">*</span> 4.95 (289 avis)</div>
+        <div class="tags">
+          <span class="tag">Expert</span>
+          <span class="tag">Sympa</span>
         </div>
       </div>
     </div>
-    <!-- Card 4: Expat Online (duplicate for demo) -->
-    <div class="rounded-2xl shadow-md bg-white overflow-hidden border border-gray-100 flex flex-col">
-      <div class="relative">
-        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Elisa" class="w-full h-36 object-cover">
-        <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full font-semibold">Japanese</span>
-        <span class="absolute top-2 right-2 bg-green-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow flex items-center gap-1">
-          <span class="w-2 h-2 bg-green-400 rounded-full inline-block"></span>Online
-        </span>
-        <span class="absolute bottom-2 right-2 bg-green-700 text-white text-xs px-3 py-1 rounded-full font-bold shadow">expatriate</span>
+    <div class="expert-card">
+      <div class="image">
+        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Marco">
+        <span class="badge lang green">English</span>
+        <span class="badge online">Online</span>
+        <span class="badge type expat">Expatriate</span>
       </div>
-      <div class="p-4 flex-1 flex flex-col">
-        <div class="font-bold text-lg mb-1">Elisa</div>
-        <div class="text-xs text-gray-500 mb-1">Country service: <span class="font-semibold text-gray-700">Thailande</span></div>
-        <div class="flex items-center text-xs text-gray-700 mb-2">
-          <span class="text-yellow-500 mr-1">★</span>4,91 <span class="text-gray-400 ml-1">(366 avis)</span>
-        </div>
-        <div class="flex flex-wrap gap-1 mb-2">
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Super pro</span>
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Top</span>
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">Sympa</span>
-        </div>
-        <div class="flex items-center justify-between mt-auto">
-          <span class="flex items-center gap-1 text-green-700 font-semibold">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884l2-3A1 1 0 015 2h10a1 1 0 01.832.445l2 3A1 1 0 0118 6v8a1 1 0 01-.168.555l-2 3A1 1 0 0115 18H5a1 1 0 01-.832-.445l-2-3A1 1 0 012 14V6a1 1 0 01.003-.116z"/></svg>
-            Online
-          </span>
-          <span class="text-blue-700 font-bold flex items-center gap-1">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884l2-3A1 1 0 015 2h10a1 1 0 01.832.445l2 3A1 1 0 0118 6v8a1 1 0 01-.168.555l-2 3A1 1 0 0115 18H5a1 1 0 01-.832-.445l-2-3A1 1 0 012 14V6a1 1 0 01.003-.116z"/></svg>
-            32
-          </span>
+      <div class="content">
+        <div class="name">Marco</div>
+        <div class="country">Country service: <strong>Spain</strong></div>
+        <div class="rating"><span class="star">*</span> 4.82 (98 avis)</div>
+        <div class="tags">
+          <span class="tag">Helpful</span>
+          <span class="tag">Fast</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 🆘 COMMON EMERGENCIES -->
-<section class="bg-gray-50 py-20 px-2 sm:px-4">
-  <div class="max-w-6xl mx-auto flex justify-center items-center">
-    <div class="text-center">
-      <h2 class="text-2xl md:text-3xl font-bold text-red-700 mb-8 max-w-2xl mx-auto leading-snug">
-        Examples of common emergency situations<br>
-        Whatever your need, be connected to the phone in seconds.
-      </h2>
-
-      <ul class="space-y-4 text-gray-800 text-base text-left inline-block max-w-xs sm:max-w-full">
-        <li class="flex items-center gap-3"><span class="text-red-600 text-sm  px-1 py-0.5  font-bold">🆘</span> Border or airport issue</li>
-        <li class="flex items-center gap-3"><span class="text-red-600 text-sm   px-1 py-0.5  font-bold">🆘</span> Rental dispute or blocked deposit</li>
-        <li class="flex items-center gap-3"><span class="text-red-600 text-sm   px-1 py-0.5  font-bold">🆘</span> Filing a local complaint</li>
-        <li class="flex items-center gap-3"><span class="text-red-600 text-sm   px-1 py-0.5  font-bold">🆘</span> Unpaid salary or sudden job loss</li>
-        <li class="flex items-center gap-3"><span class="text-red-600 text-sm  px-1 py-0.5  font-bold">🆘</span> Injuries or accidents abroad</li>
-      </ul>
-    </div>
+<!-- Emergencies Section -->
+<section class="emergencies-section">
+  <div class="emergencies-content">
+    <h2>Examples of common emergency situations<br>Whatever your need, be connected to the phone in seconds.</h2>
+    <ul class="emergencies-list">
+      <li>Border or airport issue</li>
+      <li>Rental dispute or blocked deposit</li>
+      <li>Filing a local complaint</li>
+      <li>Unpaid salary or sudden job loss</li>
+      <li>Injuries or accidents abroad</li>
+    </ul>
   </div>
 </section>
 
-<!-- 📞 EMERGENCY CALL -->
-<section class="bg-white py-20 px-2 sm:px-4 text-center">
-  <div class="max-w-md mx-auto">
-    <h2 class="text-2xl font-bold text-red-700 flex items-center justify-center gap-2 mb-6">
-      📞 Your Emergency Call
-    </h2>
-    <button 
-      onclick="showComingSoonPopup(event)" 
-      class="bg-gradient-to-r from-red-600 to-red-500 text-white text-sm px-6 py-3 rounded-full shadow-lg hover:opacity-90 transition-all duration-200">
-      Call a Professional (Coming Soon)
-    </button>
-  </div>
+<!-- Call Section -->
+<section class="call-section">
+  <h2>Your Emergency Call</h2>
+  <button class="call-btn" onclick="showComingSoonPopup(event)">Call a Professional (Coming Soon)</button>
 </section>
 
-<!-- Popup Modal -->
-<div id="sos-popup" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center min-h-screen px-2 sm:px-4 hidden" style="display:none;">
-  <div class="bg-white rounded-xl p-4 sm:p-6 shadow-2xl max-w-md w-full text-center">
-    <h2 class="text-xl font-bold text-gray-800 mb-3">Coming Soon</h2>
-    <p class="text-gray-600 italic mb-4 leading-relaxed">
-      Service available in the coming weeks.
-    </p>
-    <button onclick="closeComingSoonPopup()" 
-            class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md transition-all duration-200">
-      Close
-    </button>
+<!-- Coming Soon Popup -->
+<div id="sos-popup" class="popup-modal">
+  <div class="popup-content">
+    <h2>Coming Soon</h2>
+    <p>Service available in the coming weeks.</p>
+    <button class="popup-close" onclick="closeComingSoonPopup()">Close</button>
   </div>
 </div>
 
-<!-- Lawyer Signup Popup Modal -->
-<div id="lawyer-signup-popup" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center min-h-screen px-2 sm:px-4 overflow-y-auto">
-  <div class="bg-white rounded-xl p-3 sm:p-4 shadow-2xl w-full max-w-lg my-8 relative">
-    <!-- Close (X) button -->
-    <button type="button" onclick="closeLawyerSignupPopup()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold z-10" aria-label="Close">&times;</button>
-    <form id="lawyer-signup-form" class="bg-red-100 rounded-xl p-3 sm:p-4" onsubmit="submitLawyerSignup(event)" enctype="multipart/form-data">
+<!-- Lawyer Signup Popup -->
+<div id="lawyer-signup-popup" class="popup-modal">
+  <div class="popup-content form-popup" style="position: relative; text-align: left;">
+    <button type="button" class="close-btn" onclick="closeLawyerSignupPopup()">&times;</button>
+    <form id="lawyer-signup-form" onsubmit="submitLawyerSignup(event)" enctype="multipart/form-data">
       @csrf
-      <h2 class="text-xl md:text-2xl font-bold text-red-700 mb-1 flex items-center gap-2">🧑‍⚖️ Join  @site  SOS – Lawyer Registration</h2>
-      <div class="text-gray-700 text-xs md:text-sm mb-3">Fill out this form to be available on-demand for 20-minute legal calls.</div>
-      <div class="grid grid-cols-1 gap-3 mb-3">
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1" >First Name</label>
-            <input name="first_name" type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="Your first name" value="{{ Auth::check() ? Auth::user()->name : '' }}">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Last Name</label>
-            <input name = "last_name" type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="Your last name">
-          </div>
+      <div class="form-header lawyer">
+        <h2>Join Ulixai SOS - Lawyer Registration</h2>
+        <p>Fill out this form to be available on-demand for 20-minute legal calls.</p>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input name="first_name" type="text" required placeholder="Your first name" value="{{ Auth::check() ? Auth::user()->name : '' }}">
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label name = "dob" class="block text-xs font-semibold mb-1">Date of Birth</label>
-            <input type="date" class="w-full rounded border px-2 py-1 text-xs" required>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Country of Origin</label>
-          <select name="country_origin" class="w-full rounded border px-2 py-1 text-xs" required>
-  <option value={{ Auth::check() ? (Auth::user()->service_provider->country ?? '') : ''  }}
->Select your country</option>
-  <option value="USA">United States</option>
-  <option value="Canada">Canada</option>
-  <option value="UK">United Kingdom</option>
-  <option value="Australia">Australia</option>
-  <option value="Germany">Germany</option>
-  <option value="France">France</option>
-  <option value="India">India</option>
-  <option value="Pakistan">Pakistan</option>
-  <option value="Japan">Japan</option>
-  <option value="South Korea">South Korea</option>
-  <option value="Brazil">Brazil</option>
-  <option value="Mexico">Mexico</option>
-  <option value="Italy">Italy</option>
-  <option value="Spain">Spain</option>
-</select>
-
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label  class="block text-xs font-semibold mb-1">Phone Number</label>
-            <input name ="phone_number" type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="Your phone number">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">WhatsApp Number (required)</label>
-            <input name = "whats_app" type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="Your WhatsApp number">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1">Professional Email</label>
-            <input name = "email" type="email" class="w-full rounded border px-2 py-1 text-xs" required placeholder="example@yourfirm.com">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Bar Association Name</label>
-            <input name ="assosiate_name" type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="e.g. Paris Bar">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1">License / Registration Number</label>
-            <input type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="Official bar number">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Upload Your Bar Card / License</label>
-            <input name ="reg_number" type="file" class="w-full rounded border px-2 py-1 text-xs" required>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1">Countries Where You Practice</label>
-            <select name ="country_practice" class="w-full rounded border px-2 py-1 text-xs" multiple>
-              <option>France</option>
-              <option>USA</option>
-              <option>Canada</option>
-              <option>Morocco</option>
-              <!-- Add more countries -->
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Legal Practice Areas</label>
-            <select name = "legal_area" class="w-full rounded border px-2 py-1 text-xs" multiple>
-              <option>Family Law</option>
-              <option>Corporate Law</option>
-              <option>Immigration</option>
-              <option>Tax Law</option>
-              <!-- Add more areas -->
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1">Years of Experience</label>
-            <input name = "experience" type="number" class="w-full rounded border px-2 py-1 text-xs" required placeholder="e.g. 5">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Personal Website or LinkedIn</label>
-            <input name ="website" type="url" class="w-full rounded border px-2 py-1 text-xs" placeholder="https://yourlink.com">
-          </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input name="last_name" type="text" required placeholder="Your last name">
         </div>
       </div>
-      <div class="mb-3">
-        <label class="block text-xs font-semibold mb-1">Short Biography</label>
-        <textarea name = "bio" class="w-full rounded border px-2 py-1 text-xs" rows="2" required placeholder="Tell us briefly about your background, and why you want to help."></textarea>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input name="dob" type="date" required>
+        </div>
+        <div class="form-group">
+          <label>Country of Origin</label>
+          <select name="country_origin" required>
+            <option value="">Select your country</option>
+            <option value="USA">United States</option>
+            <option value="Canada">Canada</option>
+            <option value="UK">United Kingdom</option>
+            <option value="Australia">Australia</option>
+            <option value="Germany">Germany</option>
+            <option value="France">France</option>
+            <option value="India">India</option>
+            <option value="Japan">Japan</option>
+            <option value="Brazil">Brazil</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Italy">Italy</option>
+            <option value="Spain">Spain</option>
+          </select>
+        </div>
       </div>
-      <div class="flex justify-between items-center mt-2">
-        <button type="button" onclick="closeLawyerSignupPopup()" class="px-3 py-1 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md font-semibold text-xs">Cancel</button>
-        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-full font-semibold text-xs shadow transition-all duration-200 flex items-center gap-2">
-          <span class="material-icons" style="font-size:16px;"></span> Finish Registration
-        </button>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input name="phone_number" type="text" required placeholder="Your phone number">
+        </div>
+        <div class="form-group">
+          <label>WhatsApp Number (required)</label>
+          <input name="whats_app" type="text" required placeholder="Your WhatsApp number">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Professional Email</label>
+          <input name="email" type="email" required placeholder="example@yourfirm.com">
+        </div>
+        <div class="form-group">
+          <label>Bar Association Name</label>
+          <input name="assosiate_name" type="text" required placeholder="e.g. Paris Bar">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>License / Registration Number</label>
+          <input name="reg_number" type="text" required placeholder="Official bar number">
+        </div>
+        <div class="form-group">
+          <label>Upload Your Bar Card / License</label>
+          <input name="bar_card" type="file" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Countries Where You Practice</label>
+          <select name="country_practice" multiple>
+            <option>France</option>
+            <option>USA</option>
+            <option>Canada</option>
+            <option>Morocco</option>
+            <option>UK</option>
+            <option>Germany</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Legal Practice Areas</label>
+          <select name="legal_area" multiple>
+            <option>Family Law</option>
+            <option>Corporate Law</option>
+            <option>Immigration</option>
+            <option>Tax Law</option>
+            <option>Criminal Law</option>
+            <option>Real Estate</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Years of Experience</label>
+          <input name="experience" type="number" required placeholder="e.g. 5">
+        </div>
+        <div class="form-group">
+          <label>Personal Website or LinkedIn</label>
+          <input name="website" type="url" placeholder="https://yourlink.com">
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>Short Biography</label>
+        <textarea name="bio" required placeholder="Tell us briefly about your background, and why you want to help."></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" onclick="closeLawyerSignupPopup()">Cancel</button>
+        <button type="submit" class="submit-btn red">Finish Registration</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- Registration Confirmation Popup -->
-<div id="lawyer-confirm-popup" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center min-h-screen px-2 sm:px-4 hidden">
-  <div class="bg-white rounded-xl p-4 sm:p-6 shadow-2xl max-w-lg w-full text-center" style="background: repeating-linear-gradient(0deg, #fff, #fff 28px, #f8dada 28px, #f8dada 29px);">
-    <h2 class="text-2xl font-bold text-red-700 mb-2">Thank you for registering with  @site SOS <span class="align-middle">🙏</span></h2>
-    <div class="text-gray-700 text-base mb-2">You should have received a confirmation email with your login credentials.</div>
-    <div class="text-gray-700 text-base mb-2">You can now access your personal dashboard to manage your account and respond to requests.</div>
-    <div class="text-gray-700 text-base mb-4">We're glad to have you on board to help expatriates around the world.</div>
-    <button onclick="closeLawyerConfirmPopup()" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-semibold">Close</button>
+<!-- Lawyer Confirmation Popup -->
+<div id="lawyer-confirm-popup" class="popup-modal">
+  <div class="popup-content confirm-popup">
+    <h2>Thank you for registering with Ulixai SOS</h2>
+    <p>You should have received a confirmation email with your login credentials. You can now access your personal dashboard to manage your account and respond to requests.</p>
+    <button class="popup-close" onclick="closeLawyerConfirmPopup()">Close</button>
   </div>
 </div>
 
-<!-- Expat Signup Popup Modal -->
-<div id="expat-signup-popup" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center min-h-screen px-2 sm:px-4 overflow-y-auto hidden">
-  <div class="bg-white rounded-xl p-3 sm:p-4 shadow-2xl w-full max-w-lg my-8 relative">
-    <!-- Close (X) button -->
-    <button type="button" onclick="closeExpatSignupPopup()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold z-10" aria-label="Close">&times;</button>
-    <form id="expat-signup-form" class="bg-red-100 rounded-xl p-3 sm:p-4" onsubmit="submitExpatSignup(event)">
-      <h2 class="text-xl md:text-2xl font-bold text-red-700 mb-1 flex items-center gap-2">
-        <span class="align-middle">🌍</span> Join <span class="text-red-600">SOS Urgence</span> – Expatriate Helper
-      </h2>
-      <div class="text-gray-700 text-xs md:text-sm mb-3">
-        Sign up to receive <span class="font-bold">30-minute calls</span><br>
-        and assist other travelers or expatriates around the world.<br>
-        <span class="font-bold">Paid missions, availability toggled in 1 click.</span>
+<!-- Expat Signup Popup -->
+<div id="expat-signup-popup" class="popup-modal">
+  <div class="popup-content form-popup" style="position: relative; text-align: left;">
+    <button type="button" class="close-btn" onclick="closeExpatSignupPopup()">&times;</button>
+    <form id="expat-signup-form" onsubmit="submitExpatSignup(event)">
+      @csrf
+      <div class="form-header expat">
+        <h2>Join SOS Urgence - Expatriate Helper</h2>
+        <p>Sign up to receive 30-minute calls and assist other travelers or expatriates around the world. Paid missions, availability toggled in 1 click.</p>
       </div>
-      <div class="grid grid-cols-1 gap-3 mb-3">
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1">First Name</label>
-            <input type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="Your first name">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Last Name</label>
-            <input type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="Your last name">
-          </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" required placeholder="Your first name">
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1">Date of Birth</label>
-            <input type="date" class="w-full rounded border px-2 py-1 text-xs" required>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Country of Origin</label>
-            <select class="w-full rounded border px-2 py-1 text-xs" required>
-              <option value="">Select your country</option>
-              <option>USA</option>
-              <option>Canada</option>
-              <option>UK</option>
-              <option>Australia</option>
-              <option>Germany</option>
-              <option>France</option>
-              <option>India</option>
-              <option>Pakistan</option>
-              <option>Japan</option>
-              <option>South Korea</option>
-              <option>Brazil</option>
-              <option>Mexico</option>
-              <option>Italy</option>
-              <option>Spain</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1">Current Country of Residence</label>
-            <select class="w-full rounded border px-2 py-1 text-xs" required>
-              <option value="">Select where you live</option>
-              <option>USA</option>
-              <option>Canada</option>
-              <option>UK</option>
-              <option>Australia</option>
-              <option>Germany</option>
-              <option>France</option>
-              <option>India</option>
-              <option>Pakistan</option>
-              <option>Japan</option>
-              <option>South Korea</option>
-              <option>Brazil</option>
-              <option>Mexico</option>
-              <option>Italy</option>
-              <option>Spain</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Languages You Can Help In</label>
-            <select class="w-full rounded border px-2 py-1 text-xs" multiple required>
-              <option>English</option>
-              <option>French</option>
-              <option>Spanish</option>
-              <option>Portuguese</option>
-              <option>German</option>
-              <option>Italian</option>
-              <option>Arabic</option>
-              <option>Russian</option>
-              <option>Chinese</option>
-              <option>Japanese</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-semibold mb-1">WhatsApp Number (required)</label>
-            <input type="text" class="w-full rounded border px-2 py-1 text-xs" required placeholder="Your WhatsApp number">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1">Email</label>
-            <input type="email" class="w-full rounded border px-2 py-1 text-xs" required placeholder="you@example.com">
-          </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" required placeholder="Your last name">
         </div>
       </div>
-      <div class="mb-3">
-        <label class="block text-xs font-semibold mb-1">Short Bio</label>
-        <textarea class="w-full rounded border px-2 py-1 text-xs" rows="2" required placeholder="I'm an expat based in Thailand. I love helping newcomers settle and find their way..."></textarea>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input type="date" required>
+        </div>
+        <div class="form-group">
+          <label>Country of Origin</label>
+          <select required>
+            <option value="">Select your country</option>
+            <option>USA</option>
+            <option>Canada</option>
+            <option>UK</option>
+            <option>Australia</option>
+            <option>Germany</option>
+            <option>France</option>
+            <option>India</option>
+            <option>Japan</option>
+            <option>Brazil</option>
+            <option>Mexico</option>
+            <option>Italy</option>
+            <option>Spain</option>
+          </select>
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="block text-xs font-semibold mb-1">LinkedIn or Website (optional)</label>
-        <input type="url" class="w-full rounded border px-2 py-1 text-xs" placeholder="https://yourprofile.com">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Current Country of Residence</label>
+          <select required>
+            <option value="">Select where you live</option>
+            <option>USA</option>
+            <option>Canada</option>
+            <option>UK</option>
+            <option>Australia</option>
+            <option>Germany</option>
+            <option>France</option>
+            <option>India</option>
+            <option>Japan</option>
+            <option>Brazil</option>
+            <option>Mexico</option>
+            <option>Italy</option>
+            <option>Spain</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Languages You Can Help In</label>
+          <select multiple required>
+            <option>English</option>
+            <option>French</option>
+            <option>Spanish</option>
+            <option>Portuguese</option>
+            <option>German</option>
+            <option>Italian</option>
+            <option>Arabic</option>
+            <option>Russian</option>
+            <option>Chinese</option>
+            <option>Japanese</option>
+          </select>
+        </div>
       </div>
-      <div class="flex justify-end items-center mt-2">
-        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full font-semibold text-sm shadow transition-all duration-200 flex items-center gap-2">
-          <span class="material-icons" style="font-size:18px;"></span> Complete My Registration
-        </button>
+      <div class="form-row">
+        <div class="form-group">
+          <label>WhatsApp Number (required)</label>
+          <input type="text" required placeholder="Your WhatsApp number">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" required placeholder="you@example.com">
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>Short Bio</label>
+        <textarea required placeholder="I'm an expat based in Thailand. I love helping newcomers settle and find their way..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>LinkedIn or Website (optional)</label>
+        <input type="url" placeholder="https://yourprofile.com">
+      </div>
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" onclick="closeExpatSignupPopup()">Cancel</button>
+        <button type="submit" class="submit-btn green">Complete My Registration</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- Expat Registration Confirmation Popup -->
-<div id="expat-confirm-popup" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center min-h-screen px-2 sm:px-4 hidden" style="display:none;">
-  <div class="bg-white rounded-xl p-4 sm:p-6 shadow-2xl max-w-lg w-full text-center" style="background: repeating-linear-gradient(0deg, #fff, #fff 28px, #f8dada 28px, #f8dada 29px);">
-    <h2 class="text-2xl font-bold text-red-700 mb-2">Thank you for registering with  @site SOS <span class="align-middle">🙏</span></h2>
-    <div class="text-gray-700 text-base mb-2">You should have received a confirmation email with your login credentials.</div>
-    <div class="text-gray-700 text-base mb-2">You can now access your personal dashboard to manage your account and respond to requests.</div>
-    <div class="text-gray-700 text-base mb-4">We're glad to have you on board to help expatriates around the world.</div>
-    <button onclick="closeExpatConfirmPopup()" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-semibold">Close</button>
+<!-- Expat Confirmation Popup -->
+<div id="expat-confirm-popup" class="popup-modal">
+  <div class="popup-content confirm-popup">
+    <h2>Thank you for registering with Ulixai SOS</h2>
+    <p>You should have received a confirmation email with your login credentials. You can now access your personal dashboard to manage your account and respond to requests.</p>
+    <button class="popup-close" onclick="closeExpatConfirmPopup()">Close</button>
   </div>
 </div>
 
-<style>
-  /* Hide all popups by default */
-  #sos-popup, #lawyer-signup-popup, #lawyer-confirm-popup, #expat-signup-popup, #expat-confirm-popup {
-    display: none;
-  }
-  /* Responsive tweaks */
-  @media (max-width: 640px) {
-    .rounded-2xl, .rounded-xl, .rounded-lg {
-      border-radius: 1rem !important;
-    }
-    .p-6, .p-8, .p-4 {
-      padding: 1rem !important;
-    }
-    .max-w-md, .max-w-lg, .max-w-2xl, .max-w-3xl, .max-w-6xl {
-      max-width: 100vw !important;
-    }
-    .shadow-xl, .shadow-2xl, .shadow-lg, .shadow-md {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.10) !important;
-    }
-    .flex.items-center.justify-center {
-      align-items: flex-start !important;
-    }
-  }
-</style>
+@include('includes.footer')
 
 <script>
-  // Show/hide popup functions
-  function showComingSoonPopup(e) {
-    if (e) e.preventDefault();
-    var el = document.getElementById('sos-popup');
-    if (el) el.style.display = 'flex';
-  }
+function showComingSoonPopup(e) {
+  if (e) e.preventDefault();
+  document.getElementById('sos-popup').style.display = 'flex';
+}
 
-  function closeComingSoonPopup() {
-    var el = document.getElementById('sos-popup');
-    if (el) el.style.display = 'none';
-  }
+function closeComingSoonPopup() {
+  document.getElementById('sos-popup').style.display = 'none';
+}
 
-  function openLawyerSignupPopup(e) {
-    if (e) e.preventDefault();
-    var el = document.getElementById('lawyer-signup-popup');
-    if (el) el.style.display = 'flex';
-  }
-  function closeLawyerSignupPopup() {
-    var el = document.getElementById('lawyer-signup-popup');
-    if (el) el.style.display = 'none';
-  }
+function openLawyerSignupPopup(e) {
+  if (e) e.preventDefault();
+  document.getElementById('lawyer-signup-popup').style.display = 'flex';
+}
 
-  function submitLawyerSignup(e) {
-    e.preventDefault();
-    closeLawyerSignupPopup();
-    var el = document.getElementById('lawyer-confirm-popup');
-    if (el) el.style.display = 'flex';
-  }
+function closeLawyerSignupPopup() {
+  document.getElementById('lawyer-signup-popup').style.display = 'none';
+}
 
-  function closeLawyerConfirmPopup() {
-    var el = document.getElementById('lawyer-confirm-popup');
-    if (el) el.style.display = 'none';
-  }
+function submitLawyerSignup(e) {
+  e.preventDefault();
+  closeLawyerSignupPopup();
+  document.getElementById('lawyer-confirm-popup').style.display = 'flex';
+}
 
-  function openExpatSignupPopup(e) {
-    if (e) e.preventDefault();
-    var el = document.getElementById('expat-signup-popup');
-    if (el) el.style.display = 'flex';
-  }
+function closeLawyerConfirmPopup() {
+  document.getElementById('lawyer-confirm-popup').style.display = 'none';
+}
 
-  function closeExpatSignupPopup() {
-    var el = document.getElementById('expat-signup-popup');
-    if (el) el.style.display = 'none';
-  }
+function openExpatSignupPopup(e) {
+  if (e) e.preventDefault();
+  document.getElementById('expat-signup-popup').style.display = 'flex';
+}
 
-  function submitExpatSignup(e) {
-    e.preventDefault();
-    closeExpatSignupPopup();
-    var el = document.getElementById('expat-confirm-popup');
-    if (el) el.style.display = 'flex';
-  }
+function closeExpatSignupPopup() {
+  document.getElementById('expat-signup-popup').style.display = 'none';
+}
 
-  function closeExpatConfirmPopup() {
-    var el = document.getElementById('expat-confirm-popup');
-    if (el) el.style.display = 'none';
-  }
+function submitExpatSignup(e) {
+  e.preventDefault();
+  closeExpatSignupPopup();
+  document.getElementById('expat-confirm-popup').style.display = 'flex';
+}
 
-  // Ensure all popups are hidden on page load
-  document.addEventListener('DOMContentLoaded', function() {
-    var ids = [
-      'sos-popup',
-      'lawyer-signup-popup',
-      'lawyer-confirm-popup',
-      'expat-signup-popup',
-      'expat-confirm-popup'
-    ];
+function closeExpatConfirmPopup() {
+  document.getElementById('expat-confirm-popup').style.display = 'none';
+}
 
-    // Ensure all popups are hidden on page load
-    ids.forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.style.display = 'none'; // Hide on page load
+// Copy link functionality
+document.addEventListener('DOMContentLoaded', function() {
+  var copyBtn = document.getElementById('copyLinkBtn');
+  var affiliateLink = document.getElementById('affiliateLink');
+
+  if (copyBtn && affiliateLink) {
+    copyBtn.addEventListener('click', function() {
+      navigator.clipboard.writeText(affiliateLink.value).then(function() {
+        toastr.success('Affiliate link copied to clipboard!');
+      }).catch(function() {
+        toastr.error('Failed to copy link!');
+      });
     });
-  });
-</script>
-<script>
-document.getElementById("copyLinkBtn").addEventListener("click", function () {
-    const link = document.getElementById("affiliateLink").value;
-    navigator.clipboard.writeText(link).then(() => {
-        toastr.success("Affiliate link copied to clipboard!");
-    }).catch(() => {
-        toastr.error("Failed to copy link!");
-    });
+  }
 });
 </script>
-
-</script>
-
-  @include('includes.footer')
-
 </body>
 </html>
