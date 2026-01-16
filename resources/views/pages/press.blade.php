@@ -933,5 +933,7 @@
       }catch(_){}
     }
   </script>
+
+  @include('includes.footer')
 </body>
 </html>
