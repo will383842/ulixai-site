@@ -316,7 +316,7 @@
 
 <script>
   const COOKIE_STORAGE_KEY = 'cookieConsent';
-  const CONSENT_VERSION = '1.0';
+  const COOKIE_MGMT_VERSION = '1.0';
 
   const defaultPreferences = {
     strictly_necessary: true,
@@ -376,7 +376,7 @@
     };
     
     const consentData = {
-      version: CONSENT_VERSION,
+      version: COOKIE_MGMT_VERSION,
       timestamp: new Date().toISOString(),
       preferences: preferences
     };
@@ -394,7 +394,7 @@
 
   function resetPreferences() {
     const consentData = {
-      version: CONSENT_VERSION,
+      version: COOKIE_MGMT_VERSION,
       timestamp: new Date().toISOString(),
       preferences: defaultPreferences
     };

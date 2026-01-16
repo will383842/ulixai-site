@@ -1030,7 +1030,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <!-- Testimonial 1 -->
             <article class="glass-premium testimonial-card rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center" itemscope itemtype="https://schema.org/Review">
-                <img src="images/test1.jpg" alt="Sarah - Marketing Consultant" class="w-24 h-24 rounded-full mb-4 object-cover border-4 border-blue-500 shadow-lg" itemprop="image">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah - Marketing Consultant" class="w-24 h-24 rounded-full mb-4 object-cover border-4 border-blue-500 shadow-lg" itemprop="image">
                 <div itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
                     <meta itemprop="ratingValue" content="5">
                     <meta itemprop="bestRating" content="5">
@@ -1048,7 +1048,7 @@
             
             <!-- Testimonial 2 -->
             <article class="glass-premium testimonial-card rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center" itemscope itemtype="https://schema.org/Review">
-                <img src="images/test2.jpg" alt="Ahmed - Tech Instructor" class="w-24 h-24 rounded-full mb-4 object-cover border-4 border-pink-500 shadow-lg" itemprop="image">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Ahmed - Tech Instructor" class="w-24 h-24 rounded-full mb-4 object-cover border-4 border-pink-500 shadow-lg" itemprop="image">
                 <div itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
                     <meta itemprop="ratingValue" content="5">
                     <meta itemprop="bestRating" content="5">
@@ -1066,7 +1066,7 @@
             
             <!-- Testimonial 3 -->
             <article class="glass-premium testimonial-card rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center" itemscope itemtype="https://schema.org/Review">
-                <img src="images/test3.jpg" alt="Lisa - Real Estate Agent" class="w-24 h-24 rounded-full mb-4 object-cover border-4 border-green-500 shadow-lg" itemprop="image">
+                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Lisa - Real Estate Agent" class="w-24 h-24 rounded-full mb-4 object-cover border-4 border-green-500 shadow-lg" itemprop="image">
                 <div itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
                     <meta itemprop="ratingValue" content="5">
                     <meta itemprop="bestRating" content="5">
