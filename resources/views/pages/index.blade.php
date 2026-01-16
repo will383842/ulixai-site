@@ -1093,7 +1093,7 @@ body {
 
     <!-- Providers Grid - Limited to 2 rows of 5 (10 profiles) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="serviceGrid">
-      @foreach ($providers->take(10) as $provider)
+      @foreach ($providers->filter(fn($p) => !empty($p->slug))->take(10) as $provider)
         @php
           $avgRating = $provider->reviews()->avg('rating') ?? 5.0;
           $reviewCount = $provider->reviews()->count();
@@ -1302,8 +1302,9 @@ body {
     <!-- Featured Providers Grid - 5 profiles on 1 line -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="featuredProvidersGrid">
       @php
-        // Get providers with best ratings (random among top)
+        // Get providers with best ratings (random among top) - filter out those without slugs
         $featuredProviders = $providers
+          ->filter(fn($p) => !empty($p->slug))
           ->sortByDesc(function($provider) {
             return $provider->reviews()->avg('rating') ?? 0;
           })

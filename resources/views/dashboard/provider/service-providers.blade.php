@@ -1180,10 +1180,12 @@
                 </div>
                 
                 <!-- CTA Button -->
+                @if($provider->slug)
                 <a href="{{ route('provider-details', ['id' => $provider->slug]) }}" class="btn-see-more">
                     <span>Voir le Profil</span>
                     <i class="fas fa-arrow-right"></i>
                 </a>
+                @endif
             </article>
             @empty
             <div class="col-span-full">
