@@ -2055,10 +2055,10 @@ body {
         </div>
       </div>
       <p class="text-gray-700 text-lg leading-relaxed mb-6">
-        The AI <strong class="text-purple-600">Ulysses</strong> is learning all the languages of the world! 🌍
+        L'IA <strong class="text-purple-600">Ulysse</strong> apprend toutes les langues du monde ! 🌍
       </p>
       <p class="text-gray-600 text-base leading-relaxed">
-        Stay connected, Ulysses is coming soon with plenty of superpowers for expats, travelers and vacationers around the world! ✨
+        Restez connectés ! Ulysse arrive bientôt avec de nombreux super-pouvoirs pour les expatriés, les voyageurs et les vacanciers du monde entier ! ✨
       </p>
       
       <div class="flex justify-center space-x-2 mt-6 text-3xl">

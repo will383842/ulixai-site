@@ -6,7 +6,7 @@
     <title>Admin Dashboard - ULIXAI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon spécifique à l'admin : ancien favicon -->
-    <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('images/logoblue-64.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/faviccon.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Libs -->
@@ -156,7 +156,7 @@
   <nav role="navigation" aria-label="Admin header" class="admin-header px-6 py-4 flex justify-between items-center">
     <!-- Left side -->
     <div class="flex items-center gap-3">
-      <img src="{{ asset('images/logoblue-64.png') }}" alt="Ulixai" class="w-10 h-10 object-contain rounded-full">
+      <img src="{{ asset('images/logo-512x512.png') }}" alt="Ulixai" class="w-10 h-10 object-contain rounded-full">
       <span class="font-bold text-blue-700 text-xl">Administrateur Ulixai</span>
     </div>
 
@@ -246,6 +246,8 @@ function alignCookiesFor(lang) {
   const menu     = document.getElementById('languageMenu');
   const flag     = document.getElementById('languageFlag');
   const label    = document.getElementById('languageLabel');
+
+  if (!menu) return; // Exit if language menu doesn't exist
 
   let pendingLang = null;
   function applyLanguage(code) {
