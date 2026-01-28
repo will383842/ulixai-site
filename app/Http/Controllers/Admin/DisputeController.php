@@ -11,6 +11,7 @@ use App\Models\User;
 use Stripe\Stripe;
 use Stripe\Transfer;
 use Stripe\Refund;
+use App\Services\AuditLogService;
 
 class DisputeController extends Controller
 {
@@ -46,7 +47,10 @@ class DisputeController extends Controller
                 ]);
 
                 $requester->increment('credit_balance', $transaction->client_fee);
-                
+
+                // Log critique pour traçabilité
+                AuditLogService::logRefund($transaction, 'dispute_refund_to_requester');
+
                 return response()->json(['message' => 'Payment successfully refunded to requester']);
             }
 
@@ -101,6 +105,9 @@ class DisputeController extends Controller
                 'status' => 'completed',
                 'payment_status' => 'released'
             ]);
+
+            // Log critique pour traçabilité
+            AuditLogService::logPayment($transaction, 'dispute_transfer_to_provider');
 
             return response()->json(['message' => 'Payment successfully transferred to provider']);
         } catch (\Exception $e) {

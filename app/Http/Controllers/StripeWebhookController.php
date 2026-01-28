@@ -10,6 +10,7 @@ use App\Models\UlixCommission;
 use Stripe\Webhook;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Services\AuditLogService;
 
 class StripeWebhookController extends Controller
 {
@@ -64,6 +65,9 @@ class StripeWebhookController extends Controller
         $clientFee = $paymentIntent->metadata->client_fee ?? 0;
         $missionAmount = $paymentIntent->metadata->mission_amount ?? 0;
 
+        // ✅ Récupérer la devise depuis Stripe (EUR ou USD)
+        $currency = strtoupper($paymentIntent->currency ?? 'EUR');
+
         // ✅ SÉCURITÉ: Validation des métadonnées (type et présence)
         if (!$missionId || !$providerId || !$offerId) {
             Log::error('❌ Missing metadata in payment intent: ' . $paymentIntent->id);
@@ -92,7 +96,7 @@ class StripeWebhookController extends Controller
 
         // ✅ SÉCURITÉ: Transaction DB avec lock pour éviter les race conditions
         try {
-            DB::transaction(function () use ($paymentIntent, $missionId, $providerId, $offerId, $clientFee, $mission, $commission) {
+            DB::transaction(function () use ($paymentIntent, $missionId, $providerId, $offerId, $clientFee, $mission, $commission, $currency) {
                 // ✅ Lock pessimiste sur Transaction ET Mission
                 $existingTransaction = Transaction::where('stripe_payment_intent_id', $paymentIntent->id)
                     ->lockForUpdate()
@@ -124,7 +128,7 @@ class StripeWebhookController extends Controller
                 }
 
                 // ✅ Créer la transaction avec round() pour éviter erreurs de précision
-                Transaction::create([
+                $transaction = Transaction::create([
                     'mission_id' => $missionId,
                     'provider_id' => $providerId,
                     'offer_id' => $offerId,
@@ -133,15 +137,20 @@ class StripeWebhookController extends Controller
                     'client_fee' => round((float) $clientFee, 2),
                     'provider_fee' => round(($paymentIntent->amount / 100) * $commission->provider_fee, 2),
                     'country' => $lockedMission->location_country,
+                    'currency' => $currency, // ✅ Devise récupérée depuis Stripe (EUR ou USD)
                     'user_role' => 'service_requester', // Correct: seul le requester paie
                     'status' => 'paid',
                 ]);
+
+                // ✅ Log critique pour traçabilité
+                AuditLogService::logPayment($transaction);
 
                 Log::info('✅ Payment processed successfully via webhook', [
                     'payment_intent_id' => $paymentIntent->id,
                     'mission_id' => $missionId,
                     'provider_id' => $providerId,
-                    'amount' => round($paymentIntent->amount / 100, 2)
+                    'amount' => round($paymentIntent->amount / 100, 2),
+                    'currency' => $currency
                 ]);
             }, 5); // 5 tentatives en cas de deadlock
 
