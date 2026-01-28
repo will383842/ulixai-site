@@ -38,21 +38,48 @@ class StripePaymentController extends Controller
         $provider = ServiceProvider::findOrFail($request->provider_id);
         $offer = MissionOffer::findOrFail($request->offer_id);
 
+        // ✅ SÉCURITÉ: Vérifier que l'utilisateur est propriétaire de la mission
+        if ($mission->requester_id !== auth()->id()) {
+            abort(403, 'You are not authorized to pay for this mission.');
+        }
+
+        // ✅ SÉCURITÉ: Vérifier que la mission n'est pas déjà payée
+        if ($mission->payment_status === 'paid') {
+            return redirect()->route('dashboard')->with('error', 'This mission is already paid.');
+        }
+
+        // ✅ SÉCURITÉ: Vérifier que l'offre appartient bien à cette mission et ce provider
+        if ($offer->mission_id !== $mission->id || $offer->provider_id !== $provider->id) {
+            abort(422, 'Invalid offer for this mission.');
+        }
+
+        // ✅ SÉCURITÉ: Vérifier que l'offre est toujours en attente
+        if ($offer->status !== 'pending') {
+            return redirect()->route('dashboard')->with('error', 'This offer is no longer available.');
+        }
+
         if (!$provider->stripe_account_id) {
             $stripeAccount = $this->paymentService->createConnectAccount($provider);
             $this->paymentService->updateProviderStripeInfo($provider, $stripeAccount);
         }
-        
+
         // Calculate fees
         $amount = (float) $request->amount;
         $clientFee = (float) $request->client_fee;
         $total = (float) $request->total;
         $remainingCreditBalance = (float) $request->remaining_credits;
-        
+
+        // ✅ SÉCURITÉ: Valider que le calcul est correct (tolérance de 1 centime)
+        $expectedTotal = $amount + $clientFee;
+        if (abs($total - $expectedTotal) > 0.01) {
+            abort(422, 'Invalid payment amount calculation.');
+        }
+
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        $platformFeeInCents = intval($clientFee * 100);
-        $totalInCents = intval($total * 100);
+        // ✅ CORRECTION: Utiliser round() pour éviter les erreurs de précision flottante
+        $platformFeeInCents = (int) round($clientFee * 100);
+        $totalInCents = (int) round($total * 100);
 
         $paymentIntent = PaymentIntent::create([
             'amount' => $totalInCents, 
@@ -88,11 +115,11 @@ class StripePaymentController extends Controller
     {
         $commission = UlixCommission::first();
         Stripe::setApiKey(config('services.stripe.secret'));
-        
+
         try {
             // Retrieve the payment intent
             $paymentIntent = PaymentIntent::retrieve($request->payment_intent_id);
-            
+
             if ($paymentIntent->status === 'succeeded') {
                 $missionId = $paymentIntent->metadata['mission_id'];
                 $providerId = $paymentIntent->metadata['provider_id'];
@@ -100,45 +127,84 @@ class StripePaymentController extends Controller
                 $clientFee = $paymentIntent->metadata['client_fee'];
                 $remainingCredits = $paymentIntent->metadata['remaining_credits'];
                 $missionAmount = $paymentIntent->metadata['mission_amount'];
-                
+
+                // ✅ Récupérer la mission d'abord pour les vérifications
+                $mission = Mission::find($missionId);
+                if (!$mission) {
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'Mission not found.'
+                    ], 404);
+                }
+
+                // ✅ SÉCURITÉ: Vérifier l'autorisation AVANT toute modification
+                if ($mission->requester_id !== auth()->id()) {
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'Unauthorized: You are not the owner of this mission.'
+                    ], 403);
+                }
+
+                // ✅ SÉCURITÉ: Vérifier que la mission n'est pas déjà payée
+                if ($mission->payment_status === 'paid') {
+                    return response()->json([
+                        'success' => true,
+                        'redirect_url' => route('payments.success', ['mission' => $missionId])
+                    ]);
+                }
+
                 // ✅ Vérifier si déjà traité (évite les doublons)
                 $existingTransaction = Transaction::where('stripe_payment_intent_id', $paymentIntent->id)->first();
                 if ($existingTransaction) {
                     return response()->json([
                         'success' => true,
-                        'redirect_url' => route('payments.success', ['mission' => $missionId, 'credits' => $remainingCredits])
+                        'redirect_url' => route('payments.success', ['mission' => $missionId])
                     ]);
                 }
 
-                // ✅ CORRECTION : Maintenant on modifie la mission APRÈS le paiement réussi
-                $mission = Mission::find($missionId);
-                $mission->status = 'waiting_to_start';
-                $mission->payment_status = 'paid';
-                $mission->selected_provider_id = $providerId; // ✅ AJOUTÉ - Crucial !
-                $mission->save();
+                // ✅ SÉCURITÉ: Transaction DB pour atomicité
+                DB::transaction(function () use ($mission, $missionId, $providerId, $offerId, $clientFee, $paymentIntent, $commission, $remainingCredits) {
+                    // Modifier la mission APRÈS validation
+                    $mission->status = 'waiting_to_start';
+                    $mission->payment_status = 'paid';
+                    $mission->selected_provider_id = $providerId;
+                    $mission->save();
 
-                // ✅ Accepter l'offre
-                $missionOffer = MissionOffer::find($offerId);
-                $missionOffer->status = 'accepted'; 
-                $missionOffer->save();
+                    // Accepter l'offre
+                    $missionOffer = MissionOffer::find($offerId);
+                    if ($missionOffer) {
+                        $missionOffer->status = 'accepted';
+                        $missionOffer->save();
+                    }
 
-                // ✅ Enregistrer la transaction
-                Transaction::create([
-                    'mission_id' => $missionId,
-                    'provider_id' => $providerId,
-                    'offer_id' => $offerId,
-                    'stripe_payment_intent_id' => $paymentIntent->id,
-                    'amount_paid' => $paymentIntent->amount / 100,
-                    'client_fee' => $clientFee,
-                    'provider_fee' => ($paymentIntent->amount / 100) * $commission->provider_fee,
-                    'country' => $mission->location_country,
-                    'user_role' => auth()->user()->user_role,
-                    'status' => 'paid',
-                ]);
-                
+                    // Enregistrer la transaction
+                    Transaction::create([
+                        'mission_id' => $missionId,
+                        'provider_id' => $providerId,
+                        'offer_id' => $offerId,
+                        'stripe_payment_intent_id' => $paymentIntent->id,
+                        'amount_paid' => round($paymentIntent->amount / 100, 2),
+                        'client_fee' => round((float) $clientFee, 2),
+                        'provider_fee' => round(($paymentIntent->amount / 100) * $commission->provider_fee, 2),
+                        'country' => $mission->location_country,
+                        'user_role' => auth()->user()->user_role,
+                        'status' => 'paid',
+                    ]);
+
+                    // ✅ SÉCURITÉ: Mettre à jour le solde de crédits depuis la DB, pas depuis l'URL
+                    $requester = $mission->requester;
+                    if ($requester && $remainingCredits !== null) {
+                        // Recalculer le solde réel plutôt que de faire confiance à la valeur du client
+                        $usedCredits = $requester->credit_balance - (float) $remainingCredits;
+                        if ($usedCredits > 0 && $usedCredits <= $requester->credit_balance) {
+                            $requester->decrement('credit_balance', $usedCredits);
+                        }
+                    }
+                }, 5);
+
                 return response()->json([
                     'success' => true,
-                    'redirect_url' => route('payments.success', ['mission' => $mission->id, 'credits' => $remainingCredits])
+                    'redirect_url' => route('payments.success', ['mission' => $mission->id])
                 ]);
             }
 
@@ -155,21 +221,22 @@ class StripePaymentController extends Controller
         }
     }
 
-    public function success(Mission $mission, $credits)
+    public function success(Mission $mission)
     {
-        
+        // ✅ SÉCURITÉ: Vérifier que l'utilisateur est propriétaire de la mission
+        if ($mission->requester_id !== auth()->id()) {
+            abort(403, 'Unauthorized access.');
+        }
+
         $provider = $mission->selectedProvider;
         if (!$provider) {
             return redirect()->route('dashboard')->with('error', 'No provider selected for this mission.');
         }
         $reviews = $provider->reviews()->get() ?? [];
 
-        $requester = $mission->requester;
+        // ✅ SÉCURITÉ: Ne plus modifier credit_balance ici
+        // Le solde est mis à jour de manière sécurisée dans processPayment()
 
-        if($requester) {
-            $requester->update(['credit_balance' => $credits]);
-        }
-        
         return view('dashboard.order-confirm', compact('mission', 'provider', 'reviews'));
     }
 

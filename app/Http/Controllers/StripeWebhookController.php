@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\UlixCommission;
 use Stripe\Webhook;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class StripeWebhookController extends Controller
 {
@@ -53,6 +54,7 @@ class StripeWebhookController extends Controller
 
     /**
      * ✅ Traite un paiement réussi (double sécurité avec processPayment)
+     * ✅ SÉCURITÉ: Utilise une transaction DB avec lock pour éviter les race conditions
      */
     private function handlePaymentSuccess($paymentIntent)
     {
@@ -62,9 +64,15 @@ class StripeWebhookController extends Controller
         $clientFee = $paymentIntent->metadata->client_fee ?? 0;
         $missionAmount = $paymentIntent->metadata->mission_amount ?? 0;
 
-        // Validation des métadonnées
+        // ✅ SÉCURITÉ: Validation des métadonnées (type et présence)
         if (!$missionId || !$providerId || !$offerId) {
             Log::error('❌ Missing metadata in payment intent: ' . $paymentIntent->id);
+            return;
+        }
+
+        // ✅ SÉCURITÉ: Valider que les IDs sont des entiers
+        if (!is_numeric($missionId) || !is_numeric($providerId) || !is_numeric($offerId)) {
+            Log::error('❌ Invalid metadata types in payment intent: ' . $paymentIntent->id);
             return;
         }
 
@@ -74,49 +82,68 @@ class StripeWebhookController extends Controller
             return;
         }
 
-        // ✅ Vérifier si déjà traité (évite les doublons)
-        $existingTransaction = Transaction::where('stripe_payment_intent_id', $paymentIntent->id)->first();
-        if ($existingTransaction) {
-            Log::info('ℹ️ Payment already processed via webhook: ' . $paymentIntent->id);
+        // ✅ SÉCURITÉ: Vérification rapide avant le lock (optimisation)
+        if ($mission->payment_status === 'paid') {
+            Log::info('ℹ️ Mission already paid, skipping: ' . $missionId);
             return;
         }
 
         $commission = UlixCommission::first();
 
+        // ✅ SÉCURITÉ: Transaction DB avec lock pour éviter les race conditions
         try {
-            // ✅ Mettre à jour la mission
-            $mission->update([
-                'status' => 'waiting_to_start',
-                'payment_status' => 'paid',
-                'selected_provider_id' => $providerId,
-            ]);
+            DB::transaction(function () use ($paymentIntent, $missionId, $providerId, $offerId, $clientFee, $mission, $commission) {
+                // ✅ Lock pessimiste sur Transaction ET Mission
+                $existingTransaction = Transaction::where('stripe_payment_intent_id', $paymentIntent->id)
+                    ->lockForUpdate()
+                    ->first();
 
-            // ✅ Mettre à jour l'offre
-            $missionOffer = MissionOffer::find($offerId);
-            if ($missionOffer) {
-                $missionOffer->update(['status' => 'accepted']);
-            }
+                if ($existingTransaction) {
+                    Log::info('ℹ️ Payment already processed via webhook: ' . $paymentIntent->id);
+                    return;
+                }
 
-            // ✅ Créer la transaction
-            Transaction::create([
-                'mission_id' => $missionId,
-                'provider_id' => $providerId,
-                'offer_id' => $offerId,
-                'stripe_payment_intent_id' => $paymentIntent->id,
-                'amount_paid' => $paymentIntent->amount / 100,
-                'client_fee' => $clientFee,
-                'provider_fee' => ($paymentIntent->amount / 100) * $commission->provider_fee,
-                'country' => $mission->location_country,
-                'user_role' => 'service_requester',
-                'status' => 'paid',
-            ]);
+                // ✅ Lock sur la mission aussi pour éviter modifications concurrentes
+                $lockedMission = Mission::where('id', $missionId)->lockForUpdate()->first();
+                if (!$lockedMission || $lockedMission->payment_status === 'paid') {
+                    Log::info('ℹ️ Mission already paid (locked check): ' . $missionId);
+                    return;
+                }
 
-            Log::info('✅ Payment processed successfully via webhook', [
-                'payment_intent_id' => $paymentIntent->id,
-                'mission_id' => $missionId,
-                'provider_id' => $providerId,
-                'amount' => $paymentIntent->amount / 100
-            ]);
+                // ✅ Mettre à jour la mission
+                $lockedMission->update([
+                    'status' => 'waiting_to_start',
+                    'payment_status' => 'paid',
+                    'selected_provider_id' => $providerId,
+                ]);
+
+                // ✅ Mettre à jour l'offre
+                $missionOffer = MissionOffer::find($offerId);
+                if ($missionOffer) {
+                    $missionOffer->update(['status' => 'accepted']);
+                }
+
+                // ✅ Créer la transaction avec round() pour éviter erreurs de précision
+                Transaction::create([
+                    'mission_id' => $missionId,
+                    'provider_id' => $providerId,
+                    'offer_id' => $offerId,
+                    'stripe_payment_intent_id' => $paymentIntent->id,
+                    'amount_paid' => round($paymentIntent->amount / 100, 2),
+                    'client_fee' => round((float) $clientFee, 2),
+                    'provider_fee' => round(($paymentIntent->amount / 100) * $commission->provider_fee, 2),
+                    'country' => $lockedMission->location_country,
+                    'user_role' => 'service_requester', // Correct: seul le requester paie
+                    'status' => 'paid',
+                ]);
+
+                Log::info('✅ Payment processed successfully via webhook', [
+                    'payment_intent_id' => $paymentIntent->id,
+                    'mission_id' => $missionId,
+                    'provider_id' => $providerId,
+                    'amount' => round($paymentIntent->amount / 100, 2)
+                ]);
+            }, 5); // 5 tentatives en cas de deadlock
 
         } catch (\Exception $e) {
             Log::error('❌ Error processing payment webhook: ' . $e->getMessage(), [

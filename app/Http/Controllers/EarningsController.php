@@ -60,12 +60,20 @@ class EarningsController extends Controller
             return back()->with('error', 'You must be logged in to withdraw.');
         }
 
+        // ✅ SÉCURITÉ: Vérifier que l'utilisateur est actif
+        if ($user->status !== 'active') {
+            return back()->with('error', 'Your account is not active. Please contact support.');
+        }
+
+        // ✅ Initialiser la variable pour éviter undefined
+        $totalPayoutAmount = 0;
+
         DB::beginTransaction();
 
         try {
             $affiliateAmount = $user->pending_affiliate_balance ?? 0;
             $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-            
+
             // Create initial payout record
             $payoutRecord = Payout::create([
                 'user_id' => $user->id,
@@ -84,16 +92,21 @@ class EarningsController extends Controller
                     throw new \Exception('Your Stripe account is not fully verified or payouts are disabled.');
                 }
 
-               
                 $balance = $stripe->balance->retrieve(
                     [],
-                    ['stripe_account' => $accountId] 
+                    ['stripe_account' => $accountId]
                 );
-                $availableBalance = $balance->available[0]->amount / 100; 
+
+                // ✅ SÉCURITÉ: Vérifier que le tableau available n'est pas vide
+                $availableBalance = 0;
+                if (!empty($balance->available) && isset($balance->available[0]->amount)) {
+                    $availableBalance = $balance->available[0]->amount / 100;
+                }
 
                 $totalPayoutAmount = $affiliateAmount + $availableBalance;
 
                 if ($totalPayoutAmount < 30) {
+                    DB::rollBack();
                     return back()->with('error', 'Total balance is less than minimum withdrawal amount (30€)');
                 }
 
@@ -112,7 +125,6 @@ class EarningsController extends Controller
                     ]);
                 }
 
-
                 $stripePayout = $stripe->payouts->create(
                     [
                         'amount' => (int) round($totalPayoutAmount * 100),
@@ -123,19 +135,12 @@ class EarningsController extends Controller
                 );
 
                 if ($stripePayout && $stripePayout->id) {
-                    $payoutRecord->update([
-                        'amount' => $totalPayoutAmount,
-                        'stripe_payout_id' => $stripePayout->id,
-                        'status' => 'paid',
-                        'paid_at' => now()
-                    ]);
-
-                    $user->pending_affiliate_balance = 0;
-                    $user->save();
-
-                    Mail::to($user->email)->queue(new PayoutProcessedMail($payoutRecord));
+                    $this->finalizeSuccessfulPayout($payoutRecord, $user, $totalPayoutAmount, $stripePayout->id, 'paid');
                 }
             } else {
+                // ✅ Assigner pour le cas non-provider
+                $totalPayoutAmount = $affiliateAmount;
+
                 if (!$user->hasBankingDetails()) {
                     throw new \Exception('Please add your bank account details before withdrawing.');
                 }
@@ -168,15 +173,11 @@ class EarningsController extends Controller
                             'stripe_payout_id' => $stripePayoutResult->id,
                             'bank_account_last4' => substr($user->bank_account_iban, -4),
                             'bank_account_type' => 'external_account',
-                            'status' => 'processing',
                             'amount' => $affiliateAmount,
                             'paid_at' => now()
                         ]);
 
-                        $user->pending_affiliate_balance = 0;
-                        $user->save();
-
-                        Mail::to($user->email)->queue(new PayoutProcessedMail($payoutRecord));
+                        $this->finalizeSuccessfulPayout($payoutRecord, $user, $affiliateAmount, $stripePayoutResult->id, 'processing');
                     }
                 } catch (\Stripe\Exception\InvalidRequestException $e) {
                     throw new \Exception('Bank payout failed: ' . $e->getMessage());
@@ -195,5 +196,28 @@ class EarningsController extends Controller
             }
             return back()->with('error', 'Withdrawal failed: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * ✅ Méthode helper pour finaliser un payout réussi (évite duplication)
+     */
+    private function finalizeSuccessfulPayout(Payout $payoutRecord, User $user, float $amount, string $stripePayoutId, string $status): void
+    {
+        $payoutRecord->update([
+            'amount' => $amount,
+            'stripe_payout_id' => $stripePayoutId,
+            'status' => $status,
+            'paid_at' => now()
+        ]);
+
+        // Mettre à jour les commissions affiliées en 'paid'
+        AffiliateCommission::where('referrer_id', $user->id)
+            ->where('status', 'available')
+            ->update(['status' => 'paid']);
+
+        $user->pending_affiliate_balance = 0;
+        $user->save();
+
+        Mail::to($user->email)->queue(new PayoutProcessedMail($payoutRecord));
     }
 }

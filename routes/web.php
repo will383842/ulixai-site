@@ -77,8 +77,9 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']
 // 🌍 ROUTES PUBLIQUES
 // ═══════════════════════════════════════════════════════════
 
-// Auth helpers
-Route::post('/check-email-login', [App\Http\Controllers\AuthController::class, 'checkEmailAndLogin']);
+// Auth helpers (avec rate limiting anti-énumération)
+Route::post('/check-email-login', [App\Http\Controllers\AuthController::class, 'checkEmailAndLogin'])
+    ->middleware('throttle:10,1'); // 10 tentatives par minute
 
 // ✅ Check email & verify password (utilisés par le formulaire)
 if (app()->environment('local', 'development')) {
@@ -99,9 +100,11 @@ if (app()->environment('local', 'development')) {
     });
 }
 
-// Recruitment
+// Recruitment (avec rate limiting anti-spam)
 Route::get('/recruitment', [ReviewController::class, 'recruitment'])->name('recruitment');
-Route::post('/recruit/apply', [RecruitApplicationController::class, 'store'])->name('recruit.apply');
+Route::post('/recruit/apply', [RecruitApplicationController::class, 'store'])
+    ->middleware('throttle:5,1') // 5 candidatures par minute max
+    ->name('recruit.apply');
 
 // Affiliate
 Route::get('/affiliate', function () {
@@ -110,9 +113,11 @@ Route::get('/affiliate', function () {
     return view('pages.affiliate', compact('reviews'));
 })->name('affiliate');
 
-// Partnerships
+// Partnerships (avec rate limiting anti-spam)
 Route::get('/partnerships', [ReviewController::class, 'partnerships'])->name('partnerships');
-Route::post('/partnership/store', [PartnershipController::class, 'store'])->name('partnership.store');
+Route::post('/partnership/store', [PartnershipController::class, 'store'])
+    ->middleware('throttle:5,1') // 5 demandes par minute max
+    ->name('partnership.store');
 
 Route::get('/cookiemanagment', function () {
     return view('pages.cookiemanagment');
@@ -190,8 +195,9 @@ Route::get('/press/preview/{id}/{type}', [PressController::class, 'preview'])
 
 Route::get('/termsnconditions', [TermsAndConditionsController::class, 'ShowTerms'])->name('terms.show');
 
-// AJAX user signup
-Route::post('/signup/store', [UserController::class, 'storeViaSignup']);
+// AJAX user signup (avec rate limiting anti-abus)
+Route::post('/signup/store', [UserController::class, 'storeViaSignup'])
+    ->middleware('throttle:5,1'); // 5 inscriptions par minute max
 
 // Provider details
 Route::get('providers/{id}', [ServiceProviderController::class, 'providerDetails'])->name('provider-details');
@@ -243,7 +249,7 @@ Route::get('/become-service-provider', function () {
 
 // Registration (avec rate limiting anti brute-force OTP)
 Route::post('/send-email-otp', [RegisterController::class, 'sendEmailOtp'])
-    ->middleware('throttle:5,1') // 5 envois par minute
+    ->middleware('throttle:3,1') // 3 envois par minute max (protection anti-abus)
     ->name('send-email-otp');
 Route::post('/verify-email-otp', [RegisterController::class, 'verifyEmailOtp'])
     ->middleware('throttle:10,1') // 10 tentatives par minute (OTP = 6 chiffres)
@@ -343,10 +349,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/mission/{id}/public-message', [MissionMessageController::class, 'store'])->name('mission.public-message');
     Route::get('/mission/{id}/public-messages', [MissionMessageController::class, 'list'])->name('mission.public-messages');
 
-    // Stripe (paiement)
-    Route::post('/payments/stripe/checkout', [StripePaymentController::class, 'checkout'])->name('payments.stripe.checkout');
-    Route::post('/payments/stripe/process', [StripePaymentController::class, 'processPayment'])->name('payments.stripe.process');
-    Route::get('/payments/success/{mission}/{credits}', [StripePaymentController::class, 'success'])->name('payments.success');
+    // Stripe (paiement) - ✅ SÉCURITÉ: Rate limiting pour prévenir les abus
+    Route::middleware(['throttle:10,1'])->group(function () {
+        // 10 tentatives par minute max par utilisateur
+        Route::post('/payments/stripe/checkout', [StripePaymentController::class, 'checkout'])->name('payments.stripe.checkout');
+        Route::post('/payments/stripe/process', [StripePaymentController::class, 'processPayment'])->name('payments.stripe.process');
+    });
+    Route::get('/payments/success/{mission}', [StripePaymentController::class, 'success'])->name('payments.success');
     Route::get('/payments/cancel', [StripePaymentController::class, 'cancel'])->name('payments.stripe.cancel');
 
     // Pusher auth
@@ -362,8 +371,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/stripe/refresh', fn () => redirect()->back())->name('stripe.refresh');
     Route::get('/stripe/return', fn () => redirect('/dashboard'))->name('stripe.return');
 
-    // Withdraw
-    Route::post('/user/funds', [EarningsController::class, 'manageUserFunds'])->name('affiliate.withdraw');
+    // Withdraw - ✅ SÉCURITÉ: Rate limiting strict pour les retraits
+    Route::post('/user/funds', [EarningsController::class, 'manageUserFunds'])
+        ->middleware('throttle:5,60') // 5 retraits par heure max
+        ->name('affiliate.withdraw');
 
     // Compte (API)
     Route::prefix('account')->group(function () {
@@ -587,20 +598,24 @@ Route::get('/customerreviews', [ReviewController::class, 'index'])->name('review
 Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('review.show');
 
 // ═══════════════════════════════════════════════════════════
-// 🔐 GOOGLE VISION API - VERIFICATION
+// 🔐 GOOGLE VISION API - VERIFICATION (AUTHENTIFIÉ)
 // ═══════════════════════════════════════════════════════════
-Route::prefix('api/provider/verification')->group(function () {
-    Route::post('/photo', [ProviderPhotoVerificationController::class, 'upload']);
-    Route::get('/photo/status', [ProviderPhotoVerificationController::class, 'status']);
-    Route::get('/photo', [ProviderPhotoVerificationController::class, 'show']);
-    Route::delete('/photo', [ProviderPhotoVerificationController::class, 'destroy']);
-    
-    Route::post('/documents', [ProviderDocumentVerificationController::class, 'store']);
-    Route::get('/documents/{id}/status', [ProviderDocumentVerificationController::class, 'status']);
-    Route::get('/documents/{id}', [ProviderDocumentVerificationController::class, 'show']);
-    Route::delete('/documents/{id}', [ProviderDocumentVerificationController::class, 'destroy']);
-    Route::get('/documents', [ProviderDocumentVerificationController::class, 'index']);
-});
+Route::prefix('api/provider/verification')
+    ->middleware(['auth', 'throttle:30,1']) // Auth requis + rate limiting
+    ->group(function () {
+        // Photos de profil/vérification
+        Route::post('/photo', [ProviderPhotoVerificationController::class, 'upload']);
+        Route::get('/photo/status', [ProviderPhotoVerificationController::class, 'status']);
+        Route::get('/photo', [ProviderPhotoVerificationController::class, 'show']);
+        Route::delete('/photo', [ProviderPhotoVerificationController::class, 'destroy']);
+
+        // Documents d'identité (sensibles)
+        Route::post('/documents', [ProviderDocumentVerificationController::class, 'store']);
+        Route::get('/documents/{id}/status', [ProviderDocumentVerificationController::class, 'status']);
+        Route::get('/documents/{id}', [ProviderDocumentVerificationController::class, 'show']);
+        Route::delete('/documents/{id}', [ProviderDocumentVerificationController::class, 'destroy']);
+        Route::get('/documents', [ProviderDocumentVerificationController::class, 'index']);
+    });
 
 // ═══════════════════════════════════════════════════════════
 // ⚠️ CATCH-ALL (garder en DERNIER)

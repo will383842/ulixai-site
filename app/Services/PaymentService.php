@@ -13,6 +13,7 @@ use Stripe\Balance;
 use App\Models\User;
 use App\Models\AffiliateCommission;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class PaymentService
 {
@@ -236,49 +237,120 @@ class PaymentService
         }
     }
 
-    // Method to handle fund transfer
+    /**
+     * ✅ Transfère les fonds au prestataire et gère les commissions d'affiliation
+     * ✅ SÉCURITÉ: Utilise une transaction DB pour garantir l'atomicité
+     */
     public function transferFunds($mission, $provider)
     {
         try {
+            // ✅ SÉCURITÉ: Vérifier que le provider a un compte Stripe
+            if (!$provider->stripe_account_id) {
+                throw new \Exception('Provider does not have a Stripe account configured.');
+            }
+
+            // ✅ SÉCURITÉ: Vérifier que la mission est payée
+            if ($mission->payment_status !== 'paid') {
+                throw new \Exception('Mission payment status must be "paid" before transfer.');
+            }
+
             $commission = \App\Models\UlixCommission::first();
-            $stripeIntent = PaymentIntent::retrieve($mission->transactions()->first()->stripe_payment_intent_id);
-            
-            $transferAmount = floor($stripeIntent->amount_received - ($stripeIntent->amount_received * $commission->provider_fee));
             $transaction = $mission->transactions()->first();
 
-            $commissionAmount = ($commission->affiliate_fee * $transaction->provider_fee)* 100 / 100;
-            $transfer = Transfer::create([
-                'amount' => $transferAmount, 
-                'currency' => 'eur',
-                'destination' => $provider->stripe_account_id,
-                'transfer_group' => 'MISSION_'.$mission->id,
-            ]);
-
-            $referee = auth()->user() ?? User::find($mission->requester_id);
-
-            if( $referee->referred_by) {
-                $referrer = User::find($referee->referred_by);
-
-                if ($referrer) {
-                    $commissionData = [
-                        'referrer_id' => $referrer->id,
-                        'referee_id' => $referee->id,
-                        'mission_id' => $mission->id,
-                        'amount' => $commissionAmount,
-                        'status' => 'available',
-                    ];
-                    $commissionData['status'] = 'paid';
-                    $commissionData['payout_method'] = 'stripe';
-                    $commissionData['stripe_transfer_id'] = null;
-                    AffiliateCommission::create($commissionData);
-                    $referrer->increment('affiliate_balance', $commissionAmount);
-                    $referrer->increment('pending_affiliate_balance', $commissionAmount);
-                }
+            if (!$transaction || !$transaction->stripe_payment_intent_id) {
+                throw new \Exception('No valid transaction found for this mission.');
             }
-            return $transfer;
+
+            // ✅ SÉCURITÉ: Vérifier qu'un transfert n'a pas déjà été effectué (idempotency)
+            if ($transaction->stripe_transfer_id) {
+                Log::info('Transfer already completed for this transaction', [
+                    'transaction_id' => $transaction->id,
+                    'transfer_id' => $transaction->stripe_transfer_id,
+                ]);
+                return ['already_transferred' => true, 'transfer_id' => $transaction->stripe_transfer_id];
+            }
+
+            $stripeIntent = PaymentIntent::retrieve($transaction->stripe_payment_intent_id);
+
+            // ✅ SÉCURITÉ: Vérifier que le paiement a bien été reçu
+            if ($stripeIntent->amount_received <= 0) {
+                throw new \Exception('No payment received for this transaction.');
+            }
+
+            // ✅ CORRECTION: Utiliser round() pour éviter les erreurs de précision
+            $transferAmount = (int) round($stripeIntent->amount_received * (1 - $commission->provider_fee));
+
+            // ✅ CORRECTION: Formule simplifiée et corrigée pour la commission affilié
+            // La commission affilié est basée sur un pourcentage du provider_fee de la transaction
+            $affiliateCommissionAmount = round($commission->affiliate_fee * $transaction->provider_fee, 2);
+
+            // ✅ SÉCURITÉ: Transaction DB pour garantir l'atomicité
+            return DB::transaction(function () use ($mission, $provider, $transferAmount, $affiliateCommissionAmount, $transaction) {
+                // 1. Créer le transfert Stripe vers le prestataire
+                $transfer = Transfer::create([
+                    'amount' => $transferAmount,
+                    'currency' => 'eur',
+                    'destination' => $provider->stripe_account_id,
+                    'transfer_group' => 'MISSION_' . $mission->id,
+                    'metadata' => [
+                        'mission_id' => $mission->id,
+                        'provider_id' => $provider->id,
+                        'transaction_id' => $transaction->id,
+                    ],
+                ]);
+
+                // ✅ SÉCURITÉ: Enregistrer l'ID du transfert pour éviter les doublons
+                $transaction->update(['stripe_transfer_id' => $transfer->id]);
+
+                // 2. Gérer la commission d'affiliation si applicable
+                $referee = auth()->user() ?? User::find($mission->requester_id);
+
+                if ($referee && $referee->referred_by) {
+                    $referrer = User::find($referee->referred_by);
+
+                    if ($referrer && $affiliateCommissionAmount > 0) {
+                        // ✅ CORRECTION: Status 'available' (prêt pour retrait), pas 'paid'
+                        // Le status 'paid' sera mis lors du payout réel
+                        AffiliateCommission::create([
+                            'referrer_id' => $referrer->id,
+                            'referee_id' => $referee->id,
+                            'mission_id' => $mission->id,
+                            'amount' => $affiliateCommissionAmount,
+                            'status' => 'available', // ✅ CORRECTION: Disponible pour retrait
+                            'payout_method' => 'stripe',
+                            'stripe_transfer_id' => $transfer->id,
+                        ]);
+
+                        // ✅ Mettre à jour les balances du parrain
+                        $referrer->increment('affiliate_balance', $affiliateCommissionAmount);
+                        $referrer->increment('pending_affiliate_balance', $affiliateCommissionAmount);
+
+                        Log::info('✅ Affiliate commission created', [
+                            'referrer_id' => $referrer->id,
+                            'referee_id' => $referee->id,
+                            'mission_id' => $mission->id,
+                            'amount' => $affiliateCommissionAmount,
+                        ]);
+                    }
+                }
+
+                Log::info('✅ Transfer completed successfully', [
+                    'mission_id' => $mission->id,
+                    'provider_id' => $provider->id,
+                    'transfer_amount' => $transferAmount / 100, // En euros
+                    'transfer_id' => $transfer->id,
+                ]);
+
+                return $transfer;
+            }, 5); // 5 tentatives en cas de deadlock
+
         } catch (\Exception $e) {
-            Log::error('Transfer Error: ' . $e->getMessage());
-            return ['message' => $e->getMessage()];
+            Log::error('❌ Transfer Error: ' . $e->getMessage(), [
+                'mission_id' => $mission->id ?? null,
+                'provider_id' => $provider->id ?? null,
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return ['message' => $e->getMessage(), 'error' => true];
         }
     }
 

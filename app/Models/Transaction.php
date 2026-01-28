@@ -11,13 +11,14 @@ class Transaction extends Model
         'provider_id',
         'offer_id',
         'stripe_session_id',
+        'stripe_payment_intent_id',
+        'stripe_transfer_id',
         'amount_paid',
         'client_fee',
         'provider_fee',
         'country',
         'user_role',
         'status',
-        'stripe_payment_intent_id'
     ];
 
 
