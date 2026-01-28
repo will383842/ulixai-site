@@ -59,7 +59,7 @@ class Currency extends Model
      */
     public function exchangeRatesAsBase(): HasMany
     {
-        return $this->hasMany(ExchangeRate::class, 'base_currency', 'code');
+        return $this->hasMany(ExchangeRate::class, 'from_currency', 'code');
     }
 
     /**
@@ -67,7 +67,7 @@ class Currency extends Model
      */
     public function exchangeRatesAsTarget(): HasMany
     {
-        return $this->hasMany(ExchangeRate::class, 'target_currency', 'code');
+        return $this->hasMany(ExchangeRate::class, 'to_currency', 'code');
     }
 
     /**

@@ -13,6 +13,7 @@ use App\Models\Mission;
 use App\Models\MissionOffer;
 use App\Models\ServiceProvider;
 use App\Services\PaymentService;
+use App\Services\CurrencyService;
 use App\Models\Payout;
 use Stripe\Stripe;
 use Stripe\Charge;
@@ -85,7 +86,7 @@ class EarningsController extends Controller
             // Create initial payout record
             $payoutRecord = Payout::create([
                 'user_id' => $user->id,
-                'provider_id' => $user->serviceProvider->id ?? null,
+                'provider_id' => optional($user->serviceProvider)->id,
                 'amount' => $affiliateAmount,
                 'currency' => $currency,
                 'payout_type' => 'affiliate',
@@ -108,7 +109,8 @@ class EarningsController extends Controller
                 // ✅ SÉCURITÉ: Vérifier que le tableau available n'est pas vide
                 $availableBalance = 0;
                 if (!empty($balance->available) && isset($balance->available[0]->amount)) {
-                    $availableBalance = $balance->available[0]->amount / 100;
+                    $balanceCurrency = strtoupper($balance->available[0]->currency ?? 'EUR');
+                    $availableBalance = CurrencyService::fromCents($balance->available[0]->amount, $balanceCurrency);
                 }
 
                 $totalPayoutAmount = $affiliateAmount + $availableBalance;
@@ -120,7 +122,7 @@ class EarningsController extends Controller
 
                 if ($affiliateAmount > 0) {
                     $transfer = $stripe->transfers->create([
-                        'amount' => (int) round($affiliateAmount * 100),
+                        'amount' => CurrencyService::toCents($affiliateAmount, strtoupper($currency)),
                         'currency' => $currency,
                         'destination' => $accountId,
                         'description' => 'Affiliate commission transfer',
@@ -135,7 +137,7 @@ class EarningsController extends Controller
 
                 $stripePayout = $stripe->payouts->create(
                     [
-                        'amount' => (int) round($totalPayoutAmount * 100),
+                        'amount' => CurrencyService::toCents($totalPayoutAmount, strtoupper($currency)),
                         'currency' => $currency,
                         'method' => 'standard',
                     ],
@@ -159,7 +161,7 @@ class EarningsController extends Controller
 
                 try {
                     $stripePayoutResult = $stripe->payouts->create([
-                        'amount' => (int) round($affiliateAmount * 100),
+                        'amount' => CurrencyService::toCents($affiliateAmount, strtoupper($currency)),
                         'currency' => $currency,
                         'method' => 'standard',
                         'destination' => [

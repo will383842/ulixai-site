@@ -25,6 +25,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use App\Services\NotificationService;
+use App\Services\CurrencyService;
+use App\Notifications\DisputeOpenedNotification;
+use App\Notifications\MissionMatchNotification;
 
 class ServiceRequestController extends Controller
 {
@@ -757,12 +761,32 @@ class ServiceRequestController extends Controller
 
                     // ⚠️ PAS DE SUPPRESSION : reste visible pour résolution du litige
 
+                    // Notifications aux deux parties
+                    $reason = $request->description ?? $request->reason;
+                    $openedBy = $request->cancelled_by;
+
+                    // Notifier le demandeur
+                    NotificationService::send(
+                        $mission->requester,
+                        new DisputeOpenedNotification($mission, $openedBy, $reason),
+                        NotificationService::TYPE_DISPUTE
+                    );
+
+                    // Notifier le prestataire
+                    if ($provider = $mission->selectedProvider) {
+                        NotificationService::send(
+                            $provider->user,
+                            new DisputeOpenedNotification($mission, $openedBy, $reason),
+                            NotificationService::TYPE_DISPUTE
+                        );
+                    }
+
                     Log::info('✅ [CANCEL] Mission marked as disputed (kept visible)', [
                         'mission_id' => $mission->id
                     ]);
 
                     return response()->json([
-                        'success' => true, 
+                        'success' => true,
                         'message' => 'Mission marked as disputed successfully'
                     ], 200);
                     
@@ -900,7 +924,10 @@ class ServiceRequestController extends Controller
             
         $paymentIntent = PaymentIntent::retrieve($transaction->stripe_payment_intent_id);
         
-        $refundAmountInCents = ($paymentIntent->metadata->mission_amount ?? null) * 100;
+        // ✅ Utiliser CurrencyService::toCents pour gérer les devises zero-decimal
+        $missionAmount = $paymentIntent->metadata->mission_amount ?? null;
+        $currency = $paymentIntent->metadata->currency ?? 'EUR';
+        $refundAmountInCents = $missionAmount ? CurrencyService::toCents((float) $missionAmount, $currency) : null;
         $user = $mission->requester;
 
         if ($user) {

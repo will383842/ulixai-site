@@ -12,6 +12,7 @@ use Stripe\Stripe;
 use Stripe\Transfer;
 use Stripe\Refund;
 use App\Services\AuditLogService;
+use App\Services\CurrencyService;
 use App\Services\NotificationService;
 use App\Notifications\DisputeResolvedNotification;
 
@@ -36,9 +37,12 @@ class DisputeController extends Controller
         try {
             Stripe::setApiKey(config('services.stripe.secret'));
             
+            // ✅ Utiliser CurrencyService::toCents pour gérer les devises zero-decimal
+            $refundAmount = $transaction->amount_paid - $transaction->client_fee;
+            $currency = $transaction->currency ?? 'EUR';
             $refund = Refund::create([
                 'payment_intent' => $transaction->stripe_payment_intent_id,
-                'amount' => ($transaction->amount_paid - $transaction->client_fee) * 100, 
+                'amount' => CurrencyService::toCents($refundAmount, $currency),
             ]);
 
             if ($refund->status === 'succeeded') {

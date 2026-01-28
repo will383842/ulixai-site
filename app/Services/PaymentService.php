@@ -12,6 +12,7 @@ use Stripe\Transfer;
 use Stripe\Balance;
 use App\Models\User;
 use App\Models\AffiliateCommission;
+use App\Services\CurrencyService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -192,7 +193,7 @@ class PaymentService
     {
         try {
             $paymentIntent = $this->stripe->paymentIntents->create([
-                'amount' => $amount * 100,
+                'amount' => CurrencyService::toCents($amount, $currency),
                 'currency' => strtolower($currency),
                 'payment_method' => $paymentMethod,
                 'customer' => $customerId,
@@ -319,6 +320,7 @@ class PaymentService
                             'referee_id' => $referee->id,
                             'mission_id' => $mission->id,
                             'amount' => $affiliateCommissionAmount,
+                            'currency' => strtoupper($currency), // ✅ Devise de la transaction
                             'status' => 'available', // ✅ CORRECTION: Disponible pour retrait
                             'payout_method' => 'stripe',
                             'stripe_transfer_id' => $transfer->id,
@@ -363,10 +365,11 @@ class PaymentService
                 'stripe_account' => $provider->stripe_account_id
             ] ,[]);
 
+            $currency = strtoupper($balance->available[0]->currency ?? 'EUR');
             return [
-                'available' => $balance->available[0]->amount / 100,
-                'pending' => $balance->pending[0]->amount / 100,
-                'currency' => strtoupper($balance->available[0]->currency)
+                'available' => CurrencyService::fromCents($balance->available[0]->amount, $currency),
+                'pending' => CurrencyService::fromCents($balance->pending[0]->amount, $currency),
+                'currency' => $currency
             ];
             
         } catch (\Exception $e) {
@@ -379,10 +382,11 @@ class PaymentService
         try {
             $balance = \Stripe\Balance::retrieve();
 
+            $currency = strtoupper($balance->available[0]->currency ?? 'EUR');
             return [
-                'available' => $balance->available[0]->amount / 100,
-                'pending' => $balance->pending[0]->amount / 100,
-                'currency' => strtoupper($balance->available[0]->currency)
+                'available' => CurrencyService::fromCents($balance->available[0]->amount, $currency),
+                'pending' => CurrencyService::fromCents($balance->pending[0]->amount, $currency),
+                'currency' => $currency
             ];
 
         } catch (\Exception $e) {

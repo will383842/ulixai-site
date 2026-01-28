@@ -11,6 +11,7 @@ use Stripe\Webhook;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Services\AuditLogService;
+use App\Services\CurrencyService;
 
 class StripeWebhookController extends Controller
 {
@@ -127,15 +128,16 @@ class StripeWebhookController extends Controller
                     $missionOffer->update(['status' => 'accepted']);
                 }
 
-                // ✅ Créer la transaction avec round() pour éviter erreurs de précision
+                // ✅ Créer la transaction avec CurrencyService pour gérer les devises zero-decimal
+                $amountPaid = CurrencyService::fromCents($paymentIntent->amount, $currency);
                 $transaction = Transaction::create([
                     'mission_id' => $missionId,
                     'provider_id' => $providerId,
                     'offer_id' => $offerId,
                     'stripe_payment_intent_id' => $paymentIntent->id,
-                    'amount_paid' => round($paymentIntent->amount / 100, 2),
+                    'amount_paid' => $amountPaid,
                     'client_fee' => round((float) $clientFee, 2),
-                    'provider_fee' => round(($paymentIntent->amount / 100) * $commission->provider_fee, 2),
+                    'provider_fee' => round($amountPaid * $commission->provider_fee, 2),
                     'country' => $lockedMission->location_country,
                     'currency' => $currency, // ✅ Devise récupérée depuis Stripe (EUR ou USD)
                     'user_role' => 'service_requester', // Correct: seul le requester paie
@@ -149,7 +151,7 @@ class StripeWebhookController extends Controller
                     'payment_intent_id' => $paymentIntent->id,
                     'mission_id' => $missionId,
                     'provider_id' => $providerId,
-                    'amount' => round($paymentIntent->amount / 100, 2),
+                    'amount' => $amountPaid,
                     'currency' => $currency
                 ]);
             }, 5); // 5 tentatives en cas de deadlock

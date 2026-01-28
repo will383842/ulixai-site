@@ -15,8 +15,11 @@ use Stripe\Refund;
 use Stripe\Transfer;
 use Stripe\Account as StripeAccount;
 use App\Services\ReputationPointService;
+use App\Services\CurrencyService;
 use App\Http\Resources\MissionResource;
 use App\Http\Resources\MissionOfferResource;
+use App\Http\Requests\Mission\StoreOfferRequest;
+use Illuminate\Support\Facades\Gate;
 
 class JobListController extends Controller
 {
@@ -75,20 +78,16 @@ class JobListController extends Controller
         return view('dashboard.provider.jobs.quote-offer', compact('mission', 'offers'));
     }
 
-    public function submitOffer(Request $request, $id)
+    /**
+     * Submit an offer for a mission
+     * ✅ Uses StoreOfferRequest for validation and authorization
+     */
+    public function submitOffer(StoreOfferRequest $request, $id)
     {
-        $request->validate([
-            'price' => 'required|numeric|min:1',
-            'delivery_time' => 'required|string|max:50',
-            'message' => 'required|string|max:300',
-        ]);
+        // Validation and authorization handled by StoreOfferRequest
 
         $mission = Mission::findOrFail($id);
-        $provider = auth()->user()->serviceProvider; // assumes relation: User hasOne ServiceProvider
-
-        if (!$provider) {
-            return response()->json(['status' => 'error', 'message' => 'Provider profile not found.'], 403);
-        }
+        $provider = auth()->user()->serviceProvider;
 
         // Check if offer already exists for this mission and provider
         $existing = MissionOffer::where('mission_id', $mission->id)
@@ -119,35 +118,26 @@ class JobListController extends Controller
     }
 
     /**
-     * ✅ NOUVEAU : Annuler une offre (soft delete)
+     * ✅ Annuler une offre (soft delete)
+     * Uses MissionOfferPolicy for authorization
      */
     public function cancelOffer(Request $request, $offerId)
     {
         try {
             $offer = MissionOffer::findOrFail($offerId);
-            
-            // Vérifier que c'est bien le prestataire qui a créé l'offre
-            $provider = auth()->user()->serviceProvider;
-            
-            if (!$provider || $offer->provider_id !== $provider->id) {
+
+            // ✅ Use Policy for authorization
+            if (Gate::denies('delete', $offer)) {
                 Log::warning('Unauthorized offer cancellation attempt', [
                     'offer_id' => $offerId,
                     'attempting_user' => auth()->id(),
                     'offer_owner' => $offer->provider_id
                 ]);
-                
+
                 return response()->json([
                     'success' => false,
                     'message' => 'Non autorisé'
                 ], 403);
-            }
-
-            // Vérifier que l'offre n'a pas déjà été acceptée
-            if ($offer->status === 'accepted') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Impossible d\'annuler une offre déjà acceptée'
-                ], 422);
             }
 
             // Soft delete
@@ -155,7 +145,7 @@ class JobListController extends Controller
 
             Log::info('Offer cancelled successfully', [
                 'offer_id' => $offerId,
-                'provider_id' => $provider->id,
+                'provider_id' => $offer->provider_id,
                 'mission_id' => $offer->mission_id
             ]);
 
@@ -178,6 +168,10 @@ class JobListController extends Controller
         }
     }
 
+    /**
+     * Start a mission
+     * ✅ Uses MissionPolicy for authorization
+     */
     public function startMission(Request $request)
     {
         $request->validate([
@@ -185,16 +179,14 @@ class JobListController extends Controller
         ]);
 
         $mission = Mission::findOrFail($request->mission_id);
-        
-        $provider = ServiceProvider::where('id', $mission->selected_provider_id)->first();
-        if (!$provider) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Provider profile not found.'
-            ], 403);
-        }
 
-        if ($mission->selected_provider_id !== $provider->id) {
+        // ✅ Use Policy for authorization (checks provider, status, and payment)
+        if (Gate::denies('start', $mission)) {
+            Log::warning('Unauthorized mission start attempt', [
+                'mission_id' => $mission->id,
+                'mission_provider' => $mission->selected_provider_id,
+                'user_id' => auth()->id()
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'You are not authorized to start this mission.'
@@ -226,7 +218,29 @@ class JobListController extends Controller
         ]);
 
         $mission = Mission::findOrFail($request->mission_id);
-        
+
+        // SÉCURITÉ: Vérifier que l'utilisateur authentifié est bien le provider de la mission
+        $provider = auth()->user()->serviceProvider;
+        if (!$provider) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Provider profile not found.'
+            ], 403);
+        }
+
+        if ($mission->selected_provider_id !== $provider->id) {
+            Log::warning('Unauthorized mission resolve attempt', [
+                'mission_id' => $mission->id,
+                'attempting_provider' => $provider->id,
+                'mission_provider' => $mission->selected_provider_id,
+                'user_id' => auth()->id()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not authorized to resolve this mission.'
+            ], 403);
+        }
+
         if ($mission->status !== 'disputed') {
             return response()->json([
                 'success' => false,
@@ -234,7 +248,6 @@ class JobListController extends Controller
             ], 400);
         }
 
-        $provider = $mission->selectedProvider;
         $this->refundMissionPayment($mission, $request);
 
         $this->ReputationPointService->updateReputationPointsBasedOnDisputeResolvedByProvider($provider);
@@ -253,7 +266,10 @@ class JobListController extends Controller
             $transaction = $mission->transactions()->where('status', 'paid')->first();
             $paymentIntent = PaymentIntent::retrieve($transaction->stripe_payment_intent_id);
             
-            $refundAmountInCents = ($paymentIntent->metadata->mission_amount ?? null) * 100; // Convert to cents
+            // ✅ Utiliser CurrencyService::toCents pour gérer les devises zero-decimal
+            $missionAmount = $paymentIntent->metadata->mission_amount ?? null;
+            $currency = $paymentIntent->metadata->currency ?? 'EUR';
+            $refundAmountInCents = $missionAmount ? CurrencyService::toCents((float) $missionAmount, $currency) : null;
 
             if (!$refundAmountInCents) {
                 return response()->json(['error' => 'Refund amount not found in metadata'], 400);
@@ -301,7 +317,29 @@ class JobListController extends Controller
         ]);
 
         $mission = Mission::findOrFail($request->mission_id);
-        
+
+        // SÉCURITÉ: Vérifier que l'utilisateur authentifié est bien le provider de la mission
+        $provider = auth()->user()->serviceProvider;
+        if (!$provider) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Provider profile not found.'
+            ], 403);
+        }
+
+        if ($mission->selected_provider_id !== $provider->id) {
+            Log::warning('Unauthorized delivery confirmation attempt', [
+                'mission_id' => $mission->id,
+                'attempting_provider' => $provider->id,
+                'mission_provider' => $mission->selected_provider_id,
+                'user_id' => auth()->id()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not authorized to confirm delivery for this mission.'
+            ], 403);
+        }
+
         if ($mission->status !== 'in_progress') {
             return response()->json([
                 'success' => false,

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CountrySeeder::class,
             ReputationPointsSeeder::class,
+            ExchangeRateSeeder::class,
         ]);
     }
 }

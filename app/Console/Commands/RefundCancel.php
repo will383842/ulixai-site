@@ -7,6 +7,7 @@ use App\Models\Mission;
 use Stripe\Stripe;
 use Stripe\Refund;
 use Carbon\Carbon;
+use App\Services\CurrencyService;
 use Illuminate\Support\Facades\Log;
 
 class RefundCancel extends Command
@@ -69,7 +70,10 @@ class RefundCancel extends Command
         }
 
         $paymentIntent = \Stripe\PaymentIntent::retrieve($transaction->stripe_payment_intent_id);
-        $refundAmountInCents = ($paymentIntent->metadata->mission_amount ?? null) * 100;
+        // ✅ Utiliser CurrencyService::toCents pour gérer les devises zero-decimal
+        $missionAmount = $paymentIntent->metadata->mission_amount ?? null;
+        $currency = $paymentIntent->metadata->currency ?? 'EUR';
+        $refundAmountInCents = $missionAmount ? CurrencyService::toCents((float) $missionAmount, $currency) : null;
 
         if (!$refundAmountInCents) {
             throw new \Exception('Refund amount not found in metadata');
