@@ -12,6 +12,8 @@ use Stripe\Stripe;
 use Stripe\Transfer;
 use Stripe\Refund;
 use App\Services\AuditLogService;
+use App\Services\NotificationService;
+use App\Notifications\DisputeResolvedNotification;
 
 class DisputeController extends Controller
 {
@@ -51,6 +53,22 @@ class DisputeController extends Controller
                 // Log critique pour traçabilité
                 AuditLogService::logRefund($transaction, 'dispute_refund_to_requester');
 
+                // Notifications aux deux parties
+                $amount = $transaction->amount_paid - $transaction->client_fee;
+                NotificationService::send(
+                    $requester,
+                    new DisputeResolvedNotification($mission, 'refunded', $amount),
+                    NotificationService::TYPE_DISPUTE
+                );
+
+                if ($provider = $mission->selectedProvider) {
+                    NotificationService::send(
+                        $provider->user,
+                        new DisputeResolvedNotification($mission, 'refunded', $amount),
+                        NotificationService::TYPE_DISPUTE
+                    );
+                }
+
                 return response()->json(['message' => 'Payment successfully refunded to requester']);
             }
 
@@ -71,9 +89,12 @@ class DisputeController extends Controller
             Stripe::setApiKey(config('services.stripe.secret'));
             $commissionAmount = ($commission->affiliate_fee * $transaction->provider_fee)* 100 / 100;
             $payProvider = ($transaction->amount_paid - $transaction->provider_fee) - $transaction->client_fee;
+            // Utiliser la devise de la transaction
+            $currency = strtolower($transaction->currency ?? 'eur');
+
             $transfer = Transfer::create([
-                'amount' =>   $payProvider * 100, 
-                'currency' => 'eur',
+                'amount' => (int) round($payProvider * 100),
+                'currency' => $currency,
                 'destination' => $provider->stripe_account_id,
                 'transfer_group' => 'MISSION_' . $mission->id,
             ]);
@@ -89,11 +110,11 @@ class DisputeController extends Controller
                         'referee_id' => $referee->id,
                         'mission_id' => $mission->id,
                         'amount' => $commissionAmount,
-                        'status' => 'available',
+                        'currency' => strtoupper($currency), // Devise de la transaction
+                        'status' => 'paid',
+                        'payout_method' => 'stripe',
+                        'stripe_transfer_id' => $transfer->id,
                     ];
-                    $commissionData['status'] = 'paid';
-                    $commissionData['payout_method'] = 'stripe';
-                    $commissionData['stripe_transfer_id'] = null;
                     AffiliateCommission::create($commissionData);
                     $referrer->increment('affiliate_balance', $commissionAmount);
                     $referrer->increment('pending_affiliate_balance', $commissionAmount);
@@ -108,6 +129,19 @@ class DisputeController extends Controller
 
             // Log critique pour traçabilité
             AuditLogService::logPayment($transaction, 'dispute_transfer_to_provider');
+
+            // Notifications aux deux parties
+            NotificationService::send(
+                $mission->requester,
+                new DisputeResolvedNotification($mission, 'transferred', $payProvider),
+                NotificationService::TYPE_DISPUTE
+            );
+
+            NotificationService::send(
+                $provider->user,
+                new DisputeResolvedNotification($mission, 'transferred', $payProvider),
+                NotificationService::TYPE_DISPUTE
+            );
 
             return response()->json(['message' => 'Payment successfully transferred to provider']);
         } catch (\Exception $e) {

@@ -39,7 +39,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="text-3xl font-bold text-green-800">${{ number_format($total, 2) }}</div>
+                <div class="text-3xl font-bold text-green-800">{{ \App\Models\Currency::format($total, 'USD') }}</div>
                 <div class="text-sm text-green-600 mt-1">USD</div>
             </div>
 
@@ -53,7 +53,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="text-3xl font-bold text-blue-800">${{ number_format($totalData, 2) }}</div>
+                <div class="text-3xl font-bold text-blue-800">{{ \App\Models\Currency::format($totalData, 'USD') }}</div>
                 <div class="text-sm text-blue-600 mt-1">USD</div>
             </div>
 
@@ -67,7 +67,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="text-3xl font-bold text-orange-800">${{ number_format($totalAmountToPaid, 2) }}</div>
+                <div class="text-3xl font-bold text-orange-800">{{ \App\Models\Currency::format($totalAmountToPaid, 'USD') }}</div>
                 <div class="text-sm text-orange-600 mt-1">USD</div>
             </div>
         </div>
@@ -177,7 +177,10 @@
 
                         <!-- Balance -->
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">${{ number_format($balance) }}</div>
+                            @php
+                                    $affiliateCurrency = $affiliate->preferred_currency ?? 'USD';
+                                @endphp
+                                <div class="text-sm font-medium text-gray-900">{{ \App\Models\Currency::format($balance, $affiliateCurrency) }}</div>
                             @if($balance > 0)
                                 <div class="text-xs text-green-600">Pending payout</div>
                             @else

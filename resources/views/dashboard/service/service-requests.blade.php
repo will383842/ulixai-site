@@ -1471,24 +1471,47 @@ $completedRequests = $missions->filter(function($m) {
                     @endif
                     
                     @if($offersCount > 0 && $minPrice && $maxPrice)
+                    @php
+                        $currencyCode = $mission->budget_currency ?? 'EUR';
+                        $currencySymbols = [
+                            'EUR' => '€',
+                            'USD' => '$',
+                            'GBP' => '£',
+                            'CHF' => 'CHF',
+                            'CAD' => 'CA$',
+                            'AUD' => 'A$',
+                            'JPY' => '¥',
+                            'CNY' => '¥',
+                            'INR' => '₹',
+                            'BRL' => 'R$',
+                            'MXN' => 'MX$',
+                            'XOF' => 'CFA',
+                            'XAF' => 'CFA',
+                            'MAD' => 'DH',
+                            'TND' => 'DT',
+                            'DZD' => 'DA',
+                        ];
+                        $currencySymbol = $currencySymbols[$currencyCode] ?? $currencyCode;
+                        $currencyIcon = $currencyCode === 'USD' ? 'dollar-sign' : ($currencyCode === 'GBP' ? 'pound-sign' : 'euro-sign');
+                    @endphp
                     <div class="proposals-highlight" role="region" aria-label="Price range">
                         <div class="proposals-title">
-                            <i class="fas fa-euro-sign" aria-hidden="true"></i>
+                            <i class="fas fa-{{ $currencyIcon }}" aria-hidden="true"></i>
                             <span>Price Range</span>
                         </div>
-                        
+
                         <div class="price-range-box">
                             <div class="price-item">
                                 <div class="price-label">Min</div>
-                                <div class="price-value">{{ number_format($minPrice, 0) }}€</div>
+                                <div class="price-value">{{ number_format($minPrice, 0) }}{{ $currencySymbol }}</div>
                             </div>
                             <div class="price-item">
                                 <div class="price-label">Avg</div>
-                                <div class="price-value">{{ number_format($avgPrice, 0) }}€</div>
+                                <div class="price-value">{{ number_format($avgPrice, 0) }}{{ $currencySymbol }}</div>
                             </div>
                             <div class="price-item">
                                 <div class="price-label">Max</div>
-                                <div class="price-value">{{ number_format($maxPrice, 0) }}€</div>
+                                <div class="price-value">{{ number_format($maxPrice, 0) }}{{ $currencySymbol }}</div>
                             </div>
                         </div>
                     </div>

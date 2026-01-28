@@ -6,7 +6,7 @@ Dear {{ $user->name }},
 We're pleased to inform you that your payout request has been processed successfully.
 
 **Payout Details:**
-- Amount: €{{ number_format($payout->amount, 2) }}
+- Amount: {{ strtoupper($payout->currency) === 'EUR' ? '€' : (strtoupper($payout->currency) === 'USD' ? '$' : (strtoupper($payout->currency) === 'GBP' ? '£' : strtoupper($payout->currency) . ' ')) }}{{ number_format($payout->amount, 2) }}
 - Date: {{ $payout->paid_at->format('d M Y') }}
 - Reference: {{ $payout->stripe_payout_id }}
 

@@ -24,7 +24,7 @@
                         <div class="flex justify-between items-start">
                             <div>
                                 <div class="font-bold mb-2">
-                                    {{ $mission->title }} <span class="font-extrabold">{{ number_format($mission->transactions->first()->amount_paid ?? 0, 2) }} €</span>
+                                    {{ $mission->title }} <span class="font-extrabold">{{ number_format($mission->transactions->first()->amount_paid ?? 0, 2) }} {{ $mission->budget_currency ?? '€' }}</span>
                                 </div>
                                 <div class="mb-1">
                                     Date: <span class="font-medium">{{ $mission->updated_at->format('m/d/Y') }}</span>

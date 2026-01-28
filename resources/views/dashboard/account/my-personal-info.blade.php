@@ -605,7 +605,7 @@
     <!-- Earnings Badge -->
     <div class="earnings-badge">
         <span class="earnings-label">Total Referral Earnings</span>
-        <span class="earnings-value">{{ number_format($user->pending_affiliate_balance, 2) ?? 0.00 }} €</span>
+        <span class="earnings-value">{{ number_format($user->pending_affiliate_balance ?? 0, 2) }} {{ ($user->preferred_currency ?? 'EUR') === 'USD' ? '$' : '€' }}</span>
     </div>
 
     <!-- Personal Info Form -->

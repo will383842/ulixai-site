@@ -5,7 +5,7 @@
 @section('content')
     <!-- Main Content -->
 
-     @php 
+     @php
         // Platform fee (client-side, e.g., 5%)
         $clientFeePercent = config('ulixai.fees.client', 5);
         $providerFeePercent = config('ulixai.fees.provider', 15);
@@ -15,6 +15,28 @@
         $providerFee = number_format($commissions->provider_fee * $missionAmount, 2, '.', '');
         $total = $missionAmount + $clientFee;
         $netToProvider = $missionAmount - $providerFee;
+
+        // Determine currency symbol based on mission budget_currency
+        $currencyCode = $mission->budget_currency ?? 'EUR';
+        $currencySymbols = [
+            'EUR' => '€',
+            'USD' => '$',
+            'GBP' => '£',
+            'CHF' => 'CHF',
+            'CAD' => 'CA$',
+            'AUD' => 'A$',
+            'JPY' => '¥',
+            'CNY' => '¥',
+            'INR' => '₹',
+            'BRL' => 'R$',
+            'MXN' => 'MX$',
+            'XOF' => 'CFA',
+            'XAF' => 'CFA',
+            'MAD' => 'DH',
+            'TND' => 'DT',
+            'DZD' => 'DA',
+        ];
+        $currencySymbol = $currencySymbols[$currencyCode] ?? $currencyCode;
       @endphp
     <div class="flex-1 p-4 sm:p-6 lg:p-8">
       <h1 class="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center lg:text-left">
@@ -49,7 +71,7 @@
           <div class="border-t pt-4 space-y-3">
             <div class="flex justify-between">
               <span class="text-sm">{{ $provider->first_name ?? 'Provider' }}</span>
-              <span class="text-sm">{{ number_format($missionAmount, 2) }} €</span>
+              <span class="text-sm">{{ number_format($missionAmount, 2) }} {{ $currencySymbol }}</span>
             </div>
          <div class="flex justify-between items-center">
           <div class="flex items-center space-x-1 relative">
@@ -64,12 +86,12 @@
             </div>
           </div>
 
-          <span class="text-sm">{{ $clientFee }} €</span>
+          <span class="text-sm">{{ $clientFee }} {{ $currencySymbol }}</span>
         </div>
 
         <div class="border-t pt-3 flex justify-between font-semibold">
           <span>TOTAL</span>
-          <span>{{ number_format($total, 2) }} €</span>
+          <span>{{ number_format($total, 2) }} {{ $currencySymbol }}</span>
         </div>
         <div class="flex justify-between text-xs text-gray-500 pt-2">
           {{-- <span>Provider receives (after {{ $providerFeePercent }}% fee):</span> --}}
@@ -85,7 +107,7 @@
             <input type="hidden" name="total" value="{{ $total }}">
             <input type="hidden" name="remaining_credits" value="{{ $remainingCreditBalance }}">
             <button type="submit" class="w-full bg-blue-500 text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-blue-600 transition">
-              RESERVE FOR {{ number_format($total, 2) }} €
+              RESERVE FOR {{ number_format($total, 2) }} {{ $currencySymbol }}
             </button>
           </form>
           <p class="text-xs text-gray-500 text-center">
