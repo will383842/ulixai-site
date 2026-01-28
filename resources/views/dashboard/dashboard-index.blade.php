@@ -2,6 +2,11 @@
 
 @section('title', 'Dashboard')
 
+@php
+    $userCurrency = auth()->user()->preferred_currency ?? 'EUR';
+    $currencySymbol = $userCurrency === 'USD' ? '$' : '€';
+@endphp
+
 @section('content')
 
 <style>
@@ -1007,7 +1012,7 @@
                         <i class="fas fa-wallet"></i>
                     </div>
                     <div class="stat-card-info">
-                        <div class="stat-value-2025">{{ $balance['available'] ?? '0.00' }}€</div>
+                        <div class="stat-value-2025">{{ $userCurrency === 'USD' ? $currencySymbol : '' }}{{ $balance['available'] ?? '0.00' }}{{ $userCurrency !== 'USD' ? $currencySymbol : '' }}</div>
                         <div class="stat-label-2025">Available Balance</div>
                     </div>
                 </div>
@@ -1059,7 +1064,7 @@
                     <div class="stat-value-2025">75%</div>
                     <div class="stat-label-2025">Share & Earn 75% Commission</div>
                     <div class="stat-card-extra">
-                        {{ $user->referrals()->count() }} referrals · {{ number_format($user->commissions->sum('amount'), 2) }}€ earned
+                        {{ $user->referrals()->count() }} referrals · {{ $userCurrency === 'USD' ? $currencySymbol : '' }}{{ number_format($user->commissions->sum('amount'), 2) }}{{ $userCurrency !== 'USD' ? $currencySymbol : '' }} earned
                     </div>
                 </div>
             </div>
@@ -1071,7 +1076,7 @@
                     <i class="fas fa-coins"></i>
                 </div>
                 <div class="stat-card-info">
-                    <div class="stat-value-2025">{{ number_format($user->commissions->sum('amount'), 2) }}€</div>
+                    <div class="stat-value-2025">{{ $userCurrency === 'USD' ? $currencySymbol : '' }}{{ number_format($user->commissions->sum('amount'), 2) }}{{ $userCurrency !== 'USD' ? $currencySymbol : '' }}</div>
                     <div class="stat-label-2025">Total Commission Earned</div>
                 </div>
             </div>
@@ -1121,7 +1126,7 @@
                 <div class="share-stat-label">Referrals</div>
             </div>
             <div class="share-stat">
-                <div class="share-stat-value success">{{ number_format($user->commissions->sum('amount'), 2) }}€</div>
+                <div class="share-stat-value success">{{ $userCurrency === 'USD' ? $currencySymbol : '' }}{{ number_format($user->commissions->sum('amount'), 2) }}{{ $userCurrency !== 'USD' ? $currencySymbol : '' }}</div>
                 <div class="share-stat-label">Earned</div>
             </div>
             <div class="share-stat">

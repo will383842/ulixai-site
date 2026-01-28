@@ -29,6 +29,7 @@ class UpdatePersonalInfoRequest extends FormRequest
             'address' => 'nullable|string|max:500',
             'country' => 'nullable|string|max:255',
             'preferred_language' => 'nullable|string|max:255',
+            'preferred_currency' => 'nullable|in:EUR,USD',
             'whatsapp_number' => 'nullable|string|max:20',
             'email' => [
                 'required',

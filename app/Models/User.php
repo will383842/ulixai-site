@@ -28,6 +28,7 @@ class User extends Authenticatable
         'status',
         'user_role',
         'preferred_language',
+        'preferred_currency',
         'spoken_languages',
         'is_fake',
         'last_login_at',
@@ -36,7 +37,7 @@ class User extends Authenticatable
         'credit_balance',
         'affiliate_balance',
         'pending_affiliate_balance',
-        'dob', 
+        'dob',
         'address',
         'phone_number',
         'bank_account_holder',
@@ -144,9 +145,75 @@ class User extends Authenticatable
      */
     public function hasBankingDetails()
     {
-        return !empty($this->bank_account_holder) && 
-               !empty($this->bank_account_iban) && 
+        return !empty($this->bank_account_holder) &&
+               !empty($this->bank_account_iban) &&
                !empty($this->bank_name);
+    }
+
+    // ===========================================
+    // FORMATTED BALANCE ACCESSORS
+    // ===========================================
+
+    /**
+     * Get the formatted credit balance with the user's preferred currency.
+     */
+    public function getFormattedCreditBalanceAttribute(): string
+    {
+        $amount = $this->credit_balance ?? 0;
+        $currency = $this->preferred_currency ?? 'EUR';
+
+        return $this->formatAmountWithCurrency($amount, $currency);
+    }
+
+    /**
+     * Get the formatted affiliate balance with the user's preferred currency.
+     */
+    public function getFormattedAffiliateBalanceAttribute(): string
+    {
+        $amount = $this->affiliate_balance ?? 0;
+        $currency = $this->preferred_currency ?? 'EUR';
+
+        return $this->formatAmountWithCurrency($amount, $currency);
+    }
+
+    /**
+     * Get the formatted pending affiliate balance with the user's preferred currency.
+     */
+    public function getFormattedPendingAffiliateBalanceAttribute(): string
+    {
+        $amount = $this->pending_affiliate_balance ?? 0;
+        $currency = $this->preferred_currency ?? 'EUR';
+
+        return $this->formatAmountWithCurrency($amount, $currency);
+    }
+
+    /**
+     * Format an amount with the specified currency.
+     */
+    protected function formatAmountWithCurrency(float $amount, string $currency): string
+    {
+        $symbols = [
+            'EUR' => "\u{20AC}",
+            'USD' => '$',
+            'GBP' => "\u{00A3}",
+            'CHF' => 'CHF',
+            'CAD' => 'CA$',
+            'XOF' => 'CFA',
+            'XAF' => 'FCFA',
+            'MAD' => 'DH',
+            'TND' => 'DT',
+            'DZD' => 'DA',
+        ];
+
+        $symbol = $symbols[$currency] ?? $currency;
+        $formattedAmount = number_format($amount, 2, ',', ' ');
+
+        // Position du symbole selon la devise
+        $symbolAfter = in_array($currency, ['EUR', 'XOF', 'XAF', 'MAD', 'TND', 'DZD', 'CHF']);
+
+        return $symbolAfter
+            ? "{$formattedAmount} {$symbol}"
+            : "{$symbol}{$formattedAmount}";
     }
 
     // ===========================================

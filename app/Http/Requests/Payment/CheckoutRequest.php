@@ -73,6 +73,18 @@ class CheckoutRequest extends FormRequest
                 },
             ],
             'remaining_credits' => 'nullable|numeric|min:0',
+            'currency' => [
+                'sometimes',
+                'string',
+                'in:EUR,USD',
+                // Verifie que la currency correspond a celle de la mission si fournie
+                function ($attribute, $value, $fail) {
+                    $mission = Mission::find($this->mission_id);
+                    if ($mission && $mission->currency && $value !== $mission->currency) {
+                        $fail('The currency does not match the mission currency.');
+                    }
+                },
+            ],
         ];
     }
 
@@ -95,6 +107,8 @@ class CheckoutRequest extends FormRequest
             'client_fee.max' => 'Client fee cannot exceed 10,000€.',
             'total.required' => 'Total amount is required.',
             'total.max' => 'Total amount cannot exceed 110,000€.',
+            'currency.string' => 'Currency must be a string.',
+            'currency.in' => 'Currency must be EUR or USD.',
         ];
     }
 }

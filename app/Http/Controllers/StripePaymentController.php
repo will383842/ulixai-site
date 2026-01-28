@@ -20,16 +20,19 @@ use Illuminate\Support\Facades\DB;
 use App\Models\UlixCommission;
 use App\Models\Country;
 use App\Services\PaymentService;
+use App\Services\CurrencyService;
 use App\Http\Requests\Payment\CheckoutRequest;
 use App\Http\Requests\Payment\ProcessPaymentRequest;
 
 class StripePaymentController extends Controller
 {
     protected PaymentService $paymentService;
+    protected CurrencyService $currencyService;
 
-    public function __construct(PaymentService $paymentService)
+    public function __construct(PaymentService $paymentService, CurrencyService $currencyService)
     {
         $this->paymentService = $paymentService;
+        $this->currencyService = $currencyService;
     }
 
     public function checkout(CheckoutRequest $request)
@@ -77,13 +80,20 @@ class StripePaymentController extends Controller
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        // ✅ CORRECTION: Utiliser round() pour éviter les erreurs de précision flottante
-        $platformFeeInCents = (int) round($clientFee * 100);
-        $totalInCents = (int) round($total * 100);
+        // ✅ Récupérer et valider la devise depuis la mission
+        $currency = strtoupper($mission->budget_currency ?? 'EUR');
+        $supportedCurrencies = $this->currencyService->getSupportedCurrencies();
+        if (!in_array($currency, $supportedCurrencies)) {
+            $currency = 'EUR'; // Fallback vers EUR si devise non supportée
+        }
+
+        // ✅ CORRECTION: Utiliser CurrencyService pour la conversion en centimes
+        $platformFeeInCents = CurrencyService::toCents($clientFee, $currency);
+        $totalInCents = CurrencyService::toCents($total, $currency);
 
         $paymentIntent = PaymentIntent::create([
-            'amount' => $totalInCents, 
-            'currency' => 'eur',
+            'amount' => $totalInCents,
+            'currency' => strtolower($currency),
             'payment_method_types' => ['card'],
             'metadata' => [
                 'mission_id' => $mission->id,
@@ -92,6 +102,7 @@ class StripePaymentController extends Controller
                 'client_fee' => $clientFee,
                 'mission_amount' => $amount,
                 'remaining_credits' => $remainingCreditBalance,
+                'currency' => $currency,
             ],
         ]);
 
@@ -107,6 +118,7 @@ class StripePaymentController extends Controller
             'clientFee' => $clientFee,
             'total' => $total,
             'clientSecret' => $paymentIntent->client_secret,
+            'currency' => $currency,
         ]);
     }
 
@@ -127,6 +139,13 @@ class StripePaymentController extends Controller
                 $clientFee = $paymentIntent->metadata['client_fee'];
                 $remainingCredits = $paymentIntent->metadata['remaining_credits'];
                 $missionAmount = $paymentIntent->metadata['mission_amount'];
+                $currency = $paymentIntent->metadata['currency'] ?? 'EUR';
+
+                // ✅ Valider la devise (EUR ou USD uniquement)
+                $supportedCurrencies = $this->currencyService->getSupportedCurrencies();
+                if (!in_array(strtoupper($currency), $supportedCurrencies)) {
+                    $currency = 'EUR';
+                }
 
                 // ✅ Récupérer la mission d'abord pour les vérifications
                 $mission = Mission::find($missionId);
@@ -163,7 +182,7 @@ class StripePaymentController extends Controller
                 }
 
                 // ✅ SÉCURITÉ: Transaction DB pour atomicité
-                DB::transaction(function () use ($mission, $missionId, $providerId, $offerId, $clientFee, $paymentIntent, $commission, $remainingCredits) {
+                DB::transaction(function () use ($mission, $missionId, $providerId, $offerId, $clientFee, $paymentIntent, $commission, $remainingCredits, $currency) {
                     // Modifier la mission APRÈS validation
                     $mission->status = 'waiting_to_start';
                     $mission->payment_status = 'paid';
@@ -178,17 +197,19 @@ class StripePaymentController extends Controller
                     }
 
                     // Enregistrer la transaction
+                    $amountPaid = CurrencyService::fromCents($paymentIntent->amount, $currency);
                     Transaction::create([
                         'mission_id' => $missionId,
                         'provider_id' => $providerId,
                         'offer_id' => $offerId,
                         'stripe_payment_intent_id' => $paymentIntent->id,
-                        'amount_paid' => round($paymentIntent->amount / 100, 2),
+                        'amount_paid' => round($amountPaid, 2),
                         'client_fee' => round((float) $clientFee, 2),
-                        'provider_fee' => round(($paymentIntent->amount / 100) * $commission->provider_fee, 2),
+                        'provider_fee' => round($amountPaid * $commission->provider_fee, 2),
                         'country' => $mission->location_country,
                         'user_role' => auth()->user()->user_role,
                         'status' => 'paid',
+                        'currency' => $currency,
                     ]);
 
                     // ✅ SÉCURITÉ: Mettre à jour le solde de crédits depuis la DB, pas depuis l'URL

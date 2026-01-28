@@ -188,12 +188,12 @@ class PaymentService
         return ['completed' => false, 'url' => $accountLink->url];
     }
 
-    public function processPayment($amount, $currency, $paymentMethod, $customerId)
+    public function processPayment($amount, $paymentMethod, $customerId, $currency = 'EUR')
     {
         try {
             $paymentIntent = $this->stripe->paymentIntents->create([
                 'amount' => $amount * 100,
-                'currency' => $currency,
+                'currency' => strtolower($currency),
                 'payment_method' => $paymentMethod,
                 'customer' => $customerId,
                 'confirmation_method' => 'manual',
@@ -284,12 +284,15 @@ class PaymentService
             // La commission affilié est basée sur un pourcentage du provider_fee de la transaction
             $affiliateCommissionAmount = round($commission->affiliate_fee * $transaction->provider_fee, 2);
 
+            // Récupérer la devise depuis la transaction ou utiliser EUR par défaut
+            $currency = strtolower($transaction->currency ?? 'EUR');
+
             // ✅ SÉCURITÉ: Transaction DB pour garantir l'atomicité
-            return DB::transaction(function () use ($mission, $provider, $transferAmount, $affiliateCommissionAmount, $transaction) {
+            return DB::transaction(function () use ($mission, $provider, $transferAmount, $affiliateCommissionAmount, $transaction, $currency) {
                 // 1. Créer le transfert Stripe vers le prestataire
                 $transfer = Transfer::create([
                     'amount' => $transferAmount,
-                    'currency' => 'eur',
+                    'currency' => $currency,
                     'destination' => $provider->stripe_account_id,
                     'transfer_group' => 'MISSION_' . $mission->id,
                     'metadata' => [

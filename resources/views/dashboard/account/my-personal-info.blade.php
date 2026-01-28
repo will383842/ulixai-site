@@ -661,6 +661,14 @@
                     </select>
                 </div>
 
+                <div class="form-field">
+                    <label class="form-label">Preferred Currency</label>
+                    <select name="preferred_currency" class="form-select">
+                        <option value="EUR" {{ ($user->preferred_currency ?? 'EUR') == 'EUR' ? 'selected' : '' }}>EUR (Euro)</option>
+                        <option value="USD" {{ ($user->preferred_currency ?? 'EUR') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
+                    </select>
+                </div>
+
                 @if($user->user_role === 'service_provider')
                 <div class="form-field">
                     <label class="form-label">Provider Native Language</label>

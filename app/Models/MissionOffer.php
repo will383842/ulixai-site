@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Services\CurrencyService;
 
 class MissionOffer extends Model
 {
@@ -22,6 +23,7 @@ class MissionOffer extends Model
         'mission_id',
         'provider_id',
         'price',
+        'currency',
         'message',
         'delivery_time',
         'status',
@@ -202,5 +204,63 @@ class MissionOffer extends Model
     public function scopeWithCancelled($query)
     {
         return $query->withTrashed();
+    }
+
+    /**
+     * Scope pour filtrer par devise
+     */
+    public function scopeByCurrency($query, string $currency)
+    {
+        return $query->where('currency', strtoupper($currency));
+    }
+
+    // ===========================================
+    // ACCESSORS
+    // ===========================================
+
+    /**
+     * Obtenir le prix formaté avec la devise
+     *
+     * @return string
+     */
+    public function getFormattedPriceAttribute(): string
+    {
+        $currency = $this->currency ?? $this->mission?->budget_currency ?? 'EUR';
+        return CurrencyService::format($this->price, $currency, true);
+    }
+
+    // ===========================================
+    // VALIDATION METHODS
+    // ===========================================
+
+    /**
+     * Valide que la devise de l'offre correspond à celle de la mission
+     *
+     * @return bool
+     */
+    public function validateCurrencyMatchesMission(): bool
+    {
+        if (!$this->currency || !$this->mission) {
+            return true; // Pas de validation si pas de devise ou pas de mission
+        }
+
+        return strtoupper($this->currency) === strtoupper($this->mission->budget_currency);
+    }
+
+    /**
+     * Boot method pour ajouter les observers du modèle
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Validation avant création/mise à jour
+        static::saving(function (MissionOffer $offer) {
+            if (!$offer->validateCurrencyMatchesMission()) {
+                throw new \InvalidArgumentException(
+                    "La devise de l'offre ({$offer->currency}) ne correspond pas à celle de la mission ({$offer->mission->budget_currency})."
+                );
+            }
+        });
     }
 }

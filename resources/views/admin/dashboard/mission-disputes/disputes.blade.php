@@ -1,113 +1,147 @@
 @extends('admin.dashboard.index')
 
 @section('admin-content')
-<div class="p-4 sm:p-6 lg:p-8">
-    <div class="sm:flex sm:items-center">
-        <div class="sm:flex-auto">
-            <h1 class="text-xl font-semibold text-gray-900">Disputed Missions</h1>
-            <p class="mt-2 text-sm text-gray-700">A list of all disputed missions that require admin review.</p>
-        </div>
+<div class="admin-content">
+    <!-- Breadcrumbs -->
+    <nav class="admin-breadcrumbs">
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <span class="admin-breadcrumbs-current">Litiges</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Litiges de missions</h1>
+        <p class="page-subtitle">Liste des missions en litige nécessitant une révision</p>
     </div>
-    
-    <div class="mt-8 flex flex-col">
-        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle">
-                <div class="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
-                    <table class="min-w-full divide-y divide-gray-300">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Mission ID</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Title</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Requester</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Provider</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Amount</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Dispute Reason</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Cancelled By</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200 bg-white">
-                            @foreach($disputes as $dispute)
-                            <tr>
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900">{{ $dispute->id }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">{{ $dispute->title }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">{{ $dispute->requester->name }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">{{ optional($dispute->selectedProvider->user)->name }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">{{ $dispute->transactions->where('status', 'paid')->first()->amount_paid ?? 'N/A' }} €</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $dispute->cancellationReasons->first()->custum_description ?? $dispute->cancellationReasons->first()->reason }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">{{ ucfirst($dispute->cancelled_by) }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                    <div class="flex space-x-2">
-                                        <button class="transfer-btn inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" 
-                                                data-mission-id="{{ $dispute->id }}"
-                                                data-provider-id="{{ $dispute->selected_provider_id }}">
-                                            Transfer to Provider
-                                        </button>
-                                        <button class="refund-btn inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                                data-mission-id="{{ $dispute->id }}">
-                                            Refund to Requester
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+
+    <!-- Table -->
+    <div class="admin-card">
+        <div class="admin-table-responsive">
+            <table class="admin-table admin-table-mobile">
+                <thead>
+                    <tr>
+                        <th>ID Mission</th>
+                        <th>Titre</th>
+                        <th>Demandeur</th>
+                        <th>Prestataire</th>
+                        <th>Montant</th>
+                        <th>Raison du litige</th>
+                        <th>Annulé par</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($disputes as $dispute)
+                    <tr>
+                        <td data-label="ID Mission" style="font-weight: 500; color: var(--admin-text);">#{{ $dispute->id }}</td>
+                        <td data-label="Titre" style="color: var(--admin-text);">{{ Str::limit($dispute->title, 30) }}</td>
+                        <td data-label="Demandeur" style="color: var(--admin-text);">{{ $dispute->requester->name }}</td>
+                        <td data-label="Prestataire" style="color: var(--admin-text);">{{ optional($dispute->selectedProvider->user)->name ?? '-' }}</td>
+                        @php
+                            $paidTransaction = $dispute->transactions->where('status', 'paid')->first();
+                            $currency = $dispute->budget_currency ?? 'EUR';
+                        @endphp
+                        <td data-label="Montant" style="font-weight: 500; color: var(--admin-text);">
+                            @if($paidTransaction)
+                                {{ \App\Models\Currency::format($paidTransaction->amount_paid, $currency) }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
+                        <td data-label="Raison" style="color: var(--admin-text-muted); max-width: 200px;" title="{{ $dispute->cancellationReasons->first()->custum_description ?? $dispute->cancellationReasons->first()->reason }}">
+                            {{ Str::limit($dispute->cancellationReasons->first()->custum_description ?? $dispute->cancellationReasons->first()->reason, 40) }}
+                        </td>
+                        <td data-label="Annulé par">
+                            <span class="badge badge-default">{{ ucfirst($dispute->cancelled_by) }}</span>
+                        </td>
+                        <td data-label="Actions">
+                            <div style="display: flex; gap: 8px;">
+                                <button class="transfer-btn btn btn-ghost btn-sm" style="color: var(--admin-success);"
+                                        data-mission-id="{{ $dispute->id }}"
+                                        data-provider-id="{{ $dispute->selected_provider_id }}"
+                                        data-admin-tooltip="Transférer au prestataire">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                    </svg>
+                                </button>
+                                <button class="refund-btn btn btn-ghost btn-sm" style="color: var(--admin-danger);"
+                                        data-mission-id="{{ $dispute->id }}"
+                                        data-admin-tooltip="Rembourser le demandeur">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8">
+                            <div class="admin-empty-state">
+                                <svg class="admin-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="admin-empty-title">Aucun litige en cours</p>
+                                <p class="admin-empty-description">Les litiges de mission apparaîtront ici</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
+@push('scripts')
 <script>
-$(document).ready(function() {
-    $('.refund-btn').click(function() {
-        if (confirm('Are you sure you want to refund this amount to the requester?')) {
-            const missionId = $(this).data('mission-id');
-            $.ajax({
-                url: '/admin/disputes/refund',
-                method: 'POST',
-                data: {
-                    mission_id: missionId,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    toastr.success(response.message);
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
-                },
-                error: function(xhr) {
-                    toastr.error('Error: ' + xhr.responseJSON.message);
-                }
-            });
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.refund-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (confirm('Êtes-vous sûr de vouloir rembourser ce montant au demandeur ?')) {
+                const missionId = this.dataset.missionId;
+                fetch('/admin/disputes/refund', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ mission_id: missionId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    toastr.success(data.message || 'Remboursement effectué');
+                    setTimeout(() => location.reload(), 1500);
+                })
+                .catch(() => toastr.error('Erreur lors du remboursement'));
+            }
+        });
     });
 
-    $('.transfer-btn').click(function() {
-        if (confirm('Are you sure you want to transfer this amount to the provider?')) {
-            const missionId = $(this).data('mission-id');
-            const providerId = $(this).data('provider-id');
-            $.ajax({
-                url: '/admin/disputes/transfer',
-                method: 'POST',
-                data: {
-                    mission_id: missionId,
-                    provider_id: providerId,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    toastr.success(response.message);
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
-                },
-                error: function(xhr) {
-                    toastr.error('Error: ' + xhr.responseJSON.message);
-                }
-            });
-        }
+    document.querySelectorAll('.transfer-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (confirm('Êtes-vous sûr de vouloir transférer ce montant au prestataire ?')) {
+                const missionId = this.dataset.missionId;
+                const providerId = this.dataset.providerId;
+                fetch('/admin/disputes/transfer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ mission_id: missionId, provider_id: providerId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    toastr.success(data.message || 'Transfert effectué');
+                    setTimeout(() => location.reload(), 1500);
+                })
+                .catch(() => toastr.error('Erreur lors du transfert'));
+            }
+        });
     });
 });
 </script>
+@endpush
 @endsection

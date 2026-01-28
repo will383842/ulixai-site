@@ -1247,7 +1247,7 @@
                     
                     <div class="price-box-highlight">
                         <div class="price-label-main">For this job I win</div>
-                        <div class="price-value-main">- €</div>
+                        <div class="price-value-main">- {{ $job->budget_currency === 'USD' ? '$' : '€' }}</div>
                     </div>
                     
                     @if($job->dispute_count ?? 0)
@@ -1347,9 +1347,9 @@
                             <dd class="info-value">{{ $offer->mission->created_at->diffForHumans() }}</dd>
                         </div>
                         <div class="info-item">
-                            <i class="fas fa-euro-sign info-icon" aria-hidden="true"></i>
+                            <i class="fas fa-{{ $offer->mission->budget_currency === 'USD' ? 'dollar-sign' : 'euro-sign' }} info-icon" aria-hidden="true"></i>
                             <dt class="info-label">Offer Price:</dt>
-                            <dd class="info-value">{{ $offer->price ?? '-' }} €</dd>
+                            <dd class="info-value">{{ $offer->mission->budget_currency === 'USD' ? '$' : '€' }}{{ $offer->price ?? '-' }}</dd>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-map-marker-alt info-icon" aria-hidden="true"></i>
@@ -1428,10 +1428,10 @@
                         </div>
                     </div>
                     
-                    <div class="price-box-highlight" 
+                    <div class="price-box-highlight"
                          style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-color: #6ee7b7;">
                         <div class="price-label-main" style="color: #065f46;">You earned</div>
-                        <div class="price-value-main" style="color: #047857;">- €</div>
+                        <div class="price-value-main" style="color: #047857;">- {{ $job->budget_currency === 'USD' ? '$' : '€' }}</div>
                     </div>
                     
                     <dl class="info-grid">

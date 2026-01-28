@@ -19,6 +19,43 @@
     <div class="w-full max-w-3xl mx-auto flex-1 flex flex-col justify-center">
 
       <!-- Booking Confirmation -->
+      @php
+        $currencySymbols = [
+          'EUR' => '€',
+          'USD' => '$',
+          'GBP' => '£',
+          'CHF' => 'CHF',
+          'CAD' => 'CA$',
+          'AUD' => 'A$',
+          'JPY' => '¥',
+          'CNY' => '¥',
+          'INR' => '₹',
+          'BRL' => 'R$',
+          'MXN' => 'MX$',
+          'KRW' => '₩',
+          'RUB' => '₽',
+          'ZAR' => 'R',
+          'SEK' => 'kr',
+          'NOK' => 'kr',
+          'DKK' => 'kr',
+          'PLN' => 'zł',
+          'CZK' => 'Kč',
+          'HUF' => 'Ft',
+          'TRY' => '₺',
+          'ILS' => '₪',
+          'THB' => '฿',
+          'SGD' => 'S$',
+          'HKD' => 'HK$',
+          'NZD' => 'NZ$',
+          'MAD' => 'DH',
+          'AED' => 'AED',
+          'SAR' => 'SAR',
+          'XOF' => 'CFA',
+          'XAF' => 'CFA',
+        ];
+        $currency = $mission->budget_currency ?? 'EUR';
+        $currencySymbol = $currencySymbols[$currency] ?? $currency;
+      @endphp
       <div class="bg-white p-6 sm:p-8 md:p-10 rounded-2xl shadow-xl space-y-6 border border-blue-100">
         <h1 class="text-xl sm:text-2xl font-semibold text-blue-800 text-center">
           WE CONFIRM THAT YOUR BOOKING HAS BEEN TAKEN INTO ACCOUNT, YOUR ULYSSE HAS BEEN NOTIFIED
@@ -66,7 +103,7 @@
                 </div>
                 <div class="text-xl font-semibold text-gray-700">
                   @if($mission->offer)
-                    €{{ number_format($mission->offer->price, 2) }}
+                    {{ $currencySymbol }}{{ number_format($mission->offer->price, 2) }}
                   @endif
                 </div>
               </div>

@@ -17,6 +17,27 @@
     }
 
     $canWithdraw = ($user->pending_affiliate_balance >= 30) || ($balance['available'] ?? 0) > 30;
+
+    // Currency configuration - defaults to EUR if not provided
+    $currency = $currency ?? 'EUR';
+    $currencySymbols = [
+        'EUR' => '€',
+        'USD' => '$',
+        'GBP' => '£',
+        'CHF' => 'CHF',
+        'CAD' => 'CA$',
+        'XOF' => 'CFA',
+        'XAF' => 'FCFA',
+        'MAD' => 'DH',
+        'TND' => 'DT',
+    ];
+    $currencySymbol = $currencySymbols[$currency] ?? $currency;
+
+    // Determine if currency symbol should be placed before or after the amount
+    $symbolBefore = in_array($currency, ['USD', 'GBP', 'CAD']);
+
+    // Minimum withdrawal amount (could be passed from controller in the future)
+    $minimumWithdrawal = 30;
 @endphp
 
 <style>
@@ -561,12 +582,21 @@
         </div>
         <div class="hero-label">Total Available Balance</div>
         <div class="hero-amount" aria-label="Balance amount">
-            {{ number_format(
-                $user->user_role === 'service_provider'
-                    ? ($balance['available'] ?? 0.00)
-                    : ($user->pending_affiliate_balance ?? 0.00),
-                2
-            ) }}<span class="hero-currency">€</span>
+            @if($symbolBefore)
+                <span class="hero-currency">{{ $currencySymbol }}</span>{{ number_format(
+                    $user->user_role === 'service_provider'
+                        ? ($balance['available'] ?? 0.00)
+                        : ($user->pending_affiliate_balance ?? 0.00),
+                    2
+                ) }}
+            @else
+                {{ number_format(
+                    $user->user_role === 'service_provider'
+                        ? ($balance['available'] ?? 0.00)
+                        : ($user->pending_affiliate_balance ?? 0.00),
+                    2
+                ) }}<span class="hero-currency">{{ $currencySymbol }}</span>
+            @endif
         </div>
         <div class="hero-subtitle">Ready to withdraw</div>
     </section>
@@ -589,7 +619,11 @@
                         @endif
                     </div>
                     <div class="earnings-card-value" aria-label="Affiliate earnings">
-                        {{ number_format($user->pending_affiliate_balance, 2) }}<span class="earnings-card-currency">€</span>
+                        @if($symbolBefore)
+                            <span class="earnings-card-currency">{{ $currencySymbol }}</span>{{ number_format($user->pending_affiliate_balance, 2) }}
+                        @else
+                            {{ number_format($user->pending_affiliate_balance, 2) }}<span class="earnings-card-currency">{{ $currencySymbol }}</span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -611,7 +645,11 @@
                 <div class="earnings-card-content">
                     <div class="earnings-card-label">Missions Completed</div>
                     <div class="earnings-card-value" aria-label="Mission earnings">
-                        {{ number_format($providerEarnings ?? 0.00, 2) }}<span class="earnings-card-currency">€</span>
+                        @if($symbolBefore)
+                            <span class="earnings-card-currency">{{ $currencySymbol }}</span>{{ number_format($providerEarnings ?? 0.00, 2) }}
+                        @else
+                            {{ number_format($providerEarnings ?? 0.00, 2) }}<span class="earnings-card-currency">{{ $currencySymbol }}</span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -656,7 +694,7 @@
                 </div>
                 <div class="withdraw-info-title">Minimum Balance Required</div>
                 <p class="withdraw-info-text">
-                    You need at least 30€ to request a withdrawal. Keep earning to reach the threshold!
+                    You need at least {{ $symbolBefore ? $currencySymbol . $minimumWithdrawal : $minimumWithdrawal . $currencySymbol }} to request a withdrawal. Keep earning to reach the threshold!
                 </p>
             </div>
             
@@ -668,7 +706,7 @@
             <div class="minimum-notice">
                 <p class="minimum-notice-text">
                     <i class="fas fa-info-circle" aria-hidden="true"></i>
-                    <span>Minimum withdrawal amount: 30.00€</span>
+                    <span>Minimum withdrawal amount: {{ $symbolBefore ? $currencySymbol . number_format($minimumWithdrawal, 2) : number_format($minimumWithdrawal, 2) . $currencySymbol }}</span>
                 </p>
             </div>
         @endif

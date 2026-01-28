@@ -926,6 +926,56 @@
                             </p>
                         </div>
                     </div>
+
+                    <!-- Budget Section -->
+                    <div class="mt-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">💰 Your budget range (optional)</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="relative">
+                                <label for="budget_min" class="sr-only">Minimum budget</label>
+                                <input
+                                    type="number"
+                                    id="budget_min"
+                                    name="budget_min"
+                                    placeholder="Min"
+                                    min="0"
+                                    class="w-full p-3 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
+                                    aria-describedby="budget-help"
+                                />
+                            </div>
+                            <div class="relative">
+                                <label for="budget_max" class="sr-only">Maximum budget</label>
+                                <input
+                                    type="number"
+                                    id="budget_max"
+                                    name="budget_max"
+                                    placeholder="Max"
+                                    min="0"
+                                    class="w-full p-3 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm"
+                                    aria-describedby="budget-help"
+                                />
+                            </div>
+                            <div class="relative">
+                                <label for="budget_currency" class="sr-only">Currency</label>
+                                <select
+                                    id="budget_currency"
+                                    name="budget_currency"
+                                    class="w-full p-3 text-base bg-blue-50 border-2 border-blue-300 rounded-2xl transition-all shadow-sm appearance-none cursor-pointer"
+                                    aria-describedby="budget-help"
+                                >
+                                    <option value="EUR" selected>EUR (€)</option>
+                                    <option value="USD">USD ($)</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <p id="budget-help" class="mt-2 text-xs text-gray-500 italic text-center">⚠️ Optional - helps providers give you better quotes</p>
+                    </div>
+
                     <p class="text-xs text-red-500 mt-2 font-semibold text-center" aria-live="polite">* Required</p>
                 </fieldset>
                 

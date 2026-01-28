@@ -19,6 +19,7 @@ use App\Models\Conversation;
 use App\Models\MissionOffer;
 use App\Http\Requests\User\UpdatePersonalInfoRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
+use App\Http\Requests\Provider\UpdateBankingDetailsRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ServiceProviderResource;
 
@@ -64,6 +65,7 @@ class AccountController extends Controller
                 'address' => $request->address,
                 'country' => $request->country,
                 'preferred_language' => $request->preferred_language,
+                'preferred_currency' => $request->preferred_currency,
                 'email' => $request->email,
             ];
 
@@ -418,15 +420,14 @@ class AccountController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function updateBankingDetails(Request $request)
+    /**
+     * Update banking details using Form Request validation
+     * ✅ Uses UpdateBankingDetailsRequest for centralized validation
+     */
+    public function updateBankingDetails(UpdateBankingDetailsRequest $request)
     {
-        $request->validate([
-            'bank_account_holder' => 'required|string|max:255',
-            'bank_account_iban' => 'required|string|max:50',
-            'bank_swift_bic' => 'required|string|max:11',
-            'bank_name' => 'required|string|max:255',
-            'account_country' => 'required|string|exists:countries,short_name',
-        ]);
+        // Validation is handled by UpdateBankingDetailsRequest
+        // Authorization is also checked in the Form Request
 
         try {
             $user = auth()->user();

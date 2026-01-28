@@ -30,7 +30,25 @@
   $images = json_decode($mission->attachments ?? '[]', true);
   $user = auth()->user();
   $provider = $user->serviceProvider ?? null;
-  
+
+  // Determine currency symbol based on mission's budget_currency
+  $currencySymbols = [
+      'EUR' => '€',
+      'USD' => '$',
+      'GBP' => '£',
+      'CHF' => 'CHF',
+      'CAD' => 'CA$',
+      'AUD' => 'A$',
+      'JPY' => '¥',
+      'CNY' => '¥',
+      'XOF' => 'CFA',
+      'XAF' => 'CFA',
+      'MAD' => 'DH',
+      'TND' => 'DT',
+  ];
+  $budgetCurrency = $mission->budget_currency ?? 'EUR';
+  $currencySymbol = $currencySymbols[$budgetCurrency] ?? $budgetCurrency;
+
   // Calculate remaining days
   $remainingDays = 'N/A';
   $durationMap = [
@@ -2128,7 +2146,7 @@
                         </div>
                     </div>
                     
-                    <div class="offer-price">{{ $offer->price ?? '-' }} €</div>
+                    <div class="offer-price">{{ $offer->price ?? '-' }} {{ $currencySymbol }}</div>
                 </div>
                 
                 <div class="offer-message">{{ $offer->message ?? 'No message provided.' }}</div>
@@ -2233,7 +2251,7 @@
         
         <form id="offerForm" onsubmit="submitOfferForm(event)">
             <div class="form-group">
-                <label for="offerPrice" class="form-label">Your Proposed Price (€)</label>
+                <label for="offerPrice" class="form-label">Your Proposed Price ({{ $currencySymbol }})</label>
                 <input type="number"
                        id="offerPrice"
                        class="form-input"

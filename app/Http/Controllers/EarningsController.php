@@ -35,6 +35,8 @@ class EarningsController extends Controller
     public function index(Request $reqest) {
         $user= auth()->user();
         $provider = $user->serviceprovider;
+        $currency = $user->preferred_currency ?? 'EUR';
+
         if ($provider && $provider->stripe_account_id) {
             try {
                 $stripeBalance = $this->PaymentService->providerAccountBalance($provider);
@@ -45,12 +47,14 @@ class EarningsController extends Controller
                 'user' => $user,
                 'provider' => $provider,
                 'balance' => $stripeBalance,
+                'currency' => $currency,
             ]);
-            
+
         }
         return view('dashboard.my-earnings', [
-            'user' => $user
-        ]);        
+            'user' => $user,
+            'currency' => $currency,
+        ]);
     }
 
     public function manageUserFunds(Request $request)
@@ -68,6 +72,10 @@ class EarningsController extends Controller
         // ✅ Initialiser la variable pour éviter undefined
         $totalPayoutAmount = 0;
 
+        // Récupérer la devise préférée de l'utilisateur (EUR ou USD)
+        $currency = strtolower($user->preferred_currency ?? 'EUR');
+        $currencySymbol = $currency === 'usd' ? '$' : '€';
+
         DB::beginTransaction();
 
         try {
@@ -79,7 +87,7 @@ class EarningsController extends Controller
                 'user_id' => $user->id,
                 'provider_id' => $user->serviceProvider->id ?? null,
                 'amount' => $affiliateAmount,
-                'currency' => 'eur',
+                'currency' => $currency,
                 'payout_type' => 'affiliate',
                 'status' => 'processing'
             ]);
@@ -107,13 +115,13 @@ class EarningsController extends Controller
 
                 if ($totalPayoutAmount < 30) {
                     DB::rollBack();
-                    return back()->with('error', 'Total balance is less than minimum withdrawal amount (30€)');
+                    return back()->with('error', 'Total balance is less than minimum withdrawal amount (30' . $currencySymbol . ')');
                 }
 
                 if ($affiliateAmount > 0) {
                     $transfer = $stripe->transfers->create([
                         'amount' => (int) round($affiliateAmount * 100),
-                        'currency' => 'eur',
+                        'currency' => $currency,
                         'destination' => $accountId,
                         'description' => 'Affiliate commission transfer',
                         'transfer_group' => 'affiliate_transfer_' . $user->id,
@@ -128,7 +136,7 @@ class EarningsController extends Controller
                 $stripePayout = $stripe->payouts->create(
                     [
                         'amount' => (int) round($totalPayoutAmount * 100),
-                        'currency' => 'eur',
+                        'currency' => $currency,
                         'method' => 'standard',
                     ],
                     ['stripe_account' => $accountId]
@@ -146,13 +154,13 @@ class EarningsController extends Controller
                 }
 
                 if ($affiliateAmount < 30) {
-                    throw new \Exception('Minimum withdrawal amount is 30€');
+                    throw new \Exception('Minimum withdrawal amount is 30' . $currencySymbol);
                 }
 
                 try {
                     $stripePayoutResult = $stripe->payouts->create([
                         'amount' => (int) round($affiliateAmount * 100),
-                        'currency' => 'eur',
+                        'currency' => $currency,
                         'method' => 'standard',
                         'destination' => [
                             'type' => 'iban',
@@ -185,7 +193,7 @@ class EarningsController extends Controller
             }
 
             DB::commit();
-            return back()->with('success', 'Your withdrawal of ' . number_format($totalPayoutAmount, 2) . '€ has been processed successfully.');
+            return back()->with('success', 'Your withdrawal of ' . number_format($totalPayoutAmount, 2) . $currencySymbol . ' has been processed successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             if (isset($payoutRecord)) {

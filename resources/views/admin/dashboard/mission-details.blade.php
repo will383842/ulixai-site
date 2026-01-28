@@ -1,185 +1,191 @@
 @extends('admin.dashboard.index')
 
 @section('admin-content')
-<div class="min-h-screen bg-slate-50 py-6">
-    <div class="mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header Section -->
-        <div class="mb-6">
-            <nav class="flex items-center space-x-2 text-sm text-slate-500 mb-4">
-                <a href="{{ route('admin.missions') }}" class="hover:text-slate-700 transition-colors">Missions</a>
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+<div class="admin-content">
+    <!-- Breadcrumbs -->
+    <nav class="admin-breadcrumbs">
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <a href="{{ route('admin.missions') }}">Missions</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <span class="admin-breadcrumbs-current">Détails</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <h1 class="page-title">Aperçu de la mission</h1>
+        </div>
+        <a href="{{ route('admin.missions') }}" class="btn btn-secondary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Retour aux missions
+        </a>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="admin-card p-8">
+        <div class="flex items-center justify-center">
+            <div class="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+            <span class="ml-3 text-gray-600">Chargement des détails...</span>
+        </div>
+    </div>
+
+    <!-- Mission Details Content -->
+    <div id="missionContent" class="hidden space-y-6">
+        <!-- Status and Quick Info Card -->
+        <div class="admin-card p-6">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4" id="quickInfo">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column - Main Details -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Mission Information -->
+                <div class="admin-card">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-900">Informations de la mission</h2>
+                    </div>
+                    <div class="p-6" id="missionInfo">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="admin-card">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-900">Description</h2>
+                    </div>
+                    <div class="p-6" id="missionDescription">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Transactions -->
+                <div class="admin-card">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-900">Historique des transactions</h2>
+                    </div>
+                    <div class="p-6" id="transactionHistory">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Sidebar -->
+            <div class="space-y-6">
+                <!-- Participants -->
+                <div class="admin-card">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-900">Participants</h3>
+                    </div>
+                    <div class="p-6" id="participants">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Financial Summary -->
+                <div class="admin-card">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-900">Résumé financier</h3>
+                    </div>
+                    <div class="p-6" id="financialSummary">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="admin-card">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-900">Chronologie</h3>
+                    </div>
+                    <div class="p-6" id="timeline">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="hidden admin-card p-8">
+        <div class="text-center">
+            <svg class="h-12 w-12 text-red-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Échec du chargement</h3>
+            <p class="text-gray-600 mb-4">Impossible de récupérer les détails de la mission. Veuillez réessayer.</p>
+            <button onclick="loadMissionDetails()" class="btn btn-primary">
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                 </svg>
-                <span class="text-slate-900">Mission Details</span>
-            </nav>
-            
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-semibold text-slate-900">Mission Overview</h1>
-                <a href="{{ route('admin.missions') }}" 
-                   class="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-colors">
-                    <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Back to Missions
-                </a>
-            </div>
-        </div>
-
-        <!-- Loading State -->
-        <div id="loadingState" class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-            <div class="flex items-center justify-center">
-                <div class="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
-                <span class="ml-3 text-slate-600">Loading mission details...</span>
-            </div>
-        </div>
-
-        <!-- Mission Details Content -->
-        <div id="missionContent" class="hidden space-y-6">
-            <!-- Status and Quick Info Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4" id="quickInfo">
-                    <!-- Dynamic content will be inserted here -->
-                </div>
-            </div>
-
-            <!-- Main Content Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Left Column - Main Details -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Mission Information -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-                        <div class="px-6 py-4 border-b border-slate-200">
-                            <h2 class="text-lg font-semibold text-slate-900">Mission Information</h2>
-                        </div>
-                        <div class="p-6" id="missionInfo">
-                            <!-- Dynamic content -->
-                        </div>
-                    </div>
-
-                    <!-- Description -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-                        <div class="px-6 py-4 border-b border-slate-200">
-                            <h2 class="text-lg font-semibold text-slate-900">Description</h2>
-                        </div>
-                        <div class="p-6" id="missionDescription">
-                            <!-- Dynamic content -->
-                        </div>
-                    </div>
-
-                    <!-- Transactions -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-                        <div class="px-6 py-4 border-b border-slate-200">
-                            <h2 class="text-lg font-semibold text-slate-900">Transaction History</h2>
-                        </div>
-                        <div class="p-6" id="transactionHistory">
-                            <!-- Dynamic content -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column - Sidebar -->
-                <div class="space-y-6">
-                    <!-- Participants -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-                        <div class="px-6 py-4 border-b border-slate-200">
-                            <h3 class="text-lg font-semibold text-slate-900">Participants</h3>
-                        </div>
-                        <div class="p-6" id="participants">
-                            <!-- Dynamic content -->
-                        </div>
-                    </div>
-
-                    <!-- Financial Summary -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-                        <div class="px-6 py-4 border-b border-slate-200">
-                            <h3 class="text-lg font-semibold text-slate-900">Financial Summary</h3>
-                        </div>
-                        <div class="p-6" id="financialSummary">
-                            <!-- Dynamic content -->
-                        </div>
-                    </div>
-
-                    <!-- Timeline -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-                        <div class="px-6 py-4 border-b border-slate-200">
-                            <h3 class="text-lg font-semibold text-slate-900">Timeline</h3>
-                        </div>
-                        <div class="p-6" id="timeline">
-                            <!-- Dynamic content -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Error State -->
-        <div id="errorState" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-            <div class="text-center">
-                <svg class="h-12 w-12 text-red-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <h3 class="text-lg font-medium text-slate-900 mb-2">Failed to Load Mission</h3>
-                <p class="text-slate-600 mb-4">We couldn't retrieve the mission details. Please try again.</p>
-                <button onclick="loadMissionDetails()" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
-                    <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    Retry
-                </button>
-            </div>
+                Réessayer
+            </button>
         </div>
     </div>
 </div>
 
+@push('scripts')
 <script>
 function getStatusConfig(status) {
     const configs = {
-        'completed': { 
-            bg: 'bg-emerald-100', 
-            text: 'text-emerald-800', 
-            dot: 'bg-emerald-500',
+        'completed': {
+            class: 'badge-success',
+            dot: 'bg-green-500',
+            label: 'Terminé',
             icon: 'M5 13l4 4L19 7'
         },
-        'in_progress': { 
-            bg: 'bg-amber-100', 
-            text: 'text-amber-800', 
-            dot: 'bg-amber-500',
+        'in_progress': {
+            class: 'badge-warning',
+            dot: 'bg-yellow-500',
+            label: 'En cours',
             icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
         },
-        'pending': { 
-            bg: 'bg-blue-100', 
-            text: 'text-blue-800', 
+        'pending': {
+            class: 'badge-info',
             dot: 'bg-blue-500',
+            label: 'En attente',
             icon: 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
         },
-        'cancelled': { 
-            bg: 'bg-slate-100', 
-            text: 'text-slate-800', 
-            dot: 'bg-slate-500',
+        'published': {
+            class: 'badge-primary',
+            dot: 'bg-blue-600',
+            label: 'Publié',
+            icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
+        },
+        'cancelled': {
+            class: 'badge-default',
+            dot: 'bg-gray-500',
+            label: 'Annulé',
             icon: 'M6 18L18 6M6 6l12 12'
         }
     };
     return configs[status] || configs['cancelled'];
 }
 
-function formatCurrency(amount, currency = '') {
-    if (!amount) return '-';
-    return new Intl.NumberFormat('en-US', {
-        style: currency ? 'currency' : 'decimal',
-        currency: currency || 'USD'
+function formatCurrency(amount, currency = 'EUR') {
+    if (amount === null || amount === undefined) return '-';
+    const currencyCode = currency || 'EUR';
+    return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: currencyCode
     }).format(amount);
 }
 
 function formatDate(dateString, options = {}) {
     if (!dateString) return '-';
-    const defaultOptions = { 
-        year: 'numeric', 
-        month: 'short', 
+    const defaultOptions = {
+        year: 'numeric',
+        month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
     };
-    return new Date(dateString).toLocaleDateString('en-US', { ...defaultOptions, ...options });
+    return new Date(dateString).toLocaleDateString('fr-FR', { ...defaultOptions, ...options });
 }
 
 function loadMissionDetails() {
@@ -195,30 +201,28 @@ function loadMissionDetails() {
         })
         .then(m => {
             const statusConfig = getStatusConfig(m.status);
-            const statusDisplay = m.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
 
             // Quick Info Section
             document.getElementById('quickInfo').innerHTML = `
                 <div class="flex-1">
-                    <h2 class="text-xl font-semibold text-slate-900 mb-2">${m.title || '(No Title)'}</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">${m.title || '(Sans titre)'}</h2>
                     <div class="flex items-center space-x-4">
                         <div class="flex items-center">
                             <div class="h-2 w-2 ${statusConfig.dot} rounded-full mr-2"></div>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusConfig.bg} ${statusConfig.text}">
-                                <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span class="${statusConfig.class}">
+                                <svg class="h-4 w-4 mr-1.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${statusConfig.icon}"></path>
                                 </svg>
-                                ${statusDisplay}
+                                ${statusConfig.label}
                             </span>
                         </div>
-                        <div class="text-sm text-slate-600">
+                        <div class="text-sm text-gray-600">
                             <span class="font-medium">ID:</span> #${m.id}
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="{{ route('admin.missions.conversation', $missionId) }}" 
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                    <a href="{{ route('admin.missions.conversation', $missionId) }}" class="btn btn-primary">
                         <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 10h.01M12 10h.01M16 10h.01
@@ -226,18 +230,14 @@ function loadMissionDetails() {
                                     c0-4.418 4.03-8 9-8s9 3.582 9 8z">
                             </path>
                         </svg>
-
                         Conversations
                     </a>
-
-                    <a href="{{ route('admin.missions.edit', $missionId) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                    <a href="{{ route('admin.missions.edit', $missionId) }}" class="btn btn-secondary">
                         <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
-                        Edit Mission
+                        Modifier
                     </a>
-
-
                 </div>
             `;
 
@@ -246,40 +246,36 @@ function loadMissionDetails() {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <div class="flex items-start">
-                            <dt class="flex-shrink-0 text-sm font-medium text-slate-600 w-24">Title:</dt>
-                            <dd class="text-sm text-slate-900 font-medium">${m.title || '(No Title)'}</dd>
+                            <dt class="flex-shrink-0 text-sm font-medium text-gray-500 w-24">Titre :</dt>
+                            <dd class="text-sm text-gray-900 font-medium">${m.title || '(Sans titre)'}</dd>
                         </div>
                         <div class="flex items-start">
-                            <dt class="flex-shrink-0 text-sm font-medium text-slate-600 w-24">Status:</dt>
-                            <dd>
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig.bg} ${statusConfig.text}">
-                                    ${statusDisplay}
-                                </span>
-                            </dd>
+                            <dt class="flex-shrink-0 text-sm font-medium text-gray-500 w-24">Statut :</dt>
+                            <dd><span class="${statusConfig.class}">${statusConfig.label}</span></dd>
                         </div>
                         <div class="flex items-start">
-                            <dt class="flex-shrink-0 text-sm font-medium text-slate-600 w-24">Category:</dt>
-                            <dd class="text-sm text-slate-900">${m.category || 'General'}</dd>
+                            <dt class="flex-shrink-0 text-sm font-medium text-gray-500 w-24">Catégorie :</dt>
+                            <dd class="text-sm text-gray-900">${m.category || 'Général'}</dd>
                         </div>
                     </div>
                     <div class="space-y-4">
                         <div class="flex items-start">
-                            <dt class="flex-shrink-0 text-sm font-medium text-slate-600 w-24">Created:</dt>
-                            <dd class="text-sm text-slate-900">${formatDate(m.created_at)}</dd>
+                            <dt class="flex-shrink-0 text-sm font-medium text-gray-500 w-24">Créée le :</dt>
+                            <dd class="text-sm text-gray-900">${formatDate(m.created_at)}</dd>
                         </div>
                         <div class="flex items-start">
-                            <dt class="flex-shrink-0 text-sm font-medium text-slate-600 w-24">Updated:</dt>
-                            <dd class="text-sm text-slate-900">${formatDate(m.updated_at)}</dd>
+                            <dt class="flex-shrink-0 text-sm font-medium text-gray-500 w-24">Modifiée le :</dt>
+                            <dd class="text-sm text-gray-900">${formatDate(m.updated_at)}</dd>
                         </div>
                         <div class="flex items-start">
-                            <dt class="flex-shrink-0 text-sm font-medium text-slate-600 w-24">Priority:</dt>
+                            <dt class="flex-shrink-0 text-sm font-medium text-gray-500 w-24">Priorité :</dt>
                             <dd>
-                                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                                    (m.priority === 'high') ? 'bg-red-100 text-red-800' :
-                                    (m.priority === 'medium') ? 'bg-yellow-100 text-yellow-800' :
-                                    'bg-green-100 text-green-800'
+                                <span class="${
+                                    (m.priority === 'high') ? 'badge-warning' :
+                                    (m.priority === 'medium') ? 'badge-info' :
+                                    'badge-success'
                                 }">
-                                    ${m.priority || 'Normal'}
+                                    ${m.priority === 'high' ? 'Haute' : m.priority === 'medium' ? 'Moyenne' : 'Normale'}
                                 </span>
                             </dd>
                         </div>
@@ -289,14 +285,14 @@ function loadMissionDetails() {
 
             // Description
             document.getElementById('missionDescription').innerHTML = `
-                <div class="prose prose-slate max-w-none">
-                    ${m.description ? 
-                        `<div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700 leading-relaxed">${m.description}</div>` :
-                        `<div class="text-center py-8 text-slate-400">
-                            <svg class="h-12 w-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                <div class="prose prose-gray max-w-none">
+                    ${m.description ?
+                        `<div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700 leading-relaxed">${m.description}</div>` :
+                        `<div class="text-center py-8 text-gray-400">
+                            <svg class="h-12 w-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <p class="text-sm">No description provided</p>
+                            <p class="text-sm">Aucune description fournie</p>
                         </div>`
                     }
                 </div>
@@ -315,30 +311,30 @@ function loadMissionDetails() {
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <div class="text-sm font-medium text-slate-900">Requester</div>
-                            <div class="text-sm text-slate-600">${m.requester?.name || 'Unknown'}</div>
-                            <div class="text-xs text-slate-500">${m.requester?.email || ''}</div>
+                            <div class="text-sm font-medium text-gray-900">Demandeur</div>
+                            <div class="text-sm text-gray-600">${m.requester?.name || 'Inconnu'}</div>
+                            <div class="text-xs text-gray-500">${m.requester?.email || ''}</div>
                         </div>
                     </div>
 
                     <!-- Provider -->
                     <div class="flex items-start space-x-3">
                         <div class="flex-shrink-0">
-                            <div class="h-10 w-10 ${m.selected_provider ? 'bg-green-100' : 'bg-slate-100'} rounded-full flex items-center justify-center">
-                                <svg class="h-5 w-5 ${m.selected_provider ? 'text-green-600' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="h-10 w-10 ${m.selected_provider ? 'bg-green-100' : 'bg-gray-100'} rounded-full flex items-center justify-center">
+                                <svg class="h-5 w-5 ${m.selected_provider ? 'text-green-600' : 'text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                 </svg>
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <div class="text-sm font-medium text-slate-900">Provider</div>
-                            <div class="text-sm text-slate-600">
-                                ${m.selected_provider ? 
-                                    (m.selected_provider.first_name + ' ' + m.selected_provider.last_name) : 
-                                    '<span class="italic text-slate-400">Not assigned</span>'
+                            <div class="text-sm font-medium text-gray-900">Prestataire</div>
+                            <div class="text-sm text-gray-600">
+                                ${m.selected_provider ?
+                                    (m.selected_provider.first_name + ' ' + m.selected_provider.last_name) :
+                                    '<span class="italic text-gray-400">Non assigné</span>'
                                 }
                             </div>
-                            <div class="text-xs text-slate-500">${m.selected_provider?.email || ''}</div>
+                            <div class="text-xs text-gray-500">${m.selected_provider?.email || ''}</div>
                         </div>
                     </div>
                 </div>
@@ -347,25 +343,25 @@ function loadMissionDetails() {
             // Financial Summary
             document.getElementById('financialSummary').innerHTML = `
                 <div class="space-y-4">
-                    <div class="bg-slate-50 rounded-lg p-4">
-                        <div class="text-sm font-medium text-slate-700 mb-2">Budget Range</div>
-                        <div class="text-lg font-semibold text-slate-900">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-sm font-medium text-gray-700 mb-2">Fourchette budgétaire</div>
+                        <div class="text-lg font-semibold text-gray-900">
                             ${formatCurrency(m.budget_min, m.budget_currency)} - ${formatCurrency(m.budget_max, m.budget_currency)}
                         </div>
                     </div>
-                    <div class="flex justify-between items-center py-2 border-b border-slate-200">
-                        <span class="text-sm text-slate-600">Payment Status</span>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span class="text-sm text-gray-600">Statut du paiement</span>
                         <span class="text-sm font-medium ${
                             m.payment_status === 'paid' ? 'text-green-700' :
-                            m.payment_status === 'pending' ? 'text-amber-700' :
-                            'text-slate-700'
+                            m.payment_status === 'pending' ? 'text-yellow-700' :
+                            'text-gray-700'
                         }">
-                            ${m.payment_status ? m.payment_status.charAt(0).toUpperCase() + m.payment_status.slice(1) : 'Unknown'}
+                            ${m.payment_status === 'paid' ? 'Payé' : m.payment_status === 'pending' ? 'En attente' : m.payment_status || 'Inconnu'}
                         </span>
                     </div>
                     <div class="flex justify-between items-center py-2">
-                        <span class="text-sm text-slate-600">Total Transactions</span>
-                        <span class="text-sm font-medium text-slate-900">${(m.transactions || []).length}</span>
+                        <span class="text-sm text-gray-600">Total transactions</span>
+                        <span class="text-sm font-medium text-gray-900">${(m.transactions || []).length}</span>
                     </div>
                 </div>
             `;
@@ -378,8 +374,8 @@ function loadMissionDetails() {
                             <div class="h-2 w-2 bg-blue-600 rounded-full"></div>
                         </div>
                         <div class="flex-1">
-                            <div class="text-sm font-medium text-slate-900">Mission Created</div>
-                            <div class="text-xs text-slate-500">${formatDate(m.created_at, { hour: '2-digit', minute: '2-digit' })}</div>
+                            <div class="text-sm font-medium text-gray-900">Mission créée</div>
+                            <div class="text-xs text-gray-500">${formatDate(m.created_at, { hour: '2-digit', minute: '2-digit' })}</div>
                         </div>
                     </div>
                     ${m.selected_provider ? `
@@ -388,18 +384,18 @@ function loadMissionDetails() {
                                 <div class="h-2 w-2 bg-green-600 rounded-full"></div>
                             </div>
                             <div class="flex-1">
-                                <div class="text-sm font-medium text-slate-900">Provider Assigned</div>
-                                <div class="text-xs text-slate-500">${m.selected_provider.first_name} ${m.selected_provider.last_name}</div>
+                                <div class="text-sm font-medium text-gray-900">Prestataire assigné</div>
+                                <div class="text-xs text-gray-500">${m.selected_provider.first_name} ${m.selected_provider.last_name}</div>
                             </div>
                         </div>
                     ` : ''}
                     <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 h-6 w-6 bg-slate-100 rounded-full flex items-center justify-center">
-                            <div class="h-2 w-2 bg-slate-400 rounded-full"></div>
+                        <div class="flex-shrink-0 h-6 w-6 bg-gray-100 rounded-full flex items-center justify-center">
+                            <div class="h-2 w-2 bg-gray-400 rounded-full"></div>
                         </div>
                         <div class="flex-1">
-                            <div class="text-sm font-medium text-slate-900">Last Updated</div>
-                            <div class="text-xs text-slate-500">${formatDate(m.updated_at, { hour: '2-digit', minute: '2-digit' })}</div>
+                            <div class="text-sm font-medium text-gray-900">Dernière mise à jour</div>
+                            <div class="text-xs text-gray-500">${formatDate(m.updated_at, { hour: '2-digit', minute: '2-digit' })}</div>
                         </div>
                     </div>
                 </div>
@@ -410,49 +406,49 @@ function loadMissionDetails() {
             if (transactions.length === 0) {
                 document.getElementById('transactionHistory').innerHTML = `
                     <div class="text-center py-8">
-                        <svg class="h-12 w-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="h-12 w-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
-                        <p class="text-sm text-slate-500">No transactions recorded</p>
-                        <p class="text-xs text-slate-400 mt-1">Transaction history will appear here once payments are processed</p>
+                        <p class="text-sm text-gray-500">Aucune transaction enregistrée</p>
+                        <p class="text-xs text-gray-400 mt-1">L'historique des transactions apparaîtra ici une fois les paiements effectués</p>
                     </div>
                 `;
             } else {
                 const transactionRows = transactions.map(t => `
-                    <tr class="hover:bg-slate-50 transition-colors">
+                    <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-4 py-3">
-                            <div class="text-sm font-medium text-slate-900">#${t.id}</div>
+                            <div class="text-sm font-medium text-gray-900">#${t.id}</div>
                         </td>
                         <td class="px-4 py-3">
-                            <div class="text-sm text-slate-900">${formatCurrency(t.amount_paid, m.budget_currency)}</div>
+                            <div class="text-sm text-gray-900">${formatCurrency(t.amount_paid, m.budget_currency)}</div>
                         </td>
                         <td class="px-4 py-3">
-                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                t.status === 'completed' ? 'bg-green-100 text-green-800' :
-                                t.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-slate-100 text-slate-800'
+                            <span class="${
+                                t.status === 'completed' ? 'badge-success' :
+                                t.status === 'pending' ? 'badge-warning' :
+                                'badge-default'
                             }">
-                                ${t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : 'Unknown'}
+                                ${t.status === 'completed' ? 'Terminé' : t.status === 'pending' ? 'En attente' : t.status || 'Inconnu'}
                             </span>
                         </td>
                         <td class="px-4 py-3">
-                            <div class="text-sm text-slate-600">${formatDate(t.created_at, { month: 'short', day: 'numeric' })}</div>
+                            <div class="text-sm text-gray-600">${formatDate(t.created_at, { month: 'short', day: 'numeric' })}</div>
                         </td>
                     </tr>
                 `).join('');
 
                 document.getElementById('transactionHistory').innerHTML = `
                     <div class="overflow-hidden">
-                        <table class="min-w-full">
-                            <thead class="bg-slate-50">
+                        <table class="admin-table">
+                            <thead>
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">ID</th>
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Amount</th>
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Status</th>
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Date</th>
+                                    <th>ID</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                    <th>Date</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-200">
+                            <tbody>
                                 ${transactionRows}
                             </tbody>
                         </table>
@@ -466,7 +462,7 @@ function loadMissionDetails() {
         })
         .catch(error => {
             console.error('Error loading mission details:', error);
-            
+
             // Show error state
             document.getElementById('loadingState').classList.add('hidden');
             document.getElementById('missionContent').classList.add('hidden');
@@ -479,122 +475,5 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMissionDetails();
 });
 </script>
-
-<style>
-/* Loading animation */
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-/* Smooth transitions */
-.transition-colors {
-    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
-}
-
-/* Focus states */
-button:focus, a:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Custom scrollbar for tables */
-.overflow-x-auto::-webkit-scrollbar {
-    height: 6px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 3px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 3px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-/* Hover effects for cards */
-.bg-white {
-    transition: box-shadow 0.15s ease-in-out;
-}
-
-/* Enhanced card shadows on hover */
-.shadow-sm:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-/* Prose styling for description */
-.prose {
-    line-height: 1.6;
-}
-
-/* Status badge animations */
-.inline-flex {
-    transition: transform 0.15s ease-in-out;
-}
-
-/* Button hover animations */
-button {
-    transition: all 0.15s ease-in-out;
-}
-
-button:hover {
-    transform: translateY(-1px);
-}
-
-button:active {
-    transform: translateY(0);
-}
-
-/* Timeline connector lines */
-.timeline-connector {
-    position: relative;
-}
-
-.timeline-connector:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: 11px;
-    top: 24px;
-    width: 2px;
-    height: 20px;
-    background-color: #e2e8f0;
-}
-
-/* Responsive improvements */
-@media (max-width: 768px) {
-    .grid-cols-1 {
-        gap: 1rem;
-    }
-    
-    .space-y-6 > * + * {
-        margin-top: 1rem;
-    }
-}
-
-/* Loading state improvements */
-.loading-shimmer {
-    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-    0% {
-        background-position: -200% 0;
-    }
-    100% {
-        background-position: 200% 0;
-    }
-}
-</style>
+@endpush
 @endsection

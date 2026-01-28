@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 class ServiceRequestController extends Controller
 {
@@ -321,6 +322,9 @@ class ServiceRequestController extends Controller
                 // ✅ GDPR: Validation CGV
                 'terms_accepted_at' => 'nullable|string',
                 'terms_version' => 'nullable|string|max:10',
+
+                // Budget currency
+                'budget_currency' => 'nullable|in:EUR,USD',
             ]);
             
             Log::info('✅ [FORM] Validation passed');
@@ -416,7 +420,7 @@ class ServiceRequestController extends Controller
                 'description' => strip_tags($request->moreDetails),
                 'budget_min' => null,
                 'budget_max' => null,
-                'budget_currency' => 'EUR',
+                'budget_currency' => $request->budget_currency ?? 'EUR',
                 'service_duration' => $request->serviceDuration ?? null,
                 'location_country' => $request->countryNeed,
                 'location_city' => strip_tags($request->currentCity),
@@ -573,9 +577,10 @@ class ServiceRequestController extends Controller
     }
 
     /**
-     * ✅ ANNULER UNE DEMANDE DE MISSION (PAR LE REQUESTER) - CORRIGÉ
+     * ✅ ANNULER UNE DEMANDE DE MISSION (PAR LE REQUESTER)
+     * Uses MissionPolicy for authorization
      */
-    public function cancelMissionRequest(Request $request) 
+    public function cancelMissionRequest(Request $request)
     {
         // ═══════════════════════════════════════════════════════
         // 📊 LOGS : Entrée de la requête
@@ -585,7 +590,7 @@ class ServiceRequestController extends Controller
             'user_id' => auth()->id(),
             'reason' => $request->reason,
         ]);
-        
+
         // ═══════════════════════════════════════════════════════
         // 🛡️ VALIDATION DES DONNÉES
         // ═══════════════════════════════════════════════════════
@@ -602,15 +607,15 @@ class ServiceRequestController extends Controller
             // 🔍 RÉCUPÉRATION DE LA MISSION
             // ═══════════════════════════════════════════════════════
             $mission = Mission::findOrFail($request->mission_id);
-            
-            // ✅ Vérification des permissions
-            if ($mission->requester_id !== auth()->id()) {
+
+            // ✅ Use Policy for authorization
+            if (Gate::denies('cancel', $mission)) {
                 Log::warning('⚠️ [CANCEL] Unauthorized access attempt', [
                     'mission_id' => $mission->id,
                     'mission_owner' => $mission->requester_id,
                     'attempting_user' => auth()->id(),
                 ]);
-                
+
                 return response()->json([
                     'success' => false,
                     'error' => 'Unauthorized - You can only cancel your own missions'

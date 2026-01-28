@@ -2,6 +2,16 @@
 
 @section('title', 'Payment - ' . $mission->title)
 
+@php
+    $currencySymbol = $currency === 'USD' ? '$' : '€';
+    $formatAmount = function($value) use ($currency, $currencySymbol) {
+        if ($currency === 'USD') {
+            return $currencySymbol . number_format($value, 2, '.', ',');
+        }
+        return number_format($value, 2, ',', ' ') . ' ' . $currencySymbol;
+    };
+@endphp
+
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
@@ -13,15 +23,15 @@
                 <div class="mt-3 space-y-1">
                     <div class="flex justify-between">
                         <span class="text-sm">Mission Amount:</span>
-                        <span class="text-sm">€{{ number_format($amount, 2) }}</span>
+                        <span class="text-sm">{{ $formatAmount($amount) }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-sm">Service Fee:</span>
-                        <span class="text-sm">€{{ number_format($clientFee, 2) }}</span>
+                        <span class="text-sm">{{ $formatAmount($clientFee) }}</span>
                     </div>
                     <div class="flex justify-between font-semibold border-t pt-1">
                         <span>Total:</span>
-                        <span>€{{ number_format($total, 2) }}</span>
+                        <span>{{ $formatAmount($total) }}</span>
                     </div>
                 </div>
             </div>
@@ -52,7 +62,7 @@
 
             <button type="submit" id="submit-button" 
                     class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                <span id="button-text">Pay €{{ number_format($total, 2) }}</span>
+                <span id="button-text">Pay {{ $formatAmount($total) }}</span>
                 <span id="spinner" class="hidden">
                     <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

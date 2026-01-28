@@ -11,16 +11,56 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class AccountingController extends Controller
 {
     /**
+     * ✅ SECURITY: Whitelist of allowed column names to prevent SQL injection
+     * Only these column names can be used in raw SQL queries
+     */
+    private const ALLOWED_COLUMNS = [
+        // Amount columns
+        'amount_paid', 'amount', 'total_amount', 'grand_total', 'price', 'net_amount',
+        // Currency columns
+        'currency', 'payment_currency', 'currency_code', 'payout_currency',
+        // Status columns
+        'status', 'payment_status', 'payout_status',
+        // Country columns
+        'country', 'buyer_country', 'customer_country', 'provider_country', 'account_country',
+        // Date columns
+        'created_at', 'paid_at', 'date', 'updated_at', 'verified_at',
+        // KYC columns
+        'kyc_status', 'kyc_verified',
+    ];
+
+    /**
      * Petite aide: renvoie le premier nom de colonne existant dans $table
+     * ✅ SECURITY: Returns properly quoted column name to prevent SQL injection
      */
     private function firstExistingCol(string $table, array $candidates): ?string
     {
         foreach ($candidates as $col) {
+            // Validate column is in whitelist
+            if (!in_array($col, self::ALLOWED_COLUMNS, true)) {
+                continue;
+            }
             if (Schema::hasColumn($table, $col)) {
                 return $col;
             }
         }
         return null;
+    }
+
+    /**
+     * ✅ SECURITY: Safely quote a column name for use in raw SQL
+     */
+    private function quoteColumn(?string $col): string
+    {
+        if ($col === null) {
+            return '0';
+        }
+        // Validate against whitelist
+        if (!in_array($col, self::ALLOWED_COLUMNS, true)) {
+            return '0';
+        }
+        // Use backticks for MySQL column quoting
+        return '`' . $col . '`';
     }
 
     /**
@@ -38,7 +78,8 @@ class AccountingController extends Controller
         $txStatusCol     = $this->firstExistingCol($txTable, ['status','payment_status']);
         $txCountryCol    = $this->firstExistingCol($txTable, ['country','buyer_country','customer_country']);
 
-        $txAmountExpr = $txAmountCol ? $txAmountCol : '0';
+        // ✅ SECURITY: Use quoted column names to prevent SQL injection
+        $txAmountExpr = $this->quoteColumn($txAmountCol);
 
         $txQuery = DB::table($txTable)
             ->select(DB::raw('COUNT(*) as count'))
@@ -46,19 +87,19 @@ class AccountingController extends Controller
 
         $txGroupBy = [];
 
-        // currency
+        // currency - use safe column reference
         if ($txCurrencyCol) {
-            $txQuery->addSelect($txCurrencyCol . ' as currency');
+            $txQuery->addSelect(DB::raw("COALESCE(" . $this->quoteColumn($txCurrencyCol) . ", 'EUR') as currency"));
             $txGroupBy[] = $txCurrencyCol;
             $txQuery->orderBy($txCurrencyCol);
         } else {
-            // valeur par défaut pour affichage
-            $txQuery->addSelect(DB::raw("'EUR' as currency"));
+            // Pas de colonne currency trouvée - valeur par défaut
+            $txQuery->addSelect(DB::raw("'N/A' as currency"));
         }
 
-        // status
+        // status - use safe column reference
         if ($txStatusCol) {
-            $txQuery->addSelect($txStatusCol . ' as status');
+            $txQuery->addSelect(DB::raw($this->quoteColumn($txStatusCol) . ' as status'));
             $txGroupBy[] = $txStatusCol;
             $txQuery->orderBy($txStatusCol);
         } else {
@@ -86,7 +127,8 @@ class AccountingController extends Controller
         $poStatusCol     = $this->firstExistingCol($poTable, ['status','payout_status']);
         $poCountryCol    = $this->firstExistingCol($poTable, ['country','provider_country','account_country']);
 
-        $poAmountExpr = $poAmountCol ? $poAmountCol : '0';
+        // ✅ SECURITY: Use quoted column names to prevent SQL injection
+        $poAmountExpr = $this->quoteColumn($poAmountCol);
 
         $poQuery = DB::table($poTable)
             ->select(DB::raw('COUNT(*) as count'))
@@ -95,15 +137,16 @@ class AccountingController extends Controller
         $poGroupBy = [];
 
         if ($poCurrencyCol) {
-            $poQuery->addSelect($poCurrencyCol . ' as currency');
+            $poQuery->addSelect(DB::raw("COALESCE(" . $this->quoteColumn($poCurrencyCol) . ", 'EUR') as currency"));
             $poGroupBy[] = $poCurrencyCol;
             $poQuery->orderBy($poCurrencyCol);
         } else {
-            $poQuery->addSelect(DB::raw("'EUR' as currency"));
+            // Pas de colonne currency trouvée - valeur par défaut
+            $poQuery->addSelect(DB::raw("'N/A' as currency"));
         }
 
         if ($poStatusCol) {
-            $poQuery->addSelect($poStatusCol . ' as status');
+            $poQuery->addSelect(DB::raw($this->quoteColumn($poStatusCol) . ' as status'));
             $poGroupBy[] = $poStatusCol;
             $poQuery->orderBy($poStatusCol);
         } else {
@@ -144,23 +187,33 @@ class AccountingController extends Controller
             if ($section === 'revenue') {
                 $table       = 'transactions';
                 $amountCol   = $this->firstExistingCol($table, ['amount_paid','amount','total_amount','grand_total','price']);
+                $currencyCol = $this->firstExistingCol($table, ['currency','payment_currency','currency_code']);
                 $statusCol   = $this->firstExistingCol($table, ['status','payment_status']);
                 $dateCol     = $this->firstExistingCol($table, ['created_at','paid_at','date']);
 
-                $amountExpr  = $amountCol ? $amountCol : '0';
-                $dateExpr    = $dateCol ? "DATE($dateCol)" : "DATE(NOW())";
+                // ✅ SECURITY: Use quoted column names to prevent SQL injection
+                $amountExpr   = $this->quoteColumn($amountCol);
+                $dateExpr     = $dateCol ? "DATE(" . $this->quoteColumn($dateCol) . ")" : "DATE(NOW())";
+                $currencyExpr = $currencyCol
+                    ? "COALESCE(" . $this->quoteColumn($currencyCol) . ", 'EUR')"
+                    : "'EUR'";
 
-                $rows = DB::table($table)
-                    ->selectRaw("$dateExpr as date, COALESCE(SUM($amountExpr),0) as total")
+                $query = DB::table($table)
+                    ->selectRaw("$dateExpr as date, $currencyExpr as currency, COALESCE(SUM($amountExpr),0) as total")
                     ->when($statusCol, fn ($q) => $q->where($statusCol, 'paid'))
                     ->when($dateCol, fn ($q) => $q->where($dateCol, '>=', now()->subDays(29)))
-                    ->groupBy('date')
-                    ->orderBy('date')
-                    ->get();
+                    ->groupBy('date');
 
-                fputcsv($out, ['date','total_eur']);
+                // Grouper par devise si la colonne existe
+                if ($currencyCol) {
+                    $query->groupBy($currencyCol);
+                }
+
+                $rows = $query->orderBy('date')->get();
+
+                fputcsv($out, ['date', 'currency', 'total']);
                 foreach ($rows as $r) {
-                    fputcsv($out, [$r->date, $r->total]);
+                    fputcsv($out, [$r->date, $r->currency, $r->total]);
                 }
 
             } elseif ($section === 'kyc') {
@@ -174,10 +227,13 @@ class AccountingController extends Controller
 
                 $kycCol    = $this->firstExistingCol($table, ['kyc_status','kyc_verified']);
                 $dateCol   = $this->firstExistingCol($table, ['updated_at','created_at','verified_at']);
-                $dateExpr  = $dateCol ? "DATE($dateCol)" : "DATE(NOW())";
+
+                // ✅ SECURITY: Use quoted column names to prevent SQL injection
+                $dateExpr  = $dateCol ? "DATE(" . $this->quoteColumn($dateCol) . ")" : "DATE(NOW())";
+                $kycExpr   = $kycCol ? $this->quoteColumn($kycCol) . "='verified'" : "1=0";
 
                 $rows = DB::table($table)
-                    ->selectRaw("$dateExpr as date, SUM(CASE WHEN " . ($kycCol ? "$kycCol='verified'" : "1=0") . " THEN 1 ELSE 0 END) as verified")
+                    ->selectRaw("$dateExpr as date, SUM(CASE WHEN $kycExpr THEN 1 ELSE 0 END) as verified")
                     ->when($dateCol, fn ($q) => $q->where($dateCol, '>=', now()->subDays(29)))
                     ->groupBy('date')
                     ->orderBy('date')

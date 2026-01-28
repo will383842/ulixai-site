@@ -63,11 +63,19 @@ class AdminDashboardController extends Controller
         // Pending transactions
         $pendingTransactions = Transaction::where('status', 'pending')->count();
 
-        // Total revenue (sum of all completed transactions)
-        $totalRevenue = Transaction::where('status', 'completed')->sum('amount_paid');
+        // Total revenue grouped by currency
+        $totalRevenueByCurrency = Transaction::where('status', 'completed')
+            ->selectRaw('COALESCE(currency, "EUR") as currency, SUM(amount_paid) as total')
+            ->groupBy('currency')
+            ->pluck('total', 'currency')
+            ->toArray();
 
-        // Total pending payouts (sum of all pending transactions)
-        $totalPendingPayouts = Transaction::where('status', 'pending')->sum('amount_paid');
+        // Total pending payouts grouped by currency
+        $totalPendingPayoutsByCurrency = Transaction::where('status', 'pending')
+            ->selectRaw('COALESCE(currency, "EUR") as currency, SUM(amount_paid) as total')
+            ->groupBy('currency')
+            ->pluck('total', 'currency')
+            ->toArray();
 
         // Recent missions
         $recentMissions = Mission::latest()->limit(5)->get();
@@ -99,8 +107,8 @@ class AdminDashboardController extends Controller
             'stripeBalance',
             'pendingKycProviders',
             'pendingTransactions',
-            'totalRevenue',
-            'totalPendingPayouts',
+            'totalRevenueByCurrency',
+            'totalPendingPayoutsByCurrency',
             'recentMissions',
             'newUsersLastMonth',
             'backlinksTotal',
@@ -324,14 +332,12 @@ class AdminDashboardController extends Controller
 
     public function showAffiliateSummary()
     {
-        $referrels = User::whereNotNull('referred_by')->get('referred_by');
-        $reffrers = $referrels->map(function ($aff) {
-                        return $aff->referred_by;
-                    })->unique()->values();
+        // Get unique referrer IDs and fetch them in a single query (avoids N+1)
+        $referrerIds = User::whereNotNull('referred_by')
+            ->distinct()
+            ->pluck('referred_by');
 
-        $affiliates = $reffrers->map( function($id) {
-            return User::findOrFail($id);
-        });
+        $affiliates = User::whereIn('id', $referrerIds)->get();
         
         $total = (int) User::sum('affiliate_balance');
 

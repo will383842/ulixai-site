@@ -63,4 +63,11 @@ return [
         'provider' => env('BACKLINKS_PROVIDER'),
         'api_key'  => env('BACKLINKS_API_KEY'),
     ],
+
+    // ----------------------------
+    // Exchange Rate API
+    // ----------------------------
+    'exchangerate_api' => [
+        'key' => env('EXCHANGERATE_API_KEY'),
+    ],
 ];
