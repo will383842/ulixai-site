@@ -65,8 +65,8 @@ class TermsAndConditionsController extends Controller
      * POST /admin/terms
      */
     public function store(Request $request)
-        // validate request
     {
+        // validate request
         $data = $request->validate([
             'id'            => ['nullable','integer','exists:terms_sections,id'],
             'number'        => ['required','integer','min:1'],

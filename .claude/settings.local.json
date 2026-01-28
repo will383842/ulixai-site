@@ -53,7 +53,29 @@
       "Bash(wsl -l:*)",
       "Bash(git check-ignore:*)",
       "Bash(if not exist \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Policies\" mkdir \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Policies\")",
-      "Bash(git remote:*)"
+      "Bash(git remote:*)",
+      "Bash(composer remove:*)",
+      "Bash(composer dump-autoload:*)",
+      "Bash(wc:*)",
+      "Bash(Select-String -Pattern \"account|payment|stripe|mission\")",
+      "Bash(ls:*)",
+      "Bash(git revert:*)",
+      "Bash(more:*)",
+      "Bash(curl:*)",
+      "Bash(Out-Null)",
+      "Bash(tasklist:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(for f in \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Http\\\\Controllers\"/*Controller.php \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Http\\\\Controllers\\\\Admin\"/*Controller.php \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Http\\\\Controllers\\\\Api\"/*Controller.php)",
+      "Bash(do wc -l \"$f\")",
+      "Bash(for file in \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Http\\\\Controllers\"/*Controller.php)",
+      "Bash(for file in \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Http\\\\Controllers\\\\Admin\"/*Controller.php)",
+      "Bash(for file in \"C:\\\\Users\\\\simon\\\\Documents\\\\Projets\\\\ulixai-site\\\\app\\\\Http\\\\Controllers\\\\Api\"/*Controller.php)",
+      "Bash(xargs:*)",
+      "Bash(mysql:*)",
+      "Bash(if [ -f .env ])",
+      "Bash(then head -60 .env)",
+      "Bash(else echo \".env does not exist\")",
+      "Bash(fi)"
     ]
   }
 }

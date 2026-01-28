@@ -78,104 +78,105 @@
     }
 </style>
 
-<!-- Hero Section -->
-<section class="relative py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-    <!-- Optional background pulses (fade them more) -->
-    <div class="absolute top-10 left-10 w-56 h-56 bg-blue-100 rounded-full blur-2xl opacity-30 animate-pulse-slow"></div>
-    <div class="absolute bottom-16 right-10 w-72 h-72 bg-gray-200 rounded-full blur-2xl opacity-20 animate-pulse-slow"></div>
+<!-- Header Section -->
+<div class="admin-content">
+    <!-- Breadcrumbs -->
+    <nav class="admin-breadcrumbs">
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <span class="admin-breadcrumbs-current">Carte mondiale</span>
+    </nav>
 
-    <div class="relative max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-16 animate-fade-in">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-                Service <span class="text-blue-600">Providers Directory</span>
-            </h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Discover and manage verified professionals across the globe from a unified admin interface.
-            </p>
-        </div>
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Carte des prestataires</h1>
+        <p class="page-subtitle">Visualisez et gérez les professionnels vérifiés à travers le monde</p>
+    </div>
 
-        <!-- Filters Section -->
-        <div class="mb-12 animate-fade-in" style="animation-delay: 0.2s;">
-            <div class="admin-card shadow-sm">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <!-- Country Filter -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Country</label>
-                        <select id="countryFilter" class="search-input w-full px-3 py-2 rounded-lg">
-                            <option value="">All Countries</option>
-                            <option value="US">United States</option>
-                            <option value="UK">United Kingdom</option>
-                            <option value="CA">Canada</option>
-                            <option value="AU">Australia</option>
-                            <option value="DE">Germany</option>
-                            <option value="FR">France</option>
-                            <option value="PK">Pakistan</option>
-                        </select>
-                    </div>
-
-                    <!-- City Filter -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
-                        <input type="text" id="cityFilter" placeholder="Search city..." class="search-input w-full px-3 py-2 rounded-lg">
-                    </div>
-
-                    <!-- Category Filter -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <select id="categoryFilter" class="search-input w-full px-3 py-2 rounded-lg">
-                            <option value="">All Categories</option>
-                            <option value="legal">Legal Services</option>
-                            <option value="translation">Translation</option>
-                            <option value="consulting">Consulting</option>
-                            <option value="healthcare">Healthcare</option>
-                            <option value="education">Education</option>
-                            <option value="technology">Technology</option>
-                        </select>
-                    </div>
-
-                    <!-- Language Filter -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Language</label>
-                        <select id="languageFilter" class="search-input w-full px-3 py-2 rounded-lg">
-                            <option value="">All Languages</option>
-                            <option value="en">English</option>
-                            <option value="es">Spanish</option>
-                            <option value="fr">French</option>
-                            <option value="de">German</option>
-                            <option value="ur">Urdu</option>
-                            <option value="ar">Arabic</option>
-                        </select>
-                    </div>
+    <!-- Filters Section -->
+    <div class="admin-card mb-6">
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- Country Filter -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Pays</label>
+                    <select id="countryFilter" class="form-input">
+                        <option value="">Tous les pays</option>
+                        <option value="US">États-Unis</option>
+                        <option value="UK">Royaume-Uni</option>
+                        <option value="CA">Canada</option>
+                        <option value="AU">Australie</option>
+                        <option value="DE">Allemagne</option>
+                        <option value="FR">France</option>
+                        <option value="PK">Pakistan</option>
+                    </select>
                 </div>
 
-                <div class="flex flex-wrap items-center justify-between">
-                    <div class="flex flex-wrap gap-2 mb-4 lg:mb-0" id="activeFilters"></div>
-                    <div class="bg-white text-blue-700 px-4 py-2 rounded-full border border-blue-300 font-medium">
-                        <span id="providerCount">125</span> providers found
-                    </div>
+                <!-- City Filter -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Ville</label>
+                    <input type="text" id="cityFilter" placeholder="Rechercher une ville..." class="form-input">
+                </div>
+
+                <!-- Category Filter -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Catégorie</label>
+                    <select id="categoryFilter" class="form-input">
+                        <option value="">Toutes les catégories</option>
+                        <option value="legal">Services juridiques</option>
+                        <option value="translation">Traduction</option>
+                        <option value="consulting">Conseil</option>
+                        <option value="healthcare">Santé</option>
+                        <option value="education">Éducation</option>
+                        <option value="technology">Technologie</option>
+                    </select>
+                </div>
+
+                <!-- Language Filter -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Langue</label>
+                    <select id="languageFilter" class="form-input">
+                        <option value="">Toutes les langues</option>
+                        <option value="en">Anglais</option>
+                        <option value="es">Espagnol</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Allemand</option>
+                        <option value="ur">Ourdou</option>
+                        <option value="ar">Arabe</option>
+                    </select>
                 </div>
             </div>
-        </div>
 
-        <!-- Map Section -->
-        <div class="animate-fade-in" style="animation-delay: 0.4s;">
-            <div class="relative">
-                <div id="map" class="map-container bg-white border border-gray-200 shadow-md"></div>
-
-                <!-- Map Controls -->
-                <div class="absolute top-4 right-4 flex flex-col gap-2">
-                    <button id="resetView" class="bg-white text-gray-700 p-2 rounded-full shadow-md hover:scale-105 transition duration-200 border border-gray-300" title="Reset View">
-                        🔄
-                    </button>
-                    <button id="fullscreen" class="bg-white text-gray-700 p-2 rounded-full shadow-md hover:scale-105 transition duration-200 border border-gray-300" title="Fullscreen">
-                        ⛶
-                    </button>
+            <div class="flex flex-wrap items-center justify-between">
+                <div class="flex flex-wrap gap-2 mb-4 lg:mb-0" id="activeFilters"></div>
+                <div class="badge-primary">
+                    <span id="providerCount">125</span> prestataires trouvés
                 </div>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Map Section -->
+    <div class="admin-card">
+        <div class="relative">
+            <div id="map" class="map-container bg-white"></div>
+
+            <!-- Map Controls -->
+            <div class="absolute top-4 right-4 flex flex-col gap-2 z-[1000]">
+                <button id="resetView" class="btn btn-secondary p-2 rounded-lg shadow-sm" title="Réinitialiser la vue">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </button>
+                <button id="fullscreen" class="btn btn-secondary p-2 rounded-lg shadow-sm" title="Plein écran">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>

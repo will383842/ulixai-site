@@ -1,113 +1,115 @@
 @extends('admin.dashboard.index')
 
 @section('admin-content')
-<div class="mx-auto py-8 px-4">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 mb-2">Create Fake Provider</h1>
-        <p class="text-gray-600 text-sm">Add a new fake provider for testing purposes. Leave fields blank to let Faker auto-fill.</p>
+<div class="admin-content">
+    <!-- Breadcrumbs -->
+    <nav class="admin-breadcrumbs">
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <a href="{{ route('admin.fake-content.dashboard') }}">Fake Data</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <span class="admin-breadcrumbs-current">Créer Prestataire</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Créer un prestataire de test</h1>
+        <p class="page-subtitle">Ajoutez un nouveau prestataire pour les tests. Laissez vide pour générer automatiquement.</p>
     </div>
 
     @if(session('error'))
-        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
             {{ session('error') }}
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="admin-card">
         <form id="fakeProviderForm" method="POST" action="{{ route('admin.fake-content.create') }}" enctype="multipart/form-data" class="p-6">
             @csrf
             <input type="hidden" name="type" value="provider">
 
             <!-- Batch Count -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">How many?</label>
-                    <select name="count" id="countSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Combien ?</label>
+                    <select name="count" id="countSelect" class="form-input">
                         <option value="1" selected>1</option>
                         <option value="5">5</option>
                         <option value="20">20</option>
                         <option value="50">50</option>
                     </select>
-                    <p class="text-xs text-gray-500 mt-1">Batch creation will auto-generate unique emails and can Faker-fill blanks.</p>
+                    <p class="text-xs text-gray-400 mt-1">Création par lot : emails auto-générés.</p>
                 </div>
                 <div class="md:col-span-2"></div>
             </div>
 
             <!-- Basic Information -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                    <input type="text" name="first_name" id="first_name"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                    <input type="text" name="last_name" id="last_name"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Prénom</label>
+                    <input type="text" name="first_name" id="first_name" class="form-input">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
-                    <select name="gender" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Random</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Nom</label>
+                    <input type="text" name="last_name" id="last_name" class="form-input">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Genre</label>
+                    <select name="gender" class="form-input">
+                        <option value="">Aléatoire</option>
+                        <option value="male">Homme</option>
+                        <option value="female">Femme</option>
+                        <option value="other">Autre</option>
                     </select>
                 </div>
 
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                    <input type="text" name="name" id="name"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           placeholder="Leave blank to use Faker">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Nom complet</label>
+                    <input type="text" name="name" id="name" class="form-input" placeholder="Laisser vide pour auto-générer">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Profile Photo (optional)</label>
-                    <input type="file" name="profile_photo"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           accept="image/*">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Photo de profil (optionnel)</label>
+                    <input type="file" name="profile_photo" class="form-input" accept="image/*">
                 </div>
             </div>
 
             <!-- Contact Information -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                    <input type="text" name="phone_number"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           placeholder="+1 555 555 5555 (optional)">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Numéro de téléphone</label>
+                    <input type="text" name="phone_number" class="form-input" placeholder="+33 6 00 00 00 00 (optionnel)">
                 </div>
 
                 <div></div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Communication Online</label>
-                    <select name="communication_online" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Random</option>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Communication en ligne</label>
+                    <select name="communication_online" class="form-input">
+                        <option value="">Aléatoire</option>
+                        <option value="1">Oui</option>
+                        <option value="0">Non</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Communication In Person</label>
-                    <select name="communication_inperson" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Random</option>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Communication en personne</label>
+                    <select name="communication_inperson" class="form-input">
+                        <option value="">Aléatoire</option>
+                        <option value="1">Oui</option>
+                        <option value="0">Non</option>
                     </select>
                 </div>
             </div>
 
             <!-- Location & Languages -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
-                    <select name="country" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Random</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Pays</label>
+                    <select name="country" class="form-input">
+                        <option value="">Aléatoire</option>
                         @foreach($countries as $country)
                             <option value="{{ $country->country }}">{{ $country->country }}</option>
                         @endforeach
@@ -115,9 +117,9 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Native Language</label>
-                    <select name="native_language" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Random</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Langue maternelle</label>
+                    <select name="native_language" class="form-input">
+                        <option value="">Aléatoire</option>
                         @foreach($languages as $lang)
                             <option value="{{ $lang }}">{{ $lang }}</option>
                         @endforeach
@@ -125,9 +127,9 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Language</label>
-                    <select name="preferred_language" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Random</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Langue préférée</label>
+                    <select name="preferred_language" class="form-input">
+                        <option value="">Aléatoire</option>
                         @foreach($languages as $lang)
                             <option value="{{ $lang }}">{{ $lang }}</option>
                         @endforeach
@@ -135,43 +137,38 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Languages Spoken</label>
-                    <select name="spoken_language[]" id="spoken_languages" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Langues parlées</label>
+                    <select name="spoken_language[]" id="spoken_languages" class="form-input">
                         @foreach($languages as $lang)
                             <option value="{{ $lang }}">{{ $lang }}</option>
                         @endforeach
                     </select>
-                    <p class="mt-1 text-xs text-gray-500">Leave empty for random 1–3 languages.</p>
+                    <p class="text-xs text-gray-400 mt-1">Laisser vide pour 1-3 langues aléatoires.</p>
                 </div>
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Operational Countries
-                    <small class="font-normal text-gray-500">(select at least 2, or leave empty for random)</small>
+                <label class="block text-xs font-medium text-gray-500 mb-1">
+                    Pays d'opération
+                    <small class="font-normal text-gray-400">(au moins 2, ou laisser vide pour aléatoire)</small>
                 </label>
 
                 <div id="operationalCountriesChips" class="flex flex-wrap gap-2 mb-2"></div>
 
-                <div class="relative">
-                    <select multiple
-                            name="operational_countries[]"
-                            id="operational_countries"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white min-h-[300px]">
-                        @foreach($countries as $country)
-                            <option value="{{ $country->country }}" class="border mt-2 bg-blue-100 hover:bg-blue-50 rounded p-2">{{ $country->country }}</option>
-                        @endforeach
-                    </select>
-                    <p class="mt-1 text-xs text-gray-500">Tip: Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
-                </div>
+                <select multiple name="operational_countries[]" id="operational_countries" class="form-input min-h-[200px]">
+                    @foreach($countries as $country)
+                        <option value="{{ $country->country }}">{{ $country->country }}</option>
+                    @endforeach
+                </select>
+                <p class="text-xs text-gray-400 mt-1">Conseil : Ctrl+clic (Windows) ou Cmd+clic (Mac) pour sélection multiple.</p>
             </div>
 
             <!-- Professional Information -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                    <select name="category_id" id="categorySelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Random</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Catégorie</label>
+                    <select name="category_id" id="categorySelect" class="form-input">
+                        <option value="">Aléatoire</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                         @endforeach
@@ -179,53 +176,43 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
-                    <select name="subcategory_id" id="subcategorySelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Select Subcategory</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Sous-catégorie</label>
+                    <select name="subcategory_id" id="subcategorySelect" class="form-input">
+                        <option value="">Sélectionner</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Sub Subcategory</label>
-                    <select name="subsubcategory_id" id="subsubcategorySelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Select Sub Subcategory</option>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Sous-sous-catégorie</label>
+                    <select name="subsubcategory_id" id="subsubcategorySelect" class="form-input">
+                        <option value="">Sélectionner</option>
                     </select>
                 </div>
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Special Statuses</label>
+                <label class="block text-xs font-medium text-gray-500 mb-1">Statuts spéciaux</label>
                 <div id="specialStatusesChips" class="flex flex-wrap gap-2 mb-2"></div>
 
-                <div class="relative">
-                    <select multiple
-                            name="special_status[]"
-                            id="special_statuses"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white min-h-[240px]">
-                        @foreach($specialStatuses as $status)
-                            <option value="{{ $status->stitle }}" class="border mt-2 bg-blue-100 hover:bg-blue-50 rounded p-2">{{ $status->stitle }}</option>
-                        @endforeach
-                    </select>
-                    <p class="mt-1 text-xs text-gray-500">Leave empty to randomly assign 0–3 statuses.</p>
-                </div>
+                <select multiple name="special_status[]" id="special_statuses" class="form-input min-h-[160px]">
+                    @foreach($specialStatuses as $status)
+                        <option value="{{ $status->stitle }}">{{ $status->stitle }}</option>
+                    @endforeach
+                </select>
+                <p class="text-xs text-gray-400 mt-1">Laisser vide pour 0-3 statuts aléatoires.</p>
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Profile Description</label>
-                <textarea name="profile_description" rows="4"
-                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          placeholder="Leave blank to auto-generate short description..."></textarea>
+                <label class="block text-xs font-medium text-gray-500 mb-1">Description du profil</label>
+                <textarea name="profile_description" rows="4" class="form-input"
+                          placeholder="Laisser vide pour auto-générer..."></textarea>
             </div>
 
             <!-- Form Actions -->
-            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
-                <button type="button" onclick="history.back()"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    Cancel
-                </button>
-                <button id="createProviderBtn" type="submit"
-                        class="px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center">
-                    <span class="btn-text">Create Provider</span>
+            <div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-100">
+                <button type="button" onclick="history.back()" class="btn btn-secondary">Annuler</button>
+                <button id="createProviderBtn" type="submit" class="btn btn-primary flex items-center">
+                    <span class="btn-text">Créer le prestataire</span>
                     <svg class="btn-spinner animate-spin h-5 w-5 ml-2 hidden text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 100 16v-4l-3.5 3.5L12 24v-4a8 8 0 01-8-8z"></path>

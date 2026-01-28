@@ -502,12 +502,22 @@
       <div class="content-card">
         <div class="prose">
           @if(!empty($legalContent))
-            @if($legalContent != strip_tags($legalContent))
-              {{-- Contains HTML, render raw --}}
-              {!! $legalContent !!}
+            @php
+              // ✅ SECURITY: Sanitize HTML to prevent XSS attacks
+              $allowedTags = '<p><br><strong><b><em><i><u><ul><ol><li><h1><h2><h3><h4><h5><h6><a><blockquote><hr><span><div>';
+              $sanitizedContent = strip_tags($legalContent, $allowedTags);
+              // Remove dangerous attributes
+              $sanitizedContent = preg_replace('/\s*on\w+\s*=\s*["\'][^"\']*["\']/i', '', $sanitizedContent);
+              $sanitizedContent = preg_replace('/\s*on\w+\s*=\s*[^\s>]*/i', '', $sanitizedContent);
+              $sanitizedContent = preg_replace('/javascript\s*:/i', '', $sanitizedContent);
+              $sanitizedContent = preg_replace('/data\s*:/i', '', $sanitizedContent);
+            @endphp
+            @if($sanitizedContent != strip_tags($sanitizedContent))
+              {{-- Contains safe HTML, render sanitized --}}
+              {!! $sanitizedContent !!}
             @else
               {{-- Plain text, escaped and formatted with line breaks --}}
-              <p>{{ nl2br(e($legalContent)) }}</p>
+              <p>{!! nl2br(e($legalContent)) !!}</p>
             @endif
           @else
             <p style="text-align: center; color: var(--text-muted); padding: 40px 0;">

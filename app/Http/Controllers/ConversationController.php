@@ -17,6 +17,7 @@ use App\Events\MessageSent;
 use App\Events\NotifyUser;
 use App\Http\Resources\ConversationResource;
 use App\Http\Resources\MessageResource;
+use Illuminate\Support\Facades\Gate;
 
 class ConversationController extends Controller
 {
@@ -67,12 +68,16 @@ class ConversationController extends Controller
         return new ConversationResource($conversation);
     }
 
+    /**
+     * Get messages from a conversation
+     * ✅ Uses ConversationPolicy for authorization
+     */
     public function messages(Conversation $conversation)
     {
-    
         $user = Auth::user();
-        if ($conversation->mission->requester_id !== $user->id && 
-            $conversation->mission->selectedProvider->user_id !== $user->id) {
+
+        // ✅ Use Policy for authorization
+        if (Gate::denies('view', $conversation)) {
             abort(403, 'Unauthorized access to conversation');
         }
         
@@ -158,6 +163,10 @@ class ConversationController extends Controller
     }
 
 
+    /**
+     * Start a conversation for a mission
+     * ✅ Uses MissionPolicy for authorization
+     */
     public function start(Request $request)
     {
         $request->validate([
@@ -166,9 +175,10 @@ class ConversationController extends Controller
         $user = Auth::user();
         $mission = Mission::findOrFail($request->mission_id);
         $provider = ServiceProvider::findOrFail($mission->selected_provider_id);
-        // Only requester or provider can start
-        if ($user->id !== $mission->requester_id && $user->id !== $provider->user_id) {
-            abort(403);
+
+        // ✅ Use Policy for authorization - only mission participants can start conversation
+        if (Gate::denies('view', $mission)) {
+            abort(403, 'Unauthorized access to mission');
         }
 
         $conversation = Conversation::firstOrCreate([
@@ -189,14 +199,18 @@ class ConversationController extends Controller
     }
 
 
+    /**
+     * Download an attachment
+     * ✅ Uses ConversationPolicy for authorization
+     */
     public function downloadAttachment(MessageAttachment $attachment)
     {
         $user = Auth::user();
         $message = $attachment->message;
         $conversation = $message->conversation;
-        
-        if ($conversation->mission->requester_id !== $user->id && 
-            $conversation->mission->selected_provider_id !== $user->id) {
+
+        // ✅ Use Policy for authorization
+        if (Gate::denies('view', $conversation)) {
             abort(403, 'Unauthorized access to attachment');
         }
         
@@ -210,13 +224,22 @@ class ConversationController extends Controller
     }
 
 
-  public function report(Request $request, Conversation $conversation)
+    /**
+     * Report a conversation
+     * ✅ Uses ConversationPolicy for authorization
+     */
+    public function report(Request $request, Conversation $conversation)
     {
         $request->validate([
             'reason' => 'nullable|string|max:255',
         ]);
 
         $user = Auth::user();
+
+        // ✅ Use Policy for authorization
+        if (Gate::denies('report', $conversation)) {
+            abort(403, 'Unauthorized to report this conversation');
+        }
 
         // Allow up to 3 reports per user per conversation
         $userReportCount = \App\Models\ConversationReport::where('conversation_id', $conversation->id)

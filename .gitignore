@@ -16,9 +16,41 @@ vendor/
 node_modules/
 dist/
 build/
+
+# ============================================
+# FICHIERS SENSIBLES - SÉCURITÉ CRITIQUE
+# ============================================
+# Variables d'environnement
 .env
 .env.*
+*.env
+
+# Fichiers de sauvegarde (peuvent contenir des données sensibles)
+*.bak
+*.backup
+*.old
+*.swp
+*.swo
+*~
+
+# Dumps de base de données
+*.sql
+*.dump
+*.sqlite
+*.db
+
+# Clés et certificats
 storage/*.key
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Credentials et secrets
+*credentials*.json
+*secret*
+*.secrets
 storage/logs/
 storage/framework/
 bootstrap/cache/

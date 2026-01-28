@@ -1,87 +1,99 @@
 @extends('admin.dashboard.index')
 
 @section('admin-content')
-<div class="mx-auto py-8 p-2">
-    <h2 class="text-xl font-bold mb-4">Create Fake Requester</h2>
+<div class="admin-content">
+    <!-- Breadcrumbs -->
+    <nav class="admin-breadcrumbs">
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <a href="{{ route('admin.fake-content.dashboard') }}">Fake Data</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <span class="admin-breadcrumbs-current">Créer Demandeur</span>
+    </nav>
 
-    <form id="createFakeRequesterForm" class="bg-white p-6 rounded shadow space-y-4">
-        @csrf
-        <input type="hidden" name="type" value="requester">
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Créer un demandeur de test</h1>
+        <p class="page-subtitle">Ajoutez un nouveau demandeur pour les tests</p>
+    </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-           <div>
-    <label class="block font-semibold mb-1">Full Name (leave blank for random)</label>
-    <input name="name" class="border rounded px-3 py-2 w-full">
-</div>
+    <div class="admin-card mb-8">
+        <form id="createFakeRequesterForm" class="p-6">
+            @csrf
+            <input type="hidden" name="type" value="requester">
 
-            <div>
-                <label class="block font-semibold mb-1">How many?</label>
-               <select name="count" id="countSelect" class="border rounded px-3 py-2 w-full">
-  <option value="1" selected>1</option>
-  <option value="5">5</option>
-  <option value="20">20</option>
-  <option value="50">50</option>
-</select>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Nom complet (laisser vide pour aléatoire)</label>
+                    <input name="name" class="form-input">
+                </div>
 
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Combien ?</label>
+                    <select name="count" id="countSelect" class="form-input">
+                        <option value="1" selected>1</option>
+                        <option value="5">5</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                    <p class="text-xs text-gray-400 mt-1">Pour 5+, les emails seront auto-générés.</p>
+                </div>
 
-                <p id="countHint" class="text-xs text-gray-500 mt-1">For 5 or 10, unique emails will be auto-generated.</p>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Email (optionnel, seulement si count = 1)</label>
+                    <input name="email" id="emailInput" class="form-input">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Genre (laisser vide pour aléatoire)</label>
+                    <select name="gender" class="form-input">
+                        <option value="">Aléatoire</option>
+                        <option value="male">Homme</option>
+                        <option value="female">Femme</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
             </div>
 
-            <div>
-                <label class="block font-semibold mb-1">Email (optional, only when count = 1)</label>
-                <input name="email" id="emailInput" class="border rounded px-3 py-2 w-full">
+            <div class="flex justify-end pt-4 border-t border-gray-100">
+                <button type="submit" class="btn btn-primary">Créer</button>
             </div>
+            <div id="fakeRequesterMsg" class="mt-3 text-sm"></div>
+        </form>
+    </div>
 
-            <div>
-    <label class="block font-semibold mb-1">Gender (leave blank for random)</label>
-    <select name="gender" class="border rounded px-3 py-2 w-full">
-        <option value="">Random</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="other">Other</option>
-    </select>
-</div>
+    <div class="admin-card">
+        <div class="px-6 py-4 border-b border-gray-100">
+            <h2 class="font-semibold text-gray-900">Tous les demandeurs de test</h2>
         </div>
-
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Create</button>
-        <div id="fakeRequesterMsg" class="mt-2 text-sm"></div>
-    </form>
-
-    <div class="mt-10">
-        <h3 class="text-lg font-semibold mb-3">All Fake Requesters</h3>
-       <div class="overflow-x-auto">
-  <table class="w-full table-auto border-collapse bg-white rounded shadow mb-4">
-    <thead class="bg-gray-50">
-      <tr class="text-left">
-        <th class="px-4 py-2 w-16">ID</th>
-        <th class="px-4 py-2 w-64">Full Name</th>
-        <th class="px-4 py-2 w-[28rem]">Email</th>
-        <th class="px-4 py-2 w-28">Gender</th>
-        <th class="px-4 py-2 w-28">Status</th>
-      </tr>
-    </thead>
-
-    <tbody class="divide-y divide-gray-100" id="fakeRequestersTable">
-      @foreach(\App\Models\User::where('is_fake', true)->where('user_role', 'service_requester')->orderByDesc('id')->get() as $user)
-      <tr class="align-middle">
-        <td class="px-4 py-2 whitespace-nowrap">{{ $user->id }}</td>
-        <td class="px-4 py-2 whitespace-nowrap">{{ $user->name }}</td>
-        <td class="px-4 py-2 whitespace-nowrap">{{ $user->email }}</td>
-        <td class="px-4 py-2 whitespace-nowrap">{{ $user->gender ?? '-' }}</td>
-        <td class="px-4 py-2">
-          <span class="inline-flex items-center px-2 py-1 rounded bg-blue-100 text-blue-800 text-xs font-semibold">
-            {{ ucfirst($user->status) }}
-          </span>
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
-</div>
-
+        <div class="overflow-x-auto">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom complet</th>
+                        <th>Email</th>
+                        <th>Genre</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="fakeRequestersTable">
+                    @foreach(\App\Models\User::where('is_fake', true)->where('user_role', 'service_requester')->orderByDesc('id')->get() as $user)
+                    <tr>
+                        <td class="text-sm font-medium text-gray-900">{{ $user->id }}</td>
+                        <td class="text-sm text-gray-900">{{ $user->name }}</td>
+                        <td class="text-sm text-gray-500">{{ $user->email }}</td>
+                        <td class="text-sm text-gray-500">{{ $user->gender ?? '-' }}</td>
+                        <td><span class="badge-primary">{{ ucfirst($user->status) }}</span></td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
+@push('scripts')
 <script>
 (function () {
   const form       = document.getElementById('createFakeRequesterForm');
@@ -97,16 +109,15 @@
     return allowedCounts.has(n) ? n : 1;
   }
 
-  // Enable email only when count == 1
   function syncEmailState() {
     const count = getCount();
     if (count === 1) {
       emailInput.disabled = false;
-      emailInput.placeholder = 'example@domain.com (optional)';
+      emailInput.placeholder = 'example@domain.com (optionnel)';
     } else {
       emailInput.disabled = true;
       emailInput.value = '';
-      emailInput.placeholder = 'Auto-generated for batches';
+      emailInput.placeholder = 'Auto-généré pour les lots';
     }
   }
   syncEmailState();
@@ -115,7 +126,7 @@
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     msg.textContent = '';
-    msg.className = 'mt-2 text-sm';
+    msg.className = 'mt-3 text-sm';
 
     const payload = {
       type: 'requester',
@@ -139,7 +150,7 @@
       const data = await res.json();
 
       if (!res.ok) {
-        const errors = data.errors ? Object.values(data.errors).flat().join(' ') : (data.message || 'Failed to create.');
+        const errors = data.errors ? Object.values(data.errors).flat().join(' ') : (data.message || 'Échec de la création.');
         msg.textContent = errors;
         msg.classList.add('text-red-600');
         return;
@@ -147,8 +158,8 @@
 
       if (data.success) {
         msg.textContent = data.created_count
-          ? `Created ${data.created_count} requester(s).`
-          : 'Fake requester created!';
+          ? `${data.created_count} demandeur(s) créé(s).`
+          : 'Demandeur de test créé !';
         msg.classList.add('text-green-600');
 
         const users = Array.isArray(data.users)
@@ -158,13 +169,11 @@
         users.forEach(u => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td class="px-3 py-2">${u.id ?? '-'}</td>
-            <td class="px-3 py-2">${u.name ?? '-'}</td>
-            <td class="px-3 py-2">${u.email ?? '-'}</td>
-            <td class="px-3 py-2">${u.gender ?? '-'}</td>
-            <td class="px-3 py-2">
-              <span class="inline-block px-2 py-1 rounded bg-blue-100 text-blue-800 text-xs font-semibold">Active</span>
-            </td>
+            <td class="text-sm font-medium text-gray-900">${u.id ?? '-'}</td>
+            <td class="text-sm text-gray-900">${u.name ?? '-'}</td>
+            <td class="text-sm text-gray-500">${u.email ?? '-'}</td>
+            <td class="text-sm text-gray-500">${u.gender ?? '-'}</td>
+            <td><span class="badge-primary">Actif</span></td>
           `;
           tableBody.prepend(tr);
         });
@@ -172,16 +181,16 @@
         form.reset();
         syncEmailState();
       } else {
-        msg.textContent = data.message || 'Failed to create requester.';
+        msg.textContent = data.message || 'Échec de la création.';
         msg.classList.add('text-red-600');
       }
     } catch (err) {
       console.error(err);
-      msg.textContent = 'Network error.';
+      msg.textContent = 'Erreur réseau.';
       msg.classList.add('text-red-600');
     }
   });
 })();
 </script>
-
+@endpush
 @endsection

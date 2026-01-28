@@ -85,7 +85,7 @@ class MissionAdminController extends Controller
             $mission->urgency = 'medium';
         } 
         if($request->service_durition === '1 month') {
-            $mission->service_durition = 'low';
+            $mission->urgency = 'low';
         } 
 
         $mission->save();

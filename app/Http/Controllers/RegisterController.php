@@ -322,11 +322,12 @@ class RegisterController extends Controller
         );
 
         $otp = random_int(100000, 999999);
-        
+
+        // ✅ SECURITY: Hash OTP before storing (like passwords)
         EmailVerification::updateOrCreate(
             ['user_id' => $user->id, 'email' => $request->email],
             [
-                'otp' => $otp,
+                'otp' => Hash::make($otp),
                 'is_verified' => false,
                 'created_at' => now()
             ]
@@ -360,12 +361,12 @@ class RegisterController extends Controller
             'otp' => 'required|string|size:6'
         ]);
 
+        // ✅ SECURITY: Find by email only, then verify hashed OTP
         $verification = EmailVerification::where('email', $request->email)
-            ->where('otp', $request->otp)
             ->where('is_verified', false)
             ->first();
 
-        if (!$verification) {
+        if (!$verification || !Hash::check($request->otp, $verification->otp)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid or expired code.'
@@ -418,9 +419,10 @@ class RegisterController extends Controller
         }
 
         $otp = random_int(100000, 999999);
+        // ✅ SECURITY: Hash OTP before storing (like passwords)
         EmailVerification::updateOrCreate(
             ['user_id' => $user->id, 'email' => $user->email],
-            ['otp' => $otp, 'is_verified' => false, 'created_at' => now()]
+            ['otp' => Hash::make($otp), 'is_verified' => false, 'created_at' => now()]
         );
 
         Mail::raw(

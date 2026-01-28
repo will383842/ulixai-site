@@ -165,18 +165,19 @@ class MapController extends Controller
         $categoryNames = [];
 
         foreach ($categories as $category) {
-            $decoded = json_decode($category, true);
+            // Handle both string JSON and array input
+            $decoded = is_string($category) ? json_decode($category, true) : $category;
 
             if (is_array($decoded)) {
                 foreach ($decoded as $cat) {
                     $catName = Category::where('id', $cat)->pluck('name')->first();
-                    if ($catName) {
+                    if ($catName && !in_array($catName, $categoryNames)) {
                         $categoryNames[] = $catName;
                     }
                 }
-            } else {
-                $catName = Category::where('id', $category)->pluck('name')->first();
-                if ($catName) {
+            } elseif (!empty($decoded)) {
+                $catName = Category::where('id', $decoded)->pluck('name')->first();
+                if ($catName && !in_array($catName, $categoryNames)) {
                     $categoryNames[] = $catName;
                 }
             }
@@ -197,8 +198,19 @@ class MapController extends Controller
 
     private function fetchCategoryNames($categoryIds): string
     {
+        if (empty($categoryIds)) {
+            return '';
+        }
+
+        // Handle both string JSON and array input
+        $categories = is_string($categoryIds) ? json_decode($categoryIds, true) : $categoryIds;
+
+        if (!is_array($categories)) {
+            return '';
+        }
+
         $categoryName = '';
-        foreach (json_decode($categoryIds, true) as $category) {
+        foreach ($categories as $category) {
             if (is_array($category)) {
                 foreach ($category as $cat) {
                     $catName = Category::where('id', $cat)->pluck('name')->first();

@@ -591,6 +591,18 @@
           @php
             $content = $sections[0]['body'] ?? '<p>No terms and conditions found.</p>';
             $content = str_replace('@site', config('app.name'), (string)$content);
+
+            // ✅ SECURITY: Sanitize HTML to prevent XSS attacks
+            // Allow only safe tags for legal content formatting
+            $allowedTags = '<p><br><strong><b><em><i><u><ul><ol><li><h1><h2><h3><h4><h5><h6><a><blockquote><hr><span><div><table><thead><tbody><tr><th><td>';
+            $content = strip_tags($content, $allowedTags);
+
+            // Remove dangerous attributes (onclick, onerror, javascript:, etc.)
+            $content = preg_replace('/\s*on\w+\s*=\s*["\'][^"\']*["\']/i', '', $content);
+            $content = preg_replace('/\s*on\w+\s*=\s*[^\s>]*/i', '', $content);
+            $content = preg_replace('/javascript\s*:/i', '', $content);
+            $content = preg_replace('/data\s*:/i', '', $content);
+            $content = preg_replace('/vbscript\s*:/i', '', $content);
           @endphp
           {!! $content !!}
         </div>

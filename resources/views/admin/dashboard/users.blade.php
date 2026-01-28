@@ -1,309 +1,180 @@
 @extends('admin.dashboard.index')
 
 @section('admin-content')
-<div class="min-h-screen bg-gray-50 py-8">
-    <div class="mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header Section -->
-        <div class="mb-8">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">User Management</h1>
-                    <p class="mt-1 text-sm text-gray-600">Manage all users and their access permissions</p>
-                </div>
-                <div>
-                    <a href="{{ route('admin.w-map-view') }}" class="text-white bg-blue-400 rounded-2xl p-2 hover:bg-blue-500">Ulysse World Map</a>
-                </div>
-                @if(session('admin_id'))
-                <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
-                    <form method="POST" action="{{ route('admin.restore-admin') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
-                            </svg>
-                            Return to Admin
-                        </button>
-                    </form>
-                </div>
-                @endif
-            </div>
+<div class="admin-content">
+    <!-- Breadcrumbs -->
+    <nav class="admin-breadcrumbs">
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <span class="admin-breadcrumbs-separator">/</span>
+        <span class="admin-breadcrumbs-current">Utilisateurs</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="page-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px;">
+        <div>
+            <h1 class="page-title">Gestion des utilisateurs</h1>
+            <p class="page-subtitle">Gérez tous les utilisateurs et leurs permissions</p>
         </div>
-        <!-- Users Table -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <h2 class="text-lg font-semibold text-gray-900">All Users</h2>
-                    <nav class="flex space-x-8 px-6" aria-label="Tabs">
-                        <button class="user-filter-btn py-4 px-1 border-b-2 border-blue-500 text-blue-600 font-medium text-sm whitespace-nowrap focus:outline-none"  data-role="all">
-                            <div class="flex items-center space-x-2">
-                                <span>Users</span>
-                            </div>
-                        </button>
-                        <button class="user-filter-btn py-4 px-1 text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm whitespace-nowrap focus:outline-none"
-                                data-role="service_provider">
-                            <div class="flex items-center space-x-2">
-                                <span>Providers</span>
-                            </div>
-                        </button>
-                        <button class="user-filter-btn py-4 px-1 text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm whitespace-nowrap focus:outline-none"
-                                data-role="service_requester"
-                            <div class="flex items-center space-x-2">
-                                <span>Requesters</span>
-                            </div>
-                        </button>
-                    </nav>
-                    <div class="mt-2 sm:mt-0 text-sm text-gray-500">
-                        Total: <span id="userCount">{{ $users->total() }}</span> users
-                    </div>
-                </div>
-            </div>
-
-            <!-- Desktop Table View -->
-            <div class="hidden lg:block overflow-hidden">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                User
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Role
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Joined
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($users as $user)
-                            <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <!-- User Info -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                                                <span class="text-sm font-medium text-white">
-                                                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
-                                            <div class="text-sm text-gray-500">{{ $user->email }}</div>
-                                            <div class="text-xs text-gray-400">ID: {{ $user->id }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <!-- Role -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full
-                                        {{ $user->user_role == 'admin' ? 'bg-purple-100 text-purple-800' : 
-                                           ($user->user_role == 'service_provider' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">
-                                        {{ ucfirst(str_replace('_', ' ', $user->user_role)) }}
-                                    </span>
-                                </td>
-
-                                <!-- Status -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                        {{ $user->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        <span class="w-1.5 h-1.5 mr-1.5 rounded-full
-                                            {{ $user->status == 'active' ? 'bg-green-400' : 'bg-red-400' }}"></span>
-                                        {{ ucfirst($user->status) }}
-                                    </span>
-                                </td>
-
-                                <!-- Joined Date -->
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $user->created_at->format('M d, Y') }}
-                                </td>
-
-                                <!-- Actions -->
-                                <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <!-- Secret Login Button -->
-                                        <form method="POST" action="{{ route('admin.secret-login', $user->id) }}" class="inline">
-                                            @csrf
-                                            <button type="submit" 
-                                                    class="inline-flex items-center px-3 py-1.5 border border-blue-300 shadow-sm text-xs font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                                                    title="Login as this user">
-                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                                                </svg>
-                                                Login
-                                            </button>
-                                        </form>
-
-                                        <!-- Manage User Button -->
-                                        <a href="{{ route('admin.users.manage', $user->id) }}" 
-                                           class="inline-flex items-center justify-center w-8 h-8 border border-gray-300 shadow-sm rounded-full text-gray-400 bg-white hover:bg-gray-50 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                                           title="Manage User">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-                                            </svg>
-                                        </a>
-
-                                        <!-- Pin/Unpin Service Provider Button -->
-                                        @php
-                                            $provider = \App\Models\ServiceProvider::where('user_id', $user->id)->first();
-                                        @endphp
-                                        @if($provider)
-                                        <button type="button"
-                                            class="inline-flex items-center justify-center w-8 h-8 border border-gray-300 shadow-sm rounded-full
-                                                {{ $provider->pinned ? 'bg-yellow-200 text-yellow-700' : 'bg-white text-gray-400' }}
-                                                hover:bg-yellow-100 hover:text-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200"
-                                            title="{{ $provider->pinned ? 'Unpin Provider' : 'Pin Provider' }}"
-                                            onclick="togglePinProvider({{ $provider->id }}, this)">
-                                            <svg class="w-4 h-4" fill="{{ $provider->pinned ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M17.657 16.657L13 21.314V13H11v8.314l-4.657-4.657a8 8 0 1111.314 0z" />
-                                            </svg>
-                                        </button>
-                                        @endif
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Mobile Card View -->
-            <div class="lg:hidden">
-                <div class="space-y-4 p-4">
-                    @foreach($users as $user)
-                        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                            <div class="flex items-start justify-between mb-3">
-                                <div class="flex items-center space-x-3">
-                                    <div class="flex-shrink-0">
-                                        <div class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                                            <span class="text-sm font-medium text-white">
-                                                {{ strtoupper(substr($user->name, 0, 1)) }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="text-sm font-medium text-gray-900 truncate">{{ $user->name }}</div>
-                                        <div class="text-sm text-gray-500 truncate">{{ $user->email }}</div>
-                                    </div>
-                                </div>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                    {{ $user->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ ucfirst($user->status) }}
-                                </span>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">Role</div>
-                                    <div class="mt-1">
-                                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full
-                                            {{ $user->user_role == 'admin' ? 'bg-purple-100 text-purple-800' : 
-                                               ($user->user_role == 'service_provider' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">
-                                            {{ ucfirst(str_replace('_', ' ', $user->user_role)) }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</div>
-                                    <div class="mt-1 text-sm text-gray-900">{{ $user->created_at->format('M d, Y') }}</div>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center justify-between pt-3 border-t border-gray-200">
-                                <div class="text-xs text-gray-500">ID: {{ $user->id }}</div>
-                                <div class="flex items-center space-x-2">
-                                    <!-- Secret Login Button -->
-                                    <form method="POST" action="{{ route('admin.secret-login', $user->id) }}" class="inline">
-                                        @csrf
-                                        <button type="submit" 
-                                                class="inline-flex items-center px-3 py-1.5 border border-blue-300 shadow-sm text-xs font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                                            </svg>
-                                            Login
-                                        </button>
-                                    </form>
-
-                                    <!-- Manage User Button -->
-                                    <a href="{{ route('admin.users.manage', $user->id) }}" 
-                                       class="inline-flex items-center justify-center w-8 h-8 border border-gray-300 shadow-sm rounded-full text-gray-400 bg-white hover:bg-gray-50 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Empty State -->
-            @if($users->count() == 0)
-                <div class="text-center py-12">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="{{ route('admin.w-map-view') }}" class="btn btn-secondary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Carte mondiale
+            </a>
+            @if(session('admin_id'))
+            <form method="POST" action="{{ route('admin.restore-admin') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" class="btn btn-danger">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No users found</h3>
-                    <p class="mt-1 text-sm text-gray-500">No users have been registered yet.</p>
-                </div>
+                    Retour Admin
+                </button>
+            </form>
             @endif
         </div>
-
-        <!-- Pagination -->
-        @if($users->hasPages())
-            <div class="mt-6 flex items-center justify-between">
-                <div class="flex-1 flex justify-between sm:hidden">
-                    @if ($users->onFirstPage())
-                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-500 bg-white cursor-default">
-                            Previous
-                        </span>
-                    @else
-                        <a href="{{ $users->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                            Previous
-                        </a>
-                    @endif
-
-                    @if ($users->hasMorePages())
-                        <a href="{{ $users->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                            Next
-                        </a>
-                    @else
-                        <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-500 bg-white cursor-default">
-                            Next
-                        </span>
-                    @endif
-                </div>
-                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                    <div>
-                        <p class="text-sm text-gray-700">
-                            Showing <span class="font-medium">{{ $users->firstItem() }}</span> to <span class="font-medium">{{ $users->lastItem() }}</span> of <span class="font-medium">{{ $users->total() }}</span> results
-                        </p>
-                    </div>
-                    <div>
-                        {{ $users->links() }}
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
+
+    <!-- Users Card -->
+    <div class="admin-card">
+        <!-- Filters & Stats -->
+        <div class="admin-card-header" style="flex-wrap: wrap; gap: 16px;">
+            <div class="admin-tabs" style="margin-bottom: 0; border-bottom: none;">
+                <button class="admin-tab active user-filter-btn" data-role="all">Tous</button>
+                <button class="admin-tab user-filter-btn" data-role="service_provider">Prestataires</button>
+                <button class="admin-tab user-filter-btn" data-role="service_requester">Demandeurs</button>
+            </div>
+            <div style="font-size: 14px; color: var(--admin-text-muted);">
+                Total: <span id="userCount" style="font-weight: 600; color: var(--admin-text);">{{ $users->total() }}</span> utilisateurs
+            </div>
+        </div>
+
+        <!-- Desktop Table View -->
+        <div class="admin-table-responsive">
+            <table class="admin-table admin-table-mobile">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Rôle</th>
+                        <th>Statut</th>
+                        <th>Inscription</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($users as $user)
+                    <tr>
+                        <td data-label="Utilisateur">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="admin-avatar admin-avatar-md" style="background: linear-gradient(135deg, var(--admin-primary), var(--admin-primary-dark)); color: white;">
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                </div>
+                                <div style="min-width: 0;">
+                                    <div style="font-weight: 500; color: var(--admin-text);">{{ $user->name }}</div>
+                                    <div style="font-size: 12px; color: var(--admin-text-muted);">{{ $user->email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Rôle">
+                            @if($user->user_role == 'admin')
+                                <span class="badge badge-info">Admin</span>
+                            @elseif($user->user_role == 'service_provider')
+                                <span class="badge badge-primary">Prestataire</span>
+                            @else
+                                <span class="badge badge-default">{{ ucfirst(str_replace('_', ' ', $user->user_role)) }}</span>
+                            @endif
+                        </td>
+                        <td data-label="Statut">
+                            @if($user->status == 'active')
+                                <span class="badge badge-success">Actif</span>
+                            @else
+                                <span class="badge badge-danger">{{ ucfirst($user->status) }}</span>
+                            @endif
+                        </td>
+                        <td data-label="Inscription">
+                            <div style="font-size: 14px; color: var(--admin-text);">{{ $user->created_at->format('d M Y') }}</div>
+                            <div style="font-size: 12px; color: var(--admin-text-muted);">{{ $user->created_at->diffForHumans() }}</div>
+                        </td>
+                        <td data-label="Actions">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <form method="POST" action="{{ route('admin.secret-login', $user->id) }}" style="margin: 0;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-ghost btn-sm" style="color: var(--admin-primary);" data-admin-tooltip="Se connecter en tant que">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                        </svg>
+                                    </button>
+                                </form>
+                                <a href="{{ route('admin.users.manage', $user->id) }}" class="btn btn-ghost btn-sm" style="color: var(--admin-text-secondary);" data-admin-tooltip="Gérer">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </a>
+                                @php
+                                    $provider = \App\Models\ServiceProvider::where('user_id', $user->id)->first();
+                                @endphp
+                                @if($provider)
+                                <button type="button"
+                                    class="btn btn-ghost btn-sm"
+                                    style="color: {{ $provider->pinned ? 'var(--admin-warning)' : 'var(--admin-text-light)' }};"
+                                    data-admin-tooltip="{{ $provider->pinned ? 'Désépingler' : 'Épingler' }}"
+                                    onclick="togglePinProvider({{ $provider->id }}, this)">
+                                    <svg width="16" height="16" fill="{{ $provider->pinned ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                    </svg>
+                                </button>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5">
+                            <div class="admin-empty-state">
+                                <svg class="admin-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                                </svg>
+                                <p class="admin-empty-title">Aucun utilisateur</p>
+                                <p class="admin-empty-description">Aucun utilisateur enregistré.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Pagination -->
+    @if($users->hasPages())
+    <div style="margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
+        <div style="font-size: 14px; color: var(--admin-text-muted);">
+            Affichage de <span style="font-weight: 500; color: var(--admin-text);">{{ $users->firstItem() }}</span> à <span style="font-weight: 500; color: var(--admin-text);">{{ $users->lastItem() }}</span> sur <span style="font-weight: 500; color: var(--admin-text);">{{ $users->total() }}</span> résultats
+        </div>
+        <div>
+            {{ $users->links() }}
+        </div>
+    </div>
+    @endif
 </div>
+
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const filterButtons = document.querySelectorAll('.user-filter-btn');
+
     filterButtons.forEach(btn => {
         btn.addEventListener('click', function() {
             const role = this.getAttribute('data-role');
-            filterButtons.forEach(b => b.classList.remove('border-b-2', 'border-blue-500'));
-            this.classList.add('border-b-2', 'border-blue-500');
+
+            // Update button styles
+            filterButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
             filterUserRows(role);
         });
     });
@@ -312,14 +183,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const rows = document.querySelectorAll('tbody tr');
         let count = 0;
         rows.forEach(row => {
-            const userRole = row.querySelector('td:nth-child(2) span')?.textContent?.trim().toLowerCase() || '';
+            if (row.querySelector('td[colspan]')) return; // Skip empty state row
+            const roleSpan = row.querySelector('td:nth-child(2) span');
+            const userRole = roleSpan?.textContent?.trim().toLowerCase() || '';
+
             if (role === 'all') {
                 row.style.display = '';
                 count++;
-            } else if (role === 'service_provider' && userRole.includes('provider')) {
+            } else if (role === 'service_provider' && userRole.includes('prestataire')) {
                 row.style.display = '';
                 count++;
-            } else if (role === 'service_requester' && userRole.includes('requester')) {
+            } else if (role === 'service_requester' && (userRole.includes('requester') || userRole.includes('demandeur'))) {
                 row.style.display = '';
                 count++;
             } else {
@@ -328,8 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         document.getElementById('userCount').textContent = count;
     }
-    // Default: show all users
-    filterUserRows('all');
 });
 
 function togglePinProvider(providerId, btn) {
@@ -344,24 +216,24 @@ function togglePinProvider(providerId, btn) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // Toggle button color/icon
             if (data.pinned) {
-                btn.classList.add('bg-yellow-200', 'text-yellow-700');
-                btn.classList.remove('bg-white', 'text-gray-400');
-                btn.title = 'Unpin Provider';
+                btn.classList.add('text-yellow-600', 'bg-yellow-50');
+                btn.classList.remove('text-gray-400');
+                btn.title = 'Désépingler';
                 btn.querySelector('svg').setAttribute('fill', 'currentColor');
             } else {
-                btn.classList.remove('bg-yellow-200', 'text-yellow-700');
-                btn.classList.add('bg-white', 'text-gray-400');
-                btn.title = 'Pin Provider';
+                btn.classList.remove('text-yellow-600', 'bg-yellow-50');
+                btn.classList.add('text-gray-400');
+                btn.title = 'Épingler';
                 btn.querySelector('svg').setAttribute('fill', 'none');
             }
         } else {
-            alert('Failed to update pin status');
+            alert('Échec de la mise à jour');
         }
     })
-    .catch(() => alert('Failed to update pin status'))
+    .catch(() => alert('Échec de la mise à jour'))
     .finally(() => { btn.disabled = false; });
 }
 </script>
+@endpush
 @endsection

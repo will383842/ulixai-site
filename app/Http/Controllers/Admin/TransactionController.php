@@ -14,6 +14,7 @@ use Stripe\Charge;
 use Stripe\PaymentIntent;
 use Stripe\Transfer;
 use Stripe\Account as StripeAccount;
+use Stripe\Exception\ApiErrorException;
 use Illuminate\Support\Facades\DB;
 use App\Services\PaymentService;
 
@@ -69,17 +70,19 @@ class TransactionController extends Controller
             });
         }
 
-        // Get the filtered results
-        $transactions = $query->get();
+        // Get the filtered results with pagination
+        $transactions = $query->with(['mission', 'provider'])->paginate(50);
 
-        $transactions->map(function ($transaction) {
-            
-            $transaction->mission = $transaction->mission;
-            $transaction->provider = $transaction->provider;
-            return $transaction;
-        });
         // Return the filtered transactions as a JSON response
-        return response()->json($transactions);
+        return response()->json([
+            'data' => $transactions->items(),
+            'pagination' => [
+                'current_page' => $transactions->currentPage(),
+                'last_page' => $transactions->lastPage(),
+                'total' => $transactions->total(),
+                'per_page' => $transactions->perPage()
+            ]
+        ]);
     }
 
     public function refund($id)
