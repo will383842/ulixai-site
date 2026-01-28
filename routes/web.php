@@ -227,7 +227,8 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'
 Route::get('/signup', function () {
     return view('user-auth.signup');
 });
-Route::get('/affiliate/sign-up', [AffiliateController::Class, 'affliateSignup']);
+Route::get('/affiliate/sign-up', [AffiliateController::class, 'affiliateSignup'])->name('affiliate.signup');
+Route::post('/affiliate/validate-code', [AffiliateController::class, 'validateCode'])->name('affiliate.validate-code');
 
 Route::get('/', [ServiceProviderController::class, 'main']);
 Route::get('/get-providers', [ServiceProviderController::class, 'getProviders']);
@@ -349,6 +350,21 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/mission/{id}/public-message', [MissionMessageController::class, 'store'])->name('mission.public-message');
     Route::get('/mission/{id}/public-messages', [MissionMessageController::class, 'list'])->name('mission.public-messages');
 
+    // Notifications
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');
+        Route::get('/unread', [\App\Http\Controllers\NotificationController::class, 'getUnread'])->name('unread');
+        Route::get('/count', [\App\Http\Controllers\NotificationController::class, 'count'])->name('count');
+        Route::post('/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('read');
+        Route::post('/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('read-all');
+        Route::get('/preferences', [\App\Http\Controllers\NotificationController::class, 'getPreferences'])->name('preferences');
+        Route::post('/preferences', [\App\Http\Controllers\NotificationController::class, 'updatePreferences'])->name('preferences.update');
+    });
+
+    // Mes litiges
+    Route::get('/my-disputes', [\App\Http\Controllers\DisputeUserController::class, 'index'])->name('user.disputes');
+    Route::get('/my-disputes/{mission}', [\App\Http\Controllers\DisputeUserController::class, 'show'])->name('user.disputes.show');
+
     // Stripe (paiement) - ✅ SÉCURITÉ: Rate limiting pour prévenir les abus
     Route::middleware(['throttle:10,1'])->group(function () {
         // 10 tentatives par minute max par utilisateur
@@ -461,13 +477,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
 
         // User profile admin
-        Route::get('/users/{id}/edit-profile', [UserManagementController::class, 'editProfileView'])->name('users.edit-profile');
+        Route::get('/users/{id}/edit-profile', [UserManagementController::class, 'editProfileView'])->name('users.edit-profile-view');
         Route::post('/users/{id}/update-profile', [UserManagementController::class, 'editUserProfile'])->name('users.update-profile');
 
         // Missions
         Route::get('/missions', [MissionAdminController::class, 'index'])->name('missions');
         Route::get('/missions/{id}', [MissionAdminController::class, 'show'])->name('missions.show');
-        Route::get('/admin/missions/{id}', [MissionAdminController::class, 'show'])->name('missions.show');
         Route::get('/missions/{id}/edit', [MissionAdminController::class, 'edit'])->name('missions.edit');
         Route::get('/missions/{id}/conversation', [MissionAdminController::class, 'conversation'])->name('missions.conversation');
         Route::post('/missions/{id}/edit', [MissionAdminController::class, 'update'])->name('missions.update');
@@ -528,9 +543,38 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Partnerships
         Route::get('/partnerships', [AdminDashboardController::class, 'showpartnerships'])->name('partnerships');
 
-        // Affiliations
-        Route::get('/user-affiliations', [AdminDashboardController::class, 'showAffiliateSummary'])->name('affiliationss');
-        Route::get('/affiliate-details/{id}', [AdminDashboardController::class, 'affiliateDetails'])->name('affiliates.details');
+        // ═══════════════════════════════════════════════════════
+        // 🤝 AFFILIATIONS (admin) - Systeme complet de pilotage
+        // ═══════════════════════════════════════════════════════
+        Route::prefix('affiliates')->name('affiliates.')->group(function () {
+            // Dashboard principal
+            Route::get('/', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'index'])->name('dashboard');
+
+            // Liste des affilies
+            Route::get('/list', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'affiliatesList'])->name('list');
+            Route::get('/export', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'exportAffiliates'])->name('export');
+
+            // Details d'un affilie
+            Route::get('/{id}', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'show'])->name('show');
+
+            // Gestion des commissions
+            Route::get('/commissions/all', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'commissionsList'])->name('commissions');
+            Route::get('/commissions/export', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'exportCommissions'])->name('commissions.export');
+            Route::get('/commissions/{id}/detail', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'showCommission'])->name('commissions.show');
+            Route::post('/commissions/create', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'createCommission'])->name('commissions.create');
+            Route::patch('/commissions/{id}', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'updateCommission'])->name('commissions.update');
+            Route::delete('/commissions/{id}', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'deleteCommission'])->name('commissions.delete');
+
+            // Historique des paiements
+            Route::get('/payouts/all', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'payoutsList'])->name('payouts');
+
+            // API pour stats AJAX
+            Route::get('/api/stats', [\App\Http\Controllers\Admin\AffiliateAdminController::class, 'apiStats'])->name('api.stats');
+        });
+
+        // Anciennes routes pour retrocompatibilite (redirection)
+        Route::get('/user-affiliations', function() { return redirect()->route('admin.affiliates.dashboard'); })->name('affiliationss');
+        Route::get('/affiliate-details/{id}', function($id) { return redirect()->route('admin.affiliates.show', $id); })->name('affiliates.details');
 
         // ═══════════════════════════════════════════════════════
         // 📰 PRESS MANAGEMENT (admin)

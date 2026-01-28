@@ -70,7 +70,7 @@
                         <span>Transactions</span>
                     </div>
                 </button>
-                <a href="{{ route('admin.users.edit-profile', $user->id) }}"
+                <a href="{{ route('admin.users.edit-profile-view', $user->id) }}"
                    class="tab-link py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm whitespace-nowrap focus:outline-none">
                     <div class="flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
