@@ -193,7 +193,10 @@ Route::get('/press/preview/{id}/{type}', [PressController::class, 'preview'])
 // 📝 AUTRES ROUTES PUBLIQUES
 // ═══════════════════════════════════════════════════════════
 
-Route::get('/termsnconditions', [TermsAndConditionsController::class, 'ShowTerms'])->name('terms.show');
+Route::get('/termsnconditions', [TermsAndConditionsController::class, 'showTerms'])->name('terms.show');
+Route::get('/terms/client', [TermsAndConditionsController::class, 'showClientTerms'])->name('terms.client');
+Route::get('/terms/provider', [TermsAndConditionsController::class, 'showProviderTerms'])->name('terms.provider');
+Route::get('/terms/affiliate', [TermsAndConditionsController::class, 'showAffiliateTerms'])->name('terms.affiliate');
 
 // AJAX user signup (avec rate limiting anti-abus)
 Route::post('/signup/store', [UserController::class, 'storeViaSignup'])
@@ -531,8 +534,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/service-fees', [ServiceFeesController::class, 'store'])->name('manage-fee.store');
         Route::put('/service-fees/{serviceFee}', [ServiceFeesController::class, 'update'])->name('manage-fee.update');
 
-        // Bug reports (redirige vers messages)
-        Route::get('/bug-reports', function () { return redirect()->route('admin.messages'); })->name('bug-reports');
+        // Bug reports
+        Route::get('/bug-reports', [AdminDashboardController::class, 'ShowReports'])->name('bug-reports');
+        Route::patch('/bug-reports/{id}/status', [AdminDashboardController::class, 'updateBugReportStatus'])->name('bug-reports.status');
 
         // Applications
         Route::get('/applications', [AdminDashboardController::class, 'ShowApplications'])->name('applications');

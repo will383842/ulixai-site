@@ -261,14 +261,47 @@ class AdminDashboardController extends Controller
         return view('admin.dashboard.badges.index', compact('badges'));
     }
 
-    public function ShowReports(Request $request){
-         
-        //Bug Reports 
-      $AllBugReports = BugReport::orderByDesc('created_at')->get();
+    public function ShowReports(Request $request)
+    {
+        // Bug Reports with user relation
+        $AllBugReports = BugReport::with('user')
+            ->orderByDesc('created_at')
+            ->get();
 
-     
-        return view('admin.dashboard.bug-reports',compact('AllBugReports'));
+        // Statistics
+        $stats = [
+            'bugs' => BugReport::where('report_type', 'bug')->whereNotIn('status', ['resolved', 'dismissed'])->count(),
+            'suggestions' => BugReport::where('report_type', 'suggestion')->whereNotIn('status', ['resolved', 'dismissed'])->count(),
+            'questions' => BugReport::where('report_type', 'question')->whereNotIn('status', ['resolved', 'dismissed'])->count(),
+            'resolved' => BugReport::whereIn('status', ['resolved', 'dismissed'])->count(),
+        ];
 
+        return view('admin.dashboard.bug-reports', compact('AllBugReports', 'stats'));
+    }
+
+    /**
+     * Update bug report status (AJAX)
+     */
+    public function updateBugReportStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,in_progress,resolved,dismissed',
+        ]);
+
+        $report = BugReport::findOrFail($id);
+        $report->status = $request->status;
+
+        if (in_array($request->status, ['resolved', 'dismissed'])) {
+            $report->resolved_at = now();
+            $report->resolved_by = auth()->guard('admin')->id();
+        }
+
+        $report->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully',
+        ]);
     }
 
        public function ShowApplications()

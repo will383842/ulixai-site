@@ -135,6 +135,9 @@
   {{-- Cookie Banner --}}
   @include('includes.cookie-banner')
 
+  {{-- Floating Bug Report --}}
+  @include('components.floating-bug-report')
+
   {{-- Scripts --}}
   @include('includes.header.scripts')
 

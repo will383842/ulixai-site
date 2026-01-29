@@ -747,9 +747,33 @@
 "Minimum service fee":"Frais de service minimum",
 "calculated fee":"frais calculés",
 "You will receive":"Vous recevrez",
-"after service fees":"après frais de service"
+"after service fees":"après frais de service",
 
-
+"Report a problem":"Signaler un problème",
+"How can we help?":"Comment pouvons-nous vous aider ?",
+"Close":"Fermer",
+"Thank you!":"Merci !",
+"Your feedback has been received. We appreciate you taking the time to help us improve.":"Votre retour a bien été reçu. Merci de prendre le temps de nous aider à améliorer la plateforme.",
+"Bug":"Bug",
+"Idea":"Idée",
+"Question":"Question",
+"Other":"Autre",
+"Report type":"Type de rapport",
+"Your feedback is anonymous unless logged in. Page context is captured automatically.":"Votre retour est anonyme sauf si vous êtes connecté. Le contexte de la page est capturé automatiquement.",
+"Describe the issue":"Décrivez le problème",
+"Describe your idea":"Décrivez votre idée",
+"What is your question?":"Quelle est votre question ?",
+"What happened? What did you expect?":"Que s'est-il passé ? Qu'attendiez-vous ?",
+"What feature would help you?":"Quelle fonctionnalité vous aiderait ?",
+"What would you like to know?":"Que souhaitez-vous savoir ?",
+"Tell us more...":"Dites-nous en plus...",
+"Suggestion (optional)":"Suggestion (optionnel)",
+"How could we improve this?":"Comment pourrions-nous améliorer cela ?",
+"Send feedback":"Envoyer",
+"Sending...":"Envoi en cours...",
+"Please describe the issue or provide a suggestion.":"Veuillez décrire le problème ou fournir une suggestion.",
+"Thank you for your feedback!":"Merci pour votre retour !",
+"Failed to send. Please try again.":"Échec de l'envoi. Veuillez réessayer."
 
 
 

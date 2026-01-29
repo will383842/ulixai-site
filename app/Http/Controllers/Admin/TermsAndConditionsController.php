@@ -9,130 +9,166 @@ use Illuminate\Support\Str;
 
 class TermsAndConditionsController extends Controller
 {
+    /**
+     * Admin index page - shows tabs for all terms types
+     */
     public function termsIndex()
     {
-        return view('admin.dashboard.terms-n-conditions.index');
+        $types = TermsSection::getTypes();
+        return view('admin.dashboard.terms-n-conditions.index', compact('types'));
     }
 
     /**
-     * Seed (if needed) and return all sections.
-     * GET /admin/terms/fetch
+     * Fetch sections for a specific type
+     * GET /admin/terms/fetch?type=general|client|provider|affiliate
      */
     public function fetch(Request $request)
     {
-        // Your default headings (matches your screenshot order)
-        $defaults = [
-            1  => 'Accepting the terms',
-            2  => 'Changes to terms',
-            3  => 'Using our product',
-            4  => 'General restrictions',
-            5  => 'Content policy',
-            6  => 'Your rights',
-            7  => 'Copyright policy',
-            8  => 'Relationship guidelines',
-            9  => 'Liability Policy',
-            10 => 'General legal terms',
-        ];
+        $type = $request->get('type', TermsSection::TYPE_GENERAL);
 
-        // Upsert by slug so it’s idempotent
-        foreach ($defaults as $num => $title) {
-            $slug = Str::slug($title);
-            TermsSection::updateOrCreate(
-                ['slug' => $slug],
-                [
-                    'number' => $num,
-                    'title'  => $title,
-                    // leave body null on first run; admins can edit later
-                    'is_active' => true,
-                    'version' => $request->get('version'), // optional pass-through
-                ]
-            );
+        // Validate type
+        if (!array_key_exists($type, TermsSection::getTypes())) {
+            $type = TermsSection::TYPE_GENERAL;
         }
 
-        $sections = TermsSection::query()
+        // Get section for this type (single section per type)
+        $section = TermsSection::ofType($type)
             ->where('is_active', true)
-            ->orderBy('number')
-            ->get(['id','number','title','slug','body','version','effective_date','is_active','updated_at']);
+            ->first();
+
+        // If no section exists, create a default one
+        if (!$section) {
+            $section = TermsSection::create([
+                'number' => 1,
+                'title' => TermsSection::getTypes()[$type],
+                'slug' => $type . '-terms',
+                'type' => $type,
+                'body' => '',
+                'is_active' => true,
+            ]);
+        }
 
         return response()->json([
-            'success'  => true,
-            'sections' => $sections,
+            'success' => true,
+            'sections' => [$section],
+            'type' => $type,
         ]);
     }
 
     /**
-     * Create or update a single section body/title (from an admin editor).
+     * Store/update a section
      * POST /admin/terms
      */
     public function store(Request $request)
     {
-        // validate request
         $data = $request->validate([
             'id'            => ['nullable','integer','exists:terms_sections,id'],
             'number'        => ['required','integer','min:1'],
             'title'         => ['required','string','max:255'],
             'body'          => ['nullable','string'],
+            'type'          => ['nullable','string','in:general,client,provider,affiliate'],
             'is_active'     => ['sometimes','boolean'],
             'version'       => ['nullable','string','max:50'],
             'effective_date'=> ['nullable','date'],
         ]);
 
         $data['slug'] = Str::slug($data['title']);
+        $data['type'] = $data['type'] ?? TermsSection::TYPE_GENERAL;
 
-        // If ID provided, update; else upsert by slug
-        $section = $request->id
-            ? TermsSection::findOrFail($request->id)
-            : TermsSection::firstOrNew(['slug' => $data['slug']]);
+        // If ID provided, update; else upsert by type
+        if ($request->id) {
+            $section = TermsSection::findOrFail($request->id);
+        } else {
+            $section = TermsSection::firstOrNew([
+                'type' => $data['type']
+            ]);
+        }
 
         $section->fill($data)->save();
 
         return response()->json([
             'success' => true,
             'section' => $section->fresh(),
-            'message' => 'Section saved.',
+            'message' => 'Section enregistrée.',
         ]);
-
-
-
-
     }
 
-
-      public function ShowTerms()
+    /**
+     * Public page: General Terms & Conditions
+     */
+    public function showTerms()
     {
-        // Fixed order & titles (match your sidebar)
-        $defaults = [
-            ['number'=>1,  'title'=>'Accepting the terms',     'slug'=>'accepting-the-terms'],
-            ['number'=>2,  'title'=>'Changes to terms',        'slug'=>'changes-to-terms'],
-            ['number'=>3,  'title'=>'Using our product',       'slug'=>'using-our-product'],
-            ['number'=>4,  'title'=>'General restrictions',    'slug'=>'general-restrictions'],
-            ['number'=>5,  'title'=>'Content policy',          'slug'=>'content-policy'],
-            ['number'=>6,  'title'=>'Your rights',             'slug'=>'your-rights'],
-            ['number'=>7,  'title'=>'Copyright policy',        'slug'=>'copyright-policy'],
-            ['number'=>8,  'title'=>'Relationship guidelines', 'slug'=>'relationship-guidelines'],
-            ['number'=>9,  'title'=>'Liability Policy',        'slug'=>'liability-policy'],
-            ['number'=>10, 'title'=>'General legal terms',     'slug'=>'general-legal-terms'],
-        ];
-
-        $map = TermsSection::where('is_active', true)
-            ->get(['slug','number','title','body'])
-            ->keyBy('slug');
+        $section = TermsSection::ofType(TermsSection::TYPE_GENERAL)
+            ->where('is_active', true)
+            ->first();
 
         $appName = config('app.name');
+        $body = $section ? str_replace('@site', $appName, $section->body ?? '') : '';
 
-        // Merge DB bodies into fixed list; replace @site
-        $sections = array_map(function ($d) use ($map, $appName) {
-            $body = optional($map->get($d['slug']))->body ?? '';
-            $body = str_replace('@site', $appName, $body);
-            return [
-                'number' => $d['number'],
-                'title'  => $d['title'],
-                'slug'   => $d['slug'],
-                'body'   => $body,
-            ];
-        }, $defaults);
+        $sections = [[
+            'number' => 1,
+            'title' => 'Conditions Générales d\'Utilisation',
+            'slug' => 'general-terms',
+            'body' => $body,
+        ]];
 
-       return view('pages.termsnconditions', compact('sections'));
+        return view('pages.termsnconditions', compact('sections'));
+    }
 
+    /**
+     * Public page: Client Terms & Conditions
+     */
+    public function showClientTerms()
+    {
+        $section = TermsSection::ofType(TermsSection::TYPE_CLIENT)
+            ->where('is_active', true)
+            ->first();
+
+        $appName = config('app.name');
+        $body = $section ? str_replace('@site', $appName, $section->body ?? '') : '';
+
+        return view('pages.terms-client', [
+            'content' => $body,
+            'title' => 'Conditions Générales Clients',
+            'lastUpdated' => $section?->updated_at?->format('F Y') ?? date('F Y'),
+        ]);
+    }
+
+    /**
+     * Public page: Provider Terms & Conditions
+     */
+    public function showProviderTerms()
+    {
+        $section = TermsSection::ofType(TermsSection::TYPE_PROVIDER)
+            ->where('is_active', true)
+            ->first();
+
+        $appName = config('app.name');
+        $body = $section ? str_replace('@site', $appName, $section->body ?? '') : '';
+
+        return view('pages.terms-provider', [
+            'content' => $body,
+            'title' => 'Conditions Générales Prestataires',
+            'lastUpdated' => $section?->updated_at?->format('F Y') ?? date('F Y'),
+        ]);
+    }
+
+    /**
+     * Public page: Affiliate Terms & Conditions
+     */
+    public function showAffiliateTerms()
+    {
+        $section = TermsSection::ofType(TermsSection::TYPE_AFFILIATE)
+            ->where('is_active', true)
+            ->first();
+
+        $appName = config('app.name');
+        $body = $section ? str_replace('@site', $appName, $section->body ?? '') : '';
+
+        return view('pages.terms-affiliate', [
+            'content' => $body,
+            'title' => 'Conditions Générales d\'Affiliation',
+            'lastUpdated' => $section?->updated_at?->format('F Y') ?? date('F Y'),
+        ]);
     }
 }

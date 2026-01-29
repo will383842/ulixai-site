@@ -97,7 +97,7 @@ class DisputeController extends Controller
             $currency = strtolower($transaction->currency ?? 'eur');
 
             $transfer = Transfer::create([
-                'amount' => (int) round($payProvider * 100),
+                'amount' => CurrencyService::toCents($payProvider, $currency),
                 'currency' => $currency,
                 'destination' => $provider->stripe_account_id,
                 'transfer_group' => 'MISSION_' . $mission->id,

@@ -762,9 +762,33 @@
 "Provider Service Fee":"Provider Service Fee",
 "A minimum service fee of":"A minimum service fee of",
 "applies if the calculated commission does not reach this amount.":"applies if the calculated commission does not reach this amount.",
-"The minimum fee applies to this transaction.":"The minimum fee applies to this transaction."
+"The minimum fee applies to this transaction.":"The minimum fee applies to this transaction.",
 
-
+"Report a problem":"Report a problem",
+"How can we help?":"How can we help?",
+"Close":"Close",
+"Thank you!":"Thank you!",
+"Your feedback has been received. We appreciate you taking the time to help us improve.":"Your feedback has been received. We appreciate you taking the time to help us improve.",
+"Bug":"Bug",
+"Idea":"Idea",
+"Question":"Question",
+"Other":"Other",
+"Report type":"Report type",
+"Your feedback is anonymous unless logged in. Page context is captured automatically.":"Your feedback is anonymous unless logged in. Page context is captured automatically.",
+"Describe the issue":"Describe the issue",
+"Describe your idea":"Describe your idea",
+"What is your question?":"What is your question?",
+"What happened? What did you expect?":"What happened? What did you expect?",
+"What feature would help you?":"What feature would help you?",
+"What would you like to know?":"What would you like to know?",
+"Tell us more...":"Tell us more...",
+"Suggestion (optional)":"Suggestion (optional)",
+"How could we improve this?":"How could we improve this?",
+"Send feedback":"Send feedback",
+"Sending...":"Sending...",
+"Please describe the issue or provide a suggestion.":"Please describe the issue or provide a suggestion.",
+"Thank you for your feedback!":"Thank you for your feedback!",
+"Failed to send. Please try again.":"Failed to send. Please try again."
 
 
 

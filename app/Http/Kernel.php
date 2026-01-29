@@ -17,6 +17,7 @@ class Kernel extends HttpKernel
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\ForceHttps::class, // Force HTTPS en production
+        \App\Http\Middleware\LegacyRedirects::class, // Redirections 301 depuis l'ancien site WordPress
         \Illuminate\Http\Middleware\HandleCors::class, // Laravel native CORS (replaces Fruitcake)
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,

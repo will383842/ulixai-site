@@ -75,7 +75,10 @@
       "Bash(if [ -f .env ])",
       "Bash(then head -60 .env)",
       "Bash(else echo \".env does not exist\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "WebSearch"
     ]
   }
 }
