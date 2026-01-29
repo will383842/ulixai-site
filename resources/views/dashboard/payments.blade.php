@@ -12,9 +12,7 @@
         $commissions = \App\Models\UlixCommission::where('is_active', true)->first();
         $missionAmount = $offer->price ?? 0;
         $clientFee = $clientFee ?? 0;
-        $providerFee = number_format($commissions->provider_fee * $missionAmount, 2, '.', '');
         $total = $missionAmount + $clientFee;
-        $netToProvider = $missionAmount - $providerFee;
 
         // Determine currency symbol based on mission budget_currency
         $currencyCode = $mission->budget_currency ?? 'EUR';
@@ -37,6 +35,13 @@
             'DZD' => 'DA',
         ];
         $currencySymbol = $currencySymbols[$currencyCode] ?? $currencyCode;
+
+        // ✅ Calculer les frais prestataire avec le minimum appliqué
+        $calculatedProviderFee = $commissions->provider_fee * $missionAmount;
+        $minimumServiceFee = config('currencies.minimum_service_fee.' . $currencyCode, 10);
+        $providerFee = max($calculatedProviderFee, $minimumServiceFee);
+        $isMinimumApplied = $calculatedProviderFee < $minimumServiceFee;
+        $netToProvider = $missionAmount - $providerFee;
       @endphp
     <div class="flex-1 p-4 sm:p-6 lg:p-8">
       <h1 class="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center lg:text-left">
@@ -86,7 +91,7 @@
             </div>
           </div>
 
-          <span class="text-sm">{{ $clientFee }} {{ $currencySymbol }}</span>
+          <span class="text-sm">{{ number_format($clientFee, 2) }} {{ $currencySymbol }}</span>
         </div>
 
         <div class="border-t pt-3 flex justify-between font-semibold">
@@ -113,6 +118,23 @@
           <p class="text-xs text-gray-500 text-center">
             This is a prepayment secured by stripe. payment will only be made to the service provider after the end of the mission
           </p>
+
+          {{-- ✅ Information sur les frais de service minimum --}}
+          <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+              <div class="text-xs text-blue-700">
+                <p class="font-semibold mb-1">{{ __('Provider Service Fee') }}</p>
+                <p>{{ __('A minimum service fee of') }} <strong>{{ $minimumServiceFee }}{{ $currencySymbol }}</strong> {{ __('applies if the calculated commission does not reach this amount.') }}</p>
+                @if($isMinimumApplied)
+                  <p class="mt-1 text-blue-600">
+                    <i class="fas fa-check-circle"></i>
+                    {{ __('The minimum fee applies to this transaction.') }}
+                  </p>
+                @endif
+              </div>
+            </div>
+          </div>
       </div>
 
       {{-- <div class="mt-4 text-right">

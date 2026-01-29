@@ -27,4 +27,19 @@ return [
         'EUR' => 30,
         'USD' => 35,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Minimum Service Fee
+    |--------------------------------------------------------------------------
+    |
+    | The minimum service fee charged to providers per transaction.
+    | If the calculated commission (provider_fee * amount) is less than this
+    | minimum, the minimum fee will be applied instead.
+    |
+    */
+    'minimum_service_fee' => [
+        'EUR' => 10,
+        'USD' => 12,
+    ],
 ];

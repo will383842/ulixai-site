@@ -738,7 +738,16 @@
 "email":"email",
 "password":"mot de passe",
 "forgot password":"mot de passe oublié",
-"Don't have an account? Start Free Trial":"Pas de compte ? Commencer l'Essai Gratuit"
+"Don't have an account? Start Free Trial":"Pas de compte ? Commencer l'Essai Gratuit",
+
+"Provider Service Fee":"Frais de service prestataire",
+"A minimum service fee of":"Des frais de service minimum de",
+"applies if the calculated commission does not reach this amount.":"s'appliquent si la commission calculée n'atteint pas ce montant.",
+"The minimum fee applies to this transaction.":"Les frais minimum s'appliquent à cette transaction.",
+"Minimum service fee":"Frais de service minimum",
+"calculated fee":"frais calculés",
+"You will receive":"Vous recevrez",
+"after service fees":"après frais de service"
 
 
 

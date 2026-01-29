@@ -757,7 +757,12 @@
 "email":"email",
 "password":"password",
 "forgot password":"Log in with your email and password.",
-"Don’t have an account? Start Free Trial":"Don’t have an account? Start Free Trial"
+"Don't have an account? Start Free Trial":"Don't have an account? Start Free Trial",
+
+"Provider Service Fee":"Provider Service Fee",
+"A minimum service fee of":"A minimum service fee of",
+"applies if the calculated commission does not reach this amount.":"applies if the calculated commission does not reach this amount.",
+"The minimum fee applies to this transaction.":"The minimum fee applies to this transaction."
 
 
 

@@ -198,6 +198,12 @@ class StripePaymentController extends Controller
 
                     // Enregistrer la transaction
                     $amountPaid = CurrencyService::fromCents($paymentIntent->amount, $currency);
+
+                    // ✅ Calculer les frais prestataire avec le minimum appliqué
+                    $calculatedProviderFee = round($amountPaid * $commission->provider_fee, 2);
+                    $minimumServiceFee = $this->currencyService->getMinimumServiceFee($currency);
+                    $providerFee = max($calculatedProviderFee, $minimumServiceFee);
+
                     Transaction::create([
                         'mission_id' => $missionId,
                         'provider_id' => $providerId,
@@ -205,7 +211,7 @@ class StripePaymentController extends Controller
                         'stripe_payment_intent_id' => $paymentIntent->id,
                         'amount_paid' => round($amountPaid, 2),
                         'client_fee' => round((float) $clientFee, 2),
-                        'provider_fee' => round($amountPaid * $commission->provider_fee, 2),
+                        'provider_fee' => $providerFee,
                         'country' => $mission->location_country,
                         'user_role' => auth()->user()->user_role,
                         'status' => 'paid',

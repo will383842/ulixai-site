@@ -278,22 +278,32 @@ class PaymentService
                 throw new \Exception('No payment received for this transaction.');
             }
 
+            // Récupérer la devise depuis la transaction ou utiliser EUR par défaut
+            $currency = strtoupper($transaction->currency ?? 'EUR');
+
+            // ✅ Calculer les frais prestataire avec le minimum appliqué
+            $amountInCurrency = CurrencyService::fromCents($stripeIntent->amount_received, $currency);
+            $calculatedProviderFee = round($amountInCurrency * $commission->provider_fee, 2);
+            $minimumServiceFee = CurrencyService::getMinimumServiceFeeStatic($currency);
+            $providerFeeAmount = max($calculatedProviderFee, $minimumServiceFee);
+
             // ✅ CORRECTION: Utiliser round() pour éviter les erreurs de précision
-            $transferAmount = (int) round($stripeIntent->amount_received * (1 - $commission->provider_fee));
+            // Le montant transféré = montant reçu - frais prestataire (avec minimum appliqué)
+            $transferAmount = (int) round(CurrencyService::toCents($amountInCurrency - $providerFeeAmount, $currency));
 
             // ✅ CORRECTION: Formule simplifiée et corrigée pour la commission affilié
-            // La commission affilié est basée sur un pourcentage du provider_fee de la transaction
-            $affiliateCommissionAmount = round($commission->affiliate_fee * $transaction->provider_fee, 2);
+            // La commission affilié est basée sur un pourcentage du provider_fee (avec minimum appliqué)
+            $affiliateCommissionAmount = round($commission->affiliate_fee * $providerFeeAmount, 2);
 
-            // Récupérer la devise depuis la transaction ou utiliser EUR par défaut
-            $currency = strtolower($transaction->currency ?? 'EUR');
+            // Devise en minuscules pour Stripe
+            $currencyLower = strtolower($currency);
 
             // ✅ SÉCURITÉ: Transaction DB pour garantir l'atomicité
-            return DB::transaction(function () use ($mission, $provider, $transferAmount, $affiliateCommissionAmount, $transaction, $currency) {
+            return DB::transaction(function () use ($mission, $provider, $transferAmount, $affiliateCommissionAmount, $transaction, $currency, $currencyLower) {
                 // 1. Créer le transfert Stripe vers le prestataire
                 $transfer = Transfer::create([
                     'amount' => $transferAmount,
-                    'currency' => $currency,
+                    'currency' => $currencyLower,
                     'destination' => $provider->stripe_account_id,
                     'transfer_group' => 'MISSION_' . $mission->id,
                     'metadata' => [

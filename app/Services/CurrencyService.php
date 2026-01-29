@@ -376,6 +376,47 @@ class CurrencyService
     }
 
     /**
+     * Get the minimum service fee for a currency
+     *
+     * If the calculated provider commission is less than this minimum,
+     * this minimum fee will be charged instead.
+     *
+     * @param string $currency
+     * @return int|float
+     */
+    public function getMinimumServiceFee(string $currency): int|float
+    {
+        return config('currencies.minimum_service_fee.' . strtoupper($currency), 10);
+    }
+
+    /**
+     * Get the minimum service fee (static version for backward compatibility)
+     *
+     * @param string $currency
+     * @return int|float
+     */
+    public static function getMinimumServiceFeeStatic(string $currency): int|float
+    {
+        return config('currencies.minimum_service_fee.' . strtoupper($currency), 10);
+    }
+
+    /**
+     * Calculate the provider fee with minimum applied
+     *
+     * @param float $amount The transaction amount
+     * @param float $feeRate The fee rate (e.g., 0.15 for 15%)
+     * @param string $currency The currency code
+     * @return float The fee amount (max of calculated fee and minimum)
+     */
+    public function calculateProviderFeeWithMinimum(float $amount, float $feeRate, string $currency): float
+    {
+        $calculatedFee = round($amount * $feeRate, 2);
+        $minimumFee = $this->getMinimumServiceFee($currency);
+
+        return max($calculatedFee, $minimumFee);
+    }
+
+    /**
      * Check if a currency code is supported
      *
      * @param string $code

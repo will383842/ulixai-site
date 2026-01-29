@@ -6,38 +6,58 @@ use Illuminate\Http\Request;
 use App\Models\ServiceProvider;
 use App\Models\MissionOffer;
 use App\Models\Mission;
+use App\Services\CurrencyService;
 
 class PaymentController extends Controller
 {
+    protected CurrencyService $currencyService;
+
+    public function __construct(CurrencyService $currencyService)
+    {
+        $this->currencyService = $currencyService;
+    }
+
     public function index(Request $request) {
         $providerId = $request->query('id');
         $missionId = $request->query('mission_id');
         $provider = ServiceProvider::find($providerId);
-        
+
         if (!$provider) {
             abort(404, 'Provider not found');
         }
 
         // ✅ KYC SUPPRIMÉ - Stripe gérera le refus automatiquement si nécessaire
-        
+
         $commissions = \App\Models\UlixCommission::where('is_active', true)->first();
-        $requester = auth()->user(); 
+        $requester = auth()->user();
 
         $offer = null;
+        $mission = null;
 
         if ($missionId) {
             $offer = MissionOffer::where('mission_id', $missionId)
                 ->where('provider_id', $providerId)
                 ->first();
+            $mission = Mission::find($missionId);
         }
-        
+
         // Vérifier que l'offre existe
         if (!$offer) {
             return redirect()->route('quote-offer', ['id' => $missionId])
                 ->with('error', 'No offer found for this provider and mission.');
         }
-        
+
+        // ✅ Récupérer la devise de la mission
+        $currency = strtoupper($mission->budget_currency ?? 'EUR');
+
         $calculateClientFee = number_format($commissions->requester_fee * ($offer->price ?? 0), 2, '.', '');
+
+        // ✅ Calculer les frais prestataire avec le minimum appliqué
+        $offerPrice = $offer->price ?? 0;
+        $calculatedProviderFee = round($commissions->provider_fee * $offerPrice, 2);
+        $minimumServiceFee = $this->currencyService->getMinimumServiceFee($currency);
+        $providerFee = max($calculatedProviderFee, $minimumServiceFee);
+        $isMinimumApplied = $calculatedProviderFee < $minimumServiceFee;
 
         $requesterCreditBalance = $requester->credit_balance;
 
@@ -53,10 +73,20 @@ class PaymentController extends Controller
                 $clientFee = $calculateClientFee - $requesterCreditBalance;
             }
         }
-        
+
         // Get provider reviews
         $reviews = $provider->reviews()->get()->avg('rating');
-        return view('dashboard.payments', compact('provider', 'offer', 'reviews', 'clientFee', 'remainingCreditBalance'));
+        return view('dashboard.payments', compact(
+            'provider',
+            'offer',
+            'reviews',
+            'clientFee',
+            'remainingCreditBalance',
+            'mission',
+            'providerFee',
+            'minimumServiceFee',
+            'isMinimumApplied'
+        ));
     }
 
     public function paymentValidate(Request $request) {

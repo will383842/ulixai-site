@@ -130,6 +130,12 @@ class StripeWebhookController extends Controller
 
                 // ✅ Créer la transaction avec CurrencyService pour gérer les devises zero-decimal
                 $amountPaid = CurrencyService::fromCents($paymentIntent->amount, $currency);
+
+                // ✅ Calculer les frais prestataire avec le minimum appliqué
+                $calculatedProviderFee = round($amountPaid * $commission->provider_fee, 2);
+                $minimumServiceFee = CurrencyService::getMinimumServiceFeeStatic($currency);
+                $providerFee = max($calculatedProviderFee, $minimumServiceFee);
+
                 $transaction = Transaction::create([
                     'mission_id' => $missionId,
                     'provider_id' => $providerId,
@@ -137,7 +143,7 @@ class StripeWebhookController extends Controller
                     'stripe_payment_intent_id' => $paymentIntent->id,
                     'amount_paid' => $amountPaid,
                     'client_fee' => round((float) $clientFee, 2),
-                    'provider_fee' => round($amountPaid * $commission->provider_fee, 2),
+                    'provider_fee' => $providerFee,
                     'country' => $lockedMission->location_country,
                     'currency' => $currency, // ✅ Devise récupérée depuis Stripe (EUR ou USD)
                     'user_role' => 'service_requester', // Correct: seul le requester paie

@@ -75,7 +75,10 @@ class EarningsController extends Controller
 
         // Récupérer la devise préférée de l'utilisateur (EUR ou USD)
         $currency = strtolower($user->preferred_currency ?? 'EUR');
-        $currencySymbol = $currency === 'usd' ? '$' : '€';
+        $currencySymbol = config('currencies.symbols.' . strtoupper($currency), '€');
+
+        // ✅ Récupérer le minimum de retrait dynamique depuis la configuration
+        $minimumWithdrawal = config('currencies.minimum_withdrawal.' . strtoupper($currency), 30);
 
         DB::beginTransaction();
 
@@ -115,9 +118,9 @@ class EarningsController extends Controller
 
                 $totalPayoutAmount = $affiliateAmount + $availableBalance;
 
-                if ($totalPayoutAmount < 30) {
+                if ($totalPayoutAmount < $minimumWithdrawal) {
                     DB::rollBack();
-                    return back()->with('error', 'Total balance is less than minimum withdrawal amount (30' . $currencySymbol . ')');
+                    return back()->with('error', 'Total balance is less than minimum withdrawal amount (' . $minimumWithdrawal . $currencySymbol . ')');
                 }
 
                 if ($affiliateAmount > 0) {
@@ -155,8 +158,8 @@ class EarningsController extends Controller
                     throw new \Exception('Please add your bank account details before withdrawing.');
                 }
 
-                if ($affiliateAmount < 30) {
-                    throw new \Exception('Minimum withdrawal amount is 30' . $currencySymbol);
+                if ($affiliateAmount < $minimumWithdrawal) {
+                    throw new \Exception('Minimum withdrawal amount is ' . $minimumWithdrawal . $currencySymbol);
                 }
 
                 try {
