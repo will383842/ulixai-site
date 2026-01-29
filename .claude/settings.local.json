@@ -78,7 +78,9 @@
       "Bash(fi)",
       "Bash(git pull:*)",
       "Bash(git stash:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(del:*)",
+      "Bash(git status:*)"
     ]
   }
 }

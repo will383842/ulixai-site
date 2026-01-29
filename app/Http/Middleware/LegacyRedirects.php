@@ -130,6 +130,7 @@ class LegacyRedirects
         '/register' => '/signup',
         '/paymentsvalidate' => '/dashboard',
         '/partnership/store' => '/partnerships',
+        '/logout' => '/login', // GET logout n'existe pas en Laravel (POST only)
     ];
 
     /**
@@ -186,6 +187,16 @@ class LegacyRedirects
         // URLs avec /public/index.php/ (mauvaise config serveur)
         if (str_starts_with($path, '/public/index.php/')) {
             $cleanPath = str_replace('/public/index.php', '', $path);
+
+            // Si c'est un provider, rediriger directement vers /provider/slug (évite double redirection)
+            if (preg_match('#^/providers/(.+)$#', $cleanPath, $matches)) {
+                $slug = $matches[1];
+                if (!str_contains($slug, '.php')) {
+                    return redirect('/provider/' . $slug, 301);
+                }
+                abort(404);
+            }
+
             return redirect($cleanPath, 301);
         }
 

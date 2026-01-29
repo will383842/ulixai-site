@@ -720,8 +720,32 @@
   "email": "E‑Mail",
   "password": "Passwort",
   "forgot password": "Passwort vergessen?",
-  "Don’t have an account? Start Free Trial": "Noch kein Konto? Starte die kostenlose Testversion"
+  "Don't have an account? Start Free Trial": "Noch kein Konto? Starte die kostenlose Testversion",
 
-
+  "Report a problem": "Ein Problem melden",
+  "How can we help?": "Wie können wir helfen?",
+  "Close": "Schließen",
+  "Thank you!": "Danke!",
+  "Your feedback has been received. We appreciate you taking the time to help us improve.": "Ihr Feedback wurde empfangen. Wir schätzen es, dass Sie sich die Zeit nehmen, uns zu helfen, uns zu verbessern.",
+  "Bug": "Fehler",
+  "Idea": "Idee",
+  "Question": "Frage",
+  "Other": "Sonstiges",
+  "Report type": "Berichtstyp",
+  "Your feedback is anonymous unless logged in. Page context is captured automatically.": "Ihr Feedback ist anonym, es sei denn, Sie sind angemeldet. Der Seitenkontext wird automatisch erfasst.",
+  "Describe the issue": "Beschreiben Sie das Problem",
+  "Describe your idea": "Beschreiben Sie Ihre Idee",
+  "What is your question?": "Was ist Ihre Frage?",
+  "What happened? What did you expect?": "Was ist passiert? Was haben Sie erwartet?",
+  "What feature would help you?": "Welche Funktion würde Ihnen helfen?",
+  "What would you like to know?": "Was möchten Sie wissen?",
+  "Tell us more...": "Erzählen Sie uns mehr...",
+  "Suggestion (optional)": "Vorschlag (optional)",
+  "How could we improve this?": "Wie könnten wir das verbessern?",
+  "Send feedback": "Feedback senden",
+  "Sending...": "Wird gesendet...",
+  "Please describe the issue or provide a suggestion.": "Bitte beschreiben Sie das Problem oder geben Sie einen Vorschlag.",
+  "Thank you for your feedback!": "Danke für Ihr Feedback!",
+  "Failed to send. Please try again.": "Senden fehlgeschlagen. Bitte versuchen Sie es erneut."
 }
 
