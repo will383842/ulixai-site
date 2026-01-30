@@ -746,6 +746,39 @@
 
             <input type="hidden" name="user_id" value="{{$user->id}}">
 
+            {{-- ✅ PayPal Payout Settings (Service Providers Only) --}}
+            @if($user->user_role === 'service_provider')
+            <div class="form-section-title" style="margin-top: 2rem;">
+                <i class="fab fa-paypal" style="color: #003087; margin-right: 0.5rem;"></i>
+                PayPal Payout Settings
+            </div>
+            <div class="form-grid">
+                <div class="form-field full-width">
+                    <label class="form-label">
+                        PayPal Email
+                        <span style="font-size: 0.75rem; color: var(--color-text-secondary); font-weight: 400;">
+                            (for receiving payments in countries where PayPal is used)
+                        </span>
+                    </label>
+                    <div class="editable-field-group">
+                        <div class="editable-field-input" style="flex: 1;">
+                            <input
+                                type="email"
+                                name="paypal_email"
+                                value="{{ $provider->paypal_email ?? '' }}"
+                                class="form-input"
+                                placeholder="your-paypal@email.com"
+                            >
+                        </div>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.5rem;">
+                        <i class="fas fa-info-circle" style="margin-right: 0.25rem;"></i>
+                        If left empty, we'll use your account email ({{ $user->email }}) for PayPal payouts.
+                    </p>
+                </div>
+            </div>
+            @endif
+
             <!-- Submit Button -->
             <div class="submit-container">
                 <button type="submit" class="btn-submit" aria-label="Update personal information">

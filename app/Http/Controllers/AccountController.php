@@ -88,6 +88,11 @@ class AccountController extends Controller
                     $providerData['spoken_language'] = $request->spoken_languages;
                 }
 
+                // ✅ PayPal email for payouts (multi-gateway support)
+                if ($request->has('paypal_email')) {
+                    $providerData['paypal_email'] = $request->paypal_email ?: null;
+                }
+
                 if (!empty($providerData)) {
                     $user->serviceProvider->update($providerData);
                 }

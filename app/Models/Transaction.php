@@ -19,6 +19,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $stripe_session_id
  * @property string|null $stripe_payment_intent_id
  * @property string|null $stripe_transfer_id
+ * @property string $payment_gateway
+ * @property string|null $paypal_order_id
+ * @property string|null $paypal_capture_id
+ * @property string|null $paypal_payout_batch_id
+ * @property string|null $paypal_payout_item_id
  * @property string $amount_paid
  * @property string $client_fee
  * @property string|null $provider_fee
@@ -26,6 +31,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $currency
  * @property string|null $user_role
  * @property string $status
+ * @property \Illuminate\Support\Carbon|null $authorized_at
+ * @property \Illuminate\Support\Carbon|null $captured_at
+ * @property \Illuminate\Support\Carbon|null $release_scheduled_at
+ * @property \Illuminate\Support\Carbon|null $released_at
+ * @property string|null $release_blocked_reason
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  *
@@ -35,6 +45,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read string $formatted_amount
  * @property-read string $formatted_client_fee
  * @property-read string $formatted_provider_fee
+ * @property-read bool $is_paypal
+ * @property-read bool $is_stripe
+ * @property-read bool $is_releasable
  */
 class Transaction extends Model
 {
@@ -45,6 +58,11 @@ class Transaction extends Model
         'stripe_session_id',
         'stripe_payment_intent_id',
         'stripe_transfer_id',
+        'payment_gateway',
+        'paypal_order_id',
+        'paypal_capture_id',
+        'paypal_payout_batch_id',
+        'paypal_payout_item_id',
         'amount_paid',
         'client_fee',
         'provider_fee',
@@ -52,6 +70,11 @@ class Transaction extends Model
         'currency',
         'user_role',
         'status',
+        'authorized_at',
+        'captured_at',
+        'release_scheduled_at',
+        'released_at',
+        'release_blocked_reason',
     ];
 
     /**
@@ -63,7 +86,74 @@ class Transaction extends Model
         'amount_paid' => 'decimal:2',
         'client_fee' => 'decimal:2',
         'provider_fee' => 'decimal:2',
+        'authorized_at' => 'datetime',
+        'captured_at' => 'datetime',
+        'release_scheduled_at' => 'datetime',
+        'released_at' => 'datetime',
     ];
+
+    /**
+     * Payment gateway constants.
+     */
+    public const GATEWAY_STRIPE = 'stripe';
+    public const GATEWAY_PAYPAL = 'paypal';
+
+    /**
+     * Check if this transaction uses PayPal.
+     */
+    public function getIsPaypalAttribute(): bool
+    {
+        return $this->payment_gateway === self::GATEWAY_PAYPAL;
+    }
+
+    /**
+     * Check if this transaction uses Stripe.
+     */
+    public function getIsStripeAttribute(): bool
+    {
+        return $this->payment_gateway === self::GATEWAY_STRIPE;
+    }
+
+    /**
+     * Check if this transaction is ready for release.
+     */
+    public function getIsReleasableAttribute(): bool
+    {
+        // Must be paid and past scheduled release date
+        if ($this->status !== 'paid') {
+            return false;
+        }
+
+        if ($this->release_blocked_reason) {
+            return false;
+        }
+
+        if (!$this->release_scheduled_at) {
+            return false;
+        }
+
+        return now()->gte($this->release_scheduled_at);
+    }
+
+    /**
+     * Get the unique payment identifier regardless of gateway.
+     */
+    public function getPaymentIdentifierAttribute(): ?string
+    {
+        return $this->is_paypal
+            ? $this->paypal_order_id
+            : $this->stripe_payment_intent_id;
+    }
+
+    /**
+     * Get the transfer identifier regardless of gateway.
+     */
+    public function getTransferIdentifierAttribute(): ?string
+    {
+        return $this->is_paypal
+            ? $this->paypal_payout_batch_id
+            : $this->stripe_transfer_id;
+    }
 
     public function mission(): BelongsTo
     {
@@ -122,5 +212,50 @@ class Transaction extends Model
     public function scopeByCurrency(Builder $query, string $currency): Builder
     {
         return $query->where('currency', strtoupper($currency));
+    }
+
+    /**
+     * Scope a query to filter transactions by gateway.
+     */
+    public function scopeByGateway(Builder $query, string $gateway): Builder
+    {
+        return $query->where('payment_gateway', $gateway);
+    }
+
+    /**
+     * Scope a query to get Stripe transactions.
+     */
+    public function scopeStripe(Builder $query): Builder
+    {
+        return $query->where('payment_gateway', self::GATEWAY_STRIPE);
+    }
+
+    /**
+     * Scope a query to get PayPal transactions.
+     */
+    public function scopePaypal(Builder $query): Builder
+    {
+        return $query->where('payment_gateway', self::GATEWAY_PAYPAL);
+    }
+
+    /**
+     * Scope a query to get transactions ready for release.
+     */
+    public function scopeReleasable(Builder $query): Builder
+    {
+        return $query->where('status', 'paid')
+            ->whereNull('release_blocked_reason')
+            ->whereNotNull('release_scheduled_at')
+            ->where('release_scheduled_at', '<=', now());
+    }
+
+    /**
+     * Scope a query to get pending escrow transactions.
+     */
+    public function scopePendingEscrow(Builder $query): Builder
+    {
+        return $query->where('status', 'paid')
+            ->whereNull('released_at')
+            ->whereNotNull('captured_at');
     }
 }

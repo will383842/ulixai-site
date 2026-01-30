@@ -12,7 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'stripe/webhook', // ✅ AJOUTÉ - Stripe doit pouvoir envoyer des webhooks sans CSRF
+        'stripe/webhook', // ✅ Stripe doit pouvoir envoyer des webhooks sans CSRF
+        'paypal/webhook', // ✅ PayPal doit pouvoir envoyer des webhooks sans CSRF
         'api/*', // ✅ Conserve l'exclusion des routes API
     ];
 }

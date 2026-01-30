@@ -7,14 +7,17 @@ use App\Models\ServiceProvider;
 use App\Models\MissionOffer;
 use App\Models\Mission;
 use App\Services\CurrencyService;
+use App\Services\Gateways\PaymentGatewaySelector;
 
 class PaymentController extends Controller
 {
     protected CurrencyService $currencyService;
+    protected PaymentGatewaySelector $gatewaySelector;
 
-    public function __construct(CurrencyService $currencyService)
+    public function __construct(CurrencyService $currencyService, PaymentGatewaySelector $gatewaySelector)
     {
         $this->currencyService = $currencyService;
+        $this->gatewaySelector = $gatewaySelector;
     }
 
     public function index(Request $request) {
@@ -76,6 +79,14 @@ class PaymentController extends Controller
 
         // Get provider reviews
         $reviews = $provider->reviews()->get()->avg('rating');
+
+        // ✅ Déterminer la passerelle de paiement recommandée
+        $countryCode = $mission->location_country ?? $requester->country ?? 'FR';
+        $recommendedGateway = $this->gatewaySelector->selectForCountry($countryCode);
+        $availableGateways = $this->gatewaySelector->getAllGatewaysInfo($countryCode);
+        $isPayPalAvailable = $this->gatewaySelector->isPayPalAvailable();
+        $isStripeAvailable = $this->gatewaySelector->isStripeAvailable();
+
         return view('dashboard.payments', compact(
             'provider',
             'offer',
@@ -85,7 +96,11 @@ class PaymentController extends Controller
             'mission',
             'providerFee',
             'minimumServiceFee',
-            'isMinimumApplied'
+            'isMinimumApplied',
+            'recommendedGateway',
+            'availableGateways',
+            'isPayPalAvailable',
+            'isStripeAvailable'
         ));
     }
 

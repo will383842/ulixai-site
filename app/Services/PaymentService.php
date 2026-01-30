@@ -13,6 +13,7 @@ use Stripe\Balance;
 use App\Models\User;
 use App\Models\AffiliateCommission;
 use App\Services\CurrencyService;
+use App\Services\Gateways\PayPalGateway;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -405,46 +406,119 @@ class PaymentService
         }
     }
 
-    public function refundTransaction($transaction)
+    /**
+     * Rembourse une transaction.
+     * Supporte Stripe et PayPal.
+     *
+     * @param Transaction $transaction
+     * @param float|null $amount Montant partiel (null = remboursement total)
+     * @return array{success: bool, refund_id: string, gateway: string}
+     * @throws \Exception
+     */
+    public function refundTransaction($transaction, ?float $amount = null): array
     {
         try {
-            if (!$transaction->stripe_payment_intent_id) {
-                throw new \Exception('No Stripe payment intent found');
+            // ✅ Brancher selon la passerelle de paiement
+            if ($transaction->is_paypal) {
+                return $this->refundPayPalTransaction($transaction, $amount);
+            } else {
+                return $this->refundStripeTransaction($transaction, $amount);
             }
-
-            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-            
-            // Get the payment intent to find the charge ID
-            $paymentIntent = $stripe->paymentIntents->retrieve($transaction->stripe_payment_intent_id);
-            
-            if (!$paymentIntent->latest_charge) {
-                throw new \Exception('No charge found for this payment');
-            }
-
-            // Create the refund
-            $refund = $stripe->refunds->create([
-                'charge' => $paymentIntent->latest_charge,
-                'metadata' => [
-                    'transaction_id' => $transaction->id,
-                    'refunded_by' => 'admin',
-                    'mission_id' => $transaction->mission_id
-                ]
-            ]);
-
-            // Log the refund
-            \Log::info('Transaction refunded', [
-                'transaction_id' => $transaction->id,
-                'refund_id' => $refund->id,
-                'amount' => $refund->amount
-            ]);
-
-            return true;
         } catch (\Exception $e) {
-            \Log::error('Refund failed', [
+            Log::error('Refund failed', [
                 'transaction_id' => $transaction->id,
+                'gateway' => $transaction->payment_gateway,
                 'error' => $e->getMessage()
             ]);
             throw $e;
         }
+    }
+
+    /**
+     * Remboursement Stripe.
+     */
+    private function refundStripeTransaction(Transaction $transaction, ?float $amount = null): array
+    {
+        if (!$transaction->stripe_payment_intent_id) {
+            throw new \Exception('No Stripe payment intent found');
+        }
+
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+
+        // Get the payment intent to find the charge ID
+        $paymentIntent = $stripe->paymentIntents->retrieve($transaction->stripe_payment_intent_id);
+
+        if (!$paymentIntent->latest_charge) {
+            throw new \Exception('No charge found for this payment');
+        }
+
+        // Préparer les paramètres du remboursement
+        $refundParams = [
+            'charge' => $paymentIntent->latest_charge,
+            'metadata' => [
+                'transaction_id' => $transaction->id,
+                'refunded_by' => 'admin',
+                'mission_id' => $transaction->mission_id
+            ]
+        ];
+
+        // Remboursement partiel si montant spécifié
+        if ($amount !== null) {
+            $currency = $transaction->currency ?? 'EUR';
+            $refundParams['amount'] = CurrencyService::toCents($amount, $currency);
+        }
+
+        // Create the refund
+        $refund = $stripe->refunds->create($refundParams);
+
+        Log::info('Stripe transaction refunded', [
+            'transaction_id' => $transaction->id,
+            'refund_id' => $refund->id,
+            'amount' => $refund->amount,
+            'status' => $refund->status,
+        ]);
+
+        return [
+            'success' => $refund->status === 'succeeded',
+            'refund_id' => $refund->id,
+            'gateway' => 'stripe',
+            'amount' => CurrencyService::fromCents($refund->amount, $transaction->currency ?? 'EUR'),
+        ];
+    }
+
+    /**
+     * Remboursement PayPal.
+     */
+    private function refundPayPalTransaction(Transaction $transaction, ?float $amount = null): array
+    {
+        if (!$transaction->paypal_capture_id) {
+            throw new \Exception('No PayPal capture ID found');
+        }
+
+        $paypalGateway = app(PayPalGateway::class);
+        $currency = $transaction->currency ?? 'EUR';
+
+        // Si pas de montant spécifié, rembourser le montant total
+        $refundAmount = $amount ?? (float) $transaction->amount_paid;
+
+        $result = $paypalGateway->refund(
+            $transaction->paypal_capture_id,
+            $refundAmount,
+            $currency
+        );
+
+        Log::info('PayPal transaction refunded', [
+            'transaction_id' => $transaction->id,
+            'refund_id' => $result['refund_id'],
+            'amount' => $result['amount'],
+            'status' => $result['status'],
+        ]);
+
+        return [
+            'success' => $result['status'] === 'COMPLETED',
+            'refund_id' => $result['refund_id'],
+            'gateway' => 'paypal',
+            'amount' => $result['amount'],
+        ];
     }
 }

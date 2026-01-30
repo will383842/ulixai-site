@@ -35,6 +35,7 @@ class ServiceProvider extends Model
         'documents',
         'ip_address',
         'stripe_account_id',
+        'paypal_email',
         'slug',
         'stripe_chg_enabled',
         'stripe_pts_enabled', 

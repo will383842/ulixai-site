@@ -136,10 +136,15 @@ class StripeWebhookController extends Controller
                 $minimumServiceFee = CurrencyService::getMinimumServiceFeeStatic($currency);
                 $providerFee = max($calculatedProviderFee, $minimumServiceFee);
 
+                // ✅ Calculer la date de libération escrow
+                $escrowDays = config('ulixai.payment.escrow_period_days', 7);
+                $releaseScheduledAt = now()->addDays($escrowDays);
+
                 $transaction = Transaction::create([
                     'mission_id' => $missionId,
                     'provider_id' => $providerId,
                     'offer_id' => $offerId,
+                    'payment_gateway' => 'stripe', // ✅ Gateway explicite
                     'stripe_payment_intent_id' => $paymentIntent->id,
                     'amount_paid' => $amountPaid,
                     'client_fee' => round((float) $clientFee, 2),
@@ -148,6 +153,10 @@ class StripeWebhookController extends Controller
                     'currency' => $currency, // ✅ Devise récupérée depuis Stripe (EUR ou USD)
                     'user_role' => 'service_requester', // Correct: seul le requester paie
                     'status' => 'paid',
+                    // ✅ Champs escrow pour libération automatique
+                    'authorized_at' => now(),
+                    'captured_at' => now(),
+                    'release_scheduled_at' => $releaseScheduledAt,
                 ]);
 
                 // ✅ Log critique pour traçabilité

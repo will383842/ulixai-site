@@ -43,6 +43,8 @@ use App\Http\Controllers\ProviderReviewController;
 use App\Http\Controllers\MissionMessageController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\PayPalWebhookController;
+use App\Http\Controllers\PayPalPaymentController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\UlixaiReviewController;
 use App\Http\Controllers\ServiceFeesController;
@@ -67,11 +69,15 @@ Route::get('/provider/{slug}', [ServiceProviderController::class, 'providerProfi
     ->name('provider.profile');
 
 // ═══════════════════════════════════════════════════════════
-// 🔐 STRIPE WEBHOOK (AVANT TOUTES LES AUTRES ROUTES)
+// 🔐 PAYMENT WEBHOOKS (AVANT TOUTES LES AUTRES ROUTES)
 // ═══════════════════════════════════════════════════════════
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
     ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
     ->name('stripe.webhook');
+
+Route::post('/paypal/webhook', [PayPalWebhookController::class, 'handleWebhook'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
+    ->name('paypal.webhook');
 
 // ═══════════════════════════════════════════════════════════
 // 🌍 ROUTES PUBLIQUES
@@ -368,14 +374,26 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-disputes', [\App\Http\Controllers\DisputeUserController::class, 'index'])->name('user.disputes');
     Route::get('/my-disputes/{mission}', [\App\Http\Controllers\DisputeUserController::class, 'show'])->name('user.disputes.show');
 
-    // Stripe (paiement) - ✅ SÉCURITÉ: Rate limiting pour prévenir les abus
+    // Paiements - ✅ SÉCURITÉ: Rate limiting pour prévenir les abus
     Route::middleware(['throttle:10,1'])->group(function () {
         // 10 tentatives par minute max par utilisateur
+
+        // Stripe
         Route::post('/payments/stripe/checkout', [StripePaymentController::class, 'checkout'])->name('payments.stripe.checkout');
         Route::post('/payments/stripe/process', [StripePaymentController::class, 'processPayment'])->name('payments.stripe.process');
+
+        // PayPal
+        Route::post('/payments/paypal/checkout', [PayPalPaymentController::class, 'checkout'])->name('payments.paypal.checkout');
     });
+
+    // Success/Cancel routes (shared)
     Route::get('/payments/success/{mission}', [StripePaymentController::class, 'success'])->name('payments.success');
     Route::get('/payments/cancel', [StripePaymentController::class, 'cancel'])->name('payments.stripe.cancel');
+    Route::get('/payments/paypal/cancel', [PayPalPaymentController::class, 'cancel'])->name('payments.paypal.cancel');
+    Route::get('/payments/paypal/capture/{mission}', [PayPalPaymentController::class, 'capture'])->name('payments.paypal.capture');
+
+    // Gateway info API
+    Route::get('/payments/gateway-info', [PayPalPaymentController::class, 'getGatewayInfo'])->name('payments.gateway-info');
 
     // Pusher auth
     Route::post('/broadcasting/auth', function (Request $request) {
