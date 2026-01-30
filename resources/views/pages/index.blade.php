@@ -188,16 +188,13 @@
     .faq-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .faq-content.active {
       max-height: 500px;
-      transition: max-height 0.5s ease-in;
     }
 
     .faq-icon {
-      transition: transform 0.3s ease;
     }
 
     .faq-toggle.active .faq-icon {
@@ -364,9 +361,6 @@
         height: 200px;
       }
 
-      .card-modern:hover {
-        transform: translateY(-4px);
-      }
     }
 
     /* AI Popup */
@@ -374,10 +368,9 @@
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
+      transform: translate(-50%, -50%);
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       z-index: 10000;
       max-width: 90%;
       width: 500px;
@@ -386,7 +379,6 @@
     .ai-popup.show {
       opacity: 1;
       visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
     }
 
     .ai-popup-overlay {
@@ -395,9 +387,7 @@
       background: rgba(0, 0, 0, 0.5);
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s ease;
       z-index: 9999;
-      backdrop-filter: blur(4px);
     }
 
     .ai-popup-overlay.show {
@@ -455,7 +445,6 @@ body {
   font-weight: 500;
   color: #1F2937;
   cursor: pointer;
-  transition: all 0.3s ease;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233B82F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -570,7 +559,7 @@ body {
               onclick="openHelpPopup()"
               readonly
             />
-            <button class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full transition-all shadow-lg flex-shrink-0">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg flex-shrink-0">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7" stroke-width="2"/>
                 <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/>
@@ -631,12 +620,12 @@ body {
       </div>
 
         <!-- Navigation Arrows -->
-        <button id="prevBubble" onclick="scrollBubbles('prev')" class="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full p-3 shadow-xl hover:bg-gray-50 transition-all z-10">
+        <button id="prevBubble" onclick="scrollBubbles('prev')" class="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full p-3 shadow-xl hover:bg-gray-50 z-10">
           <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
-        <button id="nextBubble" onclick="scrollBubbles('next')" class="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full p-3 shadow-xl hover:bg-gray-50 transition-all z-10">
+        <button id="nextBubble" onclick="scrollBubbles('next')" class="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full p-3 shadow-xl hover:bg-gray-50 z-10">
           <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
@@ -910,7 +899,7 @@ body {
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
     <div>
       <label class="block text-sm font-bold text-gray-700 mb-2">ðŸ—£ï¸ Spoken languages</label>
-      <select id="languageSelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
+      <select id="languageSelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
         <option value="">Select</option>
         @foreach($languages as $lang)
           <option value="{{ $lang }}">{{ $lang }}</option>
@@ -921,7 +910,7 @@ body {
 
     <div>
       <label class="block text-sm font-bold text-gray-700 mb-2">ðŸŒ Countries of operation</label>
-      <select id="countrySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
+      <select id="countrySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
         <option value="">Select</option>
         @foreach($countries as $country)
           <option value="{{ $country }}">{{ $country }}</option>
@@ -932,7 +921,7 @@ body {
 
     <div>
       <label class="block text-sm font-bold text-gray-700 mb-2">ðŸ“‹ Category</label>
-      <select id="categorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
+      <select id="categorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
         <option value="">Select</option>
         @foreach($category as $cat)
           <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -941,7 +930,7 @@ body {
     </div>
 
     <div class="flex items-end">
-      <button id="filterButton" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg hover:shadow-xl">
+      <button id="filterButton" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-xl shadow-lg">
         ðŸ” Filter
       </button>
     </div>
@@ -949,14 +938,14 @@ body {
 
   <div id="subcategoryWrapper" class="hidden mt-4">
     <label class="block text-sm font-bold text-gray-700 mb-2">ðŸŽ¯ Subcategory</label>
-    <select id="subcategorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
+    <select id="subcategorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
       <option value="">Select</option>
     </select>
   </div>
 
   <div id="subsubcategoryWrapper" class="hidden mt-4">
     <label class="block text-sm font-bold text-gray-700 mb-2">ðŸŽ¯ Sub-subcategory</label>
-    <select id="subsubcategorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
+    <select id="subsubcategorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
       <option value="">Select</option>
     </select>
   </div>
@@ -1157,7 +1146,7 @@ body {
           <div class="text-sm text-white/80">Multilingual, ready to help you in all countries</div>
         </div>
       </div>
-      <a href="{{ route('service-providers') }}" class="bg-white text-green-600 px-8 py-3 rounded-full font-bold hover:bg-gray-50 transition-all">
+      <a href="{{ route('service-providers') }}" class="bg-white text-green-600 px-8 py-3 rounded-full font-bold hover:bg-gray-50">
         Discover all profiles â†’
       </a>
     </div>
@@ -1747,7 +1736,7 @@ body {
             <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">1</span>
             <span>How does the platform work to find a helping expat?</span>
           </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-gray-600 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -1764,7 +1753,7 @@ body {
             <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">2</span>
             <span>What types of services can I find on the platform?</span>
           </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-gray-600 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -1781,7 +1770,7 @@ body {
             <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">3</span>
             <span>Are helping expats verified and reliable?</span>
           </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-gray-600 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -1798,7 +1787,7 @@ body {
             <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">4</span>
             <span>How are service rates set?</span>
           </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-gray-600 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -1818,7 +1807,7 @@ body {
               <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Early Beta User</span>
             </span>
           </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-gray-600 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -1835,7 +1824,7 @@ body {
             <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">6</span>
             <span>In which countries is the platform available?</span>
           </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-gray-600 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -1852,7 +1841,7 @@ body {
             <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">7</span>
             <span>How can I become a helping expat and offer my services?</span>
           </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-gray-600 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -1869,7 +1858,7 @@ body {
             <span class="number-badge mr-4 flex-shrink-0 w-10 h-10 text-sm">8</span>
             <span>What happens if I am not satisfied with the service?</span>
           </span>
-          <svg class="w-6 h-6 text-gray-600 transition-transform duration-300 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-gray-600 faq-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
@@ -1911,7 +1900,7 @@ body {
 <div class="ai-popup" id="aiPopup">
   <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
     <div class="bg-gradient-to-r from-pink-500 to-purple-600 p-6 relative">
-      <button onclick="closeAIPopup()" class="absolute top-4 right-4 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all">
+      <button onclick="closeAIPopup()" class="absolute top-4 right-4 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center">
         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -2256,7 +2245,7 @@ body {
               <div class="text-6xl mb-4">ðŸ˜¢</div>
               <h3 class="text-2xl font-bold text-gray-800 mb-2">No local pro found</h3>
               <p class="text-gray-600 mb-4">Try adjusting your filters or</p>
-              <button onclick="document.getElementById('resetFiltersButton').click()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">
+              <button onclick="document.getElementById('resetFiltersButton').click()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700">
                 Reset filters
               </button>
             </div>
@@ -2270,7 +2259,7 @@ body {
             <div class="text-6xl mb-4">âš ï¸</div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2">Oops! Something went wrong</h3>
             <p class="text-gray-600 mb-4">Please try again</p>
-            <button onclick="location.reload()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">
+            <button onclick="location.reload()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700">
               Reload page
             </button>
           </div>
