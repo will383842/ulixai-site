@@ -2132,56 +2132,6 @@ body {
     }
   });
 
-  // Fallback pour openHelpPopup si non défini par app.js
-  if (typeof window.openHelpPopup !== 'function') {
-    window.openHelpPopup = function() {
-      const popup = document.getElementById('searchPopup');
-      if (popup) {
-        popup.classList.remove('hidden');
-        popup.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-        // Charger les catégories si le container est vide
-        const container = popup.querySelector('.main-categories');
-        if (container && container.children.length === 0) {
-          container.innerHTML = '<div style="text-align:center;padding:3rem;"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div></div>';
-          fetch('/api/categories')
-            .then(res => res.json())
-            .then(data => {
-              if (data.success && data.categories) {
-                container.innerHTML = data.categories.map(cat => `
-                  <button onclick="window.handleCategoryClick && window.handleCategoryClick(${cat.id}, '${cat.name.replace(/'/g, "\\'")}'); return false;"
-                          class="category-card rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-xl cursor-pointer transition-all duration-300"
-                          style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
-                    <div class="text-center font-semibold text-gray-800">${cat.name}</div>
-                  </button>
-                `).join('');
-              }
-            })
-            .catch(err => {
-              container.innerHTML = '<div style="text-align:center;padding:2rem;color:red;">Erreur de chargement</div>';
-            });
-        }
-      } else {
-        // Fallback: rediriger vers service-request si popup non trouvé
-        window.location.href = '/service-request';
-      }
-    };
-  }
-
-  // Fallback pour closeAllPopups
-  if (typeof window.closeAllPopups !== 'function') {
-    window.closeAllPopups = function() {
-      ['searchPopup', 'expatriesPopup', 'vacanciersAutresBesoinsPopup'].forEach(id => {
-        const popup = document.getElementById(id);
-        if (popup) {
-          popup.classList.add('hidden');
-          popup.setAttribute('aria-hidden', 'true');
-        }
-      });
-      document.body.style.overflow = '';
-    };
-  }
-
   // Back to Top
   const backToTop = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
@@ -2495,9 +2445,6 @@ body {
 
 {{-- Floating Bug Report Button --}}
 @include('components.floating-bug-report')
-
-{{-- Category Selection Popup --}}
-@include('wizards.requester.steps.popup_request_help')
 
 </body>
 </html>
