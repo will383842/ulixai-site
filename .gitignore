@@ -71,4 +71,13 @@ faces/
 # ============================================
 storage/app/google/vision-credentials.json
 storage/app/documents/
-storage/app/profile-photos/nul
+storage/app/profile-photos/
+
+# ============================================
+# Fichiers locaux et rapports
+# ============================================
+nul
+RAPPORT_*.md
+RECOMMANDATIONS_*.md
+sos-expat-project/
+.claude/settings.local.json
