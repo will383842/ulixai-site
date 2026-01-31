@@ -18,6 +18,7 @@ class ServiceProviderController extends Controller
 {
     public function main(Request $request) {
         // Providers actifs (avec slug valide pour éviter les erreurs de route)
+        // ✅ Limité à 50 pour la homepage (performance)
         $providers = ServiceProvider::with(['user', 'reviews'])
             ->whereHas('user', function ($query) {
                 $query->where('status', 'active');
@@ -26,6 +27,7 @@ class ServiceProviderController extends Controller
             ->where('slug', '!=', '')
             ->orderByDesc('pinned')
             ->latest()
+            ->take(50)
             ->get();
         
         // FAQs
@@ -51,19 +53,24 @@ return view('pages.index', compact('providers', 'faqs', 'category', 'countries',
     }
     
     public function serviceproviders(Request $request) {
-        // Fetch all service providers with their user info
+        // Fetch service providers with their user info
+        // ✅ Limité à 100 pour performance
         if ($request->input('providers')) {
             $providers = ServiceProvider::with('user')
                 ->whereIn('slug', json_decode($request->input('providers')))
                 ->latest()
+                ->take(100)
                 ->get();
         } else {
-            $providers = ServiceProvider::with('user')->latest()->get();
+            $providers = ServiceProvider::with('user')
+                ->latest()
+                ->take(100)
+                ->get();
         }
-        
+
         // ✅ Récupération des catégories pour la vue
         $category = Category::all();
-        
+
         return view('dashboard.provider.service-providers', compact('providers', 'category'));
     }
 

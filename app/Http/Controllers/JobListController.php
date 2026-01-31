@@ -39,21 +39,25 @@ class JobListController extends Controller
         if ($provider) {
             // Missions where provider's offer is accepted and is under work
             // ✅ Eager load relationships to avoid N+1 queries
+            // ✅ Limité à 100 pour performance
             $jobs = Mission::where('selected_provider_id', $provider->id)
                 ->whereIn('status', ['in_progress', 'waiting_to_start', 'cancelled', 'disputed', 'completed'])
                 ->whereIn('payment_status', ['paid', 'held'])
                 ->with(['requester', 'category', 'subcategory'])
                 ->orderByDesc('created_at')
+                ->take(100)
                 ->get();
 
             $ongoingJobs = Mission::where('status', 'published')->count();
 
             // All quote offers made by provider that are NOT accepted yet
             // ✅ Eager load mission with its relationships
+            // ✅ Limité à 50 pour performance
             $offers = MissionOffer::where('provider_id', $provider->id)
                 ->where('status', 'pending')
                 ->with(['mission', 'mission.requester', 'mission.category'])
                 ->orderByDesc('created_at')
+                ->take(50)
                 ->get();
         }
 

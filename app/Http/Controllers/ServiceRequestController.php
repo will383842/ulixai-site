@@ -87,17 +87,19 @@ class ServiceRequestController extends Controller
     /**
      * ✅ Liste des demandes de service en cours (CORRIGÉ)
      */
-    public function ongoingServiceRequest(Request $request) 
+    public function ongoingServiceRequest(Request $request)
     {
+        // ✅ Limité à 100 missions récentes pour performance
         $missions = Mission::orderByDesc('created_at')
-            ->with('requester') 
-            ->where('status', 'published')     
+            ->with('requester')
+            ->where('status', 'published')
             ->where('payment_status', 'unpaid')
             ->whereNull('selected_provider_id')  // ✅ CRITIQUE : Masquer si prestataire choisi
-            ->get();  
+            ->take(100)
+            ->get();
 
         $category = Category::where('level', 1)->with('subcategories')->get();
-    
+
         return view('dashboard.service.ongoing-service-requests', compact('missions', 'category'));
     }
     
