@@ -58,37 +58,7 @@
     {{-- Liste des langues - Scrollable avec espace pour tous les éléments --}}
     <div class="overflow-y-auto px-4 py-3 pb-8" style="max-height: calc(90dvh - 100px); -webkit-overflow-scrolling: touch;">
       <div class="space-y-2">
-        
-        {{-- Français --}}
-        <button data-lang="fr" data-flag="{{ asset('images/flags/fr.svg') }}" data-label="Français"
-                class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
-          <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
-            <img src="{{ asset('images/flags/fr.svg') }}" alt="FR" class="w-7 h-6 object-cover rounded" width="28" height="24" />
-          </div>
-          <div class="flex-1 text-left">
-            <div class="font-bold text-gray-900 text-base">Français</div>
-            <div class="text-xs text-gray-500">France</div>
-          </div>
-          <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
-          </svg>
-        </button>
-        
-        {{-- Anglais --}}
-        <button data-lang="en" data-flag="{{ asset('images/flags/us.svg') }}" data-label="English"
-                class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
-          <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border-2 border-gray-100 group-hover:border-blue-200 transition-colors flex-shrink-0">
-            <img src="{{ asset('images/flags/us.svg') }}" alt="EN" class="w-7 h-6 object-cover rounded" width="28" height="24" />
-          </div>
-          <div class="flex-1 text-left">
-            <div class="font-bold text-gray-900 text-base">English</div>
-            <div class="text-xs text-gray-500">United States</div>
-          </div>
-          <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
-          </svg>
-        </button>
-        
+
         {{-- Allemand --}}
         <button data-lang="de" data-flag="{{ asset('images/flags/de.svg') }}" data-label="Deutsch"
                 class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group border-2 border-transparent hover:border-blue-200 hover:shadow-sm">
@@ -190,6 +160,36 @@
             <div class="text-xs text-gray-500">भारत</div>
           </div>
           <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+          </svg>
+        </button>
+
+        {{-- Anglais - EN BAS pour être visible --}}
+        <button data-lang="en" data-flag="{{ asset('images/flags/us.svg') }}" data-label="English"
+                class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl bg-blue-50 border-2 border-blue-200 shadow-sm">
+          <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center border-2 border-blue-200 flex-shrink-0">
+            <img src="{{ asset('images/flags/us.svg') }}" alt="EN" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+          </div>
+          <div class="flex-1 text-left">
+            <div class="font-bold text-gray-900 text-base">English</div>
+            <div class="text-xs text-gray-500">United States</div>
+          </div>
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+          </svg>
+        </button>
+
+        {{-- Français - EN BAS pour être visible --}}
+        <button data-lang="fr" data-flag="{{ asset('images/flags/fr.svg') }}" data-label="Français"
+                class="lang-option w-full flex items-center gap-4 px-4 py-4 rounded-2xl bg-blue-50 border-2 border-blue-200 shadow-sm">
+          <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center border-2 border-blue-200 flex-shrink-0">
+            <img src="{{ asset('images/flags/fr.svg') }}" alt="FR" class="w-7 h-6 object-cover rounded" width="28" height="24" />
+          </div>
+          <div class="flex-1 text-left">
+            <div class="font-bold text-gray-900 text-base">Français</div>
+            <div class="text-xs text-gray-500">France</div>
+          </div>
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
           </svg>
         </button>
