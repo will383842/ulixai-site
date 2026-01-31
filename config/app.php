@@ -177,6 +177,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Custom Service Providers...
+         */
+        App\Services\Global_Notifications\NotificationServiceProvider::class,
+        App\Services\Global_Moderations\ModerationServiceProvider::class,
+
     ],
 
     /*

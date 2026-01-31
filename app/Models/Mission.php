@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Services\Global_Moderations\Traits\HasModerationFlags;
 
 class Mission extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasModerationFlags;
 
     /**
      * Table associée
@@ -49,6 +50,10 @@ class Mission extends Model
         'terms_accepted_at',
         'terms_version',
         'terms_accepted_ip',
+        // Moderation fields
+        'moderation_status',
+        'moderation_score',
+        'moderation_notes',
     ];
 
     /**
@@ -117,7 +122,23 @@ class Mission extends Model
     {
         return $this->hasMany(MissionCancellationReason::class, 'mission_id');
     }
-    
+
+    /**
+     * Vérifie si la mission est en attente de modération
+     */
+    public function isPendingModeration(): bool
+    {
+        return $this->moderation_status === 'pending';
+    }
+
+    /**
+     * Vérifie si la mission est approuvée
+     */
+    public function isModerationApproved(): bool
+    {
+        return $this->moderation_status === 'approved';
+    }
+
     /**
      * Relation avec les transactions
      */

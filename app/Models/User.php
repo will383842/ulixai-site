@@ -46,6 +46,15 @@ class User extends Authenticatable
         'bank_name',
         'account_country',
         'bank_details_verified_at',
+        // Moderation fields
+        'strike_count',
+        'last_strike_at',
+        'ban_reason',
+        'banned_at',
+        'can_appeal',
+        'appeal_until',
+        'trust_score',
+        'requires_review',
     ];
 
     protected $hidden = [
@@ -71,6 +80,12 @@ class User extends Authenticatable
         'identity_verified' => 'boolean',
         'identity_verified_at' => 'datetime',
         'deleted_at' => 'datetime',
+        // Moderation casts
+        'last_strike_at' => 'datetime',
+        'banned_at' => 'datetime',
+        'appeal_until' => 'datetime',
+        'can_appeal' => 'boolean',
+        'requires_review' => 'boolean',
     ];
 
     // ===========================================
@@ -116,6 +131,74 @@ class User extends Authenticatable
     public function isSuspended(): bool
     {
         return $this->status === 'suspended';
+    }
+
+    /**
+     * Check if user is banned
+     */
+    public function isBanned(): bool
+    {
+        return $this->status === 'banned';
+    }
+
+    /**
+     * Get user's strikes
+     */
+    public function strikes(): HasMany
+    {
+        return $this->hasMany(\App\Services\Global_Moderations\Models\UserStrike::class);
+    }
+
+    /**
+     * Get user's active strikes
+     */
+    public function activeStrikes(): HasMany
+    {
+        return $this->strikes()->where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            });
+    }
+
+    /**
+     * Get user's moderation flags
+     */
+    public function moderationFlags(): HasMany
+    {
+        return $this->hasMany(\App\Services\Global_Moderations\Models\ModerationFlag::class);
+    }
+
+    /**
+     * Get user's moderation actions history
+     */
+    public function moderationActions(): HasMany
+    {
+        return $this->hasMany(\App\Services\Global_Moderations\Models\ModerationAction::class);
+    }
+
+    /**
+     * Get user's appeals
+     */
+    public function appeals(): HasMany
+    {
+        return $this->hasMany(\App\Services\Global_Moderations\Models\UserAppeal::class);
+    }
+
+    /**
+     * Get reports filed against this user
+     */
+    public function reportsAgainst(): HasMany
+    {
+        return $this->hasMany(\App\Services\Global_Moderations\Models\ContentReport::class, 'reported_user_id');
+    }
+
+    /**
+     * Get reports filed by this user
+     */
+    public function reportsFiled(): HasMany
+    {
+        return $this->hasMany(\App\Services\Global_Moderations\Models\ContentReport::class, 'reporter_id');
     }
 
     public function badges()
