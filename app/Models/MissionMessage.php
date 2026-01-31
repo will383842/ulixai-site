@@ -3,18 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Services\Global_Moderations\Traits\HasModerationFlags;
 
 class MissionMessage extends Model
 {
+    use HasModerationFlags;
+
     protected $fillable = [
-        'mission_id', 
-        'user_id', 
+        'mission_id',
+        'user_id',
         'message',
-        'is_read'  // ✅ AJOUTÉ
+        'is_read',
+        // Moderation fields
+        'moderation_status',
+        'moderation_score',
+        'moderation_notes',
     ];
 
     protected $casts = [
-        'is_read' => 'boolean'  // ✅ AJOUTÉ
+        'is_read' => 'boolean',
+        'moderation_notes' => 'array',
     ];
 
     public function user()

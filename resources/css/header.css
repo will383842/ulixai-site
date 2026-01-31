@@ -124,10 +124,27 @@ body {
 /* Bottom sheet animations */
 #mobileLangSheet {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Fallback pour navigateurs sans support dvh */
+  max-height: 90vh;
+  max-height: 90dvh;
 }
 
 #mobileLangOverlay {
   transition: opacity 0.3s ease;
+}
+
+/* Assure que le modal de langue est au-dessus de tout */
+#mobileLangModal {
+  z-index: 9999 !important;
+}
+
+/* Zone scrollable avec support iOS */
+#mobileLangSheet > div:last-child {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  /* Fallback pour navigateurs sans support dvh */
+  max-height: calc(90vh - 100px);
+  max-height: calc(90dvh - 100px);
 }
 
 /* Lang option hover effect */

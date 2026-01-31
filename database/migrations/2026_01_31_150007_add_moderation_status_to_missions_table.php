@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::table('missions', function (Blueprint $table) {
             // Statut de modération
-            $table->enum('moderation_status', ['approved', 'pending', 'rejected'])
+            // approved: contenu approuvé et visible
+            // pending_review: en attente de vérification admin
+            // blocked: bloqué automatiquement
+            // rejected: rejeté manuellement par admin
+            $table->enum('moderation_status', ['approved', 'pending_review', 'blocked', 'rejected'])
                 ->default('approved')
                 ->after('status');
 

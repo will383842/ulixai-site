@@ -28,7 +28,11 @@ class MissionOffer extends Model
         'message',
         'delivery_time',
         'status',
-        'read_at'
+        'read_at',
+        // Moderation fields
+        'moderation_status',
+        'moderation_score',
+        'moderation_notes',
     ];
 
     /**
@@ -36,9 +40,10 @@ class MissionOffer extends Model
      */
     protected $casts = [
         'read_at' => 'datetime',
-        'deleted_at' => 'datetime', // ✅ AJOUT
+        'deleted_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'moderation_notes' => 'array',
     ];
 
     // ===========================================

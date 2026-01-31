@@ -16,6 +16,7 @@ use Stripe\Transfer;
 use Stripe\Account as StripeAccount;
 use App\Services\ReputationPointService;
 use App\Services\CurrencyService;
+use App\Services\Global_Moderations\ModerationService;
 use App\Http\Resources\MissionResource;
 use App\Http\Resources\MissionOfferResource;
 use App\Http\Requests\Mission\StoreOfferRequest;
@@ -24,10 +25,14 @@ use Illuminate\Support\Facades\Gate;
 class JobListController extends Controller
 {
     protected $ReputationPointService;
-    
-    public function __construct(ReputationPointService $ReputationPointService)
-    {
+    protected $moderationService;
+
+    public function __construct(
+        ReputationPointService $ReputationPointService,
+        ModerationService $moderationService
+    ) {
         $this->ReputationPointService = $ReputationPointService;
+        $this->moderationService = $moderationService;
     }
     
     public function index(Request $request)
@@ -88,13 +93,15 @@ class JobListController extends Controller
     /**
      * Submit an offer for a mission
      * ✅ Uses StoreOfferRequest for validation and authorization
+     * ✅ Modération du contenu intégrée
      */
     public function submitOffer(StoreOfferRequest $request, $id)
     {
         // Validation and authorization handled by StoreOfferRequest
-
         $mission = Mission::findOrFail($id);
         $provider = auth()->user()->serviceProvider;
+        $user = auth()->user();
+        $message = $request->message ?? '';
 
         // Check if offer already exists for this mission and provider
         $existing = MissionOffer::where('mission_id', $mission->id)
@@ -106,22 +113,78 @@ class JobListController extends Controller
             $existing->update([
                 'price' => $request->price,
                 'delivery_time' => $request->delivery_time,
-                'message' => $request->message,
+                'message' => $message,
                 'status' => 'pending',
             ]);
-            return response()->json(['status' => 'success', 'message' => 'Offer updated successfully!', 'offer' => new MissionOfferResource($existing)]);
+
+            // Modérer le contenu mis à jour
+            if (!empty($message)) {
+                $moderationResult = $this->moderationService->moderate($existing, $message, $user, 'offer');
+                $moderationStatus = $moderationResult['status'] ?? 'approved';
+
+                if ($moderationStatus === 'blocked') {
+                    Log::warning('🛡️ [MODERATION] Offer update blocked', [
+                        'offer_id' => $existing->id,
+                        'user_id' => $user->id,
+                    ]);
+                    return response()->json([
+                        'status' => 'moderation_blocked',
+                        'message' => $moderationResult['user_message'] ?? __('notifications.block_reasons.default'),
+                    ], 422);
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Offer updated successfully!',
+                'offer' => new MissionOfferResource($existing)
+            ]);
         }
 
+        // Créer la nouvelle offre
         $offer = MissionOffer::create([
             'mission_id' => $mission->id,
             'provider_id' => $provider->id,
             'price' => $request->price,
             'delivery_time' => $request->delivery_time,
-            'message' => $request->message,
+            'message' => $message,
             'status' => 'pending',
         ]);
 
-        return response()->json(['status' => 'success', 'message' => 'Offer submitted successfully!', 'offer' => new MissionOfferResource($offer)]);
+        // 🛡️ Modérer le contenu de l'offre
+        if (!empty($message)) {
+            $moderationResult = $this->moderationService->moderate($offer, $message, $user, 'offer');
+            $moderationStatus = $moderationResult['status'] ?? 'approved';
+
+            if ($moderationStatus === 'blocked') {
+                Log::warning('🛡️ [MODERATION] Offer blocked', [
+                    'offer_id' => $offer->id,
+                    'user_id' => $user->id,
+                    'score' => $moderationResult['score'] ?? 0,
+                ]);
+                return response()->json([
+                    'status' => 'moderation_blocked',
+                    'message' => $moderationResult['user_message'] ?? __('notifications.block_reasons.default'),
+                ], 422);
+            } elseif ($moderationStatus === 'pending_review') {
+                Log::info('🛡️ [MODERATION] Offer pending review', [
+                    'offer_id' => $offer->id,
+                    'score' => $moderationResult['score'] ?? 0,
+                ]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => __('notifications.messages.content_flagged', ['type' => __('notifications.content_types.offer')]),
+                    'moderation_status' => 'pending_review',
+                    'offer' => new MissionOfferResource($offer)
+                ]);
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Offer submitted successfully!',
+            'offer' => new MissionOfferResource($offer)
+        ]);
     }
 
     /**

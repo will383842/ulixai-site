@@ -30,12 +30,12 @@
 </button>
 
 {{-- Bottom Sheet Modal - Moderne 2025 --}}
-<div id="mobileLangModal" class="fixed inset-0 z-[300] hidden">
+<div id="mobileLangModal" class="fixed inset-0 z-[9999] hidden">
   {{-- Overlay avec blur --}}
   <div id="mobileLangOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
-  
-  {{-- Bottom Sheet --}}
-  <div id="mobileLangSheet" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-400 ease-out max-h-[85vh] overflow-hidden">
+
+  {{-- Bottom Sheet - Utilise dvh pour le viewport dynamique mobile --}}
+  <div id="mobileLangSheet" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-400 ease-out max-h-[90dvh] overflow-hidden" style="max-height: 90dvh;">
     
     {{-- Handle (barre de drag visuelle) --}}
     <div class="flex justify-center pt-3 pb-2">
@@ -55,8 +55,8 @@
       </button>
     </div>
     
-    {{-- Liste des langues - Scrollable --}}
-    <div class="overflow-y-auto px-4 py-3" style="max-height: calc(85vh - 120px);">
+    {{-- Liste des langues - Scrollable avec espace pour tous les éléments --}}
+    <div class="overflow-y-auto px-4 py-3 pb-8" style="max-height: calc(90dvh - 100px); -webkit-overflow-scrolling: touch;">
       <div class="space-y-2">
         
         {{-- Français --}}
@@ -193,7 +193,10 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
           </svg>
         </button>
-        
+
+        {{-- Espace supplémentaire pour safe-area iOS --}}
+        <div class="h-6" style="padding-bottom: env(safe-area-inset-bottom, 20px);"></div>
+
       </div>
     </div>
     

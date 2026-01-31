@@ -52,6 +52,17 @@
 
     html {
       scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* Empêcher le débordement horizontal global */
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
+    section {
+      overflow-x: hidden;
     }
 
     .font-display {
@@ -73,90 +84,33 @@
       border-radius: 4px;
     }
 
-    /* Modern Profile Card - Elegant Design */
+    /* Modern Profile Card - Design simplifié */
     .card-modern {
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
       background: white;
       border: 1px solid rgba(226, 232, 240, 0.8);
-      box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.07),
-        0 2px 4px -2px rgba(0, 0, 0, 0.05),
-        0 0 0 1px rgba(0, 0, 0, 0.02);
-    }
-
-    .card-modern::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #3B82F6, #8B5CF6, #EC4899);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .card-modern:hover {
-      transform: translateY(-8px);
-      border-color: rgba(59, 130, 246, 0.3);
-      box-shadow:
-        0 20px 25px -5px rgba(0, 0, 0, 0.1),
-        0 8px 10px -6px rgba(0, 0, 0, 0.08),
-        0 0 0 1px rgba(59, 130, 246, 0.1),
-        0 0 40px -10px rgba(59, 130, 246, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .card-modern:hover::before {
-      opacity: 1;
+    /* Animations - DÉSACTIVÉES pour réduire les effets visuels */
+    .animate-float,
+    .animate-pulse-glow,
+    .animate-pulse,
+    .animate-bounce {
+      animation: none !important;
     }
 
-    /* Animations - REDUCED */
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { 
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-      }
-      50% { 
-        box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
-      }
-    }
-
-    .animate-float {
-      animation: float 8s ease-in-out infinite;
-    }
-
-    .animate-pulse-glow {
-      animation: pulse-glow 4s ease-in-out infinite;
-    }
-
-    /* Button Effects */
+    /* Button Effects - Désactivé */
     .btn-shine {
       position: relative;
-      overflow: hidden;
     }
 
-    .btn-shine::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: 0.5s;
-    }
-
-    .btn-shine:hover::before {
-      left: 100%;
-    }
-
-    /* Category Bubbles */
+    /* Category Bubbles - Simplifié */
     .category-bubble {
       width: 110px;
       height: 110px;
@@ -170,16 +124,14 @@
       font-size: 11px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       flex-shrink: 0;
       padding: 12px;
       line-height: 1.2;
     }
 
     .category-bubble:hover {
-      transform: translateY(-10px) scale(1.1);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      opacity: 0.9;
     }
 
     .category-bubble span {
@@ -285,31 +237,19 @@
       transform: rotate(180deg);
     }
 
-    /* Status Pulse - Enhanced */
-    @keyframes status-pulse {
-      0%, 100% {
-        opacity: 1;
-        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
-      }
-      50% {
-        opacity: 0.9;
-        box-shadow: 0 0 0 6px rgba(74, 222, 128, 0);
-      }
-    }
-
+    /* Status Online - Sans animation */
     .status-online {
-      animation: status-pulse 2s ease-in-out infinite;
-      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      background: #22c55e;
     }
 
-    /* Back to Top */
+    /* Back to Top - Simplifié */
     #backToTop {
       position: fixed;
       bottom: 30px;
       right: 30px;
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      width: 50px;
+      height: 50px;
+      background: var(--primary);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -317,19 +257,13 @@
       cursor: pointer;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s ease;
       z-index: 9999;
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     #backToTop.show {
       opacity: 1;
       visibility: visible;
-    }
-
-    #backToTop:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6);
     }
 
     /* Custom Select */
@@ -342,19 +276,13 @@
       padding-right: 2.5rem;
     }
 
-    /* Testimonial Card */
+    /* Testimonial Card - Simplifié */
     .testimonial-card {
       background: white;
       border-radius: 24px;
       padding: 32px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
       height: 100%;
-    }
-
-    .testimonial-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
     }
 
     /* Number Badge */
@@ -399,18 +327,14 @@
       flex-shrink: 0;
     }
 
-    /* How It Works Cards - Fixed size and increased contrast */
+    /* How It Works Cards - Simplifié */
     .how-it-works-card {
       min-height: 320px;
       height: 320px;
       display: flex;
       flex-direction: column;
       background: white;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    }
-
-    .how-it-works-card:hover {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     /* Profile Cards - Dimensions */
@@ -473,20 +397,16 @@
         height: 200px;
       }
 
-      .card-modern:hover {
-        transform: translateY(-4px);
-      }
     }
 
-    /* AI Popup */
+    /* AI Popup - Simplifié */
     .ai-popup {
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
+      transform: translate(-50%, -50%);
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       z-index: 10000;
       max-width: 90%;
       width: 500px;
@@ -495,7 +415,6 @@
     .ai-popup.show {
       opacity: 1;
       visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
     }
 
     .ai-popup-overlay {
@@ -504,9 +423,7 @@
       background: rgba(0, 0, 0, 0.5);
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s ease;
       z-index: 9999;
-      backdrop-filter: blur(4px);
     }
 
     .ai-popup-overlay.show {
@@ -514,34 +431,23 @@
       visibility: visible;
     }
 
-    @keyframes aiRobot {
-      0%, 100% { transform: rotate(-5deg); }
-      50% { transform: rotate(5deg); }
-    }
-
+    /* AI Robot - Sans animation */
     .ai-robot {
-      animation: aiRobot 2s ease-in-out infinite;
+      /* Animation désactivée */
     }
 
-    /* Featured Badge */
+    /* Featured Badge - Sans animation */
     .featured-badge {
       background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-      animation: pulse-glow 2s ease-in-out infinite;
     }
 
-    /* Why Choose Cards */
+    /* Why Choose Cards - Simplifié */
     .why-choose-card {
       background: white;
       border-radius: 20px;
       padding: 32px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       height: 100%;
-    }
-
-    .why-choose-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
     }
 
 
@@ -719,12 +625,12 @@ body {
     </div>
   </section>
 
-  <!-- <!-- CATEGORY BUBBLES - Overlapping Hero -->
-<section class="relative -mt-16 z-30 px-4 mb-12">
-  <div class="max-w-7xl mx-auto">
+  <!-- CATEGORY BUBBLES - Overlapping Hero -->
+<section class="relative -mt-16 z-30 px-4 mb-12 overflow-hidden">
+  <div class="max-w-7xl mx-auto overflow-hidden">
     <!-- Categories Container -->
-    <div class="relative">
-      <div class="category-scroll flex gap-12 overflow-x-auto pb-4 justify-center items-center" id="categoryContainer">
+    <div class="relative overflow-hidden">
+      <div class="category-scroll flex gap-4 md:gap-8 lg:gap-12 overflow-x-auto pb-4 justify-start lg:justify-center items-center px-2" id="categoryContainer">
         @foreach($category as $index => $cat)
           @php
             $colorIndex = ((int) $index) % 9; // ✅ Force la conversion en entier
@@ -752,14 +658,14 @@ body {
         @endforeach
       </div>
 
-        <!-- Navigation Arrows -->
-        <button id="prevBubble" onclick="scrollBubbles('prev')" class="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full p-3 shadow-xl hover:bg-gray-50 transition-all z-10">
-          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Navigation Arrows (desktop only, inside bounds) -->
+        <button id="prevBubble" onclick="scrollBubbles('prev')" class="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 z-10">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
-        <button id="nextBubble" onclick="scrollBubbles('next')" class="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full p-3 shadow-xl hover:bg-gray-50 transition-all z-10">
-          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="nextBubble" onclick="scrollBubbles('next')" class="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 z-10">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
         </button>
@@ -768,8 +674,8 @@ body {
   </section>
 
   <!-- HOW IT WORKS -->
-  <section class="py-16 px-4 bg-slate-50">
-    <div class="max-w-6xl mx-auto">
+  <section class="py-16 px-4 bg-slate-50 overflow-hidden">
+    <div class="max-w-6xl mx-auto overflow-hidden">
       <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
         <h2 class="text-4xl sm:text-5xl font-display font-black mb-4">
           <span class="gradient-text">How does it work for expats?</span>
@@ -1027,13 +933,118 @@ body {
       <p class="text-gray-600 text-lg">Find help in all countries around the world 🌍</p>
     </div>
 
- <!-- Filters -->
-<div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-3xl p-6 mb-10 shadow-lg" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- MOBILE: Bouton filtre compact -->
+<div class="lg:hidden mb-6">
+  <button id="mobileFilterBtn" class="w-full flex items-center justify-between bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+        </svg>
+      </div>
+      <div class="text-left">
+        <p class="text-sm font-bold text-gray-900">Filters</p>
+        <p class="text-xs text-gray-500" id="activeFiltersCount">No filter active</p>
+      </div>
+    </div>
+    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </button>
+</div>
+
+<!-- MOBILE: Bottom Sheet Filtres -->
+<div id="mobileFilterModal" class="fixed inset-0 z-[9999] hidden lg:hidden">
+  <div id="mobileFilterOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0"></div>
+  <div id="mobileFilterSheet" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl transform translate-y-full max-h-[85dvh] overflow-hidden" style="max-height: 85dvh;">
+
+    <!-- Handle -->
+    <div class="flex justify-center pt-3 pb-2">
+      <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
+      <h3 class="text-lg font-bold text-gray-900">Filters</h3>
+      <button id="mobileFilterCloseBtn" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100">
+        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Contenu des filtres -->
+    <div class="overflow-y-auto px-5 py-4 space-y-5" style="max-height: calc(85dvh - 140px); -webkit-overflow-scrolling: touch;">
+
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-2">🗣️ Spoken languages</label>
+        <select id="languageSelectMobile" class="notranslate w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
+          <option value="">All languages</option>
+          @foreach($languages as $lang)
+            <option value="{{ $lang }}">{{ $lang }}</option>
+          @endforeach
+          <option value="Others">Others</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-2">🌍 Countries of operation</label>
+        <select id="countrySelectMobile" class="notranslate w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
+          <option value="">All countries</option>
+          @foreach($countries as $country)
+            <option value="{{ $country }}">{{ $country }}</option>
+          @endforeach
+          <option value="Others">Others</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-2">📋 Category</label>
+        <select id="categorySelectMobile" class="notranslate w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
+          <option value="">All categories</option>
+          @foreach($category as $cat)
+            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+          @endforeach
+        </select>
+      </div>
+
+      <div id="subcategoryWrapperMobile" class="hidden">
+        <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Subcategory</label>
+        <select id="subcategorySelectMobile" class="notranslate w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
+          <option value="">Select</option>
+        </select>
+      </div>
+
+      <div id="subsubcategoryWrapperMobile" class="hidden">
+        <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Sub-subcategory</label>
+        <select id="subsubcategorySelectMobile" class="notranslate w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-gray-800" translate="no">
+          <option value="">Select</option>
+        </select>
+      </div>
+
+      <!-- Espace safe-area -->
+      <div class="h-4" style="padding-bottom: env(safe-area-inset-bottom, 0);"></div>
+    </div>
+
+    <!-- Footer avec boutons -->
+    <div class="px-5 py-4 border-t border-gray-100 bg-white flex gap-3" style="padding-bottom: max(16px, env(safe-area-inset-bottom));">
+      <button id="resetFiltersMobile" class="flex-1 py-3 text-gray-700 font-semibold border border-gray-200 rounded-xl">
+        Reset
+      </button>
+      <button id="applyFiltersMobile" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl">
+        Apply filters
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DESKTOP: Filtres inline (inchangé mais caché sur mobile) -->
+<div class="hidden lg:block bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-5 mb-8 shadow-sm">
+  <div class="grid grid-cols-4 gap-4">
     <div>
-      <label class="block text-sm font-bold text-gray-700 mb-2">🗣️ Spoken languages</label>
-      <select id="languageSelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
-        <option value="">Select</option>
+      <label class="block text-xs font-bold text-gray-600 mb-1.5">🗣️ Language</label>
+      <select id="languageSelect" class="notranslate w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-sm text-gray-800" translate="no">
+        <option value="">All</option>
         @foreach($languages as $lang)
           <option value="{{ $lang }}">{{ $lang }}</option>
         @endforeach
@@ -1042,9 +1053,9 @@ body {
     </div>
 
     <div>
-      <label class="block text-sm font-bold text-gray-700 mb-2">🌍 Countries of operation</label>
-      <select id="countrySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
-        <option value="">Select</option>
+      <label class="block text-xs font-bold text-gray-600 mb-1.5">🌍 Country</label>
+      <select id="countrySelect" class="notranslate w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-sm text-gray-800" translate="no">
+        <option value="">All</option>
         @foreach($countries as $country)
           <option value="{{ $country }}">{{ $country }}</option>
         @endforeach
@@ -1053,41 +1064,37 @@ body {
     </div>
 
     <div>
-      <label class="block text-sm font-bold text-gray-700 mb-2">📋 Category</label>
-      <select id="categorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
-        <option value="">Select</option>
+      <label class="block text-xs font-bold text-gray-600 mb-1.5">📋 Category</label>
+      <select id="categorySelect" class="notranslate w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-sm text-gray-800" translate="no">
+        <option value="">All</option>
         @foreach($category as $cat)
           <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-        @endforeach  
+        @endforeach
       </select>
     </div>
 
-    <div class="flex items-end">
-      <button id="filterButton" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-xl btn-shine transition-all shadow-lg hover:shadow-xl">
+    <div class="flex items-end gap-2">
+      <button id="filterButton" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm">
         🔍 Filter
+      </button>
+      <button id="resetFiltersButton" class="py-2 px-3 text-gray-500 hover:text-gray-700 text-sm">
+        Reset
       </button>
     </div>
   </div>
 
-  <div id="subcategoryWrapper" class="hidden mt-4">
-    <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Subcategory</label>
-    <select id="subcategorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
+  <div id="subcategoryWrapper" class="hidden mt-3">
+    <label class="block text-xs font-bold text-gray-600 mb-1.5">🎯 Subcategory</label>
+    <select id="subcategorySelect" class="notranslate w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-sm text-gray-800" translate="no">
       <option value="">Select</option>
     </select>
   </div>
 
-  <div id="subsubcategoryWrapper" class="hidden mt-4">
-    <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Sub-subcategory</label>
-    <select id="subsubcategorySelect" class="notranslate w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all text-gray-800" translate="no">
+  <div id="subsubcategoryWrapper" class="hidden mt-3">
+    <label class="block text-xs font-bold text-gray-600 mb-1.5">🎯 Sub-subcategory</label>
+    <select id="subsubcategorySelect" class="notranslate w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-sm text-gray-800" translate="no">
       <option value="">Select</option>
     </select>
-  </div>
-
-  <!-- Reset Button -->
-  <div class="mt-4 text-center">
-    <button id="resetFiltersButton" class="text-blue-600 hover:text-blue-800 font-semibold underline">
-      Reset filters
-    </button>
   </div>
 </div>
 
@@ -2087,13 +2094,154 @@ body {
 <script src="{{ mix('js/app.js') }}"></script>
 
 <script>
-  // Initialize AOS with reduced effects
+  // AOS désactivé - trop d'effets visuels
   AOS.init({
-    duration: 600,
-    once: true,
-    offset: 50,
-    easing: 'ease-out'
+    disable: true  // Désactive toutes les animations AOS
   });
+
+  // ═══════════════════════════════════════════════════════════
+  // MOBILE FILTER BOTTOM SHEET
+  // ═══════════════════════════════════════════════════════════
+  const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+  const mobileFilterModal = document.getElementById('mobileFilterModal');
+  const mobileFilterOverlay = document.getElementById('mobileFilterOverlay');
+  const mobileFilterSheet = document.getElementById('mobileFilterSheet');
+  const mobileFilterCloseBtn = document.getElementById('mobileFilterCloseBtn');
+  const applyFiltersMobile = document.getElementById('applyFiltersMobile');
+  const resetFiltersMobile = document.getElementById('resetFiltersMobile');
+
+  function openMobileFilters() {
+    mobileFilterModal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      mobileFilterOverlay.style.opacity = '1';
+      mobileFilterSheet.style.transform = 'translateY(0)';
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileFilters() {
+    mobileFilterOverlay.style.opacity = '0';
+    mobileFilterSheet.style.transform = 'translateY(100%)';
+    setTimeout(() => {
+      mobileFilterModal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }, 300);
+  }
+
+  if (mobileFilterBtn) {
+    mobileFilterBtn.addEventListener('click', openMobileFilters);
+  }
+  if (mobileFilterCloseBtn) {
+    mobileFilterCloseBtn.addEventListener('click', closeMobileFilters);
+  }
+  if (mobileFilterOverlay) {
+    mobileFilterOverlay.addEventListener('click', closeMobileFilters);
+  }
+
+  // Synchroniser les filtres mobile avec desktop
+  function syncFiltersToDesktop() {
+    const langMobile = document.getElementById('languageSelectMobile');
+    const countryMobile = document.getElementById('countrySelectMobile');
+    const catMobile = document.getElementById('categorySelectMobile');
+    const langDesktop = document.getElementById('languageSelect');
+    const countryDesktop = document.getElementById('countrySelect');
+    const catDesktop = document.getElementById('categorySelect');
+
+    if (langMobile && langDesktop) langDesktop.value = langMobile.value;
+    if (countryMobile && countryDesktop) countryDesktop.value = countryMobile.value;
+    if (catMobile && catDesktop) catDesktop.value = catMobile.value;
+  }
+
+  function syncFiltersToMobile() {
+    const langMobile = document.getElementById('languageSelectMobile');
+    const countryMobile = document.getElementById('countrySelectMobile');
+    const catMobile = document.getElementById('categorySelectMobile');
+    const langDesktop = document.getElementById('languageSelect');
+    const countryDesktop = document.getElementById('countrySelect');
+    const catDesktop = document.getElementById('categorySelect');
+
+    if (langMobile && langDesktop) langMobile.value = langDesktop.value;
+    if (countryMobile && countryDesktop) countryMobile.value = countryDesktop.value;
+    if (catMobile && catDesktop) catMobile.value = catDesktop.value;
+  }
+
+  function updateActiveFiltersCount() {
+    const lang = document.getElementById('languageSelectMobile')?.value || document.getElementById('languageSelect')?.value;
+    const country = document.getElementById('countrySelectMobile')?.value || document.getElementById('countrySelect')?.value;
+    const cat = document.getElementById('categorySelectMobile')?.value || document.getElementById('categorySelect')?.value;
+
+    let count = 0;
+    if (lang) count++;
+    if (country) count++;
+    if (cat) count++;
+
+    const countEl = document.getElementById('activeFiltersCount');
+    if (countEl) {
+      countEl.textContent = count > 0 ? `${count} filter${count > 1 ? 's' : ''} active` : 'No filter active';
+    }
+  }
+
+  if (applyFiltersMobile) {
+    applyFiltersMobile.addEventListener('click', () => {
+      syncFiltersToDesktop();
+      document.getElementById('filterButton')?.click();
+      updateActiveFiltersCount();
+      closeMobileFilters();
+    });
+  }
+
+  if (resetFiltersMobile) {
+    resetFiltersMobile.addEventListener('click', () => {
+      document.getElementById('languageSelectMobile').value = '';
+      document.getElementById('countrySelectMobile').value = '';
+      document.getElementById('categorySelectMobile').value = '';
+      document.getElementById('subcategoryWrapperMobile')?.classList.add('hidden');
+      document.getElementById('subsubcategoryWrapperMobile')?.classList.add('hidden');
+      syncFiltersToDesktop();
+      document.getElementById('resetFiltersButton')?.click();
+      updateActiveFiltersCount();
+      closeMobileFilters();
+    });
+  }
+
+  // Gérer les sous-catégories mobile
+  document.getElementById('categorySelectMobile')?.addEventListener('change', function() {
+    const categoryId = this.value;
+    const subcategoryWrapper = document.getElementById('subcategoryWrapperMobile');
+    const subcategorySelect = document.getElementById('subcategorySelectMobile');
+    const subsubcategoryWrapper = document.getElementById('subsubcategoryWrapperMobile');
+
+    if (categoryId) {
+      fetch(`/get-subcategories/${categoryId}`)
+        .then(response => response.json())
+        .then(subcategories => {
+          subcategorySelect.innerHTML = '<option value="">Select</option>';
+          subcategories.forEach(function(subcategory) {
+            const option = document.createElement('option');
+            option.value = subcategory.id;
+            option.textContent = subcategory.name;
+            subcategorySelect.appendChild(option);
+          });
+          subcategoryWrapper.classList.remove('hidden');
+          subsubcategoryWrapper.classList.add('hidden');
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+      subcategoryWrapper.classList.add('hidden');
+      subsubcategoryWrapper.classList.add('hidden');
+    }
+  });
+
+  // Initialiser le style du bottom sheet
+  if (mobileFilterSheet) {
+    mobileFilterSheet.style.transition = 'transform 0.3s ease-out';
+    mobileFilterSheet.style.transform = 'translateY(100%)';
+  }
+  if (mobileFilterOverlay) {
+    mobileFilterOverlay.style.transition = 'opacity 0.3s ease';
+  }
+
+  // ═══════════════════════════════════════════════════════════
 
   // Store original providers for reset
   let originalProvidersHTML = document.getElementById('serviceGrid').innerHTML;

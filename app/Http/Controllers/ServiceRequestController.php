@@ -27,16 +27,21 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use App\Services\NotificationService;
 use App\Services\CurrencyService;
+use App\Services\Global_Moderations\ModerationService;
 use App\Notifications\DisputeOpenedNotification;
 use App\Notifications\MissionMatchNotification;
 
 class ServiceRequestController extends Controller
 {
     protected $ReputationPointService;
-    
-    public function __construct(ReputationPointService $ReputationPointService)
-    {
+    protected $moderationService;
+
+    public function __construct(
+        ReputationPointService $ReputationPointService,
+        ModerationService $moderationService
+    ) {
         $this->ReputationPointService = $ReputationPointService;
+        $this->moderationService = $moderationService;
     }
     
     /**
@@ -430,13 +435,16 @@ class ServiceRequestController extends Controller
             // ═══════════════════════════════════════════════════════
             // ✅ CRÉATION DE LA MISSION (AVEC GDPR)
             // ═══════════════════════════════════════════════════════
+            $title = strip_tags($request->requestTitle);
+            $description = strip_tags($request->moreDetails);
+
             $mission = Mission::create([
                 'requester_id' => $user->id,
                 'category_id' => $category['id'] ?? null,
-                'subcategory_id' => $subcategory['id'] ?? null, 
+                'subcategory_id' => $subcategory['id'] ?? null,
                 'subsubcategory_id' => $subcategory2['id'] ?? null,
-                'title' => strip_tags($request->requestTitle),
-                'description' => strip_tags($request->moreDetails),
+                'title' => $title,
+                'description' => $description,
                 'budget_min' => null,
                 'budget_max' => null,
                 'budget_currency' => $request->budget_currency ?? 'EUR',
@@ -448,12 +456,12 @@ class ServiceRequestController extends Controller
                 'language' => $request->input('languages.0') ?? null,
                 'spoken_languages' => $request->languages ? json_encode($request->languages) : null,
                 'urgency' => $urgency,
-                'status' => 'published',
+                'status' => 'draft', // Créé en draft, publié après modération
                 'selected_provider_id' => null,
                 'payment_status' => 'unpaid',
                 'is_fake' => false,
                 'attachments' => json_encode($imagePaths),
-                
+
                 // ✅ GDPR: Tracking consentement CGV
                 'terms_accepted' => $request->filled('terms_accepted_at') ? true : null,
                 'terms_accepted_at' => $request->terms_accepted_at ?? null,
@@ -461,9 +469,41 @@ class ServiceRequestController extends Controller
                 'terms_accepted_ip' => $request->ip(),
             ]);
 
+            // ═══════════════════════════════════════════════════════
+            // 🛡️ MODÉRATION DU CONTENU
+            // ═══════════════════════════════════════════════════════
+            $textToModerate = $title . ' ' . $description;
+            $moderationResult = $this->moderationService->moderate($mission, $textToModerate, $user, 'mission');
+
+            // Gérer le résultat de la modération
+            $moderationStatus = $moderationResult['status'] ?? 'approved';
+            $moderationMessage = null;
+
+            if ($moderationStatus === 'blocked') {
+                // Contenu bloqué - informer l'utilisateur
+                Log::warning('🛡️ [MODERATION] Mission blocked', [
+                    'mission_id' => $mission->id,
+                    'user_id' => $user->id,
+                    'score' => $moderationResult['score'] ?? 0,
+                    'issues' => $moderationResult['issues'] ?? [],
+                ]);
+                $moderationMessage = $moderationResult['user_message'] ?? __('notifications.block_reasons.default');
+            } elseif ($moderationStatus === 'pending_review') {
+                // Contenu en review - publié mais sous surveillance
+                $mission->update(['status' => 'published']);
+                Log::info('🛡️ [MODERATION] Mission pending review', [
+                    'mission_id' => $mission->id,
+                    'score' => $moderationResult['score'] ?? 0,
+                ]);
+            } else {
+                // Contenu approuvé - publier normalement
+                $mission->update(['status' => 'published']);
+            }
+
             Log::info('✅ [FORM] Mission created', [
                 'mission_id' => $mission->id,
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'moderation_status' => $moderationStatus,
             ]);
 
             // ✅ GDPR: Logger pour audit trail
@@ -484,61 +524,87 @@ class ServiceRequestController extends Controller
             if (!auth()->check()) {
                 \Auth::login($user, true);
                 $request->session()->regenerate();
-                $user->update(['last_login_at' => now()]); 
-                
+                $user->update(['last_login_at' => now()]);
+
                 $cookieName = 'user_session_' . $user->id;
                 $cookieValue = encrypt($user->id . '|' . now()->timestamp);
                 cookie()->queue($cookieName, $cookieValue, 60 * 24 * 30);
-                
+
                 Log::info('🔐 [FORM] User auto-logged in', ['user_id' => $user->id]);
             }
 
             // ═══════════════════════════════════════════════════════
             // 📧 ENVOI D'EMAILS AUX PRESTATAIRES MATCHÉS
+            // (Seulement si la mission est publiée)
             // ═══════════════════════════════════════════════════════
-            try {
-                $topProviders = ProviderMatcher::topForMission($mission, 10);
-                
-                foreach ($topProviders as $sp) {
-                    if ($sp->match_score < 0.50) continue;
-                    
-                    $to = $sp->email ?: optional($sp->user)->email;
-                    if (!$to) continue;
-                    
-                    Mail::to($to)->queue(new MissionInviteMail($mission, $sp, $sp->match_score));
+            $topProviders = collect();
+            if ($mission->status === 'published') {
+                try {
+                    $topProviders = ProviderMatcher::topForMission($mission, 10);
+
+                    foreach ($topProviders as $sp) {
+                        if ($sp->match_score < 0.50) continue;
+
+                        $to = $sp->email ?: optional($sp->user)->email;
+                        if (!$to) continue;
+
+                        Mail::to($to)->queue(new MissionInviteMail($mission, $sp, $sp->match_score));
+                    }
+
+                    Log::info('📧 [FORM] Emails queued', [
+                        'providers_count' => $topProviders->count()
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('📧 [FORM] Email error (non-blocking)', [
+                        'error' => $e->getMessage()
+                    ]);
                 }
-                
-                Log::info('📧 [FORM] Emails queued', [
-                    'providers_count' => $topProviders->count()
-                ]);
-            } catch (\Exception $e) {
-                Log::error('📧 [FORM] Email error (non-blocking)', [
-                    'error' => $e->getMessage()
-                ]);
-                // Ne pas bloquer la soumission si emails échouent
-                $topProviders = collect();
             }
-            
+
             // ═══════════════════════════════════════════════════════
-            // ✅ RETOUR SUCCÈS
+            // ✅ RETOUR SUCCÈS (avec info modération)
             // ═══════════════════════════════════════════════════════
             Log::info('🎉 [FORM] Request completed successfully', [
-                'mission_id' => $mission->id
-            ]);
-            
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Your request has been submitted successfully!',
                 'mission_id' => $mission->id,
-                'top_providers' => $topProviders->map(function ($p) {
+                'moderation_status' => $moderationStatus,
+            ]);
+
+            $responseData = [
+                'status' => 'success',
+                'mission_id' => $mission->id,
+                'moderation_status' => $moderationStatus,
+            ];
+
+            // Adapter le message selon le statut de modération
+            if ($moderationStatus === 'blocked') {
+                $responseData['status'] = 'moderation_blocked';
+                $responseData['message'] = $moderationMessage;
+                $responseData['top_providers'] = [];
+            } elseif ($moderationStatus === 'pending_review') {
+                $responseData['message'] = __('notifications.messages.content_flagged', [
+                    'type' => __('notifications.content_types.mission')
+                ]);
+                $responseData['top_providers'] = $topProviders->map(function ($p) {
                     return [
                         'id' => $p->id,
                         'name' => trim(($p->first_name ?? '') . ' ' . ($p->last_name ?? '')),
                         'email' => $p->email ?? optional($p->user)->email,
                         'score' => $p->match_score,
                     ];
-                }),
-            ]);
+                });
+            } else {
+                $responseData['message'] = 'Your request has been submitted successfully!';
+                $responseData['top_providers'] = $topProviders->map(function ($p) {
+                    return [
+                        'id' => $p->id,
+                        'name' => trim(($p->first_name ?? '') . ' ' . ($p->last_name ?? '')),
+                        'email' => $p->email ?? optional($p->user)->email,
+                        'score' => $p->match_score,
+                    ];
+                });
+            }
+
+            return response()->json($responseData);
             
         } catch (\Exception $e) {
             Log::error('💥 [FORM] Unexpected error', [

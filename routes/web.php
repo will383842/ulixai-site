@@ -284,6 +284,19 @@ Route::get('/legal-notice', function () {
 Route::get('/privacy-policy', function () {
     return view('pages.privacy-policy');
 })->name('privacy.policy');
+
+// Banned/Suspended user pages
+Route::middleware(['auth'])->group(function () {
+    Route::get('/banned', function () {
+        return view('pages.banned');
+    })->name('banned');
+
+    Route::get('/appeal', [\App\Http\Controllers\AppealController::class, 'create'])
+        ->name('appeal.create');
+    Route::post('/appeal', [\App\Http\Controllers\AppealController::class, 'store'])
+        ->middleware('throttle:3,60') // 3 appels par heure max
+        ->name('appeal.store');
+});
 Route::get('/aboutUS', function () {
     return view('pages.aboutus');
 });
@@ -651,6 +664,66 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/disputes', [DisputeController::class, 'index'])->name('disputes');
         Route::post('/disputes/refund', [DisputeController::class, 'refund'])->name('disputes.refund');
         Route::post('/disputes/transfer', [DisputeController::class, 'transfer'])->name('disputes.transfer');
+
+        // ═══════════════════════════════════════════════════════
+        // 🛡️ MODERATION - Système complet de modération
+        // ═══════════════════════════════════════════════════════
+        Route::prefix('moderation')->name('moderation.')->group(function () {
+            // Dashboard
+            Route::get('/', [\App\Http\Controllers\Admin\ModerationController::class, 'dashboard'])->name('dashboard');
+            Route::get('/statistics', [\App\Http\Controllers\Admin\ModerationController::class, 'statistics'])->name('statistics');
+            Route::get('/statistics/export', [\App\Http\Controllers\Admin\ModerationController::class, 'exportStatistics'])->name('statistics.export');
+
+            // Flags (contenus à vérifier)
+            Route::prefix('flags')->name('flags.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Admin\ModerationController::class, 'pendingFlags'])->name('index');
+                Route::get('/{flag}', [\App\Http\Controllers\Admin\ModerationController::class, 'showFlag'])->name('show');
+                Route::post('/{flag}/approve', [\App\Http\Controllers\Admin\ModerationController::class, 'approveFlag'])->name('approve');
+                Route::post('/{flag}/reject', [\App\Http\Controllers\Admin\ModerationController::class, 'rejectFlag'])->name('reject');
+            });
+
+            // Signalements utilisateurs
+            Route::prefix('reports')->name('reports.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Admin\ModerationController::class, 'pendingReports'])->name('index');
+                Route::get('/{report}', [\App\Http\Controllers\Admin\ModerationController::class, 'showReport'])->name('show');
+                Route::post('/{report}/investigate', [\App\Http\Controllers\Admin\ModerationController::class, 'investigateReport'])->name('investigate');
+                Route::post('/{report}/resolve', [\App\Http\Controllers\Admin\ModerationController::class, 'resolveReport'])->name('resolve');
+                Route::post('/{report}/dismiss', [\App\Http\Controllers\Admin\ModerationController::class, 'dismissReport'])->name('dismiss');
+            });
+
+            // Appels
+            Route::prefix('appeals')->name('appeals.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Admin\ModerationController::class, 'pendingAppeals'])->name('index');
+                Route::get('/{appeal}', [\App\Http\Controllers\Admin\ModerationController::class, 'showAppeal'])->name('show');
+                Route::post('/{appeal}/start-review', [\App\Http\Controllers\Admin\ModerationController::class, 'startAppealReview'])->name('start-review');
+                Route::post('/{appeal}/approve', [\App\Http\Controllers\Admin\ModerationController::class, 'approveAppeal'])->name('approve');
+                Route::post('/{appeal}/reject', [\App\Http\Controllers\Admin\ModerationController::class, 'rejectAppeal'])->name('reject');
+            });
+
+            // Gestion des utilisateurs (modération)
+            Route::prefix('users')->name('users.')->group(function () {
+                Route::get('/{user}/history', [\App\Http\Controllers\Admin\ModerationController::class, 'userHistory'])->name('history');
+                Route::post('/{user}/action', [\App\Http\Controllers\Admin\ModerationController::class, 'userAction'])->name('action');
+                Route::post('/{user}/warn', [\App\Http\Controllers\Admin\ModerationController::class, 'warnUser'])->name('warn');
+                Route::post('/{user}/strike', [\App\Http\Controllers\Admin\ModerationController::class, 'issueStrike'])->name('strike');
+                Route::post('/{user}/suspend', [\App\Http\Controllers\Admin\ModerationController::class, 'suspendUser'])->name('suspend');
+                Route::post('/{user}/ban', [\App\Http\Controllers\Admin\ModerationController::class, 'banUser'])->name('ban');
+                Route::post('/{user}/unban', [\App\Http\Controllers\Admin\ModerationController::class, 'unbanUser'])->name('unban');
+            });
+
+            // Strikes
+            Route::delete('/strikes/{strike}', [\App\Http\Controllers\Admin\ModerationController::class, 'removeStrike'])->name('strikes.remove');
+
+            // Mots interdits
+            Route::prefix('words')->name('words.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Admin\ModerationController::class, 'bannedWords'])->name('index');
+                Route::post('/', [\App\Http\Controllers\Admin\ModerationController::class, 'addBannedWord'])->name('store');
+                Route::put('/{word}', [\App\Http\Controllers\Admin\ModerationController::class, 'updateBannedWord'])->name('update');
+                Route::delete('/{word}', [\App\Http\Controllers\Admin\ModerationController::class, 'deleteBannedWord'])->name('destroy');
+                Route::post('/{word}/toggle', [\App\Http\Controllers\Admin\ModerationController::class, 'toggleBannedWord'])->name('toggle');
+                Route::post('/import', [\App\Http\Controllers\Admin\ModerationController::class, 'importBannedWords'])->name('import');
+            });
+        });
     });
 });
 

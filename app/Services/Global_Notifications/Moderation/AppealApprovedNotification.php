@@ -15,6 +15,8 @@ class AppealApprovedNotification extends BaseNotification
 
     public function toMail($notifiable): MailMessage
     {
+        $adminMessage = $this->adminNotes ?? $this->appeal->admin_response;
+
         $lines = [
             'Bonne nouvelle ! Votre appel a été examiné et approuvé.',
             '',
@@ -22,8 +24,8 @@ class AppealApprovedNotification extends BaseNotification
             '',
         ];
 
-        if ($this->appeal->admin_response) {
-            $lines[] = 'Message de l\'équipe : ' . $this->appeal->admin_response;
+        if ($adminMessage) {
+            $lines[] = 'Message de l\'équipe : ' . $adminMessage;
             $lines[] = '';
         }
 
@@ -39,6 +41,8 @@ class AppealApprovedNotification extends BaseNotification
 
     public function toArray($notifiable): array
     {
+        $adminMessage = $this->adminNotes ?? $this->appeal->admin_response;
+
         return $this->buildDatabaseArray(
             'moderation.appeal_approved',
             'Appel approuvé',
@@ -46,7 +50,7 @@ class AppealApprovedNotification extends BaseNotification
             url('/dashboard'),
             [
                 'appeal_id' => $this->appeal->id,
-                'admin_response' => $this->appeal->admin_response,
+                'admin_response' => $adminMessage,
             ]
         );
     }

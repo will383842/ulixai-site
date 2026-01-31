@@ -142,6 +142,34 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user can submit an appeal
+     */
+    public function canAppeal(): bool
+    {
+        // User must be banned or suspended
+        if (!$this->isBanned() && !$this->isSuspended()) {
+            return false;
+        }
+
+        // Check if can_appeal flag is set
+        if ($this->can_appeal === false) {
+            return false;
+        }
+
+        // Check if appeal_until has passed
+        if ($this->appeal_until && now()->gt($this->appeal_until)) {
+            return false;
+        }
+
+        // Check if there's already a pending appeal
+        $pendingAppeal = \App\Services\Global_Moderations\Models\UserAppeal::where('user_id', $this->id)
+            ->whereIn('status', ['pending', 'under_review'])
+            ->exists();
+
+        return !$pendingAppeal;
+    }
+
+    /**
      * Get user's strikes
      */
     public function strikes(): HasMany

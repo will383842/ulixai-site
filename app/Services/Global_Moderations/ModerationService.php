@@ -7,6 +7,7 @@ use App\Services\Global_Moderations\Models\ModerationFlag;
 use App\Services\Global_Moderations\Models\ModerationAction;
 use App\Services\Global_Notifications\NotificationService;
 use App\Services\Global_Notifications\Moderation\ContentFlaggedNotification;
+use App\Services\Global_Notifications\Moderation\ContentBlockedNotification;
 use App\Services\Global_Notifications\Moderation\ContentApprovedNotification;
 use App\Services\Global_Notifications\Moderation\ContentRejectedNotification;
 use App\Services\Global_Notifications\Admin\NewContentToReviewNotification;
@@ -98,11 +99,16 @@ class ModerationService
     }
 
     /**
-     * Gère un contenu bloqué (score >= 70)
+     * Gère un contenu bloqué (score >= 80)
      */
     private function handleBlocked(Model $content, ModerationResult $result, User $author): array
     {
-        DB::transaction(function () use ($content, $result, $author) {
+        $contentType = $this->getContentType($content);
+        $contentTitle = $content->title ?? $content->subject ?? 'Contenu';
+        $publicIssues = $this->getPublicIssues($result);
+        $flag = null;
+
+        DB::transaction(function () use ($content, $result, $author, &$flag) {
             // Marquer le contenu comme bloqué
             $content->update([
                 'moderation_status' => 'blocked',
@@ -110,15 +116,20 @@ class ModerationService
                 'moderation_notes' => json_encode($result->toArray()),
             ]);
 
-            // Créer un flag de modération
-            ModerationFlag::create([
+            // Créer un flag de modération (pour que l'admin puisse approuver manuellement)
+            $flag = ModerationFlag::create([
                 'flaggable_type' => get_class($content),
                 'flaggable_id' => $content->id,
+                'user_id' => $author->id,
                 'flag_type' => 'auto_blocked',
                 'reason' => $result->getSummary(),
                 'score' => $result->getScore(),
+                'severity' => 'critical',
                 'details' => $result->toArray(),
-                'status' => 'pending',
+                'matched_words' => $result->getMatchedWords(),
+                'has_contact_info' => $result->hasContactInfo(),
+                'is_spam' => $result->isSpam(),
+                'status' => 'pending', // Pending pour review admin
             ]);
 
             // Logger l'action
@@ -144,6 +155,17 @@ class ModerationService
             }
         });
 
+        // Notifier l'utilisateur que son contenu a été bloqué
+        $this->notificationService->send(
+            $author,
+            new ContentBlockedNotification($contentType, $contentTitle, $publicIssues)
+        );
+
+        // Notifier les admins pour review manuel potentiel
+        $this->notificationService->sendToModerators(
+            new NewContentToReviewNotification($flag)
+        );
+
         Log::warning('Content blocked by moderation', [
             'content_type' => get_class($content),
             'content_id' => $content->id,
@@ -157,8 +179,29 @@ class ModerationService
             'status' => 'blocked',
             'message' => 'content_blocked',
             'score' => $result->getScore(),
-            'issues' => $this->getPublicIssues($result),
+            'issues' => $publicIssues,
+            'user_message' => $this->getBlockedUserMessage($publicIssues),
         ];
+    }
+
+    /**
+     * Génère un message utilisateur friendly pour le blocage
+     */
+    private function getBlockedUserMessage(array $issues): string
+    {
+        if (in_array('contact_info_detected', $issues)) {
+            return 'Votre publication contient des informations de contact. Veuillez utiliser la messagerie intégrée pour communiquer.';
+        }
+
+        if (in_array('inappropriate_content', $issues)) {
+            return 'Votre publication contient des termes non autorisés. Veuillez modifier votre texte.';
+        }
+
+        if (in_array('spam_detected', $issues)) {
+            return 'Votre publication a été identifiée comme spam.';
+        }
+
+        return 'Votre publication ne respecte pas nos conditions d\'utilisation.';
     }
 
     /**
@@ -181,10 +224,15 @@ class ModerationService
             $flag = ModerationFlag::create([
                 'flaggable_type' => get_class($content),
                 'flaggable_id' => $content->id,
+                'user_id' => $author->id,
                 'flag_type' => 'auto_review',
                 'reason' => $result->getSummary(),
                 'score' => $result->getScore(),
+                'severity' => $result->getScore() >= 60 ? 'warning' : 'info',
                 'details' => $result->toArray(),
+                'matched_words' => $result->getMatchedWords(),
+                'has_contact_info' => $result->hasContactInfo(),
+                'is_spam' => $result->isSpam(),
                 'status' => 'pending',
             ]);
 

@@ -23,18 +23,21 @@ return [
     |--------------------------------------------------------------------------
     |
     | Score de 0 à 100 déterminant le statut du contenu.
+    | NOUVEAUX SEUILS plus souples (v2.0) :
+    | - Un mot isolé dans un contexte légitime ne bloque plus
+    | - Seules les combinaisons suspectes ou contacts explicites bloquent
     |
     */
     'thresholds' => [
-        // Score < 30 : Publication directe (CLEAN)
-        'clean_max' => 30,
+        // Score < 40 : Publication directe (CLEAN)
+        'clean_max' => 40,
 
-        // Score 30-70 : En attente de review (WARNING)
-        'review_min' => 30,
-        'review_max' => 70,
+        // Score 40-79 : En attente de review (WARNING)
+        'review_min' => 40,
+        'review_max' => 79,
 
-        // Score > 70 : Blocage automatique (BLOCKED)
-        'block_min' => 70,
+        // Score >= 80 : Blocage automatique (BLOCKED)
+        'block_min' => 80,
     ],
 
     /*
@@ -81,21 +84,27 @@ return [
     |--------------------------------------------------------------------------
     |
     | Score ajouté au contenu selon le type de problème détecté.
+    | NOUVEAUX SCORES (v2.0) : plus progressifs, analyse contextuelle
+    | - Un mot seul = 30% du score de base
+    | - Contexte légitime = réduction supplémentaire de 80%
+    | - Combinaisons suspectes = score additionnel
     |
     */
     'scoring' => [
-        // Mots interdits
-        'word_critical' => 80,      // Blocage direct
-        'word_warning' => 40,       // Review nécessaire
-        'word_info' => 10,          // Simple surveillance
+        // Mots interdits (scores de BASE, réduits par contexte)
+        'word_critical' => 40,      // Était 80, réduit car contextuel
+        'word_warning' => 15,       // Était 40
+        'word_info' => 5,           // Était 10
 
-        // Coordonnées de contact
-        'contact_phone' => 70,
-        'contact_email' => 70,
-        'contact_social' => 60,
-        'contact_url' => 50,
+        // Coordonnées de contact (scores ajustés)
+        'contact_phone' => 50,      // Était 70
+        'contact_email' => 50,      // Était 70
+        'contact_messaging' => 45,  // NOUVEAU: WhatsApp, Telegram, etc.
+        'contact_request' => 35,    // NOUVEAU: "contactez-moi en DM"
+        'contact_social' => 30,     // Était 60
+        'contact_url' => 25,        // Était 50
 
-        // Spam
+        // Spam (inchangé)
         'spam_caps_ratio' => 20,    // Trop de majuscules
         'spam_special_chars' => 15, // Trop de caractères spéciaux
         'spam_repetition' => 25,    // Répétition de caractères
@@ -105,6 +114,11 @@ return [
         // Autres
         'low_trust_user' => 15,     // Utilisateur avec score de confiance bas
         'new_account' => 10,        // Compte créé récemment (< 7 jours)
+
+        // NOUVEAU: Bonus contextuels (réductions)
+        'context_legitimate_multiplier' => 0.2,   // 80% de réduction si contexte légitime
+        'context_single_word_multiplier' => 0.3,  // 70% de réduction si mot seul
+        'context_question_multiplier' => 0.5,     // 50% de réduction si question
     ],
 
     /*
@@ -300,13 +314,40 @@ return [
         ],
         'contact_info' => [
             'label' => 'Coordonnées',
-            'default_severity' => 'critical',
+            'default_severity' => 'warning',  // Était critical, maintenant review par défaut
             'color' => '#17a2b8',
         ],
         'other' => [
             'label' => 'Autre',
             'default_severity' => 'info',
             'color' => '#6c757d',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Soft Warnings (Avertissements Non-Bloquants)
+    |--------------------------------------------------------------------------
+    |
+    | Avertissements informatifs qui n'empêchent PAS la publication
+    | mais guident l'utilisateur vers les bonnes pratiques.
+    |
+    */
+    'soft_warnings' => [
+        // Activer les soft warnings
+        'enabled' => true,
+
+        // Score minimum pour afficher un soft warning (sans bloquer)
+        'min_score' => 15,
+
+        // Score maximum pour soft warning (au-delà = review/block)
+        'max_score' => 39,
+
+        // Messages par type de détection
+        'messages' => [
+            'contact_info' => 'Pour votre sécurité, nous vous recommandons d\'utiliser la messagerie intégrée plutôt que de partager vos coordonnées.',
+            'external_payment' => 'Attention : les paiements hors plateforme ne sont pas protégés par notre garantie.',
+            'single_word_match' => 'Votre message a été publié. Certains termes peuvent être sensibles dans d\'autres contextes.',
         ],
     ],
 
@@ -327,6 +368,7 @@ return [
         ],
         'content_blocked' => 'Votre contenu ne peut pas être publié car il ne respecte pas nos conditions d\'utilisation.',
         'content_pending' => 'Votre contenu est en cours de vérification. Vous serez notifié une fois la vérification terminée.',
+        'content_approved_with_warning' => 'Votre contenu a été publié avec un avertissement.',
         'strike_warning' => 'Vous avez reçu un avertissement (:current/:max). Veuillez respecter nos règles.',
         'account_suspended' => 'Votre compte a été suspendu suite à de multiples violations de nos conditions.',
     ],

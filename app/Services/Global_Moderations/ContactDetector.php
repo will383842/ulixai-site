@@ -6,9 +6,50 @@ class ContactDetector
 {
     /**
      * Patterns de détection pour différents types de coordonnées
-     * Chaque pattern a une sévérité et un score associé
      */
     private array $patterns;
+
+    /**
+     * Mapping des nombres écrits vers chiffres (multilingue)
+     */
+    private array $writtenNumbers = [
+        // Français
+        'zéro' => '0', 'zero' => '0', 'un' => '1', 'deux' => '2', 'trois' => '3',
+        'quatre' => '4', 'cinq' => '5', 'six' => '6', 'sept' => '7',
+        'huit' => '8', 'neuf' => '9', 'dix' => '10',
+        // English
+        'one' => '1', 'two' => '2', 'three' => '3', 'four' => '4', 'five' => '5',
+        'seven' => '7', 'eight' => '8', 'nine' => '9', 'ten' => '10',
+        // Deutsch
+        'null' => '0', 'eins' => '1', 'zwei' => '2', 'drei' => '3', 'vier' => '4',
+        'fünf' => '5', 'funf' => '5', 'sechs' => '6', 'sieben' => '7',
+        'acht' => '8', 'neun' => '9', 'zehn' => '10',
+        // Español
+        'cero' => '0', 'uno' => '1', 'dos' => '2', 'tres' => '3', 'cuatro' => '4',
+        'cinco' => '5', 'seis' => '6', 'siete' => '7', 'ocho' => '8', 'nueve' => '9',
+        // Português
+        'um' => '1', 'três' => '3', 'quatro' => '4', 'sete' => '7',
+        'oito' => '8', 'nove' => '9',
+        // Русский (translitéré)
+        'nol' => '0', 'odin' => '1', 'dva' => '2', 'tri' => '3', 'chetyre' => '4',
+        'pyat' => '5', 'shest' => '6', 'sem' => '7', 'vosem' => '8', 'devyat' => '9',
+    ];
+
+    /**
+     * Unicode lookalikes pour la normalisation
+     */
+    private array $unicodeLookalikes = [
+        // Cyrillique qui ressemble au latin
+        'а' => 'a', 'е' => 'e', 'о' => 'o', 'р' => 'p', 'с' => 'c', 'х' => 'x',
+        'А' => 'A', 'В' => 'B', 'Е' => 'E', 'К' => 'K', 'М' => 'M', 'Н' => 'H',
+        'О' => 'O', 'Р' => 'P', 'С' => 'C', 'Т' => 'T', 'Х' => 'X',
+        // Caractères spéciaux
+        '０' => '0', '１' => '1', '２' => '2', '３' => '3', '４' => '4',
+        '５' => '5', '６' => '6', '７' => '7', '８' => '8', '９' => '9',
+        'Ａ' => 'A', 'Ｂ' => 'B', 'Ｃ' => 'C', 'Ｄ' => 'D', 'Ｅ' => 'E',
+        // Zero-width et espaces invisibles
+        "\u{200B}" => '', "\u{200C}" => '', "\u{200D}" => '', "\u{FEFF}" => '',
+    ];
 
     public function __construct()
     {
@@ -16,7 +57,7 @@ class ContactDetector
     }
 
     /**
-     * Charge les patterns depuis la config ou utilise les défauts
+     * Charge les patterns de détection
      */
     private function loadPatterns(): array
     {
@@ -30,9 +71,14 @@ class ContactDetector
                 'description' => 'Email standard',
             ],
             'email_disguised' => [
-                'pattern' => '/[a-zA-Z0-9._%+-]+\s*[\[\(\{]?\s*(@|at|arobase|arroba|chez|собака|アット)\s*[\]\)\}]?\s*[a-zA-Z0-9.-]+\s*[\[\(\{]?\s*(\.|\s*dot\s*|\s*point\s*|\s*punto\s*|\s*точка\s*)\s*[\]\)\}]?\s*[a-zA-Z]{2,}/iu',
+                'pattern' => '/[a-zA-Z0-9._%+-]+\s*[\[\(\{]?\s*(@|at|arobase|arroba|chez|собака|аt)\s*[\]\)\}]?\s*[a-zA-Z0-9.-]+\s*[\[\(\{]?\s*(\.|\s*dot\s*|\s*point\s*|\s*punto\s*|\s*точка\s*)\s*[\]\)\}]?\s*[a-zA-Z]{2,}/iu',
                 'severity' => 'critical',
                 'description' => 'Email déguisé (multilingue)',
+            ],
+            'email_spaced' => [
+                'pattern' => '/[a-zA-Z0-9]+\s*[\.\s]\s*[a-zA-Z0-9]+\s*@\s*[gG]\s*[mM]\s*[aA]\s*[iI]\s*[lL]\s*[\.\s]\s*[cC]\s*[oO]\s*[mM]/i',
+                'severity' => 'critical',
+                'description' => 'Gmail espacé',
             ],
 
             // ============================================================
@@ -92,12 +138,17 @@ class ContactDetector
             // MESSAGERIES
             // ============================================================
             'messaging_whatsapp' => [
-                'pattern' => '/whatsapp\s*[:\-]?\s*[\d\s\+\-\.]+/i',
+                'pattern' => '/wh[a4]ts?\s*[a4]pp?\s*[:\-]?\s*[\d\s\+\-\.]+/i',
                 'severity' => 'critical',
                 'description' => 'WhatsApp avec numéro',
             ],
+            'messaging_whatsapp_leet' => [
+                'pattern' => '/wh[a4@]t[s5][a4@]pp?/i',
+                'severity' => 'warning',
+                'description' => 'WhatsApp en leet speak',
+            ],
             'messaging_telegram' => [
-                'pattern' => '/telegram\s*[:\-]?\s*[@\w\d\+\-\.]+/i',
+                'pattern' => '/t[e3]l[e3]gr[a4]m\s*[:\-]?\s*[@\w\d\+\-\.]+/i',
                 'severity' => 'critical',
                 'description' => 'Telegram avec identifiant',
             ],
@@ -111,12 +162,12 @@ class ContactDetector
             // RÉSEAUX SOCIAUX
             // ============================================================
             'social_instagram' => [
-                'pattern' => '/(?:instagram|insta)\s*[:\-@]?\s*[a-zA-Z0-9._]{3,30}/i',
+                'pattern' => '/(?:instagram|insta|ig)\s*[:\-@]?\s*[a-zA-Z0-9._]{3,30}/i',
                 'severity' => 'warning',
                 'description' => 'Instagram',
             ],
             'social_facebook' => [
-                'pattern' => '/(?:facebook|fb)\s*[:\-@]?\s*[a-zA-Z0-9._]{3,50}/i',
+                'pattern' => '/(?:facebook|fb|face)\s*[:\-@]?\s*[a-zA-Z0-9._]{3,50}/i',
                 'severity' => 'warning',
                 'description' => 'Facebook',
             ],
@@ -132,22 +183,32 @@ class ContactDetector
             ],
 
             // ============================================================
-            // DEMANDES DE CONTACT (multilingue)
+            // DEMANDES DE CONTACT INDIRECTES (multilingue)
             // ============================================================
             'contact_request_fr' => [
-                'pattern' => '/(?:ajout|contact|appel|écri)[ez]?\s*(?:-|\s)*moi\s*(?:sur|via|par)\s*(?:insta|snap|whats|telegram|facebook)/iu',
+                'pattern' => '/(?:ajout|contact|appel|écri)[ez]?\s*(?:-|\s)*moi\s*(?:sur|via|par|en)\s*(?:insta|snap|whats|telegram|facebook|priv[ée]|dm|mp)/iu',
                 'severity' => 'critical',
                 'description' => 'Demande de contact FR',
             ],
             'contact_request_en' => [
-                'pattern' => '/(?:add|contact|call|text|dm|message)\s*me\s*(?:on|via|at)\s*(?:insta|snap|whats|telegram|facebook)/i',
+                'pattern' => '/(?:add|contact|call|text|dm|message|hit)\s*me\s*(?:on|via|at|in)\s*(?:insta|snap|whats|telegram|facebook|private|dm)/i',
                 'severity' => 'critical',
                 'description' => 'Demande de contact EN',
             ],
-            'contact_request_es' => [
-                'pattern' => '/(?:agrega|contacta|llama|escribe)[me]?\s*(?:en|por|via)\s*(?:insta|snap|whats|telegram|facebook)/i',
-                'severity' => 'critical',
-                'description' => 'Demande de contact ES',
+            'contact_request_dm' => [
+                'pattern' => '/(?:envo[iy]e|send|schick)\s*(?:moi|me|mir)?\s*(?:un|a|eine?)?\s*(?:dm|mp|pm|message\s*priv[ée]?|private\s*message)/iu',
+                'severity' => 'warning',
+                'description' => 'Demande de DM',
+            ],
+            'contact_indirect_fr' => [
+                'pattern' => '/(?:contact(?:ez)?|joign(?:ez)?|trouv(?:ez)?)\s*(?:-|\s)*moi\s*(?:hors|en\s*dehors|ailleurs|autrement)/iu',
+                'severity' => 'warning',
+                'description' => 'Contact indirect FR',
+            ],
+            'contact_indirect_en' => [
+                'pattern' => '/(?:contact|reach|find)\s*me\s*(?:outside|elsewhere|off\s*platform|privately)/i',
+                'severity' => 'warning',
+                'description' => 'Contact indirect EN',
             ],
 
             // ============================================================
@@ -164,33 +225,130 @@ class ContactDetector
                 'description' => 'URL raccourcie',
             ],
             'domain' => [
-                'pattern' => '/\b[a-zA-Z0-9][a-zA-Z0-9-]*\.(com|fr|net|org|io|co|be|ch|ca|app|site|online|me|uk|de|es|pt|ru|cn|in|br|mx|ar)\b/i',
-                'severity' => 'critical',
+                'pattern' => '/\b[a-zA-Z0-9][a-zA-Z0-9-]*\s*[\.\s]\s*(?:com|fr|net|org|io|co|be|ch|ca|app|site|online|me|uk|de|es|pt|ru|cn|in|br|mx|ar)\b/i',
+                'severity' => 'warning',
                 'description' => 'Nom de domaine',
+            ],
+            'domain_disguised' => [
+                'pattern' => '/[a-zA-Z0-9]+\s*(?:dot|point|punto|punkt|точка)\s*(?:com|fr|net|org|io|co)\b/i',
+                'severity' => 'critical',
+                'description' => 'Domaine déguisé',
             ],
         ];
     }
 
     /**
      * Analyse le contenu pour détecter les coordonnées
+     * Avec normalisation préalable
      */
     public function analyze(string $content): ModerationResult
     {
         $result = new ModerationResult();
 
-        foreach ($this->patterns as $type => $config) {
-            $matches = $this->findMatches($content, $config['pattern']);
+        // Normaliser le contenu avant analyse
+        $normalizedContent = $this->normalizeContent($content);
 
-            foreach ($matches as $match) {
-                $result->addDetectedContact(
-                    $type,
-                    $match,
-                    $config['severity']
-                );
+        // Convertir les nombres écrits en chiffres
+        $convertedContent = $this->convertWrittenNumbers($normalizedContent);
+
+        // Analyser le contenu original, normalisé et converti
+        $contentsToAnalyze = array_unique([$content, $normalizedContent, $convertedContent]);
+
+        $detectedMatches = [];
+
+        foreach ($contentsToAnalyze as $contentVersion) {
+            foreach ($this->patterns as $type => $config) {
+                $matches = $this->findMatches($contentVersion, $config['pattern']);
+
+                foreach ($matches as $match) {
+                    $matchKey = $type . ':' . mb_strtolower($match);
+                    if (!isset($detectedMatches[$matchKey])) {
+                        $detectedMatches[$matchKey] = true;
+                        $result->addDetectedContact(
+                            $type,
+                            $match,
+                            $config['severity']
+                        );
+                    }
+                }
             }
         }
 
+        // Détecter les patterns mixtes (ex: "06 douze 34 cinquante-six")
+        $this->detectMixedPatterns($content, $result, $detectedMatches);
+
         return $result;
+    }
+
+    /**
+     * Normalise le contenu (supprime les caractères Unicode trompeurs)
+     */
+    private function normalizeContent(string $content): string
+    {
+        // Remplacer les caractères Unicode lookalikes
+        $normalized = strtr($content, $this->unicodeLookalikes);
+
+        // Supprimer les espaces multiples et invisibles
+        $normalized = preg_replace('/[\s\x{00A0}\x{2000}-\x{200F}\x{2028}\x{2029}]+/u', ' ', $normalized);
+
+        // Supprimer les caractères de contrôle
+        $normalized = preg_replace('/[\x00-\x1F\x7F]/u', '', $normalized);
+
+        return trim($normalized);
+    }
+
+    /**
+     * Convertit les nombres écrits en lettres en chiffres
+     */
+    private function convertWrittenNumbers(string $content): string
+    {
+        $words = preg_split('/\s+/', mb_strtolower($content));
+        $result = [];
+
+        foreach ($words as $word) {
+            $cleanWord = preg_replace('/[^a-zàâäéèêëïîôùûüÿçœæ]/u', '', $word);
+            if (isset($this->writtenNumbers[$cleanWord])) {
+                $result[] = $this->writtenNumbers[$cleanWord];
+            } else {
+                $result[] = $word;
+            }
+        }
+
+        return implode(' ', $result);
+    }
+
+    /**
+     * Détecte les patterns mixtes (chiffres + lettres)
+     * Ex: "06 douze 34 cinquante-six 78"
+     */
+    private function detectMixedPatterns(string $content, ModerationResult $result, array &$detected): void
+    {
+        $lower = mb_strtolower($content);
+
+        // Pattern pour détecter un mélange de chiffres et de nombres écrits
+        $numberWords = implode('|', array_keys($this->writtenNumbers));
+        $mixedPattern = '/(?:\d+\s+(?:' . $numberWords . ')|(?:' . $numberWords . ')\s+\d+)(?:\s+(?:\d+|' . $numberWords . ')){2,}/iu';
+
+        if (preg_match_all($mixedPattern, $lower, $matches)) {
+            foreach ($matches[0] as $match) {
+                // Convertir pour vérifier si c'est un numéro de téléphone
+                $converted = $this->convertWrittenNumbers($match);
+                $digits = preg_replace('/\D/', '', $converted);
+
+                // Si on a au moins 8 chiffres, c'est probablement un téléphone
+                if (strlen($digits) >= 8) {
+                    $matchKey = 'phone_mixed:' . $match;
+                    if (!isset($detected[$matchKey])) {
+                        $detected[$matchKey] = true;
+                        $result->addDetectedContact(
+                            'phone_mixed',
+                            $match . ' → ' . $digits,
+                            'critical'
+                        );
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -199,17 +357,23 @@ class ContactDetector
     public function detect(string $content): array
     {
         $detected = [];
+        $normalizedContent = $this->normalizeContent($content);
+        $convertedContent = $this->convertWrittenNumbers($normalizedContent);
 
-        foreach ($this->patterns as $type => $config) {
-            $matches = $this->findMatches($content, $config['pattern']);
+        $contentsToAnalyze = array_unique([$content, $normalizedContent, $convertedContent]);
 
-            foreach ($matches as $match) {
-                $detected[] = [
-                    'type' => $type,
-                    'value' => $match,
-                    'severity' => $config['severity'],
-                    'description' => $config['description'],
-                ];
+        foreach ($contentsToAnalyze as $contentVersion) {
+            foreach ($this->patterns as $type => $config) {
+                $matches = $this->findMatches($contentVersion, $config['pattern']);
+
+                foreach ($matches as $match) {
+                    $detected[] = [
+                        'type' => $type,
+                        'value' => $match,
+                        'severity' => $config['severity'],
+                        'description' => $config['description'],
+                    ];
+                }
             }
         }
 
@@ -237,8 +401,10 @@ class ContactDetector
      */
     public function hasContactInfo(string $content): bool
     {
+        $normalizedContent = $this->normalizeContent($content);
+
         foreach ($this->patterns as $config) {
-            if (preg_match($config['pattern'], $content)) {
+            if (preg_match($config['pattern'], $content) || preg_match($config['pattern'], $normalizedContent)) {
                 return true;
             }
         }
@@ -250,9 +416,13 @@ class ContactDetector
      */
     public function hasCriticalContact(string $content): bool
     {
+        $normalizedContent = $this->normalizeContent($content);
+
         foreach ($this->patterns as $config) {
-            if ($config['severity'] === 'critical' && preg_match($config['pattern'], $content)) {
-                return true;
+            if ($config['severity'] === 'critical') {
+                if (preg_match($config['pattern'], $content) || preg_match($config['pattern'], $normalizedContent)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -279,10 +449,11 @@ class ContactDetector
      */
     public function quickCheck(string $content): bool
     {
+        $normalizedContent = $this->normalizeContent($content);
         $criticalPatterns = array_filter($this->patterns, fn($p) => $p['severity'] === 'critical');
 
         foreach ($criticalPatterns as $config) {
-            if (preg_match($config['pattern'], $content)) {
+            if (preg_match($config['pattern'], $content) || preg_match($config['pattern'], $normalizedContent)) {
                 return true;
             }
         }
