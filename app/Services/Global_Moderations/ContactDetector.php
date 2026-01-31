@@ -238,12 +238,28 @@ class ContactDetector
     }
 
     /**
+     * Contextes légitimes où des numéros ne sont PAS des coordonnées
+     */
+    private array $legitimateContexts = [
+        '/(?:numéro|numero|n°|ref|référence|reference|commande|order|tracking|colis|code|facture|invoice|dossier|client)\s*(?::|est|is|de|#)?\s*[A-Z0-9]+/iu',
+        '/\b(?:prix|price|coût|cout|cost|tarif|budget)\s*(?::|est|is|de)?\s*\d+/iu',
+        '/\b\d+\s*(?:€|euros?|dollars?|\$|£|CHF)\b/iu',
+        '/\b(?:€|euros?|dollars?|\$|£|CHF)\s*\d+/iu',
+        '/\b\d{1,2}[h:]\d{2}\b/', // Heures (14h30, 14:30)
+        '/\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b/', // Dates
+        '/\b(?:rue|avenue|boulevard|bd|allée|place|chemin)\s+[^,]+,?\s*\d{5}/iu', // Adresses avec code postal
+    ];
+
+    /**
      * Analyse le contenu pour détecter les coordonnées
-     * Avec normalisation préalable
+     * Avec normalisation et déduplication intelligente
      */
     public function analyze(string $content): ModerationResult
     {
         $result = new ModerationResult();
+
+        // Vérifier si le contenu est dans un contexte légitime
+        $legitimateMatches = $this->findLegitimateContextMatches($content);
 
         // Normaliser le contenu avant analyse
         $normalizedContent = $this->normalizeContent($content);
@@ -251,33 +267,109 @@ class ContactDetector
         // Convertir les nombres écrits en chiffres
         $convertedContent = $this->convertWrittenNumbers($normalizedContent);
 
-        // Analyser le contenu original, normalisé et converti
-        $contentsToAnalyze = array_unique([$content, $normalizedContent, $convertedContent]);
+        // Stocker les valeurs déjà détectées (pour éviter doublons)
+        $detectedValues = [];
+        $detectedByCategory = ['email' => false, 'phone' => false, 'messaging' => false, 'social' => false, 'url' => false];
 
-        $detectedMatches = [];
+        // Analyser uniquement le contenu normalisé (pas besoin de 3 passes)
+        foreach ($this->patterns as $type => $config) {
+            $matches = $this->findMatches($convertedContent, $config['pattern']);
 
-        foreach ($contentsToAnalyze as $contentVersion) {
-            foreach ($this->patterns as $type => $config) {
-                $matches = $this->findMatches($contentVersion, $config['pattern']);
+            foreach ($matches as $match) {
+                // Normaliser la valeur pour détecter les doublons
+                $normalizedValue = $this->normalizeMatchValue($match);
 
-                foreach ($matches as $match) {
-                    $matchKey = $type . ':' . mb_strtolower($match);
-                    if (!isset($detectedMatches[$matchKey])) {
-                        $detectedMatches[$matchKey] = true;
-                        $result->addDetectedContact(
-                            $type,
-                            $match,
-                            $config['severity']
-                        );
-                    }
+                // Ignorer si c'est dans un contexte légitime
+                if ($this->isInLegitimateContext($match, $content, $legitimateMatches)) {
+                    continue;
                 }
+
+                // Ignorer les doublons (même valeur, pattern différent)
+                if (isset($detectedValues[$normalizedValue])) {
+                    continue;
+                }
+
+                // Déterminer la catégorie du contact
+                $category = $this->getCategoryFromType($type);
+
+                // Limiter à UNE détection par catégorie majeure
+                // (évite que 5 patterns email donnent 5x le score)
+                if ($detectedByCategory[$category]) {
+                    continue;
+                }
+
+                $detectedValues[$normalizedValue] = true;
+                $detectedByCategory[$category] = true;
+
+                $result->addDetectedContact(
+                    $type,
+                    $match,
+                    $config['severity']
+                );
             }
         }
 
-        // Détecter les patterns mixtes (ex: "06 douze 34 cinquante-six")
-        $this->detectMixedPatterns($content, $result, $detectedMatches);
+        // Détecter les patterns mixtes seulement si pas déjà détecté comme phone
+        if (!$detectedByCategory['phone']) {
+            $this->detectMixedPatterns($content, $result, $detectedValues);
+        }
 
         return $result;
+    }
+
+    /**
+     * Trouve les contextes légitimes dans le contenu
+     */
+    private function findLegitimateContextMatches(string $content): array
+    {
+        $matches = [];
+        foreach ($this->legitimateContexts as $pattern) {
+            if (preg_match_all($pattern, $content, $m)) {
+                foreach ($m[0] as $match) {
+                    $matches[] = mb_strtolower($match);
+                }
+            }
+        }
+        return $matches;
+    }
+
+    /**
+     * Vérifie si une valeur est dans un contexte légitime
+     */
+    private function isInLegitimateContext(string $value, string $originalContent, array $legitimateMatches): bool
+    {
+        $valueLower = mb_strtolower($value);
+
+        foreach ($legitimateMatches as $legitMatch) {
+            if (str_contains($legitMatch, $valueLower) || str_contains($valueLower, $legitMatch)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Normalise une valeur détectée pour comparaison
+     */
+    private function normalizeMatchValue(string $value): string
+    {
+        // Supprimer tout sauf chiffres et lettres
+        return preg_replace('/[^a-z0-9@.]/i', '', mb_strtolower($value));
+    }
+
+    /**
+     * Détermine la catégorie principale d'un type de contact
+     */
+    private function getCategoryFromType(string $type): string
+    {
+        if (str_starts_with($type, 'email')) return 'email';
+        if (str_starts_with($type, 'phone')) return 'phone';
+        if (str_starts_with($type, 'messaging')) return 'messaging';
+        if (str_starts_with($type, 'social')) return 'social';
+        if (str_starts_with($type, 'url') || str_starts_with($type, 'domain')) return 'url';
+        if (str_starts_with($type, 'contact_request') || str_starts_with($type, 'contact_indirect')) return 'messaging';
+        return 'other';
     }
 
     /**

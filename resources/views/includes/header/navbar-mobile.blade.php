@@ -75,7 +75,7 @@
 {{-- ═══════════════════════════════════════════════════════════
      📱 MOBILE MENU - Animation rapide
      ═══════════════════════════════════════════════════════════ --}}
-<nav id="mobile-menu" class="lg:hidden fixed top-[62px] left-0 right-0 bg-white z-50 shadow-2xl rounded-b-3xl transform -translate-y-full transition-transform duration-200 ease-out max-h-[calc(100vh-62px)] overflow-y-auto" role="navigation" aria-label="Mobile menu" aria-hidden="true">
+<nav id="mobile-menu" class="lg:hidden fixed top-[62px] left-0 right-0 bottom-0 bg-white z-50 shadow-2xl rounded-b-3xl transform -translate-y-full transition-transform duration-200 ease-out overflow-y-auto" style="-webkit-overflow-scrolling: touch;" role="navigation" aria-label="Mobile menu" aria-hidden="true">
   
   <div class="px-6 py-6 space-y-4">
     <ul class="space-y-2" role="menu">
