@@ -1046,7 +1046,7 @@
                                 </div>
                             </div>
                             
-                            <a href="{{ route('quote-offer', ['id' => $mission->id]) }}"> 
+                            <a href="{{ route('quote-offer', ['id' => $mission->id]) }}"
                                class="btn-see-request"
                                aria-label="View full details and submit proposal for {{ $mission->title ?? 'this request' }}"
                                rel="nofollow">
