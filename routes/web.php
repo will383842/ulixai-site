@@ -125,9 +125,12 @@ Route::post('/partnership/store', [PartnershipController::class, 'store'])
     ->middleware('throttle:5,1') // 5 demandes par minute max
     ->name('partnership.store');
 
-Route::get('/cookiemanagment', function () {
-    return view('pages.cookiemanagment');
-})->name('cookies.show');
+// Cookie Management (GDPR)
+Route::get('/cookiemanagment', [App\Http\Controllers\CookieController::class, 'show'])->name('cookies.show');
+Route::post('/cookies/save', [App\Http\Controllers\CookieController::class, 'save'])->name('cookies.save');
+Route::post('/cookies/accept-all', [App\Http\Controllers\CookieController::class, 'acceptAll'])->name('cookies.accept-all');
+Route::post('/cookies/reject-all', [App\Http\Controllers\CookieController::class, 'rejectAll'])->name('cookies.reject-all');
+Route::post('/cookies/reset', [App\Http\Controllers\CookieController::class, 'reset'])->name('cookies.reset');
 
 // ✅ CCPA Compliance - Do Not Sell My Personal Information
 Route::get('/privacy/do-not-sell', function () {
