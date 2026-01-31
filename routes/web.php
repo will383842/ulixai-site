@@ -85,7 +85,7 @@ Route::post('/paypal/webhook', [PayPalWebhookController::class, 'handleWebhook']
 
 // Auth helpers (avec rate limiting anti-énumération)
 Route::post('/check-email-login', [App\Http\Controllers\AuthController::class, 'checkEmailAndLogin'])
-    ->middleware('throttle:10,1'); // 10 tentatives par minute
+    ->middleware('throttle:3,1'); // ✅ 3 tentatives par minute (anti-énumération emails)
 
 // ✅ Check email & verify password (utilisés par le formulaire)
 if (app()->environment('local', 'development')) {

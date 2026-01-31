@@ -1238,10 +1238,10 @@ $completedRequests = $missions->filter(function($m) {
                     $now = \Carbon\Carbon::now();
                     
                     $totalDays = 7;
-                    if($mission->service_durition === '1 week') $totalDays = 7;
-                    elseif($mission->service_durition === '2 weeks') $totalDays = 14;
-                    elseif($mission->service_durition === '1 month') $totalDays = 30;
-                    elseif($mission->service_durition === '3 months') $totalDays = 90;
+                    if($mission->service_duration === '1 week') $totalDays = 7;
+                    elseif($mission->service_duration === '2 weeks') $totalDays = 14;
+                    elseif($mission->service_duration === '1 month') $totalDays = 30;
+                    elseif($mission->service_duration === '3 months') $totalDays = 90;
                     
                     $daysElapsed = $createdDate->diffInDays($now);
                     $daysRemaining = max(0, $totalDays - $daysElapsed);
@@ -1315,7 +1315,7 @@ $completedRequests = $missions->filter(function($m) {
                         <div class="info-item">
                             <i class="fas fa-clock info-icon" aria-hidden="true"></i>
                             <dt class="info-label">Duration:</dt>
-                            <dd class="info-value">{{ $mission->service_durition ?? '-' }}</dd>
+                            <dd class="info-value">{{ $mission->service_duration ?? '-' }}</dd>
                         </div>
                         
                         <div class="info-item">
@@ -1386,13 +1386,13 @@ $completedRequests = $missions->filter(function($m) {
                     
                     $createdDate = \Carbon\Carbon::parse($mission->created_at);
                     
-                    if($mission->service_durition === '1 week') {
+                    if($mission->service_duration === '1 week') {
                         $endTime = $createdDate->copy()->addWeek();
-                    } elseif($mission->service_durition === '2 weeks') {
+                    } elseif($mission->service_duration === '2 weeks') {
                         $endTime = $createdDate->copy()->addWeeks(2);
-                    } elseif($mission->service_durition === '1 month') {
+                    } elseif($mission->service_duration === '1 month') {
                         $endTime = $createdDate->copy()->addMonth();
-                    } elseif($mission->service_durition === '3 months') {
+                    } elseif($mission->service_duration === '3 months') {
                         $endTime = $createdDate->copy()->addMonths(3);
                     } else {
                         $endTime = $createdDate->copy()->addWeek();
@@ -1521,7 +1521,7 @@ $completedRequests = $missions->filter(function($m) {
                         <div class="info-item">
                             <i class="fas fa-clock info-icon" aria-hidden="true"></i>
                             <dt class="info-label">Duration:</dt>
-                            <dd class="info-value">{{ $mission->service_durition ?? '-' }}</dd>
+                            <dd class="info-value">{{ $mission->service_duration ?? '-' }}</dd>
                         </div>
                         
                         <div class="info-item">

@@ -21,28 +21,34 @@ class PaymentController extends Controller
     }
 
     public function index(Request $request) {
-        $providerId = $request->query('id');
-        $missionId = $request->query('mission_id');
-        $provider = ServiceProvider::find($providerId);
+        // ✅ Validation des paramètres
+        $validated = $request->validate([
+            'id' => 'required|integer|exists:service_providers,id',
+            'mission_id' => 'required|integer|exists:missions,id',
+        ]);
 
-        if (!$provider) {
-            abort(404, 'Provider not found');
-        }
+        $providerId = $validated['id'];
+        $missionId = $validated['mission_id'];
+        $provider = ServiceProvider::findOrFail($providerId);
+        $requester = auth()->user();
 
         // ✅ KYC SUPPRIMÉ - Stripe gérera le refus automatiquement si nécessaire
 
         $commissions = \App\Models\UlixCommission::where('is_active', true)->first();
-        $requester = auth()->user();
 
         $offer = null;
         $mission = null;
 
-        if ($missionId) {
-            $offer = MissionOffer::where('mission_id', $missionId)
-                ->where('provider_id', $providerId)
-                ->first();
-            $mission = Mission::find($missionId);
+        $mission = Mission::findOrFail($missionId);
+
+        // ✅ Vérification que l'utilisateur est le propriétaire de la mission
+        if ($mission->requester_id !== $requester->id) {
+            abort(403, 'You are not authorized to pay for this mission.');
         }
+
+        $offer = MissionOffer::where('mission_id', $missionId)
+            ->where('provider_id', $providerId)
+            ->first();
 
         // Vérifier que l'offre existe
         if (!$offer) {

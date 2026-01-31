@@ -681,10 +681,10 @@
                         <span class="info-label-2025">Date:</span>
                         <span>{{ $job->created_at ? $job->created_at->format('d/m/Y') : '-' }}</span>
                     </p>
-                    @if($job->service_durition)
+                    @if($job->service_duration)
                     <p class="info-row-2025">
                         <span class="info-label-2025">Duration:</span>
-                        <span>{{ $job->service_durition }}</span>
+                        <span>{{ $job->service_duration }}</span>
                     </p>
                     @endif
                     <p class="info-row-2025">

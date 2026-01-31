@@ -97,7 +97,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Service Duration</label>
                             <div class="relative">
-                                <select name="service_durition"
+                                <select name="service_duration"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white appearance-none">
                                     <option value="">Select duration...</option>
                                     <option value="1 week">1 Week</option>

@@ -115,11 +115,11 @@
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Service Duration</label>
                             <div class="relative">
-                                <select name="service_durition" class="w-full appearance-none border border-slate-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                                <select name="service_duration" class="w-full appearance-none border border-slate-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
                                     <option value="">Select duration...</option>
-                                    <option value="1 week" {{ old('service_durition', $mission->service_durition) == '1 week' ? 'selected' : '' }}>1 Week</option>
-                                    <option value="2 weeks" {{ old('service_durition', $mission->service_durition) == '2 weeks' ? 'selected' : '' }}>2 Weeks</option>
-                                    <option value="1 month" {{ old('service_durition', $mission->service_durition) == '1 month' ? 'selected' : '' }}>1 Month</option>
+                                    <option value="1 week" {{ old('service_duration', $mission->service_duration) == '1 week' ? 'selected' : '' }}>1 Week</option>
+                                    <option value="2 weeks" {{ old('service_duration', $mission->service_duration) == '2 weeks' ? 'selected' : '' }}>2 Weeks</option>
+                                    <option value="1 month" {{ old('service_duration', $mission->service_duration) == '1 month' ? 'selected' : '' }}>1 Month</option>
                                 </select>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                     <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

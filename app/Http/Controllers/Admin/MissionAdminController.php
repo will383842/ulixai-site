@@ -74,17 +74,17 @@ class MissionAdminController extends Controller
         ]);
 
         $mission->fill($request->only([
-            'title', 'description', 'status', 'payment_status', 'category_id', 'subcategory_id', 'subsubcategory_id', 'location_country', 'language', 'service_durition',
+            'title', 'description', 'status', 'payment_status', 'category_id', 'subcategory_id', 'subsubcategory_id', 'location_country', 'language', 'service_duration',
             'selected_provider_id'
         ]));
 
-        if($request->service_durition === '1 week') {
+        if($request->service_duration === '1 week') {
             $mission->urgency = 'urgent';
         } 
-        if($request->service_durition === '2 weeks') {
+        if($request->service_duration === '2 weeks') {
             $mission->urgency = 'medium';
         } 
-        if($request->service_durition === '1 month') {
+        if($request->service_duration === '1 month') {
             $mission->urgency = 'low';
         } 
 

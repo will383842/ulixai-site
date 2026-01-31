@@ -98,7 +98,7 @@
               <div class="flex justify-between items-center flex-wrap gap-2">
                 <div>
                   <p class="text-gray-800 font-medium">{{ $mission->title }}</p>
-                  <p class="text-sm text-gray-600">{{ $mission->service_durition ?? '-' }}</p>
+                  <p class="text-sm text-gray-600">{{ $mission->service_duration ?? '-' }}</p>
                   <p class="text-xs text-gray-400">{{ $mission->created_at ? $mission->created_at->format('d/m/Y') : '-' }}</p>
                 </div>
                 <div class="text-xl font-semibold text-gray-700">

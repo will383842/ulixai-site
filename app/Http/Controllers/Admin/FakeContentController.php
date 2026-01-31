@@ -421,7 +421,7 @@ if ($type === 'provider') {
             'budget_min'          => $request->input('budget_min', 10),
             'budget_max'          => $request->input('budget_max', 100),
             'budget_currency'     => $request->input('budget_currency', 'EUR'),
-            'service_durition'    => $request->input('service_durition', '1 week'),
+            'service_duration'    => $request->input('service_duration', '1 week'),
             'location_country'    => $request->input('location_country', 'France'),
             'location_city'       => $request->input('location_city', 'Paris'),
             'is_remote'           => $request->boolean('is_remote', false),
@@ -464,7 +464,7 @@ if ($type === 'provider') {
             $mission = Mission::where('is_fake', true)->findOrFail($id);
             $mission->update($request->only([
                 'title', 'description', 'budget_min', 'budget_max', 'budget_currency',
-                'service_durition', 'location_country', 'location_city', 'is_remote',
+                'service_duration', 'location_country', 'location_city', 'is_remote',
                 'language', 'urgency', 'status', 'payment_status'
             ]));
         }

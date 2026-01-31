@@ -54,7 +54,7 @@ class StartPaidMissions extends Command
 
         foreach ($allMissions as $mission) {
             $endTime = null;
-            switch ($mission->service_durition) {
+            switch ($mission->service_duration) {
                 case '1 week':
                     $endTime = \Carbon\Carbon::parse($mission->created_at)->addWeek();
                     break;

@@ -962,13 +962,13 @@
                     @php
                         $createdDate = \Carbon\Carbon::parse($mission->created_at);
                         
-                        if($mission->service_durition === '1 week') {
+                        if($mission->service_duration === '1 week') {
                             $endTime = $createdDate->copy()->addWeek();
-                        } elseif($mission->service_durition === '2 weeks') {
+                        } elseif($mission->service_duration === '2 weeks') {
                             $endTime = $createdDate->copy()->addWeeks(2);
-                        } elseif($mission->service_durition === '1 month') {
+                        } elseif($mission->service_duration === '1 month') {
                             $endTime = $createdDate->copy()->addMonth();
-                        } elseif($mission->service_durition === '3 months') {
+                        } elseif($mission->service_duration === '3 months') {
                             $endTime = $createdDate->copy()->addMonths(3);
                         } else {
                             $endTime = $createdDate->copy()->addWeek();
@@ -1251,7 +1251,7 @@
             const createdDate = new Date(mission.created_at);
             const endDate = new Date(createdDate);
             
-            switch(mission.service_durition) {
+            switch(mission.service_duration) {
                 case '1 week': endDate.setDate(endDate.getDate() + 7); break;
                 case '2 weeks': endDate.setDate(endDate.getDate() + 14); break;
                 case '1 month': endDate.setMonth(endDate.getMonth() + 1); break;

@@ -58,16 +58,29 @@ class ServiceRequestController extends Controller
 
     /**
      * Voir une demande de service spécifique
+     * ✅ Avec vérification d'autorisation
      */
     public function viewServiceRequest(Request $request)
     {
         $id = $request->query('id') ?? $request->route('id');
-        $mission = null;
-        
-        if ($id) {
-            $mission = Mission::find($id);
+
+        if (!$id) {
+            abort(404, 'Mission not found');
         }
-        
+
+        $mission = Mission::with(['requester', 'category', 'offers.provider'])->findOrFail($id);
+        $user = auth()->user();
+
+        // ✅ Vérification d'autorisation: requester, provider sélectionné, ou admin
+        $isRequester = $mission->requester_id === $user->id;
+        $isSelectedProvider = $user->serviceProvider && $mission->selected_provider_id === $user->serviceProvider->id;
+        $hasSubmittedOffer = $user->serviceProvider && $mission->offers->where('provider_id', $user->serviceProvider->id)->isNotEmpty();
+        $isAdmin = in_array($user->user_role, ['super_admin', 'admin', 'moderator']);
+
+        if (!$isRequester && !$isSelectedProvider && !$hasSubmittedOffer && !$isAdmin) {
+            abort(403, 'You are not authorized to view this mission.');
+        }
+
         return view('dashboard.service.view-request', compact('mission'));
     }
 

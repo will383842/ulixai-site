@@ -1265,7 +1265,7 @@
                         <div class="info-item">
                             <i class="fas fa-calendar info-icon" aria-hidden="true"></i>
                             <dt class="info-label">Deadline:</dt>
-                            <dd class="info-value">{{ $job->service_durition ?? '-' }}</dd>
+                            <dd class="info-value">{{ $job->service_duration ?? '-' }}</dd>
                         </div>
                     </dl>
                     
@@ -1339,7 +1339,7 @@
                         <div class="info-item">
                             <i class="fas fa-clock info-icon" aria-hidden="true"></i>
                             <dt class="info-label">Deadline:</dt>
-                            <dd class="info-value">{{ $offer->mission->service_durition ?? '-' }}</dd>
+                            <dd class="info-value">{{ $offer->mission->service_duration ?? '-' }}</dd>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-calendar-plus info-icon" aria-hidden="true"></i>
@@ -1443,7 +1443,7 @@
                         <div class="info-item">
                             <i class="fas fa-clock info-icon" aria-hidden="true"></i>
                             <dt class="info-label">Duration:</dt>
-                            <dd class="info-value">{{ $job->service_durition ?? '-' }}</dd>
+                            <dd class="info-value">{{ $job->service_duration ?? '-' }}</dd>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-map-marker-alt info-icon" aria-hidden="true"></i>
