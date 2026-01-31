@@ -2132,11 +2132,6 @@ body {
     }
   });
 
-  // Help Popup - Redirect to service request
-  function openHelpPopup() {
-    window.location.href = '{{ route("user.service.requests") }}';
-  }
-
   // Back to Top
   const backToTop = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
@@ -2450,6 +2445,12 @@ body {
 
 {{-- Floating Bug Report Button --}}
 @include('components.floating-bug-report')
+
+{{-- Category Selection Popup --}}
+@include('wizards.requester.steps.popup_request_help')
+
+{{-- Category Popups Script --}}
+<script src="{{ asset('js/modules/ui/category/category-popups.js') }}"></script>
 
 </body>
 </html>
