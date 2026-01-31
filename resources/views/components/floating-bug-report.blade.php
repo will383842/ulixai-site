@@ -114,12 +114,14 @@
   z-index: 9995;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: all 0.3s ease;
 }
 
 .fbr-overlay.active {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 /* ============================================
@@ -135,14 +137,18 @@
   border-radius: 1.5rem 1.5rem 0 0;
   z-index: 9996;
   transform: translateY(100%);
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, visibility 0.35s ease;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .fbr-modal.active {
   transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 
 /* Drag handle for mobile */
@@ -489,6 +495,8 @@
     right: auto;
     transform: translate(-50%, -50%) scale(0.9);
     opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
     width: 100%;
     max-width: 28rem;
     max-height: 85vh;
@@ -499,6 +507,8 @@
   .fbr-modal.active {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .fbr-drag-handle {
