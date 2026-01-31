@@ -241,13 +241,23 @@ class ContactDetector
      * Contextes légitimes où des numéros ne sont PAS des coordonnées
      */
     private array $legitimateContexts = [
-        '/(?:numéro|numero|n°|ref|référence|reference|commande|order|tracking|colis|code|facture|invoice|dossier|client)\s*(?::|est|is|de|#)?\s*[A-Z0-9]+/iu',
+        // Expressions composées avec numéro/référence de commande + nombre
+        '/(?:numéro|numero|n°)\s+de\s+(?:commande|colis|tracking|suivi|client|dossier|facture)\s*(?:est|is|:|\s)\s*[A-Z0-9\-]+/iu',
+        '/(?:référence|reference|ref)\s*(?:de\s+)?(?:commande|client|dossier|facture)?\s*(?:est|is|:|\s)\s*[A-Z0-9\-]+/iu',
+        '/(?:commande|order|tracking|colis)\s*(?:n°|numéro|numero|#|:)?\s*[A-Z0-9\-]+/iu',
+        // Codes simples (code, n°, ref suivi de alphanumérique)
+        '/(?:code|n°|ref)\s*(?::|est|is)?\s*[A-Z0-9\-]+/iu',
+        // Prix et devises
         '/\b(?:prix|price|coût|cout|cost|tarif|budget)\s*(?::|est|is|de)?\s*\d+/iu',
         '/\b\d+\s*(?:€|euros?|dollars?|\$|£|CHF)\b/iu',
         '/\b(?:€|euros?|dollars?|\$|£|CHF)\s*\d+/iu',
+        // Heures et dates
         '/\b\d{1,2}[h:]\d{2}\b/', // Heures (14h30, 14:30)
         '/\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b/', // Dates
-        '/\b(?:rue|avenue|boulevard|bd|allée|place|chemin)\s+[^,]+,?\s*\d{5}/iu', // Adresses avec code postal
+        // Adresses postales
+        '/\b(?:rue|avenue|boulevard|bd|allée|place|chemin)\s+[^,]+,?\s*\d{5}/iu',
+        // Quantités et mesures
+        '/\b\d+\s*(?:kg|g|km|m|cm|mm|l|ml|h|min|jours?|semaines?|mois|ans?)\b/iu',
     ];
 
     /**
@@ -340,9 +350,21 @@ class ContactDetector
     {
         $valueLower = mb_strtolower($value);
 
+        // Extraire les chiffres de la valeur pour comparaison
+        $valueDigits = preg_replace('/\D/', '', $value);
+
         foreach ($legitimateMatches as $legitMatch) {
+            // Vérification directe
             if (str_contains($legitMatch, $valueLower) || str_contains($valueLower, $legitMatch)) {
                 return true;
+            }
+
+            // Vérification par les chiffres extraits (cas numéro de commande)
+            if (!empty($valueDigits) && strlen($valueDigits) >= 5) {
+                $legitDigits = preg_replace('/\D/', '', $legitMatch);
+                if (!empty($legitDigits) && str_contains($legitDigits, $valueDigits)) {
+                    return true;
+                }
             }
         }
 
