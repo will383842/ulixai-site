@@ -2132,6 +2132,11 @@ body {
     }
   });
 
+  // Help Popup - Redirect to service request
+  function openHelpPopup() {
+    window.location.href = '{{ route("user.service.requests") }}';
+  }
+
   // Back to Top
   const backToTop = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
