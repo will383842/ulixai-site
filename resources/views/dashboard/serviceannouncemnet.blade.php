@@ -156,6 +156,9 @@
   </div>
   <div class = "pb-12"></div>
 @include('dashboard.bottomnavbar')
+{{-- Floating Bug Report Button --}}
+@include('components.floating-bug-report')
+
 </body>
 </html>
   

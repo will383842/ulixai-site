@@ -1454,5 +1454,8 @@ body{
 
 @include('includes.footer')
 
+{{-- Floating Bug Report Button --}}
+@include('components.floating-bug-report')
+
 </body>
 </html>

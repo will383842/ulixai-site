@@ -71,4 +71,4 @@ faces/
 # ============================================
 storage/app/google/vision-credentials.json
 storage/app/documents/
-storage/app/profile-photos/
+storage/app/profile-photos/nul

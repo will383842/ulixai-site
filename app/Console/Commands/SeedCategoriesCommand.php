@@ -13,9 +13,11 @@ class SeedCategoriesCommand extends Command
     public function handle()
     {
         $this->info('Starting categories seeding...');
-        
-        // Clear existing categories
+
+        // Disable foreign key checks and clear existing categories
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
         
         $categories = $this->getCategoriesData();
         

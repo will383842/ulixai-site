@@ -61,5 +61,8 @@
     </div>
   </div>
 <?php include('bottomnavbar.php'); ?>
+{{-- Floating Bug Report Button --}}
+@include('components.floating-bug-report')
+
 </body>
 </html>

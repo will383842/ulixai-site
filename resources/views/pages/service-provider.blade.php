@@ -1437,5 +1437,8 @@ console.log('✅ Page-specific JS loaded (become-service-provider)');
 {{-- ❌ PAS DE openSignupPopup() ni closeSignupPopup() ici --}}
 {{-- ✅ Ces fonctions sont gérées par wizard-core.js --}}
 
+{{-- Floating Bug Report Button --}}
+@include('components.floating-bug-report')
+
 </body>
 </html>

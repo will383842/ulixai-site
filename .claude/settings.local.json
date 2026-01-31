@@ -80,7 +80,14 @@
       "Bash(git stash:*)",
       "WebSearch",
       "Bash(del:*)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(for commit in bc7dae6 695751d 22eb0c1 f156019)",
+      "Bash(for commit in c59ddd0 4d8ccc5 d3748e9 50617db)",
+      "Bash(python:*)",
+      "Bash(for:*)",
+      "Bash(do sed -i 's|</body>|{{-- Floating Bug Report Button --}}\\\\n@include\\(''''components.floating-bug-report''''\\)\\\\n\\\\n</body>|' \"$f\")",
+      "Bash(echo:*)",
+      "Bash(cmd /c \"del /f nul\")"
     ]
   }
 }

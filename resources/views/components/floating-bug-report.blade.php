@@ -25,30 +25,33 @@
    FLOATING BUG REPORT - MOBILE FIRST
    ============================================ */
 
-/* Floating Button */
+/* Floating Button - Mobile (FAB only) */
 .fbr-btn {
   position: fixed;
-  bottom: 1.25rem;
-  right: 1.25rem;
-  width: 3.25rem;
-  height: 3.25rem;
+  bottom: 5rem;
+  right: 1rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   border: none;
   cursor: pointer;
   z-index: 9990;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px -4px rgba(59, 130, 246, 0.5);
+  gap: 0.5rem;
+  padding: 0;
+  box-shadow: 0 4px 20px -4px rgba(220, 38, 38, 0.5);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-tap-highlight-color: transparent;
   outline: none;
 }
 
 .fbr-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 30px -4px rgba(59, 130, 246, 0.6);
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px -4px rgba(220, 38, 38, 0.6);
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
 }
 
 .fbr-btn:active {
@@ -56,17 +59,17 @@
 }
 
 .fbr-btn:focus-visible {
-  outline: 3px solid #3b82f6;
+  outline: 3px solid #dc2626;
   outline-offset: 3px;
 }
 
-/* Pulse ring */
+/* Pulse ring - Mobile circle */
 .fbr-btn::before {
   content: '';
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 2px solid rgba(59, 130, 246, 0.4);
+  border: 2px solid rgba(220, 38, 38, 0.4);
   animation: fbr-pulse 2.5s ease-out infinite;
 }
 
@@ -75,44 +78,21 @@
   100% { transform: scale(1.4); opacity: 0; }
 }
 
+/* Icon SVG */
 .fbr-btn-icon {
-  font-size: 1.5rem;
+  width: 1.375rem;
+  height: 1.375rem;
   color: white;
-  line-height: 1;
+  flex-shrink: 0;
 }
 
-/* Tooltip */
-.fbr-tooltip {
-  position: absolute;
-  right: calc(100% + 0.75rem);
-  top: 50%;
-  transform: translateY(-50%);
-  background: #1f2937;
+/* Text label - hidden on mobile */
+.fbr-btn-text {
+  display: none;
   color: white;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
   white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.2s ease;
-  pointer-events: none;
-}
-
-.fbr-tooltip::after {
-  content: '';
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 6px solid transparent;
-  border-left-color: #1f2937;
-}
-
-.fbr-btn:hover .fbr-tooltip {
-  opacity: 1;
-  visibility: visible;
 }
 
 /* Hide button when modal is open */
@@ -474,18 +454,31 @@
 }
 
 /* ============================================
-   TABLET & DESKTOP - Centered Modal
+   TABLET & DESKTOP - Pill Button with Text
    ============================================ */
 @media (min-width: 640px) {
   .fbr-btn {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: auto;
+    height: auto;
+    border-radius: 9999px;
+    padding: 0.75rem 1.25rem;
     bottom: 1.5rem;
     right: 1.5rem;
   }
 
+  /* Pill shape pulse ring */
+  .fbr-btn::before {
+    border-radius: 9999px;
+  }
+
   .fbr-btn-icon {
-    font-size: 1.625rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  /* Show text on desktop */
+  .fbr-btn-text {
+    display: inline;
   }
 
   .fbr-modal {
@@ -546,8 +539,18 @@
    ============================================ */
 @media (min-width: 1024px) {
   .fbr-btn {
-    bottom: 2rem;
-    right: 2rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.875rem 1.5rem;
+  }
+
+  .fbr-btn-icon {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
+  .fbr-btn-text {
+    font-size: 0.9375rem;
   }
 
   .fbr-modal {
@@ -577,7 +580,7 @@
    ============================================ */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .fbr-btn {
-    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    bottom: calc(5rem + env(safe-area-inset-bottom));
   }
 
   .fbr-body {
@@ -648,8 +651,13 @@
   aria-haspopup="dialog"
   aria-expanded="false"
 >
-  <span class="fbr-btn-icon" aria-hidden="true">?</span>
-  <span class="fbr-tooltip">{{ __('Report a problem') }}</span>
+  {{-- MessageSquarePlus Icon (Lucide) --}}
+  <svg class="fbr-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    <line x1="12" y1="8" x2="12" y2="14"/>
+    <line x1="9" y1="11" x2="15" y2="11"/>
+  </svg>
+  <span class="fbr-btn-text">{{ __('Un problème ?') }}</span>
 </button>
 
 <!-- ============================================
@@ -674,7 +682,11 @@
   <!-- Header -->
   <header class="fbr-header">
     <h2 id="fbrTitle" class="fbr-title">
-      <span class="fbr-title-icon" aria-hidden="true">?</span>
+      <svg class="fbr-title-icon" style="width: 1.25rem; height: 1.25rem; color: #dc2626;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        <line x1="12" y1="8" x2="12" y2="14"/>
+        <line x1="9" y1="11" x2="15" y2="11"/>
+      </svg>
       <span>{{ __('How can we help?') }}</span>
     </h2>
     <button

@@ -447,5 +447,8 @@ document.querySelectorAll('.faq-question').forEach(q=>{q.addEventListener('keypr
 console.log('✅ Trust & Security - Fully Optimized');
 </script>
 
+{{-- Floating Bug Report Button --}}
+@include('components.floating-bug-report')
+
 </body>
 </html>

@@ -661,5 +661,8 @@
     function toggleFAQ(e){const t=e.nextElementSibling,n=t.classList.contains("active");document.querySelectorAll(".faq-content").forEach(e=>e.classList.remove("active")),document.querySelectorAll(".faq-toggle").forEach(e=>{e.classList.remove("active"),e.setAttribute("aria-expanded","false")}),n||(t.classList.add("active"),e.classList.add("active"),e.setAttribute("aria-expanded","true"))}
   </script>
 
+{{-- Floating Bug Report Button --}}
+@include('components.floating-bug-report')
+
 </body>
 </html>

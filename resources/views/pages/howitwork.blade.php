@@ -320,5 +320,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor=>{anchor.addEventListen
 console.log('✅ How It Works page optimized');
 </script>
 
+{{-- Floating Bug Report Button --}}
+@include('components.floating-bug-report')
+
 </body>
 </html>
