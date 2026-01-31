@@ -2449,8 +2449,5 @@ body {
 {{-- Category Selection Popup --}}
 @include('wizards.requester.steps.popup_request_help')
 
-{{-- Category Popups Script --}}
-<script src="{{ asset('js/modules/ui/category/category-popups.js') }}"></script>
-
 </body>
 </html>
