@@ -150,7 +150,7 @@
             <div class="flex flex-wrap items-center justify-between">
                 <div class="flex flex-wrap gap-2 mb-4 lg:mb-0" id="activeFilters"></div>
                 <div class="badge-primary">
-                    <span id="providerCount">125</span> prestataires trouvés
+                    <span id="providerCount">{{ isset($providers) ? (is_countable($providers) ? count($providers) : $providers->count()) : 0 }}</span> {{ __('prestataires trouvés') }}
                 </div>
             </div>
         </div>

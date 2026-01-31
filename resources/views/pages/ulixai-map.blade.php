@@ -152,8 +152,8 @@
                             <input type="hidden" id="fetch_providers" name="providers" value="" class="bg-transparent border-none outline-none text-green-200" readonly>
                             <button type="submit" 
                                 class="flex items-center gap-2 bg-green-500/20 text-green-200 px-4 py-2 rounded-full border border-green-400/30 cursor-pointer hover:bg-green-500/30 transition">
-                                <span id="providerCount">125</span>
-                                <span>Providers found</span>
+                                <span id="providerCount">{{ isset($providers) ? $providers->count() : 0 }}</span>
+                                <span>{{ __('Providers found') }}</span>
                             </button>
                         </form>
                     </div>
