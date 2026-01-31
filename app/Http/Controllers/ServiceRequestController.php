@@ -136,11 +136,11 @@ class ServiceRequestController extends Controller
             }
         }
 
+        // Note: On garde first_name pour l'UX (saluer l'utilisateur) mais on retire user_id
         return response()->json([
             'exists' => true,
             'has_valid_cookie' => $hasValidCookie,
-            'first_name' => $user->name,
-            'user_id' => $user->id
+            'first_name' => $user->name
         ]);
     }
 

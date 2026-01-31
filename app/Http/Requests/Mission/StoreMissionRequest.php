@@ -37,8 +37,8 @@ class StoreMissionRequest extends FormRequest
             'spoken_languages' => 'nullable|array',
             'spoken_languages.*' => 'string|max:100',
             'urgency' => 'nullable|in:low,medium,high,urgent',
-            'attachments' => 'nullable|array',
-            'attachments.*' => 'file|max:10240', // 10MB max per file
+            'attachments' => 'nullable|array|max:5',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,xls,xlsx,txt|max:10240', // 10MB max per file, safe types only
             'terms_accepted' => 'required|accepted',
         ];
     }

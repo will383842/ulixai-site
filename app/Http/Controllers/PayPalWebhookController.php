@@ -6,9 +6,14 @@ use App\Models\Mission;
 use App\Models\MissionOffer;
 use App\Models\Transaction;
 use App\Models\UlixCommission;
+use App\Models\User;
+use App\Notifications\PaymentFailedNotification;
+use App\Notifications\PayoutFailedAdminNotification;
+use App\Notifications\PayPalDisputeNotification;
 use App\Services\AuditLogService;
 use App\Services\CurrencyService;
 use App\Services\Gateways\PayPalGateway;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -296,14 +301,55 @@ class PayPalWebhookController extends Controller
     private function handleCaptureFailed(array $resource, string $eventId): void
     {
         $captureId = $resource['id'] ?? null;
+        $status = $resource['status'] ?? 'UNKNOWN';
 
         Log::warning('PayPal capture failed', [
             'capture_id' => $captureId,
             'event_id' => $eventId,
-            'status' => $resource['status'] ?? 'UNKNOWN',
+            'status' => $status,
         ]);
 
-        // TODO: Notifier l'utilisateur de l'échec du paiement
+        // Récupérer les métadonnées pour trouver la mission et l'utilisateur
+        $customId = $resource['custom_id'] ?? null;
+        $metadata = $customId ? json_decode($customId, true) : null;
+
+        if ($metadata && isset($metadata['mission_id'])) {
+            $mission = Mission::with('requester')->find($metadata['mission_id']);
+
+            if ($mission && $mission->requester) {
+                try {
+                    $reason = $this->getPaymentFailureReason($status);
+                    NotificationService::send(
+                        $mission->requester,
+                        new PaymentFailedNotification($mission, $reason, $captureId),
+                        NotificationService::TYPE_PAYMENT
+                    );
+
+                    Log::info('PayPal capture failed: user notified', [
+                        'user_id' => $mission->requester->id,
+                        'mission_id' => $mission->id,
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('PayPal capture failed: unable to notify user', [
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Traduit le statut PayPal en raison lisible.
+     */
+    private function getPaymentFailureReason(string $status): string
+    {
+        return match ($status) {
+            'DENIED' => 'Payment was denied by PayPal',
+            'DECLINED' => 'Payment was declined by your bank',
+            'PENDING' => 'Payment is pending verification',
+            'FAILED' => 'Payment processing failed',
+            default => 'Payment could not be completed',
+        };
     }
 
     /**
@@ -348,10 +394,12 @@ class PayPalWebhookController extends Controller
     private function handlePayoutFailed(array $resource, string $eventId): void
     {
         $batchId = $resource['batch_header']['payout_batch_id'] ?? null;
+        $errorMessage = $resource['batch_header']['errors'][0]['message'] ?? 'Unknown error';
 
         Log::error('PayPal payout batch failed', [
             'batch_id' => $batchId,
             'event_id' => $eventId,
+            'error' => $errorMessage,
         ]);
 
         // Marquer la transaction avec la raison du blocage
@@ -359,7 +407,7 @@ class PayPalWebhookController extends Controller
 
         if ($transaction) {
             $transaction->update([
-                'release_blocked_reason' => 'PayPal payout failed',
+                'release_blocked_reason' => 'PayPal payout failed: ' . $errorMessage,
             ]);
 
             Log::warning('PayPal payout: transaction blocked', [
@@ -368,7 +416,35 @@ class PayPalWebhookController extends Controller
             ]);
         }
 
-        // TODO: Alerter l'admin du payout échoué
+        // Alerter tous les super admins
+        $this->notifyAdminsOfPayoutFailure($transaction, $batchId, $errorMessage);
+    }
+
+    /**
+     * Notifie les admins d'un échec de payout.
+     */
+    private function notifyAdminsOfPayoutFailure(?Transaction $transaction, string $batchId, string $reason): void
+    {
+        try {
+            $admins = User::whereIn('user_role', ['super_admin', 'admin'])->get();
+
+            foreach ($admins as $admin) {
+                NotificationService::send(
+                    $admin,
+                    new PayoutFailedAdminNotification($transaction, $batchId, $reason),
+                    NotificationService::TYPE_PAYMENT
+                );
+            }
+
+            Log::info('PayPal payout failed: admins notified', [
+                'admin_count' => $admins->count(),
+                'batch_id' => $batchId,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('PayPal payout failed: unable to notify admins', [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -413,11 +489,81 @@ class PayPalWebhookController extends Controller
                         'mission_id' => $transaction->mission_id,
                         'dispute_id' => $disputeId,
                     ]);
+
+                    // Notifier les parties concernées
+                    $this->notifyDisputeParties($mission, $disputeId, $disputeAmount);
                 }
             }
         }
 
-        // TODO: Notifier l'admin et les parties concernées
+        // Notifier les admins dans tous les cas
+        $this->notifyAdminsOfDispute(null, $disputeId, $disputeAmount);
+    }
+
+    /**
+     * Notifie les parties concernées d'un litige.
+     */
+    private function notifyDisputeParties(?Mission $mission, string $disputeId, ?float $amount): void
+    {
+        if (!$mission) {
+            return;
+        }
+
+        try {
+            // Notifier le client (requester)
+            if ($mission->requester) {
+                NotificationService::send(
+                    $mission->requester,
+                    new PayPalDisputeNotification($mission, $disputeId, $amount, false),
+                    NotificationService::TYPE_DISPUTE
+                );
+            }
+
+            // Notifier le prestataire
+            if ($mission->selectedProvider && $mission->selectedProvider->user) {
+                NotificationService::send(
+                    $mission->selectedProvider->user,
+                    new PayPalDisputeNotification($mission, $disputeId, $amount, false),
+                    NotificationService::TYPE_DISPUTE
+                );
+            }
+
+            Log::info('PayPal dispute: parties notified', [
+                'mission_id' => $mission->id,
+                'dispute_id' => $disputeId,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('PayPal dispute: unable to notify parties', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Notifie les admins d'un nouveau litige.
+     */
+    private function notifyAdminsOfDispute(?Mission $mission, string $disputeId, ?float $amount): void
+    {
+        try {
+            $admins = User::whereIn('user_role', ['super_admin', 'admin'])->get();
+
+            foreach ($admins as $admin) {
+                NotificationService::send(
+                    $admin,
+                    new PayPalDisputeNotification($mission, $disputeId, $amount, true),
+                    NotificationService::TYPE_DISPUTE
+                );
+            }
+
+            Log::info('PayPal dispute: admins notified', [
+                'admin_count' => $admins->count(),
+                'dispute_id' => $disputeId,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('PayPal dispute: unable to notify admins', [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -434,6 +580,87 @@ class PayPalWebhookController extends Controller
             'event_id' => $eventId,
         ]);
 
-        // TODO: Traiter selon l'outcome (RESOLVED_BUYER_FAVOR, RESOLVED_SELLER_FAVOR, etc.)
+        // Trouver la transaction associée
+        $transaction = Transaction::where('release_blocked_reason', 'LIKE', "%{$disputeId}%")->first();
+
+        if (!$transaction) {
+            Log::warning('PayPal dispute resolved: no transaction found', [
+                'dispute_id' => $disputeId,
+            ]);
+            return;
+        }
+
+        $mission = $transaction->mission;
+
+        // Traiter selon l'outcome
+        switch ($outcome) {
+            case 'RESOLVED_SELLER_FAVOR':
+                // Le vendeur gagne - libérer les fonds
+                $transaction->update([
+                    'status' => 'paid',
+                    'release_blocked_reason' => null,
+                ]);
+
+                if ($mission) {
+                    $mission->update([
+                        'status' => 'completed',
+                        'payment_status' => 'paid',
+                    ]);
+                }
+
+                Log::info('PayPal dispute resolved in seller favor', [
+                    'transaction_id' => $transaction->id,
+                    'dispute_id' => $disputeId,
+                ]);
+                break;
+
+            case 'RESOLVED_BUYER_FAVOR':
+                // L'acheteur gagne - marquer comme remboursé
+                $transaction->update([
+                    'status' => 'refunded',
+                    'release_blocked_reason' => 'Dispute resolved in buyer favor',
+                    'refunded_at' => now(),
+                ]);
+
+                if ($mission) {
+                    $mission->update([
+                        'status' => 'cancelled',
+                        'payment_status' => 'refunded',
+                    ]);
+                }
+
+                Log::info('PayPal dispute resolved in buyer favor', [
+                    'transaction_id' => $transaction->id,
+                    'dispute_id' => $disputeId,
+                ]);
+                break;
+
+            case 'CANCELED_BY_BUYER':
+            case 'RESOLVED_WITH_PAYOUT':
+                // Litige annulé ou résolu avec paiement partiel
+                $transaction->update([
+                    'release_blocked_reason' => null,
+                ]);
+
+                if ($mission) {
+                    $mission->update([
+                        'status' => $mission->getOriginal('status') === 'disputed' ? 'completed' : $mission->status,
+                        'payment_status' => 'paid',
+                    ]);
+                }
+
+                Log::info('PayPal dispute canceled or resolved with payout', [
+                    'transaction_id' => $transaction->id,
+                    'dispute_id' => $disputeId,
+                    'outcome' => $outcome,
+                ]);
+                break;
+
+            default:
+                Log::warning('PayPal dispute resolved with unknown outcome', [
+                    'outcome' => $outcome,
+                    'dispute_id' => $disputeId,
+                ]);
+        }
     }
 }

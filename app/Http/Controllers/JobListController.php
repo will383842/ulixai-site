@@ -360,8 +360,10 @@ class JobListController extends Controller
 
     public function archive(Request $request, User $user)
     {
-        // Optional: block access to other users' archives unless admin
-        if ($user->id !== auth()->id() && !optional(auth()->user())->is_admin) {
+        // Block access to other users' archives unless admin
+        $currentUser = auth()->user();
+        $isAdmin = $currentUser && in_array($currentUser->user_role, ['super_admin', 'admin', 'moderator']);
+        if ($user->id !== auth()->id() && !$isAdmin) {
             abort(403);
         }
 

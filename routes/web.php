@@ -278,6 +278,9 @@ Route::post('/signup/register', [RegisterController::class, 'signupRegister'])
 Route::get('/legal-notice', function () {
     return view('pages.legal-notice');
 });
+Route::get('/privacy-policy', function () {
+    return view('pages.privacy-policy');
+})->name('privacy.policy');
 Route::get('/aboutUS', function () {
     return view('pages.aboutus');
 });
@@ -289,8 +292,11 @@ Route::get('/inviteFriend', function () {
 // 🔐 ROUTES AUTHENTIFIÉES
 // ═══════════════════════════════════════════════════════════
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth:admin'])->group(function () {
     Route::post('/restore-admin', [AdminDashboardController::class, 'restoreAdmin'])->name('restore-admin');
+});
+
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/service-request', [ServiceRequestController::class, 'index'])->name('user.service.requests');

@@ -55,37 +55,35 @@ XML;
     public function buildProviders(): string
     {
         return Cache::remember('sitemap.providers', 3600, function () {
-            $candidates = [
-                ['table' => 'service_providers', 'slug' => 'slug', 'updated' => 'updated_at', 'public' => 'is_public'],
-                ['table' => 'providers',         'slug' => 'slug', 'updated' => 'updated_at', 'public' => 'is_public'],
-            ];
+            $table = 'service_providers';
 
-            $src = null;
-            foreach ($candidates as $c) {
-                if (Schema::hasTable($c['table']) && Schema::hasColumn($c['table'], $c['slug'])) {
-                    $src = $c; break;
-                }
-            }
-
-            if (!$src) {
+            if (!Schema::hasTable($table) || !Schema::hasColumn($table, 'slug')) {
                 return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"></urlset>";
             }
 
-            $q = DB::table($src['table'])->select([$src['slug'], $src['updated']]);
+            $q = DB::table($table)->select(['slug', 'updated_at']);
 
-            if (!empty($src['public']) && Schema::hasColumn($src['table'], $src['public'])) {
-                $q->where($src['public'], 1);
+            // Filtrer les prestataires visibles et actifs
+            if (Schema::hasColumn($table, 'provider_visibility')) {
+                $q->where('provider_visibility', 1);
             }
-            if (Schema::hasColumn($src['table'], 'id')) {
-                $q->orderBy('id');
+            if (Schema::hasColumn($table, 'is_active')) {
+                $q->where('is_active', 1);
             }
+            // Exclure les soft deleted
+            if (Schema::hasColumn($table, 'deleted_at')) {
+                $q->whereNull('deleted_at');
+            }
+            // Exclure les slugs vides
+            $q->whereNotNull('slug')->where('slug', '!=', '');
+
+            $q->orderBy('id');
 
             $body = '';
-            $q->chunk(1000, function ($rows) use (&$body, $src) {
+            $q->chunk(1000, function ($rows) use (&$body) {
                 foreach ($rows as $r) {
-                    $slug    = $r->{$src['slug']} ?? null;
-                    $updated = $r->{$src['updated']} ?? null;
-                    if (!$slug) continue;
+                    $slug = $r->slug;
+                    $updated = $r->updated_at;
 
                     $loc = htmlspecialchars(url('/provider/'.$slug), ENT_XML1);
                     $lastmod = $updated ? Carbon::parse($updated)->toAtomString() : now()->toAtomString();

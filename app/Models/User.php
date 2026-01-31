@@ -51,6 +51,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'bank_account_iban',
+        'bank_swift_bic',
+        'bank_account_holder',
+        'email_otp',
     ];
 
     protected $casts = [

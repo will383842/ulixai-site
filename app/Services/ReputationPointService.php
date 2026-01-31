@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Log;
 
 class ReputationPointService
 {
+ /**
+  * Met à jour les points de réputation pour une mission complétée (avec avis)
+  */
  public function updateReputationPointsBasedOnMissionCompletedWithReviews($provider)
  {
      try {
@@ -21,6 +24,32 @@ class ReputationPointService
      }
  }
 
+ /**
+  * Met à jour les points de réputation pour une mission complétée (sans avis)
+  * Utilisé par MissionService::handleMissionCompleted()
+  */
+ public function updateReputationPointsBasedOnCompletedMission($provider)
+ {
+     try {
+        $reputationPoint = ReputationPoint::first();
+        if (!$reputationPoint) {
+            Log::warning("No ReputationPoint config found for provider ID: {$provider->id}");
+            return;
+        }
+
+        // Utiliser mission_with_review comme points de base pour mission complétée
+        // (ou créer une colonne séparée si besoin de différenciation)
+        $points = $reputationPoint->mission_with_review ?? 0;
+
+        if ($points > 0) {
+            $provider->increment('points', $points);
+            $this->updateUlysseStatus($provider);
+        }
+     } catch (\Exception $e) {
+         Log::error("Failed to update reputation points for completed mission, provider ID: {$provider->id}. Error: {$e->getMessage()}");
+     }
+ }
+
  public function updateReputationBasedOnUserReviews($provider, $rating) {
     try {
         $reputationPoint = ReputationPoint::first();
@@ -29,7 +58,7 @@ class ReputationPointService
             //  $provider->update(['points' => $provider->points + $reputationPoint->five_star_review]);
         }
        
-        if($rating > 4 && $rating < 5 ) {
+        if($rating >= 4 && $rating < 5 ) {
             $provider->increment('points', $reputationPoint->four_star_review);
             //  $provider->update(['points' => $provider->points + $reputationPoint->four_star_review]);
         }

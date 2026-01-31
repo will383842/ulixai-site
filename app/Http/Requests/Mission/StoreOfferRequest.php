@@ -23,7 +23,7 @@ class StoreOfferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'price' => 'required|numeric|min:1|max:1000000',
+            'price' => 'required|numeric|min:10|max:1000000', // Min 10€ pour couvrir les frais de service
             'delivery_time' => 'required|string|max:50',
             'message' => 'required|string|min:10|max:1000',
         ];
@@ -37,7 +37,7 @@ class StoreOfferRequest extends FormRequest
         return [
             'price.required' => 'Please specify your price for this service.',
             'price.numeric' => 'Price must be a valid number.',
-            'price.min' => 'Price must be at least 1.',
+            'price.min' => 'Price must be at least 10€ to cover service fees.',
             'price.max' => 'Price cannot exceed 1,000,000.',
             'delivery_time.required' => 'Please specify your estimated delivery time.',
             'delivery_time.max' => 'Delivery time description is too long.',

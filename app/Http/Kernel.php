@@ -14,8 +14,9 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
-        // \App\Http\Middleware\TrustHosts::class,
+        \App\Http\Middleware\TrustHosts::class, // Activé: protection contre host header injection
         \App\Http\Middleware\TrustProxies::class,
+        \App\Http\Middleware\SecurityHeaders::class, // Headers de sécurité (HSTS, X-Frame-Options, etc.)
         \App\Http\Middleware\ForceHttps::class, // Force HTTPS en production
         \App\Http\Middleware\LegacyRedirects::class, // Redirections 301 depuis l'ancien site WordPress
         \Illuminate\Http\Middleware\HandleCors::class, // Laravel native CORS (replaces Fruitcake)
