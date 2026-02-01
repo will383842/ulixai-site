@@ -291,10 +291,6 @@
                             <img src="{{ asset('images/paypal.png') }}" alt="PayPal" width="50" height="30" loading="lazy" class="w-full h-auto object-contain">
                         </div>
                     </div>
-                    <!-- Touch-friendly button -->
-                    <a href="/reportbug" class="inline-flex mt-3 bg-gradient-to-r from-orange-400 to-pink-500 text-white font-semibold py-2 px-3 rounded-lg text-xs shadow-sm hover:shadow-md transition-shadow min-h-[36px] items-center">
-                        <i class="fas fa-bug mr-1" aria-hidden="true"></i>Report Bug
-                    </a>
                 </div>
 
                 <!-- 2 Platforms, 4 Missions -->
