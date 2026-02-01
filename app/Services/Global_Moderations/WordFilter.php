@@ -117,15 +117,30 @@ class WordFilter
         $baseScore = $this->getBaseScore($word->severity);
         $contextMultiplier = 1.0;
 
-        // Un mot SEUL = score réduit (peut être légitime)
+        // Catégories strictes = pas de réduction pour mot seul
+        $strictCategories = ['sexual', 'illegal', 'hate_speech'];
+        $moderateCategories = ['political', 'religious', 'spam'];
+        $isStrictCategory = in_array($word->category, $strictCategories);
+        $isModerateCategory = in_array($word->category, $moderateCategories);
+
+        // Un mot SEUL = score selon catégorie
         if (count($allFoundWords) === 1) {
-            $contextMultiplier = 0.3; // 30% du score seulement
             $result->setContextFlag('single_word_match', true);
+            if ($isStrictCategory) {
+                // Catégories strictes : pas de réduction
+                $contextMultiplier = 1.0;
+            } elseif ($isModerateCategory) {
+                // Catégories modérées : légère réduction
+                $contextMultiplier = 0.8;
+            } else {
+                // Autres catégories : réduction standard
+                $contextMultiplier = 0.5;
+            }
         }
 
-        // Contexte légitime détecté = score très réduit
+        // Contexte légitime détecté = score réduit (mais moins pour catégories strictes)
         if ($result->hasContextFlag('legitimate_context')) {
-            $contextMultiplier *= 0.2; // 20% supplémentaire
+            $contextMultiplier *= $isStrictCategory ? 0.5 : 0.2;
         }
 
         // Plusieurs mots de la même catégorie = plus suspect
@@ -150,14 +165,15 @@ class WordFilter
 
     /**
      * Score de base par sévérité
+     * Ajusté pour que même un mot seul atteigne le seuil REVIEW (40)
      */
     private function getBaseScore(string $severity): int
     {
         return match ($severity) {
-            'critical' => 40,
-            'warning' => 15,
-            'info' => 5,
-            default => 10,
+            'critical' => 80,   // Bloque directement si trouvé
+            'warning' => 50,    // REVIEW même pour mot seul (50 * 0.8 = 40)
+            'info' => 15,
+            default => 20,
         };
     }
 

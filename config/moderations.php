@@ -100,7 +100,7 @@ return [
         'contact_phone' => 50,      // Était 70
         'contact_email' => 50,      // Était 70
         'contact_messaging' => 45,  // NOUVEAU: WhatsApp, Telegram, etc.
-        'contact_request' => 35,    // NOUVEAU: "contactez-moi en DM"
+        'contact_request' => 40,    // NOUVEAU: "contactez-moi en DM"
         'contact_social' => 30,     // Était 60
         'contact_url' => 25,        // Était 50
 

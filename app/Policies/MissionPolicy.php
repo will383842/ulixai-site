@@ -12,10 +12,14 @@ class MissionPolicy
 
     /**
      * Determine whether the user can view any models.
+     *
+     * SECURITY: Only active, non-banned users can browse missions.
+     * This prevents suspended/banned users from accessing the platform.
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        // User must have an active account status
+        return $user->status === 'active';
     }
 
     /**

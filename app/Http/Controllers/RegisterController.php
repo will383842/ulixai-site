@@ -27,17 +27,18 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         // ═══════════════════════════════════════════════════════════
-        // 🔐 VALIDATION DU PASSWORD (COORDONNÉE AVEC LE FRONTEND)
+        // 🔐 VALIDATION DU PASSWORD
+        // Min 6 caractères, majuscule, chiffre
         // ═══════════════════════════════════════════════════════════
         $validated = $request->validate([
             'password' => [
                 'required',
                 'string',
                 'min:6',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
+                'regex:/[A-Z]/',             // At least one uppercase
+                'regex:/[0-9]/',             // At least one digit
             ],
-            'email' => 'required|email',
+            'email' => 'required|email|max:255',
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
         ], [
@@ -242,15 +243,16 @@ class RegisterController extends Controller
             $affiliateCode = $request->input('affiliate_code');
             $referrer = User::where('affiliate_code', $affiliateCode)->first();
             
+            // 🔐 VALIDATION DU PASSWORD
             $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|email|max:255|unique:users,email',
                 'password' => [
                     'required',
                     'string',
                     'min:6',
-                    'regex:/[A-Z]/',
-                    'regex:/[0-9]/',
+                    'regex:/[A-Z]/',             // At least one uppercase
+                    'regex:/[0-9]/',             // At least one digit
                 ],
                 'gender' => 'nullable|in:Male,Female'
             ], [
@@ -352,13 +354,13 @@ class RegisterController extends Controller
 
     // ═══════════════════════════════════════════════════════════
     // ✅ VÉRIFIER OTP AU STEP 15 + AUTO-LOGIN
-    // L'utilisateur reste dans le wizard après validation
+    // 🔐 SECURITY: Limited attempts to prevent brute-force
     // ═══════════════════════════════════════════════════════════
     public function verifyEmailOtp(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'otp' => 'required|string|size:6'
+            'email' => 'required|email|max:255',
+            'otp' => 'required|string|size:6|regex:/^[0-9]+$/' // Only digits
         ]);
 
         // ✅ SECURITY: Find by email only, then verify hashed OTP
@@ -366,38 +368,86 @@ class RegisterController extends Controller
             ->where('is_verified', false)
             ->first();
 
-        if (!$verification || !Hash::check($request->otp, $verification->otp)) {
+        if (!$verification) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Invalid or expired code.'
+                'message' => 'No pending verification found. Please request a new code.'
             ], 422);
         }
 
-        // Vérifier expiration (10 minutes)
-        if ($verification->created_at->addMinutes(10)->isPast()) {
+        // ═══════════════════════════════════════════════════════════
+        // 🔐 SECURITY: Check if account is locked due to too many attempts
+        // ═══════════════════════════════════════════════════════════
+        if ($verification->isLocked()) {
+            $remainingMinutes = ceil($verification->getLockoutRemainingSeconds() / 60);
+            return response()->json([
+                'status' => 'error',
+                'message' => "Too many failed attempts. Please try again in {$remainingMinutes} minutes.",
+                'locked_until' => $verification->locked_until->toIso8601String(),
+            ], 429);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 🔐 SECURITY: Check OTP expiration
+        // ═══════════════════════════════════════════════════════════
+        if ($verification->isExpired()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Code expired. Please request a new one.'
             ], 422);
         }
 
-        // Marquer comme vérifié
+        // ═══════════════════════════════════════════════════════════
+        // 🔐 SECURITY: Verify OTP hash - increment attempts on failure
+        // ═══════════════════════════════════════════════════════════
+        if (!Hash::check($request->otp, $verification->otp)) {
+            $isNowLocked = $verification->incrementAttempts();
+            $remainingAttempts = $verification->getRemainingAttempts();
+
+            if ($isNowLocked) {
+                \Log::warning('OTP verification locked due to too many attempts', [
+                    'email' => $request->email,
+                    'ip' => $request->ip(),
+                    'attempts' => $verification->attempts,
+                ]);
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Too many failed attempts. Your verification has been locked for ' . EmailVerification::LOCKOUT_MINUTES . ' minutes.',
+                ], 429);
+            }
+
+            return response()->json([
+                'status' => 'error',
+                'message' => "Invalid code. {$remainingAttempts} attempts remaining.",
+                'remaining_attempts' => $remainingAttempts,
+            ], 422);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // ✅ SUCCESS: Mark as verified and reset attempts
+        // ═══════════════════════════════════════════════════════════
         $verification->is_verified = true;
         $verification->verified_at = now();
-        $verification->save();
-        
+        $verification->resetAttempts();
+
         // Mettre à jour le user
         $user = $verification->user;
         if ($user && !$user->email_verified_at) {
             $user->email_verified_at = now();
             $user->save();
         }
-        
+
         // ✅ AUTO-LOGIN ICI - Le user reste dans le wizard
         Auth::login($user, true);
         $request->session()->regenerate();
         $user->update(['last_login_at' => now()]);
-        
+
+        \Log::info('OTP verification successful', [
+            'email' => $request->email,
+            'user_id' => $user->id,
+        ]);
+
         return response()->json([
             'status' => 'success',
             'message' => 'Email verified successfully.'

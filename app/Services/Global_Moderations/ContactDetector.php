@@ -186,7 +186,7 @@ class ContactDetector
             // DEMANDES DE CONTACT INDIRECTES (multilingue)
             // ============================================================
             'contact_request_fr' => [
-                'pattern' => '/(?:ajout|contact|appel|écri)[ez]?\s*(?:-|\s)*moi\s*(?:sur|via|par|en)\s*(?:insta|snap|whats|telegram|facebook|priv[ée]|dm|mp)/iu',
+                'pattern' => '/(?:ajout|contact|appel|écri|trouv|joign|envo[iy])[ez\-]*\s*(?:moi|me)?\s*(?:(?:un|1)\s+)?(?:message\s+)?(?:sur|via|par|en)\s*(?:insta(?:gram)?|snap(?:chat)?|whats(?:app)?|telegram|facebook|fb|priv[ée]|dm|mp)/iu',
                 'severity' => 'critical',
                 'description' => 'Demande de contact FR',
             ],

@@ -215,7 +215,7 @@ class ModerationResult
 
         // Demandes de contact explicites ("contactez-moi en DM")
         if (str_starts_with($type, 'contact_request')) {
-            return config('moderations.scoring.contact_request', 35);
+            return config('moderations.scoring.contact_request', 40);
         }
 
         // Réseaux sociaux

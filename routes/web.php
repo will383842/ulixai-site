@@ -80,9 +80,28 @@ Route::post('/paypal/webhook', [PayPalWebhookController::class, 'handleWebhook']
     ->name('paypal.webhook');
 
 // ═══════════════════════════════════════════════════════════
+// 🔐 SECURE FILE ACCESS (pour fichiers uploadés en storage/)
+// ═══════════════════════════════════════════════════════════
+Route::get('/secure-file/{path}', [App\Http\Controllers\SecureFileController::class, 'serve'])
+    ->where('path', '.*')
+    ->middleware(['auth', 'throttle:60,1'])
+    ->name('secure.file');
+
+// ═══════════════════════════════════════════════════════════
 // 🌍 ROUTES PUBLIQUES
 // ═══════════════════════════════════════════════════════════
 
+// 🔐 SECURITY: Login with password verification (rate limited)
+Route::post('/api/auth/login', [App\Http\Controllers\AuthController::class, 'login'])
+    ->middleware('throttle:5,1') // 5 tentatives par minute
+    ->name('api.auth.login');
+
+// 🔐 SECURITY: Check email exists (for pre-validation only - doesn't reveal user info)
+Route::post('/api/auth/check-email', [App\Http\Controllers\AuthController::class, 'checkEmailExists'])
+    ->middleware('throttle:5,1')
+    ->name('api.auth.check-email');
+
+// ⚠️ DEPRECATED: This route now requires password (backward compatible)
 // Auth helpers (avec rate limiting anti-énumération)
 Route::post('/check-email-login', [App\Http\Controllers\AuthController::class, 'checkEmailAndLogin'])
     ->middleware('throttle:3,1'); // ✅ 3 tentatives par minute (anti-énumération emails)
