@@ -9,13 +9,6 @@
   @version 2.3.0 - Keep It Simple
 --}}
 
-{{-- 🚀 Bouton Flèche Retour en Haut --}}
-<button id="scrollToTopBtn" aria-label="Retour en haut">
-  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-    <polyline points="18 15 12 9 6 15"></polyline>
-  </svg>
-</button>
-
 {{-- Toast Messages --}}
 @if (session('success'))
   <script>toastr.success('{{ session('success') }}', 'Success');</script>

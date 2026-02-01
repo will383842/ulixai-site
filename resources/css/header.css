@@ -510,44 +510,13 @@ html { scroll-behavior: auto !important; }
   font-size: 14px;
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🚀 SCROLL TO TOP BUTTON
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-#scrollToTopBtn {
-  position: fixed;
-  bottom: 100px; /* Au-dessus du bouton "Un problème ?" */
-  right: 24px;
-  width: 48px;
-  height: 48px;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9989; /* En dessous du bug report button (9990) */
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-#scrollToTopBtn:hover {
-  background: #2563eb;
-}
-
-#scrollToTopBtn.show {
-  display: flex;
-}
+/* Scroll to top button removed - using native scroll only */
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    📱 MOBILE RESPONSIVE
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 @media (max-width: 768px) {
-  #scrollToTopBtn {
-    display: none !important;
-  }
   .breadcrumb-container {
     padding: 12px 0;
   }
