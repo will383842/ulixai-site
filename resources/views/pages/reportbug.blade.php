@@ -151,8 +151,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 /* Header */
 .form-header{text-align:center;margin-bottom:2rem}
 .icon-wrapper{display:flex;justify-content:center;margin-bottom:1.5rem;position:relative}
-.icon-pulse{display:none}
-.delay-1{display:none}
 .icon-container{width:5rem;height:5rem;background:linear-gradient(135deg,#3b82f6,#06b6d4,#14b8a6);border-radius:1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(6,182,212,0.5);position:relative;z-index:1}
 .icon-emoji{font-size:2.5rem}
 
@@ -209,7 +207,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .modal-content{position:relative;background:#fff;border-radius:1.5rem;padding:2rem;text-align:center;box-shadow:0 20px 60px -12px rgba(0,0,0,0.25)}
 
 .success-icon-wrapper{display:flex;justify-content:center;margin-bottom:1.5rem;position:relative}
-.success-pulse{display:none}
 .success-icon{width:5rem;height:5rem;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(16,185,129,0.5);position:relative;z-index:1}
 .success-check{font-size:2.5rem;color:#fff;font-weight:900}
 
@@ -331,10 +328,8 @@ img{max-width:100%;height:auto;display:block}
           
           <!-- Icon -->
           <div class="icon-wrapper" aria-hidden="true">
-            <div class="icon-pulse"></div>
-            <div class="icon-pulse delay-1"></div>
             <div class="icon-container">
-              <span class="icon-emoji" role="img" aria-label="Tools emoji">🔧</span>
+              <span class="icon-emoji">🔧</span>
             </div>
           </div>
 
@@ -491,9 +486,8 @@ img{max-width:100%;height:auto;display:block}
       
       <!-- Success Icon -->
       <div class="success-icon-wrapper" aria-hidden="true">
-        <div class="success-pulse"></div>
         <div class="success-icon">
-          <span class="success-check" role="img" aria-label="Checkmark">✓</span>
+          <span class="success-check">✓</span>
         </div>
       </div>
       
