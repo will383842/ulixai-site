@@ -242,13 +242,13 @@
       background: #22c55e;
     }
 
-    /* Back to Top - Simplifié */
+    /* Back to Top - Au-dessus du bouton "Un problème ?" */
     #backToTop {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
+      bottom: 110px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
       background: var(--primary);
       border-radius: 50%;
       display: flex;
@@ -257,7 +257,7 @@
       cursor: pointer;
       opacity: 0;
       visibility: hidden;
-      z-index: 9999;
+      z-index: 9985;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
@@ -376,10 +376,10 @@
       }
 
       #backToTop {
-        width: 48px;
-        height: 48px;
-        bottom: 20px;
-        right: 20px;
+        width: 44px;
+        height: 44px;
+        bottom: 140px;
+        right: 16px;
       }
 
       .how-it-works-card {
