@@ -51,10 +51,5 @@ class RecruitApplicationController extends Controller
         ]);
     }
 
-   public function allcountry(Request $request){
-    $allCountries = Country::get();
-      return view('pages.recruitment' , compact('allCountries'));
-   }
-
 }
 

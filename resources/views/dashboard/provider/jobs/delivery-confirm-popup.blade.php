@@ -577,7 +577,7 @@
         </div>
         
         <div class="delivery-modal-actions-2025">
-            <a href="/dashboardindex" 
+            <a href="{{ route('dashboard') }}"
                class="delivery-btn-primary-2025"
                aria-label="Return to dashboard">
                 <span>Go back to my dashboard</span>

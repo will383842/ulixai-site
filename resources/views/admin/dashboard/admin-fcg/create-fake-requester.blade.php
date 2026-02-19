@@ -6,7 +6,7 @@
     <nav class="admin-breadcrumbs">
         <a href="{{ route('admin.dashboard') }}">Dashboard</a>
         <span class="admin-breadcrumbs-separator">/</span>
-        <a href="{{ route('admin.fake-content.dashboard') }}">Fake Data</a>
+        <a href="{{ route('admin.fake-content-generation') }}">Fake Data</a>
         <span class="admin-breadcrumbs-separator">/</span>
         <span class="admin-breadcrumbs-current">Créer Demandeur</span>
     </nav>

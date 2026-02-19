@@ -1554,13 +1554,15 @@ $completedRequests = $missions->filter(function($m) {
                             <span>View My Listing</span>
                         </a>
                         
-                        <button 
+                        @can('delete', $mission)
+                        <button
                             class="btn-service-action btn-cancel-request"
                             onclick="openCancelRequestPopup({{ $mission->id }})"
                             style="flex: 1;">
                             <i class="fas fa-times-circle" aria-hidden="true"></i>
                             <span>Cancel</span>
                         </button>
+                        @endcan
                     </div>
                 </article>
             @empty

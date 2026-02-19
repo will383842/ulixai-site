@@ -104,7 +104,7 @@ class CategoryController extends Controller
         if ($category->icon_image && file_exists(public_path($category->icon_image))) {
             unlink(public_path($category->icon_image));
         }
-        $missions = $category->missions;
+        $missions = $category->missions()->get();
 
         if($category->level == 1) {
             foreach($missions as $mission) {

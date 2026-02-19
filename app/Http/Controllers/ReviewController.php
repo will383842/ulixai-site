@@ -109,7 +109,7 @@ class ReviewController extends Controller
      * @param int|null $limit Nombre d'avis à retourner
      * @return array
      */
-    public function getFeaturedReviews($page = null, $limit = null)
+    private function getFeaturedReviews($page = null, $limit = null)
     {
         // Vérifier si la table ulixai_reviews existe
         if (Schema::hasTable('ulixai_reviews')) {
@@ -187,7 +187,7 @@ class ReviewController extends Controller
      * Récupère les VRAIS avis utilisateurs depuis ProviderReview (ancien système)
      * ⚠️ Cette méthode sera dépréciée une fois la migration vers ulixai_reviews complète
      */
-    public function getUserReviews()
+    private function getUserReviews()
     {
         // Si la nouvelle table existe, l'utiliser
         if (Schema::hasTable('ulixai_reviews')) {
@@ -311,22 +311,22 @@ class ReviewController extends Controller
     /**
      * Méthodes spécifiques par page pour faciliter l'utilisation
      */
-    public function getRecruitmentReviews($limit = 3)
+    private function getRecruitmentReviews($limit = 3)
     {
         return $this->getFeaturedReviews('recruitment', $limit);
     }
     
-    public function getAffiliateReviews($limit = 3)
+    private function getAffiliateReviews($limit = 3)
     {
         return $this->getFeaturedReviews('affiliate', $limit);
     }
     
-    public function getPartnershipReviews($limit = 3)
+    private function getPartnershipReviews($limit = 3)
     {
         return $this->getFeaturedReviews('partnerships', $limit);
     }
     
-    public function getHomepageReviews($limit = 6)
+    private function getHomepageReviews($limit = 6)
     {
         return $this->getFeaturedReviews('homepage', $limit);
     }
@@ -340,7 +340,7 @@ class ReviewController extends Controller
         return Str::slug($optimizedCategory . '-' . strtolower($country) . '-' . Str::slug($name)) . '-' . $id;
     }
     
-    public function optimizeSlug($slug, $maxLength = 35)
+    private function optimizeSlug($slug, $maxLength = 35)
     {
         $stopWords = ['assistance', 'services', 'service', 'support', 'help', 'for', 'the', 'and', 'or', 'of', 'in', 'to', 'a', 'an', 'with', 'by', 'from', 'international', 'professional', 'expert', 'consultancy', 'consulting', 'solutions'];
         $words = explode('-', $slug);
@@ -362,7 +362,7 @@ class ReviewController extends Controller
         return $optimizedSlug ?: 'service';
     }
     
-    public function getFlagEmojiFromCountryName($countryName)
+    private function getFlagEmojiFromCountryName($countryName)
     {
         $flags = [
             'Afghanistan' => '🇦🇫', 'Albania' => '🇦🇱', 'Algeria' => '🇩🇿', 'Andorra' => '🇦🇩',
@@ -430,7 +430,7 @@ class ReviewController extends Controller
         return '🌍';
     }
     
-    public function getNationalityFromCountryName($countryName)
+    private function getNationalityFromCountryName($countryName)
     {
         $nationalities = [
             'Afghanistan' => 'Afghan', 'Albania' => 'Albanian', 'Algeria' => 'Algerian', 'Andorra' => 'Andorran',
@@ -498,7 +498,7 @@ class ReviewController extends Controller
         return 'International';
     }
     
-    public function normalizeCountryName($countryName)
+    private function normalizeCountryName($countryName)
     {
         $countryName = trim($countryName);
         
@@ -657,7 +657,7 @@ class ReviewController extends Controller
     {
         $reviews = $this->getPartnershipReviews(3);
         
-        return view('pages.partnerships', [
+        return view('partnerships.become-partner', [
             'reviews' => $reviews
         ]);
     }

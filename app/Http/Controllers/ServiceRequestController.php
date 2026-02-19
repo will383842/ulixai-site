@@ -551,6 +551,15 @@ class ServiceRequestController extends Controller
                         if (!$to) continue;
 
                         Mail::to($to)->queue(new MissionInviteMail($mission, $sp, $sp->match_score));
+
+                        // In-app notification for matching providers
+                        if ($sp->user) {
+                            NotificationService::send(
+                                $sp->user,
+                                new MissionMatchNotification($mission, $sp->match_score),
+                                NotificationService::TYPE_MISSION
+                            );
+                        }
                     }
 
                     Log::info('📧 [FORM] Emails queued', [
@@ -728,7 +737,7 @@ class ServiceRequestController extends Controller
                     'cancelled_by' => $request->cancelled_by,
                     'reason' => $request->reason,
                     'email_sent' => false,
-                    'custum_description' => $request->description ?? null,
+                    'custom_description' => $request->description ?? null,
                 ]);
 
                 // Mettre à jour les infos d'annulation
@@ -782,7 +791,7 @@ class ServiceRequestController extends Controller
                         'cancelled_by' => $request->cancelled_by,
                         'reason' => $request->reason,
                         'email_sent' => false,
-                        'custum_description' => $request->description ?? null,
+                        'custom_description' => $request->description ?? null,
                     ]);
 
                     // ✅ Supprimer les offres
@@ -832,7 +841,7 @@ class ServiceRequestController extends Controller
                         'cancelled_by' => $request->cancelled_by,
                         'reason' => $request->reason,
                         'email_sent' => false,
-                        'custum_description' => $request->description ?? null,
+                        'custom_description' => $request->description ?? null,
                     ]);
 
                     $mission->update([
@@ -950,7 +959,7 @@ class ServiceRequestController extends Controller
                 'cancelled_by' => $request->cancelled_by,
                 'reason' => $request->reason,
                 'email_sent' => false,
-                'custum_description' => $request->description ?? null,
+                'custom_description' => $request->description ?? null,
             ]);
             
             // 3. Pénalité de réputation

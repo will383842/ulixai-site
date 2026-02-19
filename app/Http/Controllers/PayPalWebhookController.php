@@ -470,19 +470,27 @@ class PayPalWebhookController extends Controller
                 $transaction = Transaction::where('paypal_capture_id', $captureId)->first();
 
                 if ($transaction) {
-                    $transaction->update([
-                        'status' => 'dispute_pending',
-                        'release_blocked_reason' => "PayPal dispute: {$disputeId}",
-                    ]);
+                    // Harmonisé avec Stripe : mêmes champs dispute
+                    DB::transaction(function () use ($transaction, $disputeId, $disputeAmount) {
+                        $transaction->update([
+                            'status' => 'disputed',
+                            'dispute_id' => $disputeId,
+                            'dispute_reason' => 'paypal_dispute',
+                            'dispute_status' => 'open',
+                            'disputed_at' => now(),
+                            'release_blocked_reason' => "PayPal dispute: {$disputeId}",
+                        ]);
+
+                        if ($transaction->mission) {
+                            $transaction->mission->update([
+                                'status' => 'disputed',
+                                'payment_status' => 'held',
+                            ]);
+                        }
+                    });
 
                     // Mettre à jour la mission
                     $mission = $transaction->mission;
-                    if ($mission) {
-                        $mission->update([
-                            'status' => 'disputed',
-                            'payment_status' => 'held',
-                        ]);
-                    }
 
                     Log::info('PayPal dispute: transaction and mission updated', [
                         'transaction_id' => $transaction->id,
@@ -580,8 +588,8 @@ class PayPalWebhookController extends Controller
             'event_id' => $eventId,
         ]);
 
-        // Trouver la transaction associée
-        $transaction = Transaction::where('release_blocked_reason', 'LIKE', "%{$disputeId}%")->first();
+        // Trouver la transaction associée (harmonisé : via dispute_id au lieu de LIKE)
+        $transaction = Transaction::where('dispute_id', $disputeId)->first();
 
         if (!$transaction) {
             Log::warning('PayPal dispute resolved: no transaction found', [
@@ -595,9 +603,10 @@ class PayPalWebhookController extends Controller
         // Traiter selon l'outcome
         switch ($outcome) {
             case 'RESOLVED_SELLER_FAVOR':
-                // Le vendeur gagne - libérer les fonds
+                // Le vendeur gagne - libérer les fonds (harmonisé avec Stripe dispute won)
                 $transaction->update([
                     'status' => 'paid',
+                    'dispute_status' => 'won',
                     'release_blocked_reason' => null,
                 ]);
 
@@ -615,9 +624,10 @@ class PayPalWebhookController extends Controller
                 break;
 
             case 'RESOLVED_BUYER_FAVOR':
-                // L'acheteur gagne - marquer comme remboursé
+                // L'acheteur gagne - marquer comme remboursé (harmonisé avec Stripe dispute lost)
                 $transaction->update([
                     'status' => 'refunded',
+                    'dispute_status' => 'lost',
                     'release_blocked_reason' => 'Dispute resolved in buyer favor',
                     'refunded_at' => now(),
                 ]);

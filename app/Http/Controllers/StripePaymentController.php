@@ -23,6 +23,9 @@ use App\Services\PaymentService;
 use App\Services\CurrencyService;
 use App\Http\Requests\Payment\CheckoutRequest;
 use App\Http\Requests\Payment\ProcessPaymentRequest;
+use App\Notifications\OfferAcceptedNotification;
+use App\Services\NotificationService;
+use Illuminate\Support\Facades\Log;
 
 class StripePaymentController extends Controller
 {
@@ -231,6 +234,21 @@ class StripePaymentController extends Controller
                         }
                     }
                 }, 5);
+
+                // Notify provider that their offer was accepted
+                try {
+                    $missionOffer = MissionOffer::find($offerId);
+                    $selectedProvider = ServiceProvider::find($providerId);
+                    if ($missionOffer && $selectedProvider && $selectedProvider->user) {
+                        NotificationService::send(
+                            $selectedProvider->user,
+                            new OfferAcceptedNotification($mission, $missionOffer),
+                            NotificationService::TYPE_MISSION
+                        );
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Failed to send offer accepted notification', ['error' => $e->getMessage()]);
+                }
 
                 return response()->json([
                     'success' => true,

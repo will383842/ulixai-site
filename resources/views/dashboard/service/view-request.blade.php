@@ -16,7 +16,7 @@
         '3 months' => 90,
     ];
     
-    $serviceDuration = $mission->service_duration ?? $mission->service_durition;
+    $serviceDuration = $mission->service_duration;
     if (isset($durationMap[$serviceDuration])) {
         $totalDays = $durationMap[$serviceDuration];
         $createdAt = \Carbon\Carbon::parse($mission->created_at);

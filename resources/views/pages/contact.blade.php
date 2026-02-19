@@ -366,7 +366,7 @@
         <div class="form-group full-width">
           <div class="checkbox-group">
             <input type="checkbox" id="terms" name="terms" required>
-            <label for="terms">I accept the <a href="/terms">terms and conditions</a> and <a href="/privacy">privacy policy</a>.</label>
+            <label for="terms">I accept the <a href="{{ route('terms.show') }}">terms and conditions</a> and <a href="{{ route('privacy.policy') }}">privacy policy</a>.</label>
           </div>
         </div>
 

@@ -31,7 +31,7 @@ Route::get('/categories', [CategoryController::class, 'fetchMainCategories']);
 Route::get('/categories/{parentId}/subcategories', [CategoryController::class, 'fetchSubCategories']);
 Route::get('/categories/{parentId}/children', [CategoryController::class, 'fetchChildCategories']);
 Route::get('/providers/map', [MapController::class, 'getProviders']);
-Route::get('/world-map', [UserManagementController::class, 'getProviders'])->name('w-map-view');
+Route::get('/world-map', [MapController::class, 'getProviders'])->name('w-map-view');
 
 // Bug report (avec rate limiting pour éviter le spam)
 Route::post('/report-bug', [BugReportController::class, 'store'])

@@ -60,11 +60,4 @@ class BugReportController extends Controller
         return null;
     }
 
-    /**
-     * Show standalone bug report page
-     */
-    public function show()
-    {
-        return view('pages.reportbug');
-    }
 }

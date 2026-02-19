@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ConversationReport extends Model
 {
     protected $fillable = ['conversation_id', 'reported_by', 'reason'];
 
-
-    public function conversation(): hasOne
+    public function conversation(): BelongsTo
     {
-        return $this->hasOne(Conversation::class);
+        return $this->belongsTo(Conversation::class);
     }
 }

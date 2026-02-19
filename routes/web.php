@@ -209,7 +209,7 @@ Route::post('/press/inquiry', [PressController::class, 'storeInquiry'])
     ->name('press.inquiry.store');
 
 // Assets & Preview publics
-Route::get('/press/asset/{id}/{type}', [PressController::class, 'asset'])
+Route::get('/press/asset/{id}/{type}', [PressController::class, 'preview'])
     ->whereIn('type', ['pdf', 'guideline_pdf', 'photo', 'icon'])
     ->name('press.asset');
 
@@ -266,7 +266,7 @@ Route::post('/affiliate/validate-code', [AffiliateController::class, 'validateCo
 Route::get('/', [ServiceProviderController::class, 'main']);
 Route::get('/get-providers', [ServiceProviderController::class, 'getProviders']);
 Route::get('/filter-providers', [ServiceProviderController::class, 'filterProviders']);
-Route::get('/get-subcategories/{categoryId}', [ServiceProviderController::class, 'getSubcategories']);
+// get-subcategories public doublon supprimé — la route auth (ligne 346) suffit
 
 // ✅ PUBLIC : liste de tous les prestataires (toujours accessible)
 Route::get('/service-providers', [ServiceProviderController::class, 'serviceproviders'])
@@ -397,13 +397,13 @@ Route::middleware(['auth'])->group(function () {
         ->name('account.export-data');
 
     Route::get('/upload-document', [AccountController::class, 'uploadDocument'])->name('upload-document');
-    Route::post('/profile/photo', [AccountController::class, 'uploadProfilePicture'])->name('profile.photo.upload');
+    Route::post('/profile/photo', [AccountController::class, 'uploadProviderProfile'])->name('profile.photo.upload');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::post('/provider/{id}/review', [ProviderReviewController::class, 'store'])->name('provider.review');
     Route::post('/mission/{id}/offer', [JobListController::class, 'submitOffer'])->name('mission.offer');
 
-    // Mission public messages
-    Route::post('/mission/{id}/public-message', [MissionMessageController::class, 'store'])->name('mission.public-message');
+    // Mission public messages (pas de Policy : accès public intentionnel pour tout user auth, modéré par ModerationService)
+    Route::post('/mission/{id}/public-message', [MissionMessageController::class, 'store'])->middleware('throttle:30,1')->name('mission.public-message');
     Route::get('/mission/{id}/public-messages', [MissionMessageController::class, 'list'])->name('mission.public-messages');
 
     // Notifications
@@ -543,7 +543,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/stripe/kyc/remind/{provider}', [AdminDashboardController::class, 'remindKyc'])->name('stripe.kyc.remind');
 
         // Transactions
-        Route::get('/transactions/{transaction}/edit', [TransactionController::class, 'edit'])->name('transactions.edit');
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
 
         // User profile admin

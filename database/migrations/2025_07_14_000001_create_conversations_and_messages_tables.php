@@ -39,8 +39,8 @@ class CreateConversationsAndMessagesTables extends Migration
 
     public function down(): void
     {
+        Schema::dropIfExists('message_attachments');
         Schema::dropIfExists('messages');
         Schema::dropIfExists('conversations');
-         Schema::dropIfExists('message_attachments');
     }
 }

@@ -8,6 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Guard: table already created by 2026_01_28_214455_create_notifications_table
+        if (Schema::hasTable('notification_preferences')) {
+            return;
+        }
+
         Schema::create('notification_preferences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();

@@ -32,7 +32,7 @@ class TransactionController extends Controller
             // Fetch the payment intent from Stripe using the paymentIntentId from the transaction
             $paymentIntent = $stripe->paymentIntents->retrieve($transaction->stripe_payment_intent_id, []);
             // Return the view with the transaction and payment intent details
-            return view('admin.transactions.show', compact('transaction', 'paymentIntent'));
+            return view('admin.dashboard.transaction-show', compact('transaction', 'paymentIntent'));
             
         } catch (ApiErrorException $e) {
             // If the payment intent retrieval fails, catch the error and redirect back
@@ -103,6 +103,7 @@ class TransactionController extends Controller
             if ($result) {
                 // Update transaction status
                 $transaction->status = 'refunded';
+                $transaction->refunded_at = now();
                 $transaction->save();
 
                 // Update mission payment status

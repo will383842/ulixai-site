@@ -1326,7 +1326,7 @@
             <button onclick="window.providerWizard?.open()" class="cta-button w-full sm:w-auto bg-white text-blue-600 text-lg sm:text-xl font-bold px-10 sm:px-14 py-5 sm:py-6 rounded-full shadow-2xl hover:shadow-white/50 transition-all transform hover:scale-105">
                 <span>✨ FREE Registration</span>
             </button>
-            <a href="/paymentsvalidate" class="cta-button w-full sm:w-auto bg-transparent border-2 border-white text-white text-lg sm:text-xl font-bold px-10 sm:px-14 py-5 sm:py-6 rounded-full hover:bg-white/10 transition-all">
+            <a href="{{ route('user.payments.validate') }}" class="cta-button w-full sm:w-auto bg-transparent border-2 border-white text-white text-lg sm:text-xl font-bold px-10 sm:px-14 py-5 sm:py-6 rounded-full hover:bg-white/10 transition-all">
                 <span>🔍 Browse Missions</span>
             </a>
         </div>

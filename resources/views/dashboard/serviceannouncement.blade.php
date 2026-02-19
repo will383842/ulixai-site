@@ -18,7 +18,7 @@
 
     <!-- Sidebar -->
     <div class="lg:block  w-full lg:w-64">
-    @include('dashboard.sidebardash')
+    @include('dashboard.partials.sidebar')
     </div>
 
     <!-- Main Content -->
@@ -155,7 +155,7 @@
 
   </div>
   <div class = "pb-12"></div>
-@include('dashboard.bottomnavbar')
+@include('dashboard.partials.dashboard-mobile-navbar')
 {{-- Floating Bug Report Button --}}
 @include('components.floating-bug-report')
 

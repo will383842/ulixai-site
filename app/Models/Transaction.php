@@ -83,6 +83,7 @@ class Transaction extends Model
         'dispute_reason',
         'dispute_status',
         'disputed_at',
+        'refunded_at',
     ];
 
     /**
@@ -99,6 +100,7 @@ class Transaction extends Model
         'release_scheduled_at' => 'datetime',
         'released_at' => 'datetime',
         'disputed_at' => 'datetime',
+        'refunded_at' => 'datetime',
     ];
 
     /**

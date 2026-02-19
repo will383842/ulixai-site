@@ -133,9 +133,19 @@ class Category extends Model
         return $ancestors;
     }
 
+    /**
+     * Get all missions in this category (matches at any level).
+     * Returns a query builder with properly grouped OR conditions.
+     * Usage: $category->missions()->get() or $category->missions()->where(...)->get()
+     */
     public function missions()
     {
-        return $this->hasMany(Mission::class, 'category_id')->orWhere('subcategory_id', $this->id)->orWhere('subsubcategory_id', $this->id);
+        $categoryId = $this->id;
+        return Mission::where(function ($query) use ($categoryId) {
+            $query->where('category_id', $categoryId)
+                  ->orWhere('subcategory_id', $categoryId)
+                  ->orWhere('subsubcategory_id', $categoryId);
+        });
     }
 
     /**

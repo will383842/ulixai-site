@@ -1277,28 +1277,30 @@
                             <span>See the job</span>
                         </a>
                         
+                        @can('update', $job)
                         @if($job->status === 'waiting_to_start')
-                            <button class="btn-job-action btn-start-job" 
+                            <button class="btn-job-action btn-start-job"
                                     onclick="startMission({{$job->id}})"
                                     aria-label="Start this job">
                                 <i class="fas fa-play" aria-hidden="true"></i>
                                 <span>Start</span>
                             </button>
                         @elseif($job->status === 'in_progress')
-                            <button class="btn-job-action btn-finish-job" 
+                            <button class="btn-job-action btn-finish-job"
                                     onclick="openDeliveryConfirmPopup({{$job->id}})"
                                     aria-label="Mark job as finished">
                                 <i class="fas fa-check-circle" aria-hidden="true"></i>
                                 <span>Job finish</span>
                             </button>
                         @elseif($job->status === 'disputed')
-                            <button class="btn-job-action btn-resolve-dispute" 
+                            <button class="btn-job-action btn-resolve-dispute"
                                     onclick="resolveDispute({{$job->id}})"
                                     aria-label="Resolve dispute">
                                 <i class="fas fa-gavel" aria-hidden="true"></i>
                                 <span>Resolve Dispute</span>
                             </button>
                         @endif
+                        @endcan
                     </div>
                 </article>
             @empty
@@ -1371,15 +1373,17 @@
                             <span>See the job</span>
                         </a>
                         
-                        {{-- ✅ NOUVEAU : Bouton Cancel Offer --}}
+                        {{-- Cancel Offer (only if owned by current provider) --}}
+                        @can('delete', $offer)
                         @if($offer->status === 'pending')
-                        <button class="btn-job-action btn-cancel-offer" 
+                        <button class="btn-job-action btn-cancel-offer"
                                 onclick="confirmCancelOffer({{ $offer->id }})"
                                 aria-label="Cancel this offer">
                             <i class="fas fa-times" aria-hidden="true"></i>
                             <span>Cancel Offer</span>
                         </button>
                         @endif
+                        @endcan
                     </div>
                 </article>
             @empty

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\Global_Moderations\Traits\HasModerationFlags;
+use App\Casts\EncryptedOrPlain;
 
 class Message extends Model
 {
@@ -19,6 +20,7 @@ class Message extends Model
 
     protected $casts = [
         'is_read' => 'boolean',
+        'body' => EncryptedOrPlain::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

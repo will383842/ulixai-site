@@ -73,6 +73,12 @@ class ForgotPasswordController extends Controller
             return back()->withErrors(['email' => 'Invalid or expired reset token.']);
         }
 
+        // Token expires after 60 minutes
+        if (Carbon::parse($record->created_at)->addMinutes(60)->isPast()) {
+            DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+            return back()->withErrors(['email' => 'This reset token has expired. Please request a new one.']);
+        }
+
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             return back()->withErrors(['email' => 'No user found.']);

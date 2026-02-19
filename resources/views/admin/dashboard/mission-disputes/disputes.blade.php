@@ -49,8 +49,8 @@
                                 N/A
                             @endif
                         </td>
-                        <td data-label="Raison" style="color: var(--admin-text-muted); max-width: 200px;" title="{{ $dispute->cancellationReasons->first()->custum_description ?? $dispute->cancellationReasons->first()->reason }}">
-                            {{ Str::limit($dispute->cancellationReasons->first()->custum_description ?? $dispute->cancellationReasons->first()->reason, 40) }}
+                        <td data-label="Raison" style="color: var(--admin-text-muted); max-width: 200px;" title="{{ $dispute->cancellationReasons->first()->custom_description ?? $dispute->cancellationReasons->first()->reason }}">
+                            {{ Str::limit($dispute->cancellationReasons->first()->custom_description ?? $dispute->cancellationReasons->first()->reason, 40) }}
                         </td>
                         <td data-label="Annulé par">
                             <span class="badge badge-default">{{ ucfirst($dispute->cancelled_by) }}</span>

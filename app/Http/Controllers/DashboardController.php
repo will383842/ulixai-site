@@ -55,6 +55,6 @@ class DashboardController extends Controller
             ]);
         }
 
-        return view('dashboard.dashboardindex', ['user' => $user]);
+        return view('dashboard.dashboard-index', ['user' => $user]);
     }
 }

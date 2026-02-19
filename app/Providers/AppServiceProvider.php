@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Services\PaymentService;
-use App\Services\ReputationPoinService;
+use App\Services\ReputationPointService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -21,8 +21,8 @@ class AppServiceProvider extends ServiceProvider
             return new PaymentService();
         });
 
-        $this->app->singleton(ReputationPoinService::class, function ($app) {
-            return new ReputationPoinService();
+        $this->app->singleton(ReputationPointService::class, function ($app) {
+            return new ReputationPointService();
         });
     }
 
@@ -30,7 +30,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         try {
-            $siteName = DB::table('site_settings')->value('site_name'); 
+            $siteName = Cache::remember('site_name', 3600, function () {
+                return DB::table('site_settings')->value('site_name');
+            });
 
             if (!empty($siteName)) {
                 Config::set('app.name', $siteName);
@@ -38,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
 
             Blade::directive('site', fn () => "<?php echo e(config('app.name')); ?>");
         } catch (\Exception $e) {
-            // Base de données pas encore créée
+            // Base de données pas encore créée ou cache indisponible
         }
     }
 

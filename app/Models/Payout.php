@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payout extends Model
 {
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_PAID = 'paid';
+    public const STATUS_FAILED = 'failed';
+
     protected $fillable = [
         'user_id',
         'provider_id',
@@ -18,11 +23,13 @@ class Payout extends Model
         'bank_account_type',
         'status',
         'failure_reason',
-        'paid_at'
+        'paid_at',
+        'initiated_at',
     ];
 
     protected $casts = [
         'paid_at' => 'datetime',
+        'initiated_at' => 'datetime',
         'amount' => 'decimal:2'
     ];
 

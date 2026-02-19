@@ -20,7 +20,7 @@ class MissionCancellationReason extends Model
         'cancelled_by',
         'reason',
         'email_sent',
-        'custum_description'
+        'custom_description'
     ]; // ✅ CORRECTION : Fermeture du tableau manquante
 
     /**

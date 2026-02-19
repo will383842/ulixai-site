@@ -355,48 +355,50 @@ class AccountController extends Controller
             $provider = $user->serviceProvider;
             $disk = Storage::disk(config('filesystems.uploads_disk', 'public'));
 
-            // Delete old documents if they exist
-            if (!empty($provider->documents)) {
-                $documents = json_decode($provider->documents, true);
-                $docTypes = ['passport', 'european_id', 'license'];
-                foreach ($docTypes as $type) {
-                    if (isset($documents[$type])) {
-                        if (isset($documents[$type]['front'])) {
-                            $disk->delete($documents[$type]['front']);
-                        }
-                        if (isset($documents[$type]['back'])) {
-                            $disk->delete($documents[$type]['back']);
+            return DB::transaction(function () use ($request, $user, $provider, $disk) {
+                // Delete old documents if they exist
+                if (!empty($provider->documents)) {
+                    $documents = json_decode($provider->documents, true);
+                    $docTypes = ['passport', 'european_id', 'license'];
+                    foreach ($docTypes as $type) {
+                        if (isset($documents[$type])) {
+                            if (isset($documents[$type]['front'])) {
+                                $disk->delete($documents[$type]['front']);
+                            }
+                            if (isset($documents[$type]['back'])) {
+                                $disk->delete($documents[$type]['back']);
+                            }
                         }
                     }
                 }
-            }
 
-            $docType = $request->document_type;
-            $docData = [];
+                $docType = $request->document_type;
+                $docData = [];
 
-            // Upload front image
-            $frontImage = $request->file('front');
-            if ($frontImage) {
-                $frontImageName = 'docs-' . $user->id . '-' . $docType . '-front.' . $frontImage->getClientOriginalExtension();
-                $disk->putFileAs('userDocs', $frontImage, $frontImageName, 'public');
-                $docData['front'] = 'userDocs/' . $frontImageName;
-            }
+                // Upload front image
+                $frontImage = $request->file('front');
+                if ($frontImage) {
+                    $frontImageName = 'docs-' . $user->id . '-' . $docType . '-front.' . $frontImage->getClientOriginalExtension();
+                    $disk->putFileAs('userDocs', $frontImage, $frontImageName, 'public');
+                    $docData['front'] = 'userDocs/' . $frontImageName;
+                }
 
-            // Upload back image if provided
-            if ($request->hasFile('back')) {
-                $backImage = $request->file('back');
-                $backImageName = 'docs-' . $user->id . '-' . $docType . '-back.' . $backImage->getClientOriginalExtension();
-                $disk->putFileAs('userDocs', $backImage, $backImageName, 'public');
-                $docData['back'] = 'userDocs/' . $backImageName;
-            }
+                // Upload back image if provided
+                if ($request->hasFile('back')) {
+                    $backImage = $request->file('back');
+                    $backImageName = 'docs-' . $user->id . '-' . $docType . '-back.' . $backImage->getClientOriginalExtension();
+                    $disk->putFileAs('userDocs', $backImage, $backImageName, 'public');
+                    $docData['back'] = 'userDocs/' . $backImageName;
+                }
 
-            $newDocuments[$docType] = $docData;
-            $provider->update(['documents' => !empty($newDocuments) ? json_encode($newDocuments) : null]);
+                $newDocuments[$docType] = $docData;
+                $provider->update(['documents' => !empty($newDocuments) ? json_encode($newDocuments) : null]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Document uploaded successfully.',
-            ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Document uploaded successfully.',
+                ]);
+            });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -470,64 +472,6 @@ class AccountController extends Controller
         ]);
         
         return response()->json(['success' => true]);
-    }
-
-    /**
-     * Récupérer les informations "About You" du prestataire
-     * ✅ MÉTHODE AJOUTÉE POUR CHARGER LES DONNÉES
-     */
-    public function getAboutYou(Request $request)
-    {
-        try {
-            $userId = $request->input('user_id', Auth::id());
-            $provider = ServiceProvider::where('user_id', $userId)->first();
-            
-            return response()->json([
-                'success' => true,
-                'about_you' => $provider ? $provider->profile_description : ''
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error retrieving data: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Récupérer les catégories sélectionnées par le prestataire
-     * ✅ MÉTHODE AJOUTÉE POUR CHARGER LES CATÉGORIES
-     */
-    public function getProviderCategories(Request $request)
-    {
-        try {
-            $userId = $request->input('user_id', Auth::id());
-            $provider = ServiceProvider::where('user_id', $userId)->first();
-            
-            if (!$provider) {
-                return response()->json(['success' => false, 'message' => 'Provider not found'], 404);
-            }
-
-            // Décodage sécurisé des JSON
-            $categories = is_string($provider->services_to_offer) 
-                ? json_decode($provider->services_to_offer, true) 
-                : $provider->services_to_offer;
-                
-            $subcategories = is_string($provider->services_to_offer_category) 
-                ? json_decode($provider->services_to_offer_category, true) 
-                : $provider->services_to_offer_category;
-            
-            return response()->json([
-                'success' => true,
-                'categories' => $categories ?? [],
-                'subcategories' => $subcategories ?? []
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error retrieving categories: ' . $e->getMessage()
-            ], 500);
-        }
     }
 
     /**

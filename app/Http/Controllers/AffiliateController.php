@@ -150,9 +150,14 @@ class AffiliateController extends Controller
         }
 
         $referrals = $user->referrals()
-            ->with(['missions' => function ($query) {
-                $query->select('id', 'requester_id', 'status');
-            }])
+            ->with([
+                'missions' => function ($query) {
+                    $query->select('id', 'requester_id', 'status');
+                },
+                'serviceProvider' => function ($query) {
+                    $query->select('id', 'user_id');
+                },
+            ])
             ->get(['id', 'name', 'email', 'status', 'created_at'])
             ->map(function ($referral) use ($user) {
                 $commissions = AffiliateCommission::where('referrer_id', $user->id)

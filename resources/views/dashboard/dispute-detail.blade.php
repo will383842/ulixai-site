@@ -314,10 +314,10 @@
                 <span class="dispute-info-block-label">{{ __('Raison') }}</span>
                 <span class="dispute-info-block-value">{{ $reason->reason }}</span>
             </div>
-            @if($reason->custum_description)
+            @if($reason->custom_description)
             <div class="dispute-info-block">
                 <span class="dispute-info-block-label">{{ __('Description détaillée') }}</span>
-                <span class="dispute-info-block-value" style="white-space: pre-wrap;">{{ $reason->custum_description }}</span>
+                <span class="dispute-info-block-value" style="white-space: pre-wrap;">{{ $reason->custom_description }}</span>
             </div>
             @endif
         </div>

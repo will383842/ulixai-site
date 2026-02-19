@@ -20,6 +20,10 @@ use App\Services\Global_Moderations\ModerationService;
 use App\Http\Resources\MissionResource;
 use App\Http\Resources\MissionOfferResource;
 use App\Http\Requests\Mission\StoreOfferRequest;
+use App\Notifications\NewOfferReceivedNotification;
+use App\Notifications\MissionCompletedNotification;
+use App\Notifications\PaymentReceivedNotification;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Gate;
 
 class JobListController extends Controller
@@ -178,6 +182,19 @@ class JobListController extends Controller
                     'offer' => new MissionOfferResource($offer)
                 ]);
             }
+        }
+
+        // Notify requester of new offer
+        try {
+            if ($mission->requester) {
+                NotificationService::send(
+                    $mission->requester,
+                    new NewOfferReceivedNotification($mission, $offer, $provider),
+                    NotificationService::TYPE_MISSION
+                );
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send new offer notification', ['error' => $e->getMessage()]);
         }
 
         return response()->json([
@@ -420,6 +437,40 @@ class JobListController extends Controller
         // Update mission status to completed
         $mission->status = 'completed';
         $mission->save();
+
+        // Notify both parties of completion
+        try {
+            // Notify requester
+            if ($mission->requester) {
+                NotificationService::send(
+                    $mission->requester,
+                    new MissionCompletedNotification($mission, true),
+                    NotificationService::TYPE_MISSION
+                );
+            }
+
+            // Notify provider
+            $providerUser = $provider->user;
+            if ($providerUser) {
+                NotificationService::send(
+                    $providerUser,
+                    new MissionCompletedNotification($mission, false),
+                    NotificationService::TYPE_MISSION
+                );
+
+                // Notify provider of payment received
+                $transaction = \App\Models\Transaction::where('mission_id', $mission->id)->first();
+                if ($transaction) {
+                    NotificationService::send(
+                        $providerUser,
+                        new PaymentReceivedNotification($mission, (float) $transaction->amount_paid, $transaction->currency ?? 'EUR'),
+                        NotificationService::TYPE_PAYMENT
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send mission completion notifications', ['error' => $e->getMessage()]);
+        }
 
         return response()->json([
             'success' => true,

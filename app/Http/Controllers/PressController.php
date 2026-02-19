@@ -208,6 +208,42 @@ class PressController extends Controller
     }
 
     /**
+     * Delete all press entries and their associated files (ADMIN).
+     */
+    public function deleteAll()
+    {
+        $pressItems = Press::all();
+
+        foreach ($pressItems as $press) {
+            foreach (['icon', 'pdf', 'guideline_pdf', 'photo'] as $field) {
+                if (!empty($press->{$field}) && Storage::disk('public')->exists($press->{$field})) {
+                    Storage::disk('public')->delete($press->{$field});
+                }
+            }
+            $press->delete();
+        }
+
+        return redirect()->back()->with('success', 'All press entries deleted');
+    }
+
+    /**
+     * Get press items filtered by language (ADMIN, JSON).
+     */
+    public function getByLanguage(Request $request)
+    {
+        $language = $request->query('language', 'en');
+
+        $items = Press::where('language', $language)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $items,
+        ]);
+    }
+
+    /**
      * Hard delete a press row (ADMIN).
      */
     public function destroy($id)
@@ -271,7 +307,7 @@ class PressController extends Controller
 
     public function inquiriesPage()
     {
-        return view('admin.press.inquiries');
+        return view('admin.press-inquiries');
     }
 
     public function inquiriesList(Request $request)

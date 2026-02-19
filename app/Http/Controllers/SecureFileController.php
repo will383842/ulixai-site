@@ -202,8 +202,40 @@ class SecureFileController extends Controller
                 return true;
             }
 
-            // TODO: Check mission ownership if needed
-            return true; // For now, any authenticated user
+            // Extract mission ID from path (e.g., missionAttachments/mission-42/file.pdf)
+            if (preg_match('/mission[_-]?(\d+)/', $path, $matches)) {
+                $missionId = (int) $matches[1];
+                $mission = \App\Models\Mission::find($missionId);
+
+                if (!$mission) {
+                    return false;
+                }
+
+                // Requester can access their mission attachments
+                if ($mission->requester_id === $user->id) {
+                    return true;
+                }
+
+                // Selected provider can access
+                if ($mission->selected_provider_id && $user->serviceProvider
+                    && $mission->selected_provider_id === $user->serviceProvider->id) {
+                    return true;
+                }
+
+                // Provider who made an offer can access
+                $hasOffer = \App\Models\MissionOffer::where('mission_id', $missionId)
+                    ->where('provider_id', optional($user->serviceProvider)->id)
+                    ->exists();
+
+                if ($hasOffer) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            // If no mission ID in path, deny
+            return false;
         }
 
         // Default: deny

@@ -62,8 +62,16 @@ class ConversationController extends Controller
         return ConversationResource::collection($conversations);
     }
 
+    /**
+     * Show a single conversation
+     * ✅ Uses ConversationPolicy for authorization
+     */
     public function show(Conversation $conversation)
     {
+        if (Gate::denies('view', $conversation)) {
+            abort(403, 'Unauthorized access to conversation');
+        }
+
         $conversation->load(['mission', 'messages.sender']);
         return new ConversationResource($conversation);
     }
@@ -94,15 +102,24 @@ class ConversationController extends Controller
         return MessageResource::collection($messages);
     }
 
+    /**
+     * Send a message in a conversation
+     * ✅ Uses ConversationPolicy for authorization
+     */
     public function sendMessage(Request $request, Conversation $conversation)
     {
+        // ✅ Authorization: only conversation participants can send messages
+        if (Gate::denies('sendMessage', $conversation)) {
+            abort(403, 'Unauthorized to send message in this conversation');
+        }
+
         $request->validate([
             'body' => 'nullable|string',
             'files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:20480', // 20MB max
         ]);
 
         $user = Auth::user();
-        
+
         // Ensure at least message body or files are provided
         if (!$request->body && !$request->hasFile('files')) {
             return response()->json(['error' => 'Message body or files are required'], 422);
@@ -190,9 +207,16 @@ class ConversationController extends Controller
         return new ConversationResource($conversation);
     }
 
+    /**
+     * Check online status of conversation partner
+     * ✅ Uses ConversationPolicy for authorization
+     */
     public function status(Conversation $conversation)
     {
-        // Example: check if provider is online (using cache or last seen)
+        if (Gate::denies('view', $conversation)) {
+            abort(403, 'Unauthorized access to conversation');
+        }
+
         $providerUserId = $conversation->provider->user_id;
         $isOnline = cache()->has('user-is-online-' . $providerUserId);
         return response()->json(['online' => $isOnline]);
@@ -259,6 +283,10 @@ class ConversationController extends Controller
         return response()->json(['message' => 'Conversation reported successfully.']);
     }
 
+    /**
+     * Mark a message as read
+     * ✅ Only conversation participants can mark messages as read
+     */
     public function isRead($id)
     {
         try {
@@ -266,7 +294,16 @@ class ConversationController extends Controller
 
             $message = Message::findOrFail($id);
 
-            $message->update(['is_read' => true]);
+            // ✅ Authorization: verify user is a participant of this conversation
+            $conversation = $message->conversation;
+            if (Gate::denies('view', $conversation)) {
+                abort(403, 'Unauthorized access to this message');
+            }
+
+            // Only mark as read if the current user is NOT the sender
+            if ($message->sender_id !== $user->id) {
+                $message->update(['is_read' => true]);
+            }
 
             return response()->json([
                 'success' => true,

@@ -304,7 +304,7 @@
             @if($reason)
             <div class="dispute-reason">
                 <div class="dispute-reason-label">{{ __('Motif du litige') }}</div>
-                <div class="dispute-reason-text">{{ $reason->custum_description ?? $reason->reason }}</div>
+                <div class="dispute-reason-text">{{ $reason->custom_description ?? $reason->reason }}</div>
             </div>
             @endif
 

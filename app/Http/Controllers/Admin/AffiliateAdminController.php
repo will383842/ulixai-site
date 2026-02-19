@@ -444,34 +444,6 @@ class AffiliateAdminController extends Controller
     }
 
     /**
-     * Update affiliate settings (commission rate, etc.).
-     */
-    public function updateSettings(Request $request)
-    {
-        $request->validate([
-            'affiliate_commission_rate' => 'required|numeric|min:0|max:100',
-            'minimum_payout_amount' => 'required|numeric|min:1',
-            'payout_frequency' => 'required|in:weekly,biweekly,monthly',
-        ]);
-
-        // Update settings in database or config
-        $settings = [
-            'affiliate_commission_rate' => $request->input('affiliate_commission_rate'),
-            'minimum_payout_amount' => $request->input('minimum_payout_amount'),
-            'payout_frequency' => $request->input('payout_frequency'),
-        ];
-
-        // You would save these to a settings table or config
-        // For now, log the change
-        Log::info('Affiliate settings updated', [
-            'settings' => $settings,
-            'admin_id' => auth()->guard('admin')->id(),
-        ]);
-
-        return back()->with('success', 'Affiliate settings updated successfully.');
-    }
-
-    /**
      * Export affiliates data to CSV.
      */
     public function exportAffiliates(Request $request)

@@ -24,7 +24,7 @@
                 Carte mondiale
             </a>
             @if(session('admin_id'))
-            <form method="POST" action="{{ route('admin.restore-admin') }}" style="margin: 0;">
+            <form method="POST" action="{{ route('restore-admin') }}" style="margin: 0;">
                 @csrf
                 <button type="submit" class="btn btn-danger">
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">

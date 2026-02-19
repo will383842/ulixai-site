@@ -167,7 +167,7 @@ class StripeWebhookController extends Controller
             Log::info('✅ Stripe dispute WON', ['dispute_id' => $dispute->id, 'transaction_id' => $transaction->id]);
         } else {
             // Dispute perdue : marquer comme remboursé (fonds déjà prélevés par Stripe)
-            $transaction->update(['status' => 'refunded', 'dispute_status' => 'lost']);
+            $transaction->update(['status' => 'refunded', 'dispute_status' => 'lost', 'refunded_at' => now()]);
             if ($transaction->mission) {
                 $transaction->mission->update(['status' => 'refunded']);
             }

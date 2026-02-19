@@ -34,13 +34,10 @@ class ServiceProvider extends Model
         'email',
         'documents',
         'ip_address',
-        'stripe_account_id',
+        // stripe_account_id, stripe_chg_enabled, stripe_pts_enabled, kyc_link, kyc_status
+        // removed from $fillable — assign directly to prevent mass-assignment abuse
         'paypal_email',
         'slug',
-        'stripe_chg_enabled',
-        'stripe_pts_enabled', 
-        'kyc_link',
-        'kyc_status',
         'points',
         'ulysse_status',
         'provider_visibility',
