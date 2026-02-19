@@ -128,6 +128,9 @@ class DisputeController extends Controller
         $mission = Mission::findOrFail($request->mission_id);
         $transaction = $mission->transactions()->where('status', 'paid')->firstOrFail();
         $commission = \App\Models\UlixCommission::first();
+        if (!$commission) {
+            return response()->json(['message' => 'Commission configuration not found. Please configure platform fees in admin.'], 500);
+        }
         $provider = $mission->selectedProvider;
 
         $commissionAmount = ($commission->affiliate_fee * $transaction->provider_fee);

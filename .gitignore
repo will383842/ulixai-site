@@ -20,9 +20,10 @@ build/
 # ============================================
 # FICHIERS SENSIBLES - SÉCURITÉ CRITIQUE
 # ============================================
-# Variables d'environnement
+# Variables d'environnement (sauf .env.example qui doit être versionné)
 .env
 .env.*
+!.env.example
 *.env
 
 # Fichiers de sauvegarde (peuvent contenir des données sensibles)

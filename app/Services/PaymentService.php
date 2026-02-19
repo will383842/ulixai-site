@@ -257,6 +257,9 @@ class PaymentService
             }
 
             $commission = \App\Models\UlixCommission::first();
+            if (!$commission) {
+                throw new \Exception('Commission configuration not found. Please configure platform fees in admin.');
+            }
             $transaction = $mission->transactions()->first();
 
             if (!$transaction || !$transaction->stripe_payment_intent_id) {

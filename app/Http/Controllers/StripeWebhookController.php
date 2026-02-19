@@ -37,15 +37,23 @@ class StripeWebhookController extends Controller
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        match ($event->type) {
-            'payment_intent.succeeded' => $this->handlePaymentSuccess($event->data->object),
-            'payment_intent.payment_failed' => $this->handlePaymentFailed($event->data->object),
-            'charge.dispute.created' => $this->handleDisputeCreated($event->data->object),
-            'charge.dispute.updated' => $this->handleDisputeUpdated($event->data->object),
-            'charge.dispute.funds_withdrawn' => $this->handleDisputeFundsWithdrawn($event->data->object),
-            'charge.dispute.closed' => $this->handleDisputeClosed($event->data->object),
-            default => Log::debug('Stripe webhook unhandled: ' . $event->type),
-        };
+        try {
+            match ($event->type) {
+                'payment_intent.succeeded' => $this->handlePaymentSuccess($event->data->object),
+                'payment_intent.payment_failed' => $this->handlePaymentFailed($event->data->object),
+                'charge.dispute.created' => $this->handleDisputeCreated($event->data->object),
+                'charge.dispute.updated' => $this->handleDisputeUpdated($event->data->object),
+                'charge.dispute.funds_withdrawn' => $this->handleDisputeFundsWithdrawn($event->data->object),
+                'charge.dispute.closed' => $this->handleDisputeClosed($event->data->object),
+                default => Log::debug('Stripe webhook unhandled: ' . $event->type),
+            };
+        } catch (\Exception $e) {
+            Log::error('❌ Webhook handler failed: ' . $e->getMessage(), [
+                'event_type' => $event->type,
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json(['error' => 'Processing failed'], 500);
+        }
 
         return response()->json(['status' => 'success'], 200);
     }
@@ -191,13 +199,15 @@ class StripeWebhookController extends Controller
                 . "Mission ID: {$transaction->mission_id}\n";
         }
 
-        try {
-            Mail::raw($body, function ($mail) use ($adminEmail, $event) {
-                $mail->to($adminEmail)->subject("[ULIXAI] Stripe Dispute {$event}");
-            });
-        } catch (\Throwable $e) {
-            Log::error('Failed to send dispute notification email', ['error' => $e->getMessage()]);
-        }
+        dispatch(function () use ($adminEmail, $event, $body) {
+            try {
+                Mail::raw($body, function ($mail) use ($adminEmail, $event) {
+                    $mail->to($adminEmail)->subject("[ULIXAI] Stripe Dispute {$event}");
+                });
+            } catch (\Throwable $e) {
+                Log::error('Failed to send dispute notification email', ['error' => $e->getMessage()]);
+            }
+        })->afterResponse();
     }
 
     /**
@@ -240,6 +250,9 @@ class StripeWebhookController extends Controller
         }
 
         $commission = UlixCommission::first();
+        if (!$commission) {
+            throw new \RuntimeException('Commission configuration not found. Please configure platform fees in admin.');
+        }
 
         // ✅ SÉCURITÉ: Transaction DB avec lock pour éviter les race conditions
         try {
@@ -323,6 +336,7 @@ class StripeWebhookController extends Controller
                 'mission_id' => $missionId,
                 'trace' => $e->getTraceAsString()
             ]);
+            throw $e; // Re-throw so handleWebhook returns HTTP 500 → Stripe will retry
         }
     }
 }
