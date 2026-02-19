@@ -291,9 +291,11 @@ class PaymentService
             // après paiement et avant libération, ce qui serait une incohérence contractuelle.
             $amountInCurrency = CurrencyService::fromCents($stripeIntent->amount_received, $currency);
             $providerFeeAmount = (float) $transaction->provider_fee;
+            $clientFeeAmount = (float) $transaction->client_fee;
 
-            // Le montant transféré = montant reçu - frais prestataire gelés
-            $transferAmount = (int) round(CurrencyService::toCents($amountInCurrency - $providerFeeAmount, $currency));
+            // Le montant transféré = montant reçu - frais prestataire gelés - frais client gelés
+            // Le client_fee doit rester chez Ulixai, pas être transféré au prestataire
+            $transferAmount = (int) round(CurrencyService::toCents($amountInCurrency - $providerFeeAmount - $clientFeeAmount, $currency));
 
             // La commission affilié est basée sur un pourcentage du provider_fee gelé
             $affiliateCommissionAmount = round($commission->affiliate_fee * $providerFeeAmount, 2);
