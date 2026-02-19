@@ -80,25 +80,6 @@
                             <p class="mt-1 text-xs text-gray-500">Frais facturés aux prestataires de services</p>
                         </div>
 
-                        <!-- Organization Fee -->
-                        <div>
-                            <label for="org_fee" class="block text-xs font-medium text-gray-500 mb-2">
-                                Commission organisation
-                            </label>
-                            <div class="relative">
-                                <input type="number" step="0.01" min="0" max="100"
-                                       name="org_fee"
-                                       id="org_fee"
-                                       value="{{ old('org_fee', $commission->org_fee) }}"
-                                       class="form-input pr-12"
-                                       required>
-                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 font-medium">%</span>
-                                </div>
-                            </div>
-                            <p class="mt-1 text-xs text-gray-500">Frais alloués aux opérations de l'organisation</p>
-                        </div>
-
                         <!-- Affiliate Fee -->
                         <div>
                             <label for="affiliate_fee" class="block text-xs font-medium text-gray-500 mb-2">
@@ -162,10 +143,6 @@
                         <span class="text-sm text-gray-600">Prestataires</span>
                         <span class="font-semibold text-green-600">{{ $commission->provider_fee }}%</span>
                     </div>
-                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                        <span class="text-sm text-gray-600">Organisation</span>
-                        <span class="font-semibold text-purple-600">{{ $commission->org_fee }}%</span>
-                    </div>
                     <div class="flex justify-between items-center py-2">
                         <span class="text-sm text-gray-600">Affiliés</span>
                         <span class="font-semibold text-orange-600">{{ $commission->affiliate_fee }}%</span>
@@ -186,8 +163,7 @@
                         <div class="space-y-2 text-sm text-blue-800">
                             <p><strong>Demandeurs :</strong> Frais lors de la réservation de services</p>
                             <p><strong>Prestataires :</strong> Commission sur les services effectués</p>
-                            <p><strong>Organisation :</strong> Frais opérationnels de la plateforme</p>
-                            <p><strong>Affiliés :</strong> Commissions de parrainage</p>
+<p><strong>Affiliés :</strong> Commissions de parrainage</p>
                         </div>
                     </div>
                 </div>

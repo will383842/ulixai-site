@@ -12,7 +12,6 @@ class UlixCommission extends Model
     protected $fillable = [
         'requester_fee',
         'provider_fee',
-        'org_fee',
         'affiliate_fee',
         'description',
         'is_active'

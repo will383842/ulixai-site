@@ -19,7 +19,6 @@ class ServiceFeesController extends Controller
         $validated = $request->validate([
             'requester_fee' => 'required|numeric|between:0,100',
             'provider_fee' => 'required|numeric|between:0,100',
-            'org_fee' => 'required|numeric|between:0,100',
             'affiliate_fee' => 'required|numeric|between:0,100',
             'description' => 'nullable|string'
         ]);
