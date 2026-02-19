@@ -338,7 +338,7 @@
     @if(auth()->check())
     if (typeof window.Echo !== 'undefined') {
         // Badge messages privés
-        window.Echo.channel('notify-user-{{ auth()->id() }}')
+        window.Echo.private('notify-user-{{ auth()->id() }}')
             .listen('NotifyUser', function(data) {
                 if (data.type === 'message') {
                     const badge = document.getElementById('mobileBadge2025');
@@ -353,7 +353,7 @@
             });
 
         // ✅ NOUVEAU - Badge services (propositions + messages publics)
-        window.Echo.channel('notify-user-{{ auth()->id() }}')
+        window.Echo.private('notify-user-{{ auth()->id() }}')
             .listen('.MissionMessageReceived', function(data) {
                 const badge = document.getElementById('servicesBadge2025');
                 if (badge) {

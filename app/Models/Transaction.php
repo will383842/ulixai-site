@@ -36,6 +36,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $release_scheduled_at
  * @property \Illuminate\Support\Carbon|null $released_at
  * @property string|null $release_blocked_reason
+ * @property string|null $dispute_id
+ * @property string|null $dispute_reason
+ * @property string|null $dispute_status
+ * @property \Illuminate\Support\Carbon|null $disputed_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  *
@@ -75,6 +79,10 @@ class Transaction extends Model
         'release_scheduled_at',
         'released_at',
         'release_blocked_reason',
+        'dispute_id',
+        'dispute_reason',
+        'dispute_status',
+        'disputed_at',
     ];
 
     /**
@@ -90,6 +98,7 @@ class Transaction extends Model
         'captured_at' => 'datetime',
         'release_scheduled_at' => 'datetime',
         'released_at' => 'datetime',
+        'disputed_at' => 'datetime',
     ];
 
     /**

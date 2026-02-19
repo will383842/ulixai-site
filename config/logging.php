@@ -122,6 +122,14 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
         ],
+
+        // Paiements : Stripe, PayPal, erreurs financières critiques
+        'payments' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payments.log'),
+            'level' => 'debug',
+            'days' => 90,
+        ],
     ],
 
 ];

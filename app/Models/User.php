@@ -16,46 +16,45 @@ class User extends Authenticatable
     use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
+        // Auth & identity
         'name',
         'email',
         'password',
         'email_verified_at',
         'email_otp',
+        'remember_token',
+        'last_login_at',
+        // Registration & affiliation
         'country',
         'affiliate_code',
         'referred_by',
         'referral_stats',
-        'status',
-        'user_role',
+        // User preferences
         'preferred_language',
         'preferred_currency',
         'spoken_languages',
-        'is_fake',
-        'last_login_at',
-        'remember_token',
+        // Personal info
         'gender',
-        'credit_balance',
-        'affiliate_balance',
-        'pending_affiliate_balance',
         'dob',
         'address',
         'phone_number',
+        // Banking (protected by UpdateBankingDetailsRequest policy)
         'bank_account_holder',
         'bank_account_iban',
         'bank_swift_bic',
         'bank_name',
         'account_country',
         'bank_details_verified_at',
-        // Moderation fields
-        'strike_count',
-        'last_strike_at',
-        'ban_reason',
-        'banned_at',
-        'can_appeal',
-        'appeal_until',
-        'trust_score',
-        'requires_review',
     ];
+
+    /**
+     * Champs non-assignables en masse (admin/modération/finance uniquement).
+     * Utiliser l'assignation directe : $user->status = '...'; $user->save()
+     *
+     * NE PAS ajouter ici : status, user_role, is_fake, credit_balance,
+     * affiliate_balance, pending_affiliate_balance, strike_count, ban_reason,
+     * banned_at, can_appeal, appeal_until, trust_score, requires_review.
+     */
 
     protected $hidden = [
         'password',

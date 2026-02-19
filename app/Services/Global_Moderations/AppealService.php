@@ -68,7 +68,7 @@ class AppealService
             ]);
 
             // Marquer que l'utilisateur ne peut plus faire appel (un seul appel autorisé)
-            $user->update(['can_appeal' => false]);
+            $user->forceFill(['can_appeal' => false])->save();
 
             ModerationAction::create([
                 'user_id' => $user->id,
@@ -121,12 +121,12 @@ class AppealService
                     );
                 } elseif ($appeal->appeal_type === 'suspension') {
                     // Lever la suspension
-                    $user->update([
+                    $user->forceFill([
                         'status' => 'active',
                         'ban_reason' => null,
                         'banned_at' => null,
                         'appeal_until' => null,
-                    ]);
+                    ])->save();
                 } else {
                     // Retirer le dernier strike actif
                     $lastStrike = $user->activeStrikes()->latest()->first();

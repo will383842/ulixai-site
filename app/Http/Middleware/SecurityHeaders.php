@@ -9,6 +9,13 @@ use Symfony\Component\HttpFoundation\Response;
 class SecurityHeaders
 {
     /**
+     * Nonce CSP généré une fois par requête, partagé avec toutes les vues Blade
+     * via $cspNonce. Les navigateurs modernes ignorent 'unsafe-inline' dès qu'un
+     * nonce est présent dans la directive script-src.
+     */
+    private string $nonce = '';
+
+    /**
      * Headers de sécurité à appliquer sur toutes les réponses.
      *
      * SECURITY HEADERS:
@@ -22,6 +29,10 @@ class SecurityHeaders
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Générer un nonce unique par requête et l'exposer aux vues Blade
+        $this->nonce = base64_encode(random_bytes(16));
+        view()->share('cspNonce', $this->nonce);
+
         $response = $next($request);
 
         // ═══════════════════════════════════════════════════════════
@@ -97,9 +108,11 @@ class SecurityHeaders
             // Default: only allow from same origin
             "default-src 'self'",
 
-            // Scripts: self + trusted CDNs + inline for legacy compatibility
-            // NOTE: Remove 'unsafe-inline' when migrating to nonce-based CSP
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' " .
+            // Scripts: nonce obligatoire — les navigateurs modernes ignorent 'unsafe-inline'
+            // dès qu'un nonce est présent. 'unsafe-inline' reste en fallback pour les vieux
+            // navigateurs pendant la période de migration. 'unsafe-eval' supprimé définitivement.
+            // Dans les templates Blade, utiliser : <script nonce="{{ $cspNonce }}">
+            "script-src 'self' 'nonce-{$this->nonce}' 'unsafe-inline' " .
                 "https://js.stripe.com " .
                 "https://www.paypal.com " .
                 "https://www.google.com " .

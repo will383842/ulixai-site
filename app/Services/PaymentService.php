@@ -282,18 +282,17 @@ class PaymentService
             // Récupérer la devise depuis la transaction ou utiliser EUR par défaut
             $currency = strtoupper($transaction->currency ?? 'EUR');
 
-            // ✅ Calculer les frais prestataire avec le minimum appliqué
+            // ✅ C-08: Utiliser les frais GELÉS au moment du paiement, pas de recalcul live.
+            // Le provider_fee est fixé dans la transaction lors du webhook payment_intent.succeeded.
+            // Recalculer ici avec le taux live permettrait à un admin de modifier les frais
+            // après paiement et avant libération, ce qui serait une incohérence contractuelle.
             $amountInCurrency = CurrencyService::fromCents($stripeIntent->amount_received, $currency);
-            $calculatedProviderFee = round($amountInCurrency * $commission->provider_fee, 2);
-            $minimumServiceFee = CurrencyService::getMinimumServiceFeeStatic($currency);
-            $providerFeeAmount = max($calculatedProviderFee, $minimumServiceFee);
+            $providerFeeAmount = (float) $transaction->provider_fee;
 
-            // ✅ CORRECTION: Utiliser round() pour éviter les erreurs de précision
-            // Le montant transféré = montant reçu - frais prestataire (avec minimum appliqué)
+            // Le montant transféré = montant reçu - frais prestataire gelés
             $transferAmount = (int) round(CurrencyService::toCents($amountInCurrency - $providerFeeAmount, $currency));
 
-            // ✅ CORRECTION: Formule simplifiée et corrigée pour la commission affilié
-            // La commission affilié est basée sur un pourcentage du provider_fee (avec minimum appliqué)
+            // La commission affilié est basée sur un pourcentage du provider_fee gelé
             $affiliateCommissionAmount = round($commission->affiliate_fee * $providerFeeAmount, 2);
 
             // Devise en minuscules pour Stripe
@@ -302,6 +301,11 @@ class PaymentService
             // ✅ SÉCURITÉ: Transaction DB pour garantir l'atomicité
             return DB::transaction(function () use ($mission, $provider, $transferAmount, $affiliateCommissionAmount, $transaction, $currency, $currencyLower) {
                 // 1. Créer le transfert Stripe vers le prestataire
+                // ✅ M-02: Clé d'idempotence pour éviter les doublons en cas de crash
+                // après l'appel Stripe mais avant la sauvegarde en DB.
+                // Stripe retournera le même objet Transfer si la clé est réutilisée.
+                $idempotencyKey = 'transfer-mission-' . $mission->id . '-tx-' . $transaction->id;
+
                 $transfer = Transfer::create([
                     'amount' => $transferAmount,
                     'currency' => $currencyLower,
@@ -312,7 +316,7 @@ class PaymentService
                         'provider_id' => $provider->id,
                         'transaction_id' => $transaction->id,
                     ],
-                ]);
+                ], ['idempotency_key' => $idempotencyKey]);
 
                 // ✅ SÉCURITÉ: Enregistrer l'ID du transfert pour éviter les doublons
                 $transaction->update(['stripe_transfer_id' => $transfer->id]);

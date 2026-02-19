@@ -306,10 +306,10 @@ class ProviderDocumentVerificationService
             ->exists();
 
         if ($hasVerifiedPhoto && $hasVerifiedDocument && !$user->identity_verified) {
-            $user->update([
+            $user->forceFill([
                 'identity_verified' => true,
-                'identity_verified_at' => now()
-            ]);
+                'identity_verified_at' => now(),
+            ])->save();
 
             Log::channel('google-vision')->info('User identity fully verified', [
                 'user_id' => $userId

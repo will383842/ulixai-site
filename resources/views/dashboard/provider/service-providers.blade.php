@@ -662,7 +662,7 @@
                 },
                 "aggregateRating": {
                     "@type": "AggregateRating",
-                    "ratingValue": "{{ number_format($provider->reviews()->avg('rating') ?? 5, 1) }}",
+                    "ratingValue": "{{ number_format($provider->reviews->avg('rating') ?? 5, 1) }}",
                     "bestRating": "5",
                     "worstRating": "1"
                 }
@@ -1138,7 +1138,7 @@
                 <!-- Rating -->
                 <div class="rating-display">
                     <i class="fas fa-star star-icon"></i>
-                    <span class="rating-text">{{ number_format($provider->reviews()->avg('rating') ?? 5, 1) }} / 5</span>
+                    <span class="rating-text">{{ number_format($provider->reviews->avg('rating') ?? 5, 1) }} / 5</span>
                 </div>
                 
                 <!-- Provider Name & Join Date -->

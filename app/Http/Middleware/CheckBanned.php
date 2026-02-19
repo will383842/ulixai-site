@@ -16,6 +16,7 @@ class CheckBanned
         'appeal/*',
         'logout',
         'banned',
+        'suspended',
         'api/appeal/*',
     ];
 
@@ -94,12 +95,12 @@ class CheckBanned
         // Vérifier si la suspension est terminée
         if ($user->appeal_until && now()->isAfter($user->appeal_until)) {
             // La suspension est terminée, réactiver le compte
-            $user->update([
-                'status' => 'active',
-                'ban_reason' => null,
-                'banned_at' => null,
-                'appeal_until' => null,
-            ]);
+            // Champs hors fillable — assignation directe (C-05)
+            $user->status = 'active';
+            $user->ban_reason = null;
+            $user->banned_at = null;
+            $user->appeal_until = null;
+            $user->save();
 
             return $this->handle($request, function ($req) use ($user) {
                 return response()->json(['status' => 'active']);

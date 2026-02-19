@@ -14,6 +14,7 @@ use App\Services\GeolocationService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
+use Illuminate\Support\Facades\DB;
 
 
 class RegisterController extends Controller
@@ -22,19 +23,19 @@ class RegisterController extends Controller
      * ═══════════════════════════════════════════════════════════
      * 🔐 PROVIDER REGISTRATION (WIZARD FINAL STEP)
      * ═══════════════════════════════════════════════════════════
-     * ⚠️ RÈGLES PASSWORD: Min 6 chars + 1 majuscule + 1 chiffre
+     * ⚠️ RÈGLES PASSWORD: Min 8 chars + 1 majuscule + 1 chiffre
      */
     public function register(Request $request)
     {
         // ═══════════════════════════════════════════════════════════
         // 🔐 VALIDATION DU PASSWORD
-        // Min 6 caractères, majuscule, chiffre
+        // Min 8 caractères, majuscule, chiffre
         // ═══════════════════════════════════════════════════════════
         $validated = $request->validate([
             'password' => [
                 'required',
                 'string',
-                'min:6',
+                'min:8',
                 'regex:/[A-Z]/',             // At least one uppercase
                 'regex:/[0-9]/',             // At least one digit
             ],
@@ -43,7 +44,7 @@ class RegisterController extends Controller
             'last_name' => 'nullable|string|max:255',
         ], [
             'password.required' => 'Password is required',
-            'password.min' => 'Password must be at least 6 characters',
+            'password.min' => 'Password must be at least 8 characters',
             'password.regex' => 'Password must contain at least one uppercase letter and one number',
         ]);
 
@@ -74,26 +75,7 @@ class RegisterController extends Controller
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 🔐 METTRE À JOUR LE PASSWORD
-        // ═══════════════════════════════════════════════════════════
-        if (!empty($expats['password'])) {
-            $user->password = Hash::make($expats['password']);
-        }
-        
-        // Mettre à jour le statut et autres infos
-        $user->user_role = 'service_provider';
-        $user->status = 'active';
-        $user->name = trim(($expats['first_name'] ?? '') . ' ' . ($expats['last_name'] ?? ''));
-        $user->country = $countryName;
-        $user->preferred_language = $expats['native_language'] ?? null;
-        $user->last_login_at = now();
-        $user->save();
-        
-        // Régénérer la session après mise à jour
-        $request->session()->regenerate();
-
-        // ═══════════════════════════════════════════════════════════
-        // 📸 PROFILE IMAGE
+        // 📸 PROFILE IMAGE (avant transaction — filesystem non rollbackable)
         // ═══════════════════════════════════════════════════════════
         $profileImagePath = null;
         if (!empty($expats['profile_image'])) {
@@ -101,7 +83,7 @@ class RegisterController extends Controller
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 📄 DOCUMENTS
+        // 📄 DOCUMENTS (avant transaction — filesystem non rollbackable)
         // ═══════════════════════════════════════════════════════════
         $documents = [];
         $docTypes = ['passport', 'european_id', 'license'];
@@ -122,33 +104,12 @@ class RegisterController extends Controller
                 $documents[$docType] = $docArr;
             }
         }
- 
-        // ═══════════════════════════════════════════════════════════
-        // 🏢 VÉRIFIER SI PROVIDER EXISTE
-        // ═══════════════════════════════════════════════════════════
-        $provider = ServiceProvider::where('user_id', $user->id)->first();
 
-        if($provider) {
-            // S'assurer que le user est connecté
-            if (!Auth::check()) {
-                Auth::login($user, true);
-                $request->session()->regenerate();
-            }
-            
-            return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'provider' => $provider,
-                'message' => 'Provider already exists',
-                'redirect' => url('/dashboard')
-            ]);
-        }
-        
         // ═══════════════════════════════════════════════════════════
-        // 🏗️ CRÉER LE PROVIDER
+        // 🏗️ PRÉPARER LES DONNÉES PROVIDER
         // ═══════════════════════════════════════════════════════════
         $categoriesMetaData = isset($expats['provider_subcategories']) ? json_encode($expats['provider_subcategories']) : null;
-        $categoriesArray = json_decode($categoriesMetaData, true); 
+        $categoriesArray = json_decode($categoriesMetaData, true);
         $category = array_keys($categoriesArray);
         $subcategoryArray = [];
         $subcategory = array_values($categoriesArray);
@@ -163,37 +124,65 @@ class RegisterController extends Controller
                 $subcategoryArray[] = $value;
             }
         }
-        
+
         $slug = $this->generateSlug($expats, $countryName);
         $countryCoords = Country::where('country', $expats['location'])->first();
         $coords = $countryCoords->coordinates ?? null;
-       
-        $provider = ServiceProvider::create([
-            'user_id' => $user->id,
-            'first_name' => $expats['first_name'] ?? null,
-            'last_name' => $expats['last_name'] ?? null,
-            'native_language' => $expats['native_language'] ?? null,
-            'spoken_language' => $expats['spoken_language'],
-            'services_to_offer' =>  json_encode($category) ?? null,
-            'services_to_offer_category' => json_encode($subcategoryArray) ?? null,
-            'provider_address' => $expats['location'] ?? null,
-            'operational_countries' => $expats['operational_countries'] ?? null,
-            'communication_online' => $this->truthy($expats, 'communication_preference.Online'),
-            'communication_inperson' => $this->truthy($expats, 'communication_preference.In Person'),
-            'profile_description' => $expats['profile_description'] ?? null,
-            'profile_photo' => $profileImagePath,
-            'provider_docs' => null,
-            'phone_number' => $expats['phone_number'] ?? null,
-            'country' => $countryName, 
-            'preferred_language' => $expats['native_language'] ?? null,
-            'special_status' => isset($expats['special_status']) ? json_encode($expats['special_status']) : null,
-            'email' => $expats['email'],
-            'documents' => !empty($documents) ? json_encode($documents) : null,
-            'ip_address' => $ip,
-            'slug' => $slug,
-            'country_coords' => $coords,
-            'city_coords' => null 
-        ]);
+
+        // ═══════════════════════════════════════════════════════════
+        // 💾 TRANSACTION DB : mise à jour user + création provider
+        // ═══════════════════════════════════════════════════════════
+        $provider = DB::transaction(function () use ($user, $expats, $profileImagePath, $documents, $slug, $countryName, $ip, $coords, $category, $subcategoryArray) {
+
+            // Mettre à jour le password et les infos user
+            if (!empty($expats['password'])) {
+                $user->password = Hash::make($expats['password']);
+            }
+            $user->user_role = 'service_provider';
+            $user->status = 'active';
+            $user->name = trim(($expats['first_name'] ?? '') . ' ' . ($expats['last_name'] ?? ''));
+            $user->country = $countryName;
+            $user->preferred_language = $expats['native_language'] ?? null;
+            $user->last_login_at = now();
+            $user->save();
+
+            // Vérifier si provider existe déjà (dans la transaction pour éviter les races)
+            $existing = ServiceProvider::where('user_id', $user->id)->first();
+            if ($existing) {
+                return $existing;
+            }
+
+            // Créer le provider
+            return ServiceProvider::create([
+                'user_id' => $user->id,
+                'first_name' => $expats['first_name'] ?? null,
+                'last_name' => $expats['last_name'] ?? null,
+                'native_language' => $expats['native_language'] ?? null,
+                'spoken_language' => $expats['spoken_language'],
+                'services_to_offer' => json_encode($category) ?? null,
+                'services_to_offer_category' => json_encode($subcategoryArray) ?? null,
+                'provider_address' => $expats['location'] ?? null,
+                'operational_countries' => $expats['operational_countries'] ?? null,
+                'communication_online' => $this->truthy($expats, 'communication_preference.Online'),
+                'communication_inperson' => $this->truthy($expats, 'communication_preference.In Person'),
+                'profile_description' => $expats['profile_description'] ?? null,
+                'profile_photo' => $profileImagePath,
+                'provider_docs' => null,
+                'phone_number' => $expats['phone_number'] ?? null,
+                'country' => $countryName,
+                'preferred_language' => $expats['native_language'] ?? null,
+                'special_status' => isset($expats['special_status']) ? json_encode($expats['special_status']) : null,
+                'email' => $expats['email'],
+                'documents' => !empty($documents) ? json_encode($documents) : null,
+                'ip_address' => $ip,
+                'slug' => $slug,
+                'country_coords' => $coords,
+                'city_coords' => null,
+            ]);
+        });
+
+        // Régénérer la session après mise à jour user
+        $request->session()->regenerate();
         
         // ═══════════════════════════════════════════════════════════
         // 💳 STRIPE CONNECT
@@ -250,13 +239,13 @@ class RegisterController extends Controller
                 'password' => [
                     'required',
                     'string',
-                    'min:6',
+                    'min:8',
                     'regex:/[A-Z]/',             // At least one uppercase
                     'regex:/[0-9]/',             // At least one digit
                 ],
                 'gender' => 'nullable|in:Male,Female'
             ], [
-                'password.min' => 'Password must be at least 6 characters',
+                'password.min' => 'Password must be at least 8 characters',
                 'password.regex' => 'Password must contain at least one uppercase letter and one number',
             ]);
 
@@ -265,21 +254,26 @@ class RegisterController extends Controller
             }
 
             $affiliateLink = $this->generateAffiliateLink($request->input('email') ?? '', $request->input('name') ?? '', $request->input('last_name') ?? '');
-            
-            $user = User::create([
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'password' => Hash::make($request->input('password')),
-                'user_role' => 'service_requester',
-                'status' => 'active',
-                'affiliate_code' => $affiliateLink,
-                'gender' => $request->input('gender'),
-                'referred_by' => $referrer ? $referrer->id : null,
-                'email_verified_at' => now()
-            ]);
+
+            $user = DB::transaction(function () use ($request, $referrer, $affiliateLink) {
+                $user = new User([
+                    'name' => $request->input('name'),
+                    'email' => $request->input('email'),
+                    'password' => Hash::make($request->input('password')),
+                    'affiliate_code' => $affiliateLink,
+                    'gender' => $request->input('gender'),
+                    'referred_by' => $referrer ? $referrer->id : null,
+                    'email_verified_at' => now(),
+                    'last_login_at' => now(),
+                ]);
+                // Champs hors fillable — assignation directe
+                $user->status = 'active';
+                $user->user_role = 'service_requester';
+                $user->save();
+                return $user;
+            });
 
             Auth::login($user);
-            $user->update(['last_login_at' => now()]);
 
             return view('dashboard.dashboard-index', [
                 'user' => $user,
@@ -318,10 +312,14 @@ class RegisterController extends Controller
             [
                 'name' => 'Temp User',
                 'password' => Hash::make(Str::random(16)),
-                'user_role' => 'service_provider',
-                'status' => 'pending'
             ]
         );
+        // Champs hors fillable — assignation directe sur création uniquement
+        if ($user->wasRecentlyCreated) {
+            $user->status = 'pending';
+            $user->user_role = 'service_provider';
+            $user->save();
+        }
 
         $otp = random_int(100000, 999999);
 

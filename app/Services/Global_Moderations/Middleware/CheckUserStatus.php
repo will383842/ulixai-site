@@ -45,12 +45,12 @@ class CheckUserStatus
             // Vérifier si la suspension est terminée
             if ($user->appeal_until && now()->isAfter($user->appeal_until)) {
                 // Lever automatiquement la suspension
-                $user->update([
+                $user->forceFill([
                     'status' => 'active',
                     'ban_reason' => null,
                     'banned_at' => null,
                     'appeal_until' => null,
-                ]);
+                ])->save();
 
                 return $next($request);
             }

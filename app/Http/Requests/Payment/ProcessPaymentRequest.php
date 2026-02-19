@@ -8,10 +8,20 @@ class ProcessPaymentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * Vérifie que le payment_intent_id a bien été créé dans la session de l'utilisateur
+     * courant (stocké lors du checkout). Empêche qu'un utilisateur confirme un PI
+     * appartenant à une autre session.
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (!auth()->check()) {
+            return false;
+        }
+
+        $piId = $this->input('payment_intent_id');
+
+        return session('pending_pi.' . $piId) === auth()->id();
     }
 
     /**

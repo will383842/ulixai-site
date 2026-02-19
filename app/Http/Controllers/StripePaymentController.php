@@ -106,6 +106,9 @@ class StripePaymentController extends Controller
             ],
         ]);
 
+        // Stocker le PI dans la session pour vérification d'ownership dans processPayment()
+        session()->put('pending_pi.' . $paymentIntent->id, auth()->id());
+
         // ✅ CORRECTION : Ne plus modifier la mission ICI
         // On attend la confirmation du paiement dans processPayment()
         // L'annonce reste visible jusqu'au paiement effectif

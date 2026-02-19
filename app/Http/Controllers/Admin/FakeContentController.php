@@ -454,11 +454,11 @@ if ($type === 'provider') {
 
         if ($type === 'requester') {
             $user = User::where('is_fake', true)->where('user_role', 'service_requester')->findOrFail($id);
-            $user->update($request->only(['name', 'email', 'status']));
+            $user->forceFill($request->only(['name', 'email', 'status']))->save();
         } elseif ($type === 'provider') {
             $provider = ServiceProvider::findOrFail($id);
             $provider->update($request->only(['first_name', 'last_name', 'country', 'ulysse_status', 'points']));
-            $provider->user->update($request->only(['name', 'email', 'status']));
+            $provider->user->forceFill($request->only(['name', 'email', 'status']))->save();
             $this->reputationPointService->updateUlysseStatusManually($provider);
         } elseif ($type === 'mission') {
             $mission = Mission::where('is_fake', true)->findOrFail($id);

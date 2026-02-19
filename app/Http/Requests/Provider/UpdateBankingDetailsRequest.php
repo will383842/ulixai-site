@@ -8,10 +8,14 @@ class UpdateBankingDetailsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * Seuls les service_providers peuvent mettre à jour leurs coordonnées bancaires.
+     * La mise à jour porte toujours sur le compte de l'utilisateur authentifié (pas de user_id externe).
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        $user = auth()->user();
+
+        return $user !== null && $user->user_role === 'service_provider';
     }
 
     /**

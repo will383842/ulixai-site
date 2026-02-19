@@ -1711,7 +1711,7 @@ $completedRequests = $missions->filter(function($m) {
     
     // Laravel Echo pour mises à jour temps réel
     if (window.Echo) {
-        window.Echo.channel('notify-user-{{ auth()->id() }}')
+        window.Echo.private('notify-user-{{ auth()->id() }}')
             .listen('.MissionMessageReceived', (data) => {
                 console.log('New public message received:', data);
                 

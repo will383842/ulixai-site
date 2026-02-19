@@ -2,9 +2,7 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -19,7 +17,7 @@ class NotifyUser implements ShouldBroadcast
     
     protected $conversation;
     protected $message;
-    protected $user;
+    public $user;
     protected $sender;
     protected $title;
 
@@ -35,15 +33,18 @@ class NotifyUser implements ShouldBroadcast
    
     public function broadcastOn()
     {
-        return new Channel('notify-user-' . $this->user);
+        return new PrivateChannel('notify-user-' . $this->user);
     }
-    
-    public function broadcastWith() {
-        return  [
+
+    public function broadcastWith()
+    {
+        return [
             'title' => "New message from {$this->sender} in conversation {$this->title}",
-            'conversation' => $this->conversation,
-            'message' => $this->message,
-            'user' => $this->sender
+            'type' => 'message',
+            'conversation_id' => $this->conversation->id,
+            'mission_id' => $this->conversation->mission_id,
+            'message_id' => $this->message->id,
+            'sender' => $this->sender,
         ];
     }
 

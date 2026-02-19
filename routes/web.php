@@ -231,7 +231,9 @@ Route::post('/signup/store', [UserController::class, 'storeViaSignup'])
     ->middleware('throttle:5,1'); // 5 inscriptions par minute max
 
 // Provider details
-Route::get('providers/{id}', [ServiceProviderController::class, 'providerDetails'])->name('provider-details');
+Route::get('providers/{id}', [ServiceProviderController::class, 'providerDetails'])
+    ->middleware('provider.active')
+    ->name('provider-details');
 
 // Auth (avec rate limiting anti brute-force)
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -309,6 +311,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/banned', function () {
         return view('pages.banned');
     })->name('banned');
+
+    Route::get('/suspended', function () {
+        return view('pages.banned');
+    })->name('suspended');
 
     Route::get('/appeal', [\App\Http\Controllers\AppealController::class, 'create'])
         ->name('appeal.create');
@@ -431,7 +437,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payments/success/{mission}', [StripePaymentController::class, 'success'])->name('payments.success');
     Route::get('/payments/cancel', [StripePaymentController::class, 'cancel'])->name('payments.stripe.cancel');
     Route::get('/payments/paypal/cancel', [PayPalPaymentController::class, 'cancel'])->name('payments.paypal.cancel');
-    Route::get('/payments/paypal/capture/{mission}', [PayPalPaymentController::class, 'capture'])->name('payments.paypal.capture');
+    Route::get('/payments/paypal/capture/{mission}', [PayPalPaymentController::class, 'capture'])
+        ->middleware('throttle:10,1')
+        ->name('payments.paypal.capture');
 
     // Gateway info API
     Route::get('/payments/gateway-info', [PayPalPaymentController::class, 'getGatewayInfo'])->name('payments.gateway-info');

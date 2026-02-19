@@ -69,9 +69,9 @@ class JobListController extends Controller
         return view('dashboard.provider.jobs.job-list', compact('jobs', 'offers', 'ongoingJobs'));
     }
 
-    public function viewJob(Request $request) 
+    public function viewJob(Request $request)
     {
-        $job = Mission::findOrFail($request->id);
+        $job = Mission::with('requester')->findOrFail($request->id);
         return view('dashboard.provider.jobs.view-job', compact('job'));
     }
 

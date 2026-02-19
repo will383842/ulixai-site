@@ -56,13 +56,13 @@ return view('pages.index', compact('providers', 'faqs', 'category', 'countries',
         // Fetch service providers with their user info
         // ✅ Limité à 100 pour performance
         if ($request->input('providers')) {
-            $providers = ServiceProvider::with('user')
+            $providers = ServiceProvider::with(['user', 'reviews'])
                 ->whereIn('slug', json_decode($request->input('providers')))
                 ->latest()
                 ->take(100)
                 ->get();
         } else {
-            $providers = ServiceProvider::with('user')
+            $providers = ServiceProvider::with(['user', 'reviews'])
                 ->latest()
                 ->take(100)
                 ->get();
@@ -80,7 +80,7 @@ return view('pages.index', compact('providers', 'faqs', 'category', 'countries',
         $provider = null;
 
         if ($id) {
-            $provider = ServiceProvider::with('user')->where('slug', $id)->first();
+            $provider = ServiceProvider::with(['user', 'reviews.user'])->where('slug', $id)->first();
         }
 
         if (!$provider) {
@@ -100,7 +100,7 @@ return view('pages.index', compact('providers', 'faqs', 'category', 'countries',
         Log::info('🔍 Provider profile accessed: ' . $slug);
         
         // Chercher le provider par son slug
-        $provider = ServiceProvider::with('user')->where('slug', $slug)->first();
+        $provider = ServiceProvider::with(['user', 'reviews.user'])->where('slug', $slug)->first();
 
         // CAS 1 : Provider n'existe pas du tout
         if (!$provider) {
@@ -289,9 +289,9 @@ return view('pages.index', compact('providers', 'faqs', 'category', 'countries',
                                     ->withAvg('reviews', 'rating')
                                     ->get();
 
-        // Transform the collection to include avgRating
+        // Transform the collection to include avgRating (withAvg already computed reviews_avg_rating)
         $providers = $providers->map(function ($provider) {
-            $provider->avgRating = round($provider->reviews()->avg('rating') ?? 5, 1);
+            $provider->avgRating = round($provider->reviews_avg_rating ?? 5, 1);
             $provider->reviewCount = $provider->reviews->count() ?? 1;
             return $provider;
         });
@@ -458,6 +458,8 @@ return view('pages.index', compact('providers', 'faqs', 'category', 'countries',
             'user_id' => 'required|exists:users,id',
             'description' => 'required|string|max:1000',
         ]);
+
+        abort_if(auth()->id() !== (int)$request->user_id, 403);
 
         $provider = ServiceProvider::where('user_id', $request->user_id)->first();
 

@@ -10,6 +10,7 @@ use App\Models\UlixCommission;
 use Stripe\Webhook;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use App\Services\AuditLogService;
 use App\Services\CurrencyService;
 
@@ -36,22 +37,167 @@ class StripeWebhookController extends Controller
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        // Gérer l'événement payment_intent.succeeded
-        if ($event->type === 'payment_intent.succeeded') {
-            $paymentIntent = $event->data->object;
-            $this->handlePaymentSuccess($paymentIntent);
-        }
-
-        // Gérer payment_intent.payment_failed (optionnel)
-        if ($event->type === 'payment_intent.payment_failed') {
-            $paymentIntent = $event->data->object;
-            Log::warning('⚠️ Payment failed for PaymentIntent: ' . $paymentIntent->id, [
-                'mission_id' => $paymentIntent->metadata->mission_id ?? null,
-                'error' => $paymentIntent->last_payment_error->message ?? 'Unknown error'
-            ]);
-        }
+        match ($event->type) {
+            'payment_intent.succeeded' => $this->handlePaymentSuccess($event->data->object),
+            'payment_intent.payment_failed' => $this->handlePaymentFailed($event->data->object),
+            'charge.dispute.created' => $this->handleDisputeCreated($event->data->object),
+            'charge.dispute.updated' => $this->handleDisputeUpdated($event->data->object),
+            'charge.dispute.funds_withdrawn' => $this->handleDisputeFundsWithdrawn($event->data->object),
+            'charge.dispute.closed' => $this->handleDisputeClosed($event->data->object),
+            default => Log::debug('Stripe webhook unhandled: ' . $event->type),
+        };
 
         return response()->json(['status' => 'success'], 200);
+    }
+
+    private function handlePaymentFailed($paymentIntent): void
+    {
+        Log::warning('⚠️ Payment failed for PaymentIntent: ' . $paymentIntent->id, [
+            'mission_id' => $paymentIntent->metadata->mission_id ?? null,
+            'error' => $paymentIntent->last_payment_error->message ?? 'Unknown error',
+        ]);
+    }
+
+    /**
+     * Dispute ouverte par le client — bloquer immédiatement les fonds escrow.
+     * Stripe débite automatiquement si la dispute n'est pas contestée.
+     */
+    private function handleDisputeCreated(object $dispute): void
+    {
+        $transaction = Transaction::where('stripe_payment_intent_id', $dispute->payment_intent)->first();
+
+        if (!$transaction) {
+            Log::error('Dispute created: transaction not found', ['payment_intent' => $dispute->payment_intent, 'dispute_id' => $dispute->id]);
+            return;
+        }
+
+        DB::transaction(function () use ($transaction, $dispute) {
+            $transaction->update([
+                'status' => 'disputed',
+                'dispute_id' => $dispute->id,
+                'dispute_reason' => $dispute->reason,
+                'dispute_status' => $dispute->status,
+                'disputed_at' => now(),
+            ]);
+
+            if ($transaction->mission) {
+                $transaction->mission->update(['status' => 'disputed']);
+            }
+        });
+
+        $this->notifyAdminDispute('created', $transaction, $dispute);
+
+        Log::critical('💥 Stripe dispute CREATED', [
+            'dispute_id' => $dispute->id,
+            'payment_intent' => $dispute->payment_intent,
+            'transaction_id' => $transaction->id,
+            'mission_id' => $transaction->mission_id,
+            'amount' => $dispute->amount / 100,
+            'reason' => $dispute->reason,
+        ]);
+    }
+
+    /**
+     * Statut de la dispute mis à jour par Stripe.
+     */
+    private function handleDisputeUpdated(object $dispute): void
+    {
+        $transaction = Transaction::where('stripe_payment_intent_id', $dispute->payment_intent)->first();
+
+        if (!$transaction) {
+            return;
+        }
+
+        $transaction->update([
+            'dispute_status' => $dispute->status,
+        ]);
+
+        Log::info('Stripe dispute updated', [
+            'dispute_id' => $dispute->id,
+            'status' => $dispute->status,
+            'transaction_id' => $transaction->id,
+        ]);
+    }
+
+    /**
+     * Stripe a prélevé les fonds (dispute perdue ou en cours) — alerte critique.
+     */
+    private function handleDisputeFundsWithdrawn(object $dispute): void
+    {
+        $transaction = Transaction::where('stripe_payment_intent_id', $dispute->payment_intent)->first();
+
+        if ($transaction) {
+            $transaction->update(['status' => 'dispute_funds_withdrawn', 'dispute_status' => $dispute->status]);
+        }
+
+        $this->notifyAdminDispute('funds_withdrawn', $transaction, $dispute);
+
+        Log::critical('💸 Stripe dispute FUNDS WITHDRAWN', [
+            'dispute_id' => $dispute->id,
+            'payment_intent' => $dispute->payment_intent,
+            'amount_withdrawn' => $dispute->amount / 100,
+        ]);
+    }
+
+    /**
+     * Dispute fermée (won = on récupère les fonds, lost = fonds définitivement perdus).
+     */
+    private function handleDisputeClosed(object $dispute): void
+    {
+        $transaction = Transaction::where('stripe_payment_intent_id', $dispute->payment_intent)->first();
+
+        if (!$transaction) {
+            return;
+        }
+
+        if ($dispute->status === 'won') {
+            // Dispute gagnée : remettre la transaction en état normal
+            $transaction->update(['status' => 'paid', 'dispute_status' => 'won']);
+            if ($transaction->mission) {
+                $transaction->mission->update(['status' => 'completed']);
+            }
+            Log::info('✅ Stripe dispute WON', ['dispute_id' => $dispute->id, 'transaction_id' => $transaction->id]);
+        } else {
+            // Dispute perdue : marquer comme remboursé (fonds déjà prélevés par Stripe)
+            $transaction->update(['status' => 'refunded', 'dispute_status' => 'lost']);
+            if ($transaction->mission) {
+                $transaction->mission->update(['status' => 'refunded']);
+            }
+            Log::critical('❌ Stripe dispute LOST', ['dispute_id' => $dispute->id, 'transaction_id' => $transaction->id]);
+        }
+
+        $this->notifyAdminDispute('closed_' . $dispute->status, $transaction, $dispute);
+    }
+
+    /**
+     * Notifie l'admin par email lors d'un événement de dispute.
+     */
+    private function notifyAdminDispute(string $event, ?Transaction $transaction, object $dispute): void
+    {
+        $adminEmail = config('mail.admin_address', config('mail.from.address'));
+        if (!$adminEmail) {
+            return;
+        }
+
+        $body = "Stripe Dispute Event: {$event}\n"
+            . "Dispute ID: {$dispute->id}\n"
+            . "Payment Intent: {$dispute->payment_intent}\n"
+            . "Reason: {$dispute->reason}\n"
+            . "Status: {$dispute->status}\n"
+            . "Amount: " . ($dispute->amount / 100) . " " . strtoupper($dispute->currency) . "\n";
+
+        if ($transaction) {
+            $body .= "Transaction ID: {$transaction->id}\n"
+                . "Mission ID: {$transaction->mission_id}\n";
+        }
+
+        try {
+            Mail::raw($body, function ($mail) use ($adminEmail, $event) {
+                $mail->to($adminEmail)->subject("[ULIXAI] Stripe Dispute {$event}");
+            });
+        } catch (\Throwable $e) {
+            Log::error('Failed to send dispute notification email', ['error' => $e->getMessage()]);
+        }
     }
 
     /**

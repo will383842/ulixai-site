@@ -18,6 +18,16 @@ class SendMessageNotification implements ShouldQueue
     public int $tries = 3;
 
     /**
+     * The number of seconds to wait before retrying the job.
+     */
+    public array $backoff = [30, 60, 120];
+
+    /**
+     * The number of seconds the job can run before timing out.
+     */
+    public int $timeout = 30;
+
+    /**
      * Handle the event.
      */
     public function handle(MessageSent $event): void

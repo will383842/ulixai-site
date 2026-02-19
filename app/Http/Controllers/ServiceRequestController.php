@@ -336,7 +336,7 @@ class ServiceRequestController extends Controller
                 'languages.*' => 'string|max:50',
                 'firstName' => 'nullable|string|max:100',
                 'email' => 'nullable|email|max:255',
-                'password' => 'nullable|string|min:6|max:255',
+                'password' => 'nullable|string|min:8|max:255',
                 'serviceDuration' => 'nullable|in:1 week,2 weeks,1 month',
                 'photo1' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
                 'photo2' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
@@ -381,18 +381,20 @@ class ServiceRequestController extends Controller
             if (!$user) {
                 Log::info('👤 [FORM] Creating new user', ['email' => $request->email]);
                 
-                $user = User::create([
+                $user = new User([
                     'name' => trim($request->firstName ?? 'User'),
                     'email' => $request->email,
                     'password' => Hash::make($request->password ?? Str::random(16)),
                     'country' => $request->countryNeed,
-                    'user_role' => 'service_requester',
-                    'status' => 'active',
                     'affiliate_code' => $affiliateLink,
                     'preferred_language' => $request->input('languages.0') ?? null,
                     'spoken_languages' => $request->languages ? json_encode($request->languages) : null,
                     'last_login_at' => now(),
                 ]);
+                // Champs hors fillable — assignation directe
+                $user->status = 'active';
+                $user->user_role = 'service_requester';
+                $user->save();
                 
                 Log::info('✅ [FORM] User created', ['user_id' => $user->id]);
             }

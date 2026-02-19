@@ -564,7 +564,7 @@
 
     <!-- Real-time Notifications Listener -->
     <script>
-        const listen = window.Echo.channel(`notify-user-{{ auth()->id() }}`)
+        const listen = window.Echo.private(`notify-user-{{ auth()->id() }}`)
             .listen('NotifyUser', (data) => {
                 const navReadElement = document.getElementById('private_messages_notification');
                 if(navReadElement) {

@@ -13,6 +13,21 @@ abstract class BaseNotification extends Notification implements ShouldQueue
     use Queueable;
 
     /**
+     * The number of times the notification may be attempted.
+     */
+    public int $tries = 3;
+
+    /**
+     * The number of seconds to wait before retrying.
+     */
+    public array $backoff = [30, 60, 120];
+
+    /**
+     * The number of seconds the notification job can run before timing out.
+     */
+    public int $timeout = 30;
+
+    /**
      * Type de notification (dispute, payment, mission, message, account)
      */
     protected string $type = 'account';

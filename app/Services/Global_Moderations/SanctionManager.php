@@ -50,16 +50,15 @@ class SanctionManager
                 'issued_by' => $issuedBy,
             ]);
 
-            // Mettre à jour le compteur et la date sur l'utilisateur
-            $user->update([
-                'strike_count' => $newStrikeNumber,
-                'last_strike_at' => now(),
-            ]);
-
-            // Réduire le score de confiance
+            // Mettre à jour le compteur, la date et le score de confiance
+            // forceFill() : champs hors fillable, usage interne modération uniquement (C-05)
             $trustPenalty = config('moderations.strikes.trust_score_penalty', 20);
             $newTrustScore = max(0, $user->trust_score - $trustPenalty);
-            $user->update(['trust_score' => $newTrustScore]);
+            $user->forceFill([
+                'strike_count' => $newStrikeNumber,
+                'last_strike_at' => now(),
+                'trust_score' => $newTrustScore,
+            ])->save();
 
             // Logger l'action
             ModerationAction::logStrikeIssued($user->id, $strike->id, $reason, $issuedBy);
@@ -87,13 +86,13 @@ class SanctionManager
         DB::transaction(function () use ($user, $reason, $bannedBy) {
             $appealDeadlineDays = config('moderations.ban.appeal_deadline_days', 7);
 
-            $user->update([
+            $user->forceFill([
                 'status' => 'banned',
                 'ban_reason' => $reason,
                 'banned_at' => now(),
                 'can_appeal' => true,
                 'appeal_until' => now()->addDays($appealDeadlineDays),
-            ]);
+            ])->save();
 
             // Logger l'action
             ModerationAction::logUserBanned($user->id, $reason, $bannedBy);
@@ -116,22 +115,20 @@ class SanctionManager
     public function unbanUser(User $user, string $reason, ?int $unbannedBy = null): void
     {
         DB::transaction(function () use ($user, $reason, $unbannedBy) {
-            $user->update([
+            $user->forceFill([
                 'status' => 'active',
                 'ban_reason' => null,
                 'banned_at' => null,
                 'can_appeal' => true,
                 'appeal_until' => null,
-                'strike_count' => 0, // Reset les strikes
-            ]);
+                'strike_count' => 0,
+                'trust_score' => 50, // Score de confiance réduit après débannissement
+            ])->save();
 
             // Désactiver tous les strikes
             UserStrike::where('user_id', $user->id)
                 ->where('is_active', true)
                 ->update(['is_active' => false]);
-
-            // Restaurer le score de confiance (partiellement)
-            $user->update(['trust_score' => 50]); // Score de confiance réduit après débannissement
 
             // Logger l'action
             ModerationAction::create([
@@ -150,12 +147,12 @@ class SanctionManager
     public function suspendUser(User $user, int $days, string $reason, ?int $suspendedBy = null): void
     {
         DB::transaction(function () use ($user, $days, $reason, $suspendedBy) {
-            $user->update([
+            $user->forceFill([
                 'status' => 'suspended',
                 'ban_reason' => $reason,
                 'banned_at' => now(),
                 'appeal_until' => now()->addDays($days),
-            ]);
+            ])->save();
 
             ModerationAction::create([
                 'user_id' => $user->id,
@@ -178,12 +175,12 @@ class SanctionManager
 
             $user = $strike->user;
             $activeCount = $user->activeStrikes()->count();
-            $user->update(['strike_count' => $activeCount]);
-
-            // Restaurer un peu de score de confiance
             $trustBonus = config('moderations.strikes.trust_score_penalty', 20) / 2;
             $newTrustScore = min(100, $user->trust_score + $trustBonus);
-            $user->update(['trust_score' => $newTrustScore]);
+            $user->forceFill([
+                'strike_count' => $activeCount,
+                'trust_score' => $newTrustScore,
+            ])->save();
 
             ModerationAction::create([
                 'user_id' => $user->id,
@@ -212,7 +209,7 @@ class SanctionManager
 
         // Réduire légèrement le score de confiance
         $newTrustScore = max(0, $user->trust_score - 5);
-        $user->update(['trust_score' => $newTrustScore]);
+        $user->forceFill(['trust_score' => $newTrustScore])->save();
     }
 
     /**
@@ -231,7 +228,7 @@ class SanctionManager
 
             $user = $strike->user;
             $activeCount = $user->activeStrikes()->count();
-            $user->update(['strike_count' => $activeCount]);
+            $user->forceFill(['strike_count' => $activeCount])->save();
 
             $count++;
         }
@@ -296,11 +293,13 @@ class SanctionManager
     {
         $maxScore = 100;
         $newScore = min($maxScore, $user->trust_score + $points);
-        $user->update(['trust_score' => $newScore]);
+        $attrs = ['trust_score' => $newScore];
 
         // Si le score remonte assez, désactiver la review obligatoire
         if ($newScore >= 70 && $user->requires_review) {
-            $user->update(['requires_review' => false]);
+            $attrs['requires_review'] = false;
         }
+
+        $user->forceFill($attrs)->save();
     }
 }

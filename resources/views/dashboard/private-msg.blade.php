@@ -2098,8 +2098,8 @@
     });
 
     function handleNotification(data) {
-        if (currentConversationId == data.conversation.id) {
-            fetch(`/isRead/${data.message.id}/message`,  {
+        if (currentConversationId == data.conversation_id) {
+            fetch(`/isRead/${data.message_id}/message`,  {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2115,23 +2115,23 @@
             return;
         }
 
-        const isReadElement = document.getElementById(`conversation_unread_${data.conversation.id}`);
+        const isReadElement = document.getElementById(`conversation_unread_${data.conversation_id}`);
         if (isReadElement) {
             const oldValue = parseInt(isReadElement.dataset.value || "0", 10);
             const newValue = oldValue + 1;
             isReadElement.dataset.value = newValue;
             isReadElement.textContent = newValue;
             isReadElement.classList.remove('hidden');
-            
+
             // Mettre à jour tous les badges
-            const tabType = getConversationTabType(data.conversation.id);
+            const tabType = getConversationTabType(data.conversation_id);
             updateTabBadge(tabType, 1);
             updateGlobalBadges(1);
         }
     }
 
     if(window.Echo) {
-        const listenNotifications = window.Echo.channel(`notify-user-${userId}`)
+        const listenNotifications = window.Echo.private(`notify-user-${userId}`)
             .listen('NotifyUser', (data) => {
                 handleNotification(data);
             })

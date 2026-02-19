@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
     @if(auth()->check())
     if (window.Echo) {
         // Badge messages privés
-        window.Echo.channel('notify-user-{{ auth()->id() }}')
+        window.Echo.private('notify-user-{{ auth()->id() }}')
             .listen('NotifyUser', (data) => {
                 if (data.type === 'message') {
                     const badge = document.getElementById('private_messages_notification');
@@ -530,7 +530,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
         // Badge services (propositions + messages publics)
-        window.Echo.channel('notify-user-{{ auth()->id() }}')
+        window.Echo.private('notify-user-{{ auth()->id() }}')
             .listen('.MissionMessageReceived', (data) => {
                 const badge = document.getElementById('services_notification');
                 if (badge) {

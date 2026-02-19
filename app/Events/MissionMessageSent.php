@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -25,8 +25,7 @@ class MissionMessageSent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        // Utilise le même channel que les messages privés
-        return new Channel('notify-user-' . $this->requesterId);
+        return new PrivateChannel('notify-user-' . $this->requesterId);
     }
 
     public function broadcastAs()

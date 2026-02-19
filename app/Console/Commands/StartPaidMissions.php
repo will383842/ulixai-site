@@ -36,10 +36,6 @@ class StartPaidMissions extends Command
             ->where('updated_at', '<=', Carbon::now()->subHours(24))
             ->get();
 
-        $missionsToRemove = Mission::where('payment_status', 'unpaid')
-            ->where('status', 'published')
-            ->get();
-
         $countStarted = 0;
         foreach ($missionsToStart as $mission) {
             $mission->status = 'in_progress';
@@ -49,10 +45,16 @@ class StartPaidMissions extends Command
         }
         $this->info("Completed! {$countStarted} missions were automatically started.");
 
-        $allMissions = Mission::all();
+        // Only load missions old enough to potentially be expired (minimum duration = 1 week)
+        // and not already in a terminal state — avoids loading the full table into memory.
+        $expiryCandidates = Mission::where('created_at', '<=', Carbon::now()->subWeek())
+            ->whereNotIn('status', ['cancelled', 'completed', 'disputed', 'refunded'])
+            ->whereNotNull('service_duration')
+            ->get();
+
         $countDeleted = 0;
 
-        foreach ($allMissions as $mission) {
+        foreach ($expiryCandidates as $mission) {
             $endTime = null;
             switch ($mission->service_duration) {
                 case '1 week':

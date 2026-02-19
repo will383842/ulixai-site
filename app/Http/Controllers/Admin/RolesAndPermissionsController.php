@@ -29,7 +29,7 @@ class RolesAndPermissionsController extends Controller
 
         $validated = $request->validate([
             'user_role' => 'required|in:super_admin,regional_admin,moderator',
-            'password' => 'nullable|string|min:6'
+            'password' => 'nullable|string|min:8'
         ]);
 
         $admin = User::findOrFail($id);
@@ -64,7 +64,7 @@ class RolesAndPermissionsController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:8',
             'user_role' => 'required|in:super_admin,regional_admin,moderator'
         ]);
 

@@ -460,7 +460,7 @@ class AccountController extends Controller
     public function updateAboutYou(Request $request)
     {
         $user = User::find($request->user_id);
-        
+
         if (!$user || !$user->serviceProvider) {
             return response()->json(['success' => false, 'message' => 'User not found'], 404);
         }

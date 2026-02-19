@@ -1102,8 +1102,8 @@ body {
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="serviceGrid">
       @foreach ($providers->filter(fn($p) => !empty($p->slug))->take(10) as $provider)
         @php
-          $avgRating = $provider->reviews()->avg('rating') ?? 5.0;
-          $reviewCount = $provider->reviews()->count();
+          $avgRating = $provider->reviews->avg('rating') ?? 5.0;
+          $reviewCount = $provider->reviews->count();
           $statuses = json_decode($provider->special_status, true) ?? [];
           $firstSpecialty = !empty($statuses) ? array_key_first($statuses) : null;
           
@@ -1313,7 +1313,7 @@ body {
         $featuredProviders = $providers
           ->filter(fn($p) => !empty($p->slug))
           ->sortByDesc(function($provider) {
-            return $provider->reviews()->avg('rating') ?? 0;
+            return $provider->reviews->avg('rating') ?? 0;
           })
           ->take(20)
           ->shuffle()
@@ -1322,8 +1322,8 @@ body {
 
       @foreach ($featuredProviders as $provider)
         @php
-          $avgRating = $provider->reviews()->avg('rating') ?? 5.0;
-          $reviewCount = $provider->reviews()->count();
+          $avgRating = $provider->reviews->avg('rating') ?? 5.0;
+          $reviewCount = $provider->reviews->count();
           $statuses = json_decode($provider->special_status, true) ?? [];
           $firstSpecialty = !empty($statuses) ? array_key_first($statuses) : null;
           

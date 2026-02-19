@@ -40,13 +40,18 @@ class GoogleController extends Controller
             // Recherche d’un utilisateur existant par email
             $user = User::where('email', $email)->first();
 
-            // Création si nécessaire (pas de validation d’email ici)
+            // Création si nécessaire — Google a confirmé l'email → marqué vérifié immédiatement
             if (!$user) {
                 $user = User::create([
                     'name'     => $name,
                     'email'    => $email,
                     'password' => bcrypt(Str::random(24)),
                 ]);
+                // email_verified_at peut être hors $fillable — utiliser forceFill
+                $user->forceFill(['email_verified_at' => now()])->save();
+            } elseif (!$user->email_verified_at) {
+                // Utilisateur existant sans vérification — Google vient de le confirmer
+                $user->forceFill(['email_verified_at' => now()])->save();
             }
 
             // Connexion + régénération de session

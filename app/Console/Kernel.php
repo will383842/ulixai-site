@@ -16,10 +16,16 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // Démarrage automatique des missions payées après 24h
-        $schedule->command('missions:auto-start')->everyMinute();
+        $schedule->command('missions:auto-start')
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         // Remboursement automatique des missions disputées après 24h
-        $schedule->command('missions:auto-cancel-refunds')->everyMinute();
+        $schedule->command('missions:auto-cancel-refunds')
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         // Libération des paiements aux prestataires après 7 jours (escrow)
         $schedule->command('payment:release-pending')
