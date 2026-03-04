@@ -11,6 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Drop foreign key referencing admins before dropping the table
+        if (Schema::hasTable('press_assets')) {
+            Schema::table('press_assets', function ($table) {
+                $table->dropForeign(['created_by']);
+            });
+        }
         Schema::dropIfExists('admins');
     }
 
