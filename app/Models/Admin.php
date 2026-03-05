@@ -30,4 +30,14 @@ class Admin extends Authenticatable
         }
         return in_array($this->user_role, $roles);
     }
+
+    public function isBanned(): bool
+    {
+        return false;
+    }
+
+    public function isSuspended(): bool
+    {
+        return false;
+    }
 }
